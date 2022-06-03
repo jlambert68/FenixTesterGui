@@ -1,27 +1,31 @@
 package grpc_in
 
 import (
-	"fmt"
+	//"fmt"
 	fenixTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
-	"google.golang.org/protobuf/encoding/protojson"
+	//"google.golang.org/protobuf/encoding/protojson"
 )
 
 // AreYouAlive - *********************************************************************
 //Anyone can check if Fenix TestCase Builder server is alive with this service
-func (s *fenixGuiTestCaseBuilderGrpcServicesServer) AreYouAlive(ctx context.Context, emptyParameter *fenixTestCaseBuilderServerGrpcApi.EmptyParameter) (*fenixTestCaseBuilderServerGrpcApi.AckNackResponse, error) {
+func (s *fenixGuiTestCaseBuilderGrpcServicesServer) AreYouAlive(_ context.Context, _ *fenixTestCaseBuilderServerGrpcApi.EmptyParameter) (*fenixTestCaseBuilderServerGrpcApi.AckNackResponse, error) {
 
-	fenixGuiBuilderProxyServerObject.logger.WithFields(logrus.Fields{
+	GrpcIn.logger.WithFields(logrus.Fields{
 		"id": "1ff67695-9a8b-4821-811d-0ab8d33c4d8b",
 	}).Debug("Incoming 'gRPC - AreYouAlive'")
 
-	defer fenixGuiBuilderProxyServerObject.logger.WithFields(logrus.Fields{
+	defer GrpcIn.logger.WithFields(logrus.Fields{
 		"id": "9c7f0c3d-7e9f-4c91-934e-8d7a22926d84",
 	}).Debug("Outgoing 'gRPC - AreYouAlive'")
 
 	return &fenixTestCaseBuilderServerGrpcApi.AckNackResponse{AckNack: true, Comments: "I'am alive, from Client"}, nil
 }
+
+/*
+
+TODO This code should be moved GuiBuilderServer in GCP and might be imported if the should work as an Proxy for Raitis code
 
 // GetTestInstructionsAndTestContainers - *********************************************************************
 // The TestCase Builder asks for all TestInstructions and Pre-defined TestInstructionContainer that the user can add to a TestCase
@@ -30,16 +34,16 @@ func (s *fenixGuiTestCaseBuilderGrpcServicesServer) GetTestInstructionsAndTestCo
 	// Define the response message
 	var responseMessage *fenixTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage
 
-	fenixGuiBuilderProxyServerObject.logger.WithFields(logrus.Fields{
+	GrpcIn.logger.WithFields(logrus.Fields{
 		"id": "a55f9c82-1d74-44a5-8662-058b8bc9e48f",
 	}).Debug("Incoming 'gRPC - GetTestInstructionsAndTestContainers'")
 
-	defer fenixGuiBuilderProxyServerObject.logger.WithFields(logrus.Fields{
+	defer GrpcIn.logger.WithFields(logrus.Fields{
 		"id": "27fb45fe-3266-41aa-a6af-958513977e28",
 	}).Debug("Outgoing 'gRPC - GetTestInstructionsAndTestContainers'")
 
 	// Check if Client is using correct proto files version
-	returnMessage := fenixGuiBuilderProxyServerObject.isClientUsingCorrectTestDataProtoFileVersion("666", userIdentificationMessage.ProtoFileVersionUsedByClient)
+	returnMessage := GrpcIn.IsClientUsingCorrectTestDataProtoFileVersion("666", userIdentificationMessage.ProtoFileVersionUsedByClient)
 	if returnMessage != nil {
 		// Not correct proto-file version is used
 		responseMessage = &fenixTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage{
@@ -235,3 +239,6 @@ func (s *fenixGuiTestCaseBuilderGrpcServicesServer) SavePinnedTestInstructionsAn
 
 	return &fenixTestCaseBuilderServerGrpcApi.AckNackResponse{AckNack: true, Comments: ""}, nil
 }
+
+
+*/

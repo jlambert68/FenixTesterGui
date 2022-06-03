@@ -2,6 +2,7 @@ package main
 
 import (
 	"FenixTesterGui/grpc_in"
+	"FenixTesterGui/restAPI"
 	"github.com/sirupsen/logrus"
 	"log"
 	"os"
@@ -30,7 +31,7 @@ func cleanup() {
 	}
 }
 
-func fenixGuiTestCaseBuilderServerMain() {
+func fenixGuiBuilderServerMain() {
 
 	// Connect to CloudDB
 	//fenixSyncShared.ConnectToDB()
@@ -64,9 +65,9 @@ func fenixGuiTestCaseBuilderServerMain() {
 	defer cleanup()
 
 	// Start RestApi-server
-	go grpc_in.fenixGuiBuilderProxyServerObject.restAPIServer()
+	go restAPI.RestAPI.RestAPIServer()
 
 	// Start Backend gRPC-server
-	grpc_in.fenixGuiBuilderProxyServerObject.InitGrpcServer()
+	grpc_in.GrpcIn.InitGrpcServer()
 
 }

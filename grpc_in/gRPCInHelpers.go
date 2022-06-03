@@ -7,9 +7,8 @@ import (
 
 // Used to keep track of latest Proto-file version
 var highestFenixProtoFileVersion int32 = -1
-var highestClientProtoFileVersion int32 = -1
 
-// ********************************************************************************************************************
+// IsClientUsingCorrectTestDataProtoFileVersion ********************************************************************************************************************
 // Check if Calling Client is using correct proto-file version
 func (grpcIn *GRPCInStruct) IsClientUsingCorrectTestDataProtoFileVersion(callingClientUuid string, usedProtoFileVersion fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum) (returnMessage *fenixTestCaseBuilderServerGrpcApi.AckNackResponse) {
 
@@ -18,7 +17,7 @@ func (grpcIn *GRPCInStruct) IsClientUsingCorrectTestDataProtoFileVersion(calling
 	var protoFileUsed fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum
 
 	protoFileUsed = usedProtoFileVersion
-	protoFileExpected = fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(grpcIn.getHighestFenixTestDataProtoFileVersion())
+	protoFileExpected = fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(grpcIn.getHighestFenixGuiServerProtoFileVersion())
 
 	// Check if correct proto files is used
 	if protoFileExpected == protoFileUsed {
@@ -59,7 +58,7 @@ func (grpcIn *GRPCInStruct) IsClientUsingCorrectTestDataProtoFileVersion(calling
 
 // ********************************************************************************************************************
 // Get the highest FenixProtoFileVersionEnumeration
-func (grpcIn *GRPCInStruct) getHighestFenixTestDataProtoFileVersion() int32 {
+func (grpcIn *GRPCInStruct) getHighestFenixGuiServerProtoFileVersion() int32 {
 
 	// Check if there already is a 'highestFenixProtoFileVersion' saved, if so use that one
 	if highestFenixProtoFileVersion != -1 {

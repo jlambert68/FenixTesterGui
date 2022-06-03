@@ -2,7 +2,7 @@ package main
 
 import (
 	"FenixTesterGui/common_code"
-	"FenixTesterGui/grpc_in"
+	"FenixTesterGui/grpc_out"
 	_ "embed"
 	"strconv"
 
@@ -60,7 +60,7 @@ func main() {
 		go systray.Run(onReady, onExit)
 	}
 
-	grpc_in.fenixGuiTestCaseBuilderServerMain()
+	fenixGuiBuilderServerMain()
 }
 
 func init() {
@@ -132,7 +132,7 @@ func init() {
 	}
 
 	// Create address for FenixGuiServer to call
-	FenixGuiBuilderServerAddressToDial = common_config.FenixGuiBuilderServerAddress + ":" + strconv.Itoa(common_config.FenixGuiBuilderServerPort)
+	grpc_out.FenixGuiBuilderServerAddressToDial = common_config.FenixGuiBuilderServerAddress + ":" + strconv.Itoa(common_config.FenixGuiBuilderServerPort)
 
 	// Get Environment variable to tell if the the application should run as a Tray Application or not
 	var runAsTrayApplication = mustGetenv("RunAsTrayApplication")

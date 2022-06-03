@@ -38,14 +38,14 @@ func (GrpcOut *GRPCOutStruct) setConnectionToFenixGuiBuilderServer() {
 		remoteFenixGuiBuilderServerConnection, err = grpc.Dial(FenixGuiBuilderServerAddressToDial) //, grpc.WithInsecure())
 	}
 	if err != nil {
-		GrpcOut.logger.WithFields(logrus.Fields{
+		GrpcOut.Logger.WithFields(logrus.Fields{
 			"ID":                                 "50b59b1b-57ce-4c27-aa84-617f0cde3100",
 			"fenixGuiBuilderServerAddressToDial": FenixGuiBuilderServerAddressToDial,
 			"error message":                      err,
 		}).Error("Did not connect to FenixGuiBuilderServer via gRPC")
 		//os.Exit(0)
 	} else {
-		GrpcOut.logger.WithFields(logrus.Fields{
+		GrpcOut.Logger.WithFields(logrus.Fields{
 			"ID": "0c650bbc-45d0-4029-bd25-4ced9925a059",
 			"fenixGuiTestCaseBuilderServer_address_to_dial": FenixGuiBuilderServerAddressToDial,
 		}).Info("gRPC connection OK to FenixTestDataSyncServer")

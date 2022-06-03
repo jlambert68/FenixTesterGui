@@ -44,7 +44,7 @@ func (grpcIn *GRPCInStruct) IsClientUsingCorrectTestDataProtoFileVersion(calling
 			ErrorCodes: errorCodes,
 		}
 
-		grpcIn.logger.WithFields(logrus.Fields{
+		grpcIn.Logger.WithFields(logrus.Fields{
 			"id": "513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb",
 		}).Debug("Wrong proto file used. Expected: '" + protoFileExpected.String() + "', but got: '" + protoFileUsed.String() + "' for Client: " + callingClientUuid)
 

@@ -1,19 +1,14 @@
 package main
 
 import (
-	"FenixTesterGui/grpc_in"
+	"FenixTesterGui/fenixTestGuiObject"
 	"github.com/sirupsen/logrus"
-	//	ecpb "github.com/jlambert68/FenixGrpcApi/Client/fenixGuiTestCaseBuilderServerGrpcApi/echo/go_grpc_api"
 )
-
-type localreferenceLibraryStruct struct {
-	grpc_in *grpc_in.GRPCInStruct
-}
 
 type fenixGuiBuilderProxyServerObjectStruct struct {
 	logger               *logrus.Logger
 	runAsTrayApplication bool
-	localreferencs       localreferenceLibraryStruct
+	subPackageObjects    *fenixTestGuiObject.FenixGuiBuilderProxyServerObjectStruct
 }
 
 // Variable holding everything together

@@ -12,11 +12,11 @@ import (
 //Anyone can check if Fenix TestCase Builder server is alive with this service
 func (s *fenixGuiTestCaseBuilderGrpcServicesServer) AreYouAlive(_ context.Context, _ *fenixTestCaseBuilderServerGrpcApi.EmptyParameter) (*fenixTestCaseBuilderServerGrpcApi.AckNackResponse, error) {
 
-	GrpcIn.logger.WithFields(logrus.Fields{
+	GrpcIn.Logger.WithFields(logrus.Fields{
 		"id": "1ff67695-9a8b-4821-811d-0ab8d33c4d8b",
 	}).Debug("Incoming 'gRPC - AreYouAlive'")
 
-	defer GrpcIn.logger.WithFields(logrus.Fields{
+	defer GrpcIn.Logger.WithFields(logrus.Fields{
 		"id": "9c7f0c3d-7e9f-4c91-934e-8d7a22926d84",
 	}).Debug("Outgoing 'gRPC - AreYouAlive'")
 
@@ -34,11 +34,11 @@ func (s *fenixGuiTestCaseBuilderGrpcServicesServer) GetTestInstructionsAndTestCo
 	// Define the response message
 	var responseMessage *fenixTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage
 
-	GrpcIn.logger.WithFields(logrus.Fields{
+	GrpcIn.Logger.WithFields(logrus.Fields{
 		"id": "a55f9c82-1d74-44a5-8662-058b8bc9e48f",
 	}).Debug("Incoming 'gRPC - GetTestInstructionsAndTestContainers'")
 
-	defer GrpcIn.logger.WithFields(logrus.Fields{
+	defer GrpcIn.Logger.WithFields(logrus.Fields{
 		"id": "27fb45fe-3266-41aa-a6af-958513977e28",
 	}).Debug("Outgoing 'gRPC - GetTestInstructionsAndTestContainers'")
 

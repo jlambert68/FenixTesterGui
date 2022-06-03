@@ -1,9 +1,13 @@
 package restAPI
 
-import "github.com/sirupsen/logrus"
+import (
+	"FenixTesterGui/fenixTestGuiObject"
+	"github.com/sirupsen/logrus"
+)
 
 type RestApiStruct struct {
-	logger *logrus.Logger
+	Logger                        *logrus.Logger
+	FenixTesterGuiObjectReference *fenixTestGuiObject.FenixGuiBuilderProxyServerObjectStruct
 }
 
-var RestAPI RestApiStruct
+//var RestAPI RestApiStruct

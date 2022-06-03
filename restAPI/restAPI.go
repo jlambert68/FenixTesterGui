@@ -53,11 +53,11 @@ func (RestAPI *RestApiStruct) RestAPIServer() {
 func (RestAPI *RestApiStruct) HealthCheck(w http.ResponseWriter, _ *http.Request) {
 	// curl --request GET localhost:8080/health-check
 
-	RestAPI.logger.WithFields(logrus.Fields{
+	RestAPI.Logger.WithFields(logrus.Fields{
 		"id": "fb3c1ecb-3da8-4d27-b1c4-16d5120e7125",
 	}).Debug("Incoming 'RestApi - /health-check'")
 
-	defer RestAPI.logger.WithFields(logrus.Fields{
+	defer RestAPI.Logger.WithFields(logrus.Fields{
 		"id": "fab7676d-c303-4b20-8980-397d7a59282e",
 	}).Debug("Outgoing 'RestApi - /health-check'")
 
@@ -75,11 +75,11 @@ func (RestAPI *RestApiStruct) HealthCheck(w http.ResponseWriter, _ *http.Request
 func (RestAPI *RestApiStruct) RestSendAreYouAliveToFenixGuiBuilderServer(w http.ResponseWriter, _ *http.Request) {
 	// curl --request GET localhost:8080/are-guibuilderserver-alive
 
-	RestAPI.logger.WithFields(logrus.Fields{
+	RestAPI.Logger.WithFields(logrus.Fields{
 		"id": "0645d30c-4479-49ab-bb72-9bc3fac329a5",
 	}).Debug("Incoming 'RestApi - /are-guibuilderserver-alive'")
 
-	defer RestAPI.logger.WithFields(logrus.Fields{
+	defer RestAPI.Logger.WithFields(logrus.Fields{
 		"id": "cc168cfe-3544-4946-93d4-d2325893f8cd",
 	}).Debug("Outgoing 'RestApi - /are-guibuilderserver-alive'")
 
@@ -115,11 +115,11 @@ func (RestAPI *RestApiStruct) RestSendGetInstructionsAndTestInstructionContainer
 		-H 'Content-Type: application/json' \
 		-d '{"UserId":"s41797"}'
 	*/
-	RestAPI.logger.WithFields(logrus.Fields{
+	RestAPI.Logger.WithFields(logrus.Fields{
 		"id": "0645d30c-4479-49ab-bb72-9bc3fac329a5",
 	}).Debug("Incoming 'RestApi - (GET) /testinstructions-and-testinstructioncontainers'")
 
-	defer RestAPI.logger.WithFields(logrus.Fields{
+	defer RestAPI.Logger.WithFields(logrus.Fields{
 		"id": "cc168cfe-3544-4946-93d4-d2325893f8cd",
 	}).Debug("Outgoing 'RestApi - (GET) /testinstructions-and-testinstructioncontainers'")
 
@@ -171,11 +171,11 @@ func (RestAPI *RestApiStruct) RestSendGetPinnedInstructionsAndTestInstructionCon
 		-d '{"UserId":"s41797"}'
 	*/
 
-	RestAPI.logger.WithFields(logrus.Fields{
+	RestAPI.Logger.WithFields(logrus.Fields{
 		"id": "2472dda1-701d-4b23-8326-757e43df4af4",
 	}).Debug("Incoming 'RestApi - /pinned-testinstructions-and-testinstructioncontainers'")
 
-	defer RestAPI.logger.WithFields(logrus.Fields{
+	defer RestAPI.Logger.WithFields(logrus.Fields{
 		"id": "db318ff4-ad36-43d4-a8d4-3e0ac4ff08c6",
 	}).Debug("Outgoing 'RestApi - /pinned-testinstructions-and-testinstructioncontainers'")
 
@@ -226,11 +226,11 @@ func (RestAPI *RestApiStruct) RestSendSavePinnedInstructionsAndTestInstructionCo
 		-d '{"UserId":"s41797","PinnedTestInstructionMessages":[{"TestInstructionUuid":"2f130d7e-f8aa-466f-b29d-0fb63608c1a6","TestInstructionName":"TestInstructionName 1"}],"PinnedTestInstructionContainerMessages":[{"TestInstructionContainerUuid":"b107bdd9-4152-4020-b3f0-fc750b45885e","TestInstructionContainerName":"TestInstructionContainerName 1"},{"TestInstructionContainerUuid":"e81b9734-5dce-43c9-8d77-3368940cf126","TestInstructionContainerName":"TestInstructionContainerName"}]}'
 	*/
 	// curl -X POST localhost:8080/pinned-testinstructions-and-testinstructioncontainers -H 'Content-Type: application/json' -d '{"UserId":"s41797","PinnedTestInstructionMessages":[{"TestInstructionUuid":"myUuid", "TestInstructionName":"myName"}],"PinnedTestInstructionContainerMessages":[{"TestInstructionContainerUuid":"myUuid2", "TestInstructionContainerName":"myName2"}]}'
-	RestAPI.logger.WithFields(logrus.Fields{
+	RestAPI.Logger.WithFields(logrus.Fields{
 		"id": "2472dda1-701d-4b23-8326-757e43df4af4",
 	}).Debug("Incoming 'RestApi - (POST) /pinned-testinstructions-and-testinstructioncontainers'")
 
-	defer RestAPI.logger.WithFields(logrus.Fields{
+	defer RestAPI.Logger.WithFields(logrus.Fields{
 		"id": "db318ff4-ad36-43d4-a8d4-3e0ac4ff08c6",
 	}).Debug("Outgoing 'RestApi - (POST) /pinned-testinstructions-and-testinstructioncontainers'")
 

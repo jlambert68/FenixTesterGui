@@ -1,15 +1,14 @@
 package grpc_out
 
 import (
-	"FenixTesterGui/fenixTestGuiObject"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 
 type GRPCOutStruct struct {
-	Logger                        *logrus.Logger
-	FenixTesterGuiObjectReference *fenixTestGuiObject.FenixGuiBuilderProxyServerObjectStruct
+	logger                             *logrus.Logger
+	fenixGuiBuilderServerAddressToDial string
 }
 
 var GrpcOut GRPCOutStruct

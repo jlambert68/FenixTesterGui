@@ -44,7 +44,7 @@ func (grpcIn *GRPCInStruct) IsClientUsingCorrectTestDataProtoFileVersion(calling
 			ErrorCodes: errorCodes,
 		}
 
-		grpcIn.Logger.WithFields(logrus.Fields{
+		grpcIn.logger.WithFields(logrus.Fields{
 			"id": "513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb",
 		}).Debug("Wrong proto file used. Expected: '" + protoFileExpected.String() + "', but got: '" + protoFileUsed.String() + "' for Client: " + callingClientUuid)
 
@@ -78,4 +78,13 @@ func (grpcIn *GRPCInStruct) getHighestFenixGuiServerProtoFileVersion() int32 {
 	highestFenixProtoFileVersion = maxValue
 
 	return highestFenixProtoFileVersion
+}
+
+// SetLogger
+// Set to use the same logger reference as is used by central part of system
+func (grpcIn *GRPCInStruct) SetLogger(logger *logrus.Logger) {
+	grpcIn.logger = logger
+
+	return
+
 }

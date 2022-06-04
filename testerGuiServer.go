@@ -1,6 +1,8 @@
 package main
 
 import (
+	"FenixTesterGui/grpc_in"
+	"FenixTesterGui/restAPI"
 	"github.com/sirupsen/logrus"
 	"log"
 	"os"
@@ -22,7 +24,7 @@ func cleanup() {
 		}).Info("Clean up and shut down servers")
 
 		// Stop Backend gRPC Server
-		fenixTesterGuiObject.subPackageObjects.LocalReferences.GrpcIn.StopGrpcServer()
+		fenixTesterGuiObject.subPackageObjects.grpcIn.StopGrpcServer()
 
 		//log.Println("Close DB_session: %v", DB_session)
 		//DB_session.Close()
@@ -35,7 +37,12 @@ func fenixGuiBuilderServerMain() {
 	//fenixSyncShared.ConnectToDB()
 
 	// Set up BackendObject
-	fenixTesterGuiObject = &fenixGuiBuilderProxyServerObjectStruct{}
+	fenixTesterGuiObject = &fenixGuiBuilderProxyServerObjectStruct{
+		subPackageObjects: &referencesStruct{
+			grpcIn:  &grpc_in.GRPCInStruct{},
+			restAPI: &restAPI.RestApiStruct{},
+		},
+	}
 
 	// Init logger
 	// When application is run as tray application then use text file as log
@@ -56,22 +63,19 @@ func fenixGuiBuilderServerMain() {
 	fenixTesterGuiObject.InitLogger(filePathName)
 
 	// Set logger for sub packages
-	fenixTesterGuiObject.subPackageObjects.LocalReferences.GrpcIn.Logger = fenixTesterGuiObject.logger
-	fenixTesterGuiObject.subPackageObjects.LocalReferences.GrpcOut.Logger = fenixTesterGuiObject.logger
-	fenixTesterGuiObject.subPackageObjects.LocalReferences.RestAPI.Logger = fenixTesterGuiObject.logger
+	fenixTesterGuiObject.subPackageObjects.grpcIn.SetLogger(fenixTesterGuiObject.logger)
+	fenixTesterGuiObject.subPackageObjects.restAPI.SetLogger(fenixTesterGuiObject.logger)
 
-	// Set up reference to Sub Packages
-	fenixTesterGuiObject.subPackageObjects.LocalReferences.GrpcIn.FenixTesterGuiObjectReference = fenixTesterGuiObject.subPackageObjects
-	fenixTesterGuiObject.subPackageObjects.LocalReferences.GrpcOut.FenixTesterGuiObjectReference = fenixTesterGuiObject.subPackageObjects
-	fenixTesterGuiObject.subPackageObjects.LocalReferences.RestAPI.FenixTesterGuiObjectReference = fenixTesterGuiObject.subPackageObjects
+	// Set dial address to GuiServer
+	fenixTesterGuiObject.subPackageObjects.restAPI.SetDialAddressString(fenixGuiBuilderServerAddressToDial)
 
 	// Clean up when leaving. Is placed after logger because shutdown logs information
 	defer cleanup()
 
 	// Start RestApi-server
-	go fenixTesterGuiObject.subPackageObjects.LocalReferences.RestAPI.RestAPIServer()
+	go fenixTesterGuiObject.subPackageObjects.restAPI.RestAPIServer()
 
 	// Start Backend gRPC-server
-	fenixTesterGuiObject.subPackageObjects.LocalReferences.GrpcIn.InitGrpcServer()
+	fenixTesterGuiObject.subPackageObjects.grpcIn.InitGrpcServer()
 
 }

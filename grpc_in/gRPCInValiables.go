@@ -1,7 +1,6 @@
 package grpc_in
 
 import (
-	"FenixTesterGui/fenixTestGuiObject"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -9,8 +8,7 @@ import (
 )
 
 type GRPCInStruct struct {
-	Logger                        *logrus.Logger
-	FenixTesterGuiObjectReference *fenixTestGuiObject.FenixGuiBuilderProxyServerObjectStruct
+	logger *logrus.Logger
 }
 
 var GrpcIn GRPCInStruct

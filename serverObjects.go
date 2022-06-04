@@ -1,14 +1,27 @@
 package main
 
 import (
-	"FenixTesterGui/fenixTestGuiObject"
+	"FenixTesterGui/grpc_in"
+	"FenixTesterGui/restAPI"
 	"github.com/sirupsen/logrus"
 )
+
+type referencesStruct struct {
+	grpcIn  *grpc_in.GRPCInStruct
+	restAPI *restAPI.RestApiStruct
+}
+
+/*
+type FenixGuiBuilderProxyServerObjectStruct struct {
+	LocalReferences referencesStruct
+}
+
+*/
 
 type fenixGuiBuilderProxyServerObjectStruct struct {
 	logger               *logrus.Logger
 	runAsTrayApplication bool
-	subPackageObjects    *fenixTestGuiObject.FenixGuiBuilderProxyServerObjectStruct
+	subPackageObjects    *referencesStruct
 }
 
 // Variable holding everything together
@@ -29,3 +42,6 @@ type ecServer struct {
 
 // Bad solution but using temp storage before real variable is initiated
 var tempRunAsTrayApplication bool
+
+// Create address for FenixGuiServer to call
+var fenixGuiBuilderServerAddressToDial string

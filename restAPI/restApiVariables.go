@@ -1,13 +1,14 @@
 package restAPI
 
 import (
-	"FenixTesterGui/fenixTestGuiObject"
+	"FenixTesterGui/grpc_out"
 	"github.com/sirupsen/logrus"
 )
 
 type RestApiStruct struct {
-	Logger                        *logrus.Logger
-	FenixTesterGuiObjectReference *fenixTestGuiObject.FenixGuiBuilderProxyServerObjectStruct
+	logger                             *logrus.Logger
+	grpcOut                            *grpc_out.GRPCOutStruct
+	fenixGuiBuilderServerAddressToDial string
 }
 
-//var RestAPI RestApiStruct
+var RestAPI RestApiStruct

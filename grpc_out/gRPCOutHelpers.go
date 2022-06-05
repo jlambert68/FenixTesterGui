@@ -34,7 +34,7 @@ func (GrpcOut *GRPCOutStruct) setConnectionToFenixGuiBuilderServer() (returnMess
 		remoteFenixGuiBuilderServerConnection, err = grpc.Dial(GrpcOut.fenixGuiBuilderServerAddressToDial, opts...)
 	} else {
 		// Run Local
-		remoteFenixGuiBuilderServerConnection, err = grpc.Dial(GrpcOut.fenixGuiBuilderServerAddressToDial) //, grpc.WithInsecure())
+		remoteFenixGuiBuilderServerConnection, err = grpc.Dial(GrpcOut.fenixGuiBuilderServerAddressToDial, grpc.WithInsecure())
 	}
 	if err != nil {
 		GrpcOut.logger.WithFields(logrus.Fields{

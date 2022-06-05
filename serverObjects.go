@@ -2,13 +2,15 @@ package main
 
 import (
 	"FenixTesterGui/grpc_in"
+	"FenixTesterGui/gui"
 	"FenixTesterGui/restAPI"
 	"github.com/sirupsen/logrus"
 )
 
 type referencesStruct struct {
-	grpcIn  *grpc_in.GRPCInStruct
-	restAPI *restAPI.RestApiStruct
+	grpcIn   *grpc_in.GRPCInStruct
+	restAPI  *restAPI.RestApiStruct
+	uiServer *gui.UIServerStruct
 }
 
 /*

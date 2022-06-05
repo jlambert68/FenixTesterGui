@@ -3,6 +3,7 @@ package main
 import (
 	"FenixTesterGui/grpc_in"
 	"FenixTesterGui/grpc_out"
+	"FenixTesterGui/gui"
 	"FenixTesterGui/restAPI"
 	"github.com/sirupsen/logrus"
 	"log"
@@ -44,6 +45,7 @@ func fenixGuiBuilderServerMain() {
 			restAPI: &restAPI.RestApiStruct{
 				GrpcOut: &grpc_out.GRPCOutStruct{},
 			},
+			uiServer: &gui.UIServerStruct{},
 		},
 	}
 
@@ -68,6 +70,7 @@ func fenixGuiBuilderServerMain() {
 	// Set logger for sub packages
 	fenixTesterGuiObject.subPackageObjects.grpcIn.SetLogger(fenixTesterGuiObject.logger)
 	fenixTesterGuiObject.subPackageObjects.restAPI.SetLogger(fenixTesterGuiObject.logger)
+	fenixTesterGuiObject.subPackageObjects.uiServer.SetLogger(fenixTesterGuiObject.logger)
 
 	// Set dial address to GuiServer
 	fenixTesterGuiObject.subPackageObjects.restAPI.SetDialAddressString(fenixGuiBuilderServerAddressToDial)
@@ -79,6 +82,9 @@ func fenixGuiBuilderServerMain() {
 	go fenixTesterGuiObject.subPackageObjects.restAPI.RestAPIServer()
 
 	// Start Backend gRPC-server
-	fenixTesterGuiObject.subPackageObjects.grpcIn.InitGrpcServer()
+	go fenixTesterGuiObject.subPackageObjects.grpcIn.InitGrpcServer()
+
+	// Start UI Server
+	fenixTesterGuiObject.subPackageObjects.uiServer.StartUIServer()
 
 }

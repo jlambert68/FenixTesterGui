@@ -15,7 +15,7 @@ func (grpcIn *GRPCInStruct) InitGrpcServer() {
 	var err error
 
 	// Find first non allocated port from defined start port
-	GrpcIn.logger.WithFields(logrus.Fields{
+	grpcIn.logger.WithFields(logrus.Fields{
 		"Id": "054bc0ef-93bb-4b75-8630-74e3823f71da",
 	}).Info("Backend Server tries to start")
 

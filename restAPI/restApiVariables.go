@@ -7,8 +7,6 @@ import (
 
 type RestApiStruct struct {
 	logger                             *logrus.Logger
-	grpcOut                            *grpc_out.GRPCOutStruct
+	GrpcOut                            *grpc_out.GRPCOutStruct
 	fenixGuiBuilderServerAddressToDial string
 }
-
-var RestAPI RestApiStruct

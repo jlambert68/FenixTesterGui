@@ -31,17 +31,11 @@ type RestSavePinnedInstructionsAndTestInstructionContainersToFenixGuiBuilderServ
 func (restAPI *RestApiStruct) RestAPIServer() {
 	log.Println("starting API server")
 
-	RestAPI = RestApiStruct{xxx
-		logger:                             nil,
-		grpcOut:                            nil,
-		fenixGuiBuilderServerAddressToDial: "",
-	}
-
 	// Setting logger in gRPC Out
-	restAPI.grpcOut.SetLogger(restAPI.logger)
+	restAPI.GrpcOut.SetLogger(restAPI.logger)
 
 	// Setting Dial address to call GuiServer on
-	restAPI.grpcOut.SetDialAddressString(restAPI.fenixGuiBuilderServerAddressToDial)
+	restAPI.GrpcOut.SetDialAddressString(restAPI.fenixGuiBuilderServerAddressToDial)
 
 	//create a new router
 	router := mux.NewRouter()
@@ -100,7 +94,7 @@ func (restAPI *RestApiStruct) RestSendAreYouAliveToFenixGuiBuilderServer(w http.
 	var response *fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse
 
 	// Do gRPC-call
-	response = grpc_out.GrpcOut.SendAreYouAliveToFenixGuiBuilderServer()
+	response = restAPI.GrpcOut.SendAreYouAliveToFenixGuiBuilderServer()
 
 	// Create Header
 	w.Header().Set("Content-Type", "application/json")
@@ -150,7 +144,7 @@ func (restAPI *RestApiStruct) RestSendGetInstructionsAndTestInstructionContainer
 	}
 
 	// Do gRPC-call
-	response = restAPI.grpcOut.SendGetTestInstructionsAndTestContainers(jsonData.UserId)
+	response = restAPI.GrpcOut.SendGetTestInstructionsAndTestContainers(jsonData.UserId)
 
 	// Create Header
 	w.Header().Set("Content-Type", "application/json")
@@ -206,7 +200,7 @@ func (restAPI *RestApiStruct) RestSendGetPinnedInstructionsAndTestInstructionCon
 	}
 
 	// Do gRPC-call
-	response = restAPI.grpcOut.SendGetPinnedTestInstructionsAndTestContainers(jsonData.UserId)
+	response = restAPI.GrpcOut.SendGetPinnedTestInstructionsAndTestContainers(jsonData.UserId)
 
 	// Create Header
 	w.Header().Set("Content-Type", "application/json")
@@ -270,7 +264,7 @@ func (restAPI *RestApiStruct) RestSendSavePinnedInstructionsAndTestInstructionCo
 	}
 
 	// Do gRPC-call
-	response = restAPI.grpcOut.SendSavePinnedTestInstructionsAndTestContainers(pinnedTestInstructionsAndTestContainersMessage)
+	response = restAPI.GrpcOut.SendSavePinnedTestInstructionsAndTestContainers(pinnedTestInstructionsAndTestContainersMessage)
 
 	// Create Header
 	w.Header().Set("Content-Type", "application/json")

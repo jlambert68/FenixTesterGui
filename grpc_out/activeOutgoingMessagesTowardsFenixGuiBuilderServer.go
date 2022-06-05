@@ -20,7 +20,11 @@ func (GrpcOut *GRPCOutStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMe
 	var err error
 
 	// Set up connection to Server
-	GrpcOut.setConnectionToFenixGuiBuilderServer()
+	returnMessage = GrpcOut.setConnectionToFenixGuiBuilderServer()
+	// If there was no connection to backend then return that message
+	if returnMessage != nil {
+		return returnMessage
+	}
 
 	// Create the request message
 	emptyParameter := &fenixGuiTestCaseBuilderServerGrpcApi.EmptyParameter{

@@ -3,7 +3,7 @@ package grpc_out
 import (
 	common_config "FenixTesterGui/common_code"
 	"crypto/tls"
-	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	fenixTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -12,8 +12,7 @@ import (
 // ********************************************************************************************************************
 
 // SetConnectionToFenixTestDataSyncServer - Set upp connection and Dial to FenixTestDataSyncServer
-func (GrpcOut *GRPCOutStruct) setConnectionToFenixGuiBuilderServer() {
-
+func (GrpcOut *GRPCOutStruct) setConnectionToFenixGuiBuilderServer() (returnMessage *fenixTestCaseBuilderServerGrpcApi.AckNackResponse) {
 	var err error
 	var opts []grpc.DialOption
 
@@ -32,28 +31,49 @@ func (GrpcOut *GRPCOutStruct) setConnectionToFenixGuiBuilderServer() {
 	// When run on GCP, use credentials
 	if common_config.ExecutionLocationForFenixGuiServer == common_config.GCP {
 		// Run on GCP
-		remoteFenixGuiBuilderServerConnection, err = grpc.Dial(FenixGuiBuilderServerAddressToDial, opts...)
+		remoteFenixGuiBuilderServerConnection, err = grpc.Dial(GrpcOut.fenixGuiBuilderServerAddressToDial, opts...)
 	} else {
 		// Run Local
-		remoteFenixGuiBuilderServerConnection, err = grpc.Dial(FenixGuiBuilderServerAddressToDial) //, grpc.WithInsecure())
+		remoteFenixGuiBuilderServerConnection, err = grpc.Dial(GrpcOut.fenixGuiBuilderServerAddressToDial) //, grpc.WithInsecure())
 	}
 	if err != nil {
 		GrpcOut.logger.WithFields(logrus.Fields{
 			"ID":                                 "50b59b1b-57ce-4c27-aa84-617f0cde3100",
-			"fenixGuiBuilderServerAddressToDial": FenixGuiBuilderServerAddressToDial,
+			"fenixGuiBuilderServerAddressToDial": GrpcOut.fenixGuiBuilderServerAddressToDial,
 			"error message":                      err,
 		}).Error("Did not connect to FenixGuiBuilderServer via gRPC")
 		//os.Exit(0)
+
+		// Create response message for when no success dail was able to be made
+
+		// Set Error codes to return message
+		var errorCodes []fenixTestCaseBuilderServerGrpcApi.ErrorCodesEnum
+		var errorCode fenixTestCaseBuilderServerGrpcApi.ErrorCodesEnum
+
+		errorCode = fenixTestCaseBuilderServerGrpcApi.ErrorCodesEnum_ERROR_UNSPECIFIED
+		errorCodes = append(errorCodes, errorCode)
+
+		// Create Return message
+		returnMessage = &fenixTestCaseBuilderServerGrpcApi.AckNackResponse{
+			AckNack:    false,
+			Comments:   "Couldn't call GuiServer",
+			ErrorCodes: errorCodes,
+		}
+
+		return returnMessage
+
 	} else {
 		GrpcOut.logger.WithFields(logrus.Fields{
 			"ID": "0c650bbc-45d0-4029-bd25-4ced9925a059",
-			"fenixGuiTestCaseBuilderServer_address_to_dial": FenixGuiBuilderServerAddressToDial,
+			"fenixGuiTestCaseBuilderServer_address_to_dial": GrpcOut.fenixGuiBuilderServerAddressToDial,
 		}).Info("gRPC connection OK to FenixTestDataSyncServer")
 
 		// Creates a new Clients
-		fenixGuiBuilderServerGrpcClient = fenixGuiTestCaseBuilderServerGrpcApi.NewFenixTestCaseBuilderServerGrpcServicesClient(remoteFenixGuiBuilderServerConnection)
+		fenixGuiBuilderServerGrpcClient = fenixTestCaseBuilderServerGrpcApi.NewFenixTestCaseBuilderServerGrpcServicesClient(remoteFenixGuiBuilderServerConnection)
 
 	}
+
+	return nil
 }
 
 // GetHighestFenixGuiServerProtoFileVersion ********************************************************************************************************************
@@ -69,7 +89,7 @@ func (GrpcOut *GRPCOutStruct) GetHighestFenixGuiServerProtoFileVersion() int32 {
 	var maxValue int32
 	maxValue = 0
 
-	for _, v := range fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum_value {
+	for _, v := range fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum_value {
 		if v > maxValue {
 			maxValue = v
 		}

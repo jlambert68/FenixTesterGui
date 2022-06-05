@@ -2,6 +2,7 @@ package main
 
 import (
 	"FenixTesterGui/grpc_in"
+	"FenixTesterGui/grpc_out"
 	"FenixTesterGui/restAPI"
 	"github.com/sirupsen/logrus"
 	"log"
@@ -39,8 +40,10 @@ func fenixGuiBuilderServerMain() {
 	// Set up BackendObject
 	fenixTesterGuiObject = &fenixGuiBuilderProxyServerObjectStruct{
 		subPackageObjects: &referencesStruct{
-			grpcIn:  &grpc_in.GRPCInStruct{},
-			restAPI: &restAPI.RestApiStruct{},
+			grpcIn: &grpc_in.GRPCInStruct{},
+			restAPI: &restAPI.RestApiStruct{
+				GrpcOut: &grpc_out.GRPCOutStruct{},
+			},
 		},
 	}
 

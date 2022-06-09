@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	fyne.io/fyne/v2 v2.1.4
+	github.com/drognisep/fynetree v0.0.2
 	github.com/getlantern/systray v1.2.1
 	github.com/go-gota/gota v0.12.0
 	github.com/golang/gddo v0.0.0-20210115222349-20d68f94ee1f
@@ -18,6 +19,7 @@ require (
 
 require (
 	cloud.google.com/go/compute v1.6.1 // indirect
+	fyne.io/fyne v1.4.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fredbi/uri v0.0.0-20181227131451-3dcfdacbaaf3 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect

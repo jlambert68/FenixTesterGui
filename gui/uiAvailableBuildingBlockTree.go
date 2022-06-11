@@ -62,7 +62,7 @@ func makeTree() {
 				}
 			*/
 			obj.(*widget.Label).SetText(uid + time.Now().String())
-
+			fmt.Println(tree.Size())
 		},
 
 		OnSelected: func(uid string) {

@@ -147,7 +147,10 @@ func (testCaseUI *testCaseUIStruct) loadCompleteAvailableTestCaseBuildingBlocksU
 
 	// Create the complete TestCase BuildingBlocks UI area
 	availableTestCaseBuildingBlocksBorderedLayout := layout.NewBorderLayout(availableAvailableBuildingBlocksUIBar, nil, nil, nil)
-	completeAvailableTestCaseBuildingBlocksUI = container.New(availableTestCaseBuildingBlocksBorderedLayout, availableAvailableBuildingBlocksUIBar, availableTestCaseBuildingBlocksTreeUI)
+	tempcompleteAvailableTestCaseBuildingBlocksUI := container.New(availableTestCaseBuildingBlocksBorderedLayout, availableAvailableBuildingBlocksUIBar, container.NewVSplit(availableTestCaseBuildingBlocksTreeUI, testCaseUI.createTestCaseCommandsUI()))
+	//tempcompleteAvailableTestCaseBuildingBlocksUI.MinSize(fyne.NewSize(float32(300), float32(400))
+
+	completeAvailableTestCaseBuildingBlocksUI = tempcompleteAvailableTestCaseBuildingBlocksUI //container.New(layout.NewVBoxLayout(), tempcompleteAvailableTestCaseBuildingBlocksUI) //, layout.NewSpacer(), testCaseUI.createTestCaseCommandsUI())
 
 	return completeAvailableTestCaseBuildingBlocksUI
 }

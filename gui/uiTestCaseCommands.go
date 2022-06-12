@@ -55,34 +55,34 @@ const (
 	CommandUndoUndoLastCommandOnStack = "UndoUndoLastCommandOnStack()"
 )
 
-func (testCaseUI *testCaseUIStruct) createTestCaseCommandsUI() (testCaseCommandsUIObject fyne.CanvasObject) {
+func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIObject fyne.CanvasObject) {
 
 	newTestCaseButton := widget.NewButton(CommandNewTestcase, func() {
-		testCaseUI.newTestCase()
+		uiServer.newTestCase()
 	})
 	removeButton := widget.NewButton(CommandRemoveElementFromTestcase, func() {
-		testCaseUI.remove("x")
+		uiServer.remove("x")
 	})
 	swapFromNewButton := widget.NewButton(CommandSwapFromNewComponent, func() {
-		testCaseUI.swapFromNew("x", "xx")
+		uiServer.swapFromNew("x", "xx")
 	})
 	copyButton := widget.NewButton(CommandCopy, func() {
-		testCaseUI.copy("x")
+		uiServer.copy("x")
 	})
 	swapFromCopyBufferButton := widget.NewButton(CommandSwapFromCopyBuffer, func() {
-		testCaseUI.swapFromCopyBuffer("x", "xx")
+		uiServer.swapFromCopyBuffer("x", "xx")
 	})
 	cutButton := widget.NewButton(CommandCut, func() {
-		testCaseUI.cut("")
+		uiServer.cut("")
 	})
 	swapFromCutBufferButton := widget.NewButton(CommandSwapFromCutBuffer, func() {
-		testCaseUI.swapFromCutBuffer("x", "xx")
+		uiServer.swapFromCutBuffer("x", "xx")
 	})
 	undoLastCommandOnStackButton := widget.NewButton(CommandUndoLastCommandOnStack, func() {
-		testCaseUI.undoLastCommandOnStack()
+		uiServer.undoLastCommandOnStack()
 	})
 	undoUndoLastCommandOnStackButton := widget.NewButton(CommandUndoUndoLastCommandOnStack, func() {
-		testCaseUI.undoUndoLastCommandOnStack()
+		uiServer.undoUndoLastCommandOnStack()
 	})
 
 	testCaseCommandsUIObject_temp := container.New(
@@ -103,7 +103,7 @@ func (testCaseUI *testCaseUIStruct) createTestCaseCommandsUI() (testCaseCommands
 }
 
 // NewTestCase()
-func (testCaseUI *testCaseUIStruct) newTestCase() {
+func (uiServer *UIServerStruct) newTestCase() {
 
 	fmt.Printf("NewTestCase()\n")
 	bindedCommandListData.Prepend(CommandNewTestcase)
@@ -111,7 +111,7 @@ func (testCaseUI *testCaseUIStruct) newTestCase() {
 }
 
 // Remove(ElementToBeRemoved)
-func (testCaseUI *testCaseUIStruct) remove(elementToBeRemoved string) {
+func (uiServer *UIServerStruct) remove(elementToBeRemoved string) {
 
 	fmt.Printf("Remove(ElementToBeRemoved='%s')\n", elementToBeRemoved)
 	bindedCommandListData.Prepend(CommandRemoveElementFromTestcase)
@@ -119,7 +119,7 @@ func (testCaseUI *testCaseUIStruct) remove(elementToBeRemoved string) {
 }
 
 // SwapFromNew(ElementTobeSwappedOut, NewElementTobeSwappedIn)
-func (testCaseUI *testCaseUIStruct) swapFromNew(elementTobeSwappedOut string, newElementTobeSwappedIn string) {
+func (uiServer *UIServerStruct) swapFromNew(elementTobeSwappedOut string, newElementTobeSwappedIn string) {
 
 	fmt.Printf("SwapFromNew(ElementTobeSwappedOut='%s', NewElementTobeSwappedIn='%s')\n", elementTobeSwappedOut, newElementTobeSwappedIn)
 	bindedCommandListData.Prepend(CommandSwapFromNewComponent)
@@ -127,7 +127,7 @@ func (testCaseUI *testCaseUIStruct) swapFromNew(elementTobeSwappedOut string, ne
 }
 
 // Copy(Element)
-func (testCaseUI *testCaseUIStruct) copy(element string) {
+func (uiServer *UIServerStruct) copy(element string) {
 
 	fmt.Printf("Copy(Element='%s')\n", element)
 	bindedCommandListData.Prepend(CommandCopy)
@@ -135,7 +135,7 @@ func (testCaseUI *testCaseUIStruct) copy(element string) {
 }
 
 // SwapFromCopyBuffer(ElementTobeSwappedOut, CopyBufferElementTobeSwappedIn)
-func (testCaseUI *testCaseUIStruct) swapFromCopyBuffer(elementTobeSwappedOut string, copyBufferElementTobeSwappedIn string) {
+func (uiServer *UIServerStruct) swapFromCopyBuffer(elementTobeSwappedOut string, copyBufferElementTobeSwappedIn string) {
 
 	fmt.Printf("SwapFromCopyBuffer(ElementTobeSwappedOut='%s', CopyBufferElementTobeSwappedIn='%s')\n", elementTobeSwappedOut, copyBufferElementTobeSwappedIn)
 	bindedCommandListData.Prepend(CommandSwapFromCopyBuffer)
@@ -143,7 +143,7 @@ func (testCaseUI *testCaseUIStruct) swapFromCopyBuffer(elementTobeSwappedOut str
 }
 
 // Cut(Element)
-func (testCaseUI *testCaseUIStruct) cut(element string) {
+func (uiServer *UIServerStruct) cut(element string) {
 
 	fmt.Printf("Cut(Element='%s')\n", element)
 	bindedCommandListData.Prepend(CommandCut)
@@ -151,7 +151,7 @@ func (testCaseUI *testCaseUIStruct) cut(element string) {
 }
 
 // SwapFromCutBuffer(ElementTobeSwappedOut, CutBufferElementTobeSwappedIn)
-func (testCaseUI *testCaseUIStruct) swapFromCutBuffer(elementTobeSwappedOut string, cutBufferElementTobeSwappedIn string) {
+func (uiServer *UIServerStruct) swapFromCutBuffer(elementTobeSwappedOut string, cutBufferElementTobeSwappedIn string) {
 
 	fmt.Printf("SwapFromCutBuffer(ElementTobeSwappedOut='%s', CutBufferElementTobeSwappedIn='%s')\n", elementTobeSwappedOut, cutBufferElementTobeSwappedIn)
 	bindedCommandListData.Prepend(CommandSwapFromCutBuffer)
@@ -159,7 +159,7 @@ func (testCaseUI *testCaseUIStruct) swapFromCutBuffer(elementTobeSwappedOut stri
 }
 
 // UndoLastCommandOnStack()
-func (testCaseUI *testCaseUIStruct) undoLastCommandOnStack() {
+func (uiServer *UIServerStruct) undoLastCommandOnStack() {
 
 	fmt.Printf("UndoLastCommandOnStack()\n")
 	bindedCommandListData.Prepend(CommandUndoLastCommandOnStack)
@@ -167,7 +167,7 @@ func (testCaseUI *testCaseUIStruct) undoLastCommandOnStack() {
 }
 
 // UndoUndoLastCommandOnStack()
-func (testCaseUI *testCaseUIStruct) undoUndoLastCommandOnStack() {
+func (uiServer *UIServerStruct) undoUndoLastCommandOnStack() {
 
 	fmt.Printf("UndoUndoLastCommandOnStack()\n")
 	bindedCommandListData.Prepend(CommandUndoUndoLastCommandOnStack)

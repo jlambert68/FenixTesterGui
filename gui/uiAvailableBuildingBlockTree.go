@@ -1,9 +1,11 @@
 package gui
 
 import (
+	"FenixTesterGui/grpc_out"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
+	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"time"
 )
 
@@ -74,5 +76,15 @@ func makeTreeUI() {
 			//}
 		},
 	}
+
+}
+
+// Load all Available Building Blocks from Gui-server
+func (uiServer *UIServerStruct) loadAvailableBuildingBlocksFromServer() {
+
+	var fenixGuiTestCaseBuilderServerGrpcApi *fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage
+	fenixGuiTestCaseBuilderServerGrpcApi = grpc_out.GrpcOut.SendGetTestInstructionsAndTestContainers("s41797")
+
+	fmt.Println(fenixGuiTestCaseBuilderServerGrpcApi)
 
 }

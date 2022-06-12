@@ -43,7 +43,7 @@ func makeCommandStackUI() {
 	commandStackListUI.OnSelected = func(id widget.ListItemID) {
 		commandStackListUI.Unselect(id)
 		d, _ := bindedCommandListData.GetValue(id)
-		w := myTestCase.fyneApp.NewWindow("Edit Data")
+		w := myUIServer.fyneApp.NewWindow("Edit Data")
 
 		itemName := widget.NewEntry()
 		itemName.Text = d

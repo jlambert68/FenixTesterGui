@@ -1,6 +1,7 @@
 package gui
 
 import (
+	"FenixTesterGui/grpc_out"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -13,6 +14,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+/*
 type testCaseUIStruct struct {
 	//current *note
 	//notes   *notelist
@@ -24,9 +26,12 @@ type testCaseUIStruct struct {
 	testcase     *widget.Label
 	commandStack *widget.List
 	fyneApp      fyne.App
+	logger       *logrus.Logger
 }
 
-var myTestCase *testCaseUIStruct
+
+*/
+//var myTestCase *testCaseUIStruct
 
 var image *canvas.Image
 
@@ -38,11 +43,19 @@ func (uiServer *UIServerStruct) StartUIServer() {
 	uiServer.logger.WithFields(logrus.Fields{
 		"id": "a4d2716f-ded1-4062-bffb-fd0c03d69ca3",
 	}).Debug("Starting UI server")
-	myTestCase = &testCaseUIStruct{}
+	/*
+		myTestCase = &testCaseUIStruct{
+			logger: myUIServer.logger,
+		}
 
-	myTestCase.fyneApp = app.NewWithID("se.fenix.testcasebuilder")
+	*/
+	myUIServer = UIServerStruct{}
+
+	grpc_out.GrpcOut.SetLogger(myUIServer.logger)
+
+	myUIServer.fyneApp = app.NewWithID("se.fenix.testcasebuilder")
 	//fyneApp.Settings().SetTheme(&myTheme{})
-	fyneMasterWindow := myTestCase.fyneApp.NewWindow("Fenix TestCase Builder")
+	fyneMasterWindow := myUIServer.fyneApp.NewWindow("Fenix TestCase Builder")
 	fyneMasterWindow.SetMaster()
 
 	// Initate and create the tree structure for available building blocks, of TestInstructions and TestInstructionContainers
@@ -52,20 +65,23 @@ func (uiServer *UIServerStruct) StartUIServer() {
 	makeCommandStackUI()
 
 	// Create fyneApp window for the Command Stack
-	commandStackWindow := myTestCase.fyneApp.NewWindow("Command Stack")
+	commandStackWindow := myUIServer.fyneApp.NewWindow("Command Stack")
 	commandStackWindow.SetContent(commandStackListUI)
 	commandStackWindow.Show()
 
 	//list := &notelist{pref: fyneApp.Preferences()}
 	//list.load()
 	//builderUI := &testCaseUIStruct{notes: list}
-	builderUI := &testCaseUIStruct{
-		content:      nil,
-		tree:         nil,
-		testcase:     nil,
-		commandStack: nil,
-	}
-	fyneMasterWindow.SetContent(builderUI.loadUI())
+	/*
+		builderUI := &testCaseUIStruct{
+			content:      nil,
+			tree:         nil,
+			testcase:     nil,
+			commandStack: nil,
+		}
+
+	*/
+	fyneMasterWindow.SetContent(myUIServer.loadUI())
 
 	//fyneMasterWindow.SetContent(widget.NewLabel("Fenix TestCase Builder"))
 	//builderUI.registerKeys(fyneMasterWindow)
@@ -112,15 +128,15 @@ func (m *CustomButton) MouseOut() {
 	image.Refresh()
 }
 
-func (testCaseUI *testCaseUIStruct) loadUI() fyne.CanvasObject {
+func (uiServer *UIServerStruct) loadUI() fyne.CanvasObject {
 
 	var _ desktop.Hoverable = (*CustomButton)(nil)
 
-	testCaseUI.tree = widget.NewLabel("Available TestInstructions")
+	uiServer.tree = widget.NewLabel("Available TestInstructions")
 	//testCaseUI.testcase = widget.NewLabel("TestCase Builder Area")
 	//testCaseUI.treeContainer = container.New(layout.NewHBoxLayout(), treeCanvasObject, layout.NewSpacer())
-	testCaseUI.content = widget.NewMultiLineEntry()
-	testCaseUI.content.SetText("Here you will build the TestCase")
+	uiServer.content = widget.NewMultiLineEntry()
+	uiServer.content.SetText("Here you will build the TestCase")
 	/*
 		myButton := widget.Button{
 			DisableableWidget: widget.DisableableWidget{},
@@ -136,9 +152,9 @@ func (testCaseUI *testCaseUIStruct) loadUI() fyne.CanvasObject {
 
 	//text1 := canvas.NewText("Hello", color.White)
 
-	treeSide := testCaseUI.loadCompleteAvailableTestCaseBuildingBlocksUI()
+	treeSide := uiServer.loadCompleteAvailableTestCaseBuildingBlocksUI()
 
-	testCaseSide := testCaseUI.loadCompleteCurrentTestCaseUI()
+	testCaseSide := uiServer.loadCompleteCurrentTestCaseUI()
 
 	uiStructureContainer := newAdaptiveSplit(treeSide, testCaseSide)
 
@@ -146,12 +162,13 @@ func (testCaseUI *testCaseUIStruct) loadUI() fyne.CanvasObject {
 }
 
 // Loads available TestInstructions and TestInstructionContainers and return the UI Bar and UI Tree-structure for them
-func (testCaseUI *testCaseUIStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() (completeAvailableTestCaseBuildingBlocksUI fyne.CanvasObject) {
+func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() (completeAvailableTestCaseBuildingBlocksUI fyne.CanvasObject) {
 
 	// Create toolbar for Available TestCase BuildingBlock area
 	availableAvailableBuildingBlocksUIBar := widget.NewToolbar(
 		widget.NewToolbarAction(theme.ContentRedoIcon(), func() {
 			fmt.Println("Reload Available Components from GuiServer")
+			uiServer.loadAvailableBuildingBlocksFromServer()
 		}),
 		widget.NewToolbarAction(theme.ContentAddIcon(), func() {
 			fmt.Println("Add to Pinned")
@@ -162,11 +179,11 @@ func (testCaseUI *testCaseUIStruct) loadCompleteAvailableTestCaseBuildingBlocksU
 	)
 
 	// Load the Available TestCase BuildingBlocks TreeUI
-	availableTestCaseBuildingBlocksTreeUI := testCaseUI.loadAvailableTestCaseBuildingBlocksTreeUI()
+	availableTestCaseBuildingBlocksTreeUI := uiServer.loadAvailableTestCaseBuildingBlocksTreeUI()
 
 	// Create the complete TestCase BuildingBlocks UI area
 	availableTestCaseBuildingBlocksBorderedLayout := layout.NewBorderLayout(availableAvailableBuildingBlocksUIBar, nil, nil, nil)
-	tempcompleteAvailableTestCaseBuildingBlocksUI := container.New(availableTestCaseBuildingBlocksBorderedLayout, availableAvailableBuildingBlocksUIBar, container.NewVSplit(availableTestCaseBuildingBlocksTreeUI, testCaseUI.createTestCaseCommandsUI()))
+	tempcompleteAvailableTestCaseBuildingBlocksUI := container.New(availableTestCaseBuildingBlocksBorderedLayout, availableAvailableBuildingBlocksUIBar, container.NewVSplit(availableTestCaseBuildingBlocksTreeUI, uiServer.createTestCaseCommandsUI()))
 	//tempcompleteAvailableTestCaseBuildingBlocksUI.MinSize(fyne.NewSize(float32(300), float32(400))
 
 	completeAvailableTestCaseBuildingBlocksUI = tempcompleteAvailableTestCaseBuildingBlocksUI //container.New(layout.NewVBoxLayout(), tempcompleteAvailableTestCaseBuildingBlocksUI) //, layout.NewSpacer(), testCaseUI.createTestCaseCommandsUI())
@@ -175,7 +192,7 @@ func (testCaseUI *testCaseUIStruct) loadCompleteAvailableTestCaseBuildingBlocksU
 }
 
 // Loads current BuildingBlocksTree UI-structure
-func (testCaseUI *testCaseUIStruct) loadAvailableTestCaseBuildingBlocksTreeUI() (availableTestCaseBuildingBlocksTreeUI fyne.CanvasObject) {
+func (uiServer *UIServerStruct) loadAvailableTestCaseBuildingBlocksTreeUI() (availableTestCaseBuildingBlocksTreeUI fyne.CanvasObject) {
 
 	//availableTestCaseBuildingBlocksTreeUI = widget.NewLabel("'currentTestCaseModelAreaUI'")
 	availableTestCaseBuildingBlocksTreeUI = tree
@@ -184,7 +201,7 @@ func (testCaseUI *testCaseUIStruct) loadAvailableTestCaseBuildingBlocksTreeUI() 
 }
 
 // Loads current TestCase return the UI-structure for it
-func (testCaseUI *testCaseUIStruct) loadCompleteCurrentTestCaseUI() (completeCurrentTestCaseUIContainer fyne.CanvasObject) {
+func (uiServer *UIServerStruct) loadCompleteCurrentTestCaseUI() (completeCurrentTestCaseUIContainer fyne.CanvasObject) {
 
 	// Create toolbar for TestCase area
 	testCaseToolUIBar := widget.NewToolbar(
@@ -203,10 +220,10 @@ func (testCaseUI *testCaseUIStruct) loadCompleteCurrentTestCaseUI() (completeCur
 	)
 
 	// Load the TestCase model UI area
-	currentTestCaseModelAreaUI := testCaseUI.loadCurrentTestCaseModelAreaUI()
+	currentTestCaseModelAreaUI := uiServer.loadCurrentTestCaseModelAreaUI()
 
 	// Load the TestCase attributes UI area
-	currentTestCaseAttributesAreaUI := testCaseUI.loadCurrentTestCaseAttributesAreaUI()
+	currentTestCaseAttributesAreaUI := uiServer.loadCurrentTestCaseAttributesAreaUI()
 
 	// Create the UI area for both TestCase model UI and TestCase attributes UI
 	testCaseAdaptiveSplitLayoutContainer := newAdaptiveSplit(currentTestCaseModelAreaUI, currentTestCaseAttributesAreaUI)
@@ -219,7 +236,7 @@ func (testCaseUI *testCaseUIStruct) loadCompleteCurrentTestCaseUI() (completeCur
 }
 
 // Loads current TestCase model and return the UI-structure for it
-func (testCaseUI *testCaseUIStruct) loadCurrentTestCaseModelAreaUI() (currentTestCaseModelAreaUI fyne.CanvasObject) {
+func (uiServer *UIServerStruct) loadCurrentTestCaseModelAreaUI() (currentTestCaseModelAreaUI fyne.CanvasObject) {
 
 	currentTestCaseModelAreaUI = widget.NewLabel("'currentTestCaseModelAreaUI'")
 
@@ -227,7 +244,7 @@ func (testCaseUI *testCaseUIStruct) loadCurrentTestCaseModelAreaUI() (currentTes
 }
 
 // Loads current TestCase attributes and return the UI-structure for it
-func (testCaseUI *testCaseUIStruct) loadCurrentTestCaseAttributesAreaUI() (currentTestCaseAttributesAreaUI fyne.CanvasObject) {
+func (uiServer *UIServerStruct) loadCurrentTestCaseAttributesAreaUI() (currentTestCaseAttributesAreaUI fyne.CanvasObject) {
 
 	currentTestCaseAttributesAreaUI = widget.NewLabel("'currentTestCaseAttributesAreaUI'")
 

@@ -10,20 +10,34 @@ import (
 
 var commandStackList []string
 var commandStackListUI *widget.List
+var bindedCommandListData binding.StringList
 
 func makeCommandStackUI() {
 
 	commandStackList = []string{"MyValue 1", "MyValue 2", "MyValue 3"}
 
-	bindedCommandListData := binding.NewStringList()
+	bindedCommandListData = binding.NewStringList()
 	bindedCommandListData.Set(commandStackList)
 
-	commandStackListUI = widget.NewListWithData(bindedCommandListData,
+	commandStackListUI = widget.NewListWithData(
+		// Data to bind
+		bindedCommandListData,
+
+		// CreateItem
 		func() fyne.CanvasObject {
-			return widget.NewLabel("template")
+			//return widget.NewLabel("template")
+
+			return container.NewVBox(
+				widget.NewLabel("template"),
+				widget.NewEntry(),
+			)
+
 		},
+
+		// UpdateItem
 		func(i binding.DataItem, o fyne.CanvasObject) {
-			o.(*widget.Label).Bind(i.(binding.String))
+			//o.(*widget.Label).Bind(i.(binding.String))
+			o.(*fyne.Container).Objects[0].(*widget.Label).Bind(i.(binding.String))
 		})
 
 	commandStackListUI.OnSelected = func(id widget.ListItemID) {

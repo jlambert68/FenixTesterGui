@@ -106,6 +106,7 @@ func (testCaseUI *testCaseUIStruct) createTestCaseCommandsUI() (testCaseCommands
 func (testCaseUI *testCaseUIStruct) newTestCase() {
 
 	fmt.Printf("NewTestCase()\n")
+	bindedCommandListData.Prepend(CommandNewTestcase)
 
 }
 
@@ -113,6 +114,7 @@ func (testCaseUI *testCaseUIStruct) newTestCase() {
 func (testCaseUI *testCaseUIStruct) remove(elementToBeRemoved string) {
 
 	fmt.Printf("Remove(ElementToBeRemoved='%s')\n", elementToBeRemoved)
+	bindedCommandListData.Prepend(CommandRemoveElementFromTestcase)
 
 }
 
@@ -120,6 +122,7 @@ func (testCaseUI *testCaseUIStruct) remove(elementToBeRemoved string) {
 func (testCaseUI *testCaseUIStruct) swapFromNew(elementTobeSwappedOut string, newElementTobeSwappedIn string) {
 
 	fmt.Printf("SwapFromNew(ElementTobeSwappedOut='%s', NewElementTobeSwappedIn='%s')\n", elementTobeSwappedOut, newElementTobeSwappedIn)
+	bindedCommandListData.Prepend(CommandSwapFromNewComponent)
 
 }
 
@@ -127,6 +130,7 @@ func (testCaseUI *testCaseUIStruct) swapFromNew(elementTobeSwappedOut string, ne
 func (testCaseUI *testCaseUIStruct) copy(element string) {
 
 	fmt.Printf("Copy(Element='%s')\n", element)
+	bindedCommandListData.Prepend(CommandCopy)
 
 }
 
@@ -134,6 +138,7 @@ func (testCaseUI *testCaseUIStruct) copy(element string) {
 func (testCaseUI *testCaseUIStruct) swapFromCopyBuffer(elementTobeSwappedOut string, copyBufferElementTobeSwappedIn string) {
 
 	fmt.Printf("SwapFromCopyBuffer(ElementTobeSwappedOut='%s', CopyBufferElementTobeSwappedIn='%s')\n", elementTobeSwappedOut, copyBufferElementTobeSwappedIn)
+	bindedCommandListData.Prepend(CommandSwapFromCopyBuffer)
 
 }
 
@@ -141,6 +146,7 @@ func (testCaseUI *testCaseUIStruct) swapFromCopyBuffer(elementTobeSwappedOut str
 func (testCaseUI *testCaseUIStruct) cut(element string) {
 
 	fmt.Printf("Cut(Element='%s')\n", element)
+	bindedCommandListData.Prepend(CommandCut)
 
 }
 
@@ -148,6 +154,7 @@ func (testCaseUI *testCaseUIStruct) cut(element string) {
 func (testCaseUI *testCaseUIStruct) swapFromCutBuffer(elementTobeSwappedOut string, cutBufferElementTobeSwappedIn string) {
 
 	fmt.Printf("SwapFromCutBuffer(ElementTobeSwappedOut='%s', CutBufferElementTobeSwappedIn='%s')\n", elementTobeSwappedOut, cutBufferElementTobeSwappedIn)
+	bindedCommandListData.Prepend(CommandSwapFromCutBuffer)
 
 }
 
@@ -155,6 +162,7 @@ func (testCaseUI *testCaseUIStruct) swapFromCutBuffer(elementTobeSwappedOut stri
 func (testCaseUI *testCaseUIStruct) undoLastCommandOnStack() {
 
 	fmt.Printf("UndoLastCommandOnStack()\n")
+	bindedCommandListData.Prepend(CommandUndoLastCommandOnStack)
 
 }
 
@@ -162,5 +170,6 @@ func (testCaseUI *testCaseUIStruct) undoLastCommandOnStack() {
 func (testCaseUI *testCaseUIStruct) undoUndoLastCommandOnStack() {
 
 	fmt.Printf("UndoUndoLastCommandOnStack()\n")
+	bindedCommandListData.Prepend(CommandUndoUndoLastCommandOnStack)
 
 }

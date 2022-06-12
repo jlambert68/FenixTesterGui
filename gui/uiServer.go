@@ -20,40 +20,59 @@ type testCaseUIStruct struct {
 	content *widget.Entry
 	//list    *widget.List
 
-	tree     *widget.Label // *widget.Tree
-	testcase *widget.Label
+	tree         *widget.Label // *widget.Tree
+	testcase     *widget.Label
+	commandStack *widget.List
+	fyneApp      fyne.App
 }
+
+var myTestCase *testCaseUIStruct
 
 var image *canvas.Image
 
-// Main UI server module
-func (uiServerStruct *UIServerStruct) StartUIServer() {
+var myUIServer UIServerStruct
 
-	uiServerStruct.logger.WithFields(logrus.Fields{
+// Main UI server module
+func (uiServer *UIServerStruct) StartUIServer() {
+
+	uiServer.logger.WithFields(logrus.Fields{
 		"id": "a4d2716f-ded1-4062-bffb-fd0c03d69ca3",
 	}).Debug("Starting UI server")
+	myTestCase = &testCaseUIStruct{}
 
-	a := app.NewWithID("se.fenix.testcasebuilder")
-	//a.Settings().SetTheme(&myTheme{})
-	w := a.NewWindow("Fenix TestCase Builder")
+	myTestCase.fyneApp = app.NewWithID("se.fenix.testcasebuilder")
+	//fyneApp.Settings().SetTheme(&myTheme{})
+	fyneMasterWindow := myTestCase.fyneApp.NewWindow("Fenix TestCase Builder")
+	fyneMasterWindow.SetMaster()
 
-	makeTree()
+	// Initate and create the tree structure for available building blocks, of TestInstructions and TestInstructionContainers
+	makeTreeUI()
 
-	//list := &notelist{pref: a.Preferences()}
+	// Initiate the commandStack which describes how fyneApp TestCase is constructed
+	makeCommandStackUI()
+
+	// Create fyneApp window for the Command Stack
+	commandStackWindow := myTestCase.fyneApp.NewWindow("Command Stack")
+	commandStackWindow.SetContent(commandStackListUI)
+	commandStackWindow.Show()
+
+	//list := &notelist{pref: fyneApp.Preferences()}
 	//list.load()
 	//builderUI := &testCaseUIStruct{notes: list}
 	builderUI := &testCaseUIStruct{
-		content:  nil,
-		tree:     nil,
-		testcase: nil,
+		content:      nil,
+		tree:         nil,
+		testcase:     nil,
+		commandStack: nil,
 	}
-	w.SetContent(builderUI.loadUI())
+	fyneMasterWindow.SetContent(builderUI.loadUI())
 
-	//w.SetContent(widget.NewLabel("Fenix TestCase Builder"))
-	//builderUI.registerKeys(w)
+	//fyneMasterWindow.SetContent(widget.NewLabel("Fenix TestCase Builder"))
+	//builderUI.registerKeys(fyneMasterWindow)
 
-	w.Resize(fyne.NewSize(400, 320))
-	w.ShowAndRun()
+	fyneMasterWindow.Resize(fyne.NewSize(400, 320))
+
+	fyneMasterWindow.ShowAndRun()
 
 }
 

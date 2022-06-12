@@ -12,7 +12,7 @@ import (
 var list map[string][]string
 var tree *widget.Tree
 
-func makeTree() {
+func makeTreeUI() {
 	list = map[string][]string{
 		"":  {"A"},
 		"A": {"B", "D"},

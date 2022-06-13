@@ -12,7 +12,7 @@ var commandStackList []string
 var commandStackListUI *widget.List
 var bindedCommandListData binding.StringList
 
-func makeCommandStackUI() {
+func (uiServer *UIServerStruct) makeCommandStackUI() {
 
 	commandStackList = []string{"MyValue 1", "MyValue 2", "MyValue 3"}
 
@@ -43,7 +43,7 @@ func makeCommandStackUI() {
 	commandStackListUI.OnSelected = func(id widget.ListItemID) {
 		commandStackListUI.Unselect(id)
 		d, _ := bindedCommandListData.GetValue(id)
-		w := myUIServer.fyneApp.NewWindow("Edit Data")
+		w := uiServer.fyneApp.NewWindow("Edit Data")
 
 		itemName := widget.NewEntry()
 		itemName.Text = d

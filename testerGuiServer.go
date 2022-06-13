@@ -74,6 +74,7 @@ func fenixGuiBuilderServerMain() {
 
 	// Set dial address to GuiServer
 	fenixTesterGuiObject.subPackageObjects.restAPI.SetDialAddressString(fenixGuiBuilderServerAddressToDial)
+	fenixTesterGuiObject.subPackageObjects.uiServer.SetDialAddressString(fenixGuiBuilderServerAddressToDial)
 
 	// Clean up when leaving. Is placed after logger because shutdown logs information
 	defer cleanup()
@@ -85,6 +86,7 @@ func fenixGuiBuilderServerMain() {
 	go fenixTesterGuiObject.subPackageObjects.grpcIn.InitGrpcServer()
 
 	// Start UI Server
+	//fenixTesterGuiObject.subPackageObjects.uiServer. StartUIServer()
 	fenixTesterGuiObject.subPackageObjects.uiServer.StartUIServer()
 
 }

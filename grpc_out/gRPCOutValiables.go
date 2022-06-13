@@ -11,7 +11,7 @@ type GRPCOutStruct struct {
 	fenixGuiBuilderServerAddressToDial string
 }
 
-var GrpcOut GRPCOutStruct
+var grpcOutVaraible GRPCOutStruct
 
 var (
 	// Standard gRPC Clientr

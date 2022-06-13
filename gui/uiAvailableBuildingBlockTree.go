@@ -1,7 +1,6 @@
 package gui
 
 import (
-	"FenixTesterGui/grpc_out"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
@@ -14,7 +13,7 @@ import (
 var list map[string][]string
 var tree *widget.Tree
 
-func makeTreeUI() {
+func (uiServer *UIServerStruct) makeTreeUI() {
 	list = map[string][]string{
 		"":  {"A"},
 		"A": {"B", "D"},
@@ -83,7 +82,9 @@ func makeTreeUI() {
 func (uiServer *UIServerStruct) loadAvailableBuildingBlocksFromServer() {
 
 	var fenixGuiTestCaseBuilderServerGrpcApi *fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage
-	fenixGuiTestCaseBuilderServerGrpcApi = grpc_out.GrpcOut.SendGetTestInstructionsAndTestContainers("s41797")
+
+	//grpcOut := grpc_out.GRPCOutStruct{}
+	fenixGuiTestCaseBuilderServerGrpcApi = uiServer.grpcOut.SendGetTestInstructionsAndTestContainers("s41797")
 
 	fmt.Println(fenixGuiTestCaseBuilderServerGrpcApi)
 

@@ -1,7 +1,6 @@
 package gui
 
 import (
-	"FenixTesterGui/grpc_out"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -35,11 +34,16 @@ type testCaseUIStruct struct {
 
 var image *canvas.Image
 
-var myUIServer UIServerStruct
-
 // Main UI server module
 func (uiServer *UIServerStruct) StartUIServer() {
 
+	/*
+		myUIServer = UIServerStruct{
+			logger:  callersLoggerReference,
+			grpcOut: grpc_out.GRPCOutStruct{Logger: callersLoggerReference},
+		}
+
+	*/
 	uiServer.logger.WithFields(logrus.Fields{
 		"id": "a4d2716f-ded1-4062-bffb-fd0c03d69ca3",
 	}).Debug("Starting UI server")
@@ -49,23 +53,28 @@ func (uiServer *UIServerStruct) StartUIServer() {
 		}
 
 	*/
-	myUIServer = UIServerStruct{}
+	//myUIServer = UIServerStruct{}
 
-	grpc_out.GrpcOut.SetLogger(myUIServer.logger)
+	//var grpcOut grpc_out.GRPCOutStruct
+	// myUIServer.grpcOut.SetLogger(myUIServer.logger)
 
-	myUIServer.fyneApp = app.NewWithID("se.fenix.testcasebuilder")
+	// Add/Forward variables to packages to be used later
+	uiServer.grpcOut.SetLogger(uiServer.logger)
+	uiServer.grpcOut.SetDialAddressString(uiServer.fenixGuiBuilderServerAddressToDial)
+
+	uiServer.fyneApp = app.NewWithID("se.fenix.testcasebuilder")
 	//fyneApp.Settings().SetTheme(&myTheme{})
-	fyneMasterWindow := myUIServer.fyneApp.NewWindow("Fenix TestCase Builder")
+	fyneMasterWindow := uiServer.fyneApp.NewWindow("Fenix TestCase Builder")
 	fyneMasterWindow.SetMaster()
 
 	// Initate and create the tree structure for available building blocks, of TestInstructions and TestInstructionContainers
-	makeTreeUI()
+	uiServer.makeTreeUI()
 
 	// Initiate the commandStack which describes how fyneApp TestCase is constructed
-	makeCommandStackUI()
+	uiServer.makeCommandStackUI()
 
 	// Create fyneApp window for the Command Stack
-	commandStackWindow := myUIServer.fyneApp.NewWindow("Command Stack")
+	commandStackWindow := uiServer.fyneApp.NewWindow("Command Stack")
 	commandStackWindow.SetContent(commandStackListUI)
 	commandStackWindow.Show()
 
@@ -81,7 +90,7 @@ func (uiServer *UIServerStruct) StartUIServer() {
 		}
 
 	*/
-	fyneMasterWindow.SetContent(myUIServer.loadUI())
+	fyneMasterWindow.SetContent(uiServer.loadUI())
 
 	//fyneMasterWindow.SetContent(widget.NewLabel("Fenix TestCase Builder"))
 	//builderUI.registerKeys(fyneMasterWindow)

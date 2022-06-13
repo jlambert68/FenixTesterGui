@@ -12,7 +12,7 @@ import (
 // ********************************************************************************************************************
 
 // SendAreYouAliveToFenixGuiBuilderServer - Check if FenixGuiBuilderServer is alive
-func (GrpcOut *GRPCOutStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse) {
+func (grpcOut *GRPCOutStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse) {
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -20,7 +20,7 @@ func (GrpcOut *GRPCOutStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMe
 	var err error
 
 	// Set up connection to Server
-	returnMessage = GrpcOut.setConnectionToFenixGuiBuilderServer()
+	returnMessage = grpcOut.setConnectionToFenixGuiBuilderServer()
 	// If there was no connection to backend then return that message
 	if returnMessage != nil {
 		return returnMessage
@@ -30,7 +30,7 @@ func (GrpcOut *GRPCOutStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMe
 	emptyParameter := &fenixGuiTestCaseBuilderServerGrpcApi.EmptyParameter{
 
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
-			GrpcOut.GetHighestFenixGuiServerProtoFileVersion()),
+			grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
 	}
 
 	// Do gRPC-call
@@ -38,7 +38,7 @@ func (GrpcOut *GRPCOutStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMe
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer func() {
 		//TODO Fixa så att denna inte görs som allt går bra
-		GrpcOut.logger.WithFields(logrus.Fields{
+		grpcOut.logger.WithFields(logrus.Fields{
 			"ID": "88bbfecb-b9a4-4e2f-92e0-cabbbdf75dc8",
 		}).Error("Running Defer Cancel function")
 		cancel()
@@ -67,14 +67,14 @@ func (GrpcOut *GRPCOutStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMe
 
 	// Shouldn't happen
 	if err != nil {
-		GrpcOut.logger.WithFields(logrus.Fields{
+		grpcOut.logger.WithFields(logrus.Fields{
 			"ID":    "818aaf0b-4112-4be4-97b9-21cc084c7b8b",
 			"error": err,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendAreYouAliveToFenixGuiBuilderServer'")
 
 	} else if returnMessage.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
-		GrpcOut.logger.WithFields(logrus.Fields{
+		grpcOut.logger.WithFields(logrus.Fields{
 			"ID":                                     "2ecbc800-2fb6-4e88-858d-a421b61c5529",
 			"Message from FenixTestGuiBuilderServer": returnMessage.Comments,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendAreYouAliveToFenixGuiBuilderServer'")
@@ -87,7 +87,7 @@ func (GrpcOut *GRPCOutStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMe
 // ********************************************************************************************************************
 
 // SendGetTestInstructionsAndTestContainers - Get available TestInstructions and TestInstructionContainers
-func (GrpcOut *GRPCOutStruct) SendGetTestInstructionsAndTestContainers(userId string) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage) {
+func (grpcOut *GRPCOutStruct) SendGetTestInstructionsAndTestContainers(userId string) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage) {
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -95,13 +95,13 @@ func (GrpcOut *GRPCOutStruct) SendGetTestInstructionsAndTestContainers(userId st
 	var err error
 
 	// Set up connection to Server
-	GrpcOut.setConnectionToFenixGuiBuilderServer()
+	grpcOut.setConnectionToFenixGuiBuilderServer()
 
 	// Create the request message
 	userIdentificationMessage := &fenixGuiTestCaseBuilderServerGrpcApi.UserIdentificationMessage{
 		UserId: userId,
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
-			GrpcOut.GetHighestFenixGuiServerProtoFileVersion()),
+			grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
 	}
 
 	// Do gRPC-call
@@ -109,7 +109,7 @@ func (GrpcOut *GRPCOutStruct) SendGetTestInstructionsAndTestContainers(userId st
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer func() {
 		//TODO Fixa så att denna inte görs som allt går bra
-		GrpcOut.logger.WithFields(logrus.Fields{
+		grpcOut.logger.WithFields(logrus.Fields{
 			"ID": "797c00e1-510d-4cbe-a48b-dc63828ecd7e",
 		}).Error("Running Defer Cancel function")
 		cancel()
@@ -144,14 +144,14 @@ func (GrpcOut *GRPCOutStruct) SendGetTestInstructionsAndTestContainers(userId st
 
 	// Shouldn't happen
 	if err != nil {
-		GrpcOut.logger.WithFields(logrus.Fields{
+		grpcOut.logger.WithFields(logrus.Fields{
 			"ID":    "d7235084-33e5-43a2-9fa7-dfb05ec6869e",
 			"error": err,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendGetTestInstructionsAndTestContainers'")
 
 	} else if returnMessage.AckNackResponse.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
-		GrpcOut.logger.WithFields(logrus.Fields{
+		grpcOut.logger.WithFields(logrus.Fields{
 			"ID":                                     "30e6f1ee-202a-47bf-a2c4-5066d0f8cf75",
 			"Message from FenixTestGuiBuilderServer": returnMessage.AckNackResponse.Comments,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendGetTestInstructionsAndTestContainers'")
@@ -162,7 +162,7 @@ func (GrpcOut *GRPCOutStruct) SendGetTestInstructionsAndTestContainers(userId st
 }
 
 // SendGetPinnedTestInstructionsAndTestContainers - Get pinned TestInstructions and TestInstructionContainers
-func (GrpcOut *GRPCOutStruct) SendGetPinnedTestInstructionsAndTestContainers(userId string) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage) {
+func (grpcOut *GRPCOutStruct) SendGetPinnedTestInstructionsAndTestContainers(userId string) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage) {
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -170,13 +170,13 @@ func (GrpcOut *GRPCOutStruct) SendGetPinnedTestInstructionsAndTestContainers(use
 	var err error
 
 	// Set up connection to Server
-	GrpcOut.setConnectionToFenixGuiBuilderServer()
+	grpcOut.setConnectionToFenixGuiBuilderServer()
 
 	// Create the request message
 	userIdentificationMessage := &fenixGuiTestCaseBuilderServerGrpcApi.UserIdentificationMessage{
 		UserId: userId,
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
-			GrpcOut.GetHighestFenixGuiServerProtoFileVersion()),
+			grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
 	}
 
 	// Do gRPC-call
@@ -184,7 +184,7 @@ func (GrpcOut *GRPCOutStruct) SendGetPinnedTestInstructionsAndTestContainers(use
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer func() {
 		//TODO Fixa så att denna inte görs som allt går bra
-		GrpcOut.logger.WithFields(logrus.Fields{
+		grpcOut.logger.WithFields(logrus.Fields{
 			"ID": "c5ba19bd-75ff-4366-818d-745d4d7f1a52",
 		}).Error("Running Defer Cancel function")
 		cancel()
@@ -219,14 +219,14 @@ func (GrpcOut *GRPCOutStruct) SendGetPinnedTestInstructionsAndTestContainers(use
 
 	// Shouldn't happen
 	if err != nil {
-		GrpcOut.logger.WithFields(logrus.Fields{
+		grpcOut.logger.WithFields(logrus.Fields{
 			"ID":    "7bff3257-a193-4d07-83aa-f106f6f734a0",
 			"error": err,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendGetPinnedTestInstructionsAndTestContainers'")
 
 	} else if returnMessage.AckNackResponse.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
-		GrpcOut.logger.WithFields(logrus.Fields{
+		grpcOut.logger.WithFields(logrus.Fields{
 			"ID":                                     "72f79764-2549-4ce7-867e-16cd0f414dff",
 			"Message from FenixTestGuiBuilderServer": returnMessage.AckNackResponse.Comments,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendGetPinnedTestInstructionsAndTestContainers'")
@@ -237,7 +237,7 @@ func (GrpcOut *GRPCOutStruct) SendGetPinnedTestInstructionsAndTestContainers(use
 }
 
 // SendSavePinnedTestInstructionsAndTestContainers - Save pinned TestInstructions and TestInstructionContainers
-func (GrpcOut *GRPCOutStruct) SendSavePinnedTestInstructionsAndTestContainers(pinnedTestInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.PinnedTestInstructionsAndTestContainersMessage) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse) {
+func (grpcOut *GRPCOutStruct) SendSavePinnedTestInstructionsAndTestContainers(pinnedTestInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.PinnedTestInstructionsAndTestContainersMessage) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse) {
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -245,14 +245,14 @@ func (GrpcOut *GRPCOutStruct) SendSavePinnedTestInstructionsAndTestContainers(pi
 	var err error
 
 	// Set up connection to Server
-	GrpcOut.setConnectionToFenixGuiBuilderServer()
+	grpcOut.setConnectionToFenixGuiBuilderServer()
 
 	// Do gRPC-call
 	//ctx := context.Background()
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer func() {
 		//TODO Fixa så att denna inte görs som allt går bra
-		GrpcOut.logger.WithFields(logrus.Fields{
+		grpcOut.logger.WithFields(logrus.Fields{
 			"ID": "2d688330-025f-492a-b318-bb9374bf76ec",
 		}).Error("Running Defer Cancel function")
 		cancel()
@@ -281,14 +281,14 @@ func (GrpcOut *GRPCOutStruct) SendSavePinnedTestInstructionsAndTestContainers(pi
 
 	// Shouldn't happen
 	if err != nil {
-		GrpcOut.logger.WithFields(logrus.Fields{
+		grpcOut.logger.WithFields(logrus.Fields{
 			"ID":    "b0743d37-cdda-425d-b391-74fb0ab0890e",
 			"error": err,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendSavePinnedTestInstructionsAndTestContainers'")
 
 	} else if returnMessage.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
-		GrpcOut.logger.WithFields(logrus.Fields{
+		grpcOut.logger.WithFields(logrus.Fields{
 			"ID":                                     "7aa6164b-9a51-47fb-8279-f4be52ebab3d",
 			"Message from FenixTestGuiBuilderServer": returnMessage.Comments,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendSavePinnedTestInstructionsAndTestContainers'")

@@ -27,7 +27,7 @@ func (restAPI *RestApiStruct) RestAPIServer() {
 	log.Println("starting API server")
 
 	// Setting logger in gRPC Out
-	restAPI.GrpcOut.SetLogger(restAPI.logger)
+	//restAPI.GrpcOut.SetLogger(restAPI.logger)
 
 	// Setting Dial address to call GuiServer on
 	restAPI.GrpcOut.SetDialAddressString(restAPI.fenixGuiBuilderServerAddressToDial)
@@ -249,11 +249,13 @@ func (restAPI *RestApiStruct) RestSendSavePinnedInstructionsAndTestInstructionCo
 	// Create gRPC -response variable
 	var response *fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse
 
+	grpcOut := grpc_out.GRPCOutStruct{}
+
 	// Create input message for gRPC-call
 	pinnedTestInstructionsAndTestContainersMessage := &fenixGuiTestCaseBuilderServerGrpcApi.PinnedTestInstructionsAndTestContainersMessage{
 		UserId: jsonData.UserId,
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
-			grpc_out.GrpcOut.GetHighestFenixGuiServerProtoFileVersion()),
+			grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
 		PinnedTestInstructionMessages:          jsonData.PinnedTestInstructionMessages,
 		PinnedTestInstructionContainerMessages: jsonData.PinnedTestInstructionContainerMessages,
 	}

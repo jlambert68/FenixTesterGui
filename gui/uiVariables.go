@@ -25,28 +25,45 @@ const (
 const numberOfCharactersfromUuid = 8
 
 type availableDomainStruct struct {
-	domainUuid string
-	domainName string
+	domainNameInUITree string
+	domainUuid         string
+	domainName         string
 }
 
 type availableTestInstructionTypeStruct struct {
-	testInstructionTypeUuid string
-	testInstructionTypeName string
+	testInstructionTypeNameInUITree string
+	domainUuid                      string
+	domainName                      string
+	testInstructionTypeUuid         string
+	testInstructionTypeName         string
 }
 
 type availableTestInstructionContainerTypeStruct struct {
-	testInstructionContainerTypeUuid string
-	testInstructionContainerTypeName string
+	testInstructionContainerTypeNameInUITree string
+	domainUuid                               string
+	domainName                               string
+	testInstructionContainerTypeUuid         string
+	testInstructionContainerTypeName         string
 }
 
 type availableTestInstructionStruct struct {
-	testInstructionUuid string
-	testInstructionName string
+	testInstructionNameInUITree string
+	domainUuid                  string
+	domainName                  string
+	testInstructionTypeUuid     string
+	testInstructionTypeName     string
+	testInstructionUuid         string
+	testInstructionName         string
 }
 
 type availableTestInstructionContainerStruct struct {
-	testInstructionContainerUuid string
-	testInstructionContainerName string
+	testInstructionContainerNameInUITree string
+	domainUuid                           string
+	domainName                           string
+	testInstructionContainerTypeUuid     string
+	testInstructionContainerTypeName     string
+	testInstructionContainerUuid         string
+	testInstructionContainerName         string
 }
 
 type availableBuildingBlocksModelStruct struct {

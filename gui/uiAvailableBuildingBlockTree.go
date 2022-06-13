@@ -5,6 +5,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/exp/maps"
 	"time"
 )
@@ -28,7 +29,13 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 		"":                            {TestCaseBuildingBlocksHeader},
 		TestCaseBuildingBlocksHeader:  {PinnedBuildingBlocksHeader, AvailableBuildingBlocksHeader},
 		PinnedBuildingBlocksHeader:    {"Nothing here, yet"},
-		AvailableBuildingBlocksHeader: {getAvailableDomainsFromModel()},
+		AvailableBuildingBlocksHeader: uiServer.getAvailableDomainTreeNamesFromModel(),
+	}
+
+	// Generate TestInstructionTypes per Domain
+	for _, domainTreeName := range uiServer.getAvailableDomainTreeNamesFromModel() {
+		availableBuildingBlock[domainTreeName] = uiServer.getAvailableTestInstructionTypeTreeNamesFromModel(domainTreeName)
+
 	}
 
 	/*
@@ -154,17 +161,31 @@ func (uiServer *UIServerStruct) generateUITreeNameForTestInstructionContainer(te
 	return treeName
 }
 
-// Extract all 'Domains' for the model tha underpins the UI Tree for Available Building Blocks
-func (uiServer *UIServerStruct) getAvailableDomainsFromModel() (availableDomainsList []string) {
+// Extract all 'Domains', with Names suited for Tree-model, for the model tha underpins the UI Tree for Available Building Blocks
+func (uiServer *UIServerStruct) getAvailableDomainTreeNamesFromModel() (availableDomainTreeNamesList []string) {
 
-	availableDomainKeys := maps.Keys(uiServer.availableBuildingBlocksModel.availableDomains)
+	availableDomainTreeNamesList = maps.Keys(uiServer.availableBuildingBlocksModel.availableDomains)
 
-	for key, key := range availableDomainKeys {
-		domains := uiServer.availableBuildingBlocksModel.availableDomains[key]
+	return availableDomainTreeNamesList
+}
 
-		uiServer.generateUITreeNameForDomain(domain)
+// Extract all 'Domains', with Names suited for Tree-model, for the model tha underpins the UI Tree for Available Building Blocks
+func (uiServer *UIServerStruct) getAvailableTestInstructionTypeTreeNamesFromModel(domainTreeName string) (availableTestInstructionTypeTreeNamesList []string) {
 
+	// Extract Domain UUID
+	domain := uiServer.availableBuildingBlocksModel.availableDomains[domainTreeName]
+	if len(domain) != 1 {
+		uiServer.logger.WithFields(logrus.Fields{
+			"id": "338f2048-d4c1-4ee3-9efb-38680de44f32",
+		}).Fatalln("Expected 'one' domain, but found '" + string(len(domain)) + "' domains")
+	}
+	domainUuid := domain[0].domainUuid
+
+	availableTestInstructionTypeTreeNamesList = maps.Keys(uiServer.availableBuildingBlocksModel.domainsTestInstructionTypes)
+
+	for _, domainsTestInstructionType := range availableTestInstructionTypeTreeNamesList {
+		uiServer.availableBuildingBlocksModel.domainsTestInstructionTypes[domainsTestInstructionType]
 	}
 
-	return availableDomains
+	return availableTestInstructionTypeTreeNamesList
 }

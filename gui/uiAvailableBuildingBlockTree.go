@@ -5,6 +5,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	"golang.org/x/exp/maps"
 	"time"
 )
 
@@ -21,6 +22,13 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 		"C": {"abc"},
 		"D": {"E"},
 		"E": {"F", "G"},
+	}
+
+	availableBuildingBlock := map[string][]string{
+		"":                            {TestCaseBuildingBlocksHeader},
+		TestCaseBuildingBlocksHeader:  {PinnedBuildingBlocksHeader, AvailableBuildingBlocksHeader},
+		PinnedBuildingBlocksHeader:    {"Nothing here, yet"},
+		AvailableBuildingBlocksHeader: {getAvailableDomainsFromModel()},
 	}
 
 	/*
@@ -88,4 +96,75 @@ func (uiServer *UIServerStruct) loadAvailableBuildingBlocksFromServer() {
 
 	fmt.Println(fenixGuiTestCaseBuilderServerGrpcApi)
 
+}
+
+// Generate UI Tree name for 'Domain' for Available Building Blocks
+func (uiServer *UIServerStruct) generateUITreeNameForDomain(domain availableDomainStruct) (treeName string) {
+
+	treeName = domain.domainName + " [" + domain.domainUuid[0:numberOfCharactersfromUuid-1] + "]"
+
+	return treeName
+}
+
+// Generate UI Tree name for 'TestInstructionsHeader' for Available Building Blocks
+func (uiServer *UIServerStruct) generateUITreeNameForTestInstructionsHeader(domain availableDomainStruct) (treeName string) {
+
+	treeName = TestInstructionsHeader + " [" + domain.domainUuid[0:numberOfCharactersfromUuid-1] + "]"
+
+	return treeName
+}
+
+// Generate UI Tree name for 'TestInstructionContainersHeader' for Available Building Blocks
+func (uiServer *UIServerStruct) generateUITreeNameForTestInstructionContainersHeader(domain availableDomainStruct) (treeName string) {
+
+	treeName = TestInstructionContainersHeader + " [" + domain.domainUuid[0:numberOfCharactersfromUuid-1] + "]"
+
+	return treeName
+}
+
+// Generate UI Tree name for 'TestInstructionTypes' for Available Building Blocks
+func (uiServer *UIServerStruct) generateUITreeNameForTestInstructionType(testInstructionType availableTestInstructionTypeStruct) (treeName string) {
+
+	treeName = testInstructionType.testInstructionTypeName + " [" + testInstructionType.testInstructionTypeUuid[0:numberOfCharactersfromUuid-1] + "]"
+
+	return treeName
+}
+
+// Generate UI Tree name for 'TestInstructionContainerTypes' for Available Building Blocks
+func (uiServer *UIServerStruct) generateUITreeNameForTestInstructionContainerType(testInstructionContainerType availableTestInstructionContainerTypeStruct) (treeName string) {
+
+	treeName = testInstructionContainerType.testInstructionContainerTypeName + " [" + testInstructionContainerType.testInstructionContainerTypeUuid[0:numberOfCharactersfromUuid-1] + "]"
+
+	return treeName
+}
+
+// Generate UI Tree name for 'TestInstructions' for Available Building Blocks
+func (uiServer *UIServerStruct) generateUITreeNameForTestInstruction(testInstruction availableTestInstructionStruct) (treeName string) {
+
+	treeName = testInstruction.testInstructionName + " [" + testInstruction.testInstructionUuid[0:numberOfCharactersfromUuid-1] + "]"
+
+	return treeName
+}
+
+// Generate UI Tree name for 'TestInstructionContainers' for Available Building Blocks
+func (uiServer *UIServerStruct) generateUITreeNameForTestInstructionContainer(testInstructionContainer availableTestInstructionContainerStruct) (treeName string) {
+
+	treeName = testInstructionContainer.testInstructionContainerName + " [" + testInstructionContainer.testInstructionContainerUuid[0:numberOfCharactersfromUuid-1] + "]"
+
+	return treeName
+}
+
+// Extract all 'Domains' for the model tha underpins the UI Tree for Available Building Blocks
+func (uiServer *UIServerStruct) getAvailableDomainsFromModel() (availableDomainsList []string) {
+
+	availableDomainKeys := maps.Keys(uiServer.availableBuildingBlocksModel.availableDomains)
+
+	for key, key := range availableDomainKeys {
+		domains := uiServer.availableBuildingBlocksModel.availableDomains[key]
+
+		uiServer.generateUITreeNameForDomain(domain)
+
+	}
+
+	return availableDomains
 }

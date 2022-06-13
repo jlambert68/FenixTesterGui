@@ -4,13 +4,13 @@ go 1.18
 
 require (
 	fyne.io/fyne/v2 v2.1.4
-	github.com/drognisep/fynetree v0.0.2
 	github.com/getlantern/systray v1.2.1
 	github.com/go-gota/gota v0.12.0
 	github.com/golang/gddo v0.0.0-20210115222349-20d68f94ee1f
 	github.com/gorilla/mux v1.8.0
 	github.com/jlambert68/FenixGrpcApi v0.0.0-20220527201333-20e0e8201791
 	github.com/sirupsen/logrus v1.8.1
+	golang.org/x/exp v0.0.0-20220609121020-a51bd0440498
 	golang.org/x/net v0.0.0-20220531201128-c960675eff93
 	golang.org/x/oauth2 v0.0.0-20220524215830-622c5d57e401
 	google.golang.org/api v0.82.0
@@ -19,7 +19,6 @@ require (
 
 require (
 	cloud.google.com/go/compute v1.6.1 // indirect
-	fyne.io/fyne v1.4.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fredbi/uri v0.0.0-20181227131451-3dcfdacbaaf3 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect

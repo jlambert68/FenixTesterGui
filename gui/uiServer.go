@@ -67,6 +67,9 @@ func (uiServer *UIServerStruct) StartUIServer() {
 	fyneMasterWindow := uiServer.fyneApp.NewWindow("Fenix TestCase Builder")
 	fyneMasterWindow.SetMaster()
 
+	// Get Available Building BLocks form GUI-server
+	uiServer.loadAvailableBuildingBlocksFromServer()
+
 	// Initate and create the tree structure for available building blocks, of TestInstructions and TestInstructionContainers
 	uiServer.makeTreeUI()
 

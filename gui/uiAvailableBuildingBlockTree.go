@@ -5,13 +5,13 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
-	"time"
 )
 
 //______________________________________________________________________________
 
 var list map[string][]string
 var tree *widget.Tree
+var availableBuildingBlock map[string][]string
 
 func (uiServer *UIServerStruct) makeTreeUI() {
 	list = map[string][]string{
@@ -23,7 +23,7 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 		"E": {"F", "G"},
 	}
 
-	availableBuildingBlock := map[string][]string{
+	availableBuildingBlock = map[string][]string{
 		"":                            {TestCaseBuildingBlocksHeader},
 		TestCaseBuildingBlocksHeader:  {PinnedBuildingBlocksHeader, AvailableBuildingBlocksHeader},
 		PinnedBuildingBlocksHeader:    {"Nothing here, yet"},
@@ -99,10 +99,10 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 
 	tree = &widget.Tree{
 		ChildUIDs: func(uid string) []string {
-			return list[uid]
+			return availableBuildingBlock[uid]
 		},
 		IsBranch: func(uid string) bool {
-			children, ok := list[uid]
+			children, ok := availableBuildingBlock[uid]
 
 			return ok && len(children) > 0
 		},
@@ -121,12 +121,12 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 					return
 				}
 			*/
-			obj.(*widget.Label).SetText(uid + time.Now().String())
+			obj.(*widget.Label).SetText(uid) // + time.Now().String())
 			fmt.Println(tree.Size())
 		},
 
 		OnSelected: func(uid string) {
-			fmt.Println(uid, list[uid])
+			fmt.Println(uid, availableBuildingBlock[uid])
 			//if t, ok := list[uid]; ok {
 			//	fmt.Println(tree.Root)
 			//	fmt.Println(t)
@@ -144,6 +144,8 @@ func (uiServer *UIServerStruct) loadAvailableBuildingBlocksFromServer() {
 
 	//grpcOut := grpc_out.GRPCOutStruct{}
 	fenixGuiTestCaseBuilderServerGrpcApi = uiServer.grpcOut.SendGetTestInstructionsAndTestContainers("s41797")
+
+	uiServer.loadModelWithAvailableBuildingBlocks(fenixGuiTestCaseBuilderServerGrpcApi)
 
 	fmt.Println(fenixGuiTestCaseBuilderServerGrpcApi)
 

@@ -127,10 +127,10 @@ type availableBuildingBlocksModelStruct struct {
 	*/
 
 	availableDomains                                        []availableDomainStruct
-	domainsTestInstructionTypes                             map[string][]availableTestInstructionTypeStruct          // map[#DomainUUID#]availableTestInstructionTypeStruct
-	domainsTestInstructionContainerTypes                    map[string][]availableTestInstructionContainerTypeStruct // map[#DomainUUID#]availableTestInstructionContainerTypeStruct
-	testInstructionTypesTestInstructions                    map[string][]availableTestInstructionStruct              // map[#TestInstructionTypeUUID#]"]availableTestInstructionStruct
-	testInstructionContainerTypesTestInstructionsContainers map[string][]availableTestInstructionContainerStruct     // map[#TestInstructionContainerTypeUUID#"]availableTestInstructionContainerTypeStruct
+	domainsTestInstructionTypes                             map[string][]availableTestInstructionTypeStruct          // map[#DomainUUID#][]availableTestInstructionTypeStruct
+	domainsTestInstructionContainerTypes                    map[string][]availableTestInstructionContainerTypeStruct // map[#DomainUUID#][]availableTestInstructionContainerTypeStruct
+	testInstructionTypesTestInstructions                    map[string][]availableTestInstructionStruct              // map[#TestInstructionTypeUUID#][]availableTestInstructionStruct
+	testInstructionContainerTypesTestInstructionsContainers map[string][]availableTestInstructionContainerStruct     // map[#TestInstructionContainerTypeUUID#"][]availableTestInstructionContainerTypeStruct
 }
 
 type UIServerStruct struct {

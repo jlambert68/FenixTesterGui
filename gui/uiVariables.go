@@ -74,18 +74,20 @@ type availableBuildingBlocksModelStruct struct {
 
 	//    +Available Building Blocks
 	//       +Domain Name 1 [a107bdd9]
-	//          +TestInstructionType 1 [b107bdd9]
-	//             TestInstruction 1 [c107bdd9]
-	//             TestInstruction 2 [d107bdd9]
-	//          +TestInstructionType 2 [b107bdd9]
-	//             TestInstruction 21 [c107bdd9]
-	//             TestInstruction 22 [d107bdd9]
-	//          +TestInstructionContainerType 1 [e107bdd9]
-	//             TestInstructionContainer 1 [f107bdd9]
-	//             TestInstructionContainer 2 [g107bdd9]
-	//          +TestInstructionContainerType 2 [e107bdd9]
-	//             TestInstructionContainer 21 [f107bdd9]
-	//             TestInstructionContainer 22 [g107bdd9]
+	//          +TestInstructions [a107bdd9]
+	//              +TestInstructionType 1 [b107bdd9]
+	//                 TestInstruction 1 [c107bdd9]
+	//                 TestInstruction 2 [d107bdd9]
+	//              +TestInstructionType 2 [b107bdd9]
+	//                 TestInstruction 21 [c107bdd9]
+	//                 TestInstruction 22 [d107bdd9]
+	//         +TestInstructionContainers [a107bdd9]
+	//            +TestInstructionContainerType 1 [e107bdd9]
+	//                TestInstructionContainer 1 [f107bdd9]
+	//                TestInstructionContainer 2 [g107bdd9]
+	//             +TestInstructionContainerType 2 [e107bdd9]
+	//                TestInstructionContainer 21 [f107bdd9]
+	//                TestInstructionContainer 22 [g107bdd9]
 	/*
 		   	list = map[string][]string{
 		   	"":  {TestCaseBuildingBlocksHeader},
@@ -124,11 +126,11 @@ type availableBuildingBlocksModelStruct struct {
 		   }
 	*/
 
-	availableDomains                                        map[string][]availableDomainStruct
-	domainsTestInstructionTypes                             map[string][]availableTestInstructionTypeStruct
-	domainsTestInstructionContainerTypes                    map[string][]availableTestInstructionContainerTypeStruct
-	testInstructionTypesTestInstructions                    map[string][]availableTestInstructionTypeStruct
-	testInstructionContainerTypesTestInstructionsContainers map[string][]availableTestInstructionContainerTypeStruct
+	availableDomains                                        []availableDomainStruct
+	domainsTestInstructionTypes                             map[string][]availableTestInstructionTypeStruct          // map[#DomainUUID#]availableTestInstructionTypeStruct
+	domainsTestInstructionContainerTypes                    map[string][]availableTestInstructionContainerTypeStruct // map[#DomainUUID#]availableTestInstructionContainerTypeStruct
+	testInstructionTypesTestInstructions                    map[string][]availableTestInstructionStruct              // map[#TestInstructionTypeUUID#]"]availableTestInstructionStruct
+	testInstructionContainerTypesTestInstructionsContainers map[string][]availableTestInstructionContainerStruct     // map[#TestInstructionContainerTypeUUID#"]availableTestInstructionContainerTypeStruct
 }
 
 type UIServerStruct struct {

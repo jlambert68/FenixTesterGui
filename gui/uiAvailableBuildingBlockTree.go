@@ -5,8 +5,6 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
-	"github.com/sirupsen/logrus"
-	"golang.org/x/exp/maps"
 	"time"
 )
 
@@ -32,10 +30,56 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 		AvailableBuildingBlocksHeader: uiServer.getAvailableDomainTreeNamesFromModel(),
 	}
 
-	// Generate TestInstructionTypes per Domain
-	for _, domainTreeName := range uiServer.getAvailableDomainTreeNamesFromModel() {
-		availableBuildingBlock[domainTreeName] = uiServer.getAvailableTestInstructionTypeTreeNamesFromModel(domainTreeName)
+	// Loop all Domains
+	for _, domain := range uiServer.availableBuildingBlocksModel.availableDomains {
+		// For each domain add TestInstructionHeaderName and TestInstructionContainerHeaderName
+		availableBuildingBlock[domain.domainNameInUITree] = []string{
+			uiServer.generateUITreeNameForTestInstructionsHeader(domain),
+			uiServer.generateUITreeNameForTestInstructionContainersHeader(domain)}
 
+		// For 'TestInstructionHeaderName' add a list of all TestInstructionTypes
+		availableTestInstructionTypesFromModel := uiServer.getAvailableTestInstructionTypesFromModel(domain)
+		var testInstructionTypeNamesInUITree []string
+		// Loop all TestInstructionTypes and extract UI-tree name
+		for _, availableTestInstructionTypeFromModel := range availableTestInstructionTypesFromModel {
+			testInstructionTypeNamesInUITree = append(testInstructionTypeNamesInUITree, availableTestInstructionTypeFromModel.testInstructionTypeNameInUITree)
+		}
+		// Add TestInstructionType to UI-tree model
+		availableBuildingBlock[uiServer.generateUITreeNameForTestInstructionsHeader(domain)] = testInstructionTypeNamesInUITree
+
+		// For 'TestInstructionContainerHeaderName' add a list of all TestInstructionContainerTypes
+		availableTestInstructionContainerTypesFromModel := uiServer.getAvailableTestInstructionContainerTypesFromModel(domain)
+		var testInstructionContainerTypeNamesInUITree []string
+		// Loop all TestInstructionContainerTypes and extract UI-tree name
+		for _, testInstructionContainerTypeInUITree := range availableTestInstructionContainerTypesFromModel {
+			testInstructionContainerTypeNamesInUITree = append(testInstructionContainerTypeNamesInUITree, testInstructionContainerTypeInUITree.testInstructionContainerTypeNameInUITree)
+		}
+		// Add TestInstructionContainerType to UI-tree model
+		availableBuildingBlock[uiServer.generateUITreeNameForTestInstructionContainersHeader(domain)] = testInstructionContainerTypeNamesInUITree
+
+		// For each 'TestInstructionType' add a list of all TestInstructions
+		for _, availableTestInstructionTypeFromModel := range availableTestInstructionTypesFromModel {
+			var testInstructionNamesInUITree []string
+			availableTestInstructions := uiServer.getAvailableTestInstructionsFromModel(availableTestInstructionTypeFromModel)
+			// Loop all TestInstructions and add the UI-tree name to array
+			for _, availableTestInstruction := range availableTestInstructions {
+				testInstructionNamesInUITree = append(testInstructionNamesInUITree, availableTestInstruction.testInstructionNameInUITree)
+			}
+			// Add TestInstructions to UI-tree model
+			availableBuildingBlock[availableTestInstructionTypeFromModel.testInstructionTypeNameInUITree] = testInstructionNamesInUITree
+		}
+
+		// For each 'TestInstructionContainerType' add a list of all TestInstructionContainers
+		for _, availableTestInstructionContainerTypeFromModel := range availableTestInstructionContainerTypesFromModel {
+			var testInstructionContainerNamesInUITree []string
+			availableTestInstructionContainers := uiServer.getAvailableTestInstructionContainersFromModel(availableTestInstructionContainerTypeFromModel)
+			// Loop all TestInstructionContainers and add the UI-tree name to array
+			for _, availableTestInstructionContainer := range availableTestInstructionContainers {
+				testInstructionContainerNamesInUITree = append(testInstructionContainerNamesInUITree, availableTestInstructionContainer.testInstructionContainerNameInUITree)
+			}
+			// Add TestInstructionContainers to UI-tree model
+			availableBuildingBlock[availableTestInstructionContainerTypeFromModel.testInstructionContainerTypeNameInUITree] = testInstructionContainerNamesInUITree
+		}
 	}
 
 	/*
@@ -105,6 +149,8 @@ func (uiServer *UIServerStruct) loadAvailableBuildingBlocksFromServer() {
 
 }
 
+// *********** Generate Names for UI-Tree (Start)***********
+
 // Generate UI Tree name for 'Domain' for Available Building Blocks
 func (uiServer *UIServerStruct) generateUITreeNameForDomain(domain availableDomainStruct) (treeName string) {
 
@@ -161,31 +207,70 @@ func (uiServer *UIServerStruct) generateUITreeNameForTestInstructionContainer(te
 	return treeName
 }
 
+// *********** Generate Names for UI-Tree (End)***********
+
 // Extract all 'Domains', with Names suited for Tree-model, for the model tha underpins the UI Tree for Available Building Blocks
 func (uiServer *UIServerStruct) getAvailableDomainTreeNamesFromModel() (availableDomainTreeNamesList []string) {
 
-	availableDomainTreeNamesList = maps.Keys(uiServer.availableBuildingBlocksModel.availableDomains)
+	for _, domain := range uiServer.availableBuildingBlocksModel.availableDomains {
+		availableDomainTreeNamesList = append(availableDomainTreeNamesList, domain.domainNameInUITree)
+	}
 
 	return availableDomainTreeNamesList
 }
 
 // Extract all 'Domains', with Names suited for Tree-model, for the model tha underpins the UI Tree for Available Building Blocks
-func (uiServer *UIServerStruct) getAvailableTestInstructionTypeTreeNamesFromModel(domainTreeName string) (availableTestInstructionTypeTreeNamesList []string) {
+func (uiServer *UIServerStruct) getAvailableDomainsFromModel() (availableDomains []availableDomainStruct) {
 
-	// Extract Domain UUID
-	domain := uiServer.availableBuildingBlocksModel.availableDomains[domainTreeName]
-	if len(domain) != 1 {
-		uiServer.logger.WithFields(logrus.Fields{
-			"id": "338f2048-d4c1-4ee3-9efb-38680de44f32",
-		}).Fatalln("Expected 'one' domain, but found '" + string(len(domain)) + "' domains")
+	availableDomains = uiServer.availableBuildingBlocksModel.availableDomains
+
+	return availableDomains
+}
+
+// Extract all 'TestInstructionTypes', per Domain, with Names suited for Tree-model
+func (uiServer *UIServerStruct) getAvailableTestInstructionTypesFromModel(domain availableDomainStruct) (availableTestInstructionTypesList []availableTestInstructionTypeStruct) {
+
+	// Create the list of 'TestInstructionTypeTreeNames' for specific domain
+	for _, domainsTestInstructionType := range uiServer.availableBuildingBlocksModel.domainsTestInstructionTypes[domain.domainUuid] {
+		// Add each TestInstructionType to list
+		availableTestInstructionTypesList = append(availableTestInstructionTypesList, domainsTestInstructionType)
 	}
-	domainUuid := domain[0].domainUuid
 
-	availableTestInstructionTypeTreeNamesList = maps.Keys(uiServer.availableBuildingBlocksModel.domainsTestInstructionTypes)
+	return availableTestInstructionTypesList
+}
 
-	for _, domainsTestInstructionType := range availableTestInstructionTypeTreeNamesList {
-		uiServer.availableBuildingBlocksModel.domainsTestInstructionTypes[domainsTestInstructionType]
+// Extract all 'TestInstructionContainerTypes', per Domain, with Names suited for Tree-model
+func (uiServer *UIServerStruct) getAvailableTestInstructionContainerTypesFromModel(domain availableDomainStruct) (availableTestInstructionContainerTypesList []availableTestInstructionContainerTypeStruct) {
+
+	// Create the list of 'TestInstructionContainerTypeTreeNames' for specific domain
+	for _, domainsTestInstructionContainerType := range uiServer.availableBuildingBlocksModel.domainsTestInstructionContainerTypes[domain.domainUuid] {
+		// Add each TestInstructionType to list
+		availableTestInstructionContainerTypesList = append(availableTestInstructionContainerTypesList, domainsTestInstructionContainerType)
 	}
 
-	return availableTestInstructionTypeTreeNamesList
+	return availableTestInstructionContainerTypesList
+}
+
+// Extract all 'TestInstructions', per TestInstructionType, with Names suited for Tree-model
+func (uiServer *UIServerStruct) getAvailableTestInstructionsFromModel(testInstructionType availableTestInstructionTypeStruct) (availableTestInstructions []availableTestInstructionStruct) {
+
+	// Create the list of 'TestInstructions' for specific TestInstructionType
+	for _, testInstruction := range uiServer.availableBuildingBlocksModel.testInstructionTypesTestInstructions[testInstructionType.testInstructionTypeUuid] {
+		// Add each TestInstruction to list
+		availableTestInstructions = append(availableTestInstructions, testInstruction)
+	}
+
+	return availableTestInstructions
+}
+
+// Extract all 'TestInstructionContainers', per TestInstructionContainerType, with Names suited for Tree-model
+func (uiServer *UIServerStruct) getAvailableTestInstructionContainersFromModel(testInstructionContainerType availableTestInstructionContainerTypeStruct) (availableTestInstructionContainers []availableTestInstructionContainerStruct) {
+
+	// Create the list of 'TestInstructionContainers' for specific TestInstructionContainerType
+	for _, testInstructionContainer := range uiServer.availableBuildingBlocksModel.testInstructionContainerTypesTestInstructionsContainers[testInstructionContainerType.testInstructionContainerTypeUuid] {
+		// Add each TestInstructionContainer to list
+		availableTestInstructionContainers = append(availableTestInstructionContainers, testInstructionContainer)
+	}
+
+	return availableTestInstructionContainers
 }

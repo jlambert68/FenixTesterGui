@@ -128,7 +128,8 @@ type availableBuildingBlocksModelStruct struct {
 		   }
 	*/
 
-	fullDomainTestInstructionTypeTestInstructionRelationsMap map[string]map[string]map[string]availableTestInstructionStruct
+	fullDomainTestInstructionTypeTestInstructionRelationsMap                   map[string]map[string]map[string]availableTestInstructionStruct
+	fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap map[string]map[string]map[string]availableTestInstructionContainerStruct
 
 	availableDomains                                        map[string][]availableDomainStruct                       // map[#DomainUUID#]availableDomainStruct
 	domainsTestInstructionTypes                             map[string][]availableTestInstructionTypeStruct          // map[#DomainUUID#][]availableTestInstructionTypeStruct

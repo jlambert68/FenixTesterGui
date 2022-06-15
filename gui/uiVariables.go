@@ -24,6 +24,8 @@ const (
 
 const numberOfCharactersfromUuid = 8
 
+const TopNodeForAvailableDomainsMap = "TOP_NODE"
+
 type availableDomainStruct struct {
 	domainNameInUITree string
 	domainUuid         string
@@ -126,11 +128,14 @@ type availableBuildingBlocksModelStruct struct {
 		   }
 	*/
 
-	availableDomains                                        []availableDomainStruct
+	fullDomainTestInstructionTypeTestInstructionRelationsMap map[string]map[string]map[string]availableTestInstructionStruct
+
+	availableDomains                                        map[string][]availableDomainStruct                       // map[#DomainUUID#]availableDomainStruct
 	domainsTestInstructionTypes                             map[string][]availableTestInstructionTypeStruct          // map[#DomainUUID#][]availableTestInstructionTypeStruct
 	domainsTestInstructionContainerTypes                    map[string][]availableTestInstructionContainerTypeStruct // map[#DomainUUID#][]availableTestInstructionContainerTypeStruct
 	testInstructionTypesTestInstructions                    map[string][]availableTestInstructionStruct              // map[#TestInstructionTypeUUID#][]availableTestInstructionStruct
 	testInstructionContainerTypesTestInstructionsContainers map[string][]availableTestInstructionContainerStruct     // map[#TestInstructionContainerTypeUUID#"][]availableTestInstructionContainerTypeStruct
+
 }
 
 type UIServerStruct struct {

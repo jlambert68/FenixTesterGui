@@ -5,6 +5,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	//"golang.org/x/exp/maps"
 )
 
 //______________________________________________________________________________
@@ -31,7 +32,7 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 	}
 
 	// Loop all Domains
-	for _, domain := range uiServer.availableBuildingBlocksModel.availableDomains {
+	for _, domain := range uiServer.availableBuildingBlocksModel.availableDomains[TopNodeForAvailableDomainsMap] {
 		// For each domain add TestInstructionHeaderName and TestInstructionContainerHeaderName
 		availableBuildingBlock[domain.domainNameInUITree] = []string{
 			uiServer.generateUITreeNameForTestInstructionsHeader(domain),
@@ -214,7 +215,7 @@ func (uiServer *UIServerStruct) generateUITreeNameForTestInstructionContainer(te
 // Extract all 'Domains', with Names suited for Tree-model, for the model tha underpins the UI Tree for Available Building Blocks
 func (uiServer *UIServerStruct) getAvailableDomainTreeNamesFromModel() (availableDomainTreeNamesList []string) {
 
-	for _, domain := range uiServer.availableBuildingBlocksModel.availableDomains {
+	for _, domain := range uiServer.availableBuildingBlocksModel.availableDomains[TopNodeForAvailableDomainsMap] {
 		availableDomainTreeNamesList = append(availableDomainTreeNamesList, domain.domainNameInUITree)
 	}
 
@@ -222,12 +223,14 @@ func (uiServer *UIServerStruct) getAvailableDomainTreeNamesFromModel() (availabl
 }
 
 // Extract all 'Domains', with Names suited for Tree-model, for the model tha underpins the UI Tree for Available Building Blocks
+/*
 func (uiServer *UIServerStruct) getAvailableDomainsFromModel() (availableDomains []availableDomainStruct) {
 
-	availableDomains = uiServer.availableBuildingBlocksModel.availableDomains
+	//availableDomains = maps.Keys(uiServer.availableBuildingBlocksModel.availableDomains)
 
 	return availableDomains
 }
+*/
 
 // Extract all 'TestInstructionTypes', per Domain, with Names suited for Tree-model
 func (uiServer *UIServerStruct) getAvailableTestInstructionTypesFromModel(domain availableDomainStruct) (availableTestInstructionTypesList []availableTestInstructionTypeStruct) {

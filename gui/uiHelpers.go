@@ -37,7 +37,7 @@ func (uiServer *UIServerStruct) loadModelWithAvailableBuildingBlocks(testInstruc
 	}
 
 	// Load TestInstructions
-	//uiServer.loadModelWithAvailableBuildingBlocksRegardingTestInstructions(testInstructionsAndTestContainersMessage)
+	uiServer.loadModelWithAvailableBuildingBlocksRegardingTestInstructions(testInstructionsAndTestContainersMessage)
 
 	// Load TestInstructionContainers
 	uiServer.loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(testInstructionsAndTestContainersMessage)
@@ -176,7 +176,7 @@ func (uiServer *UIServerStruct) loadModelWithAvailableBuildingBlocksRegardingTes
 func (uiServer *UIServerStruct) loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage) {
 
 	uiServer.availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap = make(map[string]map[string]map[string]availableTestInstructionContainerStruct) //make(fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMapType)
-	var testInstructionContainerTypeTestInstructionContainersRelationsMap map[string]map[string]availableTestInstructionContainerStruct                                                               //testInstructionContainerTypeTestInstructionContainersRelationsMapType
+	var testInstructionContainerTypeTestInstructionContainersRelationsMap map[string]map[string]availableTestInstructionContainerStruct                                                               //testInstructionTypeTestInstructionsRelationsMapType
 	var testInstructionContainerMap map[string]availableTestInstructionContainerStruct                                                                                                                //testInstructionContainerMapType
 
 	var existInMap bool
@@ -258,15 +258,25 @@ func (uiServer *UIServerStruct) loadModelWithAvailableBuildingBlocksRegardingTes
 
 			// Add the TestInstructionContainerType to a simpler structure to be used vid UI-tree for Available Building Blocks
 			uiServer.availableBuildingBlocksModel.domainsTestInstructionContainerTypes[testInstructionContainer.DomainUuid] = []availableTestInstructionContainerTypeStruct{tempTestInstructionContainerType}
+			// If it is first occurrence in simpler structure then; Add the TestInstructionContainerType to a simpler structure to be used vid UI-tree for Available Building Blocks
+			_, existInMap = uiServer.availableBuildingBlocksModel.domainsTestInstructionContainerTypes[testInstructionContainer.TestInstructionContainerTypeUuid]
+			if existInMap == false {
+				uiServer.availableBuildingBlocksModel.domainsTestInstructionContainerTypes[testInstructionContainer.TestInstructionContainerTypeUuid] = []availableTestInstructionContainerTypeStruct{tempTestInstructionContainerType}
 
+			}
 		} else {
 			// Add the TestInstructionContainerType to a simpler structure to be used vid UI-tree for Available Building Blocks
-			tempTestInstructionContainerTypes := uiServer.availableBuildingBlocksModel.domainsTestInstructionContainerTypes[testInstructionContainer.DomainUuid]
-			tempTestInstructionContainerTypes = append(tempTestInstructionContainerTypes, tempTestInstructionContainerType)
-			uiServer.availableBuildingBlocksModel.domainsTestInstructionContainerTypes[testInstructionContainer.DomainUuid] = tempTestInstructionContainerTypes
+			// Only add if it is not already in there
+			_, existInMap = uiServer.availableBuildingBlocksModel.domainsTestInstructionContainerTypes[testInstructionContainer.DomainUuid]
+			if existInMap == false {
+				tempTestInstructionContainerTypes := uiServer.availableBuildingBlocksModel.domainsTestInstructionContainerTypes[testInstructionContainer.DomainUuid]
+				tempTestInstructionContainerTypes = append(tempTestInstructionContainerTypes, tempTestInstructionContainerType)
+
+				uiServer.availableBuildingBlocksModel.domainsTestInstructionContainerTypes[testInstructionContainer.DomainUuid] = tempTestInstructionContainerTypes
+			}
 		}
 
-		// *** Does TestInstructionContainer exist in map ***
+		// *** Does TestInstructionContainerContainer exist in map ***
 		_, existInMap = testInstructionContainerMap[testInstructionContainer.TestInstructionContainerUuid]
 
 		// Create simpler structure to be used vid UI-tree for Available Building Blocks

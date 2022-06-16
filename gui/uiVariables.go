@@ -26,6 +26,13 @@ const numberOfCharactersfromUuid = 8
 
 const TopNodeForAvailableDomainsMap = "TOP_NODE"
 
+type availableBuildingBlocksForUITreeNodesStruct struct {
+	nameInUITree string
+	uuid         string
+	name         string
+}
+
+/*
 type availableDomainStruct struct {
 	domainNameInUITree string
 	domainUuid         string
@@ -48,6 +55,8 @@ type availableTestInstructionContainerTypeStruct struct {
 	testInstructionContainerTypeName         string
 }
 
+
+*/
 type availableTestInstructionStruct struct {
 	testInstructionNameInUITree string
 	domainUuid                  string
@@ -131,11 +140,13 @@ type availableBuildingBlocksModelStruct struct {
 	fullDomainTestInstructionTypeTestInstructionRelationsMap                   map[string]map[string]map[string]availableTestInstructionStruct
 	fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap map[string]map[string]map[string]availableTestInstructionContainerStruct
 
-	availableDomains                                        map[string][]availableDomainStruct                       // map[#DomainUUID#]availableDomainStruct
-	domainsTestInstructionTypes                             map[string][]availableTestInstructionTypeStruct          // map[#DomainUUID#][]availableTestInstructionTypeStruct
-	domainsTestInstructionContainerTypes                    map[string][]availableTestInstructionContainerTypeStruct // map[#DomainUUID#][]availableTestInstructionContainerTypeStruct
-	testInstructionTypesTestInstructions                    map[string][]availableTestInstructionStruct              // map[#TestInstructionTypeUUID#][]availableTestInstructionStruct
-	testInstructionContainerTypesTestInstructionsContainers map[string][]availableTestInstructionContainerStruct     // map[#TestInstructionContainerTypeUUID#"][]availableTestInstructionContainerTypeStruct
+	availableBuildingBlocksForUITreeNodes map[string]availableBuildingBlocksForUITreeNodesStruct
+
+	//availableDomains                                        map[string][]availableDomainStruct                       // map[#DomainUUID#]availableDomainStruct
+	//domainsTestInstructionTypes                             map[string][]availableTestInstructionTypeStruct          // map[#DomainUUID#][]availableTestInstructionTypeStruct
+	//domainsTestInstructionContainerTypes                    map[string][]availableTestInstructionContainerTypeStruct // map[#DomainUUID#][]availableTestInstructionContainerTypeStruct
+	//testInstructionTypesTestInstructions                    map[string][]availableTestInstructionStruct              // map[#TestInstructionTypeUUID#][]availableTestInstructionStruct
+	//testInstructionContainerTypesTestInstructionsContainers map[string][]availableTestInstructionContainerStruct     // map[#TestInstructionContainerTypeUUID#"][]availableTestInstructionContainerTypeStruct
 
 }
 

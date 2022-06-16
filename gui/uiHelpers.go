@@ -53,12 +53,11 @@ func (uiServer *UIServerStruct) loadModelWithAvailableBuildingBlocksRegardingTes
 	var existInMap bool
 
 	// Simpler structure to store Available Building Blocks for UI-tree
-	_, existInMap = uiServer.availableBuildingBlocksModel.availableDomains[TopNodeForAvailableDomainsMap]
-	if existInMap == false {
-		uiServer.availableBuildingBlocksModel.availableDomains = make(map[string][]availableDomainStruct)
+	uiTreeNodes := uiServer.availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes
+	// If not created then create the map
+	if len(uiTreeNodes) == 0 {
+		uiServer.availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes = make(map[string]availableBuildingBlocksForUITreeNodesStruct)
 	}
-	uiServer.availableBuildingBlocksModel.domainsTestInstructionTypes = make(map[string][]availableTestInstructionTypeStruct)
-	uiServer.availableBuildingBlocksModel.testInstructionTypesTestInstructions = make(map[string][]availableTestInstructionStruct)
 
 	// Loop all TestInstructions and extract all data to be used in Available Building Block UI-tree
 	for _, testInstruction := range testInstructionsAndTestContainersMessage.TestInstructionMessages {
@@ -66,81 +65,58 @@ func (uiServer *UIServerStruct) loadModelWithAvailableBuildingBlocksRegardingTes
 		// *** Does Domain exist in map ***
 		testInstructionTypeTestInstructionsRelationsMap, existInMap = uiServer.availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap[testInstruction.DomainUuid]
 
-		// Create simpler structure to be used vid UI-tree for Available Building Blocks
-		// Add the domain to a simpler structure to be used vid UI-tree for Available Building Blocks
-		tempDomain := availableDomainStruct{
-			domainNameInUITree: "",
-			domainUuid:         testInstruction.DomainUuid,
-			domainName:         testInstruction.DomainName,
-		}
-		tempDomain.domainNameInUITree = uiServer.generateUITreeNameForDomain(tempDomain)
-
 		// If Domain doesn't exist then add it to full Domain-TestInstructionContainerType-TestInstructionContainers-map
 		if existInMap == false {
 			testInstructionTypeTestInstructionsRelationsMap = make(map[string]map[string]availableTestInstructionStruct) //make(testInstructionTypeTestInstructionsRelationsMapType)
 			uiServer.availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap[testInstruction.DomainUuid] = testInstructionTypeTestInstructionsRelationsMap
 
 			// If it is first occurrence in simpler structure then; Add the Domain to a simpler structure to be used vid UI-tree for Available Building Blocks
-			_, existInMap = uiServer.availableBuildingBlocksModel.availableDomains[TopNodeForAvailableDomainsMap]
-			if existInMap == false {
-				uiServer.availableBuildingBlocksModel.availableDomains[TopNodeForAvailableDomainsMap] = []availableDomainStruct{tempDomain}
-
-				// Also add reference to on key-level
-				uiServer.availableBuildingBlocksModel.availableDomains[tempDomain.domainUuid] = []availableDomainStruct{tempDomain}
-			} else {
-				_, existInMap = uiServer.availableBuildingBlocksModel.availableDomains[tempDomain.domainUuid]
-				if existInMap == false {
-					// Also add reference to on key-level
-					uiServer.availableBuildingBlocksModel.availableDomains[tempDomain.domainUuid] = []availableDomainStruct{tempDomain}
-				}
+			// Create simpler structure to be used vid UI-tree for Available Building Blocks
+			// Add the domain to a simpler structure to be used vid UI-tree for Available Building Blocks
+			tempNode := availableBuildingBlocksForUITreeNodesStruct{
+				nameInUITree: "",
+				uuid:         testInstruction.DomainUuid,
+				name:         testInstruction.DomainName,
 			}
-		} else {
-			// If it is not first occurrence in simpler structure then; Add the Domain to a simpler structure to be used vid UI-tree for Available Building Blocks
-			// Only add if it is not already in there
-			_, existInMap = uiServer.availableBuildingBlocksModel.availableDomains[tempDomain.domainUuid]
+			// Set UI Node name in node
+			tempNode.nameInUITree = uiServer.generateUITreeName(tempNode)
+
+			_, existInMap = uiServer.availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstruction.DomainUuid]
 			if existInMap == false {
-				tempDomains := uiServer.availableBuildingBlocksModel.availableDomains[TopNodeForAvailableDomainsMap]
-				tempDomains = append(tempDomains, tempDomain)
-				uiServer.availableBuildingBlocksModel.availableDomains[TopNodeForAvailableDomainsMap] = tempDomains
+				uiServer.availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstruction.DomainUuid] = tempNode
 
-				// Also add reference to on key-level
-				uiServer.availableBuildingBlocksModel.availableDomains[tempDomain.domainUuid] = []availableDomainStruct{tempDomain}
 			}
-
 		}
 
 		// *** Does TestInstructionType exist in map ***
 		testInstructionMap, existInMap = testInstructionTypeTestInstructionsRelationsMap[testInstruction.TestInstructionTypeUuid]
-
-		// Create simpler structure to be used vid UI-tree for Available Building Blocks
-		tempTestInstructionType := availableTestInstructionTypeStruct{
-			testInstructionTypeNameInUITree: "",
-			domainUuid:                      testInstruction.DomainUuid,
-			domainName:                      testInstruction.DomainName,
-			testInstructionTypeUuid:         testInstruction.TestInstructionTypeUuid,
-			testInstructionTypeName:         testInstruction.TestInstructionTypeName,
-		}
-		tempTestInstructionType.testInstructionTypeNameInUITree = uiServer.generateUITreeNameForTestInstructionType(tempTestInstructionType)
 
 		// If TestInstructionType doesn't exist then add it with its full map-structure
 		if existInMap == false {
 			testInstructionMap = make(map[string]availableTestInstructionStruct) // make(testInstructionMapType)
 			testInstructionTypeTestInstructionsRelationsMap[testInstruction.TestInstructionTypeUuid] = testInstructionMap
 
-			// Add the TestInstructionType to a simpler structure to be used vid UI-tree for Available Building Blocks
-			uiServer.availableBuildingBlocksModel.domainsTestInstructionTypes[testInstruction.DomainUuid] = []availableTestInstructionTypeStruct{tempTestInstructionType}
+			// If it is first occurrence in simpler structure then; Add the Domain to a simpler structure to be used vid UI-tree for Available Building Blocks
+			// Create simpler structure to be used vid UI-tree for Available Building Blocks
+			tempNode := availableBuildingBlocksForUITreeNodesStruct{
+				nameInUITree: "",
+				uuid:         testInstruction.TestInstructionTypeUuid,
+				name:         testInstruction.TestInstructionTypeName,
+			}
+			// Set UI Node name in node
+			tempNode.nameInUITree = uiServer.generateUITreeName(tempNode)
 
-		} else {
-			// Add the TestInstructionType to a simpler structure to be used vid UI-tree for Available Building Blocks
-			tempTestInstructionTypes := uiServer.availableBuildingBlocksModel.domainsTestInstructionTypes[testInstruction.DomainUuid]
-			tempTestInstructionTypes = append(tempTestInstructionTypes, tempTestInstructionType)
-			uiServer.availableBuildingBlocksModel.domainsTestInstructionTypes[testInstruction.DomainUuid] = tempTestInstructionTypes
+			_, existInMap = uiServer.availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstruction.TestInstructionTypeUuid]
+			if existInMap == false {
+				uiServer.availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstruction.TestInstructionTypeUuid] = tempNode
+
+			}
 		}
 
 		// *** Does TestInstruction exist in map ***
 		_, existInMap = testInstructionMap[testInstruction.TestInstructionUuid]
 
-		// Create simpler structure to be used vid UI-tree for Available Building Blocks
+		// Create the TestInstruction to be added to each leave node on UI-model for UI-Tree regarding Available Building Blocks
 		tempTestInstruction := availableTestInstructionStruct{
 			testInstructionNameInUITree: "",
 			domainUuid:                  testInstruction.DomainUuid,
@@ -150,25 +126,32 @@ func (uiServer *UIServerStruct) loadModelWithAvailableBuildingBlocksRegardingTes
 			testInstructionUuid:         testInstruction.TestInstructionUuid,
 			testInstructionName:         testInstruction.TestInstructionName,
 		}
-		tempTestInstruction.testInstructionNameInUITree = uiServer.generateUITreeNameForTestInstruction(tempTestInstruction)
+
+		// Create simpler structure to be used vid UI-tree for Available Building Blocks
+		tempNode := availableBuildingBlocksForUITreeNodesStruct{
+			nameInUITree: "",
+			uuid:         testInstruction.TestInstructionUuid,
+			name:         testInstruction.TestInstructionName,
+		}
+		// Set UI Node name in nodes
+		tempNode.nameInUITree = uiServer.generateUITreeName(tempNode)
+		tempTestInstruction.testInstructionNameInUITree = tempNode.nameInUITree
 
 		// If TestInstruction doesn't exist then add it with its full map-structure
 		if existInMap == false {
 			testInstructionMap[testInstruction.TestInstructionUuid] = tempTestInstruction
 
 			// Add the TestInstruction to a simpler structure to be used vid UI-tree for Available Building Blocks
-			uiServer.availableBuildingBlocksModel.testInstructionTypesTestInstructions[testInstruction.TestInstructionTypeUuid] = []availableTestInstructionStruct{tempTestInstruction}
+			_, existInMap = uiServer.availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstruction.TestInstructionUuid]
+			if existInMap == false {
+				uiServer.availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstruction.TestInstructionUuid] = tempNode
 
-		} else {
-			// Add the TestInstruction to a simpler structure to be used vid UI-tree for Available Building Blocks
-			tempTestInstructions := uiServer.availableBuildingBlocksModel.testInstructionTypesTestInstructions[testInstruction.TestInstructionTypeUuid]
-			tempTestInstructions = append(tempTestInstructions, tempTestInstruction)
-			uiServer.availableBuildingBlocksModel.testInstructionTypesTestInstructions[testInstruction.TestInstructionTypeUuid] = tempTestInstructions
+			}
+
+			//testInstructionTypeTestInstructionsRelationsMap[testInstruction.TestInstructionTypeUuid] = testInstructionMap
+			//uiServer.availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap[testInstruction.DomainUuid] = testInstructionTypeTestInstructionsRelationsMap
+
 		}
-
-		//testInstructionTypeTestInstructionsRelationsMap[testInstruction.TestInstructionTypeUuid] = testInstructionMap
-		//uiServer.availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap[testInstruction.DomainUuid] = testInstructionTypeTestInstructionsRelationsMap
-
 	}
 }
 
@@ -176,18 +159,17 @@ func (uiServer *UIServerStruct) loadModelWithAvailableBuildingBlocksRegardingTes
 func (uiServer *UIServerStruct) loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage) {
 
 	uiServer.availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap = make(map[string]map[string]map[string]availableTestInstructionContainerStruct) //make(fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMapType)
-	var testInstructionContainerTypeTestInstructionContainersRelationsMap map[string]map[string]availableTestInstructionContainerStruct                                                               //testInstructionTypeTestInstructionsRelationsMapType
+	var testInstructionContainerTypeTestInstructionContainersRelationsMap map[string]map[string]availableTestInstructionContainerStruct                                                               //testInstructionContainerTypeTestInstructionContainersRelationsMapType
 	var testInstructionContainerMap map[string]availableTestInstructionContainerStruct                                                                                                                //testInstructionContainerMapType
 
 	var existInMap bool
 
 	// Simpler structure to store Available Building Blocks for UI-tree
-	_, existInMap = uiServer.availableBuildingBlocksModel.availableDomains[TopNodeForAvailableDomainsMap]
-	if existInMap == false {
-		uiServer.availableBuildingBlocksModel.availableDomains = make(map[string][]availableDomainStruct)
+	uiTreeNodes := uiServer.availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes
+	// If not created then create the map
+	if len(uiTreeNodes) == 0 {
+		uiServer.availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes = make(map[string]availableBuildingBlocksForUITreeNodesStruct)
 	}
-	uiServer.availableBuildingBlocksModel.domainsTestInstructionContainerTypes = make(map[string][]availableTestInstructionContainerTypeStruct)
-	uiServer.availableBuildingBlocksModel.testInstructionContainerTypesTestInstructionsContainers = make(map[string][]availableTestInstructionContainerStruct)
 
 	// Loop all TestInstructionContainers and extract all data to be used in Available Building Block UI-tree
 	for _, testInstructionContainer := range testInstructionsAndTestContainersMessage.TestInstructionContainerMessages {
@@ -195,91 +177,58 @@ func (uiServer *UIServerStruct) loadModelWithAvailableBuildingBlocksRegardingTes
 		// *** Does Domain exist in map ***
 		testInstructionContainerTypeTestInstructionContainersRelationsMap, existInMap = uiServer.availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap[testInstructionContainer.DomainUuid]
 
-		// Create simpler structure to be used vid UI-tree for Available Building Blocks
-		// Add the domain to a simpler structure to be used vid UI-tree for Available Building Blocks
-		tempDomain := availableDomainStruct{
-			domainNameInUITree: "",
-			domainUuid:         testInstructionContainer.DomainUuid,
-			domainName:         testInstructionContainer.DomainName,
-		}
-		tempDomain.domainNameInUITree = uiServer.generateUITreeNameForDomain(tempDomain)
-
-		// If Domain doesn't exist then add it to full Domain-TestInstructionContainerType-TestInstructionContainers-map
+		// If Domain doesn't exist then add it to full Domain-TestInstructionContainerContainerType-TestInstructionContainerContainers-map
 		if existInMap == false {
 			testInstructionContainerTypeTestInstructionContainersRelationsMap = make(map[string]map[string]availableTestInstructionContainerStruct) //make(testInstructionContainerTypeTestInstructionContainersRelationsMapType)
 			uiServer.availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap[testInstructionContainer.DomainUuid] = testInstructionContainerTypeTestInstructionContainersRelationsMap
 
 			// If it is first occurrence in simpler structure then; Add the Domain to a simpler structure to be used vid UI-tree for Available Building Blocks
-			_, existInMap = uiServer.availableBuildingBlocksModel.availableDomains[TopNodeForAvailableDomainsMap]
-			if existInMap == false {
-				uiServer.availableBuildingBlocksModel.availableDomains[TopNodeForAvailableDomainsMap] = []availableDomainStruct{tempDomain}
-
-				// Also add reference to on key-level
-				uiServer.availableBuildingBlocksModel.availableDomains[tempDomain.domainUuid] = []availableDomainStruct{tempDomain}
-			} else {
-				_, existInMap = uiServer.availableBuildingBlocksModel.availableDomains[tempDomain.domainUuid]
-				if existInMap == false {
-					// Also add reference to on key-level
-					uiServer.availableBuildingBlocksModel.availableDomains[tempDomain.domainUuid] = []availableDomainStruct{tempDomain}
-				}
+			// Create simpler structure to be used vid UI-tree for Available Building Blocks
+			// Add the domain to a simpler structure to be used vid UI-tree for Available Building Blocks
+			tempNode := availableBuildingBlocksForUITreeNodesStruct{
+				nameInUITree: "",
+				uuid:         testInstructionContainer.DomainUuid,
+				name:         testInstructionContainer.DomainName,
 			}
-		} else {
-			// If it is not first occurrence in simpler structure then; Add the Domain to a simpler structure to be used vid UI-tree for Available Building Blocks
-			// Only add if it is not already in there
-			_, existInMap = uiServer.availableBuildingBlocksModel.availableDomains[tempDomain.domainUuid]
+			// Set UI Node name in node
+			tempNode.nameInUITree = uiServer.generateUITreeName(tempNode)
+
+			_, existInMap = uiServer.availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstructionContainer.DomainUuid]
 			if existInMap == false {
-				tempDomains := uiServer.availableBuildingBlocksModel.availableDomains[TopNodeForAvailableDomainsMap]
-				tempDomains = append(tempDomains, tempDomain)
-				uiServer.availableBuildingBlocksModel.availableDomains[TopNodeForAvailableDomainsMap] = tempDomains
+				uiServer.availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstructionContainer.DomainUuid] = tempNode
 
-				// Also add reference to on key-level
-				uiServer.availableBuildingBlocksModel.availableDomains[tempDomain.domainUuid] = []availableDomainStruct{tempDomain}
 			}
-
 		}
 
 		// *** Does TestInstructionContainerType exist in map ***
 		testInstructionContainerMap, existInMap = testInstructionContainerTypeTestInstructionContainersRelationsMap[testInstructionContainer.TestInstructionContainerTypeUuid]
-
-		// Create simpler structure to be used vid UI-tree for Available Building Blocks
-		tempTestInstructionContainerType := availableTestInstructionContainerTypeStruct{
-			testInstructionContainerTypeNameInUITree: "",
-			domainUuid:                               testInstructionContainer.DomainUuid,
-			domainName:                               testInstructionContainer.DomainName,
-			testInstructionContainerTypeUuid:         testInstructionContainer.TestInstructionContainerTypeUuid,
-			testInstructionContainerTypeName:         testInstructionContainer.TestInstructionContainerTypeName,
-		}
-		tempTestInstructionContainerType.testInstructionContainerTypeNameInUITree = uiServer.generateUITreeNameForTestInstructionContainerType(tempTestInstructionContainerType)
 
 		// If TestInstructionContainerType doesn't exist then add it with its full map-structure
 		if existInMap == false {
 			testInstructionContainerMap = make(map[string]availableTestInstructionContainerStruct) // make(testInstructionContainerMapType)
 			testInstructionContainerTypeTestInstructionContainersRelationsMap[testInstructionContainer.TestInstructionContainerTypeUuid] = testInstructionContainerMap
 
-			// Add the TestInstructionContainerType to a simpler structure to be used vid UI-tree for Available Building Blocks
-			uiServer.availableBuildingBlocksModel.domainsTestInstructionContainerTypes[testInstructionContainer.DomainUuid] = []availableTestInstructionContainerTypeStruct{tempTestInstructionContainerType}
-			// If it is first occurrence in simpler structure then; Add the TestInstructionContainerType to a simpler structure to be used vid UI-tree for Available Building Blocks
-			_, existInMap = uiServer.availableBuildingBlocksModel.domainsTestInstructionContainerTypes[testInstructionContainer.TestInstructionContainerTypeUuid]
-			if existInMap == false {
-				uiServer.availableBuildingBlocksModel.domainsTestInstructionContainerTypes[testInstructionContainer.TestInstructionContainerTypeUuid] = []availableTestInstructionContainerTypeStruct{tempTestInstructionContainerType}
-
+			// If it is first occurrence in simpler structure then; Add the Domain to a simpler structure to be used vid UI-tree for Available Building Blocks
+			// Create simpler structure to be used vid UI-tree for Available Building Blocks
+			tempNode := availableBuildingBlocksForUITreeNodesStruct{
+				nameInUITree: "",
+				uuid:         testInstructionContainer.TestInstructionContainerTypeUuid,
+				name:         testInstructionContainer.TestInstructionContainerTypeName,
 			}
-		} else {
-			// Add the TestInstructionContainerType to a simpler structure to be used vid UI-tree for Available Building Blocks
-			// Only add if it is not already in there
-			_, existInMap = uiServer.availableBuildingBlocksModel.domainsTestInstructionContainerTypes[testInstructionContainer.DomainUuid]
-			if existInMap == false {
-				tempTestInstructionContainerTypes := uiServer.availableBuildingBlocksModel.domainsTestInstructionContainerTypes[testInstructionContainer.DomainUuid]
-				tempTestInstructionContainerTypes = append(tempTestInstructionContainerTypes, tempTestInstructionContainerType)
+			// Set UI Node name in node
+			tempNode.nameInUITree = uiServer.generateUITreeName(tempNode)
 
-				uiServer.availableBuildingBlocksModel.domainsTestInstructionContainerTypes[testInstructionContainer.DomainUuid] = tempTestInstructionContainerTypes
+			_, existInMap = uiServer.availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstructionContainer.TestInstructionContainerTypeUuid]
+			if existInMap == false {
+				uiServer.availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstructionContainer.TestInstructionContainerTypeUuid] = tempNode
+
 			}
 		}
 
-		// *** Does TestInstructionContainerContainer exist in map ***
+		// *** Does TestInstructionContainer exist in map ***
 		_, existInMap = testInstructionContainerMap[testInstructionContainer.TestInstructionContainerUuid]
 
-		// Create simpler structure to be used vid UI-tree for Available Building Blocks
+		// Create the TestInstructionContainer to be added to each leave node on UI-model for UI-Tree regarding Available Building Blocks
 		tempTestInstructionContainer := availableTestInstructionContainerStruct{
 			testInstructionContainerNameInUITree: "",
 			domainUuid:                           testInstructionContainer.DomainUuid,
@@ -289,24 +238,31 @@ func (uiServer *UIServerStruct) loadModelWithAvailableBuildingBlocksRegardingTes
 			testInstructionContainerUuid:         testInstructionContainer.TestInstructionContainerUuid,
 			testInstructionContainerName:         testInstructionContainer.TestInstructionContainerName,
 		}
-		tempTestInstructionContainer.testInstructionContainerNameInUITree = uiServer.generateUITreeNameForTestInstructionContainer(tempTestInstructionContainer)
+
+		// Create simpler structure to be used vid UI-tree for Available Building Blocks
+		tempNode := availableBuildingBlocksForUITreeNodesStruct{
+			nameInUITree: "",
+			uuid:         testInstructionContainer.TestInstructionContainerUuid,
+			name:         testInstructionContainer.TestInstructionContainerName,
+		}
+		// Set UI Node name in nodes
+		tempNode.nameInUITree = uiServer.generateUITreeName(tempNode)
+		tempTestInstructionContainer.testInstructionContainerNameInUITree = tempNode.nameInUITree
 
 		// If TestInstructionContainer doesn't exist then add it with its full map-structure
 		if existInMap == false {
 			testInstructionContainerMap[testInstructionContainer.TestInstructionContainerUuid] = tempTestInstructionContainer
 
 			// Add the TestInstructionContainer to a simpler structure to be used vid UI-tree for Available Building Blocks
-			uiServer.availableBuildingBlocksModel.testInstructionContainerTypesTestInstructionsContainers[testInstructionContainer.TestInstructionContainerTypeUuid] = []availableTestInstructionContainerStruct{tempTestInstructionContainer}
+			_, existInMap = uiServer.availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstructionContainer.TestInstructionContainerUuid]
+			if existInMap == false {
+				uiServer.availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstructionContainer.TestInstructionContainerUuid] = tempNode
 
-		} else {
-			// Add the TestInstructionContainer to a simpler structure to be used vid UI-tree for Available Building Blocks
-			tempTestInstructionContainers := uiServer.availableBuildingBlocksModel.testInstructionContainerTypesTestInstructionsContainers[testInstructionContainer.TestInstructionContainerTypeUuid]
-			tempTestInstructionContainers = append(tempTestInstructionContainers, tempTestInstructionContainer)
-			uiServer.availableBuildingBlocksModel.testInstructionContainerTypesTestInstructionsContainers[testInstructionContainer.TestInstructionContainerTypeUuid] = tempTestInstructionContainers
+			}
+
+			//testInstructionContainerTypeTestInstructionContainersRelationsMap[testInstructionContainer.TestInstructionContainerTypeUuid] = testInstructionContainerMap
+			//uiServer.availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap[testInstructionContainer.DomainUuid] = testInstructionContainerTypeTestInstructionContainersRelationsMap
+
 		}
-
-		//testInstructionContainerTypeTestInstructionContainersRelationsMap[testInstructionContainer.TestInstructionContainerTypeUuid] = testInstructionContainerMap
-		//uiServer.availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap[testInstructionContainer.DomainUuid] = testInstructionContainerTypeTestInstructionContainersRelationsMap
-
 	}
 }

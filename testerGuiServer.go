@@ -45,7 +45,7 @@ func fenixGuiBuilderServerMain() {
 			restAPI: &restAPI.RestApiStruct{
 				GrpcOut: &grpc_out.GRPCOutStruct{},
 			},
-			uiServer: &gui.UIServerStruct{},
+			uiServer: &gui.GlobalUIServerStruct{},
 		},
 	}
 

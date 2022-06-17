@@ -4,14 +4,16 @@ import (
 	"FenixTesterGui/grpc_out"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
-	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 )
 
+/*
 type availableBuildingBlocksStruct struct {
 	availableTestInstructionsAndTestInstructionContainers       *fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage
 	availablePinnedTestInstructionsAndTestInstructionContainers *fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage
 }
+
+*/
 
 // Constants used for Available BuildingBlocks-tree as headers
 const (
@@ -99,56 +101,30 @@ type availableBuildingBlocksModelStruct struct {
 	//             +TestInstructionContainerType 2 [e107bdd9]
 	//                TestInstructionContainer 21 [f107bdd9]
 	//                TestInstructionContainer 22 [g107bdd9]
-	/*
-		   	list = map[string][]string{
-		   	"":  {TestCaseBuildingBlocksHeader},
-		   	TestCaseBuildingBlocksHeader: {PinnedBuildingBlocksHeader, AvailableBuildingBlocksHeader},
-		   	PinnedBuildingBlocksHeader: {[]TestInstructions, []TestInstructionContainer}
 
-
-		    AvailableBuildingBlocksHeader: {[]Domains},
-			[0]Domains: {TestInstructionsHeader, TestInstructionContainersHeader},
-			TestInstructionsHeader: {[]TestInstructionTypes},
-			[0]TestInstructionTypes: {[]TestInstructions},
-			[1]TestInstructionTypes: {[]TestInstructions},
-			TestInstructionContainersHeader: {[]TestInstructionContainerTypes},
-			[0]TestInstructionContainerTypes: {[]TestInstructionContainer},
-			[1]TestInstructionContainerTypes: {[]TestInstructionContainer},
-
-			[1]Domains: {TestInstructionsHeader, TestInstructionContainersHeader},
-			TestInstructionsHeader: {[]TestInstructionTypes},
-			[0]TestInstructionTypes: {[]TestInstructions},
-			[1]TestInstructionTypes: {[]TestInstructions},
-			TestInstructionContainersHeader: {[]TestInstructionContainerTypes},
-			[0]TestInstructionContainerTypes: {[]TestInstructionContainer},
-			[1]TestInstructionContainerTypes: {[]TestInstructionContainer},
-
-			Key Name construction
-			Domains = Domain Name [f107bdd9]
-			TestInstructionsHeader = TestInstructionsHeader [Domain UUID]
-			TestInstructionContainersHeader = TestInstructionContainersHeader [Domain UUID]
-			TestInstructionTypes = TestInstructionType Name [TestInstructionType UUID]
-			TestInstructionTypes = TestInstructionContainerType Name [TestInstructionContainerType UUID]
-			TestInstructions = TestInstruction Name [TestInstruction UUID]
-			TestInstructionContainers = TestInstructionContainer Name [TestInstructionContainer UUID]
-
-
-
-		   }
-	*/
-
+	logger                                                                     *logrus.Logger
+	fenixGuiBuilderServerAddressToDial                                         string
 	fullDomainTestInstructionTypeTestInstructionRelationsMap                   map[string]map[string]map[string]availableTestInstructionStruct
 	fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap map[string]map[string]map[string]availableTestInstructionContainerStruct
-
-	availableBuildingBlocksForUITreeNodes map[string]availableBuildingBlocksForUITreeNodesStruct
-
-	//availableDomains                                        map[string][]availableDomainStruct                       // map[#DomainUUID#]availableDomainStruct
-	//domainsTestInstructionTypes                             map[string][]availableTestInstructionTypeStruct          // map[#DomainUUID#][]availableTestInstructionTypeStruct
-	//domainsTestInstructionContainerTypes                    map[string][]availableTestInstructionContainerTypeStruct // map[#DomainUUID#][]availableTestInstructionContainerTypeStruct
-	//testInstructionTypesTestInstructions                    map[string][]availableTestInstructionStruct              // map[#TestInstructionTypeUUID#][]availableTestInstructionStruct
-	//testInstructionContainerTypesTestInstructionsContainers map[string][]availableTestInstructionContainerStruct     // map[#TestInstructionContainerTypeUUID#"][]availableTestInstructionContainerTypeStruct
-
+	availableBuildingBlocksForUITreeNodes                                      map[string]availableBuildingBlocksForUITreeNodesStruct
+	grpcOut                                                                    grpc_out.GRPCOutStruct
+	availableBuildingBlockModelSuitedForFyneTreeView                           map[string][]string
 }
+
+type GlobalUIServerStruct struct {
+	logger                             *logrus.Logger
+	fenixGuiBuilderServerAddressToDial string
+	//fyneApp                            fyne.App
+	//tree                               *widget.Label
+	//content                            *widget.Entry
+	//grpcOut                            grpc_out.GRPCOutStruct
+
+	//availableBuildingBlocks            availableBuildingBlocksStruct
+	//availableBuildingBlocksModel       availableBuildingBlocksModelStruct
+	//availableBuildingBlocksModel availableBuildingBlocksModelStruct
+}
+
+var localUIServer UIServerStruct
 
 type UIServerStruct struct {
 	logger                             *logrus.Logger
@@ -157,8 +133,20 @@ type UIServerStruct struct {
 	content                            *widget.Entry
 	grpcOut                            grpc_out.GRPCOutStruct
 	fenixGuiBuilderServerAddressToDial string
-	availableBuildingBlocks            availableBuildingBlocksStruct
-	availableBuildingBlocksModel       availableBuildingBlocksModelStruct
+	//availableBuildingBlocks            availableBuildingBlocksStruct
+	//availableBuildingBlocksModel       availableBuildingBlocksModelStruct
+	availableBuildingBlocksModel availableBuildingBlocksModelStruct
 }
+
+/*
+// The model for available Building Blocks used within the Tree-view in GUI
+type availableBuildingBlocksStruct struct {
+	logger                       *logrus.Logger
+
+	fenixGuiBuilderServerAddressToDial string
+	availableBuildingBlocksModel availableBuildingBlocksModelStruct
+}
+
+*/
 
 //var myUIServer UIServerStruct

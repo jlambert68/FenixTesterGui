@@ -10,7 +10,7 @@ import (
 type referencesStruct struct {
 	grpcIn   *grpc_in.GRPCInStruct
 	restAPI  *restAPI.RestApiStruct
-	uiServer *gui.UIServerStruct
+	uiServer *gui.GlobalUIServerStruct
 }
 
 /*

@@ -1,6 +1,7 @@
 package gui
 
 import (
+	"FenixTesterGui/grpc_out"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -34,9 +35,34 @@ type testCaseUIStruct struct {
 
 var image *canvas.Image
 
-// Main UI server module
-func (uiServer *UIServerStruct) StartUIServer() {
+func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 
+	uiServer := &UIServerStruct{
+		logger:                             nil,
+		fyneApp:                            nil,
+		tree:                               nil,
+		content:                            nil,
+		fenixGuiBuilderServerAddressToDial: "",
+		availableBuildingBlocksModel: availableBuildingBlocksModelStruct{
+			logger:                             nil,
+			fenixGuiBuilderServerAddressToDial: "",
+			fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
+			fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
+			availableBuildingBlocksForUITreeNodes:                                      nil,
+			grpcOut:                                                                    grpc_out.GRPCOutStruct{},
+		},
+	}
+
+	// Forward logger and Dail string
+	uiServer.SetLogger(globalUISServer.logger)
+	uiServer.SetDialAddressString(globalUISServer.fenixGuiBuilderServerAddressToDial)
+
+	uiServer.startTestCaseUIServer()
+
+}
+
+// Main UI server module
+func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	/*
 		myUIServer = UIServerStruct{
 			logger:  callersLoggerReference,
@@ -59,8 +85,8 @@ func (uiServer *UIServerStruct) StartUIServer() {
 	// myUIServer.grpcOut.SetLogger(myUIServer.logger)
 
 	// Add/Forward variables to packages to be used later
-	uiServer.grpcOut.SetLogger(uiServer.logger)
-	uiServer.grpcOut.SetDialAddressString(uiServer.fenixGuiBuilderServerAddressToDial)
+	uiServer.availableBuildingBlocksModel.grpcOut.SetLogger(uiServer.logger)
+	uiServer.availableBuildingBlocksModel.grpcOut.SetDialAddressString(uiServer.fenixGuiBuilderServerAddressToDial)
 
 	uiServer.fyneApp = app.NewWithID("se.fenix.testcasebuilder")
 	//fyneApp.Settings().SetTheme(&myTheme{})
@@ -68,7 +94,7 @@ func (uiServer *UIServerStruct) StartUIServer() {
 	fyneMasterWindow.SetMaster()
 
 	// Get Available Building BLocks form GUI-server
-	uiServer.loadAvailableBuildingBlocksFromServer()
+	uiServer.availableBuildingBlocksModel.loadAvailableBuildingBlocksFromServer()
 
 	// Initate and create the tree structure for available building blocks, of TestInstructions and TestInstructionContainers
 	uiServer.makeTreeUI()
@@ -180,7 +206,8 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 	availableAvailableBuildingBlocksUIBar := widget.NewToolbar(
 		widget.NewToolbarAction(theme.ContentRedoIcon(), func() {
 			fmt.Println("Reload Available Components from GuiServer")
-			uiServer.loadAvailableBuildingBlocksFromServer()
+			uiServer.availableBuildingBlocksModel.loadAvailableBuildingBlocksFromServer()
+			uiServer.makeTreeUI()
 		}),
 		widget.NewToolbarAction(theme.ContentAddIcon(), func() {
 			fmt.Println("Add to Pinned")

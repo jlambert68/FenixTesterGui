@@ -85,6 +85,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// myUIServer.grpcOut.SetLogger(myUIServer.logger)
 
 	// Add/Forward variables to packages to be used later
+	uiServer.availableBuildingBlocksModel.SetLogger(uiServer.logger)
 	uiServer.availableBuildingBlocksModel.grpcOut.SetLogger(uiServer.logger)
 	uiServer.availableBuildingBlocksModel.grpcOut.SetDialAddressString(uiServer.fenixGuiBuilderServerAddressToDial)
 
@@ -95,6 +96,9 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	// Get Available Building BLocks form GUI-server
 	uiServer.availableBuildingBlocksModel.loadAvailableBuildingBlocksFromServer()
+
+	// Create the Available Building Blocks adapted to Fyne tree-view
+	uiServer.availableBuildingBlocksModel.makeTreeUIModel()
 
 	// Initate and create the tree structure for available building blocks, of TestInstructions and TestInstructionContainers
 	uiServer.makeTreeUI()

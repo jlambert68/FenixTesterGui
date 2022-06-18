@@ -1,16 +1,15 @@
 package gui
 
 import (
-	common_config "FenixTesterGui/common_code"
+
 	"FenixTesterGui/grpc_out"
 	"fmt"
 	"github.com/golang/protobuf/jsonpb"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
-	"log"
-	"os"
+
 	"testing"
-	"time"
+
 
 	"FenixTesterGui/gui/UnitTestTestData"
 	"github.com/stretchr/testify/assert"
@@ -26,54 +25,6 @@ func testlist() *notelist {
 
 */
 
-// Init the logger for UnitTests
-func initLoggerForTest(filename string) (myTestLogger *logrus.Logger) {
-	myTestLogger = logrus.StandardLogger()
-
-	switch common_config.LoggingLevel {
-
-	case logrus.DebugLevel:
-		log.Println("'common_config.LoggingLevel': ", common_config.LoggingLevel)
-
-	case logrus.InfoLevel:
-		log.Println("'common_config.LoggingLevel': ", common_config.LoggingLevel)
-
-	case logrus.WarnLevel:
-		log.Println("'common_config.LoggingLevel': ", common_config.LoggingLevel)
-
-	default:
-		log.Println("Not correct value for debugging-level, this was used: ", common_config.LoggingLevel)
-		os.Exit(0)
-
-	}
-
-	logrus.SetLevel(common_config.LoggingLevel)
-	logrus.SetFormatter(&logrus.TextFormatter{
-		ForceColors:     true,
-		FullTimestamp:   true,
-		TimestampFormat: time.RFC3339Nano,
-		DisableSorting:  true,
-	})
-
-	//If no file then set standard out
-
-	if filename == "" {
-		myTestLogger.Out = os.Stdout
-
-	} else {
-		file, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0666)
-		if err == nil {
-			myTestLogger.Out = file
-		} else {
-			log.Println("Failed to log to file, using default stderr")
-		}
-	}
-
-	// Should only be done from init functions
-	//grpclog.SetLoggerV2(grpclog.NewLoggerV2(logger.Out, logger.Out, logger.Out))
-
-	return myTestLogger
-}
 
 //var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
 
@@ -91,7 +42,17 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testin
 		panic(err)
 	}
 
-	myLogger := initLoggerForTest("")
+	myLogger := UnitTestTestData.InitLoggerForTest("")
+
+	returnMessage := UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion(testInstructionsAndTestContainersMessage.)
+	if returnMessage.AckNack == false {
+		myLogger.WithFields(logrus.Fields{
+			"Id": "c9453631-46b0-47a0-86fa-fe2e5b51ed92",
+		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
+	}
+	myLogger.WithFields(logrus.Fields{
+		"Id": "c9453631-46b0-47a0-86fa-fe2e5b51ed92",
+	}).Info("Clean up and shut down servers")
 
 	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
 
@@ -139,7 +100,7 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainerss
 	}
 
 	// Initiate logger used when testing
-	myLogger := initLoggerForTest("")
+	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate availableBuildingBlocksModel
 	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
@@ -192,7 +153,7 @@ func TestLoadModelWithAvailableBuildingBlocks(t *testing.T) {
 	}
 
 	// Initiate logger used when testing
-	myLogger := initLoggerForTest("")
+	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate availableBuildingBlocksModel
 	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct

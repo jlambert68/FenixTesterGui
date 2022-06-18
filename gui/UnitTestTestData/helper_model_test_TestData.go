@@ -1,5 +1,14 @@
 package UnitTestTestData
 
+import (
+	common_config "FenixTesterGui/common_code"
+	fenixTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	"github.com/sirupsen/logrus"
+	"log"
+	"os"
+	"time"
+)
+
 // Availalbe Buoilding Blocks; ABB
 
 // ******* START ABB001 *******
@@ -110,3 +119,126 @@ var TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultIn
 var TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_007 string = "map[78a97c41-a098-4122-88d2-01ed4b6c4844:map[ca07bdd9-4152-4020-b3f0-fc750b45885e:map[aa1b9734-5dce-43c9-8d77-3368940cf126:{Emtpy parallelled processed Turbo TestInstructionsContainer [aa1b973] 78a97c41-a098-4122-88d2-01ed4b6c4844 Custody Arrangement ca07bdd9-4152-4020-b3f0-fc750b45885e CA Base containers aa1b9734-5dce-43c9-8d77-3368940cf126 Emtpy parallelled processed Turbo TestInstructionsContainer}]] e81b9734-5dce-43c9-8d77-3368940cf126:map[b107bdd9-4152-4020-b3f0-fc750b45885e:map[e107bdd9-4152-4020-b3f0-fc750b45885e:{Emtpy parallelled processed TestInstructionsContainer [e107bdd] e81b9734-5dce-43c9-8d77-3368940cf126 Fenix b107bdd9-4152-4020-b3f0-fc750b45885e Base containers e107bdd9-4152-4020-b3f0-fc750b45885e Emtpy parallelled processed TestInstructionsContainer} f81b9734-5dce-43c9-8d77-3368940cf126:{Emtpy serial processed TestInstructionsContainer [f81b973] e81b9734-5dce-43c9-8d77-3368940cf126 Fenix b107bdd9-4152-4020-b3f0-fc750b45885e Base containers f81b9734-5dce-43c9-8d77-3368940cf126 Emtpy serial processed TestInstructionsContainer}]]]"
 
 // ******* END ABB001 *******
+
+// Init the logger for UnitTests
+func InitLoggerForTest(filename string) (myTestLogger *logrus.Logger) {
+	myTestLogger = logrus.StandardLogger()
+
+	switch common_config.LoggingLevel {
+
+	case logrus.DebugLevel:
+		log.Println("'common_config.LoggingLevel': ", common_config.LoggingLevel)
+
+	case logrus.InfoLevel:
+		log.Println("'common_config.LoggingLevel': ", common_config.LoggingLevel)
+
+	case logrus.WarnLevel:
+		log.Println("'common_config.LoggingLevel': ", common_config.LoggingLevel)
+
+	default:
+		log.Println("Not correct value for debugging-level, this was used: ", common_config.LoggingLevel)
+		os.Exit(0)
+
+	}
+
+	logrus.SetLevel(common_config.LoggingLevel)
+	logrus.SetFormatter(&logrus.TextFormatter{
+		ForceColors:     true,
+		FullTimestamp:   true,
+		TimestampFormat: time.RFC3339Nano,
+		DisableSorting:  true,
+	})
+
+	//If no file then set standard out
+
+	if filename == "" {
+		myTestLogger.Out = os.Stdout
+
+	} else {
+		file, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0666)
+		if err == nil {
+			myTestLogger.Out = file
+		} else {
+			log.Println("Failed to log to file, using default stderr")
+		}
+	}
+
+	// Should only be done from init functions
+	//grpclog.SetLoggerV2(grpclog.NewLoggerV2(logger.Out, logger.Out, logger.Out))
+
+	return myTestLogger
+}
+
+// ********************************************************************************************************************
+// Check if testdata is using correct proto-file version
+func IsTestDataUsingCorrectTestDataProtoFileVersion(usedProtoFileVersion fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum) (returnMessage *fenixTestCaseBuilderServerGrpcApi.AckNackResponse) {
+
+	var clientUseCorrectProtoFileVersion bool
+	var protoFileExpected fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum
+	var protoFileUsed fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum
+
+	protoFileUsed = usedProtoFileVersion
+	protoFileExpected = fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(getHighestFenixTestDataProtoFileVersion())
+
+	// Check if correct proto files is used
+	if protoFileExpected == protoFileUsed {
+		clientUseCorrectProtoFileVersion = true
+	} else {
+		clientUseCorrectProtoFileVersion = false
+	}
+
+	// Check if Client is using correct proto files version
+	if clientUseCorrectProtoFileVersion == false {
+		// Not correct proto-file version is used
+
+		// Set Error codes to return message
+		var errorCodes []fenixTestCaseBuilderServerGrpcApi.ErrorCodesEnum
+		var errorCode fenixTestCaseBuilderServerGrpcApi.ErrorCodesEnum
+
+		errorCode = fenixTestCaseBuilderServerGrpcApi.ErrorCodesEnum_ERROR_WRONG_PROTO_FILE_VERSION
+		errorCodes = append(errorCodes, errorCode)
+
+		// Create Return message
+		returnMessage = &fenixTestCaseBuilderServerGrpcApi.AckNackResponse{
+			AckNack:    false,
+			Comments:   "Wrong proto file used. Expected: '" + protoFileExpected.String() + "', but got: '" + protoFileUsed.String() + "'",
+			ErrorCodes: errorCodes,
+		}
+		/*
+			fenixGuiTestCaseBuilderServerObject.logger.WithFields(logrus.Fields{
+				"id": "513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb",
+			}).Debug("Wrong proto file used. Expected: '" + protoFileExpected.String() + "', but got: '" + protoFileUsed.String() + "' for Client: " + callingClientUuid)
+		*/
+		return returnMessage
+
+	} else {
+		return nil
+	}
+
+}
+
+// ********************************************************************************************************************
+var highestFenixProtoFileVersion int32
+
+// Get the highest FenixProtoFileVersionEnumeration
+func getHighestFenixTestDataProtoFileVersion() int32 {
+
+	// Check if there already is a 'highestFenixProtoFileVersion' saved, if so use that one
+	if highestFenixProtoFileVersion != -1 {
+		return highestFenixProtoFileVersion
+	}
+
+	// Find the highest value for proto-file version
+	var maxValue int32
+	maxValue = 0
+
+	for _, v := range fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum_value {
+		if v > maxValue {
+			maxValue = v
+		}
+	}
+
+	highestFenixProtoFileVersion = maxValue
+
+	return highestFenixProtoFileVersion
+}

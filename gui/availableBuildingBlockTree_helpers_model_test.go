@@ -3,7 +3,6 @@ package gui
 import (
 	common_config "FenixTesterGui/common_code"
 	"FenixTesterGui/grpc_out"
-	"encoding/json"
 	"fmt"
 	"github.com/golang/protobuf/jsonpb"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
@@ -27,6 +26,7 @@ func testlist() *notelist {
 
 */
 
+// Init the logger for UnitTests
 func initLoggerForTest(filename string) (myTestLogger *logrus.Logger) {
 	myTestLogger = logrus.StandardLogger()
 
@@ -75,8 +75,9 @@ func initLoggerForTest(filename string) (myTestLogger *logrus.Logger) {
 	return myTestLogger
 }
 
-var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
+//var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
 
+// Checks that Available TestInstructions are put in Available Building Blocks-model in a correct way
 func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testing.T) {
 
 	var testInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage
@@ -105,14 +106,74 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testin
 	}
 
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructions(&testInstructionsAndTestContainersMessage)
-	fmt.Println(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes)
 
-	b, err := json.Marshal(&availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes)
+	// fmt.Println(availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap)
+	/*
+		fmt.Println(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes)
+		b, err := json.Marshal(&availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes)
 
-	if err != nil {
-		fmt.Println(err)
-		return
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(string(b))
+
+	*/
+
+	// Validate 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'
+	assert.Equal(t, fmt.Sprint(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes), UnitTestTestData.TestInstructionsAndTestInstructionsRespons_ABB001_ExpectedResultInModel_001)
+
+	// Validate 'availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap'
+	assert.Equal(t, fmt.Sprint(availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap), UnitTestTestData.TestInstructionsAndTestInstructionsRespons_ABB001_ExpectedResultInModel_002)
+
+}
+
+// Checks that Available TestInstructions are put in Available Building Blocks-model in a correct way
+func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainerss(t *testing.T) {
+
+	var testInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage
+
+	// Load data into gRPC-message response (from DB)
+	if err := jsonpb.UnmarshalString(UnitTestTestData.TestInstructionsAndTestInstructionsRespons_ABB001, &testInstructionsAndTestContainersMessage); err != nil {
+		panic(err)
 	}
-	fmt.Println(string(b))
-	assert.Equal(t, fmt.Sprint(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes), UnitTestTestData.TestInstructionsAndTestInstructionsRespons_ABB001_ExpectedResult)
+
+	// Initiate logger used when testing
+	myLogger := initLoggerForTest("")
+
+	// Initiate availableBuildingBlocksModel
+	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
+
+	availableBuildingBlocksModel = &availableBuildingBlocksModelStruct{
+		logger:                             myLogger,
+		fenixGuiBuilderServerAddressToDial: "",
+		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
+		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
+		availableBuildingBlocksForUITreeNodes:                                      nil,
+		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
+		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
+	}
+
+	// Load Available Building Blocks, in this case TestInstructionContainers
+	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(&testInstructionsAndTestContainersMessage)
+
+	fmt.Println(availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap)
+	/*
+		fmt.Println(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes)
+		b, err := json.Marshal(&availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes)
+
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(string(b))
+
+	*/
+
+	// Validate 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'
+	assert.Equal(t, fmt.Sprint(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes), UnitTestTestData.TestInstructionsAndTestInstructionsRespons_ABB001_ExpectedResultInModel_003)
+
+	// Validate 'availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap'
+	assert.Equal(t, fmt.Sprint(availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap), UnitTestTestData.TestInstructionsAndTestInstructionsRespons_ABB001_ExpectedResultInModel_004)
+
 }

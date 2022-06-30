@@ -2,18 +2,26 @@ package gcp
 
 import (
 	"FenixTesterGui/notToBeSentToGithub"
+	"fmt"
+	"github.com/gorilla/pat"
+	"github.com/gorilla/sessions"
+	"github.com/markbates/goth"
+	"github.com/markbates/goth/gothic"
+	"github.com/markbates/goth/providers/google"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
 	"google.golang.org/api/idtoken"
 	grpcMetadata "google.golang.org/grpc/metadata"
+	"html/template"
+	"net/http"
 	"time"
 )
 
-// GenerateGCPAccessToken Generate Google access token. Used when running in GCP
-func (Gcp *gcpObjectStruct) GenerateGCPAccessToken(ctx context.Context) (appendedCtx context.Context, returnAckNack bool, returnMessage string) {
+// GenerateGCPAccessTokenForServiceAccount Generate Google access token for a service account. Used when running in GCP
+func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForServiceAccount(ctx context.Context) (appendedCtx context.Context, returnAckNack bool, returnMessage string) {
 
 	// Only create the token if there is none, or it has expired
-	if Gcp.gcpAccessToken == nil || Gcp.gcpAccessToken.Expiry.Before(time.Now()) {
+	if gcp.gcpAccessTokenForServiceAccounts == nil || gcp.gcpAccessTokenForServiceAccounts.Expiry.Before(time.Now()) {
 
 		// Create an identity token.
 		// With a global TokenSource tokens would be reused and auto-refreshed at need.
@@ -52,7 +60,7 @@ func (Gcp *gcpObjectStruct) GenerateGCPAccessToken(ctx context.Context) (appende
 		tokenSource, err := idtoken.NewTokenSource(ctx, notToBeSentToGithub.Gcp_scope, idtoken.WithCredentialsJSON(notToBeSentToGithub.ServiceAccountKeyJson))
 
 		if err != nil {
-			Gcp.logger.WithFields(logrus.Fields{
+			gcp.logger.WithFields(logrus.Fields{
 				"ID":  "8ba622d8-b4cd-46c7-9f81-d9ade2568eca",
 				"err": err,
 			}).Error("Couldn't generate access token")
@@ -64,31 +72,203 @@ func (Gcp *gcpObjectStruct) GenerateGCPAccessToken(ctx context.Context) (appende
 		//token, err := config.TokenSource(oauth2.NoContext).Token()
 
 		if err != nil {
-			Gcp.logger.WithFields(logrus.Fields{
+			gcp.logger.WithFields(logrus.Fields{
 				"ID":  "0cf31da5-9e6b-41bc-96f1-6b78fb446194",
 				"err": err,
 			}).Error("Problem getting the token")
 
 			return nil, false, "Problem getting the token"
 		} else {
-			Gcp.logger.WithFields(logrus.Fields{
+			gcp.logger.WithFields(logrus.Fields{
 				"ID":    "8b1ca089-0797-4ee6-bf9d-f9b06f606ae9",
 				"token": "Nothing to see", //token,
 			}).Debug("Got Bearer Token")
 		}
 
-		Gcp.gcpAccessToken = token
+		gcp.gcpAccessTokenForServiceAccounts = token
 
 	}
 
-	Gcp.logger.WithFields(logrus.Fields{
+	gcp.logger.WithFields(logrus.Fields{
 		"ID": "cd124ca3-87bb-431b-9e7f-e044c52b4960",
-		"fenixGuiBuilderProxyServerObject.gcpAccessToken": "Nothing to see", //fenixGuiBuilderProxyServerObject.gcpAccessToken,
+		"fenixGuiBuilderProxyServerObject.gcpAccessTokenForServiceAccounts": "Nothing to see", //fenixGuiBuilderProxyServerObject.gcpAccessTokenForServiceAccounts,
 	}).Debug("Will use Bearer Token")
 
 	// Add token to gRPC Request.
-	appendedCtx = grpcMetadata.AppendToOutgoingContext(ctx, "authorization", "Bearer "+Gcp.gcpAccessToken.AccessToken)
+	appendedCtx = grpcMetadata.AppendToOutgoingContext(ctx, "authorization", "Bearer "+gcp.gcpAccessTokenForServiceAccounts.AccessToken)
 
 	return appendedCtx, true, ""
+
+}
+
+// DoneChannel - channel used for to close down local web server
+var DoneChannel chan bool
+
+func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForAuthorizedUser(ctx context.Context) (appendedCtx context.Context, returnAckNack bool, returnMessage string) {
+
+	// Secure that User is initiated
+	gcp.initiateUserObject()
+
+	// Only create the token if there is none, or it has expired (or 5 minutes before expiration
+	timeToCompareTo := time.Now().Add(-time.Minute * 5)
+	if !(gcp.gcpAccessTokenForAuthorizedAccounts.IDToken != "" || gcp.gcpAccessTokenForAuthorizedAccounts.ExpiresAt.Before(timeToCompareTo)) {
+		// We already have a ID-token that can be used, so return that
+		appendedCtx = grpcMetadata.AppendToOutgoingContext(ctx, "authorization", "Bearer "+gcp.gcpAccessTokenForAuthorizedAccounts.IDToken)
+
+		return appendedCtx, true, ""
+	}
+
+	// Need to create a new ID-token
+
+	key := "Secret-session-keyxyz" // Replace with your SESSION_SECRET or similar
+	maxAge := 86400 * 30           // 30 days
+	isProd := false                // Set to true when serving over https
+
+	store := sessions.NewCookieStore([]byte(key))
+	store.MaxAge(maxAge)
+	store.Options.Path = "/"
+	store.Options.HttpOnly = true // HttpOnly should always be enabled
+	store.Options.Secure = isProd
+
+	gothic.Store = store
+
+	goth.UseProviders(
+		//google.New("our-google-client-id", "our-google-client-secret", "http://localhost:3000/auth/google/callback", "email", "profile"),
+		google.New("944682210385-gpambi3aqcs7g6nf5abm7vdhi32crp8l.apps.googleusercontent.com", "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", "http://localhost:3000/auth/google/callback", "email", "profile"),
+	)
+	//"fenixguitestcasebuilderserver-nwxrrpoxea-lz.a.run.app",
+	router := pat.New()
+
+	router.Get("/auth/{provider}/callback", func(res http.ResponseWriter, req *http.Request) {
+
+		user, err := gothic.CompleteUserAuth(res, req)
+		if err != nil {
+
+			fmt.Fprintln(res, err)
+
+			return
+		}
+		t, _ := template.ParseFiles("templates/success.html")
+		t.Execute(res, user)
+
+		// Save ID-token
+		gcp.gcpAccessTokenForAuthorizedAccounts = user
+
+		// Trigger Close of Web Server, and 'true' means that a ID-to
+		DoneChannel <- true
+
+	})
+
+	router.Get("/logout/{provider}", func(res http.ResponseWriter, req *http.Request) {
+		gothic.Logout(res, req)
+		res.Header().Set("Location", "/")
+		res.WriteHeader(http.StatusTemporaryRedirect)
+	})
+
+	router.Get("/auth/{provider}", func(res http.ResponseWriter, req *http.Request) {
+		gothic.BeginAuthHandler(res, req)
+	})
+
+	router.Get("/", func(res http.ResponseWriter, req *http.Request) {
+		t, _ := template.ParseFiles("templates/index.html")
+		t.Execute(res, false)
+	})
+
+	// Initiate channel used to stop server
+	DoneChannel = make(chan bool, 1)
+
+	// Initiate http server
+	localWebServer := &http.Server{
+		Addr:    ":3000",
+		Handler: router,
+	}
+
+	// Start Local Web Server as go routine
+	go gcp.startLocalWebServer(localWebServer)
+
+	gcp.logger.WithFields(logrus.Fields{
+		"ID": "689d42de-3cc0-4237-b1e9-3a6c769f65ea",
+	}).Debug("Local webServer Started")
+
+	// Wait for message in channel to stop local web server
+	gotIdTokenResult := <-DoneChannel
+
+	// Shutdown local web server
+	gcp.stopLocalWebServer(context.Background(), localWebServer)
+
+	// Depending on the outcome of getting a token return different results
+	if gotIdTokenResult == true {
+		// Success in getting an ID-token
+		appendedCtx = grpcMetadata.AppendToOutgoingContext(ctx, "authorization", "Bearer "+gcp.gcpAccessTokenForAuthorizedAccounts.IDToken)
+
+		return appendedCtx, true, ""
+	} else {
+		// Didn't get any ID-token
+		return nil, false, "Couldn't generate access token"
+	}
+
+}
+
+// Start and run Local Web Server
+func (gcp *GcpObjectStruct) startLocalWebServer(webServer *http.Server) {
+	err := webServer.ListenAndServe()
+	if err != nil && err != http.ErrServerClosed {
+		Gcp.logger.WithFields(logrus.Fields{
+			"ID": "8226cf74-0cdc-4e29-a441-116504b4b333",
+		}).Fatalf("Local Web Server failed to listen: %s\n", err)
+
+	}
+}
+
+// Close down Local Web Server
+func (gcp *GcpObjectStruct) stopLocalWebServer(ctx context.Context, webServer *http.Server) {
+
+	gcp.logger.WithFields(logrus.Fields{
+		"ID": "1f4e0354-2a09-4a1d-be61-67ecda781142",
+	}).Debug("Trying to stop local web server")
+
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	err := webServer.Shutdown(ctx)
+	if err != nil {
+		if err != nil {
+			gcp.logger.WithFields(logrus.Fields{
+				"ID": "ea06dfab-39b9-4df6-b3ca-7f5f56b3cb91",
+			}).Fatalf("Local Web Server Shutdown Failed:%+v", err)
+
+		} else {
+			gcp.logger.WithFields(logrus.Fields{
+				"ID": "ea06dfab-39b9-4df6-b3ca-7f5f56b3cb91",
+			}).Debug("Local Web Server Exited Properly")
+		}
+
+	}
+
+}
+
+// SetLogger
+// Set to use the same Logger reference as is used by central part of system
+func (gcp *GcpObjectStruct) SetLogger(logger *logrus.Logger) {
+
+	//grpcOutVaraible = GRPCOutStruct{}
+
+	gcp.logger = logger
+
+	return
+
+}
+
+// initiateUserObject
+// Set to use the same Logger reference as is used by central part of system
+func (gcp *GcpObjectStruct) initiateUserObject() {
+
+	// Only do initiation if it's not done before
+
+	if gcp.gcpAccessTokenForAuthorizedAccounts.UserID == "" {
+		gcp.gcpAccessTokenForAuthorizedAccounts = goth.User{}
+	}
+
+	return
 
 }

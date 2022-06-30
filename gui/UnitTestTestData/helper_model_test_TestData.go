@@ -14,82 +14,273 @@ import (
 // ******* START ABB001 *******
 // Result when asking for Available Building Blocks
 var TestInstructionsAndTestInstructionsContainersRespons_ABB001 string = `{
-		"TestInstructionMessages": [
-	{
-	"DomainUuid": "78a97c41-a098-4122-88d2-01ed4b6c4844",
-	"DomainName": "Custody Arrangement",
-	"TestInstructionUuid": "2f130d7e-f8aa-466f-b29d-0fb63608c1a6",
-	"TestInstructionName": "Just the name",
-	"TestInstructionTypeUuid": "513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb",
-	"TestInstructionTypeName": "The type of the TestInstruction",
-	"TestInstructionDescription": "En vanlig typ",
-	"TestInstructionMouseOverText": "This will be shown when hovering above this TestInstruction",
-	"Deprecated": false,
-	"Enabled": true,
-	"MajorVersionNumber": 0,
-	"MinorVersionNumber": 1,
-	"UpdatedTimeStamp": "2022-04-29T15:42:15Z"
-	}
-	],
-	"TestInstructionContainerMessages": [
-	{
-	"DomainUuid": "e81b9734-5dce-43c9-8d77-3368940cf126",
-	"DomainName": "Fenix",
-	"TestInstructionContainerUuid": "f81b9734-5dce-43c9-8d77-3368940cf126",
-	"TestInstructionContainerName": "Emtpy serial processed TestInstructionsContainer",
-	"TestInstructionContainerTypeUuid": "b107bdd9-4152-4020-b3f0-fc750b45885e",
-	"TestInstructionContainerTypeName": "Base containers",
-	"TestInstructionContainerDescription": "Children of this container is processed in serial",
-	"TestInstructionContainerMouseOverText": "Children of this container is processed in serial",
-	"Deprecated": false,
-	"Enabled": true,
-	"MajorVersionNumber": 0,
-	"MinorVersionNumber": 1,
-	"UpdatedTimeStamp": "2022-05-02T10:10:07Z",
-	"TestInstructionContainerExecutionType": "SERIAL_PROCESSED",
-	"TestInstructionContainerChildren": []
-	},
-	{
-	"DomainUuid": "e81b9734-5dce-43c9-8d77-3368940cf126",
-	"DomainName": "Fenix",
-	"TestInstructionContainerUuid": "e107bdd9-4152-4020-b3f0-fc750b45885e",
-	"TestInstructionContainerName": "Emtpy parallelled processed TestInstructionsContainer",
-	"TestInstructionContainerTypeUuid": "b107bdd9-4152-4020-b3f0-fc750b45885e",
-	"TestInstructionContainerTypeName": "Base containers",
-	"TestInstructionContainerDescription": "Children of this container is processed in parallel",
-	"TestInstructionContainerMouseOverText": "Children of this container is processed in parallel",
-	"Deprecated": false,
-	"Enabled": true,
-	"MajorVersionNumber": 0,
-	"MinorVersionNumber": 1,
-	"UpdatedTimeStamp": "2022-05-02T10:08:28Z",
-	"TestInstructionContainerExecutionType": "PARALLELLED_PROCESSED",
-	"TestInstructionContainerChildren": []
-	},
-	{
-	"DomainUuid": "78a97c41-a098-4122-88d2-01ed4b6c4844",
-	"DomainName": "Custody Arrangement",
-	"TestInstructionContainerUuid": "aa1b9734-5dce-43c9-8d77-3368940cf126",
-	"TestInstructionContainerName": "Emtpy parallelled processed Turbo TestInstructionsContainer",
-	"TestInstructionContainerTypeUuid": "ca07bdd9-4152-4020-b3f0-fc750b45885e",
-	"TestInstructionContainerTypeName": "CA Base containers",
-	"TestInstructionContainerDescription": "Children of this CA-container is processed in parallel",
-	"TestInstructionContainerMouseOverText": "Children of this CA-container is processed in parallel",
-	"Deprecated": false,
-	"Enabled": true,
-	"MajorVersionNumber": 0,
-	"MinorVersionNumber": 1,
-	"UpdatedTimeStamp": "2022-06-16T16:09:43Z",
-	"TestInstructionContainerExecutionType": "PARALLELLED_PROCESSED",
-	"TestInstructionContainerChildren": []
-	}
-	],
-	"ackNackResponse": {
-	"AckNack": true,
-	"Comments": "",
-	"ErrorCodes": []
-	}
-	}`
+  "ImmatureTestInstructions": [
+    {
+      "BasicTestInstructionInformation": {
+        "NonEditableInformation": {
+          "DomainUuid": "78a97c41-a098-4122-88d2-01ed4b6c4844",
+          "DomainName": "Custody Arrangement",
+          "TestInstructionUuid": "2f130d7e-f8aa-466f-b29d-0fb63608c1a6",
+          "TestInstructionName": "Just the name",
+          "TestInstructionTypeUuid": "513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb",
+          "TestInstructionTypeName": "The type of the TestInstruction",
+          "Deprecated": false,
+          "MajorVersionNumber": 1,
+          "MinorVersionNumber": 0,
+          "UpdatedTimeStamp": "2022-06-19T14:11:52Z",
+          "TestInstructionColor": "#00ff00",
+          "TCRuleDeletion": "TCRuleDeletion020",
+          "TCRuleSwap": "TCRuleSwap020"
+        },
+        "EditableInformation": {
+          "TestInstructionDescription": "A TestIntruction that's cool",
+          "TestInstructionMouseOverText": "This will be shown when hovering above this TestInstruction"
+        },
+        "InvisibleBasicInformation": {
+          "Enabled": true
+        }
+      },
+      "ImmatureTestInstructionInformation": {
+        "AvailableDropZones": [
+          {
+            "DropZoneUuid": "a5c27024-e40c-49f7-8667-eab485c65105",
+            "DropZoneName": "My First DropZone",
+            "DropZoneDescription": "This is the Description of my first DropZone",
+            "DropZoneMouseOver": "This is the mouseover text for my first DropZone",
+            "DropZoneColor": "#0000ff",
+            "DropZonePreSetTestInstructionAttributes": [
+              {
+                "TestInstructionAttributeType": "TEXTBOX",
+                "TestInstructionAttributeUuid": "7fb2566e-bf27-44fd-818c-4591fa9c603c",
+                "TestInstructionAttributeName": "This attributes holds a Text",
+                "AttributeValueAsString": "Jonas",
+                "AttributeValueUuid": "7fb2566e-bf27-44fd-818c-4591fa9c603c"
+              }
+            ]
+          }
+        ]
+      },
+      "ImmatureSubTestCaseModel": {
+        "FirstImmatureElementUuid": "",
+        "TestCaseModelElements": [
+          {
+            "OriginalElementUuid": "2f130d7e-f8aa-466f-b29d-0fb63608c1a6",
+            "OriginalElementName": "Just the name",
+            "MatureElementUuid": "",
+            "PreviousElementUuid": "2f130d7e-f8aa-466f-b29d-0fb63608c1a6",
+            "NextElementUuid": "2f130d7e-f8aa-466f-b29d-0fb63608c1a6",
+            "FirstChildElementUuid": "2f130d7e-f8aa-466f-b29d-0fb63608c1a6",
+            "ParentElementUuid": "2f130d7e-f8aa-466f-b29d-0fb63608c1a6",
+            "TestCaseModelElementType": "TI_TESTINSTRUCTION",
+            "CurrentElementModelElement": "2f130d7e-f8aa-466f-b29d-0fb63608c1a6"
+          }
+        ]
+      }
+    }
+  ],
+  "ImmatureTestInstructionContainers": [
+    {
+      "BasicTestInstructionContainerInformation": {
+        "NonEditableInformation": {
+          "DomainUuid": "78a97c41-a098-4122-88d2-01ed4b6c4844",
+          "DomainName": "Custody Arrangement",
+          "TestInstructionContainerUuid": "aa1b9734-5dce-43c9-8d77-3368940cf126",
+          "TestInstructionContainerName": "Emtpy parallelled processed Turbo TestInstructionsContainer",
+          "TestInstructionContainerTypeUuid": "ca07bdd9-4152-4020-b3f0-fc750b45885e",
+          "TestInstructionContainerTypeName": "CA Base containers",
+          "Deprecated": false,
+          "MajorVersionNumber": 1,
+          "MinorVersionNumber": 0,
+          "UpdatedTimeStamp": "2022-06-22T17:15:16Z",
+          "TestInstructionContainerColor": "#aaaaaa",
+          "TCRuleDeletion": "TCRuleDeletion011",
+          "TCRuleSwap": "TCRuleSwap012"
+        },
+        "EditableInformation": {
+          "TestInstructionContainerDescription": "Children of this CA-container is processed in parallel",
+          "TestInstructionContainerMouseOverText": "Children of this CA-container is processed in parallel"
+        },
+        "InvisibleBasicInformation": {
+          "Enabled": true
+        },
+        "EditableTestInstructionContainerAttributes": {
+          "TestInstructionContainerExecutionType": "PARALLELLED_PROCESSED"
+        }
+      },
+      "ImmatureTestInstructionContainerInformation": {
+        "AvailableDropZones": []
+      },
+      "ImmatureSubTestCaseModel": {
+        "FirstImmatureElementUuid": "",
+        "TestCaseModelElements": [
+          {
+            "OriginalElementUuid": "aa1b9734-5dce-43c9-8d77-3368940cf126",
+            "OriginalElementName": "Emtpy parallelled processed Turbo TestInstructionsContainer",
+            "MatureElementUuid": "",
+            "PreviousElementUuid": "0883d538-1cff-4be1-ba1f-4dc1f68f6242",
+            "NextElementUuid": "0883d538-1cff-4be1-ba1f-4dc1f68f6242",
+            "FirstChildElementUuid": "0883d538-1cff-4be1-ba1f-4dc1f68f6242",
+            "ParentElementUuid": "aa1b9734-5dce-43c9-8d77-3368940cf126",
+            "TestCaseModelElementType": "B10_BOND",
+            "CurrentElementModelElement": "0883d538-1cff-4be1-ba1f-4dc1f68f6242"
+          },
+          {
+            "OriginalElementUuid": "aa1b9734-5dce-43c9-8d77-3368940cf126",
+            "OriginalElementName": "Emtpy parallelled processed Turbo TestInstructionsContainer",
+            "MatureElementUuid": "",
+            "PreviousElementUuid": "aa1b9734-5dce-43c9-8d77-3368940cf126",
+            "NextElementUuid": "aa1b9734-5dce-43c9-8d77-3368940cf126",
+            "FirstChildElementUuid": "0883d538-1cff-4be1-ba1f-4dc1f68f6242",
+            "ParentElementUuid": "aa1b9734-5dce-43c9-8d77-3368940cf126",
+            "TestCaseModelElementType": "TIC_TESTINSTRUCTIONCONTAINER",
+            "CurrentElementModelElement": "aa1b9734-5dce-43c9-8d77-3368940cf126"
+          }
+        ]
+      }
+    },
+    {
+      "BasicTestInstructionContainerInformation": {
+        "NonEditableInformation": {
+          "DomainUuid": "e81b9734-5dce-43c9-8d77-3368940cf126",
+          "DomainName": "Fenix",
+          "TestInstructionContainerUuid": "e107bdd9-4152-4020-b3f0-fc750b45885e",
+          "TestInstructionContainerName": "Emtpy parallelled processed TestInstructionsContainer",
+          "TestInstructionContainerTypeUuid": "b107bdd9-4152-4020-b3f0-fc750b45885e",
+          "TestInstructionContainerTypeName": "Base containers",
+          "Deprecated": false,
+          "MajorVersionNumber": 1,
+          "MinorVersionNumber": 0,
+          "UpdatedTimeStamp": "2022-06-22T17:15:16Z",
+          "TestInstructionContainerColor": "#aaaaaa",
+          "TCRuleDeletion": "TCRuleDeletion011",
+          "TCRuleSwap": "TCRuleSwap012"
+        },
+        "EditableInformation": {
+          "TestInstructionContainerDescription": "Children of this container is processed in parallel",
+          "TestInstructionContainerMouseOverText": "Children of this container is processed in parallel"
+        },
+        "InvisibleBasicInformation": {
+          "Enabled": true
+        },
+        "EditableTestInstructionContainerAttributes": {
+          "TestInstructionContainerExecutionType": "PARALLELLED_PROCESSED"
+        }
+      },
+      "ImmatureTestInstructionContainerInformation": {
+        "AvailableDropZones": []
+      },
+      "ImmatureSubTestCaseModel": {
+        "FirstImmatureElementUuid": "",
+        "TestCaseModelElements": [
+          {
+            "OriginalElementUuid": "e107bdd9-4152-4020-b3f0-fc750b45885e",
+            "OriginalElementName": "Emtpy parallelled processed TestInstructionsContainer",
+            "MatureElementUuid": "",
+            "PreviousElementUuid": "0883d538-1cff-4be1-ba1f-4dc1f68f6242",
+            "NextElementUuid": "0883d538-1cff-4be1-ba1f-4dc1f68f6242",
+            "FirstChildElementUuid": "0883d538-1cff-4be1-ba1f-4dc1f68f6242",
+            "ParentElementUuid": "e107bdd9-4152-4020-b3f0-fc750b45885e",
+            "TestCaseModelElementType": "B10_BOND",
+            "CurrentElementModelElement": "0883d538-1cff-4be1-ba1f-4dc1f68f6242"
+          },
+          {
+            "OriginalElementUuid": "e107bdd9-4152-4020-b3f0-fc750b45885e",
+            "OriginalElementName": "Emtpy parallelled processed TestInstructionsContainer",
+            "MatureElementUuid": "",
+            "PreviousElementUuid": "e107bdd9-4152-4020-b3f0-fc750b45885e",
+            "NextElementUuid": "e107bdd9-4152-4020-b3f0-fc750b45885e",
+            "FirstChildElementUuid": "0883d538-1cff-4be1-ba1f-4dc1f68f6242",
+            "ParentElementUuid": "e107bdd9-4152-4020-b3f0-fc750b45885e",
+            "TestCaseModelElementType": "TIC_TESTINSTRUCTIONCONTAINER",
+            "CurrentElementModelElement": "e107bdd9-4152-4020-b3f0-fc750b45885e"
+          }
+        ]
+      }
+    },
+    {
+      "BasicTestInstructionContainerInformation": {
+        "NonEditableInformation": {
+          "DomainUuid": "e81b9734-5dce-43c9-8d77-3368940cf126",
+          "DomainName": "Fenix",
+          "TestInstructionContainerUuid": "f81b9734-5dce-43c9-8d77-3368940cf126",
+          "TestInstructionContainerName": "Emtpy serial processed TestInstructionsContainer",
+          "TestInstructionContainerTypeUuid": "b107bdd9-4152-4020-b3f0-fc750b45885e",
+          "TestInstructionContainerTypeName": "Base containers",
+          "Deprecated": false,
+          "MajorVersionNumber": 1,
+          "MinorVersionNumber": 0,
+          "UpdatedTimeStamp": "2022-06-22T17:15:16Z",
+          "TestInstructionContainerColor": "#aaaaaa",
+          "TCRuleDeletion": "TCRuleDeletion011",
+          "TCRuleSwap": "TCRuleSwap012"
+        },
+        "EditableInformation": {
+          "TestInstructionContainerDescription": "Children of this container is processed in serial",
+          "TestInstructionContainerMouseOverText": "Children of this container is processed in serial"
+        },
+        "InvisibleBasicInformation": {
+          "Enabled": true
+        },
+        "EditableTestInstructionContainerAttributes": {
+          "TestInstructionContainerExecutionType": "SERIAL_PROCESSED"
+        }
+      },
+      "ImmatureTestInstructionContainerInformation": {
+        "AvailableDropZones": [
+          {
+            "DropZoneUuid": "c5e37024-e40c-49f7-8667-eab485c65105",
+            "DropZoneName": "My first DropZone for a TestInstructionContainer",
+            "DropZoneDescription": "This is the Description of my first DropZone",
+            "DropZoneMouseOver": "This is the mouseover text for my first DropZone",
+            "DropZoneColor": "#0000e",
+            "DropZonePreSetTestInstructionAttributes": [
+              {
+                "TestInstructionAttributeType": "TEXTBOX",
+                "TestInstructionAttributeUuid": "5cc2566e-bf27-44fd-818c-4591fa9c603c",
+                "TestInstructionAttributeName": "This attributes holds a Text but attribute is missing",
+                "AttributeValueAsString": "LambertJonas",
+                "AttributeValueUuid": "7fb2566e-bf27-44fd-818c-4591fa9c603c"
+              }
+            ]
+          }
+        ]
+      },
+      "ImmatureSubTestCaseModel": {
+        "FirstImmatureElementUuid": "",
+        "TestCaseModelElements": [
+          {
+            "OriginalElementUuid": "f81b9734-5dce-43c9-8d77-3368940cf126",
+            "OriginalElementName": "Emtpy serial processed TestInstructionsContainer",
+            "MatureElementUuid": "",
+            "PreviousElementUuid": "0883d538-1cff-4be1-ba1f-4dc1f68f6242",
+            "NextElementUuid": "0883d538-1cff-4be1-ba1f-4dc1f68f6242",
+            "FirstChildElementUuid": "0883d538-1cff-4be1-ba1f-4dc1f68f6242",
+            "ParentElementUuid": "f81b9734-5dce-43c9-8d77-3368940cf126",
+            "TestCaseModelElementType": "B10_BOND",
+            "CurrentElementModelElement": "0883d538-1cff-4be1-ba1f-4dc1f68f6242"
+          },
+          {
+            "OriginalElementUuid": "f81b9734-5dce-43c9-8d77-3368940cf126",
+            "OriginalElementName": "Emtpy serial processed TestInstructionsContainer",
+            "MatureElementUuid": "",
+            "PreviousElementUuid": "f81b9734-5dce-43c9-8d77-3368940cf126",
+            "NextElementUuid": "f81b9734-5dce-43c9-8d77-3368940cf126",
+            "FirstChildElementUuid": "0883d538-1cff-4be1-ba1f-4dc1f68f6242",
+            "ParentElementUuid": "f81b9734-5dce-43c9-8d77-3368940cf126",
+            "TestCaseModelElementType": "TIC_TESTINSTRUCTIONCONTAINER",
+            "CurrentElementModelElement": "f81b9734-5dce-43c9-8d77-3368940cf126"
+          }
+        ]
+      }
+    }
+  ],
+  "ackNackResponse": {
+    "AckNack": true,
+    "Comments": "",
+    "ErrorCodes": [],
+    "ProtoFileVersionUsedByClient": "VERSION_0_3"
+  }
+}`
 
 // *** Expected result, regarding TestInstructions, when asking for Available Building Blocks
 
@@ -204,11 +395,7 @@ func IsTestDataUsingCorrectTestDataProtoFileVersion(usedProtoFileVersion fenixTe
 			Comments:   "Wrong proto file used. Expected: '" + protoFileExpected.String() + "', but got: '" + protoFileUsed.String() + "'",
 			ErrorCodes: errorCodes,
 		}
-		/*
-			fenixGuiTestCaseBuilderServerObject.logger.WithFields(logrus.Fields{
-				"id": "513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb",
-			}).Debug("Wrong proto file used. Expected: '" + protoFileExpected.String() + "', but got: '" + protoFileUsed.String() + "' for Client: " + callingClientUuid)
-		*/
+
 		return returnMessage
 
 	} else {
@@ -224,7 +411,7 @@ var highestFenixProtoFileVersion int32
 func getHighestFenixTestDataProtoFileVersion() int32 {
 
 	// Check if there already is a 'highestFenixProtoFileVersion' saved, if so use that one
-	if highestFenixProtoFileVersion != -1 {
+	if highestFenixProtoFileVersion > 0 {
 		return highestFenixProtoFileVersion
 	}
 

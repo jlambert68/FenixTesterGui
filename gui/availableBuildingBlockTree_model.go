@@ -78,10 +78,10 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) makeTree
 // Load all Available Building Blocks from Gui-server
 func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadAvailableBuildingBlocksFromServer() {
 
-	var testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage
+	var testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
 
 	//grpcOut := grpc_out.GRPCOutStruct{}
-	testInstructionsAndTestContainersMessage = availableBuildingBlocksModel.grpcOut.SendGetTestInstructionsAndTestContainers("s41797")
+	testInstructionsAndTestContainersMessage = availableBuildingBlocksModel.grpcOut.SendListAllAvailableTestInstructionsAndTestInstructionContainers("s41797")
 
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks(testInstructionsAndTestContainersMessage)
 

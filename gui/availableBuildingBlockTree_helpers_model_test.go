@@ -1,7 +1,6 @@
 package gui
 
 import (
-
 	"FenixTesterGui/grpc_out"
 	"fmt"
 	"github.com/golang/protobuf/jsonpb"
@@ -9,7 +8,6 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"testing"
-
 
 	"FenixTesterGui/gui/UnitTestTestData"
 	"github.com/stretchr/testify/assert"
@@ -25,13 +23,12 @@ func testlist() *notelist {
 
 */
 
-
 //var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
 
 // Checks that Available TestInstructions are put in Available Building Blocks-model in a correct way
 func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testing.T) {
 
-	var testInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage
+	var testInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
 	//testInstructionsAndTestContainersMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage
 
 	//res := fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage{}
@@ -44,15 +41,13 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testin
 
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
-	returnMessage := UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion(testInstructionsAndTestContainersMessage.)
-	if returnMessage.AckNack == false {
+	// Verify That TestData is using correct proto-version
+	returnMessage := UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion(testInstructionsAndTestContainersMessage.AckNackResponse.ProtoFileVersionUsedByClient)
+	if returnMessage != nil && returnMessage.AckNack == false {
 		myLogger.WithFields(logrus.Fields{
 			"Id": "c9453631-46b0-47a0-86fa-fe2e5b51ed92",
 		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
 	}
-	myLogger.WithFields(logrus.Fields{
-		"Id": "c9453631-46b0-47a0-86fa-fe2e5b51ed92",
-	}).Info("Clean up and shut down servers")
 
 	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
 
@@ -92,7 +87,7 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testin
 // Checks that Available TestInstructionContainers are put in Available Building Blocks-model in a correct way
 func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainerss(t *testing.T) {
 
-	var testInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage
+	var testInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
 
 	// Load data into gRPC-meTestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainerssssage response (from DB)
 	if err := jsonpb.UnmarshalString(UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001, &testInstructionsAndTestContainersMessage); err != nil {
@@ -101,6 +96,14 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainerss
 
 	// Initiate logger used when testing
 	myLogger := UnitTestTestData.InitLoggerForTest("")
+
+	// Verify That TestData is using correct proto-version
+	returnMessage := UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion(testInstructionsAndTestContainersMessage.AckNackResponse.ProtoFileVersionUsedByClient)
+	if returnMessage != nil && returnMessage.AckNack == false {
+		myLogger.WithFields(logrus.Fields{
+			"Id": "715600c1-9ad0-4c6e-adc1-ae79b25dd810",
+		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
+	}
 
 	// Initiate availableBuildingBlocksModel
 	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
@@ -145,7 +148,7 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainerss
 // Checks that Available TestInstructions & TestInstructionContainers are put in Available Building Blocks-model in a correct way
 func TestLoadModelWithAvailableBuildingBlocks(t *testing.T) {
 
-	var testInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage
+	var testInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
 
 	// Load data into gRPC-message response (from DB)
 	if err := jsonpb.UnmarshalString(UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001, &testInstructionsAndTestContainersMessage); err != nil {
@@ -154,6 +157,14 @@ func TestLoadModelWithAvailableBuildingBlocks(t *testing.T) {
 
 	// Initiate logger used when testing
 	myLogger := UnitTestTestData.InitLoggerForTest("")
+
+	// Verify That TestData is using correct proto-version
+	returnMessage := UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion(testInstructionsAndTestContainersMessage.AckNackResponse.ProtoFileVersionUsedByClient)
+	if returnMessage != nil && returnMessage.AckNack == false {
+		myLogger.WithFields(logrus.Fields{
+			"Id": "c9453631-46b0-47a0-86fa-fe2e5b51ed92",
+		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
+	}
 
 	// Initiate availableBuildingBlocksModel
 	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct

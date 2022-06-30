@@ -18,9 +18,9 @@ type RestUserMessageStruct struct {
 }
 
 type RestSavePinnedInstructionsAndTestInstructionContainersToFenixGuiBuilderServerStruct struct {
-	UserId                                 string                                                                        `protobuf:"bytes,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
-	PinnedTestInstructionMessages          []*fenixGuiTestCaseBuilderServerGrpcApi.PinnedTestInstructionMessage          `protobuf:"bytes,3,rep,name=PinnedTestInstructionMessages,proto3" json:"PinnedTestInstructionMessages,omitempty"`
-	PinnedTestInstructionContainerMessages []*fenixGuiTestCaseBuilderServerGrpcApi.PinnedTestInstructionContainerMessage `protobuf:"bytes,4,rep,name=PinnedTestInstructionContainerMessages,proto3" json:"PinnedTestInstructionContainerMessages,omitempty"`
+	UserId                                 string                                                                                           `protobuf:"bytes,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
+	PinnedTestInstructionMessages          []*fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionMessage                    `protobuf:"bytes,3,rep,name=AvailablePinnedTestInstructionMessage,proto3" json:"PinnedTestInstructionMessages,omitempty"`
+	PinnedTestInstructionContainerMessages []*fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedPreCreatedTestInstructionContainerMessage `protobuf:"bytes,4,rep,name=AvailablePinnedPreCreatedTestInstructionContainerMessage,proto3" json:"PinnedTestInstructionContainerMessages,omitempty"`
 }
 
 func (restAPI *RestApiStruct) RestAPIServer() {
@@ -126,7 +126,7 @@ func (restAPI *RestApiStruct) RestSendGetInstructionsAndTestInstructionContainer
 	}).Debug("Outgoing 'RestApi - (GET) /testinstructions-and-testinstructioncontainers'")
 
 	// gRPC -response
-	var response *fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage
+	var response *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
 
 	// Variable where Rest-json-payload will end up in
 	jsonData := &RestUserMessageStruct{}
@@ -139,7 +139,7 @@ func (restAPI *RestApiStruct) RestSendGetInstructionsAndTestInstructionContainer
 	}
 
 	// Do gRPC-call
-	response = restAPI.GrpcOut.SendGetTestInstructionsAndTestContainers(jsonData.UserId)
+	response = restAPI.GrpcOut.SendListAllAvailableTestInstructionsAndTestInstructionContainers(jsonData.UserId)
 
 	// Create Header
 	w.Header().Set("Content-Type", "application/json")
@@ -182,7 +182,7 @@ func (restAPI *RestApiStruct) RestSendGetPinnedInstructionsAndTestInstructionCon
 	}).Debug("Outgoing 'RestApi - /pinned-testinstructions-and-testinstructioncontainers'")
 
 	// gRPC -response
-	var response *fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage
+	var response *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
 
 	// Variable where Rest-json-payload will end up in
 	jsonData := &RestUserMessageStruct{}
@@ -195,7 +195,7 @@ func (restAPI *RestApiStruct) RestSendGetPinnedInstructionsAndTestInstructionCon
 	}
 
 	// Do gRPC-call
-	response = restAPI.GrpcOut.SendGetPinnedTestInstructionsAndTestContainers(jsonData.UserId)
+	response = restAPI.GrpcOut.SendListAllAvailablePinnedTestInstructionsAndTestInstructionContainers(jsonData.UserId)
 
 	// Create Header
 	w.Header().Set("Content-Type", "application/json")
@@ -252,16 +252,16 @@ func (restAPI *RestApiStruct) RestSendSavePinnedInstructionsAndTestInstructionCo
 	grpcOut := grpc_out.GRPCOutStruct{}
 
 	// Create input message for gRPC-call
-	pinnedTestInstructionsAndTestContainersMessage := &fenixGuiTestCaseBuilderServerGrpcApi.PinnedTestInstructionsAndTestContainersMessage{
+	pinnedTestInstructionsAndTestContainersMessage := &fenixGuiTestCaseBuilderServerGrpcApi.SavePinnedTestInstructionsAndPreCreatedTestInstructionContainersMessage{
 		UserId: jsonData.UserId,
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
 			grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
-		PinnedTestInstructionMessages:          jsonData.PinnedTestInstructionMessages,
-		PinnedTestInstructionContainerMessages: jsonData.PinnedTestInstructionContainerMessages,
+		AvailablePinnedTestInstructions:                    jsonData.PinnedTestInstructionMessages,
+		AvailablePinnedPreCreatedTestInstructionContainers: jsonData.PinnedTestInstructionContainerMessages,
 	}
 
 	// Do gRPC-call
-	response = restAPI.GrpcOut.SendSavePinnedTestInstructionsAndTestContainers(pinnedTestInstructionsAndTestContainersMessage)
+	response = restAPI.GrpcOut.SendSaveAllPinnedTestInstructionsAndTestInstructionContainers(pinnedTestInstructionsAndTestContainersMessage)
 
 	// Create Header
 	w.Header().Set("Content-Type", "application/json")

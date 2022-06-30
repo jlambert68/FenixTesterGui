@@ -48,13 +48,15 @@ func (grpcOut *GRPCOutStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMe
 	if common_config.ExecutionLocationForFenixGuiServer == common_config.GCP {
 
 		// Add Access token
-		ctx, returnMessageAckNack, returnMessageString = gcp.Gcp.GenerateGCPAccessToken(ctx)
+		ctx, returnMessageAckNack, returnMessageString = gcp.Gcp.GenerateGCPAccessTokenForAuthorizedUser(ctx)
 		if returnMessageAckNack == false {
 			// When error
 			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{
 				AckNack:    false,
 				Comments:   returnMessageString,
 				ErrorCodes: nil,
+				ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
+					grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
 			}
 
 			return returnMessage
@@ -86,8 +88,8 @@ func (grpcOut *GRPCOutStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMe
 
 // ********************************************************************************************************************
 
-// SendGetTestInstructionsAndTestContainers - Get available TestInstructions and TestInstructionContainers
-func (grpcOut *GRPCOutStruct) SendGetTestInstructionsAndTestContainers(userId string) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage) {
+// SendListAllAvailableTestInstructionsAndTestInstructionContainers - Get available TestInstructions and TestInstructionContainers
+func (grpcOut *GRPCOutStruct) SendListAllAvailableTestInstructionsAndTestInstructionContainers(userId string) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -118,20 +120,25 @@ func (grpcOut *GRPCOutStruct) SendGetTestInstructionsAndTestContainers(userId st
 	// Only add access token when run on GCP
 	if common_config.ExecutionLocationForFenixGuiServer == common_config.GCP {
 
+		// Set logger in GCP-package
+		grpcOut.gcp.SetLogger(grpcOut.logger)
+
 		// Add Access token
-		ctx, returnMessageAckNack, returnMessageString = gcp.Gcp.GenerateGCPAccessToken(ctx)
+		ctx, returnMessageAckNack, returnMessageString = grpcOut.gcp.GenerateGCPAccessTokenForAuthorizedUser(ctx)
 		if returnMessageAckNack == false {
 			// When error
 			ackNackResponse := &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{
 				AckNack:    false,
 				Comments:   returnMessageString,
 				ErrorCodes: nil,
+				ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
+					grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
 			}
 
-			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage{
-				TestInstructionMessages:          nil,
-				TestInstructionContainerMessages: nil,
-				AckNackResponse:                  ackNackResponse,
+			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage{
+				ImmatureTestInstructions:          nil,
+				ImmatureTestInstructionContainers: nil,
+				AckNackResponse:                   ackNackResponse,
 			}
 
 			return returnMessage
@@ -140,29 +147,29 @@ func (grpcOut *GRPCOutStruct) SendGetTestInstructionsAndTestContainers(userId st
 	}
 
 	// Do the gRPC-call
-	returnMessage, err = fenixGuiBuilderServerGrpcClient.GetTestInstructionsAndTestContainers(ctx, userIdentificationMessage)
+	returnMessage, err = fenixGuiBuilderServerGrpcClient.ListAllAvailableTestInstructionsAndTestInstructionContainers(ctx, userIdentificationMessage)
 
 	// Shouldn't happen
 	if err != nil {
 		grpcOut.logger.WithFields(logrus.Fields{
 			"ID":    "d7235084-33e5-43a2-9fa7-dfb05ec6869e",
 			"error": err,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendGetTestInstructionsAndTestContainers'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListAllAvailableTestInstructionsAndTestInstructionContainers'")
 
 	} else if returnMessage.AckNackResponse.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
 		grpcOut.logger.WithFields(logrus.Fields{
 			"ID":                                     "30e6f1ee-202a-47bf-a2c4-5066d0f8cf75",
 			"Message from FenixTestGuiBuilderServer": returnMessage.AckNackResponse.Comments,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendGetTestInstructionsAndTestContainers'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListAllAvailableTestInstructionsAndTestInstructionContainers'")
 	}
 
 	return returnMessage
 
 }
 
-// SendGetPinnedTestInstructionsAndTestContainers - Get pinned TestInstructions and TestInstructionContainers
-func (grpcOut *GRPCOutStruct) SendGetPinnedTestInstructionsAndTestContainers(userId string) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage) {
+// SendListAllAvailablePinnedTestInstructionsAndTestInstructionContainers - Get pinned TestInstructions and TestInstructionContainers
+func (grpcOut *GRPCOutStruct) SendListAllAvailablePinnedTestInstructionsAndTestInstructionContainers(userId string) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -194,19 +201,21 @@ func (grpcOut *GRPCOutStruct) SendGetPinnedTestInstructionsAndTestContainers(use
 	if common_config.ExecutionLocationForFenixGuiServer == common_config.GCP {
 
 		// Add Access token
-		ctx, returnMessageAckNack, returnMessageString = gcp.Gcp.GenerateGCPAccessToken(ctx)
+		ctx, returnMessageAckNack, returnMessageString = gcp.Gcp.GenerateGCPAccessTokenForAuthorizedUser(ctx)
 		if returnMessageAckNack == false {
 			// When error
 			ackNackResponse := &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{
 				AckNack:    false,
 				Comments:   returnMessageString,
 				ErrorCodes: nil,
+				ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
+					grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
 			}
 
-			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionsAndTestContainersMessage{
-				TestInstructionMessages:          nil,
-				TestInstructionContainerMessages: nil,
-				AckNackResponse:                  ackNackResponse,
+			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage{
+				AvailablePinnedTestInstructions:                    nil,
+				AvailablePinnedPreCreatedTestInstructionContainers: nil,
+				AckNackResponse: ackNackResponse,
 			}
 
 			return returnMessage
@@ -215,29 +224,29 @@ func (grpcOut *GRPCOutStruct) SendGetPinnedTestInstructionsAndTestContainers(use
 	}
 
 	// Do the gRPC-call
-	returnMessage, err = fenixGuiBuilderServerGrpcClient.GetPinnedTestInstructionsAndTestContainers(ctx, userIdentificationMessage)
+	returnMessage, err = fenixGuiBuilderServerGrpcClient.ListAllAvailablePinnedTestInstructionsAndTestInstructionContainers(ctx, userIdentificationMessage)
 
 	// Shouldn't happen
 	if err != nil {
 		grpcOut.logger.WithFields(logrus.Fields{
 			"ID":    "7bff3257-a193-4d07-83aa-f106f6f734a0",
 			"error": err,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendGetPinnedTestInstructionsAndTestContainers'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListAllAvailablePinnedTestInstructionsAndTestInstructionContainers'")
 
 	} else if returnMessage.AckNackResponse.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
 		grpcOut.logger.WithFields(logrus.Fields{
 			"ID":                                     "72f79764-2549-4ce7-867e-16cd0f414dff",
 			"Message from FenixTestGuiBuilderServer": returnMessage.AckNackResponse.Comments,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendGetPinnedTestInstructionsAndTestContainers'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListAllAvailablePinnedTestInstructionsAndTestInstructionContainers'")
 	}
 
 	return returnMessage
 
 }
 
-// SendSavePinnedTestInstructionsAndTestContainers - Save pinned TestInstructions and TestInstructionContainers
-func (grpcOut *GRPCOutStruct) SendSavePinnedTestInstructionsAndTestContainers(pinnedTestInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.PinnedTestInstructionsAndTestContainersMessage) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse) {
+// SendSaveAllPinnedTestInstructionsAndTestInstructionContainers - Save pinned TestInstructions and TestInstructionContainers
+func (grpcOut *GRPCOutStruct) SendSaveAllPinnedTestInstructionsAndTestInstructionContainers(pinnedTestInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.SavePinnedTestInstructionsAndPreCreatedTestInstructionContainersMessage) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse) {
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -262,13 +271,15 @@ func (grpcOut *GRPCOutStruct) SendSavePinnedTestInstructionsAndTestContainers(pi
 	if common_config.ExecutionLocationForFenixGuiServer == common_config.GCP {
 
 		// Add Access token
-		ctx, returnMessageAckNack, returnMessageString = gcp.Gcp.GenerateGCPAccessToken(ctx)
+		ctx, returnMessageAckNack, returnMessageString = gcp.Gcp.GenerateGCPAccessTokenForAuthorizedUser(ctx)
 		if returnMessageAckNack == false {
 			// When error
 			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{
 				AckNack:    false,
 				Comments:   returnMessageString,
 				ErrorCodes: nil,
+				ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
+					grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
 			}
 
 			return returnMessage
@@ -277,21 +288,21 @@ func (grpcOut *GRPCOutStruct) SendSavePinnedTestInstructionsAndTestContainers(pi
 	}
 
 	// Do the gRPC-call
-	returnMessage, err = fenixGuiBuilderServerGrpcClient.SavePinnedTestInstructionsAndTestContainers(ctx, pinnedTestInstructionsAndTestContainersMessage)
+	returnMessage, err = fenixGuiBuilderServerGrpcClient.SaveAllPinnedTestInstructionsAndTestInstructionContainers(ctx, pinnedTestInstructionsAndTestContainersMessage)
 
 	// Shouldn't happen
 	if err != nil {
 		grpcOut.logger.WithFields(logrus.Fields{
 			"ID":    "b0743d37-cdda-425d-b391-74fb0ab0890e",
 			"error": err,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendSavePinnedTestInstructionsAndTestContainers'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendSaveAllPinnedTestInstructionsAndTestInstructionContainers'")
 
 	} else if returnMessage.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
 		grpcOut.logger.WithFields(logrus.Fields{
 			"ID":                                     "7aa6164b-9a51-47fb-8279-f4be52ebab3d",
 			"Message from FenixTestGuiBuilderServer": returnMessage.Comments,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendSavePinnedTestInstructionsAndTestContainers'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendSaveAllPinnedTestInstructionsAndTestInstructionContainers'")
 	}
 
 	return returnMessage

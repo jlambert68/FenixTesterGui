@@ -22,7 +22,7 @@ func cleanup() {
 
 		// Cleanup before close down application
 		fenixTesterGuiObject.logger.WithFields(logrus.Fields{
-			"Id": "9b1527db-b215-45cd-ac1e-dd37b276edb5",
+			"Id": "14dc7af0-5e46-4073-b920-8dffee7ca307",
 		}).Info("Clean up and shut down servers")
 
 		// Stop Backend gRPC Server
@@ -38,7 +38,7 @@ func fenixGuiBuilderServerMain() {
 	// Connect to CloudDB
 	//fenixSyncShared.ConnectToDB()
 
-	// Set up BackendObject
+	// Set up BackendObjec 	t
 	fenixTesterGuiObject = &fenixGuiBuilderProxyServerObjectStruct{
 		subPackageObjects: &referencesStruct{
 			grpcIn: &grpc_in.GRPCInStruct{},

@@ -9,6 +9,7 @@ import (
 	"github.com/markbates/goth/gothic"
 	"github.com/markbates/goth/providers/google"
 	"github.com/sirupsen/logrus"
+	"github.com/toqueteos/webbrowser"
 	"golang.org/x/net/context"
 	"google.golang.org/api/idtoken"
 	grpcMetadata "google.golang.org/grpc/metadata"
@@ -111,7 +112,7 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForAuthorizedUser(ctx context.
 
 	// Only create the token if there is none, or it has expired (or 5 minutes before expiration
 	timeToCompareTo := time.Now().Add(-time.Minute * 5)
-	if !(gcp.gcpAccessTokenForAuthorizedAccounts.IDToken != "" || gcp.gcpAccessTokenForAuthorizedAccounts.ExpiresAt.Before(timeToCompareTo)) {
+	if !(gcp.gcpAccessTokenForAuthorizedAccounts.IDToken == "" || gcp.gcpAccessTokenForAuthorizedAccounts.ExpiresAt.Before(timeToCompareTo)) {
 		// We already have a ID-token that can be used, so return that
 		appendedCtx = grpcMetadata.AppendToOutgoingContext(ctx, "authorization", "Bearer "+gcp.gcpAccessTokenForAuthorizedAccounts.IDToken)
 
@@ -211,6 +212,17 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForAuthorizedUser(ctx context.
 
 // Start and run Local Web Server
 func (gcp *GcpObjectStruct) startLocalWebServer(webServer *http.Server) {
+
+	go func() {
+		time.Sleep(1 * time.Second)
+		err := webbrowser.Open("http://localhost:3000")
+
+		gcp.logger.WithFields(logrus.Fields{
+			"ID":  "17bc0305-4594-48e1-bb8d-c642579e5e56",
+			"err": err,
+		}).Error("Couldn't open the web browser")
+
+	}()
 	err := webServer.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
 		Gcp.logger.WithFields(logrus.Fields{

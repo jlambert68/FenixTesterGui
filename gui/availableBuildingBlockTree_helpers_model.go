@@ -5,8 +5,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// Load Available Building Blocks, TestInstructions and TestInstructionContainers, from GUI-server
-// And Store them in model
+// Load Available Building Blocks, TestInstructions and TestInstructionContainers, from GUI-server into model
 func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadModelWithAvailableBuildingBlocks(testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	// Verify that AckNack Response is equal to AckNack = true
@@ -24,6 +23,26 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 
 	// Load TestInstructionContainers
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(testInstructionsAndTestContainersMessage)
+}
+
+// Load Pinned Building Blocks, TestInstructions and TestInstructionContainers, from GUI-server into model
+func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadModelWithPinnedBuildingBlocks(pinnedTestInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
+
+	// Verify that AckNack Response is equal to AckNack = true
+	if pinnedTestInstructionsAndTestContainersMessage.AckNackResponse.AckNack == false {
+		availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
+			"id": "707eb9c8-fd65-466e-aa82-1eca23b40345",
+		}).Fatalln("Code should not come here if AckNack == false")
+	}
+
+	// Reset 'pinnedBuildingBlocksForUITreeNodes'
+	availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes = make(map[string]string)
+
+	// Load relations between tree-name and original UUID for TestInstructions
+	availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructions(pinnedTestInstructionsAndTestContainersMessage)
+
+	// Load relations between tree-name and original UUID for TestInstructionContainers
+	availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(pinnedTestInstructionsAndTestContainersMessage)
 }
 
 // Load all available TestInstructions Building Blocks
@@ -248,4 +267,60 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 
 		}
 	}
+}
+
+// Load all Pinned TestInstructions Building Blocks into model
+func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadModelWithPinnedBuildingBlocksRegardingTestInstructions(pinnedTestInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
+
+	// If there are no Pinned TestInstructions then exit this function
+	if len(pinnedTestInstructionsAndTestContainersMessage.AvailablePinnedTestInstructions) == 0 {
+		return
+	}
+
+	// Loop through the Pinned TestInstructions and add them to the model
+	for _, pinnedTestInstruction := range pinnedTestInstructionsAndTestContainersMessage.AvailablePinnedTestInstructions {
+
+		// Get Tree-name from model and create reference between Pinned Tree-name and original UUID
+		availableTestInstructionFromTreeNameModel, existsInMap := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[pinnedTestInstruction.TestInstructionUuid]
+
+		// If the element is missing in map then there are something wrong
+		if existsInMap == false {
+			availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
+				"id":                    "fa3890ab-d756-4deb-b66c-5357167904e5",
+				"pinnedTestInstruction": pinnedTestInstruction,
+			}).Fatalln("Some is wrong because couldn't find the 'pinnedTestInstruction' in tree-view-name-model")
+		}
+
+		// Add relation between pinned name and the original elements UUID
+		availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[availableTestInstructionFromTreeNameModel.nameInUITree] = pinnedTestInstruction.TestInstructionUuid
+	}
+
+}
+
+// Load all Pinned TestInstructions Building Blocks into model
+func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(pinnedTestInstructionsAndTestInstructionsContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
+
+	// If there are no Pinned TestInstructions then exit this function
+	if len(pinnedTestInstructionsAndTestInstructionsContainersMessage.AvailablePinnedPreCreatedTestInstructionContainers) == 0 {
+		return
+	}
+
+	// Loop through the Pinned TestInstructionContainerss and add them to the model
+	for _, pinnedTestInstructionContainer := range pinnedTestInstructionsAndTestInstructionsContainersMessage.AvailablePinnedPreCreatedTestInstructionContainers {
+
+		// Get Tree-name from model and create reference between Pinned Tree-name and original UUID
+		availableTestInstructionContainerFromTreeNameModel, existsInMap := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[pinnedTestInstructionContainer.TestInstructionContainerUuid]
+
+		// If the element is missing in map then there are something wrong
+		if existsInMap == false {
+			availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
+				"id":                             "6f2781ef-4bf8-40c1-8da4-0ac6996ae04b",
+				"pinnedTestInstructionContainer": pinnedTestInstructionContainer,
+			}).Fatalln("Some is wrong because couldn't find the 'pinnedTestInstructionContainer' in tree-view-name-model")
+		}
+
+		// Add relation between pinned name and the original elements UUID
+		availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[availableTestInstructionContainerFromTreeNameModel.nameInUITree] = pinnedTestInstructionContainer.TestInstructionContainerUuid
+	}
+
 }

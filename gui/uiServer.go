@@ -97,6 +97,9 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Get Available Building BLocks form GUI-server
 	uiServer.availableBuildingBlocksModel.loadAvailableBuildingBlocksFromServer()
 
+	// Get Available Building BLocks form GUI-server
+	uiServer.availableBuildingBlocksModel.loadPinnedBuildingBlocksFromServer()
+
 	// Create the Available Building Blocks adapted to Fyne tree-view
 	uiServer.availableBuildingBlocksModel.makeTreeUIModel()
 
@@ -208,14 +211,28 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 
 	// Create toolbar for Available TestCase BuildingBlock area
 	availableAvailableBuildingBlocksUIBar := widget.NewToolbar(
+
+		// Icon for reloading Building Blocks from Server
 		widget.NewToolbarAction(theme.ContentRedoIcon(), func() {
 			fmt.Println("Reload Available Components from GuiServer")
+
+			// Load Available Building Blocks and Pinned Building Blocks from Server
 			uiServer.availableBuildingBlocksModel.loadAvailableBuildingBlocksFromServer()
+			uiServer.availableBuildingBlocksModel.loadPinnedBuildingBlocksFromServer()
+
+			// Recreate the TreeUIModel
+			uiServer.availableBuildingBlocksModel.makeTreeUIModel()
+
+			// Recreate the UI-tree-component
 			uiServer.makeTreeUI()
 		}),
+
+		// Icon for Adding Building Block to Pinned Building Blocks
 		widget.NewToolbarAction(theme.ContentAddIcon(), func() {
 			fmt.Println("Add to Pinned")
 		}),
+
+		// Icon for Removing Pinned Building Block
 		widget.NewToolbarAction(theme.ContentRemoveIcon(), func() {
 			fmt.Println("Remove from Pinned")
 		}),
@@ -229,6 +246,13 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 	tempcompleteAvailableTestCaseBuildingBlocksUI := container.New(availableTestCaseBuildingBlocksBorderedLayout, availableAvailableBuildingBlocksUIBar, container.NewVSplit(availableTestCaseBuildingBlocksTreeUI, uiServer.createTestCaseCommandsUI()))
 	//tempcompleteAvailableTestCaseBuildingBlocksUI.MinSize(fyne.NewSize(float32(300), float32(400))
 
+	//templabel := widget.NewLabel("MyLabel")
+
+	//newAll := container.NewWithoutLayout(tempcompleteAvailableTestCaseBuildingBlocksUI, templabel)
+
+	//templabel.Move(fyne.NewPos(200, 200))
+
+	//completeAvailableTestCaseBuildingBlocksUI = newAll
 	completeAvailableTestCaseBuildingBlocksUI = tempcompleteAvailableTestCaseBuildingBlocksUI //container.New(layout.NewVBoxLayout(), tempcompleteAvailableTestCaseBuildingBlocksUI) //, layout.NewSpacer(), testCaseUI.createTestCaseCommandsUI())
 
 	return completeAvailableTestCaseBuildingBlocksUI

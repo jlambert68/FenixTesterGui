@@ -12,7 +12,7 @@ import (
 // Availalbe Buoilding Blocks; ABB
 
 // ******* START ABB001 *******
-// Result when asking for Available Building Blocks
+// gRPC-result when asking for Available Building Blocks
 var TestInstructionsAndTestInstructionsContainersRespons_ABB001 string = `{
   "ImmatureTestInstructions": [
     {
@@ -310,6 +310,46 @@ var TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultIn
 var TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_007 string = "map[78a97c41-a098-4122-88d2-01ed4b6c4844:map[ca07bdd9-4152-4020-b3f0-fc750b45885e:map[aa1b9734-5dce-43c9-8d77-3368940cf126:{Emtpy parallelled processed Turbo TestInstructionsContainer [aa1b973] 78a97c41-a098-4122-88d2-01ed4b6c4844 Custody Arrangement ca07bdd9-4152-4020-b3f0-fc750b45885e CA Base containers aa1b9734-5dce-43c9-8d77-3368940cf126 Emtpy parallelled processed Turbo TestInstructionsContainer}]] e81b9734-5dce-43c9-8d77-3368940cf126:map[b107bdd9-4152-4020-b3f0-fc750b45885e:map[e107bdd9-4152-4020-b3f0-fc750b45885e:{Emtpy parallelled processed TestInstructionsContainer [e107bdd] e81b9734-5dce-43c9-8d77-3368940cf126 Fenix b107bdd9-4152-4020-b3f0-fc750b45885e Base containers e107bdd9-4152-4020-b3f0-fc750b45885e Emtpy parallelled processed TestInstructionsContainer} f81b9734-5dce-43c9-8d77-3368940cf126:{Emtpy serial processed TestInstructionsContainer [f81b973] e81b9734-5dce-43c9-8d77-3368940cf126 Fenix b107bdd9-4152-4020-b3f0-fc750b45885e Base containers f81b9734-5dce-43c9-8d77-3368940cf126 Emtpy serial processed TestInstructionsContainer}]]]"
 
 // ******* END ABB001 *******
+
+// Pinned Building Blocks; PBB
+
+// ******* START PBB001 *******
+// gRPC-result when asking for Pinned Building Blocks
+var PinnedTestInstructionsAndTestInstructionsContainersRespons_PBB001 string = `{
+  "AvailablePinnedTestInstructions": [
+    {
+      "TestInstructionUuid": "2f130d7e-f8aa-466f-b29d-0fb63608c1a6",
+      "TestInstructionName": "TestInstructionName 1"
+    }
+  ],
+  "AvailablePinnedPreCreatedTestInstructionContainers": [
+    {
+      "TestInstructionContainerUuid": "f81b9734-5dce-43c9-8d77-3368940cf126",
+      "TestInstructionContainerName": "TestInstructionContainerName 1"
+    },
+    {
+      "TestInstructionContainerUuid": "e107bdd9-4152-4020-b3f0-fc750b45885e",
+      "TestInstructionContainerName": "TestInstructionContainerName"
+    }
+  ],
+  "ackNackResponse": {
+    "AckNack": true,
+    "Comments": "",
+    "ErrorCodes": [],
+    "ProtoFileVersionUsedByClient": "VERSION_0_3"
+  }
+}`
+
+// All Pinned TestInstructions
+var TestInstructionsAndTestInstructionsContainersRespons_PBB001_ExpectedResultInModel_001 string = "map[Just the name [2f130d7]:2f130d7e-f8aa-466f-b29d-0fb63608c1a6]"
+
+// All Pinned TestInstructionContainers
+var TestInstructionsAndTestInstructionsContainersRespons_PBB001_ExpectedResultInModel_002 string = "map[Emtpy parallelled processed TestInstructionsContainer [e107bdd]:e107bdd9-4152-4020-b3f0-fc750b45885e Emtpy serial processed TestInstructionsContainer [f81b973]:f81b9734-5dce-43c9-8d77-3368940cf126]"
+
+// All Pinned TestInstructions and TestInstructionContainers
+var TestInstructionsAndTestInstructionsContainersRespons_PBB001_ExpectedResultInModel_003 string = "map[Emtpy parallelled processed TestInstructionsContainer [e107bdd]:e107bdd9-4152-4020-b3f0-fc750b45885e Emtpy serial processed TestInstructionsContainer [f81b973]:f81b9734-5dce-43c9-8d77-3368940cf126 Just the name [2f130d7]:2f130d7e-f8aa-466f-b29d-0fb63608c1a6]"
+
+// ******* END PBB001 *******
 
 // Init the logger for UnitTests
 func InitLoggerForTest(filename string) (myTestLogger *logrus.Logger) {

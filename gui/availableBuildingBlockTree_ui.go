@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
+	"log"
 	//"golang.org/x/exp/maps"
 )
 
@@ -49,7 +50,7 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 
 		CreateNode: func(branch bool) fyne.CanvasObject {
 			fmt.Println("CreateNode: ")
-			return widget.NewLabel("Collection Widgets: ")
+			return newTappableLabel() //widget.NewLabel("Collection Widgets: ")
 		},
 
 		UpdateNode: func(uid string, branch bool, obj fyne.CanvasObject) {
@@ -61,7 +62,7 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 					return
 				}
 			*/
-			obj.(*widget.Label).SetText(uid) // + time.Now().String())
+			obj.(*tappableLabel).SetText(uid) //obj.(*widget.Label).SetText(uid) // + time.Now().String())
 			fmt.Println(tree.Size())
 		},
 
@@ -75,4 +76,41 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 		},
 	}
 
+}
+
+type tappableLabel struct {
+	widget.Label
+	movableLable *widget.Label
+}
+
+func newTappableLabel() *tappableLabel {
+	label := &tappableLabel{}
+	label.ExtendBaseWidget(label)
+	//icon.SetResource(res)
+
+	return label
+}
+
+func (t *tappableLabel) Tapped(_ *fyne.PointEvent) {
+	log.Println("I have been tapped")
+
+	fmt.Println(t.Position())
+}
+
+func (t *tappableLabel) TappedSecondary(_ *fyne.PointEvent) {
+	log.Println("I have been Secondary tapped")
+}
+
+func (t *tappableLabel) Dragged(ev *fyne.DragEvent) {
+	log.Println("I have been Dragged: ", t.Position())
+	t.movableLable = widget.NewLabel("DRAGGED")
+	t.movableLable.Move(ev.Position)
+	t.TextStyle.Bold = true
+	fmt.Println(fmt.Println(t.Text))
+
+}
+
+func (t *tappableLabel) DragEnd() {
+	log.Println("I have been DragEnd")
+	t.TextStyle.Bold = false
 }

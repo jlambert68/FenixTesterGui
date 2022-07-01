@@ -81,9 +81,23 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadAvai
 	var testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
 
 	//grpcOut := grpc_out.GRPCOutStruct{}
-	testInstructionsAndTestContainersMessage = availableBuildingBlocksModel.grpcOut.SendListAllAvailableTestInstructionsAndTestInstructionContainers("s41797")
+	testInstructionsAndTestContainersMessage = availableBuildingBlocksModel.grpcOut.SendListAllAvailableTestInstructionsAndTestInstructionContainers("s41797") //TODO change to use current logged in to computer user
 
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks(testInstructionsAndTestContainersMessage)
+
+	fmt.Println(testInstructionsAndTestContainersMessage)
+
+}
+
+// Load all Pinned Building Blocks from Gui-server
+func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadPinnedBuildingBlocksFromServer() {
+
+	var testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
+
+	//grpcOut := grpc_out.GRPCOutStruct{}
+	testInstructionsAndTestContainersMessage = availableBuildingBlocksModel.grpcOut.SendListAllAvailablePinnedTestInstructionsAndTestInstructionContainers("s41797") //TODO change to use current logged in to computer user
+
+	availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks(testInstructionsAndTestContainersMessage)
 
 	fmt.Println(testInstructionsAndTestContainersMessage)
 

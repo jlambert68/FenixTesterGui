@@ -107,6 +107,7 @@ type availableBuildingBlocksModelStruct struct {
 	fullDomainTestInstructionTypeTestInstructionRelationsMap                   map[string]map[string]map[string]availableTestInstructionStruct
 	fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap map[string]map[string]map[string]availableTestInstructionContainerStruct
 	availableBuildingBlocksForUITreeNodes                                      map[string]availableBuildingBlocksForUITreeNodesStruct
+	pinnedBuildingBlocksForUITreeNodes                                         map[string]string //map[nameInUITree]uuid
 	grpcOut                                                                    grpc_out.GRPCOutStruct
 	availableBuildingBlockModelSuitedForFyneTreeView                           map[string][]string
 }

@@ -81,7 +81,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 				name:         testInstruction.BasicTestInstructionInformation.NonEditableInformation.DomainName,
 			}
 			// Set UI Node name in node
-			tempNode.nameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode)
+			tempNode.nameInUITree, tempNode.pinnedNameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode, "Can not be pinned")
 
 			_, existInMap = availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.DomainUuid]
 			if existInMap == false {
@@ -106,7 +106,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 				name:         testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeName,
 			}
 			// Set UI Node name in node
-			tempNode.nameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode)
+			tempNode.nameInUITree, tempNode.pinnedNameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode, "Can not be pinned")
 
 			_, existInMap = availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeUuid]
 			if existInMap == false {
@@ -136,7 +136,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 			name:         testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionName,
 		}
 		// Set UI Node name in nodes
-		tempNode.nameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode)
+		tempNode.nameInUITree, tempNode.pinnedNameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode, testInstruction.BasicTestInstructionInformation.NonEditableInformation.DomainName)
 		tempTestInstruction.testInstructionNameInUITree = tempNode.nameInUITree
 
 		// If TestInstruction doesn't exist then add it with its full map-structure
@@ -193,7 +193,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 				name:         testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.DomainName,
 			}
 			// Set UI Node name in node
-			tempNode.nameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode)
+			tempNode.nameInUITree, tempNode.pinnedNameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode, "Can not be pinned")
 
 			_, existInMap = availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.DomainUuid]
 			if existInMap == false {
@@ -218,7 +218,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 				name:         testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerTypeName,
 			}
 			// Set UI Node name in node
-			tempNode.nameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode)
+			tempNode.nameInUITree, tempNode.pinnedNameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode, "Can not be pinned")
 
 			_, existInMap = availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerTypeUuid]
 			if existInMap == false {
@@ -248,7 +248,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 			name:         testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerName,
 		}
 		// Set UI Node name in nodes
-		tempNode.nameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode)
+		tempNode.nameInUITree, tempNode.pinnedNameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode, testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.DomainName)
 		tempTestInstructionContainer.testInstructionContainerNameInUITree = tempNode.nameInUITree
 
 		// If TestInstructionContainer doesn't exist then add it with its full map-structure

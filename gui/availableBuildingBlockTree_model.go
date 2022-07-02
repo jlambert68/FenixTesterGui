@@ -5,7 +5,7 @@ import (
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 )
 
-// Generate the model used to drive the Available Building Blocks-Tree
+// Gets the model used to drive the Available Building Blocks-Tree
 func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getAvailableBuildingBlocksModel() map[string][]string {
 
 	return availableBuildingBlocksModel.availableBuildingBlockModelSuitedForFyneTreeView
@@ -106,11 +106,13 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadPinn
 // *********** Generate Names for UI-Tree (Start)***********
 
 // Generate UI Tree name for 'Domain', TestInstructionType, TestInstruction, TestInstructionContainerType and TestInstructionContainer for the Available Building Blocks UI-Tree
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) generateUITreeName(node availableBuildingBlocksForUITreeNodesStruct) (treeName string) {
+func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) generateUITreeName(node availableBuildingBlocksForUITreeNodesStruct, domainName string) (treeName string, pinnedTreeName string) {
 
 	treeName = node.name + " [" + node.uuid[0:numberOfCharactersfromUuid-1] + "]"
 
-	return treeName
+	pinnedTreeName = node.name + " (" + domainName + ")" + " [" + node.uuid[0:numberOfCharactersfromUuid-1] + "]"
+
+	return treeName, pinnedTreeName
 }
 
 // Generate UI Tree name for 'TestInstructionsHeader' for Available Building Blocks
@@ -213,4 +215,16 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getAvail
 	}
 
 	return availableTestInstructionContainers
+}
+
+// Pin one Available Building Block (TestInstruction or TestInstructionContainer, if it isn't already pinned
+func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) pinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string) (err error) {
+
+	return err
+}
+
+// Unpin one pinned Available Building Block (TestInstruction or TestInstructionContainer
+func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) unPinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string) (err error) {
+
+	return err
 }

@@ -1,7 +1,6 @@
 package UnitTestTestData
 
 import (
-	common_config "FenixTesterGui/common_code"
 	fenixTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"log"
@@ -285,7 +284,7 @@ var TestInstructionsAndTestInstructionsContainersRespons_ABB001 string = `{
 // *** Expected result, regarding TestInstructions, when asking for Available Building Blocks
 
 // All TestDomains, TestInstructionTypes and TestInstructions
-var TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_001 string = "map[2f130d7e-f8aa-466f-b29d-0fb63608c1a6:{Just the name [2f130d7] 2f130d7e-f8aa-466f-b29d-0fb63608c1a6 Just the name} 513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb:{The type of the TestInstruction [513dd8f] 513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb The type of the TestInstruction} 78a97c41-a098-4122-88d2-01ed4b6c4844:{Custody Arrangement [78a97c4] 78a97c41-a098-4122-88d2-01ed4b6c4844 Custody Arrangement}]"
+var TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_001 string = "map[2f130d7e-f8aa-466f-b29d-0fb63608c1a6:{Just the name [2f130d7] Just the name (Custody Arrangement) [2f130d7] 2f130d7e-f8aa-466f-b29d-0fb63608c1a6 Just the name} 513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb:{The type of the TestInstruction [513dd8f] The type of the TestInstruction (Can not be pinned) [513dd8f] 513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb The type of the TestInstruction} 78a97c41-a098-4122-88d2-01ed4b6c4844:{Custody Arrangement [78a97c4] Custody Arrangement (Can not be pinned) [78a97c4] 78a97c41-a098-4122-88d2-01ed4b6c4844 Custody Arrangement}]"
 
 // The model with structure adjusted to a tree-view, Only TestInstruction-part
 var TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_002 string = "map[78a97c41-a098-4122-88d2-01ed4b6c4844:map[513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb:map[2f130d7e-f8aa-466f-b29d-0fb63608c1a6:{Just the name [2f130d7] 78a97c41-a098-4122-88d2-01ed4b6c4844 Custody Arrangement 513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb The type of the TestInstruction 2f130d7e-f8aa-466f-b29d-0fb63608c1a6 Just the name}]]]"
@@ -293,7 +292,7 @@ var TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultIn
 // *** Expected result, regarding TestInstructionContainerss, when asking for Available Building Blocks
 
 // All TestDomains, TestInstructionContainerTypes and TestInstructionContainers
-var TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_003 string = "map[78a97c41-a098-4122-88d2-01ed4b6c4844:{Custody Arrangement [78a97c4] 78a97c41-a098-4122-88d2-01ed4b6c4844 Custody Arrangement} aa1b9734-5dce-43c9-8d77-3368940cf126:{Emtpy parallelled processed Turbo TestInstructionsContainer [aa1b973] aa1b9734-5dce-43c9-8d77-3368940cf126 Emtpy parallelled processed Turbo TestInstructionsContainer} b107bdd9-4152-4020-b3f0-fc750b45885e:{Base containers [b107bdd] b107bdd9-4152-4020-b3f0-fc750b45885e Base containers} ca07bdd9-4152-4020-b3f0-fc750b45885e:{CA Base containers [ca07bdd] ca07bdd9-4152-4020-b3f0-fc750b45885e CA Base containers} e107bdd9-4152-4020-b3f0-fc750b45885e:{Emtpy parallelled processed TestInstructionsContainer [e107bdd] e107bdd9-4152-4020-b3f0-fc750b45885e Emtpy parallelled processed TestInstructionsContainer} e81b9734-5dce-43c9-8d77-3368940cf126:{Fenix [e81b973] e81b9734-5dce-43c9-8d77-3368940cf126 Fenix} f81b9734-5dce-43c9-8d77-3368940cf126:{Emtpy serial processed TestInstructionsContainer [f81b973] f81b9734-5dce-43c9-8d77-3368940cf126 Emtpy serial processed TestInstructionsContainer}]"
+var TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_003 string = "map[78a97c41-a098-4122-88d2-01ed4b6c4844:{Custody Arrangement [78a97c4] Custody Arrangement (Can not be pinned) [78a97c4] 78a97c41-a098-4122-88d2-01ed4b6c4844 Custody Arrangement} aa1b9734-5dce-43c9-8d77-3368940cf126:{Emtpy parallelled processed Turbo TestInstructionsContainer [aa1b973] Emtpy parallelled processed Turbo TestInstructionsContainer (Custody Arrangement) [aa1b973] aa1b9734-5dce-43c9-8d77-3368940cf126 Emtpy parallelled processed Turbo TestInstructionsContainer} b107bdd9-4152-4020-b3f0-fc750b45885e:{Base containers [b107bdd] Base containers (Can not be pinned) [b107bdd] b107bdd9-4152-4020-b3f0-fc750b45885e Base containers} ca07bdd9-4152-4020-b3f0-fc750b45885e:{CA Base containers [ca07bdd] CA Base containers (Can not be pinned) [ca07bdd] ca07bdd9-4152-4020-b3f0-fc750b45885e CA Base containers} e107bdd9-4152-4020-b3f0-fc750b45885e:{Emtpy parallelled processed TestInstructionsContainer [e107bdd] Emtpy parallelled processed TestInstructionsContainer (Fenix) [e107bdd] e107bdd9-4152-4020-b3f0-fc750b45885e Emtpy parallelled processed TestInstructionsContainer} e81b9734-5dce-43c9-8d77-3368940cf126:{Fenix [e81b973] Fenix (Can not be pinned) [e81b973] e81b9734-5dce-43c9-8d77-3368940cf126 Fenix} f81b9734-5dce-43c9-8d77-3368940cf126:{Emtpy serial processed TestInstructionsContainer [f81b973] Emtpy serial processed TestInstructionsContainer (Fenix) [f81b973] f81b9734-5dce-43c9-8d77-3368940cf126 Emtpy serial processed TestInstructionsContainer}]"
 
 // The model with structure adjusted to a tree-view, Only TestInstruction-part
 var TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_004 string = "map[78a97c41-a098-4122-88d2-01ed4b6c4844:map[ca07bdd9-4152-4020-b3f0-fc750b45885e:map[aa1b9734-5dce-43c9-8d77-3368940cf126:{Emtpy parallelled processed Turbo TestInstructionsContainer [aa1b973] 78a97c41-a098-4122-88d2-01ed4b6c4844 Custody Arrangement ca07bdd9-4152-4020-b3f0-fc750b45885e CA Base containers aa1b9734-5dce-43c9-8d77-3368940cf126 Emtpy parallelled processed Turbo TestInstructionsContainer}]] e81b9734-5dce-43c9-8d77-3368940cf126:map[b107bdd9-4152-4020-b3f0-fc750b45885e:map[e107bdd9-4152-4020-b3f0-fc750b45885e:{Emtpy parallelled processed TestInstructionsContainer [e107bdd] e81b9734-5dce-43c9-8d77-3368940cf126 Fenix b107bdd9-4152-4020-b3f0-fc750b45885e Base containers e107bdd9-4152-4020-b3f0-fc750b45885e Emtpy parallelled processed TestInstructionsContainer} f81b9734-5dce-43c9-8d77-3368940cf126:{Emtpy serial processed TestInstructionsContainer [f81b973] e81b9734-5dce-43c9-8d77-3368940cf126 Fenix b107bdd9-4152-4020-b3f0-fc750b45885e Base containers f81b9734-5dce-43c9-8d77-3368940cf126 Emtpy serial processed TestInstructionsContainer}]]]"
@@ -301,7 +300,7 @@ var TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultIn
 // *** Expected result, regarding TestInstructions & TestInstructionContainerss, when asking for Available Building Blocks
 
 // All TestDomains, TestInstructionTypes, TestInstructions, TestInstructionContainerTypes and TestInstructionContainers
-var TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_005 string = "map[2f130d7e-f8aa-466f-b29d-0fb63608c1a6:{Just the name [2f130d7] 2f130d7e-f8aa-466f-b29d-0fb63608c1a6 Just the name} 513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb:{The type of the TestInstruction [513dd8f] 513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb The type of the TestInstruction} 78a97c41-a098-4122-88d2-01ed4b6c4844:{Custody Arrangement [78a97c4] 78a97c41-a098-4122-88d2-01ed4b6c4844 Custody Arrangement} aa1b9734-5dce-43c9-8d77-3368940cf126:{Emtpy parallelled processed Turbo TestInstructionsContainer [aa1b973] aa1b9734-5dce-43c9-8d77-3368940cf126 Emtpy parallelled processed Turbo TestInstructionsContainer} b107bdd9-4152-4020-b3f0-fc750b45885e:{Base containers [b107bdd] b107bdd9-4152-4020-b3f0-fc750b45885e Base containers} ca07bdd9-4152-4020-b3f0-fc750b45885e:{CA Base containers [ca07bdd] ca07bdd9-4152-4020-b3f0-fc750b45885e CA Base containers} e107bdd9-4152-4020-b3f0-fc750b45885e:{Emtpy parallelled processed TestInstructionsContainer [e107bdd] e107bdd9-4152-4020-b3f0-fc750b45885e Emtpy parallelled processed TestInstructionsContainer} e81b9734-5dce-43c9-8d77-3368940cf126:{Fenix [e81b973] e81b9734-5dce-43c9-8d77-3368940cf126 Fenix} f81b9734-5dce-43c9-8d77-3368940cf126:{Emtpy serial processed TestInstructionsContainer [f81b973] f81b9734-5dce-43c9-8d77-3368940cf126 Emtpy serial processed TestInstructionsContainer}]"
+var TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_005 string = "map[2f130d7e-f8aa-466f-b29d-0fb63608c1a6:{Just the name [2f130d7] Just the name (Custody Arrangement) [2f130d7] 2f130d7e-f8aa-466f-b29d-0fb63608c1a6 Just the name} 513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb:{The type of the TestInstruction [513dd8f] The type of the TestInstruction (Can not be pinned) [513dd8f] 513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb The type of the TestInstruction} 78a97c41-a098-4122-88d2-01ed4b6c4844:{Custody Arrangement [78a97c4] Custody Arrangement (Can not be pinned) [78a97c4] 78a97c41-a098-4122-88d2-01ed4b6c4844 Custody Arrangement} aa1b9734-5dce-43c9-8d77-3368940cf126:{Emtpy parallelled processed Turbo TestInstructionsContainer [aa1b973] Emtpy parallelled processed Turbo TestInstructionsContainer (Custody Arrangement) [aa1b973] aa1b9734-5dce-43c9-8d77-3368940cf126 Emtpy parallelled processed Turbo TestInstructionsContainer} b107bdd9-4152-4020-b3f0-fc750b45885e:{Base containers [b107bdd] Base containers (Can not be pinned) [b107bdd] b107bdd9-4152-4020-b3f0-fc750b45885e Base containers} ca07bdd9-4152-4020-b3f0-fc750b45885e:{CA Base containers [ca07bdd] CA Base containers (Can not be pinned) [ca07bdd] ca07bdd9-4152-4020-b3f0-fc750b45885e CA Base containers} e107bdd9-4152-4020-b3f0-fc750b45885e:{Emtpy parallelled processed TestInstructionsContainer [e107bdd] Emtpy parallelled processed TestInstructionsContainer (Fenix) [e107bdd] e107bdd9-4152-4020-b3f0-fc750b45885e Emtpy parallelled processed TestInstructionsContainer} e81b9734-5dce-43c9-8d77-3368940cf126:{Fenix [e81b973] Fenix (Can not be pinned) [e81b973] e81b9734-5dce-43c9-8d77-3368940cf126 Fenix} f81b9734-5dce-43c9-8d77-3368940cf126:{Emtpy serial processed TestInstructionsContainer [f81b973] Emtpy serial processed TestInstructionsContainer (Fenix) [f81b973] f81b9734-5dce-43c9-8d77-3368940cf126 Emtpy serial processed TestInstructionsContainer}]"
 
 // The model with structure adjusted to a tree-view, Only TestInstruction-part
 var TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_006 string = "map[78a97c41-a098-4122-88d2-01ed4b6c4844:map[513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb:map[2f130d7e-f8aa-466f-b29d-0fb63608c1a6:{Just the name [2f130d7] 78a97c41-a098-4122-88d2-01ed4b6c4844 Custody Arrangement 513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb The type of the TestInstruction 2f130d7e-f8aa-466f-b29d-0fb63608c1a6 Just the name}]]]"
@@ -351,28 +350,15 @@ var TestInstructionsAndTestInstructionsContainersRespons_PBB001_ExpectedResultIn
 
 // ******* END PBB001 *******
 
+const loggingLevelForDebug = logrus.ErrorLevel // InfoLevel
+
 // Init the logger for UnitTests
 func InitLoggerForTest(filename string) (myTestLogger *logrus.Logger) {
 	myTestLogger = logrus.StandardLogger()
 
-	switch common_config.LoggingLevel {
+	//log.Println("'loggingLevelForDebug': ", loggingLevelForDebug)
 
-	case logrus.DebugLevel:
-		log.Println("'common_config.LoggingLevel': ", common_config.LoggingLevel)
-
-	case logrus.InfoLevel:
-		log.Println("'common_config.LoggingLevel': ", common_config.LoggingLevel)
-
-	case logrus.WarnLevel:
-		log.Println("'common_config.LoggingLevel': ", common_config.LoggingLevel)
-
-	default:
-		log.Println("Not correct value for debugging-level, this was used: ", common_config.LoggingLevel)
-		os.Exit(0)
-
-	}
-
-	logrus.SetLevel(common_config.LoggingLevel)
+	logrus.SetLevel(loggingLevelForDebug)
 	logrus.SetFormatter(&logrus.TextFormatter{
 		ForceColors:     true,
 		FullTimestamp:   true,

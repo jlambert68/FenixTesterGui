@@ -29,9 +29,10 @@ const numberOfCharactersfromUuid = 8
 const TopNodeForAvailableDomainsMap = "TOP_NODE"
 
 type availableBuildingBlocksForUITreeNodesStruct struct {
-	nameInUITree string
-	uuid         string
-	name         string
+	nameInUITree       string
+	pinnedNameInUITree string
+	uuid               string
+	name               string
 }
 
 /*

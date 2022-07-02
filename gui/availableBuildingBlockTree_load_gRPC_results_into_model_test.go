@@ -13,6 +13,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const printValues = false
+
 /*
 func testlist() *notelist {
 	a := test.NewApp()
@@ -78,10 +80,17 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testin
 
 	// Validate 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_001, fmt.Sprint(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes))
+	if printValues {
+		fmt.Println("TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_001")
+		fmt.Println(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes)
+	}
 
 	// Validate 'availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap'
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_002, fmt.Sprint(availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap))
-
+	if printValues {
+		fmt.Println("TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_002")
+		fmt.Println(availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap)
+	}
 }
 
 // Checks that Available TestInstructionContainers are put in Available Building Blocks-model in a correct way
@@ -139,10 +148,17 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(
 
 	// Validate 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_003, fmt.Sprint(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes))
+	if printValues {
+		fmt.Println("TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_003")
+		fmt.Println(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes)
+	}
 
 	// Validate 'availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap'
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_004, fmt.Sprint(availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap))
-
+	if printValues {
+		fmt.Println("TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_004")
+		fmt.Println(availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap)
+	}
 }
 
 // Checks that Available TestInstructions & TestInstructionContainers are put in Available Building Blocks-model in a correct way
@@ -179,17 +195,31 @@ func TestLoadModelWithAvailableBuildingBlocks(t *testing.T) {
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 	}
 
+	var assertResult bool
+
 	// Load Available Building Blocks, in this case TestInstructionContainers
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks(&testInstructionsAndTestContainersMessage)
 
 	// Validate 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'
-	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_005, fmt.Sprint(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes))
+	assertResult = assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_005, fmt.Sprint(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes))
+	if printValues && !assertResult {
+		fmt.Println("TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_005")
+		fmt.Println(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes)
+	}
 
 	// Validate 'availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap'
-	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_006, fmt.Sprint(availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap))
+	assertResult = assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_006, fmt.Sprint(availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap))
+	if printValues && !assertResult {
+		fmt.Println("TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_006")
+		fmt.Println(availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap)
+	}
 
 	// Validate 'availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap'
-	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_007, fmt.Sprint(availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap))
+	assertResult = assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_007, fmt.Sprint(availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap))
+	if printValues && !assertResult {
+		fmt.Println("TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_007")
+		fmt.Println(availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap)
+	}
 
 }
 

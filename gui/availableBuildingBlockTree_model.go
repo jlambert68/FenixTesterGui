@@ -17,7 +17,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) makeTree
 	availableBuildingBlocksModel.availableBuildingBlockModelSuitedForFyneTreeView = map[string][]string{
 		"":                            {TestCaseBuildingBlocksHeader},
 		TestCaseBuildingBlocksHeader:  {PinnedBuildingBlocksHeader, AvailableBuildingBlocksHeader},
-		PinnedBuildingBlocksHeader:    {"Nothing here, yet"},
+		PinnedBuildingBlocksHeader:    availableBuildingBlocksModel.getPinnedBuildingBlocksTreeNamesFromModel(),
 		AvailableBuildingBlocksHeader: availableBuildingBlocksModel.getAvailableDomainTreeNamesFromModel(),
 	}
 
@@ -215,6 +215,40 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getAvail
 	}
 
 	return availableTestInstructionContainers
+}
+
+// Extract all 'Pinned TestInstructions' suited for Tree-model
+func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getPinnedBuildingBlocksTreeNamesFromModel() (pinnedBuildingBlocks []string) {
+
+	// Get Pinned TestInstructions
+	pinnedBuildingBlocks = availableBuildingBlocksModel.getPinnedTestInstructionTreeNamesFromModel()
+
+	// Get and add Pinned TestInstructionContainers to the list
+	pinnedBuildingBlocks = append(pinnedBuildingBlocks, availableBuildingBlocksModel.getPinnedTestInstructionContainerTreeNamesFromModel()...)
+
+	return pinnedBuildingBlocks
+}
+
+// Extract all 'Pinned TestInstructions' suited for Tree-model
+func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getPinnedTestInstructionTreeNamesFromModel() (pinnedInstructions []string) {
+
+	// Create the list of Pinned TestInstructions names suited for UI-Trre
+	for pinnedTestInstructionTreeName, _ := range availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes {
+		pinnedInstructions = append(pinnedInstructions, pinnedTestInstructionTreeName)
+	}
+
+	return pinnedInstructions
+}
+
+// Extract all 'Pinned TestInstructionContainers' suited for Tree-model
+func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getPinnedTestInstructionContainerTreeNamesFromModel() (pinnedInstructionContainers []string) {
+
+	// Create the list of Pinned TestInstructions names suited for UI-Trre
+	for pinnedTestInstructionContainerTreeName, _ := range availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes {
+		pinnedInstructionContainers = append(pinnedInstructionContainers, pinnedTestInstructionContainerTreeName)
+	}
+
+	return pinnedInstructionContainers
 }
 
 // Pin one Available Building Block (TestInstruction or TestInstructionContainer, if it isn't already pinned

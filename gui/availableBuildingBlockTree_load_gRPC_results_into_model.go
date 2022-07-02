@@ -292,7 +292,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 		}
 
 		// Add relation between pinned name and the original elements UUID
-		availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[availableTestInstructionFromTreeNameModel.nameInUITree] = pinnedTestInstruction.TestInstructionUuid
+		availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[availableTestInstructionFromTreeNameModel.pinnedNameInUITree] = pinnedTestInstruction.TestInstructionUuid
 	}
 
 }
@@ -320,7 +320,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 		}
 
 		// Add relation between pinned name and the original elements UUID
-		availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[availableTestInstructionContainerFromTreeNameModel.nameInUITree] = pinnedTestInstructionContainer.TestInstructionContainerUuid
+		availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[availableTestInstructionContainerFromTreeNameModel.pinnedNameInUITree] = pinnedTestInstructionContainer.TestInstructionContainerUuid
 	}
 
 }

@@ -340,13 +340,13 @@ var PinnedTestInstructionsAndTestInstructionsContainersRespons_PBB001 string = `
 }`
 
 // All Pinned TestInstructions
-var TestInstructionsAndTestInstructionsContainersRespons_PBB001_ExpectedResultInModel_001 string = "map[Just the name [2f130d7]:2f130d7e-f8aa-466f-b29d-0fb63608c1a6]"
+var TestInstructionsAndTestInstructionsContainersRespons_PBB001_ExpectedResultInModel_001 string = "map[Just the name (Custody Arrangement) [2f130d7]:2f130d7e-f8aa-466f-b29d-0fb63608c1a6]"
 
 // All Pinned TestInstructionContainers
-var TestInstructionsAndTestInstructionsContainersRespons_PBB001_ExpectedResultInModel_002 string = "map[Emtpy parallelled processed TestInstructionsContainer [e107bdd]:e107bdd9-4152-4020-b3f0-fc750b45885e Emtpy serial processed TestInstructionsContainer [f81b973]:f81b9734-5dce-43c9-8d77-3368940cf126]"
+var TestInstructionsAndTestInstructionsContainersRespons_PBB001_ExpectedResultInModel_002 string = "map[Emtpy parallelled processed TestInstructionsContainer (Fenix) [e107bdd]:e107bdd9-4152-4020-b3f0-fc750b45885e Emtpy serial processed TestInstructionsContainer (Fenix) [f81b973]:f81b9734-5dce-43c9-8d77-3368940cf126]"
 
 // All Pinned TestInstructions and TestInstructionContainers
-var TestInstructionsAndTestInstructionsContainersRespons_PBB001_ExpectedResultInModel_003 string = "map[Emtpy parallelled processed TestInstructionsContainer [e107bdd]:e107bdd9-4152-4020-b3f0-fc750b45885e Emtpy serial processed TestInstructionsContainer [f81b973]:f81b9734-5dce-43c9-8d77-3368940cf126 Just the name [2f130d7]:2f130d7e-f8aa-466f-b29d-0fb63608c1a6]"
+var TestInstructionsAndTestInstructionsContainersRespons_PBB001_ExpectedResultInModel_003 string = "map[Emtpy parallelled processed TestInstructionsContainer (Fenix) [e107bdd]:e107bdd9-4152-4020-b3f0-fc750b45885e Emtpy serial processed TestInstructionsContainer (Fenix) [f81b973]:f81b9734-5dce-43c9-8d77-3368940cf126 Just the name (Custody Arrangement) [2f130d7]:2f130d7e-f8aa-466f-b29d-0fb63608c1a6]"
 
 // ******* END PBB001 *******
 

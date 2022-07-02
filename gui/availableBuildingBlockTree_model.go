@@ -1,8 +1,10 @@
 package gui
 
 import (
+	"errors"
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	"github.com/sirupsen/logrus"
 )
 
 // Gets the model used to drive the Available Building Blocks-Tree
@@ -230,6 +232,32 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getPinne
 
 // Pin one Available Building Block (TestInstruction or TestInstructionContainer, if it isn't already pinned
 func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) pinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string) (err error) {
+
+	// Verify that Name of exists among available NodeNames
+	nodeName, existsInMap := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[nameInAvailableBuildingBlocksTree]
+
+	if existsInMap == false {
+		err = errors.New(nameInAvailableBuildingBlocksTree + " is missing among nodes i map")
+		availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
+			"id":  "9d3510ec-8b9e-4490-bae9-0e6cf9c0a1cb",
+			"err": err,
+		}).Error(nameInAvailableBuildingBlocksTree + " is missing among nodes i map 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'")
+		return err
+	}
+
+	// Verify that nod is not already pinned
+	_, existsInMap = availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[nameInAvailableBuildingBlocksTree]
+	if existsInMap == true {
+		err = errors.New(nameInAvailableBuildingBlocksTree + " is already pinned")
+		availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
+			"id":  "e1d22ba0-072f-4be5-a2d9-4b73278c170c",
+			"err": err,
+		}).Error(nameInAvailableBuildingBlocksTree + " is already pinned, or exists in map 'availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes['")
+		return err
+	}
+
+	// Pin Building Block
+	pin
 
 	return err
 }

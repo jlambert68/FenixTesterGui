@@ -33,7 +33,21 @@ type availableBuildingBlocksForUITreeNodesStruct struct {
 	pinnedNameInUITree string
 	uuid               string
 	name               string
+	buildingBlockType  buildingBlock
 }
+
+type uiTreeNodesNameToUuidStruct struct {
+	uuid              string
+	buildingBlockType buildingBlock
+}
+
+type buildingBlock int
+
+const (
+	Undefined buildingBlock = iota
+	TestInstruction
+	TestInstructionContainer
+)
 
 /*
 type availableDomainStruct struct {
@@ -108,9 +122,10 @@ type availableBuildingBlocksModelStruct struct {
 	fullDomainTestInstructionTypeTestInstructionRelationsMap                   map[string]map[string]map[string]availableTestInstructionStruct
 	fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap map[string]map[string]map[string]availableTestInstructionContainerStruct
 	availableBuildingBlocksForUITreeNodes                                      map[string]availableBuildingBlocksForUITreeNodesStruct
-	pinnedBuildingBlocksForUITreeNodes                                         map[string]string //map[nameInUITree]uuid
+	pinnedBuildingBlocksForUITreeNodes                                         map[string]uiTreeNodesNameToUuidStruct //map[nameInUITree]uiTreeNodesNameToUuidStruct
 	grpcOut                                                                    grpc_out.GRPCOutStruct
 	availableBuildingBlockModelSuitedForFyneTreeView                           map[string][]string
+	allBuildingBlocksTreeNameToUuid                                            map[string]uiTreeNodesNameToUuidStruct
 }
 
 type GlobalUIServerStruct struct {

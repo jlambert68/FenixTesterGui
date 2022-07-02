@@ -200,8 +200,11 @@ func (grpcOut *GRPCOutStruct) SendListAllAvailablePinnedTestInstructionsAndTestI
 	// Only add access token when run on GCP
 	if common_config.ExecutionLocationForFenixGuiServer == common_config.GCP {
 
+		// Set logger in GCP-package
+		grpcOut.gcp.SetLogger(grpcOut.logger)
+
 		// Add Access token
-		ctx, returnMessageAckNack, returnMessageString = gcp.Gcp.GenerateGCPAccessTokenForAuthorizedUser(ctx)
+		ctx, returnMessageAckNack, returnMessageString = grpcOut.gcp.GenerateGCPAccessTokenForAuthorizedUser(ctx)
 		if returnMessageAckNack == false {
 			// When error
 			ackNackResponse := &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{
@@ -270,8 +273,11 @@ func (grpcOut *GRPCOutStruct) SendSaveAllPinnedTestInstructionsAndTestInstructio
 	// Only add access token when run on GCP
 	if common_config.ExecutionLocationForFenixGuiServer == common_config.GCP {
 
+		// Set logger in GCP-package
+		grpcOut.gcp.SetLogger(grpcOut.logger)
+
 		// Add Access token
-		ctx, returnMessageAckNack, returnMessageString = gcp.Gcp.GenerateGCPAccessTokenForAuthorizedUser(ctx)
+		ctx, returnMessageAckNack, returnMessageString = grpcOut.gcp.GenerateGCPAccessTokenForAuthorizedUser(ctx)
 		if returnMessageAckNack == false {
 			// When error
 			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{

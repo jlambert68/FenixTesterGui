@@ -15,16 +15,6 @@ import (
 
 const printValues = false
 
-/*
-func testlist() *notelist {
-	a := test.NewApp()
-	n := &notelist{pref: a.Preferences()}
-
-	return n
-}
-
-*/
-
 //var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
 
 // Checks that Available TestInstructions are put in Available Building Blocks-model in a correct way

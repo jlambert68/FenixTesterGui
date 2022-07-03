@@ -121,8 +121,8 @@ type availableBuildingBlocksModelStruct struct {
 	fenixGuiBuilderServerAddressToDial                                         string
 	fullDomainTestInstructionTypeTestInstructionRelationsMap                   map[string]map[string]map[string]availableTestInstructionStruct
 	fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap map[string]map[string]map[string]availableTestInstructionContainerStruct
-	availableBuildingBlocksForUITreeNodes                                      map[string]availableBuildingBlocksForUITreeNodesStruct
-	pinnedBuildingBlocksForUITreeNodes                                         map[string]uiTreeNodesNameToUuidStruct //map[nameInUITree]uiTreeNodesNameToUuidStruct
+	availableBuildingBlocksForUITreeNodes                                      map[string]availableBuildingBlocksForUITreeNodesStruct // map[uuid]availableBuildingBlocksForUITreeNodesStruct
+	pinnedBuildingBlocksForUITreeNodes                                         map[string]uiTreeNodesNameToUuidStruct                 //map[nameInUITree]uiTreeNodesNameToUuidStruct
 	grpcOut                                                                    grpc_out.GRPCOutStruct
 	availableBuildingBlockModelSuitedForFyneTreeView                           map[string][]string
 	allBuildingBlocksTreeNameToUuid                                            map[string]uiTreeNodesNameToUuidStruct

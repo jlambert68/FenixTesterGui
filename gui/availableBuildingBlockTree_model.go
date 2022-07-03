@@ -234,7 +234,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getPinne
 func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) pinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string) (err error) {
 
 	// Verify that Name exists among available Building Blocks NodeNames
-	nodeData, existsInMap := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[nameInAvailableBuildingBlocksTree]
+	nodeData, existsInMap := availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid[nameInAvailableBuildingBlocksTree]
 
 	if existsInMap == false {
 		err = errors.New(nameInAvailableBuildingBlocksTree + " is missing among nodes i map")
@@ -246,9 +246,11 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) pinTestI
 	}
 
 	// Verify that nod is not already pinned, equals exists in TreeNameToUuid for pinned Building Blocks
-	_, existsInMap = availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[nodeData.pinnedNameInUITree]
+	tempPinnedNameInUITree := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[nodeData.uuid].pinnedNameInUITree
+
+	_, existsInMap = availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[tempPinnedNameInUITree]
 	if existsInMap == true {
-		err = errors.New(nameInAvailableBuildingBlocksTree + " is already pinned")
+		err = errors.New("building block is already pinned")
 		availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
 			"id":  "e1d22ba0-072f-4be5-a2d9-4b73278c170c",
 			"err": err,
@@ -261,7 +263,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) pinTestI
 		uuid:              nodeData.uuid,
 		buildingBlockType: nodeData.buildingBlockType,
 	}
-	availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[nodeData.pinnedNameInUITree] = tempPinnedNodeData
+	availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[tempPinnedNameInUITree] = tempPinnedNodeData
 
 	return err
 }

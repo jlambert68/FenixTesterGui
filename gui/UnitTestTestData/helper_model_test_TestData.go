@@ -350,6 +350,15 @@ var TestInstructionsAndTestInstructionsContainersRespons_PBB001_ExpectedResultIn
 
 // ******* END PBB001 *******
 
+// ******* START PBB002 *******
+// Error text after trying to pin an non existing Building Block
+var TestInstructionsAndTestInstructionsContainersRespons_PBB002_ExpectedResultInModel_001 string = "NonExistingBuildingBlock is missing among nodes i map"
+
+// Error message after trying to pin an already pinned Building Block
+var TestInstructionsAndTestInstructionsContainersRespons_PBB002_ExpectedResultInModel_002 string = "building block is already pinned"
+
+// ******* END PBB002 *******
+
 const loggingLevelForDebug = logrus.ErrorLevel // InfoLevel
 
 // Init the logger for UnitTests

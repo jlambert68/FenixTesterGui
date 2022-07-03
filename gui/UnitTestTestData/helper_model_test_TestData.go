@@ -357,13 +357,28 @@ var TestInstructionsAndTestInstructionsContainersRespons_PBB002_ExpectedResultIn
 // Error message after trying to pin an already pinned Building Block
 var TestInstructionsAndTestInstructionsContainersRespons_PBB002_ExpectedResultInModel_002 string = "building block is already pinned"
 
-// Error message after pinning Building Block that can be pinned
+// Error message after Validate that a non pinned Building Block can be pinned
 var TestInstructionsAndTestInstructionsContainersRespons_PBB002_ExpectedResultInModel_003 string = "<nil>"
 
 // Map after pinning a Building Block that can be pinned
 var TestInstructionsAndTestInstructionsContainersRespons_PBB002_ExpectedResultInModel_004 string = "map[Emtpy parallelled processed TestInstructionsContainer (Fenix) [e107bdd]:{e107bdd9-4152-4020-b3f0-fc750b45885e 2} Emtpy parallelled processed Turbo TestInstructionsContainer (Custody Arrangement) [aa1b973]:{aa1b9734-5dce-43c9-8d77-3368940cf126 2} Emtpy serial processed TestInstructionsContainer (Fenix) [f81b973]:{f81b9734-5dce-43c9-8d77-3368940cf126 2} Just the name (Custody Arrangement) [2f130d7]:{2f130d7e-f8aa-466f-b29d-0fb63608c1a6 1}]"
 
 // ******* END PBB002 *******
+
+// ******* START PBB003 *******
+// Error text after trying to unpin an non existing Building Block
+var TestInstructionsAndTestInstructionsContainersRespons_PBB003_ExpectedResultInModel_001 string = "NonExistingBuildingBlock is missing among nodes i map"
+
+// Error message after trying toun pin an Building Block that doesn't exist among pinned building blocks
+var TestInstructionsAndTestInstructionsContainersRespons_PBB003_ExpectedResultInModel_002 string = "building block is already pinned"
+
+// Error message after Validate that a pinned Building Block can be unpinned
+var TestInstructionsAndTestInstructionsContainersRespons_PBB003_ExpectedResultInModel_003 string = "<nil>"
+
+// Map after unpinning a Building Block that was pinned
+var TestInstructionsAndTestInstructionsContainersRespons_PBB003_ExpectedResultInModel_004 string = "map[Emtpy parallelled processed TestInstructionsContainer (Fenix) [e107bdd]:{e107bdd9-4152-4020-b3f0-fc750b45885e 2} Emtpy parallelled processed Turbo TestInstructionsContainer (Custody Arrangement) [aa1b973]:{aa1b9734-5dce-43c9-8d77-3368940cf126 2} Emtpy serial processed TestInstructionsContainer (Fenix) [f81b973]:{f81b9734-5dce-43c9-8d77-3368940cf126 2} Just the name (Custody Arrangement) [2f130d7]:{2f130d7e-f8aa-466f-b29d-0fb63608c1a6 1}]"
+
+// ******* END PBB003 *******
 
 const loggingLevelForDebug = logrus.ErrorLevel // InfoLevel
 

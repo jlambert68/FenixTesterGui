@@ -267,11 +267,41 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) pinTestI
 
 	return err
 
-	// TODO Rebuild UI-tree-model
+	//TODO Rebuild UI-tree-model
 }
 
 // Unpin one pinned Available Building Block (TestInstruction or TestInstructionContainer
 func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) unPinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string) (err error) {
 
+	// Verify that Name exists among available Building Blocks NodeNames
+	nodeData, existsInMap := availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid[nameInAvailableBuildingBlocksTree]
+
+	if existsInMap == false {
+		err = errors.New(nameInAvailableBuildingBlocksTree + " is missing among nodes i map")
+		availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
+			"id":  "3e8af427-d2a7-4d01-95b0-45817e33fbc4",
+			"err": err,
+		}).Error(nameInAvailableBuildingBlocksTree + " is missing among nodes i map 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'")
+		return err
+	}
+
+	// Verify that nod is pinned, equals exists in TreeNameToUuid for pinned Building Blocks
+	tempPinnedNameInUITree := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[nodeData.uuid].pinnedNameInUITree
+
+	_, existsInMap = availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[tempPinnedNameInUITree]
+	if existsInMap == false {
+		err = errors.New("building block is not  pinned")
+		availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
+			"id":  "be6e39f1-09dc-4532-9819-d516d8ca9661",
+			"err": err,
+		}).Error(nameInAvailableBuildingBlocksTree + " is not pinned, or exists in map 'availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes['")
+		return err
+	}
+
+	// Do the UnPin of the Building Block by removing it to 'pinnedBuildingBlocksForUITreeNodes'-map
+	delete(availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes, tempPinnedNameInUITree)
+
 	return err
+
+	//TODO Rebuild UI-tree-model
 }

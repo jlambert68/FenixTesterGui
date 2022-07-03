@@ -53,6 +53,9 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testin
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 	}
 
+	// Initiate map
+	availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid = make(map[string]uiTreeNodesNameToUuidStruct)
+
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructions(&testInstructionsAndTestContainersMessage)
 
 	// fmt.Println(availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap)
@@ -116,6 +119,9 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(
 		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 	}
+
+	// Initiate map
+	availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid = make(map[string]uiTreeNodesNameToUuidStruct)
 
 	// Load Available Building Blocks, in this case TestInstructionContainers
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(&testInstructionsAndTestContainersMessage)
@@ -264,7 +270,10 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructions(t *testing.T
 	}
 
 	// Clear and initiate variables
-	availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes = make(map[string]string)
+	availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes = make(map[string]uiTreeNodesNameToUuidStruct)
+
+	// Initiate map
+	availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid = make(map[string]uiTreeNodesNameToUuidStruct)
 
 	// Load Available Building Blocks - needed for the test should crash
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructions(&testInstructionsAndTestContainersMessage)
@@ -328,7 +337,10 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(t *
 	}
 
 	// Clear and initiate variables
-	availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes = make(map[string]string)
+	availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes = make(map[string]uiTreeNodesNameToUuidStruct)
+
+	// Initiate map
+	availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid = make(map[string]uiTreeNodesNameToUuidStruct)
 
 	// Load Available Building Blocks - needed for the test should crash
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(&testInstructionsAndTestContainersMessage)

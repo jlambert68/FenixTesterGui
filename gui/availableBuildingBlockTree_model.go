@@ -233,8 +233,8 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getPinne
 // Pin one Available Building Block (TestInstruction or TestInstructionContainer, if it isn't already pinned
 func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) pinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string) (err error) {
 
-	// Verify that Name of exists among available NodeNames
-	nodeName, existsInMap := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[nameInAvailableBuildingBlocksTree]
+	// Verify that Name exists among available Building Blocks NodeNames
+	nodeData, existsInMap := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[nameInAvailableBuildingBlocksTree]
 
 	if existsInMap == false {
 		err = errors.New(nameInAvailableBuildingBlocksTree + " is missing among nodes i map")
@@ -245,8 +245,8 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) pinTestI
 		return err
 	}
 
-	// Verify that nod is not already pinned
-	_, existsInMap = availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[nameInAvailableBuildingBlocksTree]
+	// Verify that nod is not already pinned, equals exists in TreeNameToUuid for pinned Building Blocks
+	_, existsInMap = availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[nodeData.pinnedNameInUITree]
 	if existsInMap == true {
 		err = errors.New(nameInAvailableBuildingBlocksTree + " is already pinned")
 		availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
@@ -256,8 +256,12 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) pinTestI
 		return err
 	}
 
-	// Pin Building Block
-	pin
+	// Do the Pin of the Building Block by adding it to 'pinnedBuildingBlocksForUITreeNodes'-map
+	tempPinnedNodeData := uiTreeNodesNameToUuidStruct{
+		uuid:              nodeData.uuid,
+		buildingBlockType: nodeData.buildingBlockType,
+	}
+	availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[nodeData.pinnedNameInUITree] = tempPinnedNodeData
 
 	return err
 }

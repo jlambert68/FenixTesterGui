@@ -266,6 +266,8 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) pinTestI
 	availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[tempPinnedNameInUITree] = tempPinnedNodeData
 
 	return err
+
+	// TODO Rebuild UI-tree-model
 }
 
 // Unpin one pinned Available Building Block (TestInstruction or TestInstructionContainer

@@ -17,7 +17,7 @@ import (
 
 //var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
 
-// Checks that a non-existing Building Block can be pinned
+// Checks that a non-existing Building Block can't be pinned
 func TestThatNonExistingBuildBlockCanBePinned(t *testing.T) {
 
 	var pinnedTestInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
@@ -86,7 +86,7 @@ func TestThatNonExistingBuildBlockCanBePinned(t *testing.T) {
 
 }
 
-// Checks that a non-existing Building Block can be pinned
+// Checks that an already pinned Building Block can be pinned
 func TestThatAlreadyPinnedBuildingBlockNotCanBePinned(t *testing.T) {
 
 	var pinnedTestInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
@@ -145,7 +145,7 @@ func TestThatAlreadyPinnedBuildingBlockNotCanBePinned(t *testing.T) {
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks(&testInstructionsAndTestContainersMessage)
 
 	// Load Pinned Building Blocks
-	availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructions(&pinnedTestInstructionsAndTestContainersMessage)
+	availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks(&pinnedTestInstructionsAndTestContainersMessage)
 
 	// Validate that an already pinned  Building Block can't be pinned again
 	pinnedBuildingBlockName := availableBuildingBlocksModel.getPinnedBuildingBlocksTreeNamesFromModel()[0]
@@ -154,5 +154,77 @@ func TestThatAlreadyPinnedBuildingBlockNotCanBePinned(t *testing.T) {
 	err := availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer(buildingBlockName)
 
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_PBB002_ExpectedResultInModel_002, fmt.Sprint(err))
+
+}
+
+// Checks that a non-pinned Building Block can be pinned
+func TestToPinBuildingBlockCanBePinned(t *testing.T) {
+
+	var pinnedTestInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
+
+	//  Needed to support test
+	var testInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
+
+	// Load data into gRPC-message response (from DB) - needed to support test
+	if err := jsonpb.UnmarshalString(UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001, &testInstructionsAndTestContainersMessage); err != nil {
+		panic(err)
+	}
+
+	// Load data into gRPC-message response (from DB)
+	if err := jsonpb.UnmarshalString(UnitTestTestData.PinnedTestInstructionsAndTestInstructionsContainersRespons_PBB001, &pinnedTestInstructionsAndTestContainersMessage); err != nil {
+		panic(err)
+	}
+
+	// Initiate logger used when testing
+	myLogger := UnitTestTestData.InitLoggerForTest("")
+
+	// Verify That TestData is using correct proto-version
+	returnMessage := UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion(testInstructionsAndTestContainersMessage.AckNackResponse.ProtoFileVersionUsedByClient)
+	if returnMessage != nil && returnMessage.AckNack == false {
+		myLogger.WithFields(logrus.Fields{
+			"Id": "df1285df-db49-404f-9e8b-a9549aff0f74",
+		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
+	}
+
+	returnMessage = UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion(pinnedTestInstructionsAndTestContainersMessage.AckNackResponse.ProtoFileVersionUsedByClient)
+	if returnMessage != nil && returnMessage.AckNack == false {
+		myLogger.WithFields(logrus.Fields{
+			"Id": "03d024d1-3fdf-4d2d-84e6-56bb09fcb736",
+		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
+	}
+
+	// Initiate availableBuildingBlocksModel
+	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
+
+	availableBuildingBlocksModel = &availableBuildingBlocksModelStruct{
+		logger:                             myLogger,
+		fenixGuiBuilderServerAddressToDial: "",
+		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
+		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
+		availableBuildingBlocksForUITreeNodes:                                      nil,
+		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
+		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
+	}
+
+	// Clear and initiate variables
+	availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes = make(map[string]uiTreeNodesNameToUuidStruct)
+
+	// Initiate map
+	availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid = make(map[string]uiTreeNodesNameToUuidStruct)
+
+	// Load Available Building Blocks, in this case TestInstructionContainers
+	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks(&testInstructionsAndTestContainersMessage)
+
+	// Load Pinned Building Blocks
+	availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks(&pinnedTestInstructionsAndTestContainersMessage)
+
+	// Validate that a not pinned Building Block can be pinned
+	tempTreeName := "Emtpy parallelled processed Turbo TestInstructionsContainer [aa1b973]"
+	err := availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer(tempTreeName)
+
+	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_PBB002_ExpectedResultInModel_003, fmt.Sprint(err))
+
+	// Validate that node got pinned
+	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_PBB002_ExpectedResultInModel_004, fmt.Sprint(availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes))
 
 }

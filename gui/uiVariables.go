@@ -126,6 +126,7 @@ type availableBuildingBlocksModelStruct struct {
 	grpcOut                                                                    grpc_out.GRPCOutStruct
 	availableBuildingBlockModelSuitedForFyneTreeView                           map[string][]string
 	allBuildingBlocksTreeNameToUuid                                            map[string]uiTreeNodesNameToUuidStruct
+	clickedNodeName                                                            string
 }
 
 type GlobalUIServerStruct struct {

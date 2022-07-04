@@ -230,7 +230,7 @@ func TestToPinBuildingBlockCanBePinned(t *testing.T) {
 }
 
 // Checks that a non-existing Building Block can't be unpinned
-func TestThatNonExistingBuildBlockCanBeUnPinned(t *testing.T) {
+func TestThatNonExistingBuildingBlockCanNotBeUnPinned(t *testing.T) {
 
 	var pinnedTestInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
 
@@ -291,13 +291,14 @@ func TestThatNonExistingBuildBlockCanBeUnPinned(t *testing.T) {
 	// Load Pinned Building Blocks
 	availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructions(&pinnedTestInstructionsAndTestContainersMessage)
 
-	// Validate that an non-existing Building Block can't be pinned
-	err := availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer("NonExistingBuildingBlock")
+	// Validate that an non-existing Building Block can't be Unpinned
+	err := availableBuildingBlocksModel.unPinTestInstructionOrTestInstructionContainer("NonExistingBuildingBlock")
 
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_PBB003_ExpectedResultInModel_001, fmt.Sprint(err))
 
 }
 
+/*
 // Checks that an pinned Building Block exist among pinned building blocks
 func TestThatBuildingBlockToBeUnPinnedExistsAmongPinned(t *testing.T) {
 
@@ -368,7 +369,7 @@ func TestThatBuildingBlockToBeUnPinnedExistsAmongPinned(t *testing.T) {
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_PBB003_ExpectedResultInModel_002, fmt.Sprint(err))
 
 }
-
+*/
 // Checks that a pinned Building Block can be unpinned
 func TestUnPinBuildingBlockThatIsPinned(t *testing.T) {
 
@@ -431,12 +432,12 @@ func TestUnPinBuildingBlockThatIsPinned(t *testing.T) {
 	availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks(&pinnedTestInstructionsAndTestContainersMessage)
 
 	// Validate that a not pinned Building Block can be pinned
-	tempTreeName := "Emtpy parallelled processed Turbo TestInstructionsContainer [aa1b973]"
-	err := availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer(tempTreeName)
+	tempTreeName := "Just the name (Custody Arrangement) [2f130d7]"
+	err := availableBuildingBlocksModel.unPinTestInstructionOrTestInstructionContainer(tempTreeName)
 
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_PBB003_ExpectedResultInModel_003, fmt.Sprint(err))
 
-	// Validate that node got pinned
+	// Validate that node got unpinned
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_PBB003_ExpectedResultInModel_004, fmt.Sprint(availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes))
 
 }

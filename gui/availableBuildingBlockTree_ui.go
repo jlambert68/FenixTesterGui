@@ -50,7 +50,8 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 
 		CreateNode: func(branch bool) fyne.CanvasObject {
 			fmt.Println("CreateNode: ")
-			return newTappableLabel() //widget.NewLabel("Collection Widgets: ")
+			//return newTappableLabel() //widget.NewLabel("Collection Widgets: ")
+			return widget.NewLabel("xxxx")
 		},
 
 		UpdateNode: func(uid string, branch bool, obj fyne.CanvasObject) {
@@ -62,12 +63,15 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 					return
 				}
 			*/
-			obj.(*tappableLabel).SetText(uid) //obj.(*widget.Label).SetText(uid) // + time.Now().String())
+			//obj.(*tappableLabel).SetText(uid) //obj.(*widget.Label).SetText(uid) // + time.Now().String())
+			obj.(*widget.Label).SetText(uid)
 			fmt.Println(tree.Size())
 		},
 
 		OnSelected: func(uid string) {
 			fmt.Println(uid, uiServer.availableBuildingBlocksModel.getAvailableBuildingBlocksModel()[uid])
+			uiServer.availableBuildingBlocksModel.clickedNodeName = uid
+
 			//if t, ok := list[uid]; ok {
 			//	fmt.Println(tree.Root)
 			//	fmt.Println(t)
@@ -80,7 +84,8 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 
 type tappableLabel struct {
 	widget.Label
-	movableLable *widget.Label
+	movableLable        *widget.Label
+	lastClickedNodeName string
 }
 
 func newTappableLabel() *tappableLabel {
@@ -93,7 +98,7 @@ func newTappableLabel() *tappableLabel {
 
 func (t *tappableLabel) Tapped(_ *fyne.PointEvent) {
 	log.Println("I have been tapped")
-
+	//t.lastClickedNodeName
 	fmt.Println(t.Position())
 }
 

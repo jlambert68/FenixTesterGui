@@ -230,8 +230,8 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getPinne
 	return pinnedBuildingBlocks
 }
 
-// Pin one Available Building Block (TestInstruction or TestInstructionContainer, if it isn't already pinned
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) pinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string) (err error) {
+// Verify that it is possible to Pin one Available Building Block (TestInstruction or TestInstructionContainer, if it isn't already pinned
+func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) verifyBeforePinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string) (err error) {
 
 	// Verify that Name exists among available Building Blocks NodeNames
 	nodeData, existsInMap := availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid[nameInAvailableBuildingBlocksTree]
@@ -258,50 +258,75 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) pinTestI
 		return err
 	}
 
-	// Do the Pin of the Building Block by adding it to 'pinnedBuildingBlocksForUITreeNodes'-map
-	tempPinnedNodeData := uiTreeNodesNameToUuidStruct{
-		uuid:              nodeData.uuid,
-		buildingBlockType: nodeData.buildingBlockType,
+	return err
+}
+
+// Pin one Available Building Block (TestInstruction or TestInstructionContainer, if it isn't already pinned
+func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) pinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string) (err error) {
+
+	// Verify that node can be pinned
+	err = availableBuildingBlocksModel.verifyBeforePinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree)
+
+	if err != nil {
+		// Do the Pin of the Building Block by adding it to 'pinnedBuildingBlocksForUITreeNodes'-map
+
+		//Extract node-uuid and node type
+		nodeData, _ := availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid[nameInAvailableBuildingBlocksTree] //
+		pinnedNodeName := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[nodeData.uuid].pinnedNameInUITree
+
+		tempPinnedNodeData := uiTreeNodesNameToUuidStruct{
+			uuid:              nodeData.uuid,
+			buildingBlockType: nodeData.buildingBlockType,
+		}
+		availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[pinnedNodeName] = tempPinnedNodeData
+
 	}
-	availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[tempPinnedNameInUITree] = tempPinnedNodeData
 
 	return err
 
-	//TODO Rebuild UI-tree-model
 }
 
-// Unpin one pinned Available Building Block (TestInstruction or TestInstructionContainer
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) unPinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string) (err error) {
-
-	// Verify that Name exists among available Building Blocks NodeNames
-	nodeData, existsInMap := availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid[nameInAvailableBuildingBlocksTree]
-
-	if existsInMap == false {
-		err = errors.New(nameInAvailableBuildingBlocksTree + " is missing among nodes i map")
-		availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
-			"id":  "3e8af427-d2a7-4d01-95b0-45817e33fbc4",
-			"err": err,
-		}).Error(nameInAvailableBuildingBlocksTree + " is missing among nodes i map 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'")
-		return err
-	}
+// Verify that it is possible to Unpin one pinned Available Building Block (TestInstruction or TestInstructionContainer
+func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) verifyBeforeUnPinTestInstructionOrTestInstructionContainer(pinnedNameInUITree string) (err error) {
 
 	// Verify that nod is pinned, equals exists in TreeNameToUuid for pinned Building Blocks
-	tempPinnedNameInUITree := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[nodeData.uuid].pinnedNameInUITree
-
-	_, existsInMap = availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[tempPinnedNameInUITree]
+	pinnedBuildingBlock, existsInMap := availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[pinnedNameInUITree]
 	if existsInMap == false {
 		err = errors.New("building block is not  pinned")
 		availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
 			"id":  "be6e39f1-09dc-4532-9819-d516d8ca9661",
 			"err": err,
-		}).Error(nameInAvailableBuildingBlocksTree + " is not pinned, or exists in map 'availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes['")
+		}).Error(pinnedNameInUITree + " is not pinned, or exists in map 'availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes['")
 		return err
 	}
 
-	// Do the UnPin of the Building Block by removing it to 'pinnedBuildingBlocksForUITreeNodes'-map
-	delete(availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes, tempPinnedNameInUITree)
+	// Verify that Name exists among available Building Blocks
+	_, existsInMap = availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[pinnedBuildingBlock.uuid]
+
+	if existsInMap == false {
+		err = errors.New(pinnedNameInUITree + " is missing among all nodes map")
+		availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
+			"id":  "3e8af427-d2a7-4d01-95b0-45817e33fbc4",
+			"err": err,
+		}).Error(pinnedNameInUITree + " is missing among nodes i map 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'")
+		return err
+	}
 
 	return err
 
-	//TODO Rebuild UI-tree-model
+}
+
+// Unpin one pinned Available Building Block (TestInstruction or TestInstructionContainer
+func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) unPinTestInstructionOrTestInstructionContainer(pinnedNameInUITree string) (err error) {
+
+	// Verify that node can be unpinned
+	err = availableBuildingBlocksModel.verifyBeforeUnPinTestInstructionOrTestInstructionContainer(pinnedNameInUITree)
+
+	if err != nil {
+		// Do the UnPin of the Building Block by removing it to 'pinnedBuildingBlocksForUITreeNodes'-map
+		delete(availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes, pinnedNameInUITree)
+
+	}
+
+	return err
 }

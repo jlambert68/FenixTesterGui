@@ -229,21 +229,29 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 
 		// Icon for Adding Building Block to Pinned Building Blocks
 		widget.NewToolbarAction(theme.ContentAddIcon(), func() {
-			fmt.Println("Add to Pinned")
-			err := uiServer.availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer(uiServer.availableBuildingBlocksModel.clickedNodeName)
+			err := uiServer.availableBuildingBlocksModel.verifyBeforePinTestInstructionOrTestInstructionContainer(uiServer.availableBuildingBlocksModel.clickedNodeName, true)
 			if err == nil {
-				// Update the model, which will refrsh UI
-				uiServer.availableBuildingBlocksModel.makeTreeUIModel()
+				fmt.Println("Add to Pinned")
+				err := uiServer.availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer(uiServer.availableBuildingBlocksModel.clickedNodeName)
+				if err == nil {
+					// Update the model, which will refrsh UI
+					uiServer.availableBuildingBlocksModel.makeTreeUIModel()
+				}
 			}
+
 		}),
 
 		// Icon for Removing Pinned Building Block
 		widget.NewToolbarAction(theme.ContentRemoveIcon(), func() {
-			fmt.Println("Remove from Pinned")
-			err := uiServer.availableBuildingBlocksModel.unPinTestInstructionOrTestInstructionContainer(uiServer.availableBuildingBlocksModel.clickedNodeName)
+			err := uiServer.availableBuildingBlocksModel.verifyBeforeUnPinTestInstructionOrTestInstructionContainer(uiServer.availableBuildingBlocksModel.clickedNodeName, true)
 			if err == nil {
-				// Update the model, which will refrsh UI
-				uiServer.availableBuildingBlocksModel.makeTreeUIModel()
+				fmt.Println("Remove from Pinned")
+				err := uiServer.availableBuildingBlocksModel.unPinTestInstructionOrTestInstructionContainer(uiServer.availableBuildingBlocksModel.clickedNodeName)
+				if err == nil {
+					// Update the model, which will refrsh UI
+					uiServer.availableBuildingBlocksModel.makeTreeUIModel()
+					//uiServer.tree.Refresh()
+				}
 			}
 		}),
 	)

@@ -231,17 +231,20 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getPinne
 }
 
 // Verify that it is possible to Pin one Available Building Block (TestInstruction or TestInstructionContainer, if it isn't already pinned
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) verifyBeforePinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string) (err error) {
+func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) verifyBeforePinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string, onlyForVerifying bool) (err error) {
 
 	// Verify that Name exists among available Building Blocks NodeNames
 	nodeData, existsInMap := availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid[nameInAvailableBuildingBlocksTree]
 
 	if existsInMap == false {
 		err = errors.New(nameInAvailableBuildingBlocksTree + " is missing among nodes i map")
-		availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
-			"id":  "9d3510ec-8b9e-4490-bae9-0e6cf9c0a1cb",
-			"err": err,
-		}).Error(nameInAvailableBuildingBlocksTree + " is missing among nodes i map 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'")
+		if onlyForVerifying == false {
+			availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
+				"id":  "9d3510ec-8b9e-4490-bae9-0e6cf9c0a1cb",
+				"err": err,
+			}).Error(nameInAvailableBuildingBlocksTree + " is missing among nodes i map 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'")
+
+		}
 		return err
 	}
 
@@ -251,10 +254,13 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) verifyBe
 	_, existsInMap = availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[tempPinnedNameInUITree]
 	if existsInMap == true {
 		err = errors.New("building block is already pinned")
-		availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
-			"id":  "e1d22ba0-072f-4be5-a2d9-4b73278c170c",
-			"err": err,
-		}).Error(nameInAvailableBuildingBlocksTree + " is already pinned, or exists in map 'availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes['")
+		if onlyForVerifying == false {
+			// Only create log message if we really tries to pin
+			availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
+				"id":  "e1d22ba0-072f-4be5-a2d9-4b73278c170c",
+				"err": err,
+			}).Error(nameInAvailableBuildingBlocksTree + " is already pinned, or exists in map 'availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes['")
+		}
 		return err
 	}
 
@@ -265,9 +271,9 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) verifyBe
 func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) pinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string) (err error) {
 
 	// Verify that node can be pinned
-	err = availableBuildingBlocksModel.verifyBeforePinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree)
+	err = availableBuildingBlocksModel.verifyBeforePinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree, false)
 
-	if err != nil {
+	if err == nil {
 		// Do the Pin of the Building Block by adding it to 'pinnedBuildingBlocksForUITreeNodes'-map
 
 		//Extract node-uuid and node type
@@ -287,16 +293,19 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) pinTestI
 }
 
 // Verify that it is possible to Unpin one pinned Available Building Block (TestInstruction or TestInstructionContainer
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) verifyBeforeUnPinTestInstructionOrTestInstructionContainer(pinnedNameInUITree string) (err error) {
+func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) verifyBeforeUnPinTestInstructionOrTestInstructionContainer(pinnedNameInUITree string, onlyForVerifying bool) (err error) {
 
 	// Verify that nod is pinned, equals exists in TreeNameToUuid for pinned Building Blocks
 	pinnedBuildingBlock, existsInMap := availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[pinnedNameInUITree]
 	if existsInMap == false {
 		err = errors.New("building block is not  pinned")
-		availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
-			"id":  "be6e39f1-09dc-4532-9819-d516d8ca9661",
-			"err": err,
-		}).Error(pinnedNameInUITree + " is not pinned, or exists in map 'availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes['")
+		if onlyForVerifying == false {
+			// Only create log message if we really tries to unpin
+			availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
+				"id":  "be6e39f1-09dc-4532-9819-d516d8ca9661",
+				"err": err,
+			}).Error(pinnedNameInUITree + " is not pinned, or exists in map 'availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes['")
+		}
 		return err
 	}
 
@@ -305,10 +314,12 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) verifyBe
 
 	if existsInMap == false {
 		err = errors.New(pinnedNameInUITree + " is missing among all nodes map")
-		availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
-			"id":  "3e8af427-d2a7-4d01-95b0-45817e33fbc4",
-			"err": err,
-		}).Error(pinnedNameInUITree + " is missing among nodes i map 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'")
+		if onlyForVerifying == false {
+			availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
+				"id":  "3e8af427-d2a7-4d01-95b0-45817e33fbc4",
+				"err": err,
+			}).Error(pinnedNameInUITree + " is missing among nodes i map 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'")
+		}
 		return err
 	}
 
@@ -320,9 +331,9 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) verifyBe
 func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) unPinTestInstructionOrTestInstructionContainer(pinnedNameInUITree string) (err error) {
 
 	// Verify that node can be unpinned
-	err = availableBuildingBlocksModel.verifyBeforeUnPinTestInstructionOrTestInstructionContainer(pinnedNameInUITree)
+	err = availableBuildingBlocksModel.verifyBeforeUnPinTestInstructionOrTestInstructionContainer(pinnedNameInUITree, false)
 
-	if err != nil {
+	if err == nil {
 		// Do the UnPin of the Building Block by removing it to 'pinnedBuildingBlocksForUITreeNodes'-map
 		delete(availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes, pinnedNameInUITree)
 

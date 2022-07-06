@@ -4,10 +4,12 @@ go 1.18
 
 require (
 	fyne.io/fyne/v2 v2.1.4
+	github.com/faiface/beep v1.1.0
 	github.com/getlantern/systray v1.2.1
 	github.com/go-gota/gota v0.12.0
 	github.com/golang/gddo v0.0.0-20210115222349-20d68f94ee1f
 	github.com/golang/protobuf v1.5.2
+	github.com/google/uuid v1.1.2
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/pat v1.0.1
 	github.com/gorilla/sessions v1.2.1
@@ -41,14 +43,19 @@ require (
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
+	github.com/hajimehoshi/go-mp3 v0.3.0 // indirect
+	github.com/hajimehoshi/oto v0.7.1 // indirect
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/srwiley/oksvg v0.0.0-20200311192757-870daf9aa564 // indirect
 	github.com/srwiley/rasterx v0.0.0-20200120212402-85cb7272f5e9 // indirect
 	github.com/yuin/goldmark v1.3.8 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	golang.org/x/exp v0.0.0-20220609121020-a51bd0440498 // indirect
+	golang.org/x/exp/shiny v0.0.0-20220613132600-b0d781184e0d // indirect
 	golang.org/x/image v0.0.0-20210216034530-4410531fe030 // indirect
+	golang.org/x/mobile v0.0.0-20201217150744-e6ae53a27f4f // indirect
 	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gonum.org/v1/gonum v0.9.1 // indirect

@@ -5,7 +5,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// Load Available Building Blocks, TestInstructions and TestInstructionContainers, from GUI-server into model
+// Load Available Building Blocks, TestInstructions and TestInstructionContainers, from GUI-server into testCaseModel
 func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadModelWithAvailableBuildingBlocks(testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	// Verify that AckNack Response is equal to AckNack = true
@@ -28,7 +28,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(testInstructionsAndTestContainersMessage)
 }
 
-// Load Pinned Building Blocks, TestInstructions and TestInstructionContainers, from GUI-server into model
+// Load Pinned Building Blocks, TestInstructions and TestInstructionContainers, from GUI-server into testCaseModel
 func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadModelWithPinnedBuildingBlocks(pinnedTestInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	// Verify that AckNack Response is equal to AckNack = true
@@ -123,7 +123,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 		// *** Does TestInstruction exist in map ***
 		_, existInMap = testInstructionMap[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionUuid]
 
-		// Create the TestInstruction to be added to each leave node on UI-model for UI-Tree regarding Available Building Blocks
+		// Create the TestInstruction to be added to each leave node on UI-testCaseModel for UI-Tree regarding Available Building Blocks
 		tempTestInstruction := availableTestInstructionStruct{
 			testInstructionNameInUITree: "",
 			domainUuid:                  testInstruction.BasicTestInstructionInformation.NonEditableInformation.DomainUuid,
@@ -246,7 +246,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 		// *** Does TestInstructionContainer exist in map ***
 		_, existInMap = testInstructionContainerMap[testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerUuid]
 
-		// Create the TestInstructionContainer to be added to each leave node on UI-model for UI-Tree regarding Available Building Blocks
+		// Create the TestInstructionContainer to be added to each leave node on UI-testCaseModel for UI-Tree regarding Available Building Blocks
 		tempTestInstructionContainer := availableTestInstructionContainerStruct{
 			testInstructionContainerNameInUITree: "",
 			domainUuid:                           testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.DomainUuid,
@@ -294,7 +294,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 	}
 }
 
-// Load all Pinned TestInstructions Building Blocks into model
+// Load all Pinned TestInstructions Building Blocks into testCaseModel
 func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadModelWithPinnedBuildingBlocksRegardingTestInstructions(pinnedTestInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	// If there are no Pinned TestInstructions then exit this function
@@ -302,10 +302,10 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 		return
 	}
 
-	// Loop through the Pinned TestInstructions and add them to the model
+	// Loop through the Pinned TestInstructions and add them to the testCaseModel
 	for _, pinnedTestInstruction := range pinnedTestInstructionsAndTestContainersMessage.AvailablePinnedTestInstructions {
 
-		// Get Tree-name from model and create reference between Pinned Tree-name and original UUID
+		// Get Tree-name from testCaseModel and create reference between Pinned Tree-name and original UUID
 		availableTestInstructionFromTreeNameModel, existsInMap := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[pinnedTestInstruction.TestInstructionUuid]
 
 		// If the element is missing in map then there are something wrong
@@ -313,7 +313,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 			availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
 				"id":                    "fa3890ab-d756-4deb-b66c-5357167904e5",
 				"pinnedTestInstruction": pinnedTestInstruction,
-			}).Fatalln("Some is wrong because couldn't find the 'pinnedTestInstruction' in tree-view-name-model")
+			}).Fatalln("Some is wrong because couldn't find the 'pinnedTestInstruction' in tree-view-name-testCaseModel")
 		}
 
 		tempTreeNameToUuidForPinnedInstruction := uiTreeNodesNameToUuidStruct{
@@ -327,7 +327,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 
 }
 
-// Load all Pinned TestInstructions Building Blocks into model
+// Load all Pinned TestInstructions Building Blocks into testCaseModel
 func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(pinnedTestInstructionsAndTestInstructionsContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	// If there are no Pinned TestInstructions then exit this function
@@ -335,10 +335,10 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 		return
 	}
 
-	// Loop through the Pinned TestInstructionContainerss and add them to the model
+	// Loop through the Pinned TestInstructionContainerss and add them to the testCaseModel
 	for _, pinnedTestInstructionContainer := range pinnedTestInstructionsAndTestInstructionsContainersMessage.AvailablePinnedPreCreatedTestInstructionContainers {
 
-		// Get Tree-name from model and create reference between Pinned Tree-name and original UUID
+		// Get Tree-name from testCaseModel and create reference between Pinned Tree-name and original UUID
 		availableTestInstructionContainerFromTreeNameModel, existsInMap := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[pinnedTestInstructionContainer.TestInstructionContainerUuid]
 
 		// If the element is missing in map then there are something wrong
@@ -346,7 +346,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 			availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
 				"id":                             "6f2781ef-4bf8-40c1-8da4-0ac6996ae04b",
 				"pinnedTestInstructionContainer": pinnedTestInstructionContainer,
-			}).Fatalln("Some is wrong because couldn't find the 'pinnedTestInstructionContainer' in tree-view-name-model")
+			}).Fatalln("Some is wrong because couldn't find the 'pinnedTestInstructionContainer' in tree-view-name-testCaseModel")
 		}
 
 		tempTreeNameToUuidForPinnedInstruction := uiTreeNodesNameToUuidStruct{

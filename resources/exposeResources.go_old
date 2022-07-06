@@ -1,0 +1,5 @@
+package resources
+
+func ExposeSound() []byte {
+	return resourceSuierrorstereo0435938Mp3.StaticContent
+}

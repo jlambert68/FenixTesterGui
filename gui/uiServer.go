@@ -11,7 +11,14 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"github.com/faiface/beep"
+	"github.com/faiface/beep/mp3"
+	"github.com/faiface/beep/speaker"
 	"github.com/sirupsen/logrus"
+	"log"
+	"os"
+	"time"
+	//"FenixTesterGui/resources"
 )
 
 /*
@@ -227,6 +234,35 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 			uiServer.makeTreeUI()
 		}),
 
+		// Icon for saving pinned Building Blocks to Server
+		widget.NewToolbarAction(theme.DocumentSaveIcon(), func() {
+			fmt.Println("Reload Available Components from GuiServer")
+
+			// Load Available Building Blocks and Pinned Building Blocks from Server
+			err := uiServer.availableBuildingBlocksModel.savePinnedBuildingBlocksFromServer()
+
+			f, err := os.Open("resources/s_ui_error_stereo_04-35938.mp3")
+			if err != nil {
+				log.Println(err)
+			}
+
+			streamer, format, err := mp3.Decode(f)
+			if err != nil {
+				log.Println(err)
+			}
+			defer streamer.Close()
+
+			speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
+
+			done := make(chan bool)
+			speaker.Play(beep.Seq(streamer, beep.Callback(func() {
+				done <- true
+			})))
+
+			<-done
+
+		}),
+
 		// Icon for Adding Building Block to Pinned Building Blocks
 		widget.NewToolbarAction(theme.ContentAddIcon(), func() {
 			err := uiServer.availableBuildingBlocksModel.verifyBeforePinTestInstructionOrTestInstructionContainer(uiServer.availableBuildingBlocksModel.clickedNodeName, true)
@@ -234,7 +270,7 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 				fmt.Println("Add to Pinned")
 				err := uiServer.availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer(uiServer.availableBuildingBlocksModel.clickedNodeName)
 				if err == nil {
-					// Update the model, which will refrsh UI
+					// Update the testCaseModel, which will refrsh UI
 					uiServer.availableBuildingBlocksModel.makeTreeUIModel()
 				}
 			}
@@ -248,7 +284,7 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 				fmt.Println("Remove from Pinned")
 				err := uiServer.availableBuildingBlocksModel.unPinTestInstructionOrTestInstructionContainer(uiServer.availableBuildingBlocksModel.clickedNodeName)
 				if err == nil {
-					// Update the model, which will refrsh UI
+					// Update the testCaseModel, which will refrsh UI
 					uiServer.availableBuildingBlocksModel.makeTreeUIModel()
 					//uiServer.tree.Refresh()
 				}
@@ -291,7 +327,7 @@ func (uiServer *UIServerStruct) loadCompleteCurrentTestCaseUI() (completeCurrent
 	// Create toolbar for TestCase area
 	testCaseToolUIBar := widget.NewToolbar(
 		widget.NewToolbarAction(theme.ContentRedoIcon(), func() {
-			fmt.Println("Reload GUI TestCase from model")
+			fmt.Println("Reload GUI TestCase from testCaseModel")
 		}),
 		widget.NewToolbarAction(theme.ContentCopyIcon(), func() {
 			fmt.Println("Copy Node")
@@ -304,13 +340,13 @@ func (uiServer *UIServerStruct) loadCompleteCurrentTestCaseUI() (completeCurrent
 		}),
 	)
 
-	// Load the TestCase model UI area
+	// Load the TestCase testCaseModel UI area
 	currentTestCaseModelAreaUI := uiServer.loadCurrentTestCaseModelAreaUI()
 
 	// Load the TestCase attributes UI area
 	currentTestCaseAttributesAreaUI := uiServer.loadCurrentTestCaseAttributesAreaUI()
 
-	// Create the UI area for both TestCase model UI and TestCase attributes UI
+	// Create the UI area for both TestCase testCaseModel UI and TestCase attributes UI
 	testCaseAdaptiveSplitLayoutContainer := newAdaptiveSplit(currentTestCaseModelAreaUI, currentTestCaseAttributesAreaUI)
 
 	// Create the complete TestCase UI area
@@ -320,7 +356,7 @@ func (uiServer *UIServerStruct) loadCompleteCurrentTestCaseUI() (completeCurrent
 	return completeCurrentTestCaseUIContainer
 }
 
-// Loads current TestCase model and return the UI-structure for it
+// Loads current TestCase testCaseModel and return the UI-structure for it
 func (uiServer *UIServerStruct) loadCurrentTestCaseModelAreaUI() (currentTestCaseModelAreaUI fyne.CanvasObject) {
 
 	currentTestCaseModelAreaUI = widget.NewLabel("'currentTestCaseModelAreaUI'")

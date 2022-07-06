@@ -17,7 +17,7 @@ const printValues = false
 
 //var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
 
-// Checks that Available TestInstructions are put in Available Building Blocks-model in a correct way
+// Checks that Available TestInstructions are put in Available Building Blocks-testCaseModel in a correct way
 func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testing.T) {
 
 	var testInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
@@ -86,7 +86,7 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testin
 	}
 }
 
-// Checks that Available TestInstructionContainers are put in Available Building Blocks-model in a correct way
+// Checks that Available TestInstructionContainers are put in Available Building Blocks-testCaseModel in a correct way
 func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(t *testing.T) {
 
 	var testInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
@@ -157,7 +157,7 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(
 	}
 }
 
-// Checks that Available TestInstructions & TestInstructionContainers are put in Available Building Blocks-model in a correct way
+// Checks that Available TestInstructions & TestInstructionContainers are put in Available Building Blocks-testCaseModel in a correct way
 func TestLoadModelWithAvailableBuildingBlocks(t *testing.T) {
 
 	var testInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
@@ -219,7 +219,7 @@ func TestLoadModelWithAvailableBuildingBlocks(t *testing.T) {
 
 }
 
-// Checks that Pinned TestInstructions are put in Pinned Building Blocks-model in a correct way
+// Checks that Pinned TestInstructions are put in Pinned Building Blocks-testCaseModel in a correct way
 func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructions(t *testing.T) {
 
 	var pinnedTestInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
@@ -286,7 +286,7 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructions(t *testing.T
 
 }
 
-// Checks that Pinned TestInstructionContainers are put in Pinned Building Blocks-model in a correct way
+// Checks that Pinned TestInstructionContainers are put in Pinned Building Blocks-testCaseModel in a correct way
 func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(t *testing.T) {
 
 	var pinnedTestInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
@@ -353,7 +353,7 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(t *
 
 }
 
-// Checks that Pinned TestInstruction And TestInstructionContainers are put in Pinned Building Blocks-model in a correct way
+// Checks that Pinned TestInstruction And TestInstructionContainers are put in Pinned Building Blocks-testCaseModel in a correct way
 func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionAndTestInstructionContainers(t *testing.T) {
 
 	var pinnedTestInstructionsAndTestContainersMessage fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage

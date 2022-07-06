@@ -157,7 +157,7 @@ type UIServerStruct struct {
 }
 
 /*
-// The model for available Building Blocks used within the Tree-view in GUI
+// The testCaseModel for available Building Blocks used within the Tree-view in GUI
 type availableBuildingBlocksStruct struct {
 	logger                       *logrus.Logger
 

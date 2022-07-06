@@ -128,10 +128,13 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 // n=TI or TIC(X)			X-B12x-n-B12x-X					X-B12x-X					TCRuleDeletion115
 // n=TI or TIC(X)			X-B12-n-B12x-X					X-B12x-X					TCRuleDeletion116
 // n=TI or TIC(X)			X-B12x-n-B12-X					X-B12x-X					TCRuleDeletion117
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedComplexRules(uuid string, testCaseModelMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementMessage) (err error) {
+func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedComplexRules(uuid string, testCaseModelMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementMessage) (updatedTestCaseModelMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementMessage, err error) {
 
 	var ruleName string
-	var ruleProcessed bool
+	var ruleCanBeProcessed bool
+
+	ruleName = ""
+	ruleCanBeProcessed = false
 
 	// Extract data for Previous Element
 	currentElementUuid := uuid
@@ -149,16 +152,265 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 	parrentElementUuid := testCaseModelMap[uuid].ParentElementUuid
 	//parrentElemenType := testCaseModelMap[parrentElementUuid].TestCaseModelElementType
 
+	// TCRuleDeletion101
 	// What to remove			Remove in structure				Result after deletion		Rule
 	// n= TIC(X)				B1-n-B1							B0							TCRuleDeletion101
-	if previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1_BOND_NONE_SWAPPABLE &&
+	if ruleCanBeProcessed == false &&
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1_BOND_NONE_SWAPPABLE &&
 		currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION &&
 		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1_BOND_NONE_SWAPPABLE {
 
 		// Rule OK
 		ruleName = "TCRuleDeletion101"
-		ruleProcessed = true
+		ruleCanBeProcessed = true
 
+	}
+
+	// TCRuleDeletion102
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			B11f-n-B11l						B10							TCRuleDeletion102
+	if ruleCanBeProcessed == false &&
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND &&
+		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND {
+
+		// Rule OK
+		ruleName = "TCRuleDeletion102"
+		ruleCanBeProcessed = true
+
+	}
+
+	// TCRuleDeletion103
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			B11fx-n-B11lx					B10*x*						TCRuleDeletion103
+	if ruleCanBeProcessed == false &&
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE &&
+		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE {
+
+		// Rule OK
+		ruleName = "TCRuleDeletion103"
+		ruleCanBeProcessed = true
+
+	}
+
+	// TCRuleDeletion104
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			B11f-n-B11lx					B10x*						TCRuleDeletion104
+	if ruleCanBeProcessed == false &&
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND &&
+		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE {
+
+		// Rule OK
+		ruleName = "TCRuleDeletion104"
+		ruleCanBeProcessed = true
+
+	}
+
+	// TCRuleDeletion105
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			B11fx-n-B11l					B10*x						TCRuleDeletion105
+	if ruleCanBeProcessed == false &&
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE &&
+		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND {
+
+		// Rule OK
+		ruleName = "TCRuleDeletion105"
+		ruleCanBeProcessed = true
+
+	}
+
+	// TCRuleDeletion106
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			B11f-n-B12-X					B11f-X						TCRuleDeletion106
+	if ruleCanBeProcessed == false &&
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND &&
+		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND {
+
+		// Rule OK
+		ruleName = "TCRuleDeletion106"
+		ruleCanBeProcessed = true
+
+	}
+
+	// TCRuleDeletion107
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			B11fx-n-B12x-X					B11fx-X						TCRuleDeletion107
+	if ruleCanBeProcessed == false &&
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE &&
+		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE {
+
+		// Rule OK
+		ruleName = "TCRuleDeletion107"
+		ruleCanBeProcessed = true
+
+	}
+
+	// TCRuleDeletion108
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			B11f-n-B12x-X					B11fx-X						TCRuleDeletion108
+	if ruleCanBeProcessed == false &&
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND &&
+		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE {
+
+		// Rule OK
+		ruleName = "TCRuleDeletion108"
+		ruleCanBeProcessed = true
+
+	}
+
+	// TCRuleDeletion109
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			B11fx-n-B12-X					B11fx-X						TCRuleDeletion109
+	if ruleCanBeProcessed == false &&
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE &&
+		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND {
+
+		// Rule OK
+		ruleName = "TCRuleDeletion109"
+		ruleCanBeProcessed = true
+
+	}
+
+	// TCRuleDeletion110
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			X-B12-n-B11l					X-B11l						TCRuleDeletion110
+	if ruleCanBeProcessed == false &&
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND &&
+		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND {
+
+		// Rule OK
+		ruleName = "TCRuleDeletion110"
+		ruleCanBeProcessed = true
+
+	}
+
+	// TCRuleDeletion111
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			X-B12x-n-B11lx					X-B11lx						TCRuleDeletion111
+	if ruleCanBeProcessed == false &&
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE &&
+		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE {
+
+		// Rule OK
+		ruleName = "TCRuleDeletion111"
+		ruleCanBeProcessed = true
+
+	}
+
+	// TCRuleDeletion112
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			X-B12-n-B11lx					X-B11lx						TCRuleDeletion112
+	if ruleCanBeProcessed == false &&
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND &&
+		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE {
+
+		// Rule OK
+		ruleName = "TCRuleDeletion112"
+		ruleCanBeProcessed = true
+
+	}
+
+	// TCRuleDeletion113
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			X-B12x-n-B11l					X-B11lx						TCRuleDeletion113
+	if ruleCanBeProcessed == false &&
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE &&
+		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND {
+
+		// Rule OK
+		ruleName = "TCRuleDeletion113"
+		ruleCanBeProcessed = true
+
+	}
+
+	// TCRuleDeletion114
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			X-B12-n-B12-X					X-B12-X						TCRuleDeletion114
+	if ruleCanBeProcessed == false &&
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND &&
+		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND {
+
+		// Rule OK
+		ruleName = "TCRuleDeletion114"
+		ruleCanBeProcessed = true
+
+	}
+
+	// TCRuleDeletion115
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			X-B12x-n-B12x-X					X-B12x-X					TCRuleDeletion115
+	if ruleCanBeProcessed == false &&
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE &&
+		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE {
+
+		// Rule OK
+		ruleName = "TCRuleDeletion115"
+		ruleCanBeProcessed = true
+
+	}
+
+	// TCRuleDeletion116
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			X-B12-n-B12x-X					X-B12x-X					TCRuleDeletion116
+	if ruleCanBeProcessed == false &&
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND &&
+		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE {
+
+		// Rule OK
+		ruleName = "TCRuleDeletion116"
+		ruleCanBeProcessed = true
+
+	}
+
+	// TCRuleDeletion117
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			X-B12x-n-B12-X					X-B12x-X					TCRuleDeletion117
+	if ruleCanBeProcessed == false &&
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE &&
+		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND {
+
+		// Rule OK
+		ruleName = "TCRuleDeletion117"
+		ruleCanBeProcessed = true
+
+	}
+
+	switch ruleName {
+
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n= TIC(X)				B1-n-B1							B0							TCRuleDeletion101
+	case "TCRuleDeletion101":
 		/*
 			// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
 			message TestCaseModelElementMessage {
@@ -174,6 +426,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 			}
 		*/
 
+		// Create new B0-bond element
 		newB0Element := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementMessage{
 			OriginalElementUuid:        commandAndRuleEngineObject.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND].BasicBondInformation.VisibleBondAttributes.BondUuid,
 			OriginalElementName:        commandAndRuleEngineObject.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND].BasicBondInformation.VisibleBondAttributes.BondName,
@@ -199,8 +452,80 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 		tempParrentElement.FirstChildElementUuid = newB0Element.MatureElementUuid
 		testCaseModelMap[parrentElementUuid] = tempParrentElement
 
+		// What to remove			Remove in structure				Result after deletion		Rule
+		// n=TI or TIC(X)			B11f-n-B11l						B10							TCRuleDeletion102
+	case "TCRuleDeletion102":
+
+		// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			B11fx-n-B11lx					B10*x*						TCRuleDeletion103
+	case "TCRuleDeletion103":
+
+		// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			B11f-n-B11lx					B10x*						TCRuleDeletion104
+	case "TCRuleDeletion104":
+
+		// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			B11fx-n-B11l					B10*x						TCRuleDeletion105
+	case "TCRuleDeletion105":
+
+	// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			B11f-n-B12-X					B11f-X						TCRuleDeletion107
+	case "TCRuleDeletion106":
+
+		// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			B11fx-n-B12x-X					B11fx-X						TCRuleDeletion107
+	case "TCRuleDeletion107":
+
+		// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			B11f-n-B12x-X					B11fx-X						TCRuleDeletion108
+	case "TCRuleDeletion108":
+
+		// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			B11fx-n-B12-X					B11fx-X						TCRuleDeletion109
+	case "TCRuleDeletion109":
+
+		// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			X-B12-n-B11l					X-B11l						TCRuleDeletion110
+	case "TCRuleDeletion110":
+
+		// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			X-B12x-n-B11lx					X-B11lx						TCRuleDeletion111
+	case "TCRuleDeletion111":
+
+		// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			X-B12-n-B11lx					X-B11lx						TCRuleDeletion112
+	case "TCRuleDeletion112":
+
+		// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			X-B12x-n-B11l					X-B11lx						TCRuleDeletion113
+	case "TCRuleDeletion113":
+
+		// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			X-B12-n-B12-X					X-B12-X						TCRuleDeletion114
+	case "TCRuleDeletion114":
+
+		// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			X-B12x-n-B12x-X					X-B12x-X					TCRuleDeletion115
+	case "TCRuleDeletion115":
+
+		// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			X-B12-n-B12x-X					X-B12x-X					TCRuleDeletion116
+	case "TCRuleDeletion116":
+
+		// What to remove			Remove in structure				Result after deletion		Rule
+	// n=TI or TIC(X)			X-B12x-n-B12-X					X-B12x-X					TCRuleDeletion117
+	case "TCRuleDeletion117":
+
+	default:
+		err = errors.New(ruleName + " is an unknown componentType")
+
+		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+			"id":       "95c278ba-f95e-4aba-baee-e0710be3e30c",
+			"ruleName": ruleName,
+		}).Error(ruleName + " is an unknown rule")
+
 	}
 
-	return err
+	return updatedTestCaseModelMap, err
 
 }

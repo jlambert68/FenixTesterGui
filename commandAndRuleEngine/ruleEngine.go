@@ -128,7 +128,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 // n=TI or TIC(X)			X-B12x-n-B12x-X					X-B12x-X					TCRuleDeletion115
 // n=TI or TIC(X)			X-B12-n-B12x-X					X-B12x-X					TCRuleDeletion116
 // n=TI or TIC(X)			X-B12x-n-B12-X					X-B12x-X					TCRuleDeletion117
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedComplexRules(uuid string, testCaseModelMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementMessage) (updatedTestCaseModelMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementMessage, err error) {
+func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedComplexRules(uuid string) (err error) {
 
 	var ruleName string
 	var ruleCanBeProcessed bool
@@ -136,20 +136,20 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 	ruleName = ""
 	ruleCanBeProcessed = false
 
-	// Extract data for Previous Element
+	// Extract data for Previous Elementfunc (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct)
 	currentElementUuid := uuid
-	currentElementType := testCaseModelMap[currentElementUuid].TestCaseModelElementType
+	currentElementType := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[currentElementUuid].TestCaseModelElementType
 
 	// Extract data for Previous Element
-	previousElementUuid := testCaseModelMap[uuid].PreviousElementUuid
-	previousElementType := testCaseModelMap[previousElementUuid].TestCaseModelElementType
+	previousElementUuid := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[uuid].PreviousElementUuid
+	previousElementType := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[previousElementUuid].TestCaseModelElementType
 
 	// Extract data for Next Element
-	nextElementUuid := testCaseModelMap[uuid].NextElementUuid
-	nextlementType := testCaseModelMap[nextElementUuid].TestCaseModelElementType
+	nextElementUuid := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[uuid].NextElementUuid
+	nextlementType := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[nextElementUuid].TestCaseModelElementType
 
 	// Extract dta for Parent Element
-	parrentElementUuid := testCaseModelMap[uuid].ParentElementUuid
+	parrentElementUuid := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[uuid].ParentElementUuid
 	//parrentElemenType := testCaseModelMap[parrentElementUuid].TestCaseModelElementType
 
 	// TCRuleDeletion101
@@ -425,6 +425,8 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 			  string CurrentElementModelElement = 9; // The UUID of the element that this data act on, e.g. For TI & TIC the it is the same as 'OriginalElementUuid' but for BONDs then it is the BONDs UUID
 			}
 		*/
+
+		// Create the structure after Delete
 
 		// Create new B0-bond element
 		newB0Element := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementMessage{

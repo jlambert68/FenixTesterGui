@@ -4,7 +4,7 @@ import (
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 )
 
-type TestCaseModel struct {
+type TestCaseModelStruct struct {
 	LastLoadedTestCaseModelGRPCMessage fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage
-	testCaseModelMap                   map[string]fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementMessage
+	TestCaseModelMap                   map[string]fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementMessage
 }

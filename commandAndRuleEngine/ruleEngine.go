@@ -2,7 +2,6 @@ package commandAndRuleEngine
 
 import (
 	"errors"
-	uuidGenerator "github.com/google/uuid"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 )
@@ -128,7 +127,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 // n=TI or TIC(X)			X-B12x-n-B12x-X					X-B12x-X					TCRuleDeletion115
 // n=TI or TIC(X)			X-B12-n-B12x-X					X-B12x-X					TCRuleDeletion116
 // n=TI or TIC(X)			X-B12x-n-B12-X					X-B12x-X					TCRuleDeletion117
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedComplexRules(uuid string) (err error) {
+func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedWithComplexRules(uuid string) (err error) {
 
 	var ruleName string
 	var ruleCanBeProcessed bool
@@ -138,19 +137,48 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 
 	// Extract data for Previous Elementfunc (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct)
 	currentElementUuid := uuid
-	currentElementType := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[currentElementUuid].TestCaseModelElementType
+	currentElement, existInMap := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[currentElementUuid]
+	if existInMap == false {
+		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+			"id":                 "8c69112a-31ea-4606-89a5-54b80789e691",
+			"currentElementUuid": currentElementUuid,
+		}).Error(currentElementUuid + " could not be found in in map 'TestCaseModelMap'")
+
+		err = errors.New(currentElementUuid + " could not be found in in map 'TestCaseModelMap'")
+
+		return err
+	}
+	currentElementType := currentElement.TestCaseModelElementType
 
 	// Extract data for Previous Element
-	previousElementUuid := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[uuid].PreviousElementUuid
-	previousElementType := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[previousElementUuid].TestCaseModelElementType
+	previousElementUuid := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[currentElementUuid].PreviousElementUuid
+	previousElement, existInMap := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[previousElementUuid]
+	if existInMap == false {
+		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+			"id":                  "d801356c-5ab6-48d7-bcd5-73d820b86d1e",
+			"previousElementUuid": previousElementUuid,
+		}).Error(previousElementUuid + " could not be found in in map 'TestCaseModelMap'")
+
+		err = errors.New(previousElementUuid + " could not be found in in map 'TestCaseModelMap'")
+
+		return err
+	}
+	previousElementType := previousElement.TestCaseModelElementType
 
 	// Extract data for Next Element
-	nextElementUuid := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[uuid].NextElementUuid
-	nextlementType := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[nextElementUuid].TestCaseModelElementType
+	nextElementUuid := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[currentElementUuid].NextElementUuid
+	nextElement, existInMap := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[nextElementUuid]
+	if existInMap == false {
+		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+			"id":              "6c8c7382-48c7-4041-9f19-0c9b11298bbf",
+			"nextElementUuid": nextElementUuid,
+		}).Error(nextElementUuid + " could not be found in in map 'TestCaseModelMap'")
 
-	// Extract dta for Parent Element
-	parrentElementUuid := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[uuid].ParentElementUuid
-	//parrentElemenType := testCaseModelMap[parrentElementUuid].TestCaseModelElementType
+		err = errors.New(nextElementUuid + " could not be found in in map 'TestCaseModelMap'")
+
+		return err
+	}
+	nextlementType := nextElement.TestCaseModelElementType
 
 	// TCRuleDeletion101
 	// What to remove			Remove in structure				Result after deletion		Rule
@@ -408,126 +436,29 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 
 	switch ruleName {
 
-	// What to remove			Remove in structure				Result after deletion		Rule
-	// n= TIC(X)				B1-n-B1							B0							TCRuleDeletion101
-	case "TCRuleDeletion101":
-		/*
-			// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
-			message TestCaseModelElementMessage {
-			  string OriginalElementUuid = 1; // The original elements UUID, e.g. a TestInstruction unique UUID set by client system
-			  string OriginalElementName = 2; // The original elements Name, e.g. a TestInstruction Name set by client system
-			  string MatureElementUuid = 3; // The UUID that is created in the TestCase to give it a unique id
-			  string PreviousElementUuid = 4;  // The UUID of the previous element. When there are no previous element then this field is populated with current element UUID
-			  string NextElementUuid = 5;  // The UUID of the previous element. When there are no next element then this field is populated with current element UUID
-			  string FirstChildElementUuid = 6; // The UUID of the first child element. Only applicable when this is a TestInstructionContainer. When there are no child element then this field is populated with current element UUID
-			  string ParentElementUuid = 7; // The UUID of the parent, TestInstructionContainer. Only applicable when this is the last element inside a TestInstructionContainer. When there are no parent element then this field is populated with current element UUID
-			  TestCaseModelElementTypeEnum TestCaseModelElementType = 8; // The specific type of this TestCase-element
-			  string CurrentElementModelElement = 9; // The UUID of the element that this data act on, e.g. For TI & TIC the it is the same as 'OriginalElementUuid' but for BONDs then it is the BONDs UUID
-			}
-		*/
+	case "TCRuleDeletion101", "TCRuleDeletion102", "TCRuleDeletion103", "TCRuleDeletion104",
+		"TCRuleDeletion105", "TCRuleDeletion106", "TCRuleDeletion107", "TCRuleDeletion108",
+		"TCRuleDeletion109", "TCRuleDeletion110", "TCRuleDeletion111", "TCRuleDeletion112",
+		"TCRuleDeletion113", "TCRuleDeletion114", "TCRuleDeletion115", "TCRuleDeletion116", "TCRuleDeletion117":
 
-		// Create the structure after Delete
-
-		// Create new B0-bond element
-		newB0Element := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementMessage{
-			OriginalElementUuid:        commandAndRuleEngineObject.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND].BasicBondInformation.VisibleBondAttributes.BondUuid,
-			OriginalElementName:        commandAndRuleEngineObject.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND].BasicBondInformation.VisibleBondAttributes.BondName,
-			MatureElementUuid:          uuidGenerator.New().String(),
-			PreviousElementUuid:        commandAndRuleEngineObject.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND].BasicBondInformation.VisibleBondAttributes.BondUuid,
-			NextElementUuid:            commandAndRuleEngineObject.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND].BasicBondInformation.VisibleBondAttributes.BondUuid,
-			FirstChildElementUuid:      commandAndRuleEngineObject.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND].BasicBondInformation.VisibleBondAttributes.BondUuid,
-			ParentElementUuid:          parrentElementUuid,
-			TestCaseModelElementType:   fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND,
-			CurrentElementModelElement: commandAndRuleEngineObject.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND].BasicBondInformation.VisibleBondAttributes.BondUuid,
-		}
-
-		// Add New Elements to Map
-		testCaseModelMap[newB0Element.MatureElementUuid] = newB0Element
-
-		// Remove Old Elements from Map
-		delete(testCaseModelMap, previousElementUuid)
-		delete(testCaseModelMap, currentElementUuid)
-		delete(testCaseModelMap, nextElementUuid)
-
-		// Update Reference in parent TIC
-		tempParrentElement := testCaseModelMap[parrentElementUuid]
-		tempParrentElement.FirstChildElementUuid = newB0Element.MatureElementUuid
-		testCaseModelMap[parrentElementUuid] = tempParrentElement
-
-		// What to remove			Remove in structure				Result after deletion		Rule
-		// n=TI or TIC(X)			B11f-n-B11l						B10							TCRuleDeletion102
-	case "TCRuleDeletion102":
-
-		// What to remove			Remove in structure				Result after deletion		Rule
-	// n=TI or TIC(X)			B11fx-n-B11lx					B10*x*						TCRuleDeletion103
-	case "TCRuleDeletion103":
-
-		// What to remove			Remove in structure				Result after deletion		Rule
-	// n=TI or TIC(X)			B11f-n-B11lx					B10x*						TCRuleDeletion104
-	case "TCRuleDeletion104":
-
-		// What to remove			Remove in structure				Result after deletion		Rule
-	// n=TI or TIC(X)			B11fx-n-B11l					B10*x						TCRuleDeletion105
-	case "TCRuleDeletion105":
-
-	// What to remove			Remove in structure				Result after deletion		Rule
-	// n=TI or TIC(X)			B11f-n-B12-X					B11f-X						TCRuleDeletion107
-	case "TCRuleDeletion106":
-
-		// What to remove			Remove in structure				Result after deletion		Rule
-	// n=TI or TIC(X)			B11fx-n-B12x-X					B11fx-X						TCRuleDeletion107
-	case "TCRuleDeletion107":
-
-		// What to remove			Remove in structure				Result after deletion		Rule
-	// n=TI or TIC(X)			B11f-n-B12x-X					B11fx-X						TCRuleDeletion108
-	case "TCRuleDeletion108":
-
-		// What to remove			Remove in structure				Result after deletion		Rule
-	// n=TI or TIC(X)			B11fx-n-B12-X					B11fx-X						TCRuleDeletion109
-	case "TCRuleDeletion109":
-
-		// What to remove			Remove in structure				Result after deletion		Rule
-	// n=TI or TIC(X)			X-B12-n-B11l					X-B11l						TCRuleDeletion110
-	case "TCRuleDeletion110":
-
-		// What to remove			Remove in structure				Result after deletion		Rule
-	// n=TI or TIC(X)			X-B12x-n-B11lx					X-B11lx						TCRuleDeletion111
-	case "TCRuleDeletion111":
-
-		// What to remove			Remove in structure				Result after deletion		Rule
-	// n=TI or TIC(X)			X-B12-n-B11lx					X-B11lx						TCRuleDeletion112
-	case "TCRuleDeletion112":
-
-		// What to remove			Remove in structure				Result after deletion		Rule
-	// n=TI or TIC(X)			X-B12x-n-B11l					X-B11lx						TCRuleDeletion113
-	case "TCRuleDeletion113":
-
-		// What to remove			Remove in structure				Result after deletion		Rule
-	// n=TI or TIC(X)			X-B12-n-B12-X					X-B12-X						TCRuleDeletion114
-	case "TCRuleDeletion114":
-
-		// What to remove			Remove in structure				Result after deletion		Rule
-	// n=TI or TIC(X)			X-B12x-n-B12x-X					X-B12x-X					TCRuleDeletion115
-	case "TCRuleDeletion115":
-
-		// What to remove			Remove in structure				Result after deletion		Rule
-	// n=TI or TIC(X)			X-B12-n-B12x-X					X-B12x-X					TCRuleDeletion116
-	case "TCRuleDeletion116":
-
-		// What to remove			Remove in structure				Result after deletion		Rule
-	// n=TI or TIC(X)			X-B12x-n-B12-X					X-B12x-X					TCRuleDeletion117
-	case "TCRuleDeletion117":
+		// Deletion can be execute by complex deletion rules
+		err = nil
 
 	default:
-		err = errors.New(ruleName + " is an unknown componentType")
+		// The criteria for Deleting is not met by complex deletion rule
+		err = errors.New("The criteria for any complex deletion rule was not met")
 
 		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
-			"id":       "95c278ba-f95e-4aba-baee-e0710be3e30c",
-			"ruleName": ruleName,
-		}).Error(ruleName + " is an unknown rule")
+			"id":                  "4e62df40-4192-4f45-ac4d-adbf1a687ad2",
+			"previousElementType": previousElementType,
+			"currentElementType":  currentElementType,
+			"nextlementType":      nextlementType,
+		}).Error("The criteria for any complex deletion rule was not met")
+
+		return err
 
 	}
 
-	return updatedTestCaseModelMap, err
+	return err
 
 }

@@ -30,70 +30,102 @@ func VerifyIfComponentCanBeDeleted(uuid string, testCaseModelMap *map[string]fen
 }
 
 // Verify the complex rules if a component can be deleted or not
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedSimpleRules(componentType fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum) (canBeDeleted bool, err error) {
+func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedSimpleRules(elementUuid string) (canBeDeleted bool, matchedRule string, err error) {
+
+	// Retrieve component to be verified for deletion
+	element, existInMap := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[elementUuid]
+	if existInMap == false {
+		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+			"id":          "490b9af6-883f-45e9-ac46-a85706680063",
+			"elementUuid": elementUuid,
+		}).Error(elementUuid + " could not be found in in map 'TestCaseModelMap'")
+
+		err = errors.New(elementUuid + " could not be found in in map 'TestCaseModelMap'")
+
+		return false, "", err
+	}
+
+	// Extract component type to verify
+	componentType := element.TestCaseModelElementType
 
 	// Check simple rules of component can be deleted or not
 	switch componentType {
 
 	//	B0 - False - TCRuleDeletion001
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND:
+		matchedRule = "TCRuleDeletion001"
 		canBeDeleted = false
 
 		//	B1 - False - TCRuleDeletion002
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1_BOND_NONE_SWAPPABLE:
-		canBeDeleted = false
+		matchedRule = "TCRuleDeletion002"
 
 		//	B10 - False - TCRuleDeletion003
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND:
+		matchedRule = "TCRuleDeletion002"
 		canBeDeleted = false
 
 		//	B11			False				TCRuleDeletion004
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND,
 		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND:
+		matchedRule = "TCRuleDeletion004"
 		canBeDeleted = false
 
 		//	B12			False				TCRuleDeletion005
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND:
+		matchedRule = "TCRuleDeletion005"
 		canBeDeleted = false
 
 		//	B10*x* 		False				TCRuleDeletion006
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND:
+		matchedRule = "TCRuleDeletion006"
 		canBeDeleted = false
 
 		//	B10*x 		False				TCRuleDeletion007
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10ox_BOND:
+		matchedRule = "TCRuleDeletion007"
 		canBeDeleted = false
 
 		//	B10x*		False				TCRuleDeletion008
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND:
+		matchedRule = "TCRuleDeletion008"
+		canBeDeleted = false
 
 		//	B11x		False				TCRuleDeletion009
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE,
 		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE:
+		matchedRule = "TCRuleDeletion009"
 		canBeDeleted = false
 
 		//	B12x		False				TCRuleDeletion010
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE:
+		matchedRule = "TCRuleDeletion010"
 		canBeDeleted = false
 
 		//	TI			True				TCRuleDeletion011
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION:
+		matchedRule = "TCRuleDeletion011"
 		canBeDeleted = true
 
 		//	Tix			False				TCRuleDeletion012
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE:
+		matchedRule = "TCRuleDeletion012"
 		canBeDeleted = false
 
 		//	TIC(X)		True				TCRuleDeletion013
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER:
+		matchedRule = "TCRuleDeletion013"
 		canBeDeleted = true
 
 		//	TICx(X)		False				TCRuleDeletion014
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE:
+		matchedRule = "TCRuleDeletion014"
 		canBeDeleted = false
 
 	default:
+		matchedRule = ""
 		canBeDeleted = false
+
 		err = errors.New(componentType.String() + " is an unknown componentType")
 
 		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
@@ -103,7 +135,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 
 	}
 
-	return canBeDeleted, err
+	return canBeDeleted, matchedRule, err
 }
 
 // Verify the complex rules if a component can be deleted or not
@@ -127,7 +159,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 // n=TI or TIC(X)			X-B12x-n-B12x-X					X-B12x-X					TCRuleDeletion115
 // n=TI or TIC(X)			X-B12-n-B12x-X					X-B12x-X					TCRuleDeletion116
 // n=TI or TIC(X)			X-B12x-n-B12-X					X-B12x-X					TCRuleDeletion117
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedWithComplexRules(uuid string) (err error) {
+func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedWithComplexRules(uuid string) (matchedRule string, err error) {
 
 	var ruleName string
 	var ruleCanBeProcessed bool
@@ -146,7 +178,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 
 		err = errors.New(currentElementUuid + " could not be found in in map 'TestCaseModelMap'")
 
-		return err
+		return "", err
 	}
 	currentElementType := currentElement.TestCaseModelElementType
 
@@ -161,7 +193,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 
 		err = errors.New(previousElementUuid + " could not be found in in map 'TestCaseModelMap'")
 
-		return err
+		return "", err
 	}
 	previousElementType := previousElement.TestCaseModelElementType
 
@@ -176,7 +208,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 
 		err = errors.New(nextElementUuid + " could not be found in in map 'TestCaseModelMap'")
 
-		return err
+		return "", err
 	}
 	nextlementType := nextElement.TestCaseModelElementType
 
@@ -455,10 +487,10 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 			"nextlementType":      nextlementType,
 		}).Error("The criteria for any complex deletion rule was not met")
 
-		return err
+		return "", err
 
 	}
 
-	return err
+	return ruleName, err
 
 }

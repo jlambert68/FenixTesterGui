@@ -11,3 +11,13 @@ type commandAndRuleEngineObjectStruct struct {
 	availableBondsMap map[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage
 	testcaseModel     *testCaseModel.TestCaseModelStruct
 }
+
+type matureElementStruct struct {
+	firstElementUuid string
+	matureElementMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
+}
+
+type immatureElementStruct struct {
+	firstElementUuid   string
+	immatureElementMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage
+}

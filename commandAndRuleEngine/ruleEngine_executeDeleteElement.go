@@ -11,7 +11,7 @@ import (
 func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleDeletion101(uuidToDelete string) (err error) {
 	/*
 		// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
-		message TestCaseModelElementMessage {
+		message MatureTestCaseModelElementMessage {
 		  string OriginalElementUuid = 1; // The original elements UUID, e.g. a TestInstruction unique UUID set by client system
 		  string OriginalElementName = 2; // The original elements Name, e.g. a TestInstruction Name set by client system
 		  string MatureElementUuid = 3; // The UUID that is created in the TestCase to give it a unique id
@@ -100,7 +100,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRul
 func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleDeletion102(uuidToDelete string) (err error) {
 	/*
 		// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
-		message TestCaseModelElementMessage {
+		message MatureTestCaseModelElementMessage {
 		  string OriginalElementUuid = 1; // The original elements UUID, e.g. a TestInstruction unique UUID set by client system
 		  string OriginalElementName = 2; // The original elements Name, e.g. a TestInstruction Name set by client system
 		  string MatureElementUuid = 3; // The UUID that is created in the TestCase to give it a unique id
@@ -189,7 +189,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRul
 func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleDeletion103(uuidToDelete string) (err error) {
 	/*
 		// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
-		message TestCaseModelElementMessage {
+		message MatureTestCaseModelElementMessage {
 		  string OriginalElementUuid = 1; // The original elements UUID, e.g. a TestInstruction unique UUID set by client system
 		  string OriginalElementName = 2; // The original elements Name, e.g. a TestInstruction Name set by client system
 		  string MatureElementUuid = 3; // The UUID that is created in the TestCase to give it a unique id
@@ -278,7 +278,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRul
 func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleDeletion104(uuidToDelete string) (err error) {
 	/*
 		// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
-		message TestCaseModelElementMessage {
+		message MatureTestCaseModelElementMessage {
 		  string OriginalElementUuid = 1; // The original elements UUID, e.g. a TestInstruction unique UUID set by client system
 		  string OriginalElementName = 2; // The original elements Name, e.g. a TestInstruction Name set by client system
 		  string MatureElementUuid = 3; // The UUID that is created in the TestCase to give it a unique id
@@ -367,7 +367,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRul
 func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleDeletion105(uuidToDelete string) (err error) {
 	/*
 		// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
-		message TestCaseModelElementMessage {
+		message MatureTestCaseModelElementMessage {
 		  string OriginalElementUuid = 1; // The original elements UUID, e.g. a TestInstruction unique UUID set by client system
 		  string OriginalElementName = 2; // The original elements Name, e.g. a TestInstruction Name set by client system
 		  string MatureElementUuid = 3; // The UUID that is created in the TestCase to give it a unique id
@@ -497,7 +497,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRul
 func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleDeletion_106_107_108_109(uuidToDelete string) (err error) {
 	/*
 		// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
-		message TestCaseModelElementMessage {
+		message MatureTestCaseModelElementMessage {
 		  string OriginalElementUuid = 1; // The original elements UUID, e.g. a TestInstruction unique UUID set by client system
 		  string OriginalElementName = 2; // The original elements Name, e.g. a TestInstruction Name set by client system
 		  string MatureElementUuid = 3; // The UUID that is created in the TestCase to give it a unique id
@@ -637,7 +637,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRul
 func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleDeletion_110_111_112_113(uuidToDelete string) (err error) {
 	/*
 		// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
-		message TestCaseModelElementMessage {
+		message MatureTestCaseModelElementMessage {
 		  string OriginalElementUuid = 1; // The original elements UUID, e.g. a TestInstruction unique UUID set by client system
 		  string OriginalElementName = 2; // The original elements Name, e.g. a TestInstruction Name set by client system
 		  string MatureElementUuid = 3; // The UUID that is created in the TestCase to give it a unique id
@@ -777,7 +777,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRul
 func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleDeletion_114_115_116_117(uuidToDelete string) (err error) {
 	/*
 		// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
-		message TestCaseModelElementMessage {
+		message MatureTestCaseModelElementMessage {
 		  string OriginalElementUuid = 1; // The original elements UUID, e.g. a TestInstruction unique UUID set by client system
 		  string OriginalElementName = 2; // The original elements Name, e.g. a TestInstruction Name set by client system
 		  string MatureElementUuid = 3; // The UUID that is created in the TestCase to give it a unique id
@@ -834,8 +834,8 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRul
 	}
 
 	// Decide which of the Bond (Previous or Next to keep)
-	var elementToKeep *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementMessage
-	var elementToRemove *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementMessage
+	var elementToKeep *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
+	var elementToRemove *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
 
 	if previousElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND &&
 		nextElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE {

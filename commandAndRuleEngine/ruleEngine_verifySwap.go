@@ -2,8 +2,10 @@ package commandAndRuleEngine
 
 import (
 	"errors"
+	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
+	"reflect"
 )
 
 //Rules if an element are allowed to be swapped into another element
@@ -134,28 +136,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 }
 
 // Verify the complex rules if a component can be Swapped or not
-// Rules how Swap of an element is done
-// X = any allowed structure
-// What to remove			Remove in structure				Result after Swap		Rule
-// n= TIC(X)				B1-n-B1							B0							TCRuleSwap101
-// n=TI or TIC(X)			B11f-n-B11l						B10							TCRuleSwap102
-// n=TI or TIC(X)			B11fx-n-B11lx					B10*x*						TCRuleSwap103
-// n=TI or TIC(X)			B11f-n-B11lx					B10x*						TCRuleSwap104
-// n=TI or TIC(X)			B11fx-n-B11l					B10*x						TCRuleSwap105
-// n=TI or TIC(X)			B11f-n-B12-X					B11f-X						TCRuleSwap106
-// n=TI or TIC(X)			B11fx-n-B12x-X					B11fx-X						TCRuleSwap107
-// n=TI or TIC(X)			B11f-n-B12x-X					B11fx-X						TCRuleSwap108
-// n=TI or TIC(X)			B11fx-n-B12-X					B11fx-X						TCRuleSwap109
-// n=TI or TIC(X)			X-B12-n-B11l					X-B11l						TCRuleSwap110
-// n=TI or TIC(X)			X-B12x-n-B11lx					X-B11lx						TCRuleSwap111
-// n=TI or TIC(X)			X-B12-n-B11lx					X-B11lx						TCRuleSwap112
-// n=TI or TIC(X)			X-B12x-n-B11l					X-B11lx						TCRuleSwap113
-// n=TI or TIC(X)			X-B12-n-B12-X					X-B12-X						TCRuleSwap114
-// n=TI or TIC(X)			X-B12x-n-B12x-X					X-B12x-X					TCRuleSwap115
-// n=TI or TIC(X)			X-B12-n-B12x-X					X-B12x-X					TCRuleSwap116
-// n=TI or TIC(X)			X-B12x-n-B12-X					X-B12x-X					TCRuleSwap117
-
-// Rules how swapping out an element
+// Rules how swapping out an element for another element
 // X = any allowed structure
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC(X)			B0					n 		B0								B1-n-B1					TCRuleSwap101
@@ -168,6 +149,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 //	n=TIC or TIC(X)		B10x*				n		TIC(B10x*)						TIC(B11-n-B11x)			TCRuleSwap108
 //No other combinations of swapping elements are allowed
 
+// Verify the Complex rules if a component can be Swapped or not
 func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedWithComplexRules(uuid string) (matchedRule string, err error) {
 
 	var ruleName string
@@ -502,4 +484,170 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 
 	return ruleName, err
 
+}
+
+// Verify that all UUIDs are correct in component to be swapped in. Means that no empty uuid is allowed and they all are correct
+func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyThatThereAreNoZombieElementsInComponent(immatureElement immatureElementStruct) (err error) {
+
+	var allUuidKeys []string
+
+	// Extract all elements by key from component
+	for _, elementKey := range immatureElement.immatureElementMap {
+		allUuidKeys = append(allUuidKeys, elementKey.ImmatureElementUuid)
+	}
+
+	// Follow the path from "first element and remove the found element from 'allUuidKeys'
+	commandAndRuleEngineObject.recursiveZombieElementSearchInComponentModel(immatureElement.firstElementUuid, &allUuidKeys, &immatureElement)
+
+	// If there are elements left in slice then there were zombie elements, which there shouldn't be
+	if len(allUuidKeys) != 0 {
+		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+			"id":                               "3e519b3c-367d-42d5-a8ce-ff507efd8972",
+			"allUuidKeys":                      allUuidKeys,
+			"Number of Zombie Elements":        len(allUuidKeys),
+			"immatureElement.firstElementUuid": immatureElement.firstElementUuid,
+		}).Error("There existed Zombie elements in 'immatureElement.immatureElementMap'")
+
+		err = errors.New("there existed Zombie elements in 'immatureElement.immatureElementMap', for " + immatureElement.firstElementUuid)
+
+		return err
+	}
+
+	return err
+}
+
+// Verify all children, in ImmatureEleemnt-model and remove the found element from 'allUuidKeys'
+func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) recursiveZombieElementSearchInComponentModel(elementsUuid string, allUuidKeys *[]string, immatureElement *immatureElementStruct) (err error) {
+
+	// Extract current element
+	currentElement, existInMap := immatureElement.immatureElementMap[elementsUuid]
+
+	// If the element doesn't exit then there is something really wrong
+	if existInMap == false {
+		// This shouldn't happen
+		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+			"id":           "9f628356-2ea2-48a6-8e6a-546a5f97f05b",
+			"elementsUuid": elementsUuid,
+		}).Error(elementsUuid + " could not be found in in map 'immatureElement.immatureElementMap'")
+
+		err = errors.New(elementsUuid + " could not be found in in map 'immatureElement.immatureElementMap'")
+
+		return err
+	}
+
+	// Element has child-element then go that path
+	if currentElement.FirstChildElementUuid != elementsUuid {
+		err = commandAndRuleEngineObject.recursiveDeleteOfChildElements(currentElement.FirstChildElementUuid)
+	}
+
+	// If we got an error back then something wrong happen, so just back out
+	if err != nil {
+		return err
+	}
+
+	// If element has a next-element the go that path
+	if currentElement.NextElementUuid != elementsUuid {
+		err = commandAndRuleEngineObject.recursiveDeleteOfChildElements(currentElement.NextElementUuid)
+	}
+
+	// If we got an error back then something wrong happen, so just back out
+	if err != nil {
+		return err
+	}
+
+	// Remove current element from "slice of all elements in map"
+	allUuidKeys = findElementInSliceAndRemove(allUuidKeys, elementsUuid)
+
+	return err
+}
+
+// Remove 'uuid' from slice
+func findElementInSliceAndRemove(sliceToWorkOn *[]string, uuid string) (returnSlice *[]string) {
+
+	var index int
+	var uuidInSLice string
+
+	// Find the index of the 'uuid'
+	for index, uuidInSLice = range *sliceToWorkOn {
+		if uuidInSLice == uuid {
+			break
+		}
+	}
+
+	// Create a temporary slice to work on
+	tempSlice := *sliceToWorkOn
+
+	// Remove the element in the slice
+	tempSlice[index] = tempSlice[len(tempSlice)-1]
+	tempSlice = tempSlice[:len(tempSlice)-1]
+
+	returnSlice = &tempSlice
+
+	return returnSlice
+}
+
+// Verify that all UUIDs are correct in component to be swapped in. Means that no empty uuid is allowed and they all are correct
+func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyThatAllUuidsAreCorrectInComponent(immatureElement immatureElementStruct) (err error) {
+
+	// Loop all fields and find the ones defined as 'String'. Verify that content is a UUID
+	e := reflect.ValueOf(&immatureElement.immatureElementMap).Elem()
+
+	for i := 0; i < e.NumField(); i++ {
+		varName := e.Type().Field(i).Name
+		varType := e.Type().Field(i).Type
+		varValue := e.Field(i).Interface()
+
+		// If Type is 'String' then verify that it's a correct UUID
+		if varType.Kind() == reflect.String {
+			//TODO Implement UUID validation instead
+			fmt.Printf("****************************REPLACE WITH CORRECT CHECK ON UUID-type***********************************************")
+		}
+		fmt.Printf("%v %v %v\n", varName, varType, varValue)
+	}
+
+	return err
+}
+
+// Verify all children, in new Element-model to be swapped in, that they contain correct UUIDs
+func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) recursiveVerifyAllUuidOfChildElements(elementsUuid string) (err error) {
+
+	// Extract current element
+	currentElement, existInMap := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[elementsUuid]
+
+	// If the element doesn't exit then there is something really wrong
+	if existInMap == false {
+		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+			"id":           "9eae5791-88f0-481d-a7d9-21123b9eadfe",
+			"elementsUuid": elementsUuid,
+		}).Error(elementsUuid + " could not be found in in map 'TestCaseModelMap'")
+
+		err = errors.New(elementsUuid + " could not be found in in map 'immatureElement.immatureElementMap'")
+
+		return err
+	}
+
+	// Element has child-element then go that path
+	if currentElement.FirstChildElementUuid != elementsUuid {
+		err = commandAndRuleEngineObject.recursiveDeleteOfChildElements(currentElement.FirstChildElementUuid)
+	}
+
+	// If we got an error back then something wrong happen, so just back out
+	if err != nil {
+		return err
+	}
+
+	// If element has a next-element the go that path
+	if currentElement.NextElementUuid != elementsUuid {
+		err = commandAndRuleEngineObject.recursiveDeleteOfChildElements(currentElement.NextElementUuid)
+	}
+
+	// If we got an error back then something wrong happen, so just back out
+	if err != nil {
+		return err
+	}
+
+	// Remove current element from Map
+	delete(commandAndRuleEngineObject.testcaseModel.TestCaseModelMap, elementsUuid)
+
+	return err
 }

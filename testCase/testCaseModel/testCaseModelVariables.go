@@ -6,5 +6,5 @@ import (
 
 type TestCaseModelStruct struct {
 	LastLoadedTestCaseModelGRPCMessage fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage
-	TestCaseModelMap                   map[string]fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementMessage
+	TestCaseModelMap                   map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
 }

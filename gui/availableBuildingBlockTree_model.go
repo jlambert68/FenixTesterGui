@@ -293,7 +293,8 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) verifyBe
 
 	if existsInMap == false {
 		err = errors.New(nameInAvailableBuildingBlocksTree + " is missing among nodes i map")
-		if onlyForVerifying == false {
+		err = errors.New(nameInAvailableBuildingBlocksTree + " is missing among nodes i map")
+		{
 			availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
 				"id":  "9d3510ec-8b9e-4490-bae9-0e6cf9c0a1cb",
 				"err": err,

@@ -47,6 +47,11 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) createNewBon
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
 
+	// If there is no parent element then use 'matureElementUuid'
+	if parentElementUuid == "" {
+		parentElementUuid = matureElementUuid
+	}
+
 	// Create new Bond element
 	newBondB0Element = fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
 		OriginalElementUuid:      commandAndRuleEngineObject.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND].BasicBondInformation.VisibleBondAttributes.BondUuid,
@@ -68,6 +73,11 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) createNewBon
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
+
+	// If there is no parent element then use 'matureElementUuid'
+	if parentElementUuid == "" {
+		parentElementUuid = matureElementUuid
+	}
 
 	// Create new Bond element
 	newBondB10Element = fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
@@ -91,6 +101,11 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) createNewBon
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
 
+	// If there is no parent element then use 'matureElementUuid'
+	if parentElementUuid == "" {
+		parentElementUuid = matureElementUuid
+	}
+
 	// Create new Bond element
 	newBondB10oxoElement = fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
 		OriginalElementUuid:      commandAndRuleEngineObject.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND].BasicBondInformation.VisibleBondAttributes.BondUuid,
@@ -112,6 +127,11 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) createNewBon
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
+
+	// If there is no parent element then use 'matureElementUuid'
+	if parentElementUuid == "" {
+		parentElementUuid = matureElementUuid
+	}
 
 	// Create new Bond element
 	newBondB10xoElement = fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
@@ -135,6 +155,11 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) createNewBon
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
 
+	// If there is no parent element then use 'matureElementUuid'
+	if parentElementUuid == "" {
+		parentElementUuid = matureElementUuid
+	}
+
 	// Create new Bond element
 	newBondB10oxElement = fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
 		OriginalElementUuid:      commandAndRuleEngineObject.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10ox_BOND].BasicBondInformation.VisibleBondAttributes.BondUuid,
@@ -156,6 +181,11 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) createNewBon
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
+
+	// If there is no parent element then use 'matureElementUuid'
+	if parentElementUuid == "" {
+		parentElementUuid = matureElementUuid
+	}
 
 	// Create new Bond element
 	newBondB11fElement = fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
@@ -179,6 +209,11 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) createNewBon
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
 
+	// If there is no parent element then use 'matureElementUuid'
+	if parentElementUuid == "" {
+		parentElementUuid = matureElementUuid
+	}
+
 	// Create new Bond element
 	newBondB11lElement = fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
 		OriginalElementUuid:      commandAndRuleEngineObject.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND].BasicBondInformation.VisibleBondAttributes.BondUuid,
@@ -200,6 +235,11 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) createNewBon
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
+
+	// If there is no parent element then use 'matureElementUuid'
+	if parentElementUuid == "" {
+		parentElementUuid = matureElementUuid
+	}
 
 	// Create new Bond element
 	newBondB11fxElement = fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
@@ -223,6 +263,11 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) createNewBon
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
 
+	// If there is no parent element then use 'matureElementUuid'
+	if parentElementUuid == "" {
+		parentElementUuid = matureElementUuid
+	}
+
 	// Create new Bond element
 	newBondB11lxElement = fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
 		OriginalElementUuid:      commandAndRuleEngineObject.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE].BasicBondInformation.VisibleBondAttributes.BondUuid,
@@ -245,6 +290,11 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) createNewBon
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
 
+	// If there is no parent element then use 'matureElementUuid'
+	if parentElementUuid == "" {
+		parentElementUuid = matureElementUuid
+	}
+
 	// Create new Bond element
 	newBondB12Element = fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
 		OriginalElementUuid:      commandAndRuleEngineObject.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND].BasicBondInformation.VisibleBondAttributes.BondUuid,
@@ -266,6 +316,11 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) createNewBon
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
+
+	// If there is no parent element then use 'matureElementUuid'
+	if parentElementUuid == "" {
+		parentElementUuid = matureElementUuid
+	}
 
 	// Create new Bond element
 	newBondB12xElement = fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{

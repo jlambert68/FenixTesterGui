@@ -52,7 +52,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeSwapE
 
 	switch matchedComplexRule {
 	case TCRuleSwap101:
-		err = commandAndRuleEngineObject.executeTCRuleSwap101(elementUuid)
+		err = commandAndRuleEngineObject.executeTCRuleSwap101(elementUuid, immatureElementToSwapIn*immatureElementStruct)
 
 	case TCRuleSwap102:
 		err = commandAndRuleEngineObject.executeTCRuleSwap102(elementUuid)

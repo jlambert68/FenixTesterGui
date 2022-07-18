@@ -80,7 +80,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRul
 // TCRuleSwap102
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B10					n		TIC(B10)						TIC(B11f-n-B11l)		TCRuleSwap102
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleSwap102(uuidToSwapOut string, immatureElementToSwapIn immatureElementStruct) (err error) {
+func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleSwap102(uuidToSwapOut string, immatureElementToSwapIn *immatureElementStruct) (err error) {
 
 	return err
 }
@@ -88,7 +88,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRul
 // TCRuleSwap103
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B11f				n		TIC(B11f-X)						TIC(B11f-n-B12-X)		TCRuleSwap103
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleSwap103(uuidToSwapOut string, immatureElementToSwapIn immatureElementStruct) (err error) {
+func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleSwap103(uuidToSwapOut string, immatureElementToSwapIn *immatureElementStruct) (err error) {
 
 	return err
 }
@@ -96,7 +96,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRul
 // TCRuleSwap104
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B11l				n		TIC(X-B11l)						TIC(X-B12-n-B11l)		TCRuleSwap104
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleSwap104(uuidToSwapOut string, immatureElementToSwapIn immatureElementStruct) (err error) {
+func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleSwap104(uuidToSwapOut string, immatureElementToSwapIn *immatureElementStruct) (err error) {
 
 	return err
 }
@@ -104,7 +104,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRul
 // TCRuleSwap105
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B12					n		X-B12-X							X-B12-n-B12-X			TCRuleSwap105
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleSwap105(uuidToSwapOut string, immatureElementToSwapIn immatureElementStruct) (err error) {
+func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleSwap105(uuidToSwapOut string, immatureElementToSwapIn *immatureElementStruct) (err error) {
 
 	return err
 }
@@ -114,7 +114,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRul
 //	n=TIC or TIC(X)		B10x*				n		TIC(B10*x*)						TIC(B11x-n-B11x)		TCRuleSwap106
 //	n=TIC or TIC(X)		B10*x				n		TIC(B10*x)						TIC(B11x-n-B11)			TCRuleSwap107
 //	n=TIC or TIC(X)		B10x*				n		TIC(B10x*)						TIC(B11-n-B11x)			TCRuleSwap108
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleSwap106(uuidToSwapOut string, immatureElementToSwapIn immatureElementStruct) (err error) {
+func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleSwap106(uuidToSwapOut string, immatureElementToSwapIn *immatureElementStruct) (err error) {
 
 	return err
 }
@@ -123,7 +123,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRul
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B10*x				n		TIC(B10*x)						TIC(B11x-n-B11)			TCRuleSwap107
 //	n=TIC or TIC(X)		B10x*				n		TIC(B10x*)						TIC(B11-n-B11x)			TCRuleSwap108
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleSwap107(uuidToSwapOut string, immatureElementToSwapIn immatureElementStruct) (err error) {
+func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleSwap107(uuidToSwapOut string, immatureElementToSwapIn *immatureElementStruct) (err error) {
 
 	return err
 }
@@ -131,7 +131,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRul
 // TCRuleSwap108
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B10x*				n		TIC(B10x*)						TIC(B11-n-B11x)			TCRuleSwap108
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleSwap108(uuidToSwapOut string, immatureElementToSwapIn immatureElementStruct) (err error) {
+func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) executeTCRuleSwap108(uuidToSwapOut string, immatureElementToSwapIn *immatureElementStruct) (err error) {
 
 	return err
 }
@@ -221,60 +221,4 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) transformImm
 	err = errors.New("there is no top element 'immatureElementToSwapIn'")
 
 	return matureElementModel, err
-}
-
-// Follow all children, in ImmatureElement-model and create the Mature Element Model instead
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) recursiveImmatureToMatureElementComponentModelCreator(elementsUuid string, immatureElement *immatureElementStruct, matureElement *matureElementStruct) (err error) {
-
-	// Extract current element
-	currentElement, existInMap := immatureElement.immatureElementMap[elementsUuid]
-
-	// If the element doesn't exit then there is something really wrong
-	if existInMap == false {
-		// This shouldn't happen
-		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
-			"id":           "e4215635-9770-4142-b2af-cc12b851c79f",
-			"elementsUuid": elementsUuid,
-		}).Error(elementsUuid + " could not be found in in map 'immatureElement.immatureElementMap'")
-
-		err = errors.New(elementsUuid + " could not be found in in map 'immatureElement.immatureElementMap'")
-
-		return err
-	}
-
-	// Element has child-element then go that path
-	if currentElement.FirstChildElementUuid != elementsUuid {
-		err = commandAndRuleEngineObject.recursiveDeleteOfChildElements(currentElement.FirstChildElementUuid)
-	}
-
-	// If we got an error back then something wrong happen, so just back out
-	if err != nil {
-		return err
-	}
-
-	// If element has a next-element the go that path
-	if currentElement.NextElementUuid != elementsUuid {
-		err = commandAndRuleEngineObject.recursiveDeleteOfChildElements(currentElement.NextElementUuid)
-	}
-
-	// If we got an error back then something wrong happen, so just back out
-	if err != nil {
-		return err
-	}
-
-	// Create the 'raw 'MatureElement from an ImmatureElement. This element is not yet connected
-	newRawMatureComponent := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
-		OriginalElementUuid:      currentElement.OriginalElementUuid,
-		OriginalElementName:      currentElement.OriginalElementName,
-		MatureElementUuid:        uuid.New().String(),
-		PreviousElementUuid:      "",
-		NextElementUuid:          "",
-		FirstChildElementUuid:    "",
-		ParentElementUuid:        "",
-		TestCaseModelElementType: 0,
-	}
-
-	// Add
-
-	return err
 }

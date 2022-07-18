@@ -53,13 +53,4 @@ const (
 	TCRuleSwap106 = "TCRuleSwap106"
 	TCRuleSwap107 = "TCRuleSwap107"
 	TCRuleSwap108 = "TCRuleSwap108"
-	TCRuleSwap109 = "TCRuleSwap109"
-	TCRuleSwap110 = "TCRuleSwap110"
-	TCRuleSwap111 = "TCRuleSwap111"
-	TCRuleSwap112 = "TCRuleSwap112"
-	TCRuleSwap113 = "TCRuleSwap113"
-	TCRuleSwap114 = "TCRuleSwap114"
-	TCRuleSwap115 = "TCRuleSwap115"
-	TCRuleSwap116 = "TCRuleSwap116"
-	TCRuleSwap117 = "TCRuleSwap117"
 )

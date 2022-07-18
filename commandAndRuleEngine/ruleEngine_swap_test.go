@@ -96,33 +96,33 @@ func TestTCRuleSwap101(t *testing.T) {
 	// Add needed data for availableBondsMap
 	tempAvailableBondsMap := make(map[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage)
 
-	// B11f_BOND
-	visibleBondAttributesMessage_AvaialbeBond_B11f_BOND := fenixGuiTestCaseBuilderServerGrpcApi.BasicBondInformationMessage_VisibleBondAttributesMessage{
+	// B1f_BOND
+	visibleBondAttributesMessage_AvaialbeBond_B1f_BOND := fenixGuiTestCaseBuilderServerGrpcApi.BasicBondInformationMessage_VisibleBondAttributesMessage{
 		BondUuid: "0d77690e-f8e2-4942-b532-6b3e26d0b81a",
-		BondName: "B11f_BOND",
+		BondName: "B1f_BOND",
 	}
 
-	basicBondInformationMessage_AvaialbeBond_B11f_BOND := fenixGuiTestCaseBuilderServerGrpcApi.BasicBondInformationMessage{
-		VisibleBondAttributes: &visibleBondAttributesMessage_AvaialbeBond_B11f_BOND}
+	basicBondInformationMessage_AvaialbeBond_B1f_BOND := fenixGuiTestCaseBuilderServerGrpcApi.BasicBondInformationMessage{
+		VisibleBondAttributes: &visibleBondAttributesMessage_AvaialbeBond_B1f_BOND}
 
-	immatureBondsMessage_ImmatureBondMessage_B11f_BOND := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage{
-		BasicBondInformation: &basicBondInformationMessage_AvaialbeBond_B11f_BOND}
+	immatureBondsMessage_ImmatureBondMessage_B1f_BOND := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage{
+		BasicBondInformation: &basicBondInformationMessage_AvaialbeBond_B1f_BOND}
 
-	tempAvailableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND] = &immatureBondsMessage_ImmatureBondMessage_B11f_BOND
+	tempAvailableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1f_BOND_NONE_SWAPPABLE] = &immatureBondsMessage_ImmatureBondMessage_B1f_BOND
 
-	// B11l_BOND
-	visibleBondAttributesMessage_AvaialbeBond_B11l_BOND := fenixGuiTestCaseBuilderServerGrpcApi.BasicBondInformationMessage_VisibleBondAttributesMessage{
+	// B1l_BOND
+	visibleBondAttributesMessage_AvaialbeBond_B1l_BOND := fenixGuiTestCaseBuilderServerGrpcApi.BasicBondInformationMessage_VisibleBondAttributesMessage{
 		BondUuid: "2858d47a-198c-43f3-abe8-abd2a36f6045",
-		BondName: "B11l_BOND",
+		BondName: "B1l_BOND",
 	}
 
-	basicBondInformationMessage_AvaialbeBond_B11l_BOND := fenixGuiTestCaseBuilderServerGrpcApi.BasicBondInformationMessage{
-		VisibleBondAttributes: &visibleBondAttributesMessage_AvaialbeBond_B11l_BOND}
+	basicBondInformationMessage_AvaialbeBond_B1l_BOND := fenixGuiTestCaseBuilderServerGrpcApi.BasicBondInformationMessage{
+		VisibleBondAttributes: &visibleBondAttributesMessage_AvaialbeBond_B1l_BOND}
 
-	immatureBondsMessage_ImmatureBondMessage_B11l_BOND := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage{
-		BasicBondInformation: &basicBondInformationMessage_AvaialbeBond_B11l_BOND}
+	immatureBondsMessage_ImmatureBondMessage_B1l_BOND := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage{
+		BasicBondInformation: &basicBondInformationMessage_AvaialbeBond_B1l_BOND}
 
-	tempAvailableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND] = &immatureBondsMessage_ImmatureBondMessage_B11l_BOND
+	tempAvailableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1l_BOND_NONE_SWAPPABLE] = &immatureBondsMessage_ImmatureBondMessage_B1l_BOND
 
 	// Add bond-map to 'commandAndRuleEngine.availableBondsMap'
 	commandAndRuleEngine.availableBondsMap = tempAvailableBondsMap
@@ -133,6 +133,8 @@ func TestTCRuleSwap101(t *testing.T) {
 	// Validate that there were no errors
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
-	// Validate the result of the swap, 'B1-TIC(B10)-B1'
+	// Validate the result of the swap, 'B1f-TIC(B10)-B1l'
+
+	// Validate that first element is a B111
 
 }

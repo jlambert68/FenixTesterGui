@@ -40,29 +40,29 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	}
 
 	// Create the Bonds connecting the TIC
-	newPreviousB1Bond := commandAndRuleEngine.createNewBondB11fElement("")
-	newNextB1Bond := commandAndRuleEngine.createNewBondB11lElement("")
+	newPreviousB1fBond := commandAndRuleEngine.createNewBondB1fElement("")
+	newNextB1lBond := commandAndRuleEngine.createNewBondB1lElement("")
 
 	// Extract TIC from new element model
 	newTopElement := matureElementToSwapIn.matureElementMap[matureElementToSwapIn.firstElementUuid]
 
 	// Connect the new structure
-	newPreviousB1Bond.NextElementUuid = newTopElement.MatureElementUuid
+	newPreviousB1fBond.NextElementUuid = newTopElement.MatureElementUuid
 
-	newTopElement.PreviousElementUuid = newPreviousB1Bond.MatureElementUuid
-	newTopElement.NextElementUuid = newNextB1Bond.MatureElementUuid
+	newTopElement.PreviousElementUuid = newPreviousB1fBond.MatureElementUuid
+	newTopElement.NextElementUuid = newNextB1lBond.MatureElementUuid
 
-	newNextB1Bond.PreviousElementUuid = newTopElement.MatureElementUuid
+	newNextB1lBond.PreviousElementUuid = newTopElement.MatureElementUuid
 
 	// Add updated element back to 'matureElementToSwapIn'
 	matureElementToSwapIn.matureElementMap[matureElementToSwapIn.firstElementUuid] = newTopElement
 
 	// Add new Bonds to TestCase Element Model
-	commandAndRuleEngine.testcaseModel.TestCaseModelMap[newPreviousB1Bond.MatureElementUuid] = newPreviousB1Bond
-	commandAndRuleEngine.testcaseModel.TestCaseModelMap[newNextB1Bond.MatureElementUuid] = newNextB1Bond
+	commandAndRuleEngine.testcaseModel.TestCaseModelMap[newPreviousB1fBond.MatureElementUuid] = newPreviousB1fBond
+	commandAndRuleEngine.testcaseModel.TestCaseModelMap[newNextB1lBond.MatureElementUuid] = newNextB1lBond
 
 	// Set First Element
-	commandAndRuleEngine.testcaseModel.FirstElementUuid = newPreviousB1Bond.MatureElementUuid
+	commandAndRuleEngine.testcaseModel.FirstElementUuid = newPreviousB1fBond.MatureElementUuid
 
 	// Add 'matureElementToSwapIn' to TestCase Element Model
 	for elementUuid, element := range matureElementToSwapIn.matureElementMap {

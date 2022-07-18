@@ -68,6 +68,60 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB0Ele
 
 }
 
+// Create a new B1f-bond to be used in the TestCase-model
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB1fElement(parentElementUuid string) (newBondB1fElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
+
+	// Generate new UUID
+	matureElementUuid := uuidGenerator.New().String()
+
+	// If there is no parent element then use 'matureElementUuid'
+	if parentElementUuid == "" {
+		parentElementUuid = matureElementUuid
+	}
+
+	// Create new Bond element
+	newBondB1fElement = fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
+		OriginalElementUuid:      commandAndRuleEngine.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1f_BOND_NONE_SWAPPABLE].BasicBondInformation.VisibleBondAttributes.BondUuid,
+		OriginalElementName:      commandAndRuleEngine.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1f_BOND_NONE_SWAPPABLE].BasicBondInformation.VisibleBondAttributes.BondName,
+		MatureElementUuid:        matureElementUuid,
+		PreviousElementUuid:      matureElementUuid,
+		NextElementUuid:          "",
+		FirstChildElementUuid:    matureElementUuid,
+		ParentElementUuid:        parentElementUuid,
+		TestCaseModelElementType: fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1f_BOND_NONE_SWAPPABLE,
+	}
+
+	return newBondB1fElement
+
+}
+
+// Create a new B1l-bond to be used in the TestCase-model
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB1lElement(parentElementUuid string) (newBondB1lElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
+
+	// Generate new UUID
+	matureElementUuid := uuidGenerator.New().String()
+
+	// If there is no parent element then use 'matureElementUuid'
+	if parentElementUuid == "" {
+		parentElementUuid = matureElementUuid
+	}
+
+	// Create new Bond element
+	newBondB1lElement = fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
+		OriginalElementUuid:      commandAndRuleEngine.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1l_BOND_NONE_SWAPPABLE].BasicBondInformation.VisibleBondAttributes.BondUuid,
+		OriginalElementName:      commandAndRuleEngine.availableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1l_BOND_NONE_SWAPPABLE].BasicBondInformation.VisibleBondAttributes.BondName,
+		MatureElementUuid:        matureElementUuid,
+		PreviousElementUuid:      "",
+		NextElementUuid:          matureElementUuid,
+		FirstChildElementUuid:    matureElementUuid,
+		ParentElementUuid:        parentElementUuid,
+		TestCaseModelElementType: fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1l_BOND_NONE_SWAPPABLE,
+	}
+
+	return newBondB1lElement
+
+}
+
 // Create a new B10-bond to be used in the TestCase-model
 func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB10Element(parentElementUuid string) (newBondB10Element fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
 

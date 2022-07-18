@@ -27,12 +27,12 @@ import (
 //	TICx(X)			False							TCRuleSwap014
 
 // Verify the simple rules if a component can be Swapped or not
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedSimpleRules(elementUuid string) (canBeSwapped bool, matchedRule string, err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedSimpleRules(elementUuid string) (canBeSwapped bool, matchedRule string, err error) {
 
 	// Retrieve component to be verified for Swap
-	element, existInMap := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[elementUuid]
+	element, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[elementUuid]
 	if existInMap == false {
-		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":          "9d8aebb2-4409-4236-8740-4ca396007088",
 			"elementUuid": elementUuid,
 		}).Error(elementUuid + " could not be found in in map 'TestCaseModelMap'")
@@ -51,11 +51,12 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 	//	B0 - False - TCRuleSwap001
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND:
 		matchedRule = "TCRuleSwap001"
-		canBeSwapped = false
+		canBeSwapped = true
 
 		//	B1 - False - TCRuleSwap002
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1_BOND_NONE_SWAPPABLE:
 		matchedRule = "TCRuleSwap002"
+		canBeSwapped = false
 
 		//	B10 - False - TCRuleSwap003
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND:
@@ -125,7 +126,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 
 		err = errors.New(componentType.String() + " is an unknown componentType")
 
-		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":            "1e9846c0-9c79-4e6f-aabd-46d2b3d80053",
 			"componentType": componentType,
 		}).Error(componentType.String() + " is an unknown componentType")
@@ -150,7 +151,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 //No other combinations of swapping elements are allowed
 
 // Verify the Complex rules if a component can be Swapped or not
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedWithComplexRules(uuid string) (matchedRule string, err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedWithComplexRules(uuid string) (matchedRule string, err error) {
 
 	var ruleName string
 	var ruleCanBeProcessed bool
@@ -158,11 +159,11 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 	ruleName = ""
 	ruleCanBeProcessed = false
 
-	// Extract data for Previous Elementfunc (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct)
+	// Extract data for Previous Elementfunc (commandAndRuleEngine *commandAndRuleEngineObjectStruct)
 	currentElementUuid := uuid
-	currentElement, existInMap := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[currentElementUuid]
+	currentElement, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[currentElementUuid]
 	if existInMap == false {
-		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":                 "d450e7e5-32f4-42e9-b371-279d5bfe9d14",
 			"currentElementUuid": currentElementUuid,
 		}).Error(currentElementUuid + " could not be found in in map 'TestCaseModelMap'")
@@ -174,10 +175,10 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 	currentElementType := currentElement.TestCaseModelElementType
 
 	// Extract data for Previous Element
-	previousElementUuid := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[currentElementUuid].PreviousElementUuid
-	previousElement, existInMap := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[previousElementUuid]
+	previousElementUuid := commandAndRuleEngine.testcaseModel.TestCaseModelMap[currentElementUuid].PreviousElementUuid
+	previousElement, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[previousElementUuid]
 	if existInMap == false {
-		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":                  "42b050c6-3d63-45fc-9b6c-6b4a6e02516f",
 			"previousElementUuid": previousElementUuid,
 		}).Error(previousElementUuid + " could not be found in in map 'TestCaseModelMap'")
@@ -189,10 +190,10 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 	previousElementType := previousElement.TestCaseModelElementType
 
 	// Extract data for Next Element
-	nextElementUuid := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[currentElementUuid].NextElementUuid
-	nextElement, existInMap := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[nextElementUuid]
+	nextElementUuid := commandAndRuleEngine.testcaseModel.TestCaseModelMap[currentElementUuid].NextElementUuid
+	nextElement, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[nextElementUuid]
 	if existInMap == false {
-		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":              "bf2ac32f-5edb-472f-af73-87d04400e132",
 			"nextElementUuid": nextElementUuid,
 		}).Error(nextElementUuid + " could not be found in in map 'TestCaseModelMap'")
@@ -204,12 +205,12 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 	nextlementType := nextElement.TestCaseModelElementType
 
 	// TCRuleSwap101
-	// What to remove			Remove in structure				Result after Swap		Rule
-	// n= TIC(X)				B1-n-B1							B0							TCRuleSwap101
+	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
+	//	n=TIC(X)			B0					n 		B0								B1-n-B1					TCRuleSwap101
 	if ruleCanBeProcessed == false &&
-		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1_BOND_NONE_SWAPPABLE &&
-		currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION &&
-		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1_BOND_NONE_SWAPPABLE {
+		previousElementUuid == currentElementUuid &&
+		currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND &&
+		nextElementUuid == currentElementUuid {
 
 		// Rule OK
 		ruleName = "TCRuleSwap101"
@@ -218,8 +219,8 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 	}
 
 	// TCRuleSwap102
-	// What to remove			Remove in structure				Result after Swap		Rule
-	// n=TI or TIC(X)			B11f-n-B11l						B10							TCRuleSwap102
+	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
+	//	n=TIC or TIC(X)		B10					n		TIC(B10)						TIC(B11f-n-B11l)		TCRuleSwap102
 	if ruleCanBeProcessed == false &&
 		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND &&
 		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
@@ -233,8 +234,8 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 	}
 
 	// TCRuleSwap103
-	// What to remove			Remove in structure				Result after Swap		Rule
-	// n=TI or TIC(X)			B11fx-n-B11lx					B10*x*						TCRuleSwap103
+	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
+	//	n=TIC or TIC(X)		B11f				n		TIC(B11f-X)						TIC(B11f-n-B12-X)		TCRuleSwap103
 	if ruleCanBeProcessed == false &&
 		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE &&
 		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
@@ -248,8 +249,8 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 	}
 
 	// TCRuleSwap104
-	// What to remove			Remove in structure				Result after Swap		Rule
-	// n=TI or TIC(X)			B11f-n-B11lx					B10x*						TCRuleSwap104
+	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
+	//	n=TIC or TIC(X)		B11l				n		TIC(X-B11l)						TIC(X-B12-n-B11l)		TCRuleSwap104
 	if ruleCanBeProcessed == false &&
 		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND &&
 		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
@@ -263,8 +264,8 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 	}
 
 	// TCRuleSwap105
-	// What to remove			Remove in structure				Result after Swap		Rule
-	// n=TI or TIC(X)			B11fx-n-B11l					B10*x						TCRuleSwap105
+	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
+	//	n=TIC or TIC(X)		B12					n		X-B12-X							X-B12-n-B12-X			TCRuleSwap105
 	if ruleCanBeProcessed == false &&
 		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE &&
 		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
@@ -278,8 +279,10 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 	}
 
 	// TCRuleSwap106
-	// What to remove			Remove in structure				Result after Swap		Rule
-	// n=TI or TIC(X)			B11f-n-B12-X					B11f-X						TCRuleSwap106
+	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
+	//	n=TIC or TIC(X)		B10x*				n		TIC(B10*x*)						TIC(B11x-n-B11x)		TCRuleSwap106
+	//	n=TIC or TIC(X)		B10*x				n		TIC(B10*x)						TIC(B11x-n-B11)			TCRuleSwap107
+	//	n=TIC or TIC(X)		B10x*				n		TIC(B10x*)						TIC(B11-n-B11x)			TCRuleSwap108
 	if ruleCanBeProcessed == false &&
 		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND &&
 		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
@@ -293,8 +296,9 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 	}
 
 	// TCRuleSwap107
-	// What to remove			Remove in structure				Result after Swap		Rule
-	// n=TI or TIC(X)			B11fx-n-B12x-X					B11fx-X						TCRuleSwap107
+	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
+	//	n=TIC or TIC(X)		B10*x				n		TIC(B10*x)						TIC(B11x-n-B11)			TCRuleSwap107
+	//	n=TIC or TIC(X)		B10x*				n		TIC(B10x*)						TIC(B11-n-B11x)			TCRuleSwap108
 	if ruleCanBeProcessed == false &&
 		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE &&
 		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
@@ -308,8 +312,8 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 	}
 
 	// TCRuleSwap108
-	// What to remove			Remove in structure				Result after Swap		Rule
-	// n=TI or TIC(X)			B11f-n-B12x-X					B11fx-X						TCRuleSwap108
+	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
+	//	n=TIC or TIC(X)		B10x*				n		TIC(B10x*)						TIC(B11-n-B11x)			TCRuleSwap108
 	if ruleCanBeProcessed == false &&
 		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND &&
 		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
@@ -322,147 +326,10 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 
 	}
 
-	// TCRuleSwap109
-	// What to remove			Remove in structure				Result after Swap		Rule
-	// n=TI or TIC(X)			B11fx-n-B12-X					B11fx-X						TCRuleSwap109
-	if ruleCanBeProcessed == false &&
-		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE &&
-		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
-			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
-		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND {
-
-		// Rule OK
-		ruleName = "TCRuleSwap109"
-		ruleCanBeProcessed = true
-
-	}
-
-	// TCRuleSwap110
-	// What to remove			Remove in structure				Result after Swap		Rule
-	// n=TI or TIC(X)			X-B12-n-B11l					X-B11l						TCRuleSwap110
-	if ruleCanBeProcessed == false &&
-		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND &&
-		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
-			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
-		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND {
-
-		// Rule OK
-		ruleName = "TCRuleSwap110"
-		ruleCanBeProcessed = true
-
-	}
-
-	// TCRuleSwap111
-	// What to remove			Remove in structure				Result after Swap		Rule
-	// n=TI or TIC(X)			X-B12x-n-B11lx					X-B11lx						TCRuleSwap111
-	if ruleCanBeProcessed == false &&
-		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE &&
-		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
-			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
-		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE {
-
-		// Rule OK
-		ruleName = "TCRuleSwap111"
-		ruleCanBeProcessed = true
-
-	}
-
-	// TCRuleSwap112
-	// What to remove			Remove in structure				Result after Swap		Rule
-	// n=TI or TIC(X)			X-B12-n-B11lx					X-B11lx						TCRuleSwap112
-	if ruleCanBeProcessed == false &&
-		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND &&
-		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
-			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
-		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE {
-
-		// Rule OK
-		ruleName = "TCRuleSwap112"
-		ruleCanBeProcessed = true
-
-	}
-
-	// TCRuleSwap113
-	// What to remove			Remove in structure				Result after Swap		Rule
-	// n=TI or TIC(X)			X-B12x-n-B11l					X-B11lx						TCRuleSwap113
-	if ruleCanBeProcessed == false &&
-		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE &&
-		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
-			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
-		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND {
-
-		// Rule OK
-		ruleName = "TCRuleSwap113"
-		ruleCanBeProcessed = true
-
-	}
-
-	// TCRuleSwap114
-	// What to remove			Remove in structure				Result after Swap		Rule
-	// n=TI or TIC(X)			X-B12-n-B12-X					X-B12-X						TCRuleSwap114
-	if ruleCanBeProcessed == false &&
-		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND &&
-		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
-			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
-		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND {
-
-		// Rule OK
-		ruleName = "TCRuleSwap114"
-		ruleCanBeProcessed = true
-
-	}
-
-	// TCRuleSwap115
-	// What to remove			Remove in structure				Result after Swap		Rule
-	// n=TI or TIC(X)			X-B12x-n-B12x-X					X-B12x-X					TCRuleSwap115
-	if ruleCanBeProcessed == false &&
-		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE &&
-		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
-			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
-		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE {
-
-		// Rule OK
-		ruleName = "TCRuleSwap115"
-		ruleCanBeProcessed = true
-
-	}
-
-	// TCRuleSwap116
-	// What to remove			Remove in structure				Result after Swap		Rule
-	// n=TI or TIC(X)			X-B12-n-B12x-X					X-B12x-X					TCRuleSwap116
-	if ruleCanBeProcessed == false &&
-		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND &&
-		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
-			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
-		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE {
-
-		// Rule OK
-		ruleName = "TCRuleSwap116"
-		ruleCanBeProcessed = true
-
-	}
-
-	// TCRuleSwap117
-	// What to remove			Remove in structure				Result after Swap		Rule
-	// n=TI or TIC(X)			X-B12x-n-B12-X					X-B12x-X					TCRuleSwap117
-	if ruleCanBeProcessed == false &&
-		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE &&
-		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
-			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
-		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND {
-
-		// Rule OK
-		ruleName = "TCRuleSwap117"
-		ruleCanBeProcessed = true
-
-	}
-
 	switch ruleName {
 
 	case "TCRuleSwap101", "TCRuleSwap102", "TCRuleSwap103", "TCRuleSwap104",
-		"TCRuleSwap105", "TCRuleSwap106", "TCRuleSwap107", "TCRuleSwap108",
-		"TCRuleSwap109", "TCRuleSwap110", "TCRuleSwap111", "TCRuleSwap112",
-		"TCRuleSwap113", "TCRuleSwap114", "TCRuleSwap115", "TCRuleSwap116", "TCRuleSwap117":
+		"TCRuleSwap105", "TCRuleSwap106", "TCRuleSwap107", "TCRuleSwap108":
 
 		// Swap can be execute by complex Swap rules
 		err = nil
@@ -471,7 +338,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 		// The criteria for Deleting is not met by complex Swap rule
 		err = errors.New("The criteria for any complex Swap rule was not met")
 
-		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":                  "62c2d049-c3aa-40be-b192-9a2a4c2ad42c",
 			"previousElementType": previousElementType,
 			"currentElementType":  currentElementType,
@@ -487,7 +354,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 }
 
 // Verify that all UUIDs are correct in component to be swapped in. Means that no empty uuid is allowed and they all are correct
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyThatThereAreNoZombieElementsInComponent(immatureElement immatureElementStruct) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyThatThereAreNoZombieElementsInComponent(immatureElement immatureElementStruct) (err error) {
 
 	var allUuidKeys []string
 
@@ -497,11 +364,11 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyThatTh
 	}
 
 	// Follow the path from "first element and remove the found element from 'allUuidKeys'
-	commandAndRuleEngineObject.recursiveZombieElementSearchInComponentModel(immatureElement.firstElementUuid, &allUuidKeys, &immatureElement)
+	commandAndRuleEngine.recursiveZombieElementSearchInComponentModel(immatureElement.firstElementUuid, &allUuidKeys, &immatureElement)
 
 	// If there are elements left in slice then there were zombie elements, which there shouldn't be
 	if len(allUuidKeys) != 0 {
-		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":                               "3e519b3c-367d-42d5-a8ce-ff507efd8972",
 			"allUuidKeys":                      allUuidKeys,
 			"Number of Zombie Elements":        len(allUuidKeys),
@@ -517,7 +384,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyThatTh
 }
 
 // Verify all children, in ImmatureEleemnt-model and remove the found element from 'allUuidKeys'
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) recursiveZombieElementSearchInComponentModel(elementsUuid string, allUuidKeys *[]string, immatureElement *immatureElementStruct) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveZombieElementSearchInComponentModel(elementsUuid string, allUuidKeys *[]string, immatureElement *immatureElementStruct) (err error) {
 
 	// Extract current element
 	currentElement, existInMap := immatureElement.immatureElementMap[elementsUuid]
@@ -525,7 +392,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) recursiveZom
 	// If the element doesn't exit then there is something really wrong
 	if existInMap == false {
 		// This shouldn't happen
-		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":           "9f628356-2ea2-48a6-8e6a-546a5f97f05b",
 			"elementsUuid": elementsUuid,
 		}).Error(elementsUuid + " could not be found in in map 'immatureElement.immatureElementMap'")
@@ -537,7 +404,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) recursiveZom
 
 	// Element has child-element then go that path
 	if currentElement.FirstChildElementUuid != elementsUuid {
-		err = commandAndRuleEngineObject.recursiveDeleteOfChildElements(currentElement.FirstChildElementUuid)
+		err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentElement.FirstChildElementUuid)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -547,7 +414,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) recursiveZom
 
 	// If element has a next-element the go that path
 	if currentElement.NextElementUuid != elementsUuid {
-		err = commandAndRuleEngineObject.recursiveDeleteOfChildElements(currentElement.NextElementUuid)
+		err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentElement.NextElementUuid)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -587,7 +454,7 @@ func findElementInSliceAndRemove(sliceToWorkOn *[]string, uuid string) (returnSl
 }
 
 // Verify that all UUIDs are correct in component to be swapped in. Means that no empty uuid is allowed and they all are correct
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyThatAllUuidsAreCorrectInComponent(immatureElement immatureElementStruct) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyThatAllUuidsAreCorrectInComponent(immatureElement immatureElementStruct) (err error) {
 
 	// Loop all fields and find the ones defined as 'String'. Verify that content is a UUID
 	e := reflect.ValueOf(&immatureElement.immatureElementMap).Elem()
@@ -609,14 +476,14 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyThatAl
 }
 
 // Verify all children, in new Element-model to be swapped in, that they contain correct UUIDs
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) recursiveVerifyAllUuidOfChildElements(elementsUuid string) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveVerifyAllUuidOfChildElements(elementsUuid string) (err error) {
 
 	// Extract current element
-	currentElement, existInMap := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[elementsUuid]
+	currentElement, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[elementsUuid]
 
 	// If the element doesn't exit then there is something really wrong
 	if existInMap == false {
-		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":           "9eae5791-88f0-481d-a7d9-21123b9eadfe",
 			"elementsUuid": elementsUuid,
 		}).Error(elementsUuid + " could not be found in in map 'TestCaseModelMap'")
@@ -628,7 +495,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) recursiveVer
 
 	// Element has child-element then go that path
 	if currentElement.FirstChildElementUuid != elementsUuid {
-		err = commandAndRuleEngineObject.recursiveDeleteOfChildElements(currentElement.FirstChildElementUuid)
+		err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentElement.FirstChildElementUuid)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -638,7 +505,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) recursiveVer
 
 	// If element has a next-element the go that path
 	if currentElement.NextElementUuid != elementsUuid {
-		err = commandAndRuleEngineObject.recursiveDeleteOfChildElements(currentElement.NextElementUuid)
+		err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentElement.NextElementUuid)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -647,7 +514,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) recursiveVer
 	}
 
 	// Remove current element from Map
-	delete(commandAndRuleEngineObject.testcaseModel.TestCaseModelMap, elementsUuid)
+	delete(commandAndRuleEngine.testcaseModel.TestCaseModelMap, elementsUuid)
 
 	return err
 }

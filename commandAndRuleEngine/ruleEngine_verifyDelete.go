@@ -26,12 +26,12 @@ import (
 //	TICx(X)		False				TCRuleDeletion014
 
 // Verify the simple rules if a component can be deleted or not
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedSimpleRules(elementUuid string) (canBeDeleted bool, matchedRule string, err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedSimpleRules(elementUuid string) (canBeDeleted bool, matchedRule string, err error) {
 
 	// Retrieve component to be verified for deletion
-	element, existInMap := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[elementUuid]
+	element, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[elementUuid]
 	if existInMap == false {
-		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":          "490b9af6-883f-45e9-ac46-a85706680063",
 			"elementUuid": elementUuid,
 		}).Error(elementUuid + " could not be found in in map 'TestCaseModelMap'")
@@ -124,7 +124,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 
 		err = errors.New(componentType.String() + " is an unknown componentType")
 
-		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":            "3be29c9d-1db6-47dc-8ee1-8dcdfecda074",
 			"componentType": componentType,
 		}).Error(componentType.String() + " is an unknown componentType")
@@ -155,7 +155,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 // n=TI or TIC(X)			X-B12x-n-B12x-X					X-B12x-X					TCRuleDeletion115
 // n=TI or TIC(X)			X-B12-n-B12x-X					X-B12x-X					TCRuleDeletion116
 // n=TI or TIC(X)			X-B12x-n-B12-X					X-B12x-X					TCRuleDeletion117
-func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedWithComplexRules(uuid string) (matchedRule string, err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedWithComplexRules(uuid string) (matchedRule string, err error) {
 
 	var ruleName string
 	var ruleCanBeProcessed bool
@@ -163,11 +163,11 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 	ruleName = ""
 	ruleCanBeProcessed = false
 
-	// Extract data for Previous Elementfunc (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct)
+	// Extract data for Previous Elementfunc (commandAndRuleEngine *commandAndRuleEngineObjectStruct)
 	currentElementUuid := uuid
-	currentElement, existInMap := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[currentElementUuid]
+	currentElement, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[currentElementUuid]
 	if existInMap == false {
-		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":                 "8c69112a-31ea-4606-89a5-54b80789e691",
 			"currentElementUuid": currentElementUuid,
 		}).Error(currentElementUuid + " could not be found in in map 'TestCaseModelMap'")
@@ -179,10 +179,10 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 	currentElementType := currentElement.TestCaseModelElementType
 
 	// Extract data for Previous Element
-	previousElementUuid := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[currentElementUuid].PreviousElementUuid
-	previousElement, existInMap := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[previousElementUuid]
+	previousElementUuid := commandAndRuleEngine.testcaseModel.TestCaseModelMap[currentElementUuid].PreviousElementUuid
+	previousElement, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[previousElementUuid]
 	if existInMap == false {
-		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":                  "d801356c-5ab6-48d7-bcd5-73d820b86d1e",
 			"previousElementUuid": previousElementUuid,
 		}).Error(previousElementUuid + " could not be found in in map 'TestCaseModelMap'")
@@ -194,10 +194,10 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 	previousElementType := previousElement.TestCaseModelElementType
 
 	// Extract data for Next Element
-	nextElementUuid := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[currentElementUuid].NextElementUuid
-	nextElement, existInMap := commandAndRuleEngineObject.testcaseModel.TestCaseModelMap[nextElementUuid]
+	nextElementUuid := commandAndRuleEngine.testcaseModel.TestCaseModelMap[currentElementUuid].NextElementUuid
+	nextElement, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[nextElementUuid]
 	if existInMap == false {
-		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":              "6c8c7382-48c7-4041-9f19-0c9b11298bbf",
 			"nextElementUuid": nextElementUuid,
 		}).Error(nextElementUuid + " could not be found in in map 'TestCaseModelMap'")
@@ -476,7 +476,7 @@ func (commandAndRuleEngineObject *commandAndRuleEngineObjectStruct) verifyIfComp
 		// The criteria for Deleting is not met by complex deletion rule
 		err = errors.New("The criteria for any complex deletion rule was not met")
 
-		commandAndRuleEngineObject.logger.WithFields(logrus.Fields{
+		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":                  "4e62df40-4192-4f45-ac4d-adbf1a687ad2",
 			"previousElementType": previousElementType,
 			"currentElementType":  currentElementType,

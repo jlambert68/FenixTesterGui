@@ -146,6 +146,45 @@ func TestTCRuleSwap101(t *testing.T) {
 
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
-	// Validate that first element is a B111
+	// 2) Validate TIC
+	secondTestCaseModelElementUuid := firstTestCaseModelElement.NextElementUuid
+	secondTestCaseModelElement := myTestCaseModel.TestCaseModelMap[secondTestCaseModelElementUuid]
+
+	correctElement = secondTestCaseModelElement.MatureElementUuid == secondTestCaseModelElement.ParentElementUuid &&
+		secondTestCaseModelElement.MatureElementUuid != secondTestCaseModelElement.PreviousElementUuid &&
+		secondTestCaseModelElement.MatureElementUuid != secondTestCaseModelElement.FirstChildElementUuid &&
+		secondTestCaseModelElement.MatureElementUuid != secondTestCaseModelElement.NextElementUuid &&
+		secondTestCaseModelElement.PreviousElementUuid == firstTestCaseModelElement.MatureElementUuid &&
+		secondTestCaseModelElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER
+
+	assert.Equal(t, "true", fmt.Sprint(correctElement))
+
+	// 3) Validate B1l
+	thirdTestCaseModelElementUuid := secondTestCaseModelElement.NextElementUuid
+	thirdTestCaseModelElement := myTestCaseModel.TestCaseModelMap[thirdTestCaseModelElementUuid]
+
+	correctElement = thirdTestCaseModelElement.MatureElementUuid == thirdTestCaseModelElement.ParentElementUuid &&
+		thirdTestCaseModelElement.MatureElementUuid != thirdTestCaseModelElement.PreviousElementUuid &&
+		thirdTestCaseModelElement.MatureElementUuid == thirdTestCaseModelElement.FirstChildElementUuid &&
+		thirdTestCaseModelElement.MatureElementUuid == thirdTestCaseModelElement.NextElementUuid &&
+		thirdTestCaseModelElement.PreviousElementUuid == secondTestCaseModelElement.MatureElementUuid &&
+		thirdTestCaseModelElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1l_BOND_NONE_SWAPPABLE
+
+	assert.Equal(t, "true", fmt.Sprint(correctElement))
+
+	// 4) Validate B10
+	fourthTestCaseModelElementUuid := thirdTestCaseModelElement.NextElementUuid
+	fourthTestCaseModelElement := myTestCaseModel.TestCaseModelMap[fourthTestCaseModelElementUuid]
+
+	correctElement = fourthTestCaseModelElement.MatureElementUuid != fourthTestCaseModelElement.ParentElementUuid &&
+		fourthTestCaseModelElement.MatureElementUuid == fourthTestCaseModelElement.PreviousElementUuid &&
+		fourthTestCaseModelElement.MatureElementUuid == fourthTestCaseModelElement.FirstChildElementUuid &&
+		fourthTestCaseModelElement.MatureElementUuid == fourthTestCaseModelElement.NextElementUuid &&
+		fourthTestCaseModelElement.ParentElementUuid == secondTestCaseModelElement.MatureElementUuid &&
+		fourthTestCaseModelElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND
+
+	assert.Equal(t, "true", fmt.Sprint(correctElement))
+
+	// Validate that there are no zombie elements in TestCaseModel
 
 }

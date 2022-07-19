@@ -134,6 +134,17 @@ func TestTCRuleSwap101(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate the result of the swap, 'B1f-TIC(B10)-B1l'
+	// 1) Validate B1f
+	firstTestCaseModelElementUuid := myTestCaseModel.FirstElementUuid
+	firstTestCaseModelElement := myTestCaseModel.TestCaseModelMap[firstTestCaseModelElementUuid]
+
+	correctElement := firstTestCaseModelElement.MatureElementUuid == firstTestCaseModelElement.ParentElementUuid &&
+		firstTestCaseModelElement.MatureElementUuid == firstTestCaseModelElement.PreviousElementUuid &&
+		firstTestCaseModelElement.MatureElementUuid == firstTestCaseModelElement.FirstChildElementUuid &&
+		firstTestCaseModelElement.MatureElementUuid != firstTestCaseModelElement.NextElementUuid &&
+		firstTestCaseModelElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1f_BOND_NONE_SWAPPABLE
+
+	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that first element is a B111
 

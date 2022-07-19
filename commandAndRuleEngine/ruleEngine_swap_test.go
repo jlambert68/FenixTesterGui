@@ -1,14 +1,79 @@
 package commandAndRuleEngine
 
 import (
+	"FenixTesterGui/gui/UnitTestTestData"
 	"FenixTesterGui/testCase/testCaseModel"
+	"errors"
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
-	"testing"
-
-	"FenixTesterGui/gui/UnitTestTestData"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
+
+// Verify that all UUIDs are correct in TestCaseModel. Meaning that no empty uuid is allowed and they all are correct
+func verifyThatThereAreNoZombieElementsInTestCaseModel(testCaseModel *testCaseModel.TestCaseModelStruct) (err error) {
+
+	var allUuidKeys []string
+
+	// Extract all elements by key from TestCaseModel
+	for _, elementKey := range testCaseModel.TestCaseModelMap {
+		allUuidKeys = append(allUuidKeys, elementKey.MatureElementUuid)
+	}
+
+	// Follow the path from "first element and remove the found element from 'allUuidKeys'
+	allUuidKeys, err = recursiveZombieElementSearchInTestCaseModel(testCaseModel.FirstElementUuid, allUuidKeys, testCaseModel)
+
+	// If there are elements left in slice then there were zombie elements, which there shouldn't be
+	if len(allUuidKeys) != 0 {
+		err = errors.New("there existed Zombie elements in 'testCaseModel.TestCaseModelMap', for " + testCaseModel.FirstElementUuid)
+
+		return err
+	}
+
+	return err
+}
+
+// Verify all children, in TestCaseElement-model and remove the found element from 'allUuidKeys'
+func recursiveZombieElementSearchInTestCaseModel(elementsUuid string, allUuidKeys []string, testCaseModel *testCaseModel.TestCaseModelStruct) (processedAllUuidKeys []string, err error) {
+
+	// Extract current element
+	currentElement, existInMap := testCaseModel.TestCaseModelMap[elementsUuid]
+
+	// If the element doesn't exit then there is something really wrong
+	if existInMap == false {
+		// This shouldn't happen
+		err = errors.New(elementsUuid + " could not be found in in map 'testCaseModel.TestCaseModelMap'")
+
+		return nil, err
+	}
+
+	// Element has child-element then go that path
+	if currentElement.FirstChildElementUuid != elementsUuid {
+		allUuidKeys, err = recursiveZombieElementSearchInTestCaseModel(currentElement.FirstChildElementUuid, allUuidKeys, testCaseModel)
+	}
+
+	// If we got an error back then something wrong happen, so just back out
+	if err != nil {
+		return nil, err
+	}
+
+	// If element has a next-element the go that path
+	if currentElement.NextElementUuid != elementsUuid {
+		allUuidKeys, err = recursiveZombieElementSearchInTestCaseModel(currentElement.NextElementUuid, allUuidKeys, testCaseModel)
+	}
+
+	// If we got an error back then something wrong happen, so just back out
+	if err != nil {
+		return nil, err
+	}
+
+	// Remove current element from "slice of all elements in map"
+	tempAallUuidKeys := findElementInSliceAndRemove(&allUuidKeys, elementsUuid)
+
+	processedAllUuidKeys = *tempAallUuidKeys
+
+	return processedAllUuidKeys, err
+}
 
 // Verify that a 'B0' can be swapped into 'B1-TIC(B10)-B1'
 // TCRuleSwap101
@@ -173,7 +238,7 @@ func TestTCRuleSwap101(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// 4) Validate B10
-	fourthTestCaseModelElementUuid := thirdTestCaseModelElement.NextElementUuid
+	fourthTestCaseModelElementUuid := secondTestCaseModelElement.FirstChildElementUuid
 	fourthTestCaseModelElement := myTestCaseModel.TestCaseModelMap[fourthTestCaseModelElementUuid]
 
 	correctElement = fourthTestCaseModelElement.MatureElementUuid != fourthTestCaseModelElement.ParentElementUuid &&
@@ -186,5 +251,8 @@ func TestTCRuleSwap101(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
+	err = verifyThatThereAreNoZombieElementsInTestCaseModel(&myTestCaseModel)
+
+	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 }

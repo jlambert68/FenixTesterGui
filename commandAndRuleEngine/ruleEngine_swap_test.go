@@ -255,4 +255,8 @@ func TestTCRuleSwap101(t *testing.T) {
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
+	// TCRuleSwap102
+	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
+	//	n=TIC or TIC(X)		B10					n		TIC(B10)						TIC(B11f-n-B11l)
+
 }

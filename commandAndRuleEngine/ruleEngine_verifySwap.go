@@ -365,7 +365,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyThatThereAre
 	}
 
 	// Follow the path from "first element and remove the found element from 'allUuidKeys'
-	commandAndRuleEngine.recursiveZombieElementSearchInComponentModel(immatureElement.firstElementUuid, &allUuidKeys, &immatureElement)
+	allUuidKeys, err = commandAndRuleEngine.recursiveZombieElementSearchInComponentModel(immatureElement.firstElementUuid, allUuidKeys, &immatureElement)
 
 	// If there are elements left in slice then there were zombie elements, which there shouldn't be
 	if len(allUuidKeys) != 0 {
@@ -385,7 +385,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyThatThereAre
 }
 
 // Verify all children, in ImmatureEleemnt-model and remove the found element from 'allUuidKeys'
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveZombieElementSearchInComponentModel(elementsUuid string, allUuidKeys *[]string, immatureElement *immatureElementStruct) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveZombieElementSearchInComponentModel(elementsUuid string, allUuidKeys []string, immatureElement *immatureElementStruct) (processedAllUuidKeys []string, err error) {
 
 	// Extract current element
 	currentElement, existInMap := immatureElement.immatureElementMap[elementsUuid]
@@ -400,33 +400,35 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveZombieEle
 
 		err = errors.New(elementsUuid + " could not be found in in map 'immatureElement.immatureElementMap'")
 
-		return err
+		return nil, err
 	}
 
 	// Element has child-element then go that path
 	if currentElement.FirstChildElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentElement.FirstChildElementUuid)
+		allUuidKeys, err = commandAndRuleEngine.recursiveZombieElementSearchInComponentModel(currentElement.FirstChildElementUuid, allUuidKeys, immatureElement)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// If element has a next-element the go that path
 	if currentElement.NextElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentElement.NextElementUuid)
+		allUuidKeys, err = commandAndRuleEngine.recursiveZombieElementSearchInComponentModel(currentElement.NextElementUuid, allUuidKeys, immatureElement)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Remove current element from "slice of all elements in map"
-	allUuidKeys = findElementInSliceAndRemove(allUuidKeys, elementsUuid)
+	tempAallUuidKeys := findElementInSliceAndRemove(&allUuidKeys, elementsUuid)
 
-	return err
+	processedAllUuidKeys = *tempAallUuidKeys
+
+	return processedAllUuidKeys, err
 }
 
 // Remove 'uuid' from slice

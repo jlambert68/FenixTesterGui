@@ -201,6 +201,53 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap1
 //	n=TIC or TIC(X)		B11l				n		TIC(X-B11l)						TIC(X-B12-n-B11l)		TCRuleSwap104
 func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap104(uuidToSwapOut string, immatureElementToSwapIn *immatureElementStruct) (err error) {
 
+	matureElementToSwapIn, err := commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap104)
+
+	// Couldn't convert immature element component into mature element component
+	if err != nil {
+		return err
+	}
+
+	// Extract parent-TIC to element to swap out
+	elementToSwapOut, _ := commandAndRuleEngine.testcaseModel.TestCaseModelMap[uuidToSwapOut]
+	parentElementUuid := elementToSwapOut.ParentElementUuid
+	previousElement := commandAndRuleEngine.testcaseModel.TestCaseModelMap[elementToSwapOut.PreviousElementUuid]
+
+	// Create the new Bonds
+	newB12Bond := commandAndRuleEngine.createNewBondB12Element(parentElementUuid)
+
+	// Extract TIC/TI from new element model, same as first element
+	topElementInModelToBeSwappedIn := matureElementToSwapIn.matureElementMap[matureElementToSwapIn.firstElementUuid]
+
+	// Connect the new structure
+	previousElement.NextElementUuid = newB12Bond.MatureElementUuid
+
+	newB12Bond.PreviousElementUuid = previousElement.MatureElementUuid
+	newB12Bond.NextElementUuid = topElementInModelToBeSwappedIn.MatureElementUuid
+
+	topElementInModelToBeSwappedIn.PreviousElementUuid = newB12Bond.MatureElementUuid
+	topElementInModelToBeSwappedIn.NextElementUuid = elementToSwapOut.MatureElementUuid
+	topElementInModelToBeSwappedIn.ParentElementUuid = parentElementUuid
+
+	elementToSwapOut.PreviousElementUuid = topElementInModelToBeSwappedIn.MatureElementUuid
+
+	// Add updated element back to 'matureElementToSwapIn'
+	matureElementToSwapIn.matureElementMap[topElementInModelToBeSwappedIn.MatureElementUuid] = topElementInModelToBeSwappedIn
+
+	// Update elements in TestCaseModel
+	commandAndRuleEngine.testcaseModel.TestCaseModelMap[elementToSwapOut.MatureElementUuid] = elementToSwapOut
+	commandAndRuleEngine.testcaseModel.TestCaseModelMap[previousElement.MatureElementUuid] = previousElement
+
+	// Add new Bonds to TestCase Element Model
+	commandAndRuleEngine.testcaseModel.TestCaseModelMap[newB12Bond.MatureElementUuid] = newB12Bond
+
+	// Add 'matureElementToSwapIn' to TestCase Element Model
+	for elementUuid, element := range matureElementToSwapIn.matureElementMap {
+
+		commandAndRuleEngine.testcaseModel.TestCaseModelMap[elementUuid] = element
+
+	}
+
 	return err
 }
 

@@ -48,7 +48,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 	// Check simple rules of component can be Swapped or not
 	switch componentType {
 
-	//	B0 - False - TCRuleSwap001
+	//	B0 - True - TCRuleSwap001
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND:
 		matchedRule = "TCRuleSwap001"
 		canBeSwapped = true
@@ -59,33 +59,33 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 		matchedRule = "TCRuleSwap002"
 		canBeSwapped = false
 
-		//	B10 - False - TCRuleSwap003
+		//	B10 - True - TCRuleSwap003
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND:
 		matchedRule = "TCRuleSwap002"
 		canBeSwapped = true
 
-		//	B11			False				TCRuleSwap004
+		//	B11			True				TCRuleSwap004
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND,
 		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND:
 		matchedRule = "TCRuleSwap004"
 		canBeSwapped = true
 
-		//	B12			False				TCRuleSwap005
+		//	B12			True				TCRuleSwap005
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND:
 		matchedRule = "TCRuleSwap005"
 		canBeSwapped = true
 
-		//	B10*x* 		False				TCRuleSwap006
+		//	B10*x* 		True				TCRuleSwap006
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND:
 		matchedRule = "TCRuleSwap006"
 		canBeSwapped = true
 
-		//	B10*x 		False				TCRuleSwap007
+		//	B10*x 		True				TCRuleSwap007
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10ox_BOND:
 		matchedRule = "TCRuleSwap007"
 		canBeSwapped = true
 
-		//	B10x*		False				TCRuleSwap008
+		//	B10x*		True				TCRuleSwap008
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND:
 		matchedRule = "TCRuleSwap008"
 		canBeSwapped = true
@@ -289,13 +289,10 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 	// TCRuleSwap106
 	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 	//	n=TIC or TIC(X)		B10x*				n		TIC(B10*x*)						TIC(B11x-n-B11x)		TCRuleSwap106
-	//	n=TIC or TIC(X)		B10*x				n		TIC(B10*x)						TIC(B11x-n-B11)			TCRuleSwap107
-	//	n=TIC or TIC(X)		B10x*				n		TIC(B10x*)						TIC(B11-n-B11x)			TCRuleSwap108
 	if ruleCanBeProcessed == false &&
-		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND &&
-		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
-			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
-		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND {
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND &&
+		currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND {
 
 		// Rule OK
 		ruleName = "TCRuleSwap106"
@@ -306,7 +303,6 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 	// TCRuleSwap107
 	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 	//	n=TIC or TIC(X)		B10*x				n		TIC(B10*x)						TIC(B11x-n-B11)			TCRuleSwap107
-	//	n=TIC or TIC(X)		B10x*				n		TIC(B10x*)						TIC(B11-n-B11x)			TCRuleSwap108
 	if ruleCanBeProcessed == false &&
 		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE &&
 		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||

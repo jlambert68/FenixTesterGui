@@ -1986,7 +1986,7 @@ func TestTCRuleSwap108(t *testing.T) {
 		TestCaseModelElementType: fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1l_BOND_NONE_SWAPPABLE,
 	}
 
-	tc_2_1_b10ox := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
+	tc_2_1_b10xo := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
 		OriginalElementUuid:      "4f348a88-bb9a-4852-80de-3141687db11d",
 		OriginalElementName:      "B10_Bond",
 		MatureElementUuid:        uuidToSwapOut,
@@ -2001,7 +2001,7 @@ func TestTCRuleSwap108(t *testing.T) {
 	myTestCaseModel.TestCaseModelMap[tc_1_b1f.MatureElementUuid] = tc_1_b1f
 	myTestCaseModel.TestCaseModelMap[tc_2_tic.MatureElementUuid] = tc_2_tic
 	myTestCaseModel.TestCaseModelMap[tc_3_b1l.MatureElementUuid] = tc_3_b1l
-	myTestCaseModel.TestCaseModelMap[tc_2_1_b10ox.MatureElementUuid] = tc_2_1_b10ox
+	myTestCaseModel.TestCaseModelMap[tc_2_1_b10xo.MatureElementUuid] = tc_2_1_b10xo
 
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid

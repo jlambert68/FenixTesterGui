@@ -62,49 +62,49 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 		//	B10 - False - TCRuleSwap003
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND:
 		matchedRule = "TCRuleSwap002"
-		canBeSwapped = false
+		canBeSwapped = true
 
 		//	B11			False				TCRuleSwap004
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND,
 		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND:
 		matchedRule = "TCRuleSwap004"
-		canBeSwapped = false
+		canBeSwapped = true
 
 		//	B12			False				TCRuleSwap005
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND:
 		matchedRule = "TCRuleSwap005"
-		canBeSwapped = false
+		canBeSwapped = true
 
 		//	B10*x* 		False				TCRuleSwap006
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND:
 		matchedRule = "TCRuleSwap006"
-		canBeSwapped = false
+		canBeSwapped = true
 
 		//	B10*x 		False				TCRuleSwap007
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10ox_BOND:
 		matchedRule = "TCRuleSwap007"
-		canBeSwapped = false
+		canBeSwapped = true
 
 		//	B10x*		False				TCRuleSwap008
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND:
 		matchedRule = "TCRuleSwap008"
-		canBeSwapped = false
+		canBeSwapped = true
 
 		//	B11x		False				TCRuleSwap009
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE,
 		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE:
 		matchedRule = "TCRuleSwap009"
-		canBeSwapped = false
+		canBeSwapped = true
 
 		//	B12x		False				TCRuleSwap010
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE:
 		matchedRule = "TCRuleSwap010"
-		canBeSwapped = false
+		canBeSwapped = true
 
 		//	TI			True				TCRuleSwap011
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION:
 		matchedRule = "TCRuleSwap011"
-		canBeSwapped = true
+		canBeSwapped = false
 
 		//	Tix			False				TCRuleSwap012
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE:
@@ -114,7 +114,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 		//	TIC(X)		True				TCRuleSwap013
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER:
 		matchedRule = "TCRuleSwap013"
-		canBeSwapped = true
+		canBeSwapped = false
 
 		//	TICx(X)		False				TCRuleSwap014
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE:
@@ -223,10 +223,9 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 	//	n=TIC or TIC(X)		B10					n		TIC(B10)						TIC(B11f-n-B11l)		TCRuleSwap102
 	if ruleCanBeProcessed == false &&
-		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND &&
-		(currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
-			currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER) &&
-		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND {
+		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND &&
+		currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND &&
+		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND {
 
 		// Rule OK
 		ruleName = "TCRuleSwap102"

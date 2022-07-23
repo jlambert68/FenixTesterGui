@@ -146,6 +146,53 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap1
 //	n=TIC or TIC(X)		B11f				n		TIC(B11f-X)						TIC(B11f-n-B12-X)		TCRuleSwap103
 func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap103(uuidToSwapOut string, immatureElementToSwapIn *immatureElementStruct) (err error) {
 
+	matureElementToSwapIn, err := commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap103)
+
+	// Couldn't convert immature element component into mature element component
+	if err != nil {
+		return err
+	}
+
+	// Extract parent-TIC to element to swap out
+	elementToSwapOut, _ := commandAndRuleEngine.testcaseModel.TestCaseModelMap[uuidToSwapOut]
+	parentElementUuid := elementToSwapOut.ParentElementUuid
+	nextElement := commandAndRuleEngine.testcaseModel.TestCaseModelMap[elementToSwapOut.NextElementUuid]
+
+	// Create the new Bonds
+	newB12Bond := commandAndRuleEngine.createNewBondB12Element(parentElementUuid)
+
+	// Extract TIC/TI from new element model, same as first element
+	topElementInModelToBeSwappedIn := matureElementToSwapIn.matureElementMap[matureElementToSwapIn.firstElementUuid]
+
+	// Connect the new structure
+	elementToSwapOut.NextElementUuid = topElementInModelToBeSwappedIn.MatureElementUuid
+
+	topElementInModelToBeSwappedIn.PreviousElementUuid = elementToSwapOut.MatureElementUuid
+	topElementInModelToBeSwappedIn.NextElementUuid = newB12Bond.MatureElementUuid
+	topElementInModelToBeSwappedIn.ParentElementUuid = parentElementUuid
+
+	newB12Bond.PreviousElementUuid = topElementInModelToBeSwappedIn.MatureElementUuid
+	newB12Bond.NextElementUuid = nextElement.MatureElementUuid
+
+	nextElement.PreviousElementUuid = newB12Bond.MatureElementUuid
+
+	// Add updated element back to 'matureElementToSwapIn'
+	matureElementToSwapIn.matureElementMap[topElementInModelToBeSwappedIn.MatureElementUuid] = topElementInModelToBeSwappedIn
+
+	// Update elements in TestCaseModel
+	commandAndRuleEngine.testcaseModel.TestCaseModelMap[elementToSwapOut.MatureElementUuid] = elementToSwapOut
+	commandAndRuleEngine.testcaseModel.TestCaseModelMap[nextElement.MatureElementUuid] = nextElement
+
+	// Add new Bonds to TestCase Element Model
+	commandAndRuleEngine.testcaseModel.TestCaseModelMap[newB12Bond.MatureElementUuid] = newB12Bond
+
+	// Add 'matureElementToSwapIn' to TestCase Element Model
+	for elementUuid, element := range matureElementToSwapIn.matureElementMap {
+
+		commandAndRuleEngine.testcaseModel.TestCaseModelMap[elementUuid] = element
+
+	}
+
 	return err
 }
 
@@ -168,8 +215,6 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap1
 // TCRuleSwap106
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B10x*				n		TIC(B10*x*)						TIC(B11x-n-B11x)		TCRuleSwap106
-//	n=TIC or TIC(X)		B10*x				n		TIC(B10*x)						TIC(B11x-n-B11)			TCRuleSwap107
-//	n=TIC or TIC(X)		B10x*				n		TIC(B10x*)						TIC(B11-n-B11x)			TCRuleSwap108
 func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap106(uuidToSwapOut string, immatureElementToSwapIn *immatureElementStruct) (err error) {
 
 	return err
@@ -178,7 +223,6 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap1
 // TCRuleSwap107
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B10*x				n		TIC(B10*x)						TIC(B11x-n-B11)			TCRuleSwap107
-//	n=TIC or TIC(X)		B10x*				n		TIC(B10x*)						TIC(B11-n-B11x)			TCRuleSwap108
 func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap107(uuidToSwapOut string, immatureElementToSwapIn *immatureElementStruct) (err error) {
 
 	return err

@@ -2,6 +2,8 @@ package commandAndRuleEngine
 
 import (
 	"FenixTesterGui/testCase/testCaseModel"
+	"google.golang.org/protobuf/types/known/timestamppb"
+
 	//"errors"
 	uuidGenerator "github.com/google/uuid"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
@@ -30,13 +32,26 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 	// Set the B0-bond as first element in TestCaseModel
 	newTestCaseModel.FirstElementUuid = b0Bond.MatureElementUuid
 
+	// Create a new Command
+	newCommandEntry := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage_TestCaseModelCommandMessage{
+		TestCaseCommandType:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_NEW_TESTCASE,
+		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_NEW_TESTCASE)],
+		FirstParameter:           testCaseModel.NotApplicable,
+		SecondParameter:          testCaseModel.NotApplicable,
+		UserId:                   commandAndRuleEngine.testcases.CurrentUser,
+		CommandExecutedTimeStamp: timestamppb.Now(),
+	}
+
+	// Add command to command stack
+	newTestCaseModel.CommandStack = append(newTestCaseModel.CommandStack, newCommandEntry)
+
 	// Generate new TestCase-UUID
 	testCaseUuid = uuidGenerator.New().String()
 
 	// Add the TestCaseModel into map of all TestCaseModels
 	commandAndRuleEngine.testcases.TestCases[testCaseUuid] = newTestCaseModel
 
-	return testCaseUuid, nil
+	return testCaseUuid, err
 
 }
 

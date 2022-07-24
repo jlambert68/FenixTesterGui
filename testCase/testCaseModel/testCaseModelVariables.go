@@ -6,7 +6,8 @@ import (
 )
 
 type TestCaseModelsStruct struct {
-	TestCases map[string]TestCaseModelStruct
+	TestCases   map[string]TestCaseModelStruct
+	CurrentUser string
 }
 
 type TestCaseModelStruct struct {
@@ -15,7 +16,7 @@ type TestCaseModelStruct struct {
 	TestCaseModelMap                     map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
 	TextualTestCaseRepresentationSimple  []string
 	TextualTestCaseRepresentationComplex []string
-	commandStack                         []commandStackStruct
+	CommandStack                         []fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage_TestCaseModelCommandMessage
 	LastSavedCommandStack                lastSavedCommandStack
 	copyBuffer                           fenixGuiTestCaseBuilderServerGrpcApi.ImmatureElementModelMessage
 	cutBuffer                            matureElementStruct
@@ -23,18 +24,12 @@ type TestCaseModelStruct struct {
 
 type lastSavedCommandStack struct {
 	savedTimeStamp time.Time
-	commandStack   []commandStackStruct
-}
-
-type commandStackStruct struct {
-	command           fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum
-	commandName       string
-	commandParameter1 string
-	commandParameter2 string
-	updatedDateTime   time.Time
+	commandStack   []fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage_TestCaseModelCommandMessage
 }
 
 type matureElementStruct struct {
 	firstElementUuid string
 	matureElementMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
 }
+
+const NotApplicable = "N/A"

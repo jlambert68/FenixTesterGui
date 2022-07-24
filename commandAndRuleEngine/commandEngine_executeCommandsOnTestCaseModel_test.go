@@ -6,6 +6,7 @@ import (
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/stretchr/testify/assert"
+	"strconv"
 	"testing"
 )
 
@@ -80,5 +81,14 @@ func TestNewTestCaseModel(t *testing.T) {
 
 	assert.Equal(t, textualTestCaseRepresentationSimple, textualTestCaseSimple)
 	assert.Equal(t, textualTestCaseRepresentationComplex, textualTestCaseComplex)
+
+	// Validate Command stack, but fix timestamp
+	commandTimeStamp := testCase.CommandStack[0].CommandExecutedTimeStamp
+	commandTimeStampSecondsAsString := strconv.Itoa(int(commandTimeStamp.Seconds))
+	commandTimeStampnanosAsString := strconv.Itoa(int(commandTimeStamp.Nanos))
+
+	commandSliceToCompareWith := "[{{{} [] [] <nil>} 0 [] NEW_TESTCASE NEW_TESTCASE N/A N/A  seconds:" + commandTimeStampSecondsAsString + " nanos:" + commandTimeStampnanosAsString + "}]"
+
+	assert.Equal(t, commandSliceToCompareWith, fmt.Sprint(testCase.CommandStack))
 
 }

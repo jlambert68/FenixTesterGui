@@ -255,6 +255,13 @@ func TestTCRuleSwap101(t *testing.T) {
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
+	// Validate Textual TestCase Presentation
+	textualTestCase, err := myTestCaseModel.CreateTextualTestCase()
+
+	textualTestCaseRepresentation := "[B1f-TIC(B10)-B1l]"
+
+	assert.Equal(t, textualTestCaseRepresentation, textualTestCase)
+
 }
 
 // TCRuleSwap102
@@ -502,6 +509,13 @@ func TestTCRuleSwap102(t *testing.T) {
 	err = verifyThatThereAreNoZombieElementsInTestCaseModel(&myTestCaseModel)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
+
+	// Validate Textual TestCase Presentation
+	textualTestCase, err := myTestCaseModel.CreateTextualTestCase()
+
+	textualTestCaseRepresentation := "[B1f-TIC(B11f-TIC(B10)-B11l)-B1l]"
+
+	assert.Equal(t, textualTestCaseRepresentation, textualTestCase)
 
 }
 
@@ -807,6 +821,13 @@ func TestTCRuleSwap103(t *testing.T) {
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
+	// Validate Textual TestCase Presentation
+	textualTestCase, err := myTestCaseModel.CreateTextualTestCase()
+
+	textualTestCaseRepresentation := "[B1f-TIC(B11f-TIC(B10)-B12-TIC(B10)-B11l)-B1l]"
+
+	assert.Equal(t, textualTestCaseRepresentation, textualTestCase)
+
 }
 
 // TCRuleSwap104
@@ -1110,6 +1131,13 @@ func TestTCRuleSwap104(t *testing.T) {
 	err = verifyThatThereAreNoZombieElementsInTestCaseModel(&myTestCaseModel)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
+
+	// Validate Textual TestCase Presentation
+	textualTestCase, err := myTestCaseModel.CreateTextualTestCase()
+
+	textualTestCaseRepresentation := "[B1f-TIC(B11f-TIC(B10)-B12-TIC(B10)-B11l)-B1l]"
+
+	assert.Equal(t, textualTestCaseRepresentation, textualTestCase)
 
 }
 
@@ -1436,6 +1464,13 @@ func TestTCRuleSwap105(t *testing.T) {
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
+	// Validate Textual TestCase Presentation
+	textualTestCase, err := myTestCaseModel.CreateTextualTestCase()
+
+	textualTestCaseRepresentation := "[B1f-TIC(B11f-TIC(B10)-B12-TI-B12-TI-B11l)-B1l]"
+
+	assert.Equal(t, textualTestCaseRepresentation, textualTestCase)
+
 }
 
 // TCRuleSwap106
@@ -1683,6 +1718,13 @@ func TestTCRuleSwap106(t *testing.T) {
 	err = verifyThatThereAreNoZombieElementsInTestCaseModel(&myTestCaseModel)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
+
+	// Validate Textual TestCase Presentation
+	textualTestCase, err := myTestCaseModel.CreateTextualTestCase()
+
+	textualTestCaseRepresentation := "[B1f-TIC(B11fx-TIC(B10)-B11lx)-B1l]"
+
+	assert.Equal(t, textualTestCaseRepresentation, textualTestCase)
 
 }
 
@@ -1932,6 +1974,13 @@ func TestTCRuleSwap107(t *testing.T) {
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
+	// Validate Textual TestCase Presentation
+	textualTestCase, err := myTestCaseModel.CreateTextualTestCase()
+
+	textualTestCaseRepresentation := "[B1f-TIC(B11fx-TIC(B10)-B11l)-B1l]"
+
+	assert.Equal(t, textualTestCaseRepresentation, textualTestCase)
+
 }
 
 // TCRuleSwap108
@@ -2092,7 +2141,7 @@ func TestTCRuleSwap108(t *testing.T) {
 	// Validate that there were no errors
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
-	// Validate the result of the swap, 'B1f-TIC(B11fx-TIC(B10)-B11l)-B1l'
+	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B11xl)-B1l'
 	// 1) Validate B1f (1)
 	testCaseModelElementUuid_1 := myTestCaseModel.FirstElementUuid
 	testCaseModelElement_1 := myTestCaseModel.TestCaseModelMap[testCaseModelElementUuid_1]
@@ -2179,5 +2228,12 @@ func TestTCRuleSwap108(t *testing.T) {
 	err = verifyThatThereAreNoZombieElementsInTestCaseModel(&myTestCaseModel)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
+
+	// Validate Textual TestCase Presentation
+	textualTestCase, err := myTestCaseModel.CreateTextualTestCase()
+
+	textualTestCaseRepresentation := "[B1f-TIC(B11f-TIC(B10)-B11lx)-B1l]"
+
+	assert.Equal(t, textualTestCaseRepresentation, textualTestCase)
 
 }

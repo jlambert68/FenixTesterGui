@@ -87,7 +87,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	delete(currentTestCase.TestCaseModelMap, uuidToSwapOut)
 
 	// If there are no errors then save the TestCase back into map of all TestCases
-	if err != nil {
+	if err == nil {
 		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
 	}
 

@@ -138,6 +138,10 @@ func TestTCRuleSwap101(t *testing.T) {
 	// Validate that there were no errors
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
+	// Retrieve updated TestCase and validate that it exists im Map
+	myTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	assert.Equal(t, "true", fmt.Sprint(existsInMap))
+
 	// Validate the result of the swap, 'B1f-TIC(B10)-B1l'
 	// 1) Validate B1f
 	firstTestCaseModelElementUuid := myTestCaseModel.FirstElementUuid

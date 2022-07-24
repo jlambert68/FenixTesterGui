@@ -1,7 +1,6 @@
 package testCaseModel
 
 import (
-	"FenixTesterGui/commandAndRuleEngine"
 	"errors"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"strings"
@@ -79,11 +78,36 @@ func (testCaseModel *TestCaseModelsStruct) recursiveZombieElementSearchInTestCas
 	}
 
 	// Remove current element from "slice of all elements in map"
-	tempAallUuidKeys := commandAndRuleEngine.FindElementInSliceAndRemove(&allUuidKeys, elementsUuid)
+	tempAallUuidKeys := findElementInSliceAndRemove(&allUuidKeys, elementsUuid)
 
 	processedAllUuidKeys = *tempAallUuidKeys
 
 	return processedAllUuidKeys, err
+}
+
+// Remove 'uuid' from slice
+func findElementInSliceAndRemove(sliceToWorkOn *[]string, uuid string) (returnSlice *[]string) {
+
+	var index int
+	var uuidInSLice string
+
+	// Find the index of the 'uuid'
+	for index, uuidInSLice = range *sliceToWorkOn {
+		if uuidInSLice == uuid {
+			break
+		}
+	}
+
+	// Create a temporary slice to work on
+	tempSlice := *sliceToWorkOn
+
+	// Remove the element in the slice
+	tempSlice[index] = tempSlice[len(tempSlice)-1]
+	tempSlice = tempSlice[:len(tempSlice)-1]
+
+	returnSlice = &tempSlice
+
+	return returnSlice
 }
 
 func (testCaseModel *TestCaseModelsStruct) CreateTextualTestCase(testCaseUuid string) (textualTestCaseSimple string, textualTestCaseComplex string, err error) {

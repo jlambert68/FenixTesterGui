@@ -3,77 +3,11 @@ package commandAndRuleEngine
 import (
 	"FenixTesterGui/gui/UnitTestTestData"
 	"FenixTesterGui/testCase/testCaseModel"
-	"errors"
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
-
-// Verify that all UUIDs are correct in TestCaseModel. Meaning that no empty uuid is allowed and they all are correct
-func verifyThatThereAreNoZombieElementsInTestCaseModel(testCaseModel *testCaseModel.TestCaseModelStruct) (err error) {
-
-	var allUuidKeys []string
-
-	// Extract all elements by key from TestCaseModel
-	for _, elementKey := range testCaseModel.TestCaseModelMap {
-		allUuidKeys = append(allUuidKeys, elementKey.MatureElementUuid)
-	}
-
-	// Follow the path from "first element and remove the found element from 'allUuidKeys'
-	allUuidKeys, err = recursiveZombieElementSearchInTestCaseModel(testCaseModel.FirstElementUuid, allUuidKeys, testCaseModel)
-
-	// If there are elements left in slice then there were zombie elements, which there shouldn't be
-	if len(allUuidKeys) != 0 {
-		err = errors.New("there existed Zombie elements in 'testCaseModel.TestCaseModelMap', for " + testCaseModel.FirstElementUuid)
-
-		return err
-	}
-
-	return err
-}
-
-// Verify all children, in TestCaseElement-model and remove the found element from 'allUuidKeys'
-func recursiveZombieElementSearchInTestCaseModel(elementsUuid string, allUuidKeys []string, testCaseModel *testCaseModel.TestCaseModelStruct) (processedAllUuidKeys []string, err error) {
-
-	// Extract current element
-	currentElement, existInMap := testCaseModel.TestCaseModelMap[elementsUuid]
-
-	// If the element doesn't exit then there is something really wrong
-	if existInMap == false {
-		// This shouldn't happen
-		err = errors.New(elementsUuid + " could not be found in in map 'testCaseModel.TestCaseModelMap'")
-
-		return nil, err
-	}
-
-	// Element has child-element then go that path
-	if currentElement.FirstChildElementUuid != elementsUuid {
-		allUuidKeys, err = recursiveZombieElementSearchInTestCaseModel(currentElement.FirstChildElementUuid, allUuidKeys, testCaseModel)
-	}
-
-	// If we got an error back then something wrong happen, so just back out
-	if err != nil {
-		return nil, err
-	}
-
-	// If element has a next-element the go that path
-	if currentElement.NextElementUuid != elementsUuid {
-		allUuidKeys, err = recursiveZombieElementSearchInTestCaseModel(currentElement.NextElementUuid, allUuidKeys, testCaseModel)
-	}
-
-	// If we got an error back then something wrong happen, so just back out
-	if err != nil {
-		return nil, err
-	}
-
-	// Remove current element from "slice of all elements in map"
-	tempAallUuidKeys := findElementInSliceAndRemove(&allUuidKeys, elementsUuid)
-
-	processedAllUuidKeys = *tempAallUuidKeys
-
-	return processedAllUuidKeys, err
-}
 
 // Verify that a 'B0' can be swapped into 'B1-TIC(B10)-B1'
 // TCRuleSwap101
@@ -151,11 +85,17 @@ func TestTCRuleSwap101(t *testing.T) {
 	// Add first Element ti Immature Element Model
 	immatureElementModel.firstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
+	// Add TestCase to structure for all TestCases
+	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
+	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
+	allTestCases[testCaseUuid] = myTestCaseModel
+	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcaseModel:     &myTestCaseModel,
+		testcases:         &testCasesObject,
 	}
 
 	// Add needed data for availableBondsMap
@@ -193,7 +133,7 @@ func TestTCRuleSwap101(t *testing.T) {
 	commandAndRuleEngine.availableBondsMap = tempAvailableBondsMap
 
 	// Execute Swap
-	err := commandAndRuleEngine.executeTCRuleSwap101(uuidToSwapOut, &immatureElementModel)
+	err := commandAndRuleEngine.executeTCRuleSwap101(testCaseUuid, uuidToSwapOut, &immatureElementModel)
 
 	// Validate that there were no errors
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
@@ -251,12 +191,12 @@ func TestTCRuleSwap101(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = verifyThatThereAreNoZombieElementsInTestCaseModel(&myTestCaseModel)
+	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := myTestCaseModel.CreateTextualTestCase()
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B10)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B10)-B1l]"
@@ -377,11 +317,17 @@ func TestTCRuleSwap102(t *testing.T) {
 	// Add first Element ti Immature Element Model
 	immatureElementModel.firstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
+	// Add TestCase to structure for all TestCases
+	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
+	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
+	allTestCases[testCaseUuid] = myTestCaseModel
+	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcaseModel:     &myTestCaseModel,
+		testcases:         &testCasesObject,
 	}
 
 	// Add needed data for availableBondsMap
@@ -419,7 +365,7 @@ func TestTCRuleSwap102(t *testing.T) {
 	commandAndRuleEngine.availableBondsMap = tempAvailableBondsMap
 
 	// Execute Swap
-	err := commandAndRuleEngine.executeTCRuleSwap102(uuidToSwapOut, &immatureElementModel)
+	err := commandAndRuleEngine.executeTCRuleSwap102(testCaseUuid, uuidToSwapOut, &immatureElementModel)
 
 	// Validate that there were no errors
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
@@ -508,12 +454,12 @@ func TestTCRuleSwap102(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = verifyThatThereAreNoZombieElementsInTestCaseModel(&myTestCaseModel)
+	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := myTestCaseModel.CreateTextualTestCase()
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B11)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B11l)-B1l]"
@@ -670,11 +616,17 @@ func TestTCRuleSwap103(t *testing.T) {
 	// Add first Element ti Immature Element Model
 	immatureElementModel.firstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
+	// Add TestCase to structure for all TestCases
+	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
+	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
+	allTestCases[testCaseUuid] = myTestCaseModel
+	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcaseModel:     &myTestCaseModel,
+		testcases:         &testCasesObject,
 	}
 
 	// Add needed data for availableBondsMap
@@ -698,7 +650,7 @@ func TestTCRuleSwap103(t *testing.T) {
 	commandAndRuleEngine.availableBondsMap = tempAvailableBondsMap
 
 	// Execute Swap
-	err := commandAndRuleEngine.executeTCRuleSwap103(uuidToSwapOut, &immatureElementModel)
+	err := commandAndRuleEngine.executeTCRuleSwap103(testCaseUuid, uuidToSwapOut, &immatureElementModel)
 
 	// Validate that there were no errors
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
@@ -821,12 +773,12 @@ func TestTCRuleSwap103(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = verifyThatThereAreNoZombieElementsInTestCaseModel(&myTestCaseModel)
+	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := myTestCaseModel.CreateTextualTestCase()
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B12-TIC(B10)-B11)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B12-TIC(B10)-B11l)-B1l]"
@@ -983,11 +935,17 @@ func TestTCRuleSwap104(t *testing.T) {
 	// Add first Element ti Immature Element Model
 	immatureElementModel.firstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
+	// Add TestCase to structure for all TestCases
+	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
+	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
+	allTestCases[testCaseUuid] = myTestCaseModel
+	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcaseModel:     &myTestCaseModel,
+		testcases:         &testCasesObject,
 	}
 
 	// Add needed data for availableBondsMap
@@ -1011,7 +969,7 @@ func TestTCRuleSwap104(t *testing.T) {
 	commandAndRuleEngine.availableBondsMap = tempAvailableBondsMap
 
 	// Execute Swap
-	err := commandAndRuleEngine.executeTCRuleSwap104(uuidToSwapOut, &immatureElementModel)
+	err := commandAndRuleEngine.executeTCRuleSwap104(testCaseUuid, uuidToSwapOut, &immatureElementModel)
 
 	// Validate that there were no errors
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
@@ -1134,12 +1092,12 @@ func TestTCRuleSwap104(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = verifyThatThereAreNoZombieElementsInTestCaseModel(&myTestCaseModel)
+	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := myTestCaseModel.CreateTextualTestCase()
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B12-TIC(B10)-B11)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B12-TIC(B10)-B11l)-B1l]"
@@ -1307,11 +1265,17 @@ func TestTCRuleSwap105(t *testing.T) {
 	// Add first Element to Immature Element Model
 	immatureElementModel.firstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
+	// Add TestCase to structure for all TestCases
+	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
+	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
+	allTestCases[testCaseUuid] = myTestCaseModel
+	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcaseModel:     &myTestCaseModel,
+		testcases:         &testCasesObject,
 	}
 
 	// Add needed data for availableBondsMap
@@ -1335,7 +1299,7 @@ func TestTCRuleSwap105(t *testing.T) {
 	commandAndRuleEngine.availableBondsMap = tempAvailableBondsMap
 
 	// Execute Swap
-	err := commandAndRuleEngine.executeTCRuleSwap105(uuidToSwapOut, &immatureElementModel)
+	err := commandAndRuleEngine.executeTCRuleSwap105(testCaseUuid, uuidToSwapOut, &immatureElementModel)
 
 	// Validate that there were no errors
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
@@ -1468,12 +1432,12 @@ func TestTCRuleSwap105(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = verifyThatThereAreNoZombieElementsInTestCaseModel(&myTestCaseModel)
+	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := myTestCaseModel.CreateTextualTestCase()
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B12-TI-B12-TI-B11)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B12-TI-B12-TI-B11l)-B1l]"
@@ -1593,11 +1557,17 @@ func TestTCRuleSwap106(t *testing.T) {
 	// Add first Element ti Immature Element Model
 	immatureElementModel.firstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
+	// Add TestCase to structure for all TestCases
+	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
+	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
+	allTestCases[testCaseUuid] = myTestCaseModel
+	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcaseModel:     &myTestCaseModel,
+		testcases:         &testCasesObject,
 	}
 
 	// Add needed data for availableBondsMap
@@ -1635,7 +1605,7 @@ func TestTCRuleSwap106(t *testing.T) {
 	commandAndRuleEngine.availableBondsMap = tempAvailableBondsMap
 
 	// Execute Swap
-	err := commandAndRuleEngine.executeTCRuleSwap106(uuidToSwapOut, &immatureElementModel)
+	err := commandAndRuleEngine.executeTCRuleSwap106(testCaseUuid, uuidToSwapOut, &immatureElementModel)
 
 	// Validate that there were no errors
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
@@ -1724,12 +1694,12 @@ func TestTCRuleSwap106(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = verifyThatThereAreNoZombieElementsInTestCaseModel(&myTestCaseModel)
+	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := myTestCaseModel.CreateTextualTestCase()
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11x-TIC(B10)-B11x)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11fx-TIC(B10)-B11lx)-B1l]"
@@ -1850,11 +1820,17 @@ func TestTCRuleSwap107(t *testing.T) {
 	// Add first Element ti Immature Element Model
 	immatureElementModel.firstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
+	// Add TestCase to structure for all TestCases
+	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
+	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
+	allTestCases[testCaseUuid] = myTestCaseModel
+	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcaseModel:     &myTestCaseModel,
+		testcases:         &testCasesObject,
 	}
 
 	// Add needed data for availableBondsMap
@@ -1892,7 +1868,7 @@ func TestTCRuleSwap107(t *testing.T) {
 	commandAndRuleEngine.availableBondsMap = tempAvailableBondsMap
 
 	// Execute Swap
-	err := commandAndRuleEngine.executeTCRuleSwap107(uuidToSwapOut, &immatureElementModel)
+	err := commandAndRuleEngine.executeTCRuleSwap107(testCaseUuid, uuidToSwapOut, &immatureElementModel)
 
 	// Validate that there were no errors
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
@@ -1981,12 +1957,12 @@ func TestTCRuleSwap107(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = verifyThatThereAreNoZombieElementsInTestCaseModel(&myTestCaseModel)
+	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := myTestCaseModel.CreateTextualTestCase()
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11x-TIC(B10)-B11)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11fx-TIC(B10)-B11l)-B1l]"
@@ -2107,11 +2083,17 @@ func TestTCRuleSwap108(t *testing.T) {
 	// Add first Element ti Immature Element Model
 	immatureElementModel.firstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
+	// Add TestCase to structure for all TestCases
+	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
+	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
+	allTestCases[testCaseUuid] = myTestCaseModel
+	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcaseModel:     &myTestCaseModel,
+		testcases:         &testCasesObject,
 	}
 
 	// Add needed data for availableBondsMap
@@ -2149,7 +2131,7 @@ func TestTCRuleSwap108(t *testing.T) {
 	commandAndRuleEngine.availableBondsMap = tempAvailableBondsMap
 
 	// Execute Swap
-	err := commandAndRuleEngine.executeTCRuleSwap108(uuidToSwapOut, &immatureElementModel)
+	err := commandAndRuleEngine.executeTCRuleSwap108(testCaseUuid, uuidToSwapOut, &immatureElementModel)
 
 	// Validate that there were no errors
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
@@ -2238,12 +2220,12 @@ func TestTCRuleSwap108(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = verifyThatThereAreNoZombieElementsInTestCaseModel(&myTestCaseModel)
+	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := myTestCaseModel.CreateTextualTestCase()
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B11x)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B11lx)-B1l]"

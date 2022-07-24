@@ -27,10 +27,17 @@ import (
 //	TICx(X)			False							TCRuleSwap014
 
 // Verify the simple rules if a component can be Swapped or not
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedSimpleRules(elementUuid string) (canBeSwapped bool, matchedRule string, err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedSimpleRules(testCaseUuid string, elementUuid string) (canBeSwapped bool, matchedRule string, err error) {
+
+	// Get current TestCase
+	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	if existsInMap == false {
+		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
+		return false, "", err
+	}
 
 	// Retrieve component to be verified for Swap
-	element, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[elementUuid]
+	element, existInMap := currentTestCase.TestCaseModelMap[elementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":          "9d8aebb2-4409-4236-8740-4ca396007088",
@@ -152,7 +159,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 //No other combinations of swapping elements are allowed
 
 // Verify the Complex rules if a component can be Swapped or not
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedWithComplexRules(uuid string) (matchedRule string, err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedWithComplexRules(testCaseUuid string, uuidToSwapOut string) (matchedRule string, err error) {
 
 	var ruleName string
 	var ruleCanBeProcessed bool
@@ -160,9 +167,16 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 	ruleName = ""
 	ruleCanBeProcessed = false
 
+	// Get current TestCase
+	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	if existsInMap == false {
+		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
+		return "", err
+	}
+
 	// Extract data for Previous Elementfunc (commandAndRuleEngine *commandAndRuleEngineObjectStruct)
-	currentElementUuid := uuid
-	currentElement, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[currentElementUuid]
+	currentElementUuid := uuidToSwapOut
+	currentElement, existInMap := currentTestCase.TestCaseModelMap[currentElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":                 "d450e7e5-32f4-42e9-b371-279d5bfe9d14",
@@ -176,8 +190,8 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 	currentElementType := currentElement.TestCaseModelElementType
 
 	// Extract data for Previous Element
-	previousElementUuid := commandAndRuleEngine.testcaseModel.TestCaseModelMap[currentElementUuid].PreviousElementUuid
-	previousElement, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[previousElementUuid]
+	previousElementUuid := currentTestCase.TestCaseModelMap[currentElementUuid].PreviousElementUuid
+	previousElement, existInMap := currentTestCase.TestCaseModelMap[previousElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":                  "42b050c6-3d63-45fc-9b6c-6b4a6e02516f",
@@ -191,8 +205,8 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 	previousElementType := previousElement.TestCaseModelElementType
 
 	// Extract data for Next Element
-	nextElementUuid := commandAndRuleEngine.testcaseModel.TestCaseModelMap[currentElementUuid].NextElementUuid
-	nextElement, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[nextElementUuid]
+	nextElementUuid := currentTestCase.TestCaseModelMap[currentElementUuid].NextElementUuid
+	nextElement, existInMap := currentTestCase.TestCaseModelMap[nextElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":              "bf2ac32f-5edb-472f-af73-87d04400e132",
@@ -425,7 +439,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveZombieEle
 	}
 
 	// Remove current element from "slice of all elements in map"
-	tempAallUuidKeys := findElementInSliceAndRemove(&allUuidKeys, elementsUuid)
+	tempAallUuidKeys := FindElementInSliceAndRemove(&allUuidKeys, elementsUuid)
 
 	processedAllUuidKeys = *tempAallUuidKeys
 
@@ -433,7 +447,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveZombieEle
 }
 
 // Remove 'uuid' from slice
-func findElementInSliceAndRemove(sliceToWorkOn *[]string, uuid string) (returnSlice *[]string) {
+func FindElementInSliceAndRemove(sliceToWorkOn *[]string, uuid string) (returnSlice *[]string) {
 
 	var index int
 	var uuidInSLice string
@@ -480,10 +494,17 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyThatAllUuids
 }
 
 // Verify all children, in new Element-model to be swapped in, that they contain correct UUIDs
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveVerifyAllUuidOfChildElements(elementsUuid string) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveVerifyAllUuidOfChildElements(testCaseUuid string, elementsUuid string) (err error) {
+
+	// Get current TestCase
+	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	if existsInMap == false {
+		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
+		return err
+	}
 
 	// Extract current element
-	currentElement, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[elementsUuid]
+	currentElement, existInMap := currentTestCase.TestCaseModelMap[elementsUuid]
 
 	// If the element doesn't exit then there is something really wrong
 	if existInMap == false {
@@ -499,7 +520,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveVerifyAll
 
 	// Element has child-element then go that path
 	if currentElement.FirstChildElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentElement.FirstChildElementUuid)
+		err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElement.FirstChildElementUuid)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -509,7 +530,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveVerifyAll
 
 	// If element has a next-element the go that path
 	if currentElement.NextElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentElement.NextElementUuid)
+		err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElement.NextElementUuid)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -518,7 +539,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveVerifyAll
 	}
 
 	// Remove current element from Map
-	delete(commandAndRuleEngine.testcaseModel.TestCaseModelMap, elementsUuid)
+	delete(currentTestCase.TestCaseModelMap, elementsUuid)
 
 	return err
 }

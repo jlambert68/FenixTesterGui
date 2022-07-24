@@ -6,10 +6,10 @@ import (
 )
 
 // Verify if an element can be swapped or not, regarding swap rules
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfElementCanBeSwapped(elementUuid string) (canBeSwapped bool, matchedSimpledRule string, matchedComplexRule string, err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfElementCanBeSwapped(testCaseUuid string, elementUuid string) (canBeSwapped bool, matchedSimpledRule string, matchedComplexRule string, err error) {
 
 	// First verify towards simple rules
-	canBeSwapped, matchedSimpledRule, err = commandAndRuleEngine.verifyIfComponentCanBeSwappedSimpleRules(elementUuid)
+	canBeSwapped, matchedSimpledRule, err = commandAndRuleEngine.verifyIfComponentCanBeSwappedSimpleRules(testCaseUuid, elementUuid)
 
 	// Only check complex rules if simple rules was OK for swapping
 	if !(canBeSwapped == true &&
@@ -18,16 +18,16 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfElementCan
 	}
 
 	// Verify towards complex rules
-	matchedComplexRule, err = commandAndRuleEngine.verifyIfComponentCanBeSwappedWithComplexRules(elementUuid)
+	matchedComplexRule, err = commandAndRuleEngine.verifyIfComponentCanBeSwappedWithComplexRules(testCaseUuid, elementUuid)
 
 	return canBeSwapped, matchedSimpledRule, matchedComplexRule, err
 }
 
 // Swap an element, but first ensure that rules for swapping are used
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeSwapElement(elementUuid string) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeSwapElement(testCaseUuid string, elementUuid string) (err error) {
 
 	// Verify that element is allowed, and can be swapped
-	canBeSwapped, matchedSimpleRule, _, err := commandAndRuleEngine.verifyIfElementCanBeSwapped(elementUuid)
+	canBeSwapped, matchedSimpleRule, _, err := commandAndRuleEngine.verifyIfElementCanBeSwapped(testCaseUuid, elementUuid)
 
 	// If there was an error from swap verification then exit
 	if err != nil {
@@ -42,38 +42,38 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeSwapElement
 	}
 
 	// Execute deletion of element
-	err = commandAndRuleEngine.executeSwapElement(elementUuid)
+	err = commandAndRuleEngine.executeSwapElement(testCaseUuid, elementUuid)
 
 	return err
 }
 
 // Execute a swap on an element based on specific rule
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeSwapElementBasedOnRule(elementUuid string, immatureElementToSwapIn *immatureElementStruct, matchedComplexRule string) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeSwapElementBasedOnRule(testCaseUuid string, elementUuid string, immatureElementToSwapIn *immatureElementStruct, matchedComplexRule string) (err error) {
 
 	switch matchedComplexRule {
 	case TCRuleSwap101:
-		err = commandAndRuleEngine.executeTCRuleSwap101(elementUuid, immatureElementToSwapIn)
+		err = commandAndRuleEngine.executeTCRuleSwap101(testCaseUuid, elementUuid, immatureElementToSwapIn)
 
 	case TCRuleSwap102:
-		err = commandAndRuleEngine.executeTCRuleSwap102(elementUuid, immatureElementToSwapIn)
+		err = commandAndRuleEngine.executeTCRuleSwap102(testCaseUuid, elementUuid, immatureElementToSwapIn)
 
 	case TCRuleSwap103:
-		err = commandAndRuleEngine.executeTCRuleSwap103(elementUuid, immatureElementToSwapIn)
+		err = commandAndRuleEngine.executeTCRuleSwap103(testCaseUuid, elementUuid, immatureElementToSwapIn)
 
 	case TCRuleSwap104:
-		err = commandAndRuleEngine.executeTCRuleSwap104(elementUuid, immatureElementToSwapIn)
+		err = commandAndRuleEngine.executeTCRuleSwap104(testCaseUuid, elementUuid, immatureElementToSwapIn)
 
 	case TCRuleSwap105:
-		commandAndRuleEngine.executeTCRuleSwap105(elementUuid, immatureElementToSwapIn)
+		commandAndRuleEngine.executeTCRuleSwap105(testCaseUuid, elementUuid, immatureElementToSwapIn)
 
 	case TCRuleSwap106:
-		err = commandAndRuleEngine.executeTCRuleSwap106(elementUuid, immatureElementToSwapIn)
+		err = commandAndRuleEngine.executeTCRuleSwap106(testCaseUuid, elementUuid, immatureElementToSwapIn)
 
 	case TCRuleSwap107:
-		err = commandAndRuleEngine.executeTCRuleSwap107(elementUuid, immatureElementToSwapIn)
+		err = commandAndRuleEngine.executeTCRuleSwap107(testCaseUuid, elementUuid, immatureElementToSwapIn)
 
 	case TCRuleSwap108:
-		err = commandAndRuleEngine.executeTCRuleSwap108(elementUuid, immatureElementToSwapIn)
+		err = commandAndRuleEngine.executeTCRuleSwap108(testCaseUuid, elementUuid, immatureElementToSwapIn)
 
 	default:
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{

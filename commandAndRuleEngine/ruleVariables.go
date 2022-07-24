@@ -9,7 +9,7 @@ import (
 type commandAndRuleEngineObjectStruct struct {
 	logger            *logrus.Logger
 	availableBondsMap map[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage
-	testcaseModel     *testCaseModel.TestCaseModelStruct
+	testcases         *testCaseModel.TestCaseModelsStruct
 }
 
 type matureElementStruct struct {

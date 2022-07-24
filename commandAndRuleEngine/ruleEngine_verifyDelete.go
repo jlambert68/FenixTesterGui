@@ -26,10 +26,17 @@ import (
 //	TICx(X)		False				TCRuleDeletion014
 
 // Verify the simple rules if a component can be deleted or not
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedSimpleRules(elementUuid string) (canBeDeleted bool, matchedRule string, err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedSimpleRules(testCaseUuid string, elementUuid string) (canBeDeleted bool, matchedRule string, err error) {
+
+	// Get current TestCase
+	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	if existsInMap == false {
+		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
+		return false, "", err
+	}
 
 	// Retrieve component to be verified for deletion
-	element, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[elementUuid]
+	element, existInMap := currentTestCase.TestCaseModelMap[elementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":          "490b9af6-883f-45e9-ac46-a85706680063",
@@ -157,7 +164,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 // n=TI or TIC(X)			X-B12x-n-B12x-X					X-B12x-X					TCRuleDeletion115
 // n=TI or TIC(X)			X-B12-n-B12x-X					X-B12x-X					TCRuleDeletion116
 // n=TI or TIC(X)			X-B12x-n-B12-X					X-B12x-X					TCRuleDeletion117
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedWithComplexRules(uuid string) (matchedRule string, err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedWithComplexRules(testCaseUuid string, uuidToDelete string) (matchedRule string, err error) {
 
 	var ruleName string
 	var ruleCanBeProcessed bool
@@ -165,9 +172,16 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 	ruleName = ""
 	ruleCanBeProcessed = false
 
+	// Get current TestCase
+	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	if existsInMap == false {
+		err = errors.New("testcase with uuidToDelete '" + testCaseUuid + "' doesn't exist in map with all testcases")
+		return "", err
+	}
+
 	// Extract data for Previous Elementfunc (commandAndRuleEngine *commandAndRuleEngineObjectStruct)
-	currentElementUuid := uuid
-	currentElement, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[currentElementUuid]
+	currentElementUuid := uuidToDelete
+	currentElement, existInMap := currentTestCase.TestCaseModelMap[currentElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":                 "8c69112a-31ea-4606-89a5-54b80789e691",
@@ -181,8 +195,8 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 	currentElementType := currentElement.TestCaseModelElementType
 
 	// Extract data for Previous Element
-	previousElementUuid := commandAndRuleEngine.testcaseModel.TestCaseModelMap[currentElementUuid].PreviousElementUuid
-	previousElement, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[previousElementUuid]
+	previousElementUuid := currentTestCase.TestCaseModelMap[currentElementUuid].PreviousElementUuid
+	previousElement, existInMap := currentTestCase.TestCaseModelMap[previousElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":                  "d801356c-5ab6-48d7-bcd5-73d820b86d1e",
@@ -196,8 +210,8 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 	previousElementType := previousElement.TestCaseModelElementType
 
 	// Extract data for Next Element
-	nextElementUuid := commandAndRuleEngine.testcaseModel.TestCaseModelMap[currentElementUuid].NextElementUuid
-	nextElement, existInMap := commandAndRuleEngine.testcaseModel.TestCaseModelMap[nextElementUuid]
+	nextElementUuid := currentTestCase.TestCaseModelMap[currentElementUuid].NextElementUuid
+	nextElement, existInMap := currentTestCase.TestCaseModelMap[nextElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":              "6c8c7382-48c7-4041-9f19-0c9b11298bbf",

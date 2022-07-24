@@ -98,6 +98,11 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	// Add updated parent-element back into TestCaseModelMap
 	currentTestCase.TestCaseModelMap[parentElementUuid] = tempParentElement
 
+	// If there are no errors then save the TestCase back into map of all TestCases
+	if err == nil {
+		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+	}
+
 	return err
 
 }
@@ -193,6 +198,11 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 	// Add updated parent-element back into TestCaseModelMap
 	currentTestCase.TestCaseModelMap[parentElementUuid] = tempParentElement
+
+	// If there are no errors then save the TestCase back into map of all TestCases
+	if err == nil {
+		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+	}
 
 	return err
 
@@ -290,6 +300,11 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	// Add updated parent-element back into TestCaseModelMap
 	currentTestCase.TestCaseModelMap[parentElementUuid] = tempParentElement
 
+	// If there are no errors then save the TestCase back into map of all TestCases
+	if err == nil {
+		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+	}
+
 	return err
 
 }
@@ -386,6 +401,11 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	// Add updated parent-element back into TestCaseModelMap
 	currentTestCase.TestCaseModelMap[parentElementUuid] = tempParentElement
 
+	// If there are no errors then save the TestCase back into map of all TestCases
+	if err == nil {
+		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+	}
+
 	return err
 
 }
@@ -481,6 +501,11 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 	// Add updated parent-element back into TestCaseModelMap
 	currentTestCase.TestCaseModelMap[parentElementUuid] = tempParentElement
+
+	// If there are no errors then save the TestCase back into map of all TestCases
+	if err == nil {
+		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+	}
 
 	return err
 
@@ -629,6 +654,11 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 		return err
 	}
 
+	// If there are no errors then save the TestCase back into map of all TestCases
+	if err == nil {
+		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+	}
+
 	return err
 
 }
@@ -774,6 +804,11 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 		err = errors.New("something went wrong when deleting children, in 'TestCaseModelMap', using recursive calls")
 
 		return err
+	}
+
+	// If there are no errors then save the TestCase back into map of all TestCases
+	if err == nil {
+		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
 	}
 
 	return err
@@ -957,6 +992,11 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 		err = errors.New("something went wrong when deleting children, in 'TestCaseModelMap', using recursive calls")
 
 		return err
+	}
+
+	// If there are no errors then save the TestCase back into map of all TestCases
+	if err == nil {
+		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
 	}
 
 	return err

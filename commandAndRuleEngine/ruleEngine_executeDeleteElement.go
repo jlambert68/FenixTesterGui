@@ -58,7 +58,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	// Create the structure after Delete
 
 	// Create new B0-bond element
-	newB0BondElement := commandAndRuleEngine.createNewBondB0Element(parentElementUuid)
+	newB0BondElement := commandAndRuleEngine.createNewBondB0Element()
 
 	// Add New Elements to Map
 	currentTestCase.TestCaseModelMap[newB0BondElement.MatureElementUuid] = newB0BondElement

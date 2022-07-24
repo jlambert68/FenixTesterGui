@@ -42,15 +42,10 @@ import (
 */
 
 // Create a new B0-bond to be used in the TestCase-model
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB0Element(parentElementUuid string) (newBondB0Element fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB0Element() (newBondB0Element fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
-
-	// If there is no parent element then use 'matureElementUuid'
-	if parentElementUuid == "" {
-		parentElementUuid = matureElementUuid
-	}
 
 	// Create new Bond element
 	newBondB0Element = fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
@@ -60,7 +55,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB0Ele
 		PreviousElementUuid:      matureElementUuid,
 		NextElementUuid:          matureElementUuid,
 		FirstChildElementUuid:    matureElementUuid,
-		ParentElementUuid:        parentElementUuid,
+		ParentElementUuid:        matureElementUuid,
 		TestCaseModelElementType: fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND,
 	}
 

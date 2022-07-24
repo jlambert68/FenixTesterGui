@@ -7,7 +7,7 @@ import (
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 )
 
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_NewTestCaseModel() (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_NewTestCaseModel() (testCaseUuid string, err error) {
 
 	// Create new B0-Bind
 	b0Bond := commandAndRuleEngine.createNewBondB0Element()
@@ -29,11 +29,11 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 	newTestCaseModel.FirstElementUuid = b0Bond.MatureElementUuid
 
 	// Generate new TestCase-UUID
-	testCaseUuid := uuidGenerator.New().String()
+	testCaseUuid = uuidGenerator.New().String()
 
 	// Add the TestCaseModel into map of all TestCaseModels
 	commandAndRuleEngine.testcases.TestCases[testCaseUuid] = newTestCaseModel
 
-	return nil
+	return testCaseUuid, nil
 
 }

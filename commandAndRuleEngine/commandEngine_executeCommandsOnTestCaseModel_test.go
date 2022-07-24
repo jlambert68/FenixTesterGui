@@ -46,9 +46,39 @@ func TestNewTestCaseModel(t *testing.T) {
 	commandAndRuleEngine.availableBondsMap = tempAvailableBondsMap
 
 	// Execute command
-	err := commandAndRuleEngine.executeCommandOnTestCaseModel_NewTestCaseModel()
+	testCaseUuid, err := commandAndRuleEngine.executeCommandOnTestCaseModel_NewTestCaseModel()
 
 	// Validate that there were no errors
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
+
+	// Extract TestCase
+	testCase := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+
+	// Validate the result of the NewTestCaseModel-command, 'B0'
+	// 1) Validate B0 (1)
+	testCaseModelElementUuid_1 := testCase.FirstElementUuid
+	testCaseModelElement_1 := testCase.TestCaseModelMap[testCaseModelElementUuid_1]
+
+	correctElement := testCaseModelElement_1.MatureElementUuid == testCaseModelElement_1.ParentElementUuid &&
+		testCaseModelElement_1.MatureElementUuid == testCaseModelElement_1.PreviousElementUuid &&
+		testCaseModelElement_1.MatureElementUuid == testCaseModelElement_1.FirstChildElementUuid &&
+		testCaseModelElement_1.MatureElementUuid == testCaseModelElement_1.NextElementUuid &&
+		testCaseModelElement_1.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND
+
+	assert.Equal(t, "true", fmt.Sprint(correctElement))
+
+	// Validate that there are no zombie elements in TestCaseModel
+	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
+
+	assert.Equal(t, "<nil>", fmt.Sprint(err))
+
+	// Validate Textual TestCase Presentation
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+
+	textualTestCaseRepresentationSimple := "[B0]"
+	textualTestCaseRepresentationComplex := "[B0]"
+
+	assert.Equal(t, textualTestCaseRepresentationSimple, textualTestCaseSimple)
+	assert.Equal(t, textualTestCaseRepresentationComplex, textualTestCaseComplex)
 
 }

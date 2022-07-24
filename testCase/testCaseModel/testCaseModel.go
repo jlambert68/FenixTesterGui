@@ -6,56 +6,67 @@ import (
 	"strings"
 )
 
-func (testCaseModel *TestCaseModelStruct) CreateTextualTestCase() (textualTestCase string, err error) {
+func (testCaseModel *TestCaseModelStruct) CreateTextualTestCase() (textualTestCaseSimple string, textualTestCaseComplex string, err error) {
 
 	// Create slice with all elementTypes in presentation order
 	testCaseModelElements, err := testCaseModel.recursiveTextualTestCaseModelExtractor(testCaseModel.FirstElementUuid, []fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum{})
 
 	// Something wrong happen
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	// If there are no elements in TestCaseModel then return empty Textual description
 	if len(testCaseModelElements) == 0 {
-		return "[]", nil
+		return "[]", "[]", nil
 	}
 
 	// Loop all elements and convert element type into presentation representation
 	for _, testCaseModelElementType := range testCaseModelElements {
-		presentationName := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_name[int32(testCaseModelElementType)]
 
-		separatorIndex := strings.Index(presentationName, "_")
-		presentationName = presentationName[:separatorIndex]
+		// Simple presentation style, like 'B10x' for "B10oxo"
+		presentationNameSimple := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementPresentationNameEnum_name[int32(testCaseModelElementType)]
+		separatorIndexSimple := strings.Index(presentationNameSimple, "_")
+		presentationNameSimple = presentationNameSimple[:separatorIndexSimple]
+
+		// Complex presentation style, like 'B10oxo' for "B10oxo"
+		presentationNameComplex := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_name[int32(testCaseModelElementType)]
+		separatorIndexComplex := strings.Index(presentationNameComplex, "_")
+		presentationNameComplex = presentationNameComplex[:separatorIndexComplex]
 
 		switch testCaseModelElementType {
 
 		// First element in TC
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1f_BOND_NONE_SWAPPABLE:
 
-			presentationName = "[" + presentationName
+			presentationNameSimple = "[" + presentationNameSimple
+			presentationNameComplex = "[" + presentationNameComplex
 
 			// Last element in TC
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1l_BOND_NONE_SWAPPABLE:
 
-			presentationName = "-" + presentationName + "]"
+			presentationNameSimple = "-" + presentationNameSimple + "]"
+			presentationNameComplex = "-" + presentationNameComplex + "]"
 
 			// The only element in TC
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND:
 
-			presentationName = "[" + presentationName + "]"
+			presentationNameSimple = "[" + presentationNameSimple + "]"
+			presentationNameComplex = "[" + presentationNameComplex + "]"
 
 		// First element child in TIC(x)
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND,
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE:
 
-			presentationName = "(" + presentationName
+			presentationNameSimple = "(" + presentationNameSimple
+			presentationNameComplex = "(" + presentationNameComplex
 
 		// Last element child in TIC(x)
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND,
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE:
 
-			presentationName = "-" + presentationName + ")"
+			presentationNameSimple = "-" + presentationNameSimple + ")"
+			presentationNameComplex = "-" + presentationNameComplex + ")"
 
 			// The only element in TIC
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND,
@@ -63,7 +74,8 @@ func (testCaseModel *TestCaseModelStruct) CreateTextualTestCase() (textualTestCa
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND,
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND:
 
-			presentationName = "(" + presentationName + ")"
+			presentationNameSimple = "(" + presentationNameSimple + ")"
+			presentationNameComplex = "(" + presentationNameComplex + ")"
 
 			// Element surrounded with other elements
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION,
@@ -73,22 +85,24 @@ func (testCaseModel *TestCaseModelStruct) CreateTextualTestCase() (textualTestCa
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND,
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE:
 
-			presentationName = "-" + presentationName
+			presentationNameSimple = "-" + presentationNameSimple
+			presentationNameComplex = "-" + presentationNameComplex
 
 			// No match in element
 		default:
 
 			err = errors.New("no match in element type for: " + testCaseModelElementType.String())
-			return "", err
+			return "", "", err
 
 		}
 
 		// Add presentation name to Textual TestCase
-		textualTestCase = textualTestCase + presentationName
+		textualTestCaseSimple = textualTestCaseSimple + presentationNameSimple
+		textualTestCaseComplex = textualTestCaseComplex + presentationNameComplex
 
 	}
 
-	return textualTestCase, nil
+	return textualTestCaseSimple, textualTestCaseComplex, err
 }
 
 // Verify all children, in TestCaseElement-model and remove the found element from 'allUuidKeys'

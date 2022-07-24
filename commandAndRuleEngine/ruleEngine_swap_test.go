@@ -256,11 +256,13 @@ func TestTCRuleSwap101(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCase, err := myTestCaseModel.CreateTextualTestCase()
+	textualTestCaseSimple, textualTestCaseComplex, err := myTestCaseModel.CreateTextualTestCase()
 
-	textualTestCaseRepresentation := "[B1f-TIC(B10)-B1l]"
+	textualTestCaseRepresentationSimple := "[B1-TIC(B10)-B1]"
+	textualTestCaseRepresentationComplex := "[B1f-TIC(B10)-B1l]"
 
-	assert.Equal(t, textualTestCaseRepresentation, textualTestCase)
+	assert.Equal(t, textualTestCaseRepresentationSimple, textualTestCaseSimple)
+	assert.Equal(t, textualTestCaseRepresentationComplex, textualTestCaseComplex)
 
 }
 
@@ -511,11 +513,13 @@ func TestTCRuleSwap102(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCase, err := myTestCaseModel.CreateTextualTestCase()
+	textualTestCaseSimple, textualTestCaseComplex, err := myTestCaseModel.CreateTextualTestCase()
 
-	textualTestCaseRepresentation := "[B1f-TIC(B11f-TIC(B10)-B11l)-B1l]"
+	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B11)-B1]"
+	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B11l)-B1l]"
 
-	assert.Equal(t, textualTestCaseRepresentation, textualTestCase)
+	assert.Equal(t, textualTestCaseRepresentationSimple, textualTestCaseSimple)
+	assert.Equal(t, textualTestCaseRepresentationComplex, textualTestCaseComplex)
 
 }
 
@@ -822,11 +826,13 @@ func TestTCRuleSwap103(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCase, err := myTestCaseModel.CreateTextualTestCase()
+	textualTestCaseSimple, textualTestCaseComplex, err := myTestCaseModel.CreateTextualTestCase()
 
-	textualTestCaseRepresentation := "[B1f-TIC(B11f-TIC(B10)-B12-TIC(B10)-B11l)-B1l]"
+	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B12-TIC(B10)-B11)-B1]"
+	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B12-TIC(B10)-B11l)-B1l]"
 
-	assert.Equal(t, textualTestCaseRepresentation, textualTestCase)
+	assert.Equal(t, textualTestCaseRepresentationSimple, textualTestCaseSimple)
+	assert.Equal(t, textualTestCaseRepresentationComplex, textualTestCaseComplex)
 
 }
 
@@ -1133,11 +1139,13 @@ func TestTCRuleSwap104(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCase, err := myTestCaseModel.CreateTextualTestCase()
+	textualTestCaseSimple, textualTestCaseComplex, err := myTestCaseModel.CreateTextualTestCase()
 
-	textualTestCaseRepresentation := "[B1f-TIC(B11f-TIC(B10)-B12-TIC(B10)-B11l)-B1l]"
+	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B12-TIC(B10)-B11)-B1]"
+	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B12-TIC(B10)-B11l)-B1l]"
 
-	assert.Equal(t, textualTestCaseRepresentation, textualTestCase)
+	assert.Equal(t, textualTestCaseRepresentationSimple, textualTestCaseSimple)
+	assert.Equal(t, textualTestCaseRepresentationComplex, textualTestCaseComplex)
 
 }
 
@@ -1465,12 +1473,13 @@ func TestTCRuleSwap105(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCase, err := myTestCaseModel.CreateTextualTestCase()
+	textualTestCaseSimple, textualTestCaseComplex, err := myTestCaseModel.CreateTextualTestCase()
 
-	textualTestCaseRepresentation := "[B1f-TIC(B11f-TIC(B10)-B12-TI-B12-TI-B11l)-B1l]"
+	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B12-TI-B12-TI-B11)-B1]"
+	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B12-TI-B12-TI-B11l)-B1l]"
 
-	assert.Equal(t, textualTestCaseRepresentation, textualTestCase)
-
+	assert.Equal(t, textualTestCaseRepresentationSimple, textualTestCaseSimple)
+	assert.Equal(t, textualTestCaseRepresentationComplex, textualTestCaseComplex)
 }
 
 // TCRuleSwap106
@@ -1720,11 +1729,13 @@ func TestTCRuleSwap106(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCase, err := myTestCaseModel.CreateTextualTestCase()
+	textualTestCaseSimple, textualTestCaseComplex, err := myTestCaseModel.CreateTextualTestCase()
 
-	textualTestCaseRepresentation := "[B1f-TIC(B11fx-TIC(B10)-B11lx)-B1l]"
+	textualTestCaseRepresentationSimple := "[B1-TIC(B11x-TIC(B10)-B11x)-B1]"
+	textualTestCaseRepresentationComplex := "[B1f-TIC(B11fx-TIC(B10)-B11lx)-B1l]"
 
-	assert.Equal(t, textualTestCaseRepresentation, textualTestCase)
+	assert.Equal(t, textualTestCaseRepresentationSimple, textualTestCaseSimple)
+	assert.Equal(t, textualTestCaseRepresentationComplex, textualTestCaseComplex)
 
 }
 
@@ -1975,11 +1986,13 @@ func TestTCRuleSwap107(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCase, err := myTestCaseModel.CreateTextualTestCase()
+	textualTestCaseSimple, textualTestCaseComplex, err := myTestCaseModel.CreateTextualTestCase()
 
-	textualTestCaseRepresentation := "[B1f-TIC(B11fx-TIC(B10)-B11l)-B1l]"
+	textualTestCaseRepresentationSimple := "[B1-TIC(B11x-TIC(B10)-B11)-B1]"
+	textualTestCaseRepresentationComplex := "[B1f-TIC(B11fx-TIC(B10)-B11l)-B1l]"
 
-	assert.Equal(t, textualTestCaseRepresentation, textualTestCase)
+	assert.Equal(t, textualTestCaseRepresentationSimple, textualTestCaseSimple)
+	assert.Equal(t, textualTestCaseRepresentationComplex, textualTestCaseComplex)
 
 }
 
@@ -2230,10 +2243,12 @@ func TestTCRuleSwap108(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCase, err := myTestCaseModel.CreateTextualTestCase()
+	textualTestCaseSimple, textualTestCaseComplex, err := myTestCaseModel.CreateTextualTestCase()
 
-	textualTestCaseRepresentation := "[B1f-TIC(B11f-TIC(B10)-B11lx)-B1l]"
+	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B11x)-B1]"
+	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B11lx)-B1l]"
 
-	assert.Equal(t, textualTestCaseRepresentation, textualTestCase)
+	assert.Equal(t, textualTestCaseRepresentationSimple, textualTestCaseSimple)
+	assert.Equal(t, textualTestCaseRepresentationComplex, textualTestCaseComplex)
 
 }

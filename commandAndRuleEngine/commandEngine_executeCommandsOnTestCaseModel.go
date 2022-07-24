@@ -7,6 +7,8 @@ import (
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 )
 
+// TestCaseCommandTypeEnum_NEW_TESTCASE
+// Used for creating a new TestCase-Model to be used within a new TestCase
 func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_NewTestCaseModel() (testCaseUuid string, err error) {
 
 	// Create new B0-Bind
@@ -36,4 +38,46 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 
 	return testCaseUuid, nil
 
+}
+
+// TestCaseCommandTypeEnum_REMOVE_ELEMENT
+// Used for Deleting an element from a TestCaseModel that is used within a TestCase
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel() (err error) {
+
+	return err
+}
+
+// TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_NEW_ELEMENT
+// Used for Swapping out an element, and in an element structure, from a TestCaseModel that is used within a TestCase
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapOutElementFromTestCaseModel() (err error) {
+
+	return err
+}
+
+// TestCaseCommandTypeEnum_COPY_ELEMENT
+// Used for copying an element  in a TestCaseModel that is used within a TestCase
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_CopyElementInTestCaseModel() (err error) {
+
+	return err
+}
+
+// TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_COPY_BUFFER_ELEMENT
+// Used for Swapping in an element from Copy Buffer in a TestCaseModel that is used within a TestCase
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapInElementFromCopyBufferInTestCaseModel() (err error) {
+
+	return err
+}
+
+// TestCaseCommandTypeEnum_CUT_ELEMENT
+// Used for cutting an element in a TestCaseModel that is used within a TestCase
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_CutElementInTestCaseModel() (err error) {
+
+	return err
+}
+
+// TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_CUT_BUFFER_ELEMENT
+// Used for Swapping in an element from Cut opy Buffer in a TestCaseModel that is used within a TestCase
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapInElementFromCutBufferInTestCaseModel() (err error) {
+
+	return err
 }

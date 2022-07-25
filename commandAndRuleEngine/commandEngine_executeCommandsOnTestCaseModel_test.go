@@ -248,7 +248,7 @@ func TestRemoveElementFromTestCaseModel(t *testing.T) {
 	commandTimeStampSecondsAsString := strconv.Itoa(int(commandTimeStamp.Seconds))
 	commandTimeStampnanosAsString := strconv.Itoa(int(commandTimeStamp.Nanos))
 
-	commandSliceToCompareWith := fmt.Sprintf("[{{{} [] [] <nil>} 0 [] REMOVE_ELEMENT REMOVE_ELEMENT %s N/A  seconds:%s  nanos:%s}]", uuidToBeDeleted, commandTimeStampSecondsAsString, commandTimeStampnanosAsString)
+	commandSliceToCompareWith := fmt.Sprintf("[{{{} [] [] <nil>} 0 [] REMOVE_ELEMENT REMOVE_ELEMENT %s N/A  seconds:%s nanos:%s}]", uuidToBeDeleted, commandTimeStampSecondsAsString, commandTimeStampnanosAsString)
 
 	assert.Equal(t, commandSliceToCompareWith, fmt.Sprint(testCase.CommandStack))
 

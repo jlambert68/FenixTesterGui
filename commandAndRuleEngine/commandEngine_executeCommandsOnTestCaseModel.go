@@ -59,10 +59,10 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 
 // TestCaseCommandTypeEnum_REMOVE_ELEMENT
 // Used for Deleting an element from a TestCaseModel that is used within a TestCase
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(testCaseId string, elementId string) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(testCaseUuid string, elementId string) (err error) {
 
 	// Try to Delete element
-	err = commandAndRuleEngine.executeDeleteElement(testCaseId, elementId)
+	err = commandAndRuleEngine.executeDeleteElement(testCaseUuid, elementId)
 
 	// Exit if the element couldn't be deleted
 	if err != nil {
@@ -80,13 +80,16 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 	}
 
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseId]
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases", testCaseId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases", testCaseUuid))
 	}
 
 	// Add command to command stack
 	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
+
+	// Add the TestCaseModel back into map of all TestCaseModels
+	commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCaseModel
 
 	return err
 }

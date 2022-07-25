@@ -13,7 +13,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfElementCan
 
 	// Only check complex rules if simple rules was OK for deletion
 	if !(canBeDeleted == true &&
-		err != nil) {
+		err == nil) {
 		return canBeDeleted, matchedSimpldRule, "", err
 	}
 

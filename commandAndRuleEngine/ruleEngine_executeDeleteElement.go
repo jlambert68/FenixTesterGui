@@ -52,9 +52,6 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	// Extract data for Next Element
 	nextElementUuid := currentElement.NextElementUuid
 
-	// Extract dta for Parent Element
-	parentElementUuid := currentElement.ParentElementUuid
-
 	// Create the structure after Delete
 
 	// Create new B0-bond element
@@ -66,6 +63,13 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	// Remove Old Elements from Map
 	delete(currentTestCase.TestCaseModelMap, previousElementUuid)
 	delete(currentTestCase.TestCaseModelMap, nextElementUuid)
+
+	// Remove references in currentElement to already removed Previous and Next Elements
+	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
+	currentElement.NextElementUuid = currentElement.MatureElementUuid
+
+	// Save updated currentElement back into TestCase-map
+	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
 	err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElementUuid)
@@ -80,23 +84,8 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 		return err
 	}
 
-	// Update Reference in parent TIC
-	tempParentElement, existInMap := currentTestCase.TestCaseModelMap[parentElementUuid]
-	if existInMap == false {
-		commandAndRuleEngine.logger.WithFields(logrus.Fields{
-			"id":                "5d0bca9d-86f7-448a-82d7-e0fc1a02a966",
-			"parentElementUuid": parentElementUuid,
-		}).Error(parentElementUuid + " could not be found in in map 'TestCaseModelMap'")
-
-		err = errors.New(parentElementUuid + " could not be found in in map 'TestCaseModelMap'")
-
-		return err
-	}
-
-	tempParentElement.FirstChildElementUuid = newB0BondElement.MatureElementUuid
-
-	// Add updated parent-element back into TestCaseModelMap
-	currentTestCase.TestCaseModelMap[parentElementUuid] = tempParentElement
+	// Update first element of this TestCase
+	currentTestCase.FirstElementUuid = newB0BondElement.MatureElementUuid
 
 	// If there are no errors then save the TestCase back into map of all TestCases
 	if err == nil {

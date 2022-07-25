@@ -359,7 +359,7 @@ func TestTCRuleDeletion102(t *testing.T) {
 	testCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
-	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B1l'
+	// Validate the result of the swap, 'B1f-TIC(B10)-B1l'
 	// 1) Validate B1f (1)
 	testCaseModelElementUuid_1 := testCase.FirstElementUuid
 	testCaseModelElement_1 := testCase.TestCaseModelMap[testCaseModelElementUuid_1]
@@ -403,29 +403,8 @@ func TestTCRuleDeletion102(t *testing.T) {
 		testCaseModelElement_2_1.ParentElementUuid == testCaseModelElement_2.MatureElementUuid &&
 		testCaseModelElement_2_1.MatureElementUuid == testCaseModelElement_2_1.PreviousElementUuid &&
 		testCaseModelElement_2_1.MatureElementUuid == testCaseModelElement_2_1.FirstChildElementUuid &&
-		testCaseModelElement_2_1.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND
-
-	assert.Equal(t, "true", fmt.Sprint(correctElement))
-
-	// 5) Validate TIC (2.2)
-	testCaseModelElementUuid_2_2 := testCaseModelElement_2_1.NextElementUuid
-	testCaseModelElement_2_2 := testCase.TestCaseModelMap[testCaseModelElementUuid_2_2]
-
-	correctElement = testCaseModelElement_2.MatureElementUuid == testCaseModelElement_2_2.ParentElementUuid &&
-		testCaseModelElement_2_2.PreviousElementUuid == testCaseModelElement_2_1.MatureElementUuid &&
-		testCaseModelElement_2_1.NextElementUuid == testCaseModelElement_2_2.MatureElementUuid &&
-		testCaseModelElement_2_2.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER
-
-	assert.Equal(t, "true", fmt.Sprint(correctElement))
-
-	// 6) Validate B12 (2.3)
-	testCaseModelElementUuid_2_3 := testCaseModelElement_2_2.NextElementUuid
-	testCaseModelElement_2_3 := testCase.TestCaseModelMap[testCaseModelElementUuid_2_3]
-
-	correctElement = testCaseModelElement_2.MatureElementUuid == testCaseModelElement_2_3.ParentElementUuid &&
-		testCaseModelElement_2_3.PreviousElementUuid == testCaseModelElement_2_2.MatureElementUuid &&
-		testCaseModelElement_2_2.NextElementUuid == testCaseModelElement_2_3.MatureElementUuid &&
-		testCaseModelElement_2_3.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND
+		testCaseModelElement_2_1.MatureElementUuid == testCaseModelElement_2_1.NextElementUuid &&
+		testCaseModelElement_2_1.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND
 
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
@@ -437,8 +416,8 @@ func TestTCRuleDeletion102(t *testing.T) {
 	// Validate Textual TestCase Presentation
 	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
 
-	textualTestCaseRepresentationSimple := "[B0]"
-	textualTestCaseRepresentationComplex := "[B0]"
+	textualTestCaseRepresentationSimple := "[B1-TIC(B10)-B1]"
+	textualTestCaseRepresentationComplex := "[B1f-TIC(B10)-B1l]"
 
 	assert.Equal(t, textualTestCaseRepresentationSimple, textualTestCaseSimple)
 	assert.Equal(t, textualTestCaseRepresentationComplex, textualTestCaseComplex)

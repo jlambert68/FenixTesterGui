@@ -157,6 +157,13 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	delete(currentTestCase.TestCaseModelMap, previousElementUuid)
 	delete(currentTestCase.TestCaseModelMap, nextElementUuid)
 
+	// Remove references in currentElement to already removed Previous and Next Elements
+	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
+	currentElement.NextElementUuid = currentElement.MatureElementUuid
+
+	// Save updated currentElement back into TestCase-map
+	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
+
 	// Remove current element and children, if they exist, from map
 	err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElementUuid)
 	if err != nil {
@@ -257,6 +264,13 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	// Remove Old Elements from Map
 	delete(currentTestCase.TestCaseModelMap, previousElementUuid)
 	delete(currentTestCase.TestCaseModelMap, nextElementUuid)
+
+	// Remove references in currentElement to already removed Previous and Next Elements
+	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
+	currentElement.NextElementUuid = currentElement.MatureElementUuid
+
+	// Save updated currentElement back into TestCase-map
+	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
 	err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElementUuid)
@@ -359,6 +373,13 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	delete(currentTestCase.TestCaseModelMap, previousElementUuid)
 	delete(currentTestCase.TestCaseModelMap, nextElementUuid)
 
+	// Remove references in currentElement to already removed Previous and Next Elements
+	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
+	currentElement.NextElementUuid = currentElement.MatureElementUuid
+
+	// Save updated currentElement back into TestCase-map
+	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
+
 	// Remove current element and children, if they exist, from map
 	err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElementUuid)
 	if err != nil {
@@ -459,6 +480,13 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	// Remove Old Elements from Map
 	delete(currentTestCase.TestCaseModelMap, previousElementUuid)
 	delete(currentTestCase.TestCaseModelMap, nextElementUuid)
+
+	// Remove references in currentElement to already removed Previous and Next Elements
+	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
+	currentElement.NextElementUuid = currentElement.MatureElementUuid
+
+	// Save updated currentElement back into TestCase-map
+	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
 	err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElementUuid)
@@ -630,6 +658,12 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	// Remove Old Elements from Map
 	delete(currentTestCase.TestCaseModelMap, nextElementUuid)
 
+	// Remove references in currentElement to already removed Next Elements
+	currentElement.NextElementUuid = currentElement.MatureElementUuid
+
+	// Save updated currentElement back into TestCase-map
+	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
+
 	// Remove current element and children, if they exist, from map
 	err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElementUuid)
 	if err != nil {
@@ -781,6 +815,12 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 	// Remove Old Elements from Map
 	delete(currentTestCase.TestCaseModelMap, previousElementUuid)
+
+	// Remove references in currentElement to already removed Next Elements
+	currentElement.NextElementUuid = currentElement.MatureElementUuid
+
+	// Save updated currentElement back into TestCase-map
+	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
 	err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElementUuid)

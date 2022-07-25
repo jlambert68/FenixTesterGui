@@ -2,6 +2,8 @@ package commandAndRuleEngine
 
 import (
 	"FenixTesterGui/testCase/testCaseModel"
+	"errors"
+	"fmt"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	//"errors"
@@ -57,7 +59,34 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 
 // TestCaseCommandTypeEnum_REMOVE_ELEMENT
 // Used for Deleting an element from a TestCaseModel that is used within a TestCase
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel() (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(testCaseId string, elementId string) (err error) {
+
+	// Try to Delete element
+	err = commandAndRuleEngine.executeDeleteElement(testCaseId, elementId)
+
+	// Exit if the element couldn't be deleted
+	if err != nil {
+		return err
+	}
+
+	// Create a new Command
+	newCommandEntry := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage_TestCaseModelCommandMessage{
+		TestCaseCommandType:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_REMOVE_ELEMENT,
+		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_REMOVE_ELEMENT)],
+		FirstParameter:           elementId,
+		SecondParameter:          testCaseModel.NotApplicable,
+		UserId:                   commandAndRuleEngine.testcases.CurrentUser,
+		CommandExecutedTimeStamp: timestamppb.Now(),
+	}
+
+	// Extract the TestCaseModel
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseId]
+	if existsInMap == false {
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases", testCaseId))
+	}
+
+	// Add command to command stack
+	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
 
 	return err
 }

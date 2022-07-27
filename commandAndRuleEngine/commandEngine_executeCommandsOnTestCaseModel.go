@@ -94,7 +94,8 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 	// Extract the TestCaseModel
 	currentTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases", testCaseUuid))
+		errorId := "9e42e135-e5c3-479c-8a09-0e33213a68d1"
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
 	}
 
 	// Add command to command stack

@@ -1,6 +1,7 @@
 package commandAndRuleEngine
 
 import (
+	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
@@ -72,7 +73,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
-	err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElementUuid)
+	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
 	if err != nil {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":  "99abee1e-3078-42e7-a08a-a719e0a4ed8d",
@@ -165,7 +166,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
-	err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElementUuid)
+	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
 	if err != nil {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":  "43f9cfd5-5cfe-4ec0-b9e9-20271ab868e4",
@@ -273,7 +274,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
-	err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElementUuid)
+	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
 	if err != nil {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":  "f2683652-02ef-4260-8cb3-15cf627ddfa9",
@@ -381,7 +382,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
-	err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElementUuid)
+	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
 	if err != nil {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":  "b464d0dc-86b6-405b-802d-b538a6c2c840",
@@ -489,7 +490,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
-	err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElementUuid)
+	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
 	if err != nil {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":  "ccda61cf-5c53-4248-aaa2-9be53bd7f46b",
@@ -659,13 +660,16 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	delete(currentTestCase.TestCaseModelMap, nextElementUuid)
 
 	// Remove references in currentElement to already removed Next Elements
+	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
 	currentElement.NextElementUuid = currentElement.MatureElementUuid
 
-	// Save updated currentElement back into TestCase-map
+	// Save updated back into TestCase-map
+	currentTestCase.TestCaseModelMap[previousElement.MatureElementUuid] = previousElement
+	currentTestCase.TestCaseModelMap[nextNextElement.MatureElementUuid] = nextNextElement
 	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
-	err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElementUuid)
+	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
 	if err != nil {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":  "ccda61cf-5c53-4248-aaa2-9be53bd7f46b",
@@ -819,11 +823,13 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	// Remove references in currentElement to already removed Next Elements
 	currentElement.NextElementUuid = currentElement.MatureElementUuid
 
-	// Save updated currentElement back into TestCase-map
+	// Save updated back into TestCase-map
+	currentTestCase.TestCaseModelMap[previousPreviousElement.MatureElementUuid] = previousPreviousElement
+	currentTestCase.TestCaseModelMap[nextElement.MatureElementUuid] = nextElement
 	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
-	err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElementUuid)
+	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
 	if err != nil {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":  "73d5c570-d845-4685-a9f8-158ef782eee3",
@@ -1007,11 +1013,15 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	nextElement.PreviousElementUuid = previousPreviousElementUuid
 	previousPreviousElement.NextElementUuid = nextElementUuid
 
+	// Save updated back into TestCase-map
+	currentTestCase.TestCaseModelMap[previousPreviousElement.MatureElementUuid] = previousPreviousElement
+	currentTestCase.TestCaseModelMap[nextNextElement.MatureElementUuid] = nextNextElement
+
 	// Remove Old Elements from Map
 	delete(currentTestCase.TestCaseModelMap, elementToRemove.MatureElementUuid)
 
 	// Remove current element and children, if they exist, from map
-	err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElementUuid)
+	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
 	if err != nil {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":  "43492f86-71ee-4a72-bfa4-1a68f84fcbed",
@@ -1033,14 +1043,16 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 }
 
 // Remove all children, in TestCase-model, for specific Element
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveDeleteOfChildElements(testCaseUuid string, elementsUuid string) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveDeleteOfChildElements(currentTestCase *testCaseModel.TestCaseModelStruct, elementsUuid string) (err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
-	if existsInMap == false {
-		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
-		return err
-	}
+	/*
+		currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCase]
+		if existsInMap == false {
+			err = errors.New("testcase with uuid '" + testCase + "' doesn't exist in map with all testcases")
+			return err
+		}
+	*/
 
 	// Extract current element
 	currentElement, existInMap := currentTestCase.TestCaseModelMap[elementsUuid]
@@ -1055,7 +1067,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveDeleteOfC
 
 	// Element has child-element then go that path
 	if currentElement.FirstChildElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElement.FirstChildElementUuid)
+		err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentTestCase, currentElement.FirstChildElementUuid)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -1065,7 +1077,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveDeleteOfC
 
 	// If element has a next-element the go that path
 	if currentElement.NextElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElement.NextElementUuid)
+		err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentTestCase, currentElement.NextElementUuid)
 	}
 
 	// If we got an error back then something wrong happen, so just back out

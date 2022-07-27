@@ -2,6 +2,7 @@ package commandAndRuleEngine
 
 import (
 	"errors"
+	"fmt"
 	"github.com/sirupsen/logrus"
 )
 
@@ -36,7 +37,8 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeDeleteEleme
 
 	// If the component couldn't be deleted then exit with error message
 	if canBeDeleted == false {
-		err = errors.New("element couldn't be deleted due to deletion rule '" + matcheSimpleRule + "' or that complex rules aren't met")
+		errorId := "6319ec76-d471-46dc-841b-16c488c6e728"
+		err = errors.New(fmt.Sprintf("element couldn't be deleted due to deletion rule '%s' or that complex rules aren't met [ErrorID: %s]", matcheSimpleRule, errorId))
 
 		return err
 	}
@@ -108,7 +110,8 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeDeleteEleme
 			"matchedComplexRule": matchedComplexRule,
 		}).Error(" Unknown 'matchedComplexRule' was used when trying to delete")
 
-		err = errors.New("'" + matchedComplexRule + "' is an unknown complex deletion rule")
+		errorId := "b106fc72-50de-40b7-bacc-ae99cf7ca725"
+		err = errors.New(fmt.Sprintf("'%s' is an unknown complex deletion rule [ErrorID: %s]", matchedComplexRule, errorId))
 
 	}
 

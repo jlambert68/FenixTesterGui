@@ -520,7 +520,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveVerifyAll
 
 	// Element has child-element then go that path
 	if currentElement.FirstChildElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElement.FirstChildElementUuid)
+		err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElement.FirstChildElementUuid)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -530,7 +530,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveVerifyAll
 
 	// If element has a next-element the go that path
 	if currentElement.NextElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveDeleteOfChildElements(testCaseUuid, currentElement.NextElementUuid)
+		err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElement.NextElementUuid)
 	}
 
 	// If we got an error back then something wrong happen, so just back out

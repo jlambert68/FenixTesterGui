@@ -663,7 +663,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
 	currentElement.NextElementUuid = currentElement.MatureElementUuid
 
-	// Handle special case for switching 'b11f' into 'b11fx' when there is a 'b12x' that is deleted
+	// Handle special case for switching 'b11f' into 'b11fx' when there is a 'b12x' that is auto-deleted
 	if previousElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND &&
 		nextElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE {
 
@@ -829,6 +829,13 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 	// Remove references in currentElement to already removed Next Elements
 	currentElement.NextElementUuid = currentElement.MatureElementUuid
+
+	// Handle special case for switching 'b11l' into 'b11lx' when there is a 'b12x' that is auto-deleted
+	if previousElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE &&
+		nextElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND {
+
+		nextElement.TestCaseModelElementType = fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE
+	}
 
 	// Save updated back into TestCase-map
 	currentTestCase.TestCaseModelMap[previousPreviousElement.MatureElementUuid] = previousPreviousElement

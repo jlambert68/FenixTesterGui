@@ -7,26 +7,28 @@ import (
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 )
-)
-
 
 func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCopyFullELementStructure(testCaseUuid string, uuidToCopy string) (err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+
 	if existsInMap == false {
-		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
+		errorId := "64bb031b-88c7-4758-aade-7375816ac285"
+		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
+
 		return err
 	}
 
 	currentElement, existInMap := currentTestCase.TestCaseModelMap[uuidToCopy]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
-			"id":           "b69296dd-7b73-46c9-b465-a8fb40a9a592",
+			"id":         "b69296dd-7b73-46c9-b465-a8fb40a9a592",
 			"uuidToCopy": uuidToCopy,
 		}).Error(uuidToCopy + " could not be found in in map 'TestCaseModelMap'")
 
-		err = errors.New(uuidToCopy + " could not be found in in map 'TestCaseModelMap'")
+		errorId := "f4f32c48-a840-4fbc-807d-19bd4d4960d9"
+		err = errors.New(fmt.Sprintf("'%s' could not be found in in currents TestCase-map [ErrorID: %s]", uuidToCopy, errorId))
 
 		return err
 	}
@@ -34,22 +36,20 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCopyFullELe
 	// Extract data for Previous Element
 	currentElementUuid := uuidToCopy
 
-
 	// Remove references in currentElement to Previous- and Next- Elements
 	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
 	currentElement.NextElementUuid = currentElement.MatureElementUuid
-
 
 	// Save updated back into TestCase-map
 	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
 
 	// Set up structure for copied element structure
-	copiedStructure := testCaseModel.MatureElementStruct{
-		FirstElementUuid: currentElementUuid,
-		MatureElementMap: nil,
+	copiedStructure := testCaseModel.ImmatureElementStruct{
+		FirstElementUuid:   currentElementUuid,
+		ImmatureElementMap: nil,
 	}
 	// Initiate map for elements to be copied
-	copiedStructure.MatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage)
+	copiedStructure.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
 
 	// Make the copying of current element and its children, if they exist
 	err = commandAndRuleEngine.recursiveCopyingOfFullElementStructure(&currentTestCase, currentElementUuid, &copiedStructure)
@@ -61,18 +61,22 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCopyFullELe
 		return err
 	}
 
-	// If there are no errors then save the copied Element Structure in Copy-buffer
+	// If there are no errors then save the copied Element Structure in Copy-buffer and then save the Updaed TestCase
 	if err == nil {
-		//commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+		// Save Copy Buffer in TestCase
+		currentTestCase.CopyBuffer = copiedStructure
+
+		// Save TestCase
+		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+
 	}
 
 	return err
 
 }
 
-
 // Copy the full structure of all children, in TestCase-model, for specific Element
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveCopyingOfFullElementStructure(currentTestCase *testCaseModel.TestCaseModelStruct, elementsUuid string, copiedElementStructure *testCaseModel.MatureElementStruct) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveCopyingOfFullElementStructure(currentTestCase *testCaseModel.TestCaseModelStruct, elementsUuid string, copiedElementStructure *testCaseModel.ImmatureElementStruct) (err error) {
 
 	// Extract current element
 	currentElement, existInMap := currentTestCase.TestCaseModelMap[elementsUuid]
@@ -80,13 +84,11 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveCopyingOf
 	// If the element doesn't exit then there is something really wrong
 	if existInMap == false {
 		errorId := "10bf1786-efc0-49f0-8434-232431c6072f"
-		err = errors.New(fmt.Sprintf("'%s' could not be found in in currents TestCase-map [ErrorID: %s]",elementsUuid, errorId))
+		err = errors.New(fmt.Sprintf("'%s' could not be found in in currents TestCase-map [ErrorID: %s]", elementsUuid, errorId))
 
 		return err
 
 	}
-
-
 
 	// Element has child-element then go that path
 	if currentElement.FirstChildElementUuid != elementsUuid {
@@ -109,10 +111,10 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveCopyingOf
 	}
 
 	// Copy the element
-	newCopiedElement := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
+	newCopiedElement := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
 		OriginalElementUuid:      currentElement.OriginalElementUuid,
 		OriginalElementName:      currentElement.OriginalElementName,
-		MatureElementUuid:        currentElement.MatureElementUuid,
+		ImmatureElementUuid:      currentElement.MatureElementUuid,
 		PreviousElementUuid:      currentElement.PreviousElementUuid,
 		NextElementUuid:          currentElement.NextElementUuid,
 		FirstChildElementUuid:    currentElement.FirstChildElementUuid,
@@ -120,8 +122,8 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveCopyingOf
 		TestCaseModelElementType: currentElement.TestCaseModelElementType,
 	}
 
-	// Add the element to the reference map
-	copiedElementStructure.MatureElementMap[currentElement.MatureElementUuid] = newCopiedElement
+	// Add the element to the referenced map
+	copiedElementStructure.ImmatureElementMap[currentElement.MatureElementUuid] = newCopiedElement
 
 	return err
 }

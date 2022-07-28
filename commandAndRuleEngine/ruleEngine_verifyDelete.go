@@ -67,7 +67,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 
 		//	B10 - False - TCRuleDeletion003
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND:
-		matchedRule = "TCRuleDeletion002"
+		matchedRule = "TCRuleDeletion003"
 		canBeDeleted = false
 
 		//	B11			False				TCRuleDeletion004

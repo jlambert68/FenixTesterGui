@@ -19,7 +19,7 @@ type TestCaseModelStruct struct {
 	CommandStack                              []fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage_TestCaseModelCommandMessage
 	LastSavedCommandStack                     lastSavedCommandStack
 	copyBuffer                                fenixGuiTestCaseBuilderServerGrpcApi.ImmatureElementModelMessage
-	cutBuffer                                 matureElementStruct
+	cutBuffer                                 MatureElementStruct
 }
 
 type lastSavedCommandStack struct {
@@ -27,9 +27,9 @@ type lastSavedCommandStack struct {
 	commandStack   []fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage_TestCaseModelCommandMessage
 }
 
-type matureElementStruct struct {
-	firstElementUuid string
-	matureElementMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
+type MatureElementStruct struct {
+	FirstElementUuid string
+	MatureElementMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
 }
 
 const NotApplicable = "N/A"

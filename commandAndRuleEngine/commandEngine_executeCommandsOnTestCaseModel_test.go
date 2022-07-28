@@ -681,5 +681,27 @@ func TestCopyElementCommandOnTestCaseModel(t *testing.T) {
 	assert.Equal(t, currentUser, testCase.CommandStack[0].UserId)
 
 	// Validate Copy Buffer content
+	// 1) Validate TIC(1)
+	copyBufferElementUuid_1 := testCase.CopyBuffer.FirstElementUuid
+	copyBufferElementElement_1 := testCase.CopyBuffer.ImmatureElementMap[copyBufferElementUuid_1]
+
+	correctElement = copyBufferElementElement_1.ImmatureElementUuid == copyBufferElementElement_1.ParentElementUuid &&
+		copyBufferElementElement_1.ImmatureElementUuid == copyBufferElementElement_1.PreviousElementUuid &&
+		copyBufferElementElement_1.ImmatureElementUuid == copyBufferElementElement_1.NextElementUuid &&
+		copyBufferElementElement_1.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER
+
+	assert.Equal(t, "true", fmt.Sprint(correctElement))
+
+	// 2) Validate TIC(1.1)
+	copyBufferElementUuid_1_1 := copyBufferElementElement_1.FirstChildElementUuid
+	copyBufferElementElement_1_1 := testCase.CopyBuffer.ImmatureElementMap[copyBufferElementUuid_1_1]
+
+	correctElement = copyBufferElementElement_1_1.ImmatureElementUuid == copyBufferElementElement_1.FirstChildElementUuid &&
+		copyBufferElementElement_1_1.ImmatureElementUuid == copyBufferElementElement_1_1.PreviousElementUuid &&
+		copyBufferElementElement_1_1.ImmatureElementUuid == copyBufferElementElement_1_1.NextElementUuid &&
+		copyBufferElementElement_1_1.ImmatureElementUuid == copyBufferElementElement_1_1.FirstChildElementUuid &&
+		copyBufferElementElement_1_1.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND
+
+	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 }

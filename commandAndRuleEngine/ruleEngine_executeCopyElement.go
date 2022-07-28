@@ -10,6 +10,10 @@ import (
 
 func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCopyFullELementStructure(testCaseUuid string, uuidToCopy string) (err error) {
 
+	var tempTestCase *testCaseModel.TestCaseModelStruct
+
+	tempTestCaseModelMap := make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage)
+
 	// Get current TestCase
 	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
 
@@ -20,7 +24,17 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCopyFullELe
 		return err
 	}
 
-	currentElement, existInMap := currentTestCase.TestCaseModelMap[uuidToCopy]
+	// Transform a copy of current TestCase to 'tempTestCase'
+	for elemenUuid, tempElement := range currentTestCase.TestCaseModelMap {
+		tempTestCaseModelMap[elemenUuid] = tempElement
+	}
+
+	tempTestCase = &testCaseModel.TestCaseModelStruct{
+		FirstElementUuid: currentTestCase.FirstElementUuid,
+		TestCaseModelMap: tempTestCaseModelMap,
+	}
+
+	currentElement, existInMap := tempTestCase.TestCaseModelMap[uuidToCopy]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":         "b69296dd-7b73-46c9-b465-a8fb40a9a592",
@@ -36,9 +50,13 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCopyFullELe
 	// Extract data for Previous Element
 	currentElementUuid := uuidToCopy
 
-	// Remove references in currentElement to Previous- and Next- Elements
+	// Remove references in currentElement to Previous- , Next- and Parent Elements
 	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
 	currentElement.NextElementUuid = currentElement.MatureElementUuid
+	currentElement.ParentElementUuid = currentElement.MatureElementUuid
+
+	// Save updated element back into tempMap
+	tempTestCase.TestCaseModelMap[currentElementUuid] = currentElement
 
 	// Set up structure for copied element structure
 	copiedStructure := testCaseModel.ImmatureElementStruct{
@@ -49,7 +67,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCopyFullELe
 	copiedStructure.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
 
 	// Make the copying of current element and its children, if they exist
-	err = commandAndRuleEngine.recursiveCopyingOfFullElementStructure(&currentTestCase, currentElementUuid, &copiedStructure)
+	err = commandAndRuleEngine.recursiveCopyingOfFullElementStructure(tempTestCase, currentElementUuid, &copiedStructure)
 	if err != nil {
 
 		errorId := "c2d1e439-ef76-4486-a7f5-3c7a54dc156c"
@@ -58,8 +76,8 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCopyFullELe
 		return err
 	}
 
-	//Reload the TestCase
-	currentTestCase, existsInMap = commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	//Reload the TestCase - not needed
+	// currentTestCase, existsInMap = commandAndRuleEngine.testcases.TestCases[testCaseUuid]
 
 	if existsInMap == false {
 		errorId := "9d857471-7918-4762-be9b-729b82a961e2"

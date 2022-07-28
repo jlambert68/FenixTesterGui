@@ -24,10 +24,10 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfElementCan
 }
 
 // Swap an element, but first ensure that rules for swapping are used
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeSwapElement(testCaseUuid string, elementUuid string) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeSwapElement(testCaseUuid string, elementToSwapOutUuid string, immatureElementToSwapIn *immatureElementStruct) (err error) {
 
 	// Verify that element is allowed, and can be swapped
-	canBeSwapped, matchedSimpleRule, _, err := commandAndRuleEngine.verifyIfElementCanBeSwapped(testCaseUuid, elementUuid)
+	canBeSwapped, matchedSimpleRule, matchedComplexRule, err := commandAndRuleEngine.verifyIfElementCanBeSwapped(testCaseUuid, elementToSwapOutUuid)
 
 	// If there was an error from swap verification then exit
 	if err != nil {
@@ -42,7 +42,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeSwapElement
 	}
 
 	// Execute deletion of element
-	err = commandAndRuleEngine.executeSwapElement(testCaseUuid, elementUuid)
+	err = commandAndRuleEngine.executeSwapElementBasedOnRule(testCaseUuid, elementToSwapOutUuid, immatureElementToSwapIn, matchedComplexRule)
 
 	return err
 }

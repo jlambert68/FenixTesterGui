@@ -12,7 +12,7 @@ import (
 )
 
 // Test to create a New TestCaseModel
-func TestNewTestCaseModel(t *testing.T) {
+func TestNewTestCaseModelCommand(t *testing.T) {
 
 	// Initiate logger used when testing
 	myLogger := UnitTestTestData.InitLoggerForTest("")
@@ -96,7 +96,7 @@ func TestNewTestCaseModel(t *testing.T) {
 }
 
 // Test to Delete an element from the TestCaseModel
-func TestRemoveElementFromTestCaseModel(t *testing.T) {
+func TestRemoveElementCommandOnTestCaseModel(t *testing.T) {
 
 	// Initiate logger used when testing
 	myLogger := UnitTestTestData.InitLoggerForTest("")
@@ -201,8 +201,13 @@ func TestRemoveElementFromTestCaseModel(t *testing.T) {
 	// Add myTestCaseModel to map of all testcases
 	allTestCases[testCaseUuid] = myTestCaseModel
 
+	// Set Current User
+	currentUser := "s41797"
+
 	// Add AddTestCases to TestCases-model
-	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCaseModelsStruct{
+		TestCases:   allTestCases,
+		CurrentUser: currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.testcases = &testCasesObject
@@ -243,13 +248,246 @@ func TestRemoveElementFromTestCaseModel(t *testing.T) {
 	assert.Equal(t, textualTestCaseRepresentationSimple, textualTestCaseSimple)
 	assert.Equal(t, textualTestCaseRepresentationComplex, textualTestCaseComplex)
 
-	// Validate Command stack, but fix timestamp
-	commandTimeStamp := testCase.CommandStack[0].CommandExecutedTimeStamp
-	commandTimeStampSecondsAsString := strconv.Itoa(int(commandTimeStamp.Seconds))
-	commandTimeStampnanosAsString := strconv.Itoa(int(commandTimeStamp.Nanos))
+	// Validate Simple- And Complex- Textual Representation Stack - length
+	lenghtIsOneSimple := fmt.Sprint(len(testCase.TextualTestCaseRepresentationSimpleStack) == 1)
+	assert.Equal(t, "true", lenghtIsOneSimple)
+	lenghtIsOneComplex := fmt.Sprint(len(testCase.TextualTestCaseRepresentationComplexStack) == 1)
+	assert.Equal(t, "true", lenghtIsOneComplex)
 
-	commandSliceToCompareWith := fmt.Sprintf("[{{{} [] [] <nil>} 0 [] REMOVE_ELEMENT REMOVE_ELEMENT %s N/A  seconds:%s nanos:%s}]", uuidToBeDeleted, commandTimeStampSecondsAsString, commandTimeStampnanosAsString)
+	// Validate Simple Textual Representation Stack - Content
+	textualRepresentationStackContentSimple := testCase.TextualTestCaseRepresentationSimpleStack[0]
+	assert.Equal(t, textualTestCaseRepresentationSimple, textualRepresentationStackContentSimple)
 
-	assert.Equal(t, commandSliceToCompareWith, fmt.Sprint(testCase.CommandStack))
+	// Validate Complex Textual Representation Stack - Content
+	textualRepresentationStackContentSComplex := testCase.TextualTestCaseRepresentationComplexStack[0]
+	assert.Equal(t, textualTestCaseRepresentationComplex, textualRepresentationStackContentSComplex)
+
+	// Validate Command stack length
+	lenghtIsOne := fmt.Sprint(len(testCase.CommandStack) == 1)
+	assert.Equal(t, "true", lenghtIsOne)
+
+	// Validate Command Stack content
+	assert.Equal(t, fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_REMOVE_ELEMENT, testCase.CommandStack[0].TestCaseCommandType)
+	assert.Equal(t, fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_REMOVE_ELEMENT)], testCase.CommandStack[0].TestCaseCommandName)
+	assert.Equal(t, uuidToBeDeleted, testCase.CommandStack[0].FirstParameter)
+	assert.Equal(t, testCaseModel.NotApplicable, testCase.CommandStack[0].SecondParameter)
+	assert.Equal(t, currentUser, testCase.CommandStack[0].UserId)
+
+}
+
+// Test to Swap out an element and in another element in the TestCaseModel
+func TestSwapElementCommandOnTestCaseModel(t *testing.T) {
+
+	// Initiate logger used when testing
+	myLogger := UnitTestTestData.InitLoggerForTest("")
+
+	// Initiate CommandAndRule-engine
+	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+		logger:            myLogger,
+		availableBondsMap: nil,
+		testcases:         nil,
+	}
+
+	// Add needed data for availableBondsMap
+	tempAvailableBondsMap := make(map[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage)
+
+	// B1f_BOND
+	visibleBondAttributesMessage_AvaialbeBond_B1f_BOND := fenixGuiTestCaseBuilderServerGrpcApi.BasicBondInformationMessage_VisibleBondAttributesMessage{
+		BondUuid: "2858d47a-198c-43f3-abe8-abd2a36f6045",
+		BondName: "B1f_BOND",
+	}
+
+	basicBondInformationMessage_AvaialbeBond_B1f_BOND := fenixGuiTestCaseBuilderServerGrpcApi.BasicBondInformationMessage{
+		VisibleBondAttributes: &visibleBondAttributesMessage_AvaialbeBond_B1f_BOND}
+
+	immatureBondsMessage_ImmatureBondMessage_B1f_BOND := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage{
+		BasicBondInformation: &basicBondInformationMessage_AvaialbeBond_B1f_BOND}
+
+	tempAvailableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1f_BOND_NONE_SWAPPABLE] = &immatureBondsMessage_ImmatureBondMessage_B1f_BOND
+
+	// B1l_BOND
+	visibleBondAttributesMessage_AvaialbeBond_B1l_BOND := fenixGuiTestCaseBuilderServerGrpcApi.BasicBondInformationMessage_VisibleBondAttributesMessage{
+		BondUuid: "95cbb203-1bb3-4ab4-84b7-c2a27a2e40fb",
+		BondName: "B1l_BOND",
+	}
+
+	basicBondInformationMessage_AvaialbeBond_B1l_BOND := fenixGuiTestCaseBuilderServerGrpcApi.BasicBondInformationMessage{
+		VisibleBondAttributes: &visibleBondAttributesMessage_AvaialbeBond_B1l_BOND}
+
+	immatureBondsMessage_ImmatureBondMessage_B1l_BOND := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage{
+		BasicBondInformation: &basicBondInformationMessage_AvaialbeBond_B1l_BOND}
+
+	tempAvailableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1l_BOND_NONE_SWAPPABLE] = &immatureBondsMessage_ImmatureBondMessage_B1l_BOND
+
+	// Add bond-map to 'commandAndRuleEngine.availableBondsMap'
+	commandAndRuleEngine.availableBondsMap = tempAvailableBondsMap
+
+	// Initiate a TestCaseModel
+	myTestCaseModel := testCaseModel.TestCaseModelStruct{
+		LastLoadedTestCaseModelGRPCMessage: fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage{},
+		FirstElementUuid:                   "",
+		TestCaseModelMap:                   nil,
+	}
+
+	myTestCaseModel.TestCaseModelMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage)
+
+	uuidToBeDeleted := "4b694f8c-f194-45af-a75e-f2bb3fd350e6"
+
+	tc_b0 := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
+		OriginalElementUuid:      "c072d6bf-e349-4730-9b04-4949368f50ea",
+		OriginalElementName:      "B0_BOND",
+		MatureElementUuid:        uuidToBeDeleted,
+		PreviousElementUuid:      uuidToBeDeleted,
+		NextElementUuid:          uuidToBeDeleted,
+		FirstChildElementUuid:    uuidToBeDeleted,
+		ParentElementUuid:        uuidToBeDeleted,
+		TestCaseModelElementType: fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND,
+	}
+
+	// Set up TestCaseModel-map
+	myTestCaseModel.TestCaseModelMap[tc_b0.MatureElementUuid] = tc_b0
+
+	// Set the B1f-bond as first element in TestCaseModel
+	myTestCaseModel.FirstElementUuid = tc_b0.MatureElementUuid
+
+	// Initiate structure for all TestCases
+	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
+
+	// Generate new UUID
+	testCaseUuid := uuidGenerator.New().String()
+
+	// Add myTestCaseModel to map of all testcases
+	allTestCases[testCaseUuid] = myTestCaseModel
+
+	// Set Current User
+	currentUser := "s41797"
+
+	// Add AddTestCases to TestCases-model
+	testCasesObject := testCaseModel.TestCaseModelsStruct{
+		TestCases:   allTestCases,
+		CurrentUser: currentUser}
+
+	// Add reference to TestCAses in command and rule engine
+	commandAndRuleEngine.testcases = &testCasesObject
+
+	// Create an Immature Element model for 'TIC(B10)'
+	immatureElementModel := immatureElementStruct{
+		firstElementUuid:   "",
+		immatureElementMap: nil,
+	}
+
+	immatureElementModel.immatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+
+	// Create TIC
+	tic := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
+		OriginalElementUuid:      "c072d6bf-e349-4730-9b04-4949368f50ea",
+		OriginalElementName:      "TIC",
+		ImmatureElementUuid:      "d444b8d8-b2fb-4505-ad8e-36bfe89988ab",
+		PreviousElementUuid:      "d444b8d8-b2fb-4505-ad8e-36bfe89988ab",
+		NextElementUuid:          "d444b8d8-b2fb-4505-ad8e-36bfe89988ab",
+		FirstChildElementUuid:    "ff224d27-5c8a-48b9-ace9-af43245cb35d",
+		ParentElementUuid:        "d444b8d8-b2fb-4505-ad8e-36bfe89988ab",
+		TestCaseModelElementType: fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER,
+	}
+
+	// Create B10 in TIC(x)
+	b10Bond := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
+		OriginalElementUuid:      "7be82e83-6048-4c30-b4aa-b68c11037c1d",
+		OriginalElementName:      "B10-Bond",
+		ImmatureElementUuid:      "ff224d27-5c8a-48b9-ace9-af43245cb35d",
+		PreviousElementUuid:      "ff224d27-5c8a-48b9-ace9-af43245cb35d",
+		NextElementUuid:          "ff224d27-5c8a-48b9-ace9-af43245cb35d",
+		FirstChildElementUuid:    "ff224d27-5c8a-48b9-ace9-af43245cb35d",
+		ParentElementUuid:        "d444b8d8-b2fb-4505-ad8e-36bfe89988ab",
+		TestCaseModelElementType: fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND,
+	}
+
+	// Add the Elements to the Immature Elements Model map
+	immatureElementModel.immatureElementMap["d444b8d8-b2fb-4505-ad8e-36bfe89988ab"] = tic
+	immatureElementModel.immatureElementMap["ff224d27-5c8a-48b9-ace9-af43245cb35d"] = b10Bond
+
+	// Add first Element ti Immature Element Model
+	immatureElementModel.firstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
+
+	// Execute command
+	err := commandAndRuleEngine.executeCommandOnTestCaseModel_SwapOutElemenAndInNewElementInTestCaseModel(testCaseUuid, uuidToBeDeleted, &immatureElementModel)
+
+	// Validate that there were no errors
+	assert.Equal(t, "<nil>", fmt.Sprint(err))
+
+	// Extract TestCase
+	testCase := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+
+	// Validate the result of the Swap-Element-command, 'B1f-TIC(B10)-B1l'
+	// 1) Validate B1f (1)
+	testCaseModelElementUuid_1 := testCase.FirstElementUuid
+	testCaseModelElement_1 := testCase.TestCaseModelMap[testCaseModelElementUuid_1]
+
+	correctElement := testCaseModelElement_1.MatureElementUuid == testCaseModelElement_1.ParentElementUuid &&
+		testCaseModelElement_1.MatureElementUuid == testCaseModelElement_1.PreviousElementUuid &&
+		testCaseModelElement_1.MatureElementUuid == testCaseModelElement_1.FirstChildElementUuid &&
+		testCaseModelElement_1.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1f_BOND_NONE_SWAPPABLE
+
+	assert.Equal(t, "true", fmt.Sprint(correctElement))
+
+	// 2) Validate TIC (2)
+	testCaseModelElementUuid_2 := testCaseModelElement_1.NextElementUuid
+	testCaseModelElement_2 := testCase.TestCaseModelMap[testCaseModelElementUuid_2]
+
+	correctElement = testCaseModelElement_2.MatureElementUuid == testCaseModelElement_2.ParentElementUuid &&
+		testCaseModelElement_2.MatureElementUuid == testCaseModelElement_1.NextElementUuid &&
+		testCaseModelElement_2.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER
+
+	assert.Equal(t, "true", fmt.Sprint(correctElement))
+
+	// 3) Validate B1l (3)
+	testCaseModelElementUuid_3 := testCaseModelElement_2.NextElementUuid
+	testCaseModelElement_3 := testCase.TestCaseModelMap[testCaseModelElementUuid_3]
+
+	correctElement = testCaseModelElement_3.MatureElementUuid == testCaseModelElement_3.ParentElementUuid &&
+		testCaseModelElement_3.MatureElementUuid == testCaseModelElement_2.NextElementUuid &&
+		testCaseModelElement_3.MatureElementUuid == testCaseModelElement_3.NextElementUuid &&
+		testCaseModelElement_3.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1l_BOND_NONE_SWAPPABLE
+
+	assert.Equal(t, "true", fmt.Sprint(correctElement))
+
+	// Validate that there are no zombie elements in TestCaseModel
+	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
+
+	assert.Equal(t, "<nil>", fmt.Sprint(err))
+
+	// Validate Textual TestCase Presentation
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+
+	textualTestCaseRepresentationSimple := "[B1-TIC(B10)-B1]"
+	textualTestCaseRepresentationComplex := "[B1f-TIC(B10)-B1l]"
+
+	assert.Equal(t, textualTestCaseRepresentationSimple, textualTestCaseSimple)
+	assert.Equal(t, textualTestCaseRepresentationComplex, textualTestCaseComplex)
+
+	// Validate Simple- And Complex- Textual Representation Stack - length
+	lenghtIsOneSimple := fmt.Sprint(len(testCase.TextualTestCaseRepresentationSimpleStack) == 1)
+	assert.Equal(t, "true", lenghtIsOneSimple)
+	lenghtIsOneComplex := fmt.Sprint(len(testCase.TextualTestCaseRepresentationComplexStack) == 1)
+	assert.Equal(t, "true", lenghtIsOneComplex)
+
+	// Validate Simple Textual Representation Stack - Content
+	textualRepresentationStackContentSimple := testCase.TextualTestCaseRepresentationSimpleStack[0]
+	assert.Equal(t, textualTestCaseRepresentationSimple, textualRepresentationStackContentSimple)
+
+	// Validate Complex Textual Representation Stack - Content
+	textualRepresentationStackContentSComplex := testCase.TextualTestCaseRepresentationComplexStack[0]
+	assert.Equal(t, textualTestCaseRepresentationComplex, textualRepresentationStackContentSComplex)
+
+	// Validate Command stack length
+	lenghtIsOne := fmt.Sprint(len(testCase.CommandStack) == 1)
+	assert.Equal(t, "true", lenghtIsOne)
+
+	// Validate Command Stack content
+	assert.Equal(t, fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_NEW_ELEMENT, testCase.CommandStack[0].TestCaseCommandType)
+	assert.Equal(t, fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_NEW_ELEMENT)], testCase.CommandStack[0].TestCaseCommandName)
+	assert.Equal(t, uuidToBeDeleted, testCase.CommandStack[0].FirstParameter)
+	assert.Equal(t, immatureElementModel.firstElementUuid, testCase.CommandStack[0].SecondParameter)
+	assert.Equal(t, currentUser, testCase.CommandStack[0].UserId)
 
 }

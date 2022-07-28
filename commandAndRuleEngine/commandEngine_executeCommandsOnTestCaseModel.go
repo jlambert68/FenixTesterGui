@@ -170,7 +170,40 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 
 // TestCaseCommandTypeEnum_COPY_ELEMENT
 // Used for copying an element  in a TestCaseModel that is used within a TestCase
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_CopyElementInTestCaseModel() (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_CopyElementInTestCaseModel(testCaseUuid string, elementIdToCopy string) (err error) {
+
+	// Try to Swap out element
+	err = commandAndRuleEngine.executeCopyElement(testCaseUuid, elementIdToCopy)
+
+	// Exit if the element couldn't be deleted
+	if err != nil {
+		return err
+	}
+
+	// Create a new Command
+	newCommandEntry := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage_TestCaseModelCommandMessage{
+		TestCaseCommandType:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_COPY_ELEMENT,
+		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_COPY_ELEMENT)],
+		FirstParameter:           elementIdToCopy,
+		SecondParameter:          testCaseModel.NotApplicable,
+		UserId:                   commandAndRuleEngine.testcases.CurrentUser,
+		CommandExecutedTimeStamp: timestamppb.Now(),
+	}
+
+	// Extract the TestCaseModel
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	if existsInMap == false {
+		errorId := "2d6af5bd-5a1b-4cc0-b3e7-da21b5928c4f"
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+	}
+
+	// Add command to command stack
+	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
+
+	// If no errors then add the TestCaseModel back into map of all TestCaseModels
+	if err == nil {
+		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCaseModel
+	}
 
 	return err
 }

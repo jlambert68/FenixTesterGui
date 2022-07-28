@@ -40,9 +40,6 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCopyFullELe
 	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
 	currentElement.NextElementUuid = currentElement.MatureElementUuid
 
-	// Save updated back into TestCase-map
-	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
-
 	// Set up structure for copied element structure
 	copiedStructure := testCaseModel.ImmatureElementStruct{
 		FirstElementUuid:   currentElementUuid,
@@ -61,15 +58,22 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCopyFullELe
 		return err
 	}
 
-	// If there are no errors then save the copied Element Structure in Copy-buffer and then save the Updaed TestCase
-	if err == nil {
-		// Save Copy Buffer in TestCase
-		currentTestCase.CopyBuffer = copiedStructure
+	//Reload the TestCase
+	currentTestCase, existsInMap = commandAndRuleEngine.testcases.TestCases[testCaseUuid]
 
-		// Save TestCase
-		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+	if existsInMap == false {
+		errorId := "9d857471-7918-4762-be9b-729b82a961e2"
+		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
 
+		return err
 	}
+
+	// If there are no errors then save the copied Element Structure in Copy-buffer and then save the Updaed TestCase
+	// Save Copy Buffer in TestCase
+	currentTestCase.CopyBuffer = copiedStructure
+
+	// Save TestCase
+	commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
 
 	return err
 

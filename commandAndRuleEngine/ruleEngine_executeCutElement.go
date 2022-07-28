@@ -52,7 +52,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCutFullELem
 	copiedStructure.MatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage)
 
 	// Make the copying of current element and its children, if they exist
-	err = commandAndRuleEngine.recursiveCutingOfFullElementStructure(&currentTestCase, currentElementUuid, &copiedStructure)
+	err = commandAndRuleEngine.recursiveCuttingOfFullElementStructure(&currentTestCase, currentElementUuid, &copiedStructure)
 	if err != nil {
 
 		errorId := "4791e1e3-af61-4894-bc5d-ec7d0fef8d7b"
@@ -81,7 +81,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCutFullELem
 		return err
 	}
 
-	// If there are no errors then save the copied Element Structure in Copy-buffer and then save the Updaed TestCase
+	// If there are no errors then save the copied Element Structure in Copy-buffer and then save the Updated TestCase
 	// Save Copied element to Cut Buffer  in TestCase
 	currentTestCase.CutBuffer = copiedStructure
 
@@ -93,7 +93,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCutFullELem
 }
 
 // Copy the full structure of all children, in TestCase-model, for specific Element
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveCutingOfFullElementStructure(currentTestCase *testCaseModel.TestCaseModelStruct, elementsUuid string, copiedElementStructure *testCaseModel.MatureElementStruct) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveCuttingOfFullElementStructure(currentTestCase *testCaseModel.TestCaseModelStruct, elementsUuid string, copiedElementStructure *testCaseModel.MatureElementStruct) (err error) {
 
 	// Extract current element
 	currentElement, existInMap := currentTestCase.TestCaseModelMap[elementsUuid]
@@ -109,7 +109,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveCutingOfF
 
 	// Element has child-element then go that path
 	if currentElement.FirstChildElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveCutingOfFullElementStructure(currentTestCase, currentElement.FirstChildElementUuid, copiedElementStructure)
+		err = commandAndRuleEngine.recursiveCuttingOfFullElementStructure(currentTestCase, currentElement.FirstChildElementUuid, copiedElementStructure)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -119,7 +119,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveCutingOfF
 
 	// If element has a next-element the go that path
 	if currentElement.NextElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveCutingOfFullElementStructure(currentTestCase, currentElement.NextElementUuid, copiedElementStructure)
+		err = commandAndRuleEngine.recursiveCuttingOfFullElementStructure(currentTestCase, currentElement.NextElementUuid, copiedElementStructure)
 	}
 
 	// If we got an error back then something wrong happen, so just back out

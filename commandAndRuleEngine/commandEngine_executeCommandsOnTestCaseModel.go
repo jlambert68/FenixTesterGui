@@ -172,7 +172,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 // Used for copying an element  in a TestCaseModel that is used within a TestCase
 func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_CopyElementInTestCaseModel(testCaseUuid string, elementIdToCopy string) (err error) {
 
-	// Try to Swap out element
+	// Try to Copy element to Copy Buffer
 	err = commandAndRuleEngine.executeCopyElement(testCaseUuid, elementIdToCopy)
 
 	// Exit if the element couldn't be deleted
@@ -212,7 +212,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 // Used for Swapping in an element from Copy Buffer in a TestCaseModel that is used within a TestCase
 func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapInElementFromCopyBufferInTestCaseModel(testCaseUuid string, elementIdToBeReplacedByCopyBuffer string) (err error) {
 
-	// Try to Swap out element
+	// Try to Swap Element From Copy Buffer
 	err = commandAndRuleEngine.executeSwapElementForCopyBuffer(testCaseUuid, elementIdToBeReplacedByCopyBuffer)
 
 	// Exit if the element couldn't be deleted
@@ -250,14 +250,80 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 
 // TestCaseCommandTypeEnum_CUT_ELEMENT
 // Used for cutting an element in a TestCaseModel that is used within a TestCase
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_CutElementInTestCaseModel() (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_CutElementInTestCaseModel(testCaseUuid string, elementIdToCut string) (err error) {
+
+	// Try to Copy element to Cut Buffer
+	err = commandAndRuleEngine.executeCutElement(testCaseUuid, elementIdToCut)
+
+	// Exit if the element couldn't be deleted
+	if err != nil {
+		return err
+	}
+
+	// Create a new Command
+	newCommandEntry := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage_TestCaseModelCommandMessage{
+		TestCaseCommandType:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_CUT_ELEMENT,
+		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_CUT_ELEMENT)],
+		FirstParameter:           elementIdToCut,
+		SecondParameter:          testCaseModel.NotApplicable,
+		UserId:                   commandAndRuleEngine.testcases.CurrentUser,
+		CommandExecutedTimeStamp: timestamppb.Now(),
+	}
+
+	// Extract the TestCaseModel
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	if existsInMap == false {
+		errorId := "dc1cd5d3-e809-4465-aeda-cdf6ec44070f"
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+	}
+
+	// Add command to command stack
+	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
+
+	// If no errors then add the TestCaseModel back into map of all TestCaseModels
+	if err == nil {
+		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCaseModel
+	}
 
 	return err
 }
 
 // TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_CUT_BUFFER_ELEMENT
 // Used for Swapping in an element from Cut opy Buffer in a TestCaseModel that is used within a TestCase
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapInElementFromCutBufferInTestCaseModel() (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapInElementFromCutBufferInTestCaseModel(testCaseUuid string, uuidToReplacedByCutBufferContent string) (err error) {
+
+	// Try to Swap Element From Cut Buffer
+	err = commandAndRuleEngine.executeSwapElementForCutBuffer(testCaseUuid, uuidToReplacedByCutBufferContent)
+
+	// Exit if the element couldn't be Swapped in from Cut
+	if err != nil {
+		return err
+	}
+
+	// Create a new Command
+	newCommandEntry := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage_TestCaseModelCommandMessage{
+		TestCaseCommandType:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_CUT_BUFFER_ELEMENT,
+		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_CUT_BUFFER_ELEMENT)],
+		FirstParameter:           uuidToReplacedByCutBufferContent,
+		SecondParameter:          testCaseModel.NotApplicable,
+		UserId:                   commandAndRuleEngine.testcases.CurrentUser,
+		CommandExecutedTimeStamp: timestamppb.Now(),
+	}
+
+	// Extract the TestCaseModel
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	if existsInMap == false {
+		errorId := "e1f7b09a-1867-4c0d-a02a-2b513788d711"
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+	}
+
+	// Add command to command stack
+	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
+
+	// If no errors then add the TestCaseModel back into map of all TestCaseModels
+	if err == nil {
+		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCaseModel
+	}
 
 	return err
 }

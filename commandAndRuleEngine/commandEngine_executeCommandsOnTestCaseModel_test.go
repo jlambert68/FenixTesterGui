@@ -1005,6 +1005,20 @@ func TestSwapElementFromCutBufferCommandOnTestCaseModel(t *testing.T) {
 	// Add needed data for availableBondsMap
 	tempAvailableBondsMap := make(map[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage)
 
+	// B10_BOND
+	visibleBondAttributesMessage_AvaialbeBond_B10_BOND := fenixGuiTestCaseBuilderServerGrpcApi.BasicBondInformationMessage_VisibleBondAttributesMessage{
+		BondUuid: "d4c99def-eb57-4f4e-8a5a-93ede3ee6b48",
+		BondName: "B10_BOND",
+	}
+
+	basicBondInformationMessage_AvaialbeBond_B10_BOND := fenixGuiTestCaseBuilderServerGrpcApi.BasicBondInformationMessage{
+		VisibleBondAttributes: &visibleBondAttributesMessage_AvaialbeBond_B10_BOND}
+
+	immatureBondsMessage_ImmatureBondMessage_B10_BOND := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage{
+		BasicBondInformation: &basicBondInformationMessage_AvaialbeBond_B10_BOND}
+
+	tempAvailableBondsMap[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND] = &immatureBondsMessage_ImmatureBondMessage_B10_BOND
+
 	// B12_BOND
 	visibleBondAttributesMessage_AvaialbeBond_B12_BOND := fenixGuiTestCaseBuilderServerGrpcApi.BasicBondInformationMessage_VisibleBondAttributesMessage{
 		BondUuid: "2858d47a-198c-43f3-abe8-abd2a36f6045",
@@ -1051,7 +1065,7 @@ func TestSwapElementFromCutBufferCommandOnTestCaseModel(t *testing.T) {
 		MatureElementUuid:        "4acad0f7-e7aa-4733-b371-5f6626c87e0a",
 		PreviousElementUuid:      "bfe9c2ba-05db-4a75-bc07-db110a0a73ef",
 		NextElementUuid:          "79a6702d-8370-446c-b001-d60494eca6fa",
-		FirstChildElementUuid:    uuidToReplacedByCutBufferContent,
+		FirstChildElementUuid:    "48b65b75-a4b9-49e8-94c6-a25004525c04",
 		ParentElementUuid:        "4acad0f7-e7aa-4733-b371-5f6626c87e0a",
 		TestCaseModelElementType: fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER,
 	}
@@ -1108,7 +1122,7 @@ func TestSwapElementFromCutBufferCommandOnTestCaseModel(t *testing.T) {
 		NextElementUuid:          uuidToBeCut,
 		FirstChildElementUuid:    "04d768d1-81e4-42c4-9eb3-09b911222e01",
 		ParentElementUuid:        "31506ce2-ce5c-4ddf-80ac-e4a388c8cbb2",
-		TestCaseModelElementType: fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1f_BOND_NONE_SWAPPABLE,
+		TestCaseModelElementType: fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND,
 	}
 
 	tc_2_2_2_tic := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
@@ -1130,7 +1144,7 @@ func TestSwapElementFromCutBufferCommandOnTestCaseModel(t *testing.T) {
 		NextElementUuid:          "6f8c7a20-dd48-41ea-810b-4244dd98712a",
 		FirstChildElementUuid:    "6f8c7a20-dd48-41ea-810b-4244dd98712a",
 		ParentElementUuid:        "31506ce2-ce5c-4ddf-80ac-e4a388c8cbb2",
-		TestCaseModelElementType: fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1l_BOND_NONE_SWAPPABLE,
+		TestCaseModelElementType: fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND,
 	}
 
 	tc_2_2_2_1_b10 := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
@@ -1297,7 +1311,7 @@ func TestSwapElementFromCutBufferCommandOnTestCaseModel(t *testing.T) {
 	testCaseModelElementUuid_2_4_1 := testCaseModelElement_2_4.FirstChildElementUuid
 	testCaseModelElement_2_4_1 := testCase.TestCaseModelMap[testCaseModelElementUuid_2_4_1]
 
-	correctElement = testCaseModelElement_2_4_1.MatureElementUuid == testCaseModelElement_2_2.FirstChildElementUuid &&
+	correctElement = testCaseModelElement_2_4_1.MatureElementUuid == testCaseModelElement_2_4.FirstChildElementUuid &&
 		testCaseModelElement_2_4_1.MatureElementUuid == testCaseModelElement_2_4_1.PreviousElementUuid &&
 		testCaseModelElement_2_4_1.MatureElementUuid == testCaseModelElement_2_4_1.NextElementUuid &&
 		testCaseModelElement_2_4_1.MatureElementUuid == testCaseModelElement_2_4_1.FirstChildElementUuid &&
@@ -1339,26 +1353,10 @@ func TestSwapElementFromCutBufferCommandOnTestCaseModel(t *testing.T) {
 
 	// Validate Cut Buffer content -Should be EMPTY
 	// 1) Validate TIC(1)
-	copyBufferElementUuid_1 := testCase.CopyBuffer.FirstElementUuid
-	copyBufferElementElement_1 := testCase.CopyBuffer.ImmatureElementMap[copyBufferElementUuid_1]
+	firstElement := testCase.CutBuffer.FirstElementUuid
+	cutBuffer := testCase.CutBuffer.MatureElementMap
 
-	correctElement = copyBufferElementElement_1.ImmatureElementUuid == copyBufferElementElement_1.ParentElementUuid &&
-		copyBufferElementElement_1.ImmatureElementUuid == copyBufferElementElement_1.PreviousElementUuid &&
-		copyBufferElementElement_1.ImmatureElementUuid == copyBufferElementElement_1.NextElementUuid &&
-		copyBufferElementElement_1.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER
-
-	assert.Equal(t, "true", fmt.Sprint(correctElement))
-
-	// 2) Validate TIC(1.1)
-	copyBufferElementUuid_1_1 := copyBufferElementElement_1.FirstChildElementUuid
-	copyBufferElementElement_1_1 := testCase.CopyBuffer.ImmatureElementMap[copyBufferElementUuid_1_1]
-
-	correctElement = copyBufferElementElement_1_1.ImmatureElementUuid == copyBufferElementElement_1.FirstChildElementUuid &&
-		copyBufferElementElement_1_1.ImmatureElementUuid == copyBufferElementElement_1_1.PreviousElementUuid &&
-		copyBufferElementElement_1_1.ImmatureElementUuid == copyBufferElementElement_1_1.NextElementUuid &&
-		copyBufferElementElement_1_1.ImmatureElementUuid == copyBufferElementElement_1_1.FirstChildElementUuid &&
-		copyBufferElementElement_1_1.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND
-
-	assert.Equal(t, "true", fmt.Sprint(correctElement))
+	assert.Equal(t, "", fmt.Sprint(firstElement))
+	assert.Equal(t, "map[]", fmt.Sprint(cutBuffer))
 
 }

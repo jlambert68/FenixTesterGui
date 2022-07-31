@@ -240,6 +240,9 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 	// Add command to command stack
 	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
 
+	// Indicate that Cut command has been initiated
+	currentTestCaseModel.CutCommandInitiated = true
+
 	// If no errors then add the TestCaseModel back into map of all TestCaseModels
 	if err == nil {
 		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCaseModel
@@ -293,7 +296,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapInElementFromCutBufferInTestCaseModel(testCaseUuid string, uuidToReplacedByCutBufferContent string) (err error) {
 
 	// Try to Swap Element From Cut Buffer
-	err = commandAndRuleEngine.executeSwapElementForCutBuffer(testCaseUuid, uuidToReplacedByCutBufferContent)
+	err = commandAndRuleEngine.executeSwapElementFromCutBuffer(testCaseUuid, uuidToReplacedByCutBufferContent, nil)
 
 	// Exit if the element couldn't be Swapped in from Cut
 	if err != nil {
@@ -319,6 +322,16 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 
 	// Add command to command stack
 	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
+
+	// Indicate that Cut command has been finished, or is not active anymore
+	currentTestCaseModel.CutCommandInitiated = false
+
+	// Clear Cut Buffer
+	newEmptyCutBufferContet := testCaseModel.MatureElementStruct{
+		FirstElementUuid: "",
+		MatureElementMap: nil,
+	}
+	currentTestCaseModel.CutBuffer = newEmptyCutBufferContet
 
 	// If no errors then add the TestCaseModel back into map of all TestCaseModels
 	if err == nil {

@@ -6,7 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// Verify if an element can be swapped or not, regarding swap rules
+// Verify if anor element can be swapped or not, regarding swap rules
 func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfElementCanBeSwapped(testCaseUuid string, elementUuid string) (canBeSwapped bool, matchedSimpledRule string, matchedComplexRule string, err error) {
 
 	// First verify towards simple rules

@@ -3,6 +3,7 @@ package commandAndRuleEngine
 import (
 	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
+	"fmt"
 	"github.com/google/uuid"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
@@ -26,11 +27,28 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifySwapRuleAndC
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
-	// Transform ImmatureElementModel into a MatureElementModel
-	matureElementToSwapIn, err = commandAndRuleEngine.transformImmatureElementModelIntoMatureElementModel(immatureElementToSwapIn)
+	// Extract the TestCaseModel
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	if existsInMap == false {
+		errorId := "37fcb025-f91b-4c51-aac3-b0f50fba7de5"
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+	}
 
-	return matureElementToSwapIn, err
+	// If Cut-command is in progress then
+	if currentTestCaseModel.CutCommandInitiated == false {
 
+		//  Swap from cut-buffer then element already is in mature form
+		matureElementToSwapIn := currentTestCaseModel.CutBuffer
+
+		return matureElementToSwapIn, err
+
+	} else {
+		// Transform ImmatureElementModel into a MatureElementModel
+		matureElementToSwapIn, err = commandAndRuleEngine.transformImmatureElementModelIntoMatureElementModel(immatureElementToSwapIn)
+
+		return matureElementToSwapIn, err
+
+	}
 }
 
 // TCRuleSwap101

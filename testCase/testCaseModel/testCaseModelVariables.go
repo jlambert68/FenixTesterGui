@@ -20,6 +20,7 @@ type TestCaseModelStruct struct {
 	LastSavedCommandStack                     lastSavedCommandStack
 	CopyBuffer                                ImmatureElementStruct
 	CutBuffer                                 MatureElementStruct
+	CutCommandInitiated                       bool
 }
 
 type lastSavedCommandStack struct {

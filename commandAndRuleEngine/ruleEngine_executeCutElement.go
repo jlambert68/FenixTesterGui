@@ -10,6 +10,10 @@ import (
 
 func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCutFullELementStructure(testCaseUuid string, uuidToBeCutOut string) (err error) {
 
+	var tempTestCase *testCaseModel.TestCaseModelStruct
+
+	tempTestCaseModelMap := make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage)
+
 	// Get current TestCase
 	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
 
@@ -20,7 +24,17 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCutFullELem
 		return err
 	}
 
-	currentElement, existInMap := currentTestCase.TestCaseModelMap[uuidToBeCutOut]
+	// Transform a copy of current TestCase to 'tempTestCase'
+	for elemenUuid, tempElement := range currentTestCase.TestCaseModelMap {
+		tempTestCaseModelMap[elemenUuid] = tempElement
+	}
+
+	tempTestCase = &testCaseModel.TestCaseModelStruct{
+		FirstElementUuid: currentTestCase.FirstElementUuid,
+		TestCaseModelMap: tempTestCaseModelMap,
+	}
+
+	currentElement, existInMap := tempTestCase.TestCaseModelMap[uuidToBeCutOut]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":             "1cf17c6b-d6bf-4045-be7d-07e03be25f6d",
@@ -40,8 +54,8 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCutFullELem
 	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
 	currentElement.NextElementUuid = currentElement.MatureElementUuid
 
-	// Save updated back into TestCase-map
-	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
+	// Save updated back into tempMap
+	tempTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
 
 	// Set up structure for copied element structure
 	copiedStructure := testCaseModel.MatureElementStruct{
@@ -52,7 +66,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCutFullELem
 	copiedStructure.MatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage)
 
 	// Make the copying of current element and its children, if they exist
-	err = commandAndRuleEngine.recursiveCuttingOfFullElementStructure(&currentTestCase, currentElementUuid, &copiedStructure)
+	err = commandAndRuleEngine.recursiveCuttingOfFullElementStructure(tempTestCase, currentElementUuid, &copiedStructure)
 	if err != nil {
 
 		errorId := "4791e1e3-af61-4894-bc5d-ec7d0fef8d7b"

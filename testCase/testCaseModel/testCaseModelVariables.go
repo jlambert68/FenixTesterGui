@@ -27,14 +27,29 @@ type lastSavedCommandStack struct {
 	commandStack   []fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage_TestCaseModelCommandMessage
 }
 
+type ImmatureElementStruct struct {
+	FirstElementUuid   string
+	ImmatureElementMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage
+}
+
 type MatureElementStruct struct {
 	FirstElementUuid string
 	MatureElementMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
 }
 
+/*
+type MatureElementStruct struct {
+	FirstElementUuid string
+	MatureElementMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
+}
+*/
+
+/*
 type ImmatureElementStruct struct {
 	FirstElementUuid   string
 	ImmatureElementMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage
 }
+
+*/
 
 const NotApplicable = "N/A"

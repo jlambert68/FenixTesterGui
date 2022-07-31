@@ -47,12 +47,12 @@ func TestTCRuleSwap101(t *testing.T) {
 	myTestCaseModel.FirstElementUuid = b0Bond.MatureElementUuid
 
 	// Create an Immature Element model for 'TIC(B10)'
-	immatureElementModel := immatureElementStruct{
-		firstElementUuid:   "",
-		immatureElementMap: nil,
+	immatureElementModel := testCaseModel.ImmatureElementStruct{
+		FirstElementUuid:   "",
+		ImmatureElementMap: nil,
 	}
 
-	immatureElementModel.immatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+	immatureElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
 
 	// Create TIC
 	tic := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
@@ -79,11 +79,11 @@ func TestTCRuleSwap101(t *testing.T) {
 	}
 
 	// Add the Elements to the Immature Elements Model map
-	immatureElementModel.immatureElementMap["d444b8d8-b2fb-4505-ad8e-36bfe89988ab"] = tic
-	immatureElementModel.immatureElementMap["ff224d27-5c8a-48b9-ace9-af43245cb35d"] = b10Bond
+	immatureElementModel.ImmatureElementMap["d444b8d8-b2fb-4505-ad8e-36bfe89988ab"] = tic
+	immatureElementModel.ImmatureElementMap["ff224d27-5c8a-48b9-ace9-af43245cb35d"] = b10Bond
 
 	// Add first Element ti Immature Element Model
-	immatureElementModel.firstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
+	immatureElementModel.FirstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
 	// Add TestCase to structure for all TestCases
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
@@ -283,12 +283,12 @@ func TestTCRuleSwap102(t *testing.T) {
 	myTestCaseModel.FirstElementUuid = tc_b1f.MatureElementUuid
 
 	// Create an Immature Element model for 'TIC(B10)'
-	immatureElementModel := immatureElementStruct{
-		firstElementUuid:   "",
-		immatureElementMap: nil,
+	immatureElementModel := testCaseModel.ImmatureElementStruct{
+		FirstElementUuid:   "",
+		ImmatureElementMap: nil,
 	}
 
-	immatureElementModel.immatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+	immatureElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
 
 	// Create TIC
 	tic := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
@@ -315,11 +315,11 @@ func TestTCRuleSwap102(t *testing.T) {
 	}
 
 	// Add the Elements to the Immature Elements Model map
-	immatureElementModel.immatureElementMap["d444b8d8-b2fb-4505-ad8e-36bfe89988ab"] = tic
-	immatureElementModel.immatureElementMap["ff224d27-5c8a-48b9-ace9-af43245cb35d"] = b10Bond
+	immatureElementModel.ImmatureElementMap["d444b8d8-b2fb-4505-ad8e-36bfe89988ab"] = tic
+	immatureElementModel.ImmatureElementMap["ff224d27-5c8a-48b9-ace9-af43245cb35d"] = b10Bond
 
 	// Add first Element ti Immature Element Model
-	immatureElementModel.firstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
+	immatureElementModel.FirstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
 	// Add TestCase to structure for all TestCases
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
@@ -586,12 +586,12 @@ func TestTCRuleSwap103(t *testing.T) {
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
 	// Create an Immature Element model for 'TIC(B10)'
-	immatureElementModel := immatureElementStruct{
-		firstElementUuid:   "",
-		immatureElementMap: nil,
+	immatureElementModel := testCaseModel.ImmatureElementStruct{
+		FirstElementUuid:   "",
+		ImmatureElementMap: nil,
 	}
 
-	immatureElementModel.immatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+	immatureElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
 
 	// Create TIC
 	tic := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
@@ -618,11 +618,11 @@ func TestTCRuleSwap103(t *testing.T) {
 	}
 
 	// Add the Elements to the Immature Elements Model map
-	immatureElementModel.immatureElementMap["d444b8d8-b2fb-4505-ad8e-36bfe89988ab"] = tic
-	immatureElementModel.immatureElementMap["ff224d27-5c8a-48b9-ace9-af43245cb35d"] = b10Bond
+	immatureElementModel.ImmatureElementMap["d444b8d8-b2fb-4505-ad8e-36bfe89988ab"] = tic
+	immatureElementModel.ImmatureElementMap["ff224d27-5c8a-48b9-ace9-af43245cb35d"] = b10Bond
 
 	// Add first Element ti Immature Element Model
-	immatureElementModel.firstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
+	immatureElementModel.FirstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
 	// Add TestCase to structure for all TestCases
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
@@ -909,12 +909,12 @@ func TestTCRuleSwap104(t *testing.T) {
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
 	// Create an Immature Element model for 'TIC(B10)'
-	immatureElementModel := immatureElementStruct{
-		firstElementUuid:   "",
-		immatureElementMap: nil,
+	immatureElementModel := testCaseModel.ImmatureElementStruct{
+		FirstElementUuid:   "",
+		ImmatureElementMap: nil,
 	}
 
-	immatureElementModel.immatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+	immatureElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
 
 	// Create TIC
 	tic := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
@@ -941,11 +941,11 @@ func TestTCRuleSwap104(t *testing.T) {
 	}
 
 	// Add the Elements to the Immature Elements Model map
-	immatureElementModel.immatureElementMap["d444b8d8-b2fb-4505-ad8e-36bfe89988ab"] = tic
-	immatureElementModel.immatureElementMap["ff224d27-5c8a-48b9-ace9-af43245cb35d"] = b10Bond
+	immatureElementModel.ImmatureElementMap["d444b8d8-b2fb-4505-ad8e-36bfe89988ab"] = tic
+	immatureElementModel.ImmatureElementMap["ff224d27-5c8a-48b9-ace9-af43245cb35d"] = b10Bond
 
 	// Add first Element ti Immature Element Model
-	immatureElementModel.firstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
+	immatureElementModel.FirstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
 	// Add TestCase to structure for all TestCases
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
@@ -1256,12 +1256,12 @@ func TestTCRuleSwap105(t *testing.T) {
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
 	// Create an Immature Element model for 'TI'
-	immatureElementModel := immatureElementStruct{
-		firstElementUuid:   "",
-		immatureElementMap: nil,
+	immatureElementModel := testCaseModel.ImmatureElementStruct{
+		FirstElementUuid:   "",
+		ImmatureElementMap: nil,
 	}
 
-	immatureElementModel.immatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+	immatureElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
 
 	// Create TI
 	ti := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
@@ -1276,10 +1276,10 @@ func TestTCRuleSwap105(t *testing.T) {
 	}
 
 	// Add the Elements to the Immature Elements Model map
-	immatureElementModel.immatureElementMap["d444b8d8-b2fb-4505-ad8e-36bfe89988ab"] = ti
+	immatureElementModel.ImmatureElementMap["d444b8d8-b2fb-4505-ad8e-36bfe89988ab"] = ti
 
 	// Add first Element to Immature Element Model
-	immatureElementModel.firstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
+	immatureElementModel.FirstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
 	// Add TestCase to structure for all TestCases
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
@@ -1539,12 +1539,12 @@ func TestTCRuleSwap106(t *testing.T) {
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
 	// Create an Immature Element model for 'TIC(B10)'
-	immatureElementModel := immatureElementStruct{
-		firstElementUuid:   "",
-		immatureElementMap: nil,
+	immatureElementModel := testCaseModel.ImmatureElementStruct{
+		FirstElementUuid:   "",
+		ImmatureElementMap: nil,
 	}
 
-	immatureElementModel.immatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+	immatureElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
 
 	// Create TIC
 	tic := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
@@ -1571,11 +1571,11 @@ func TestTCRuleSwap106(t *testing.T) {
 	}
 
 	// Add the Elements to the Immature Elements Model map
-	immatureElementModel.immatureElementMap["d444b8d8-b2fb-4505-ad8e-36bfe89988ab"] = tic
-	immatureElementModel.immatureElementMap["ff224d27-5c8a-48b9-ace9-af43245cb35d"] = b10Bond
+	immatureElementModel.ImmatureElementMap["d444b8d8-b2fb-4505-ad8e-36bfe89988ab"] = tic
+	immatureElementModel.ImmatureElementMap["ff224d27-5c8a-48b9-ace9-af43245cb35d"] = b10Bond
 
 	// Add first Element ti Immature Element Model
-	immatureElementModel.firstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
+	immatureElementModel.FirstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
 	// Add TestCase to structure for all TestCases
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
@@ -1806,12 +1806,12 @@ func TestTCRuleSwap107(t *testing.T) {
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
 	// Create an Immature Element model for 'TIC(B10)'
-	immatureElementModel := immatureElementStruct{
-		firstElementUuid:   "",
-		immatureElementMap: nil,
+	immatureElementModel := testCaseModel.ImmatureElementStruct{
+		FirstElementUuid:   "",
+		ImmatureElementMap: nil,
 	}
 
-	immatureElementModel.immatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+	immatureElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
 
 	// Create TIC
 	tic := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
@@ -1838,11 +1838,11 @@ func TestTCRuleSwap107(t *testing.T) {
 	}
 
 	// Add the Elements to the Immature Elements Model map
-	immatureElementModel.immatureElementMap["d444b8d8-b2fb-4505-ad8e-36bfe89988ab"] = tic
-	immatureElementModel.immatureElementMap["ff224d27-5c8a-48b9-ace9-af43245cb35d"] = b10Bond
+	immatureElementModel.ImmatureElementMap["d444b8d8-b2fb-4505-ad8e-36bfe89988ab"] = tic
+	immatureElementModel.ImmatureElementMap["ff224d27-5c8a-48b9-ace9-af43245cb35d"] = b10Bond
 
 	// Add first Element ti Immature Element Model
-	immatureElementModel.firstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
+	immatureElementModel.FirstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
 	// Add TestCase to structure for all TestCases
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
@@ -2073,12 +2073,12 @@ func TestTCRuleSwap108(t *testing.T) {
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
 	// Create an Immature Element model for 'TIC(B10)'
-	immatureElementModel := immatureElementStruct{
-		firstElementUuid:   "",
-		immatureElementMap: nil,
+	immatureElementModel := testCaseModel.ImmatureElementStruct{
+		FirstElementUuid:   "",
+		ImmatureElementMap: nil,
 	}
 
-	immatureElementModel.immatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+	immatureElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
 
 	// Create TIC
 	tic := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
@@ -2105,11 +2105,11 @@ func TestTCRuleSwap108(t *testing.T) {
 	}
 
 	// Add the Elements to the Immature Elements Model map
-	immatureElementModel.immatureElementMap["d444b8d8-b2fb-4505-ad8e-36bfe89988ab"] = tic
-	immatureElementModel.immatureElementMap["ff224d27-5c8a-48b9-ace9-af43245cb35d"] = b10Bond
+	immatureElementModel.ImmatureElementMap["d444b8d8-b2fb-4505-ad8e-36bfe89988ab"] = tic
+	immatureElementModel.ImmatureElementMap["ff224d27-5c8a-48b9-ace9-af43245cb35d"] = b10Bond
 
 	// Add first Element ti Immature Element Model
-	immatureElementModel.firstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
+	immatureElementModel.FirstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
 	// Add TestCase to structure for all TestCases
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)

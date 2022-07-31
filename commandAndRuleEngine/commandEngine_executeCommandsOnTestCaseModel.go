@@ -120,7 +120,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 
 // TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_NEW_ELEMENT
 // Used for Swapping out an element, and in an element structure, from a TestCaseModel that is used within a TestCase
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapOutElemenAndInNewElementInTestCaseModel(testCaseUuid string, elementToSwapOutUuid string, immatureElementToSwapIn *immatureElementStruct) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapOutElemenAndInNewElementInTestCaseModel(testCaseUuid string, elementToSwapOutUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
 
 	// Try to Swap out element
 	err = commandAndRuleEngine.executeSwapElement(testCaseUuid, elementToSwapOutUuid, immatureElementToSwapIn)
@@ -135,7 +135,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 		TestCaseCommandType:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_NEW_ELEMENT,
 		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_NEW_ELEMENT)],
 		FirstParameter:           elementToSwapOutUuid,
-		SecondParameter:          immatureElementToSwapIn.firstElementUuid,
+		SecondParameter:          immatureElementToSwapIn.FirstElementUuid,
 		UserId:                   commandAndRuleEngine.testcases.CurrentUser,
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
@@ -210,7 +210,40 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 
 // TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_COPY_BUFFER_ELEMENT
 // Used for Swapping in an element from Copy Buffer in a TestCaseModel that is used within a TestCase
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapInElementFromCopyBufferInTestCaseModel() (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapInElementFromCopyBufferInTestCaseModel(testCaseUuid string, elementIdToBeReplacedByCopyBuffer string) (err error) {
+
+	// Try to Swap out element
+	err = commandAndRuleEngine.executeSwapElementForCopyBuffer(testCaseUuid, elementIdToBeReplacedByCopyBuffer)
+
+	// Exit if the element couldn't be deleted
+	if err != nil {
+		return err
+	}
+
+	// Create a new Command
+	newCommandEntry := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage_TestCaseModelCommandMessage{
+		TestCaseCommandType:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_COPY_BUFFER_ELEMENT,
+		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_COPY_BUFFER_ELEMENT)],
+		FirstParameter:           elementIdToBeReplacedByCopyBuffer,
+		SecondParameter:          testCaseModel.NotApplicable,
+		UserId:                   commandAndRuleEngine.testcases.CurrentUser,
+		CommandExecutedTimeStamp: timestamppb.Now(),
+	}
+
+	// Extract the TestCaseModel
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	if existsInMap == false {
+		errorId := "10ef5496-d92e-4e35-af41-e16c51c7df71"
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+	}
+
+	// Add command to command stack
+	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
+
+	// If no errors then add the TestCaseModel back into map of all TestCaseModels
+	if err == nil {
+		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCaseModel
+	}
 
 	return err
 }

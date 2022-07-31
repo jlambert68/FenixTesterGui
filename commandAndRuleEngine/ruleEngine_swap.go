@@ -1,6 +1,7 @@
 package commandAndRuleEngine
 
 import (
+	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"github.com/sirupsen/logrus"
 )
@@ -24,7 +25,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfElementCan
 }
 
 // Swap an element, but first ensure that rules for swapping are used
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeSwapElement(testCaseUuid string, elementToSwapOutUuid string, immatureElementToSwapIn *immatureElementStruct) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeSwapElement(testCaseUuid string, elementToSwapOutUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
 
 	// Verify that element is allowed, and can be swapped
 	canBeSwapped, matchedSimpleRule, matchedComplexRule, err := commandAndRuleEngine.verifyIfElementCanBeSwapped(testCaseUuid, elementToSwapOutUuid)
@@ -48,7 +49,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeSwapElement
 }
 
 // Execute a swap on an element based on specific rule
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeSwapElementBasedOnRule(testCaseUuid string, elementUuid string, immatureElementToSwapIn *immatureElementStruct, matchedComplexRule string) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeSwapElementBasedOnRule(testCaseUuid string, elementUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct, matchedComplexRule string) (err error) {
 
 	switch matchedComplexRule {
 	case TCRuleSwap101:

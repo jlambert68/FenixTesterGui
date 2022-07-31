@@ -12,16 +12,6 @@ type commandAndRuleEngineObjectStruct struct {
 	testcases         *testCaseModel.TestCaseModelsStruct
 }
 
-type matureElementStruct struct {
-	firstElementUuid string
-	matureElementMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
-}
-
-type immatureElementStruct struct {
-	firstElementUuid   string
-	immatureElementMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage
-}
-
 // The Complex Deletion Rules
 const (
 	TCRuleDeletion101 = "TCRuleDeletion101"

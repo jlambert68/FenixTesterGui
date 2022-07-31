@@ -1,6 +1,7 @@
 package commandAndRuleEngine
 
 import (
+	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
@@ -370,17 +371,17 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 }
 
 // Verify that all UUIDs are correct in component to be swapped in. Means that no empty uuid is allowed and they all are correct
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyThatThereAreNoZombieElementsInComponent(immatureElement immatureElementStruct) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyThatThereAreNoZombieElementsInComponent(immatureElement testCaseModel.ImmatureElementStruct) (err error) {
 
 	var allUuidKeys []string
 
 	// Extract all elements by key from component
-	for _, elementKey := range immatureElement.immatureElementMap {
+	for _, elementKey := range immatureElement.ImmatureElementMap {
 		allUuidKeys = append(allUuidKeys, elementKey.ImmatureElementUuid)
 	}
 
 	// Follow the path from "first element and remove the found element from 'allUuidKeys'
-	allUuidKeys, err = commandAndRuleEngine.recursiveZombieElementSearchInComponentModel(immatureElement.firstElementUuid, allUuidKeys, &immatureElement)
+	allUuidKeys, err = commandAndRuleEngine.recursiveZombieElementSearchInComponentModel(immatureElement.FirstElementUuid, allUuidKeys, &immatureElement)
 
 	// If there are elements left in slice then there were zombie elements, which there shouldn't be
 	if len(allUuidKeys) != 0 {
@@ -388,10 +389,10 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyThatThereAre
 			"id":                               "3e519b3c-367d-42d5-a8ce-ff507efd8972",
 			"allUuidKeys":                      allUuidKeys,
 			"Number of Zombie Elements":        len(allUuidKeys),
-			"immatureElement.firstElementUuid": immatureElement.firstElementUuid,
-		}).Error("There existed Zombie elements in 'immatureElement.immatureElementMap'")
+			"immatureElement.FirstElementUuid": immatureElement.FirstElementUuid,
+		}).Error("There existed Zombie elements in 'immatureElement.ImmatureElementMap'")
 
-		err = errors.New("there existed Zombie elements in 'immatureElement.immatureElementMap', for " + immatureElement.firstElementUuid)
+		err = errors.New("there existed Zombie elements in 'immatureElement.ImmatureElementMap', for " + immatureElement.FirstElementUuid)
 
 		return err
 	}
@@ -400,10 +401,10 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyThatThereAre
 }
 
 // Verify all children, in ImmatureEleemnt-model and remove the found element from 'allUuidKeys'
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveZombieElementSearchInComponentModel(elementsUuid string, allUuidKeys []string, immatureElement *immatureElementStruct) (processedAllUuidKeys []string, err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveZombieElementSearchInComponentModel(elementsUuid string, allUuidKeys []string, immatureElement *testCaseModel.ImmatureElementStruct) (processedAllUuidKeys []string, err error) {
 
 	// Extract current element
-	currentElement, existInMap := immatureElement.immatureElementMap[elementsUuid]
+	currentElement, existInMap := immatureElement.ImmatureElementMap[elementsUuid]
 
 	// If the element doesn't exit then there is something really wrong
 	if existInMap == false {
@@ -411,9 +412,9 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveZombieEle
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":           "9f628356-2ea2-48a6-8e6a-546a5f97f05b",
 			"elementsUuid": elementsUuid,
-		}).Error(elementsUuid + " could not be found in in map 'immatureElement.immatureElementMap'")
+		}).Error(elementsUuid + " could not be found in in map 'immatureElement.ImmatureElementMap'")
 
-		err = errors.New(elementsUuid + " could not be found in in map 'immatureElement.immatureElementMap'")
+		err = errors.New(elementsUuid + " could not be found in in map 'immatureElement.ImmatureElementMap'")
 
 		return nil, err
 	}
@@ -472,10 +473,10 @@ func FindElementInSliceAndRemove(sliceToWorkOn *[]string, uuid string) (returnSl
 }
 
 // Verify that all UUIDs are correct in component to be swapped in. Means that no empty uuid is allowed and they all are correct
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyThatAllUuidsAreCorrectInComponent(immatureElement immatureElementStruct) (err error) {
+func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyThatAllUuidsAreCorrectInComponent(immatureElement testCaseModel.ImmatureElementStruct) (err error) {
 
 	// Loop all fields and find the ones defined as 'String'. Verify that content is a UUID
-	e := reflect.ValueOf(&immatureElement.immatureElementMap).Elem()
+	e := reflect.ValueOf(&immatureElement.ImmatureElementMap).Elem()
 
 	for i := 0; i < e.NumField(); i++ {
 		varName := e.Type().Field(i).Name
@@ -513,7 +514,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveVerifyAll
 			"elementsUuid": elementsUuid,
 		}).Error(elementsUuid + " could not be found in in map 'TestCaseModelMap'")
 
-		err = errors.New(elementsUuid + " could not be found in in map 'immatureElement.immatureElementMap'")
+		err = errors.New(elementsUuid + " could not be found in in map 'immatureElement.ImmatureElementMap'")
 
 		return err
 	}

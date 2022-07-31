@@ -908,7 +908,7 @@ func TestSwapElementFromCopyBufferCommandOnTestCaseModel(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// 6) Validate B11l(2.3)
-	testCaseModelElementUuid_2_3 := testCaseModelElement_2_2.FirstChildElementUuid
+	testCaseModelElementUuid_2_3 := testCaseModelElement_2_2.NextElementUuid
 	testCaseModelElement_2_3 := testCase.TestCaseModelMap[testCaseModelElementUuid_2_3]
 
 	correctElement = testCaseModelElement_2_3.ParentElementUuid == testCaseModelElement_2.MatureElementUuid &&

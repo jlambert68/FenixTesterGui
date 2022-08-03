@@ -1,15 +1,17 @@
 package commandAndRuleEngine
 
 import (
+	"FenixTesterGui/gui"
 	"FenixTesterGui/testCase/testCaseModel"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 )
 
-type commandAndRuleEngineObjectStruct struct {
-	logger            *logrus.Logger
-	availableBondsMap map[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage
-	testcases         *testCaseModel.TestCaseModelsStruct
+type CommandAndRuleEngineObjectStruct struct {
+	logger                    *logrus.Logger
+	availableBondsMap         map[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage
+	testcases                 *testCaseModel.TestCaseModelsStruct
+	subSystemsCrossReferences *gui.SubSystemsCrossReferencesStruct
 }
 
 // The Complex Deletion Rules

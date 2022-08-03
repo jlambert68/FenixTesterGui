@@ -22,7 +22,7 @@ func TestNewTestCaseModelCommand(t *testing.T) {
 	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         &testCasesObject,
@@ -102,7 +102,7 @@ func TestRemoveElementCommandOnTestCaseModel(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -282,7 +282,7 @@ func TestSwapElementCommandOnTestCaseModel(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -511,7 +511,7 @@ func TestCopyElementCommandOnTestCaseModel(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -713,7 +713,7 @@ func TestSwapElementFromCopyBufferCommandOnTestCaseModel(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -996,7 +996,7 @@ func TestSwapElementFromCutBufferCommandOnTestCaseModel(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,

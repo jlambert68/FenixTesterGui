@@ -27,7 +27,7 @@ import (
 //	TICx(X)		True				TCRuleCopy014
 
 // Verify the simple rules if a component can be copied or not
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeCopiedSimpleRules(testCaseUuid string, elementUuid string) (canBeCopied bool, matchedRule string, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeCopiedSimpleRules(testCaseUuid string, elementUuid string) (canBeCopied bool, matchedRule string, err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]

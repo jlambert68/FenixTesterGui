@@ -42,7 +42,7 @@ import (
 */
 
 // Create a new B0-bond to be used in the TestCase-model
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB0Element() (newBondB0Element fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) createNewBondB0Element() (newBondB0Element fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
@@ -64,7 +64,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB0Ele
 }
 
 // Create a new B1f-bond to be used in the TestCase-model
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB1fElement(parentElementUuid string) (newBondB1fElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) createNewBondB1fElement(parentElementUuid string) (newBondB1fElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
@@ -91,7 +91,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB1fEl
 }
 
 // Create a new B1l-bond to be used in the TestCase-model
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB1lElement(parentElementUuid string) (newBondB1lElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) createNewBondB1lElement(parentElementUuid string) (newBondB1lElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
@@ -118,7 +118,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB1lEl
 }
 
 // Create a new B10-bond to be used in the TestCase-model
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB10Element(parentElementUuid string) (newBondB10Element fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) createNewBondB10Element(parentElementUuid string) (newBondB10Element fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
@@ -145,7 +145,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB10El
 }
 
 // Create a new B10*x*-bond to be used in the TestCase-model
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB10oxoElement(parentElementUuid string) (newBondB10oxoElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) createNewBondB10oxoElement(parentElementUuid string) (newBondB10oxoElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
@@ -172,7 +172,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB10ox
 }
 
 // Create a new B10x*-bond to be used in the TestCase-model
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB10xoElement(parentElementUuid string) (newBondB10xoElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) createNewBondB10xoElement(parentElementUuid string) (newBondB10xoElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
@@ -199,7 +199,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB10xo
 }
 
 // Create a new B10*x-bond to be used in the TestCase-model
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB10oxElement(parentElementUuid string) (newBondB10oxElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) createNewBondB10oxElement(parentElementUuid string) (newBondB10oxElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
@@ -226,7 +226,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB10ox
 }
 
 // Create a new B11f-Bond to be used in the TestCase-model
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB11fElement(parentElementUuid string) (newBondB11fElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) createNewBondB11fElement(parentElementUuid string) (newBondB11fElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
@@ -253,7 +253,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB11fE
 }
 
 // Create a new B11l-Bond to be used in the TestCase-model
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB11lElement(parentElementUuid string) (newBondB11lElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) createNewBondB11lElement(parentElementUuid string) (newBondB11lElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
@@ -280,7 +280,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB11lE
 }
 
 // Create a new B11fx-Bond to be used in the TestCase-model
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB11fxElement(parentElementUuid string) (newBondB11fxElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) createNewBondB11fxElement(parentElementUuid string) (newBondB11fxElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
@@ -307,7 +307,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB11fx
 }
 
 // Create a new B11lx-Bond to be used in the TestCase-model
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB11lxElement(parentElementUuid string) (newBondB11lxElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) createNewBondB11lxElement(parentElementUuid string) (newBondB11lxElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
@@ -334,7 +334,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB11lx
 }
 
 // Create a new B12-Bond to be used in the TestCase-model
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB12Element(parentElementUuid string) (newBondB12Element fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) createNewBondB12Element(parentElementUuid string) (newBondB12Element fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()
@@ -361,7 +361,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB12El
 }
 
 // Create a new B12x-Bond to be used in the TestCase-model
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) createNewBondB12xElement(parentElementUuid string) (newBondB12xElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) createNewBondB12xElement(parentElementUuid string) (newBondB12xElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) {
 
 	// Generate new UUID
 	matureElementUuid := uuidGenerator.New().String()

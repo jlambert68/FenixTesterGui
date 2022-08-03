@@ -1,7 +1,9 @@
 package gui
 
 import (
+	"FenixTesterGui/commandAndRuleEngine"
 	"FenixTesterGui/grpc_out"
+	"FenixTesterGui/testCase/testCaseModel"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -50,7 +52,7 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 		tree:                               nil,
 		content:                            nil,
 		fenixGuiBuilderServerAddressToDial: "",
-		availableBuildingBlocksModel: availableBuildingBlocksModelStruct{
+		availableBuildingBlocksModel: AvailableBuildingBlocksModelStruct{
 			logger:                             nil,
 			fenixGuiBuilderServerAddressToDial: "",
 			fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
@@ -58,6 +60,20 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 			availableBuildingBlocksForUITreeNodes:                                      nil,
 			grpcOut:                                                                    grpc_out.GRPCOutStruct{},
 		},
+		testCasesModel: testCaseModel.TestCaseModelsStruct{
+			TestCases:   nil,
+			CurrentUser: "s41797",
+		},
+		commandAndRuleEngine:      commandAndRuleEngine.CommandAndRuleEngineObjectStruct{},
+		grpcOut:                   grpc_out.GRPCOutStruct{},
+		subSystemsCrossReferences: SubSystemsCrossReferencesStruct{},
+	}
+	// Add SubSystems References
+	uiServer.subSystemsCrossReferences = SubSystemsCrossReferencesStruct{
+		AvailableBuildingBlocksModelReference: &uiServer.availableBuildingBlocksModel,
+		TestCasesModelReference:               &uiServer.testCasesModel,
+		CommandAndRuleEnginReference:          &uiServer.commandAndRuleEngine,
+		GrpcOutReference:                      &uiServer.grpcOut,
 	}
 
 	// Forward logger and Dail string

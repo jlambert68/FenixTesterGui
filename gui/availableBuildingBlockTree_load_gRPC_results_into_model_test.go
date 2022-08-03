@@ -15,7 +15,7 @@ import (
 
 const printValues = false
 
-//var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
+//var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
 // Checks that Available TestInstructions are put in Available Building Blocks-testCaseModel in a correct way
 func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testing.T) {
@@ -41,9 +41,9 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testin
 		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
 	}
 
-	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
+	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
-	availableBuildingBlocksModel = &availableBuildingBlocksModelStruct{
+	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
 		logger:                             myLogger,
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
@@ -108,9 +108,9 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(
 	}
 
 	// Initiate availableBuildingBlocksModel
-	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
+	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
-	availableBuildingBlocksModel = &availableBuildingBlocksModelStruct{
+	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
 		logger:                             myLogger,
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
@@ -179,9 +179,9 @@ func TestLoadModelWithAvailableBuildingBlocks(t *testing.T) {
 	}
 
 	// Initiate availableBuildingBlocksModel
-	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
+	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
-	availableBuildingBlocksModel = &availableBuildingBlocksModelStruct{
+	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
 		logger:                             myLogger,
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
@@ -256,9 +256,9 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructions(t *testing.T
 	}
 
 	// Initiate availableBuildingBlocksModel
-	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
+	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
-	availableBuildingBlocksModel = &availableBuildingBlocksModelStruct{
+	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
 		logger:                             myLogger,
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
@@ -323,9 +323,9 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(t *
 	}
 
 	// Initiate availableBuildingBlocksModel
-	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
+	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
-	availableBuildingBlocksModel = &availableBuildingBlocksModelStruct{
+	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
 		logger:                             myLogger,
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
@@ -390,9 +390,9 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionAndTestInstruc
 	}
 
 	// Initiate availableBuildingBlocksModel
-	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
+	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
-	availableBuildingBlocksModel = &availableBuildingBlocksModelStruct{
+	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
 		logger:                             myLogger,
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,

@@ -92,7 +92,7 @@ func TestTCRuleSwap101(t *testing.T) {
 	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         &testCasesObject,
@@ -328,7 +328,7 @@ func TestTCRuleSwap102(t *testing.T) {
 	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         &testCasesObject,
@@ -631,7 +631,7 @@ func TestTCRuleSwap103(t *testing.T) {
 	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         &testCasesObject,
@@ -954,7 +954,7 @@ func TestTCRuleSwap104(t *testing.T) {
 	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         &testCasesObject,
@@ -1288,7 +1288,7 @@ func TestTCRuleSwap105(t *testing.T) {
 	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         &testCasesObject,
@@ -1584,7 +1584,7 @@ func TestTCRuleSwap106(t *testing.T) {
 	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         &testCasesObject,
@@ -1851,7 +1851,7 @@ func TestTCRuleSwap107(t *testing.T) {
 	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         &testCasesObject,
@@ -2118,7 +2118,7 @@ func TestTCRuleSwap108(t *testing.T) {
 	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         &testCasesObject,

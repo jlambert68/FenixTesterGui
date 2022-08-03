@@ -27,7 +27,7 @@ import (
 //	TICx(X)		False				TCRuleCut014
 
 // Verify the simple rules if a component can be Cut or not
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeCutSimpleRules(testCaseUuid string, elementUuid string) (canBeCut bool, matchedRule string, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeCutSimpleRules(testCaseUuid string, elementUuid string) (canBeCut bool, matchedRule string, err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]

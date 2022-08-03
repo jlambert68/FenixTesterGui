@@ -55,7 +55,47 @@ const (
 	CommandUndoUndoLastCommandOnStack = "UndoUndoLastCommandOnStack()"
 )
 
+var (
+	availableBuildingBlocks  widget.Select
+	buildingBlocksInTestCase widget.Select
+)
+
 func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIObject fyne.CanvasObject) {
+
+	availableBuildingBlocks = widget.Select{
+		DisableableWidget: widget.DisableableWidget{},
+		Alignment:         0,
+		Selected:          "",
+		Options:           uiServer.availableBuildingBlocksModel.listAllAvailableBuidlingBlocks(),
+		PlaceHolder:       "",
+		OnChanged: func(s string) {
+			fmt.Printf("I selected %s to live forever..", s)
+			//label1.Text = s
+			//label1.Refresh()
+		},
+	}
+	/*
+		Select(
+			uiServer.availableBuildingBlocksModel.listAllAvailableBuidlingBlocks(),
+			func(s string) {
+				fmt.Printf("I selected %s to live forever..", s)
+				//label1.Text = s
+				//label1.Refresh()
+			})
+
+	*/
+	availableBuildingBlocks = widget.Select{
+		DisableableWidget: widget.DisableableWidget{},
+		Alignment:         0,
+		Selected:          "",
+		Options:           uiServer.availableBuildingBlocksModel.listBuidlingBlocksInTestCase(),
+		PlaceHolder:       "",
+		OnChanged: func(s string) {
+			fmt.Printf("I selected %s to live forever..", s)
+			//label1.Text = s
+			//label1.Refresh()
+		},
+	}
 
 	newTestCaseButton := widget.NewButton(CommandNewTestcase, func() {
 		uiServer.newTestCase()
@@ -87,6 +127,8 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 
 	testCaseCommandsUIObject_temp := container.New(
 		layout.NewVBoxLayout(),
+		&availableBuildingBlocks,
+		//buildingBlocksInTestCase,
 		newTestCaseButton,
 		removeButton,
 		swapFromNewButton,

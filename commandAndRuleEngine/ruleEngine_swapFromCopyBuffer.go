@@ -6,7 +6,7 @@ import (
 )
 
 // Verify if an element can be swapped for copy Buffer or not, regarding swap rules
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfElementCanBeSwappedForCopyBuffer(testCaseUuid string, elementUuid string) (canBeSwapped bool, matchedSimpledRule string, matchedComplexRule string, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCanBeSwappedForCopyBuffer(testCaseUuid string, elementUuid string) (canBeSwapped bool, matchedSimpledRule string, matchedComplexRule string, err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
@@ -43,7 +43,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfElementCan
 }
 
 // Swap an element for content in Copy Buffer, but first ensure that rules for swapping are used
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeSwapElementForCopyBuffer(testCaseUuid string, elementToSwapOutUuid string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElementForCopyBuffer(testCaseUuid string, elementToSwapOutUuid string) (err error) {
 
 	// Verify that element is allowed, and can be swapped
 	canBeSwapped, matchedSimpleRule, matchedComplexRule, err := commandAndRuleEngine.verifyIfElementCanBeSwapped(testCaseUuid, elementToSwapOutUuid)

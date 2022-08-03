@@ -6,7 +6,7 @@ import (
 )
 
 // Verify if an element can be cut out or not, regarding cut rules
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfElementCanBeCutOut(testCaseUuid string, elementUuid string) (canBeCut bool, matchedSimpldRule string, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCanBeCutOut(testCaseUuid string, elementUuid string) (canBeCut bool, matchedSimpldRule string, err error) {
 
 	// First verify towards simple rules
 	canBeCut, matchedSimpldRule, err = commandAndRuleEngine.verifyIfComponentCanBeCutSimpleRules(testCaseUuid, elementUuid)
@@ -15,7 +15,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfElementCan
 }
 
 // Cut an element, but first ensure that rules for cutting are used
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCutElement(testCaseUuid string, elementUuid string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCutElement(testCaseUuid string, elementUuid string) (err error) {
 
 	// Verify that element is allowed, and can be cut
 	canBeCut, matchedSimpleRule, err := commandAndRuleEngine.verifyIfElementCanBeCutOut(testCaseUuid, elementUuid)

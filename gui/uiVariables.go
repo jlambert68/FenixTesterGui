@@ -1,7 +1,9 @@
 package gui
 
 import (
+	"FenixTesterGui/commandAndRuleEngine"
 	"FenixTesterGui/grpc_out"
+	"FenixTesterGui/testCase/testCaseModel"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
 	"github.com/sirupsen/logrus"
@@ -94,7 +96,7 @@ type availableTestInstructionContainerStruct struct {
 	testInstructionContainerName         string
 }
 
-type availableBuildingBlocksModelStruct struct {
+type AvailableBuildingBlocksModelStruct struct {
 	// + TestCase Building Blocks
 	//    + Pinned Building Blocks
 	//       TestInstruction 1 [c107bdd9] - Pinned
@@ -138,8 +140,8 @@ type GlobalUIServerStruct struct {
 	//grpcOut                            grpc_out.GRPCOutStruct
 
 	//availableBuildingBlocks            availableBuildingBlocksStruct
-	//availableBuildingBlocksModel       availableBuildingBlocksModelStruct
-	//availableBuildingBlocksModel availableBuildingBlocksModelStruct
+	//availableBuildingBlocksModel       AvailableBuildingBlocksModelStruct
+	//availableBuildingBlocksModel AvailableBuildingBlocksModelStruct
 }
 
 var localUIServer UIServerStruct
@@ -152,8 +154,18 @@ type UIServerStruct struct {
 	grpcOut                            grpc_out.GRPCOutStruct
 	fenixGuiBuilderServerAddressToDial string
 	//availableBuildingBlocks            availableBuildingBlocksStruct
-	//availableBuildingBlocksModel       availableBuildingBlocksModelStruct
-	availableBuildingBlocksModel availableBuildingBlocksModelStruct
+	//availableBuildingBlocksModel       AvailableBuildingBlocksModelStruct
+	availableBuildingBlocksModel AvailableBuildingBlocksModelStruct
+	testCasesModel               testCaseModel.TestCaseModelsStruct
+	commandAndRuleEngine         commandAndRuleEngine.CommandAndRuleEngineObjectStruct
+	subSystemsCrossReferences    SubSystemsCrossReferencesStruct
+}
+
+type SubSystemsCrossReferencesStruct struct {
+	AvailableBuildingBlocksModelReference *AvailableBuildingBlocksModelStruct
+	TestCasesModelReference               *testCaseModel.TestCaseModelsStruct
+	CommandAndRuleEnginReference          *commandAndRuleEngine.CommandAndRuleEngineObjectStruct
+	GrpcOutReference                      *grpc_out.GRPCOutStruct
 }
 
 /*
@@ -162,7 +174,7 @@ type availableBuildingBlocksStruct struct {
 	logger                       *logrus.Logger
 
 	fenixGuiBuilderServerAddressToDial string
-	availableBuildingBlocksModel availableBuildingBlocksModelStruct
+	availableBuildingBlocksModel AvailableBuildingBlocksModelStruct
 }
 
 */

@@ -6,7 +6,7 @@ import (
 )
 
 // Load Available Building Blocks, TestInstructions and TestInstructionContainers, from GUI-server into testCaseModel
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadModelWithAvailableBuildingBlocks(testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadModelWithAvailableBuildingBlocks(testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	// Verify that AckNack Response is equal to AckNack = true
 	if testInstructionsAndTestContainersMessage.AckNackResponse.AckNack == false {
@@ -29,7 +29,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 }
 
 // Load Pinned Building Blocks, TestInstructions and TestInstructionContainers, from GUI-server into testCaseModel
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadModelWithPinnedBuildingBlocks(pinnedTestInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadModelWithPinnedBuildingBlocks(pinnedTestInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	// Verify that AckNack Response is equal to AckNack = true
 	if pinnedTestInstructionsAndTestContainersMessage.AckNackResponse.AckNack == false {
@@ -49,7 +49,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 }
 
 // Load all available TestInstructions Building Blocks
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadModelWithAvailableBuildingBlocksRegardingTestInstructions(testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadModelWithAvailableBuildingBlocksRegardingTestInstructions(testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap = make(map[string]map[string]map[string]availableTestInstructionStruct) //make(fullDomainTestInstructionTypeTestInstructionRelationsMapType)
 	var testInstructionTypeTestInstructionsRelationsMap map[string]map[string]availableTestInstructionStruct                                                      //testInstructionTypeTestInstructionsRelationsMapType
@@ -172,7 +172,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 }
 
 // Load all available TestInstructionContainers Building Blocks
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap = make(map[string]map[string]map[string]availableTestInstructionContainerStruct) //make(fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMapType)
 	var testInstructionContainerTypeTestInstructionContainersRelationsMap map[string]map[string]availableTestInstructionContainerStruct                                                      //testInstructionContainerTypeTestInstructionContainersRelationsMapType
@@ -295,7 +295,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 }
 
 // Load all Pinned TestInstructions Building Blocks into testCaseModel
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadModelWithPinnedBuildingBlocksRegardingTestInstructions(pinnedTestInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadModelWithPinnedBuildingBlocksRegardingTestInstructions(pinnedTestInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	// If there are no Pinned TestInstructions then exit this function
 	if len(pinnedTestInstructionsAndTestContainersMessage.AvailablePinnedTestInstructions) == 0 {
@@ -328,7 +328,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadMode
 }
 
 // Load all Pinned TestInstructions Building Blocks into testCaseModel
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(pinnedTestInstructionsAndTestInstructionsContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(pinnedTestInstructionsAndTestInstructionsContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	// If there are no Pinned TestInstructions then exit this function
 	if len(pinnedTestInstructionsAndTestInstructionsContainersMessage.AvailablePinnedPreCreatedTestInstructionContainers) == 0 {

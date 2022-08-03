@@ -15,7 +15,7 @@ import (
 
 //const printValues = false
 
-//var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
+//var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
 // Checks that a non-existing Building Block can't be pinned
 func TestThatNonExistingBuildBlockCanBePinned(t *testing.T) {
@@ -54,9 +54,9 @@ func TestThatNonExistingBuildBlockCanBePinned(t *testing.T) {
 	}
 
 	// Initiate availableBuildingBlocksModel
-	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
+	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
-	availableBuildingBlocksModel = &availableBuildingBlocksModelStruct{
+	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
 		logger:                             myLogger,
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
@@ -123,9 +123,9 @@ func TestThatAlreadyPinnedBuildingBlockNotCanBePinned(t *testing.T) {
 	}
 
 	// Initiate availableBuildingBlocksModel
-	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
+	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
-	availableBuildingBlocksModel = &availableBuildingBlocksModelStruct{
+	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
 		logger:                             myLogger,
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
@@ -194,9 +194,9 @@ func TestToPinBuildingBlockCanBePinned(t *testing.T) {
 	}
 
 	// Initiate availableBuildingBlocksModel
-	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
+	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
-	availableBuildingBlocksModel = &availableBuildingBlocksModelStruct{
+	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
 		logger:                             myLogger,
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
@@ -266,9 +266,9 @@ func TestThatNonExistingBuildingBlockCanNotBeUnPinned(t *testing.T) {
 	}
 
 	// Initiate availableBuildingBlocksModel
-	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
+	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
-	availableBuildingBlocksModel = &availableBuildingBlocksModelStruct{
+	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
 		logger:                             myLogger,
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
@@ -336,9 +336,9 @@ func TestThatBuildingBlockToBeUnPinnedExistsAmongPinned(t *testing.T) {
 	}
 
 	// Initiate availableBuildingBlocksModel
-	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
+	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
-	availableBuildingBlocksModel = &availableBuildingBlocksModelStruct{
+	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
 		logger:                             myLogger,
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
@@ -407,9 +407,9 @@ func TestUnPinBuildingBlockThatIsPinned(t *testing.T) {
 	}
 
 	// Initiate availableBuildingBlocksModel
-	var availableBuildingBlocksModel *availableBuildingBlocksModelStruct
+	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
-	availableBuildingBlocksModel = &availableBuildingBlocksModelStruct{
+	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
 		logger:                             myLogger,
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,

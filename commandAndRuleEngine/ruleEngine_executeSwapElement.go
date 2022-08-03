@@ -9,7 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct, ruleNameToVerify string) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct, ruleNameToVerify string) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
 
 	// Verify Rules before start swapping
 	canBeSwapped, _, matchedComplexRule, err := commandAndRuleEngine.verifyIfElementCanBeSwapped(testCaseUuid, uuidToSwapOut)
@@ -54,7 +54,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifySwapRuleAndC
 // TCRuleSwap101
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC(X)			B0					n 		B0								B1-n-B1					TCRuleSwap101
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap101(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap101(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
 
 	matureElementToSwapIn, err := commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap101)
 
@@ -116,7 +116,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap1
 // TCRuleSwap102
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B10					n		TIC(B10)						TIC(B11f-n-B11l)		TCRuleSwap102
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap102(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap102(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
 
 	matureElementToSwapIn, err := commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap102)
 
@@ -187,7 +187,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap1
 // TCRuleSwap103
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B11f				n		TIC(B11f-X)						TIC(B11f-n-B12-X)		TCRuleSwap103
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap103(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap103(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
 
 	matureElementToSwapIn, err := commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap103)
 
@@ -254,7 +254,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap1
 // TCRuleSwap104
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B11l				n		TIC(X-B11l)						TIC(X-B12-n-B11l)		TCRuleSwap104
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap104(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap104(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
 
 	matureElementToSwapIn, err := commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap104)
 
@@ -321,7 +321,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap1
 // TCRuleSwap105
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B12					n		X-B12-X							X-B12-n-B12-X			TCRuleSwap105
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap105(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap105(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
 
 	matureElementToSwapIn, err := commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap105)
 
@@ -388,7 +388,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap1
 // TCRuleSwap106
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B10x*				n		TIC(B10*x*)						TIC(B11x-n-B11x)		TCRuleSwap106
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap106(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap106(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
 
 	matureElementToSwapIn, err := commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap106)
 
@@ -459,7 +459,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap1
 // TCRuleSwap107
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B10*x				n		TIC(B10*x)						TIC(B11x-n-B11)			TCRuleSwap107
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap107(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap107(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
 
 	matureElementToSwapIn, err := commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap107)
 
@@ -530,7 +530,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap1
 // TCRuleSwap108
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B10x*				n		TIC(B10x*)						TIC(B11-n-B11x)			TCRuleSwap108
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap108(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap108(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
 
 	matureElementToSwapIn, err := commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap108)
 
@@ -600,7 +600,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 // Transforms a immature element model into a mature element model.
 // This means that new UUIDs are created for each element in the component
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) transformImmatureElementModelIntoMatureElementModel(immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementModel testCaseModel.MatureElementStruct, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) transformImmatureElementModelIntoMatureElementModel(immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementModel testCaseModel.MatureElementStruct, err error) {
 
 	var matureIndicator = "_mature"
 

@@ -8,13 +8,13 @@ import (
 )
 
 // Gets the testCaseModel used to drive the Available Building Blocks-Tree
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getAvailableBuildingBlocksModel() map[string][]string {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) getAvailableBuildingBlocksModel() map[string][]string {
 
 	return availableBuildingBlocksModel.availableBuildingBlockModelSuitedForFyneTreeView
 }
 
 // Generate the testCaseModel used to drive the Available Building Blocks-Tree
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) makeTreeUIModel() {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) makeTreeUIModel() {
 
 	availableBuildingBlocksModel.availableBuildingBlockModelSuitedForFyneTreeView = map[string][]string{
 		"":                            {TestCaseBuildingBlocksHeader},
@@ -78,7 +78,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) makeTree
 }
 
 // Load all Available Building Blocks from Gui-server
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadAvailableBuildingBlocksFromServer() {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvailableBuildingBlocksFromServer() {
 
 	var testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
 
@@ -92,7 +92,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadAvai
 }
 
 // Load all Pinned Building Blocks from Gui-server
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadPinnedBuildingBlocksFromServer() {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadPinnedBuildingBlocksFromServer() {
 
 	var testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
 
@@ -106,7 +106,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) loadPinn
 }
 
 // Save all Pinned Building Blocks to Gui-server
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) savePinnedBuildingBlocksFromServer() (err error) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) savePinnedBuildingBlocksFromServer() (err error) {
 
 	var pinnedTestInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.SavePinnedTestInstructionsAndPreCreatedTestInstructionContainersMessage
 	var availablePinnedTestInstructions []*fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionMessage
@@ -163,7 +163,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) savePinn
 // *********** Generate Names for UI-Tree (Start)***********
 
 // Generate UI Tree name for 'Domain', TestInstructionType, TestInstruction, TestInstructionContainerType and TestInstructionContainer for the Available Building Blocks UI-Tree
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) generateUITreeName(node availableBuildingBlocksForUITreeNodesStruct, domainName string) (treeName string, pinnedTreeName string) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) generateUITreeName(node availableBuildingBlocksForUITreeNodesStruct, domainName string) (treeName string, pinnedTreeName string) {
 
 	treeName = node.name + " [" + node.uuid[0:numberOfCharactersfromUuid-1] + "]"
 
@@ -173,7 +173,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) generate
 }
 
 // Generate UI Tree name for 'TestInstructionsHeader' for Available Building Blocks
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) generateUITreeNameForTestInstructionsHeader(domain availableBuildingBlocksForUITreeNodesStruct) (treeName string) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) generateUITreeNameForTestInstructionsHeader(domain availableBuildingBlocksForUITreeNodesStruct) (treeName string) {
 
 	treeName = TestInstructionsHeader + " [" + domain.uuid[0:numberOfCharactersfromUuid-1] + "]"
 
@@ -181,7 +181,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) generate
 }
 
 // Generate UI Tree name for 'TestInstructionContainersHeader' for Available Building Blocks
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) generateUITreeNameForTestInstructionContainersHeader(domain availableBuildingBlocksForUITreeNodesStruct) (treeName string) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) generateUITreeNameForTestInstructionContainersHeader(domain availableBuildingBlocksForUITreeNodesStruct) (treeName string) {
 
 	treeName = TestInstructionContainersHeader + " [" + domain.uuid[0:numberOfCharactersfromUuid-1] + "]"
 
@@ -189,7 +189,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) generate
 }
 
 // Extract all 'Domains', with Names suited for Tree-testCaseModel, for the testCaseModel tha underpins the UI Tree for Available Building Blocks
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getAvailableDomainTreeNamesFromModel() (availableDomainTreeNamesList []string) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) getAvailableDomainTreeNamesFromModel() (availableDomainTreeNamesList []string) {
 
 	availableDomains := availableBuildingBlocksModel.getAvailableDomainsFromModel()
 
@@ -201,7 +201,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getAvail
 }
 
 // Extract all 'Domains', with Names suited for Tree-testCaseModel, for the testCaseModel tha underpins the UI Tree for Available Building Blocks
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getAvailableDomainsFromModel() (availableDomains []availableBuildingBlocksForUITreeNodesStruct) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) getAvailableDomainsFromModel() (availableDomains []availableBuildingBlocksForUITreeNodesStruct) {
 
 	// Extract Domain nodes from TestInstruction-map
 	domainNodesInTestInstructionMap := availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap
@@ -226,7 +226,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getAvail
 }
 
 // Extract all 'TestInstructionTypes', per Domain, with Names suited for Tree-testCaseModel
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getAvailableTestInstructionTypesFromModel(domain availableBuildingBlocksForUITreeNodesStruct) (availableTestInstructionTypes []availableBuildingBlocksForUITreeNodesStruct) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) getAvailableTestInstructionTypesFromModel(domain availableBuildingBlocksForUITreeNodesStruct) (availableTestInstructionTypes []availableBuildingBlocksForUITreeNodesStruct) {
 
 	// Create the list of 'TestInstructionType' for specific domain
 	testInstructionTypes := availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap[domain.uuid]
@@ -238,7 +238,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getAvail
 }
 
 // Extract all 'TestInstructionContainerTypes', per Domain, with Names suited for Tree-testCaseModel
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getAvailableTestInstructionContainerTypesFromModel(domain availableBuildingBlocksForUITreeNodesStruct) (availableTestInstructionContainerTypes []availableBuildingBlocksForUITreeNodesStruct) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) getAvailableTestInstructionContainerTypesFromModel(domain availableBuildingBlocksForUITreeNodesStruct) (availableTestInstructionContainerTypes []availableBuildingBlocksForUITreeNodesStruct) {
 
 	// Create the list of 'TestInstructionContainerType' for specific domain
 	testInstructionContainerTypes := availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap[domain.uuid]
@@ -249,7 +249,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getAvail
 }
 
 // Extract all 'TestInstructions', per TestInstructionType, with Names suited for Tree-testCaseModel
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getAvailableTestInstructionsFromModel(domain availableBuildingBlocksForUITreeNodesStruct, testInstructionType availableBuildingBlocksForUITreeNodesStruct) (availableTestInstructions []availableBuildingBlocksForUITreeNodesStruct) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) getAvailableTestInstructionsFromModel(domain availableBuildingBlocksForUITreeNodesStruct, testInstructionType availableBuildingBlocksForUITreeNodesStruct) (availableTestInstructions []availableBuildingBlocksForUITreeNodesStruct) {
 
 	// Create the list of 'TestInstructions' for specific TestInstructionType
 	testInstructionTypes := availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap[domain.uuid]
@@ -262,7 +262,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getAvail
 }
 
 // Extract all 'TestInstructionContainers', per TestInstructionContainerType, with Names suited for Tree-testCaseModel
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getAvailableTestInstructionContainersFromModel(domain availableBuildingBlocksForUITreeNodesStruct, testInstructionContainerType availableBuildingBlocksForUITreeNodesStruct) (availableTestInstructionContainers []availableBuildingBlocksForUITreeNodesStruct) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) getAvailableTestInstructionContainersFromModel(domain availableBuildingBlocksForUITreeNodesStruct, testInstructionContainerType availableBuildingBlocksForUITreeNodesStruct) (availableTestInstructionContainers []availableBuildingBlocksForUITreeNodesStruct) {
 
 	// Create the list of 'TestInstructionContainers' for specific TestInstructionContainerType
 	testInstructionContainerTypes := availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap[domain.uuid]
@@ -275,7 +275,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getAvail
 }
 
 // Extract all 'Pinned TestInstructions' suited for Tree-testCaseModel
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getPinnedBuildingBlocksTreeNamesFromModel() (pinnedBuildingBlocks []string) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) getPinnedBuildingBlocksTreeNamesFromModel() (pinnedBuildingBlocks []string) {
 
 	// Create the list of Pinned Building Blocks with names suited for UI-Trre
 	for pinnedBuildingBlockTreeName := range availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes {
@@ -286,7 +286,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) getPinne
 }
 
 // Verify that it is possible to Pin one Available Building Block (TestInstruction or TestInstructionContainer, if it isn't already pinned
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) verifyBeforePinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string, onlyForVerifying bool) (err error) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) verifyBeforePinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string, onlyForVerifying bool) (err error) {
 
 	// Verify that Name exists among available Building Blocks NodeNames
 	nodeData, existsInMap := availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid[nameInAvailableBuildingBlocksTree]
@@ -324,7 +324,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) verifyBe
 }
 
 // Pin one Available Building Block (TestInstruction or TestInstructionContainer, if it isn't already pinned
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) pinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string) (err error) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) pinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string) (err error) {
 
 	// Verify that node can be pinned
 	err = availableBuildingBlocksModel.verifyBeforePinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree, false)
@@ -349,7 +349,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) pinTestI
 }
 
 // Verify that it is possible to Unpin one pinned Available Building Block (TestInstruction or TestInstructionContainer
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) verifyBeforeUnPinTestInstructionOrTestInstructionContainer(pinnedNameInUITree string, onlyForVerifying bool) (err error) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) verifyBeforeUnPinTestInstructionOrTestInstructionContainer(pinnedNameInUITree string, onlyForVerifying bool) (err error) {
 
 	// Verify that nod is pinned, equals exists in TreeNameToUuid for pinned Building Blocks
 	pinnedBuildingBlock, existsInMap := availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[pinnedNameInUITree]
@@ -384,7 +384,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) verifyBe
 }
 
 // Unpin one pinned Available Building Block (TestInstruction or TestInstructionContainer
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) unPinTestInstructionOrTestInstructionContainer(pinnedNameInUITree string) (err error) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) unPinTestInstructionOrTestInstructionContainer(pinnedNameInUITree string) (err error) {
 
 	// Verify that node can be unpinned
 	err = availableBuildingBlocksModel.verifyBeforeUnPinTestInstructionOrTestInstructionContainer(pinnedNameInUITree, false)
@@ -396,4 +396,26 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) unPinTes
 	}
 
 	return err
+}
+
+// Unpin one pinned Available Building Block (TestInstruction or TestInstructionContainer
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) listAllAvailableBuidlingBlocks() (availableBuidlingBlocksList []string) {
+
+	// Loop all available building blocks and create list to be used in DropDown
+	for uuidKey, buidingBlock := range availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid {
+
+		switch buidingBlock.buildingBlockType {
+
+		case TestInstruction:
+			availableBuidlingBlocksList = append(availableBuidlingBlocksList, uuidKey+" [TI]")
+
+		case TestInstructionContainer:
+			availableBuidlingBlocksList = append(availableBuidlingBlocksList, uuidKey+" [TIC]")
+
+		default:
+			availableBuidlingBlocksList = append(availableBuidlingBlocksList, uuidKey+" [UNKNOWN]")
+		}
+	}
+
+	return availableBuidlingBlocksList
 }

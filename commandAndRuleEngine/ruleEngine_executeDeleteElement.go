@@ -9,7 +9,7 @@ import (
 
 // What to remove			Remove in structure				Result after deletion		Rule
 // n= TIC(X)				B1-n-B1							B0							TCRuleDeletion101
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion101(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion101(testCaseUuid string, uuidToDelete string) (err error) {
 	/*
 		// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
 		message MatureTestCaseModelElementMessage {
@@ -99,7 +99,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			B11f-n-B11l						B10							TCRuleDeletion102
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion102(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion102(testCaseUuid string, uuidToDelete string) (err error) {
 	/*
 		// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
 		message MatureTestCaseModelElementMessage {
@@ -207,7 +207,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			B11fx-n-B11lx					B10*x*						TCRuleDeletion103
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion103(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion103(testCaseUuid string, uuidToDelete string) (err error) {
 	/*
 		// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
 		message MatureTestCaseModelElementMessage {
@@ -315,7 +315,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			B11f-n-B11lx					B10x*						TCRuleDeletion104
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion104(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion104(testCaseUuid string, uuidToDelete string) (err error) {
 	/*
 		// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
 		message MatureTestCaseModelElementMessage {
@@ -423,7 +423,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			B11fx-n-B11l					B10*x						TCRuleDeletion105
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion105(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion105(testCaseUuid string, uuidToDelete string) (err error) {
 	/*
 		// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
 		message MatureTestCaseModelElementMessage {
@@ -531,7 +531,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			B11f-n-B12-X					B11f-X						TCRuleDeletion106
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion106(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion106(testCaseUuid string, uuidToDelete string) (err error) {
 
 	// Call shared delete function
 	err = commandAndRuleEngine.executeTCRuleDeletion_106_107_108_109(testCaseUuid, uuidToDelete)
@@ -541,7 +541,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			B11fx-n-B12x-X					B11fx-X						TCRuleDeletion107
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion107(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion107(testCaseUuid string, uuidToDelete string) (err error) {
 
 	// Call shared delete function
 	err = commandAndRuleEngine.executeTCRuleDeletion_106_107_108_109(testCaseUuid, uuidToDelete)
@@ -551,7 +551,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			B11f-n-B12x-X					B11fx-X						TCRuleDeletion108
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion108(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion108(testCaseUuid string, uuidToDelete string) (err error) {
 
 	// Call shared delete function
 	err = commandAndRuleEngine.executeTCRuleDeletion_106_107_108_109(testCaseUuid, uuidToDelete)
@@ -561,7 +561,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			B11fx-n-B12-X					B11fx-X						TCRuleDeletion109
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion109(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion109(testCaseUuid string, uuidToDelete string) (err error) {
 
 	// Call shared delete function
 	err = commandAndRuleEngine.executeTCRuleDeletion_106_107_108_109(testCaseUuid, uuidToDelete)
@@ -572,7 +572,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 // Multi-deletion-rule function
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			FirstBond-n-Bond-X				FirstBond-X					executeTCRuleDeletion_106_107_108_109
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion_106_107_108_109(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion_106_107_108_109(testCaseUuid string, uuidToDelete string) (err error) {
 	/*
 		// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
 		message MatureTestCaseModelElementMessage {
@@ -699,7 +699,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			X-B12-n-B11l					X-B11l						TCRuleDeletion110
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion110(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion110(testCaseUuid string, uuidToDelete string) (err error) {
 
 	// Call shared delete function
 	err = commandAndRuleEngine.executeTCRuleDeletion_110_111_112_113(testCaseUuid, uuidToDelete)
@@ -709,7 +709,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			X-B12x-n-B11lx					X-B11lx						TCRuleDeletion111
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion111(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion111(testCaseUuid string, uuidToDelete string) (err error) {
 
 	// Call shared delete function
 	err = commandAndRuleEngine.executeTCRuleDeletion_110_111_112_113(testCaseUuid, uuidToDelete)
@@ -719,7 +719,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			X-B12-n-B11lx					X-B11lx						TCRuleDeletion112
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion112(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion112(testCaseUuid string, uuidToDelete string) (err error) {
 
 	// Call shared delete function
 	err = commandAndRuleEngine.executeTCRuleDeletion_110_111_112_113(testCaseUuid, uuidToDelete)
@@ -729,7 +729,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			X-B12x-n-B11l					X-B11lx						TCRuleDeletion113
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion113(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion113(testCaseUuid string, uuidToDelete string) (err error) {
 
 	// Call shared delete function
 	err = commandAndRuleEngine.executeTCRuleDeletion_110_111_112_113(testCaseUuid, uuidToDelete)
@@ -740,7 +740,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 // Multi-deletion-rule function
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			X-Bond-n-LastBond				X-LastBond					executeTCRuleDeletion_110_111_112_113
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion_110_111_112_113(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion_110_111_112_113(testCaseUuid string, uuidToDelete string) (err error) {
 	/*
 		// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
 		message MatureTestCaseModelElementMessage {
@@ -866,7 +866,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			X-B12-n-B12-X					X-B12-X						TCRuleDeletion114
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion114(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion114(testCaseUuid string, uuidToDelete string) (err error) {
 
 	// Call shared delete function
 	err = commandAndRuleEngine.executeTCRuleDeletion_114_115_116_117(testCaseUuid, uuidToDelete)
@@ -876,7 +876,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			X-B12x-n-B12x-X					X-B12x-X					TCRuleDeletion115
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion115(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion115(testCaseUuid string, uuidToDelete string) (err error) {
 
 	// Call shared delete function
 	err = commandAndRuleEngine.executeTCRuleDeletion_114_115_116_117(testCaseUuid, uuidToDelete)
@@ -886,7 +886,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			X-B12-n-B12x-X					X-B12x-X					TCRuleDeletion116
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion116(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion116(testCaseUuid string, uuidToDelete string) (err error) {
 
 	// Call shared delete function
 	err = commandAndRuleEngine.executeTCRuleDeletion_114_115_116_117(testCaseUuid, uuidToDelete)
@@ -896,7 +896,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			X-B12x-n-B12-X					X-B12x-X					TCRuleDeletion117
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion117(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion117(testCaseUuid string, uuidToDelete string) (err error) {
 
 	// Call shared delete function
 	err = commandAndRuleEngine.executeTCRuleDeletion_114_115_116_117(testCaseUuid, uuidToDelete)
@@ -907,7 +907,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 // Multi-deletion-rule function
 // What to remove			Remove in structure				Result after deletion		Rule
 // n=TI or TIC(X)			X-Bond-n-Bond-X					X-Bond-X					executeTCRuleDeletion_114_115_116_117
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDeletion_114_115_116_117(testCaseUuid string, uuidToDelete string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDeletion_114_115_116_117(testCaseUuid string, uuidToDelete string) (err error) {
 	/*
 		// One TestCaseElement, that is not a TestInstructionContainer, that hold type, reference to previous, next and parent elements
 		message MatureTestCaseModelElementMessage {
@@ -1060,7 +1060,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeTCRuleDelet
 }
 
 // Remove all children, in TestCase-model, for specific Element
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveDeleteOfChildElements(currentTestCase *testCaseModel.TestCaseModelStruct, elementsUuid string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveDeleteOfChildElements(currentTestCase *testCaseModel.TestCaseModelStruct, elementsUuid string) (err error) {
 
 	// Get current TestCase
 	/*

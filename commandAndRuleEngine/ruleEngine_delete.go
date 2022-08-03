@@ -7,7 +7,7 @@ import (
 )
 
 // Verify if an element can be deleted or not, regarding deletion rules
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfElementCanBeDeleted(testCaseUuid string, elementUuid string) (canBeDeleted bool, matchedSimpldRule string, matchedComplexRule string, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCanBeDeleted(testCaseUuid string, elementUuid string) (canBeDeleted bool, matchedSimpldRule string, matchedComplexRule string, err error) {
 
 	// First verify towards simple rules
 	canBeDeleted, matchedSimpldRule, err = commandAndRuleEngine.verifyIfComponentCanBeDeletedSimpleRules(testCaseUuid, elementUuid)
@@ -25,7 +25,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfElementCan
 }
 
 // Delete an element, but first ensure that rules for deletion are used
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeDeleteElement(testCaseUuid string, elementUuid string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeDeleteElement(testCaseUuid string, elementUuid string) (err error) {
 
 	// Verify that element is allowed, and can be deleted
 	canBeDeleted, matcheSimpleRule, matchedComplexRule, err := commandAndRuleEngine.verifyIfElementCanBeDeleted(testCaseUuid, elementUuid)
@@ -50,7 +50,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeDeleteEleme
 }
 
 // Delete an element based on specific rule
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeDeleteElementBasedOnRule(testCaseUuid string, elementUuid string, matchedComplexRule string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeDeleteElementBasedOnRule(testCaseUuid string, elementUuid string, matchedComplexRule string) (err error) {
 
 	switch matchedComplexRule {
 	case TCRuleDeletion101:

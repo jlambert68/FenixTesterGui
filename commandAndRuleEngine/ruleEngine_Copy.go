@@ -6,7 +6,7 @@ import (
 )
 
 // Verify if an element can be copied or not, regarding copy rules
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfElementCanBeCopied(testCaseUuid string, elementUuid string) (canBeCopied bool, matchedSimpldRule string, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCanBeCopied(testCaseUuid string, elementUuid string) (canBeCopied bool, matchedSimpldRule string, err error) {
 
 	// First verify towards simple rules
 	canBeCopied, matchedSimpldRule, err = commandAndRuleEngine.verifyIfComponentCanBeCopiedSimpleRules(testCaseUuid, elementUuid)
@@ -15,7 +15,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfElementCan
 }
 
 // Copy an element, but first ensure that rules for copying are used
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCopyElement(testCaseUuid string, elementUuid string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCopyElement(testCaseUuid string, elementUuid string) (err error) {
 
 	// Verify that element is allowed, and can be copied
 	canBeCopyied, matchedSimpleRule, err := commandAndRuleEngine.verifyIfElementCanBeCopied(testCaseUuid, elementUuid)

@@ -7,7 +7,7 @@ import (
 )
 
 // Verify if anor element can be swapped or not, regarding swap rules
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfElementCanBeSwapped(testCaseUuid string, elementUuid string) (canBeSwapped bool, matchedSimpledRule string, matchedComplexRule string, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCanBeSwapped(testCaseUuid string, elementUuid string) (canBeSwapped bool, matchedSimpledRule string, matchedComplexRule string, err error) {
 
 	// First verify towards simple rules
 	canBeSwapped, matchedSimpledRule, err = commandAndRuleEngine.verifyIfComponentCanBeSwappedSimpleRules(testCaseUuid, elementUuid)
@@ -25,7 +25,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfElementCan
 }
 
 // Swap an element, but first ensure that rules for swapping are used
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeSwapElement(testCaseUuid string, elementToSwapOutUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElement(testCaseUuid string, elementToSwapOutUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
 
 	// Verify that element is allowed, and can be swapped
 	canBeSwapped, matchedSimpleRule, matchedComplexRule, err := commandAndRuleEngine.verifyIfElementCanBeSwapped(testCaseUuid, elementToSwapOutUuid)
@@ -49,7 +49,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeSwapElement
 }
 
 // Execute a swap on an element based on specific rule
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeSwapElementBasedOnRule(testCaseUuid string, elementUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct, matchedComplexRule string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElementBasedOnRule(testCaseUuid string, elementUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct, matchedComplexRule string) (err error) {
 
 	switch matchedComplexRule {
 	case TCRuleSwap101:

@@ -28,7 +28,7 @@ import (
 //	TICx(X)			False							TCRuleSwap014
 
 // Verify the simple rules if a component can be Swapped or not
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedSimpleRules(testCaseUuid string, elementUuid string) (canBeSwapped bool, matchedRule string, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedSimpleRules(testCaseUuid string, elementUuid string) (canBeSwapped bool, matchedRule string, err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
@@ -160,7 +160,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 //No other combinations of swapping elements are allowed
 
 // Verify the Complex rules if a component can be Swapped or not
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedWithComplexRules(testCaseUuid string, uuidToSwapOut string) (matchedRule string, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedWithComplexRules(testCaseUuid string, uuidToSwapOut string) (matchedRule string, err error) {
 
 	var ruleName string
 	var ruleCanBeProcessed bool
@@ -175,7 +175,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 		return "", err
 	}
 
-	// Extract data for Previous Elementfunc (commandAndRuleEngine *commandAndRuleEngineObjectStruct)
+	// Extract data for Previous Elementfunc (commandAndRuleEngine *CommandAndRuleEngineObjectStruct)
 	currentElementUuid := uuidToSwapOut
 	currentElement, existInMap := currentTestCase.TestCaseModelMap[currentElementUuid]
 	if existInMap == false {
@@ -371,7 +371,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 }
 
 // Verify that all UUIDs are correct in component to be swapped in. Means that no empty uuid is allowed and they all are correct
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyThatThereAreNoZombieElementsInComponent(immatureElement testCaseModel.ImmatureElementStruct) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyThatThereAreNoZombieElementsInComponent(immatureElement testCaseModel.ImmatureElementStruct) (err error) {
 
 	var allUuidKeys []string
 
@@ -401,7 +401,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyThatThereAre
 }
 
 // Verify all children, in ImmatureEleemnt-model and remove the found element from 'allUuidKeys'
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveZombieElementSearchInComponentModel(elementsUuid string, allUuidKeys []string, immatureElement *testCaseModel.ImmatureElementStruct) (processedAllUuidKeys []string, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveZombieElementSearchInComponentModel(elementsUuid string, allUuidKeys []string, immatureElement *testCaseModel.ImmatureElementStruct) (processedAllUuidKeys []string, err error) {
 
 	// Extract current element
 	currentElement, existInMap := immatureElement.ImmatureElementMap[elementsUuid]
@@ -473,7 +473,7 @@ func FindElementInSliceAndRemove(sliceToWorkOn *[]string, uuid string) (returnSl
 }
 
 // Verify that all UUIDs are correct in component to be swapped in. Means that no empty uuid is allowed and they all are correct
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyThatAllUuidsAreCorrectInComponent(immatureElement testCaseModel.ImmatureElementStruct) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyThatAllUuidsAreCorrectInComponent(immatureElement testCaseModel.ImmatureElementStruct) (err error) {
 
 	// Loop all fields and find the ones defined as 'String'. Verify that content is a UUID
 	e := reflect.ValueOf(&immatureElement.ImmatureElementMap).Elem()
@@ -495,7 +495,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyThatAllUuids
 }
 
 // Verify all children, in new Element-model to be swapped in, that they contain correct UUIDs
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveVerifyAllUuidOfChildElements(testCaseUuid string, elementsUuid string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveVerifyAllUuidOfChildElements(testCaseUuid string, elementsUuid string) (err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]

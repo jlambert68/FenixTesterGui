@@ -8,7 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCopyFullELementStructure(testCaseUuid string, uuidToCopy string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCopyFullELementStructure(testCaseUuid string, uuidToCopy string) (err error) {
 
 	var tempTestCase *testCaseModel.TestCaseModelStruct
 
@@ -98,7 +98,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCopyFullELe
 }
 
 // Copy the full structure of all children, in TestCase-model, for specific Element
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveCopyingOfFullElementStructure(currentTestCase *testCaseModel.TestCaseModelStruct, elementsUuid string, copiedElementStructure *testCaseModel.ImmatureElementStruct) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveCopyingOfFullElementStructure(currentTestCase *testCaseModel.TestCaseModelStruct, elementsUuid string, copiedElementStructure *testCaseModel.ImmatureElementStruct) (err error) {
 
 	// Extract current element
 	currentElement, existInMap := currentTestCase.TestCaseModelMap[elementsUuid]

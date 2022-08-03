@@ -13,7 +13,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/pat v1.0.1
 	github.com/gorilla/sessions v1.2.1
-	github.com/jlambert68/FenixGrpcApi v0.0.0-20220724194030-6491f004977a
+	github.com/jlambert68/FenixGrpcApi v0.0.0-20220801175231-51073a9215ec
 	github.com/markbates/goth v1.73.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.7.1
@@ -22,6 +22,7 @@ require (
 	golang.org/x/oauth2 v0.0.0-20220524215830-622c5d57e401
 	google.golang.org/api v0.82.0
 	google.golang.org/grpc v1.47.0
+	google.golang.org/protobuf v1.28.0
 )
 
 require (
@@ -61,6 +62,5 @@ require (
 	gonum.org/v1/gonum v0.9.1 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20220527130721-00d5c0f3be58 // indirect
-	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
 )

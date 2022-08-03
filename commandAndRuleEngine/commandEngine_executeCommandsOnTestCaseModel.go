@@ -13,7 +13,7 @@ import (
 
 // TestCaseCommandTypeEnum_NEW_TESTCASE
 // Used for creating a new TestCase-Model to be used within a new TestCase
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_NewTestCaseModel() (testCaseUuid string, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_NewTestCaseModel() (testCaseUuid string, err error) {
 
 	// Create new B0-Bind
 	b0Bond := commandAndRuleEngine.createNewBondB0Element()
@@ -71,7 +71,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 
 // TestCaseCommandTypeEnum_REMOVE_ELEMENT
 // Used for Deleting an element from a TestCaseModel that is used within a TestCase
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(testCaseUuid string, elementId string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(testCaseUuid string, elementId string) (err error) {
 
 	// Try to Delete element
 	err = commandAndRuleEngine.executeDeleteElement(testCaseUuid, elementId)
@@ -120,7 +120,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 
 // TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_NEW_ELEMENT
 // Used for Swapping out an element, and in an element structure, from a TestCaseModel that is used within a TestCase
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapOutElemenAndInNewElementInTestCaseModel(testCaseUuid string, elementToSwapOutUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapOutElemenAndInNewElementInTestCaseModel(testCaseUuid string, elementToSwapOutUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
 
 	// Try to Swap out element
 	err = commandAndRuleEngine.executeSwapElement(testCaseUuid, elementToSwapOutUuid, immatureElementToSwapIn)
@@ -170,7 +170,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 
 // TestCaseCommandTypeEnum_COPY_ELEMENT
 // Used for copying an element  in a TestCaseModel that is used within a TestCase
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_CopyElementInTestCaseModel(testCaseUuid string, elementIdToCopy string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_CopyElementInTestCaseModel(testCaseUuid string, elementIdToCopy string) (err error) {
 
 	// Try to Copy element to Copy Buffer
 	err = commandAndRuleEngine.executeCopyElement(testCaseUuid, elementIdToCopy)
@@ -210,7 +210,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 
 // TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_COPY_BUFFER_ELEMENT
 // Used for Swapping in an element from Copy Buffer in a TestCaseModel that is used within a TestCase
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapInElementFromCopyBufferInTestCaseModel(testCaseUuid string, elementIdToBeReplacedByCopyBuffer string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapInElementFromCopyBufferInTestCaseModel(testCaseUuid string, elementIdToBeReplacedByCopyBuffer string) (err error) {
 
 	// Try to Swap Element From Copy Buffer
 	err = commandAndRuleEngine.executeSwapElementForCopyBuffer(testCaseUuid, elementIdToBeReplacedByCopyBuffer)
@@ -253,7 +253,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 
 // TestCaseCommandTypeEnum_CUT_ELEMENT
 // Used for cutting an element in a TestCaseModel that is used within a TestCase
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_CutElementInTestCaseModel(testCaseUuid string, elementIdToCut string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_CutElementInTestCaseModel(testCaseUuid string, elementIdToCut string) (err error) {
 
 	// Try to Copy element to Cut Buffer
 	err = commandAndRuleEngine.executeCutElement(testCaseUuid, elementIdToCut)
@@ -293,7 +293,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTe
 
 // TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_CUT_BUFFER_ELEMENT
 // Used for Swapping in an element from Cut opy Buffer in a TestCaseModel that is used within a TestCase
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapInElementFromCutBufferInTestCaseModel(testCaseUuid string, uuidToReplacedByCutBufferContent string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapInElementFromCutBufferInTestCaseModel(testCaseUuid string, uuidToReplacedByCutBufferContent string) (err error) {
 
 	// Try to Swap Element From Cut Buffer
 	err = commandAndRuleEngine.executeSwapElementFromCutBuffer(testCaseUuid, uuidToReplacedByCutBufferContent, nil)

@@ -26,7 +26,7 @@ import (
 //	TICx(X)		False				TCRuleDeletion014
 
 // Verify the simple rules if a component can be deleted or not
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedSimpleRules(testCaseUuid string, elementUuid string) (canBeDeleted bool, matchedRule string, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedSimpleRules(testCaseUuid string, elementUuid string) (canBeDeleted bool, matchedRule string, err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
@@ -164,7 +164,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 // n=TI or TIC(X)			X-B12x-n-B12x-X					X-B12x-X					TCRuleDeletion115
 // n=TI or TIC(X)			X-B12-n-B12x-X					X-B12x-X					TCRuleDeletion116
 // n=TI or TIC(X)			X-B12x-n-B12-X					X-B12x-X					TCRuleDeletion117
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedWithComplexRules(testCaseUuid string, uuidToDelete string) (matchedRule string, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedWithComplexRules(testCaseUuid string, uuidToDelete string) (matchedRule string, err error) {
 
 	var ruleName string
 	var ruleCanBeProcessed bool
@@ -179,7 +179,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) verifyIfComponentC
 		return "", err
 	}
 
-	// Extract data for Previous Elementfunc (commandAndRuleEngine *commandAndRuleEngineObjectStruct)
+	// Extract data for Previous Elementfunc (commandAndRuleEngine *CommandAndRuleEngineObjectStruct)
 	currentElementUuid := uuidToDelete
 	currentElement, existInMap := currentTestCase.TestCaseModelMap[currentElementUuid]
 	if existInMap == false {

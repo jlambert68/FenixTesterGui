@@ -20,7 +20,7 @@ func TestTCRuleDeletion101(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -203,7 +203,7 @@ func TestTCRuleDeletion102(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -459,7 +459,7 @@ func TestTCRuleDeletion103(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -715,7 +715,7 @@ func TestTCRuleDeletion104(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -970,7 +970,7 @@ func TestTCRuleDeletion105(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -1225,7 +1225,7 @@ func TestTCRuleDeletion106(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -1505,7 +1505,7 @@ func TestTCRuleDeletion107(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -1785,7 +1785,7 @@ func TestTCRuleDeletion108(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -2065,7 +2065,7 @@ func TestTCRuleDeletion109(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -2345,7 +2345,7 @@ func TestTCRuleDeletion110(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -2637,7 +2637,7 @@ func TestTCRuleDeletion111(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -2929,7 +2929,7 @@ func TestTCRuleDeletion112(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -3221,7 +3221,7 @@ func TestTCRuleDeletion113(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -3513,7 +3513,7 @@ func TestTCRuleDeletion114(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -3853,7 +3853,7 @@ func TestTCRuleDeletion115(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -4193,7 +4193,7 @@ func TestTCRuleDeletion116(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,
@@ -4533,7 +4533,7 @@ func TestTCRuleDeletion117(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate CommandAndRule-engine
-	commandAndRuleEngine := commandAndRuleEngineObjectStruct{
+	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
 		testcases:         nil,

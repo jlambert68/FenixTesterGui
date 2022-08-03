@@ -8,7 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCutFullELementStructure(testCaseUuid string, uuidToBeCutOut string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCutFullELementStructure(testCaseUuid string, uuidToBeCutOut string) (err error) {
 
 	var tempTestCase *testCaseModel.TestCaseModelStruct
 
@@ -107,7 +107,7 @@ func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) executeCutFullELem
 }
 
 // Copy the full structure of all children, in TestCase-model, for specific Element
-func (commandAndRuleEngine *commandAndRuleEngineObjectStruct) recursiveCuttingOfFullElementStructure(currentTestCase *testCaseModel.TestCaseModelStruct, elementsUuid string, copiedElementStructure *testCaseModel.MatureElementStruct) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveCuttingOfFullElementStructure(currentTestCase *testCaseModel.TestCaseModelStruct, elementsUuid string, copiedElementStructure *testCaseModel.MatureElementStruct) (err error) {
 
 	// Extract current element
 	currentElement, existInMap := currentTestCase.TestCaseModelMap[elementsUuid]

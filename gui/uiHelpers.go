@@ -6,7 +6,7 @@ import (
 
 // SetLogger
 // Set to use the same logger reference as is used by central part of system
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) SetLogger(logger *logrus.Logger) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) SetLogger(logger *logrus.Logger) {
 
 	//myUIServer = UIServerStruct{}
 	availableBuildingBlocksModel.logger = logger
@@ -17,7 +17,7 @@ func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) SetLogge
 
 // SetDialAddressString
 // Set the Dial Address, which was received from environment variables
-func (availableBuildingBlocksModel *availableBuildingBlocksModelStruct) SetDialAddressString(dialAddress string) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) SetDialAddressString(dialAddress string) {
 	availableBuildingBlocksModel.fenixGuiBuilderServerAddressToDial = dialAddress
 
 	return

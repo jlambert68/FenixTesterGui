@@ -1,13 +1,17 @@
 package testCaseModel
 
 import (
+	"FenixTesterGui/gui"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"time"
 )
 
+const numberOfCharactersfromUuid = 8
+
 type TestCaseModelsStruct struct {
-	TestCases   map[string]TestCaseModelStruct
-	CurrentUser string
+	TestCases                 map[string]TestCaseModelStruct
+	CurrentUser               string
+	subSystemsCrossReferences *gui.SubSystemsCrossReferencesStruct
 }
 
 type TestCaseModelStruct struct {

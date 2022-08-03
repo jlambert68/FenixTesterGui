@@ -62,6 +62,21 @@ var (
 
 func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIObject fyne.CanvasObject) {
 
+	// List alla TestCases
+	availableBuildingBlocks = widget.Select{
+		DisableableWidget: widget.DisableableWidget{},
+		Alignment:         0,
+		Selected:          "",
+		Options:           uiServer.availableBuildingBlocksModel.listAllAvailableBuidlingBlocks(),
+		PlaceHolder:       "",
+		OnChanged: func(s string) {
+			fmt.Printf("I selected %s to live forever..", s)
+			//label1.Text = s
+			//label1.Refresh()
+		},
+	}
+
+	// List all Available BuildingBlocks
 	availableBuildingBlocks = widget.Select{
 		DisableableWidget: widget.DisableableWidget{},
 		Alignment:         0,
@@ -84,11 +99,13 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 			})
 
 	*/
+
+	// List all Elements for current TestCase
 	availableBuildingBlocks = widget.Select{
 		DisableableWidget: widget.DisableableWidget{},
 		Alignment:         0,
 		Selected:          "",
-		Options:           uiServer.availableBuildingBlocksModel.listBuidlingBlocksInTestCase(),
+		Options:           uiServer.testCasesModel.ListAllAvailableBuildingBlocks(),
 		PlaceHolder:       "",
 		OnChanged: func(s string) {
 			fmt.Printf("I selected %s to live forever..", s)

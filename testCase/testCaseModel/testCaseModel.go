@@ -2,6 +2,7 @@ package testCaseModel
 
 import (
 	"errors"
+	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"strings"
 )
@@ -261,4 +262,53 @@ func (testCaseModel *TestCaseModelsStruct) recursiveTextualTestCaseModelExtracto
 	}
 
 	return testCaseModelElementsIOut, err
+}
+
+// List ALL Building Blocks in TestCase
+func (testCaseModel *TestCaseModelsStruct) ListAllAvailableBuildingBlocks(testCaseUuid string) (availableBuidlingBlocksInTestCaseList []string, err error) {
+
+	// Get current TestCase
+	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+
+	if existsInMap == false {
+		errorId := "02914625-46a8-4174-800a-f519f4cf0532"
+		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
+
+		return nil, err
+	}
+
+	// Loop all available building blocks and create list to be used in DropDown
+	for _, element := range currentTestCase.TestCaseModelMap {
+
+		elementUiName := testCaseModel.generateUINameForTestCaseElement(&element)
+
+		switch element.TestCaseModelElementType {
+
+		// TestInstructions
+		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION,
+			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE:
+
+			availableBuidlingBlocksInTestCaseList = append(availableBuidlingBlocksInTestCaseList, elementUiName+" [TI]")
+
+			// TestInstructionContainers
+		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER,
+			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE:
+
+			availableBuidlingBlocksInTestCaseList = append(availableBuidlingBlocksInTestCaseList, elementUiName+" [TIC]")
+
+			// Bonds
+		default:
+			availableBuidlingBlocksInTestCaseList = append(availableBuidlingBlocksInTestCaseList, elementUiName+" [BOND]")
+		}
+	}
+
+	return availableBuidlingBlocksInTestCaseList, err
+}
+
+// Generate name to be used when presenting TestCase Element
+func (testCaseModel *TestCaseModelsStruct) generateUINameForTestCaseElement(element *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) (elementUiName string) {
+
+	elementUiName = element.OriginalElementName + " [" + element.MatureElementUuid[0:numberOfCharactersfromUuid-1] + "]"
+
+	return elementUiName
 }

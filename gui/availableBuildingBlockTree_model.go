@@ -398,7 +398,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) unPinTes
 	return err
 }
 
-// Unpin one pinned Available Building Block (TestInstruction or TestInstructionContainer
+// List all Available Building Block (TestInstruction or TestInstructionContainer
 func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) listAllAvailableBuidlingBlocks() (availableBuidlingBlocksList []string) {
 
 	// Loop all available building blocks and create list to be used in DropDown

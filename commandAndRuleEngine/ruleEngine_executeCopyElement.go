@@ -15,11 +15,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCopyFullELe
 	tempTestCaseModelMap := make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage)
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 
 	if existsInMap == false {
 		errorId := "64bb031b-88c7-4758-aade-7375816ac285"
-		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all Testcases [ErrorID: %s]", testCaseUuid, errorId))
 
 		return err
 	}
@@ -77,11 +77,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCopyFullELe
 	}
 
 	//Reload the TestCase - not needed
-	// currentTestCase, existsInMap = commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	// currentTestCase, existsInMap = commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 
 	if existsInMap == false {
 		errorId := "9d857471-7918-4762-be9b-729b82a961e2"
-		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all Testcases [ErrorID: %s]", testCaseUuid, errorId))
 
 		return err
 	}
@@ -91,7 +91,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCopyFullELe
 	currentTestCase.CopyBuffer = copiedStructure
 
 	// Save TestCase
-	commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+	commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
 
 	return err
 

@@ -56,28 +56,36 @@ const (
 )
 
 var (
-	availableBuildingBlocks  widget.Select
-	buildingBlocksInTestCase widget.Select
+	availableTestCasesSelectWidget                widget.Select
+	availableBuildingBlocksSelectWidget           widget.Select
+	availableBuildingBlocksInTestCaseSelectWidget widget.Select
 )
 
-func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIObject fyne.CanvasObject) {
+func (uiServer *UIServerStruct) createTestCaseCommandParametersUI() (testCaseCommandsParametersUIObject fyne.CanvasObject) {
 
 	// List alla TestCases
-	availableBuildingBlocks = widget.Select{
+	availableTestCasesSelectWidget = widget.Select{
 		DisableableWidget: widget.DisableableWidget{},
 		Alignment:         0,
 		Selected:          "",
-		Options:           uiServer.availableBuildingBlocksModel.listAllAvailableBuidlingBlocks(),
+		Options:           uiServer.testCasesModel.ListAvailableTestCases(),
 		PlaceHolder:       "",
 		OnChanged: func(s string) {
-			fmt.Printf("I selected %s to live forever..", s)
+			fmt.Println("I selected %s to live forever..", s)
+			availableTestCaseElements, err := uiServer.testCasesModel.ListAllAvailableBuildingBlocksInTestCase(availableTestCasesSelectWidget.Selected)
+
+			if err != nil {
+				fmt.Println(err)
+			} else {
+				availableBuildingBlocksInTestCaseSelectWidget.Options = availableTestCaseElements
+			}
 			//label1.Text = s
 			//label1.Refresh()
 		},
 	}
 
 	// List all Available BuildingBlocks
-	availableBuildingBlocks = widget.Select{
+	availableBuildingBlocksSelectWidget = widget.Select{
 		DisableableWidget: widget.DisableableWidget{},
 		Alignment:         0,
 		Selected:          "",
@@ -101,11 +109,83 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 	*/
 
 	// List all Elements for current TestCase
-	availableBuildingBlocks = widget.Select{
+	availableBuildingBlocksInTestCaseSelectWidget = widget.Select{
 		DisableableWidget: widget.DisableableWidget{},
 		Alignment:         0,
 		Selected:          "",
-		Options:           uiServer.testCasesModel.ListAllAvailableBuildingBlocks(),
+		Options:           nil,
+		PlaceHolder:       "",
+		OnChanged: func(s string) {
+			fmt.Printf("I selected %s to live forever..", s)
+			//label1.Text = s
+			//label1.Refresh()
+		},
+	}
+
+	testCaseCommandsUIObject_temp := container.New(
+		layout.NewVBoxLayout(),
+		&availableTestCasesSelectWidget,
+		&availableBuildingBlocksSelectWidget,
+		&availableBuildingBlocksInTestCaseSelectWidget)
+
+	testCaseCommandsParametersUIObject = container.NewScroll(testCaseCommandsUIObject_temp)
+
+	return testCaseCommandsParametersUIObject
+
+}
+func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIObject fyne.CanvasObject) {
+
+	// List alla TestCases
+	availableTestCasesSelectWidget = widget.Select{
+		DisableableWidget: widget.DisableableWidget{},
+		Alignment:         0,
+		Selected:          "",
+		Options:           uiServer.testCasesModel.ListAvailableTestCases(),
+		PlaceHolder:       "",
+		OnChanged: func(s string) {
+			fmt.Println("I selected %s to live forever..", s)
+			availableTestCaseElements, err := uiServer.testCasesModel.ListAllAvailableBuildingBlocksInTestCase(availableTestCasesSelectWidget.Selected)
+
+			if err != nil {
+				fmt.Println(err)
+			} else {
+				availableBuildingBlocksInTestCaseSelectWidget.Options = availableTestCaseElements
+			}
+			//label1.Text = s
+			//label1.Refresh()
+		},
+	}
+
+	// List all Available BuildingBlocks
+	availableBuildingBlocksSelectWidget = widget.Select{
+		DisableableWidget: widget.DisableableWidget{},
+		Alignment:         0,
+		Selected:          "",
+		Options:           uiServer.availableBuildingBlocksModel.listAllAvailableBuidlingBlocks(),
+		PlaceHolder:       "",
+		OnChanged: func(s string) {
+			fmt.Printf("I selected %s to live forever..", s)
+			//label1.Text = s
+			//label1.Refresh()
+		},
+	}
+	/*
+		Select(
+			uiServer.availableBuildingBlocksModel.listAllAvailableBuidlingBlocks(),
+			func(s string) {
+				fmt.Printf("I selected %s to live forever..", s)
+				//label1.Text = s
+				//label1.Refresh()
+			})
+
+	*/
+
+	// List all Elements for current TestCase
+	availableBuildingBlocksInTestCaseSelectWidget = widget.Select{
+		DisableableWidget: widget.DisableableWidget{},
+		Alignment:         0,
+		Selected:          "",
+		Options:           nil,
 		PlaceHolder:       "",
 		OnChanged: func(s string) {
 			fmt.Printf("I selected %s to live forever..", s)
@@ -118,7 +198,7 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 		uiServer.newTestCase()
 	})
 	removeButton := widget.NewButton(CommandRemoveElementFromTestcase, func() {
-		uiServer.remove("x")
+		uiServer.remove(availableBuildingBlocksInTestCaseSelectWidget.Selected)
 	})
 	swapFromNewButton := widget.NewButton(CommandSwapFromNewComponent, func() {
 		uiServer.swapFromNew("x", "xx")
@@ -144,8 +224,9 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 
 	testCaseCommandsUIObject_temp := container.New(
 		layout.NewVBoxLayout(),
-		&availableBuildingBlocks,
-		//buildingBlocksInTestCase,
+		&availableTestCasesSelectWidget,
+		&availableBuildingBlocksSelectWidget,
+		&availableBuildingBlocksInTestCaseSelectWidget,
 		newTestCaseButton,
 		removeButton,
 		swapFromNewButton,
@@ -166,6 +247,12 @@ func (uiServer *UIServerStruct) newTestCase() {
 
 	fmt.Printf("NewTestCase()\n")
 	bindedCommandListData.Prepend(CommandNewTestcase)
+	err := uiServer.commandAndRuleEngine.NewTestCaseModel()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		availableTestCasesSelectWidget.Options = uiServer.testCasesModel.ListAvailableTestCases()
+	}
 
 }
 
@@ -174,6 +261,13 @@ func (uiServer *UIServerStruct) remove(elementToBeRemoved string) {
 
 	fmt.Printf("Remove(ElementToBeRemoved='%s')\n", elementToBeRemoved)
 	bindedCommandListData.Prepend(CommandRemoveElementFromTestcase)
+
+	err := uiServer.commandAndRuleEngine.RemoveElement()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		availableTestCasesSelectWidget.Options = uiServer.testCasesModel.ListAvailableTestCases()
+	}
 
 }
 

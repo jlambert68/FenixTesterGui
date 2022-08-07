@@ -7,5 +7,5 @@ import (
 
 type commandsEngineStruct struct {
 	logger    *logrus.Logger
-	testcases *testCaseModel.TestCaseModelsStruct
+	testcases *testCaseModel.TestCasesModelsStruct
 }

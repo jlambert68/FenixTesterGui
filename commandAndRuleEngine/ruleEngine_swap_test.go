@@ -89,13 +89,13 @@ func TestTCRuleSwap101(t *testing.T) {
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
 	allTestCases[testCaseUuid] = myTestCaseModel
-	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcases:         &testCasesObject,
+		Testcases:         &testCasesObject,
 	}
 
 	// Add needed data for availableBondsMap
@@ -139,7 +139,7 @@ func TestTCRuleSwap101(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Retrieve updated TestCase and validate that it exists im Map
-	myTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B10)-B1l'
@@ -195,12 +195,12 @@ func TestTCRuleSwap101(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
+	err = commandAndRuleEngine.Testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B10)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B10)-B1l]"
@@ -325,13 +325,13 @@ func TestTCRuleSwap102(t *testing.T) {
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
 	allTestCases[testCaseUuid] = myTestCaseModel
-	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcases:         &testCasesObject,
+		Testcases:         &testCasesObject,
 	}
 
 	// Add needed data for availableBondsMap
@@ -375,7 +375,7 @@ func TestTCRuleSwap102(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Retrieve updated TestCase and validate that it exists im Map
-	myTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B11l)-B1l'
@@ -462,12 +462,12 @@ func TestTCRuleSwap102(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
+	err = commandAndRuleEngine.Testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B11)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B11l)-B1l]"
@@ -628,13 +628,13 @@ func TestTCRuleSwap103(t *testing.T) {
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
 	allTestCases[testCaseUuid] = myTestCaseModel
-	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcases:         &testCasesObject,
+		Testcases:         &testCasesObject,
 	}
 
 	// Add needed data for availableBondsMap
@@ -664,7 +664,7 @@ func TestTCRuleSwap103(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Retrieve updated TestCase and validate that it exists im Map
-	myTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B12-TIC(B10)-B11l)-B1l'
@@ -785,12 +785,12 @@ func TestTCRuleSwap103(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
+	err = commandAndRuleEngine.Testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B12-TIC(B10)-B11)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B12-TIC(B10)-B11l)-B1l]"
@@ -951,13 +951,13 @@ func TestTCRuleSwap104(t *testing.T) {
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
 	allTestCases[testCaseUuid] = myTestCaseModel
-	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcases:         &testCasesObject,
+		Testcases:         &testCasesObject,
 	}
 
 	// Add needed data for availableBondsMap
@@ -987,7 +987,7 @@ func TestTCRuleSwap104(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Retrieve updated TestCase and validate that it exists im Map
-	myTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B12-TIC(B10)-B11l)-B1l'
@@ -1108,12 +1108,12 @@ func TestTCRuleSwap104(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
+	err = commandAndRuleEngine.Testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B12-TIC(B10)-B11)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B12-TIC(B10)-B11l)-B1l]"
@@ -1285,13 +1285,13 @@ func TestTCRuleSwap105(t *testing.T) {
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
 	allTestCases[testCaseUuid] = myTestCaseModel
-	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcases:         &testCasesObject,
+		Testcases:         &testCasesObject,
 	}
 
 	// Add needed data for availableBondsMap
@@ -1321,7 +1321,7 @@ func TestTCRuleSwap105(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Retrieve updated TestCase and validate that it exists im Map
-	myTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B12-TI-B12-TI-B11l)-B1l'
@@ -1452,12 +1452,12 @@ func TestTCRuleSwap105(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
+	err = commandAndRuleEngine.Testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B12-TI-B12-TI-B11)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B12-TI-B12-TI-B11l)-B1l]"
@@ -1581,13 +1581,13 @@ func TestTCRuleSwap106(t *testing.T) {
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
 	allTestCases[testCaseUuid] = myTestCaseModel
-	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcases:         &testCasesObject,
+		Testcases:         &testCasesObject,
 	}
 
 	// Add needed data for availableBondsMap
@@ -1631,7 +1631,7 @@ func TestTCRuleSwap106(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Retrieve updated TestCase and validate that it exists im Map
-	myTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11fx-TIC(B10)-B11lx)-B1l'
@@ -1718,12 +1718,12 @@ func TestTCRuleSwap106(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
+	err = commandAndRuleEngine.Testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11x-TIC(B10)-B11x)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11fx-TIC(B10)-B11lx)-B1l]"
@@ -1848,13 +1848,13 @@ func TestTCRuleSwap107(t *testing.T) {
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
 	allTestCases[testCaseUuid] = myTestCaseModel
-	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcases:         &testCasesObject,
+		Testcases:         &testCasesObject,
 	}
 
 	// Add needed data for availableBondsMap
@@ -1898,7 +1898,7 @@ func TestTCRuleSwap107(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Retrieve updated TestCase and validate that it exists im Map
-	myTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11fx-TIC(B10)-B11l)-B1l'
@@ -1985,12 +1985,12 @@ func TestTCRuleSwap107(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
+	err = commandAndRuleEngine.Testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11x-TIC(B10)-B11)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11fx-TIC(B10)-B11l)-B1l]"
@@ -2115,13 +2115,13 @@ func TestTCRuleSwap108(t *testing.T) {
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
 	allTestCases[testCaseUuid] = myTestCaseModel
-	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcases:         &testCasesObject,
+		Testcases:         &testCasesObject,
 	}
 
 	// Add needed data for availableBondsMap
@@ -2165,7 +2165,7 @@ func TestTCRuleSwap108(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Retrieve updated TestCase and validate that it exists im Map
-	myTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B11xl)-B1l'
@@ -2252,12 +2252,12 @@ func TestTCRuleSwap108(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
+	err = commandAndRuleEngine.Testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B11x)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B11lx)-B1l]"

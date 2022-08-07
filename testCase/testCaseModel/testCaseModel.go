@@ -8,7 +8,7 @@ import (
 )
 
 // Verify that all UUIDs are correct in TestCaseModel. Meaning that no empty uuid is allowed and they all are correct
-func (testCaseModel *TestCaseModelsStruct) VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid string) (err error) {
+func (testCaseModel *TestCasesModelsStruct) VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid string) (err error) {
 
 	var allUuidKeys []string
 
@@ -38,7 +38,7 @@ func (testCaseModel *TestCaseModelsStruct) VerifyThatThereAreNoZombieElementsInT
 }
 
 // Verify all children, in TestCaseElement-model and remove the found element from 'allUuidKeys'
-func (testCaseModel *TestCaseModelsStruct) recursiveZombieElementSearchInTestCaseModel(testCaseUuid string, elementsUuid string, allUuidKeys []string) (processedAllUuidKeys []string, err error) {
+func (testCaseModel *TestCasesModelsStruct) recursiveZombieElementSearchInTestCaseModel(testCaseUuid string, elementsUuid string, allUuidKeys []string) (processedAllUuidKeys []string, err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
@@ -111,7 +111,7 @@ func findElementInSliceAndRemove(sliceToWorkOn *[]string, uuid string) (returnSl
 	return returnSlice
 }
 
-func (testCaseModel *TestCaseModelsStruct) CreateTextualTestCase(testCaseUuid string) (textualTestCaseSimple string, textualTestCaseComplex string, err error) {
+func (testCaseModel *TestCasesModelsStruct) CreateTextualTestCase(testCaseUuid string) (textualTestCaseSimple string, textualTestCaseComplex string, err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
@@ -218,7 +218,7 @@ func (testCaseModel *TestCaseModelsStruct) CreateTextualTestCase(testCaseUuid st
 }
 
 // Verify all children, in TestCaseElement-model and remove the found element from 'allUuidKeys'
-func (testCaseModel *TestCaseModelsStruct) recursiveTextualTestCaseModelExtractor(testCaseUuid string, elementsUuid string, testCaseModelElementsIn []fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum) (testCaseModelElementsIOut []fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum, err error) {
+func (testCaseModel *TestCasesModelsStruct) recursiveTextualTestCaseModelExtractor(testCaseUuid string, elementsUuid string, testCaseModelElementsIn []fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum) (testCaseModelElementsIOut []fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum, err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
@@ -265,7 +265,7 @@ func (testCaseModel *TestCaseModelsStruct) recursiveTextualTestCaseModelExtracto
 }
 
 // List ALL Building Blocks in TestCase
-func (testCaseModel *TestCaseModelsStruct) ListAllAvailableBuildingBlocks(testCaseUuid string) (availableBuidlingBlocksInTestCaseList []string, err error) {
+func (testCaseModel *TestCasesModelsStruct) ListAllAvailableBuildingBlocksInTestCase(testCaseUuid string) (availableBuidlingBlocksInTestCaseList []string, err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
@@ -306,9 +306,24 @@ func (testCaseModel *TestCaseModelsStruct) ListAllAvailableBuildingBlocks(testCa
 }
 
 // Generate name to be used when presenting TestCase Element
-func (testCaseModel *TestCaseModelsStruct) generateUINameForTestCaseElement(element *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) (elementUiName string) {
+func (testCaseModel *TestCasesModelsStruct) generateUINameForTestCaseElement(element *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) (elementUiName string) {
 
 	elementUiName = element.OriginalElementName + " [" + element.MatureElementUuid[0:numberOfCharactersfromUuid-1] + "]"
 
 	return elementUiName
+}
+
+// ListAvailableTestCases
+// List all available TestCase in TestCasesModel
+
+func (testCaseModel *TestCasesModelsStruct) ListAvailableTestCases() (availableTestCasesAsList []string) {
+
+	// Loop all available TestCases and append  UUID for TestCase to list
+	for testCaseUuid, _ := range testCaseModel.TestCases {
+
+		availableTestCasesAsList = append(availableTestCasesAsList, testCaseUuid)
+
+	}
+
+	return availableTestCasesAsList
 }

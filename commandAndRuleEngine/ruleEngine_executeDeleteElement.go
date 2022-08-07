@@ -26,9 +26,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	*/
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
-		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
+		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
 	}
 
@@ -90,7 +90,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 	// If there are no errors then save the TestCase back into map of all TestCases
 	if err == nil {
-		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
 	}
 
 	return err
@@ -116,9 +116,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	*/
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
-		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
+		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
 	}
 
@@ -198,7 +198,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 	// If there are no errors then save the TestCase back into map of all TestCases
 	if err == nil {
-		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
 	}
 
 	return err
@@ -224,9 +224,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	*/
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
-		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
+		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
 	}
 
@@ -306,7 +306,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 	// If there are no errors then save the TestCase back into map of all TestCases
 	if err == nil {
-		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
 	}
 
 	return err
@@ -332,9 +332,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	*/
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
-		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
+		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
 	}
 
@@ -414,7 +414,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 	// If there are no errors then save the TestCase back into map of all TestCases
 	if err == nil {
-		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
 	}
 
 	return err
@@ -440,9 +440,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	*/
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
-		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
+		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
 	}
 
@@ -522,7 +522,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 	// If there are no errors then save the TestCase back into map of all TestCases
 	if err == nil {
-		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
 	}
 
 	return err
@@ -589,9 +589,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	*/
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
-		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
+		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
 	}
 
@@ -690,7 +690,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 	// If there are no errors then save the TestCase back into map of all TestCases
 	if err == nil {
-		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
 	}
 
 	return err
@@ -757,9 +757,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	*/
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
-		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
+		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
 	}
 
@@ -857,7 +857,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 	// If there are no errors then save the TestCase back into map of all TestCases
 	if err == nil {
-		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
 	}
 
 	return err
@@ -924,9 +924,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	*/
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
-		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
+		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
 	}
 
@@ -1052,7 +1052,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 
 	// If there are no errors then save the TestCase back into map of all TestCases
 	if err == nil {
-		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
 	}
 
 	return err
@@ -1064,9 +1064,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveDeleteOfC
 
 	// Get current TestCase
 	/*
-		currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCase]
+		currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCase]
 		if existsInMap == false {
-			err = errors.New("testcase with uuid '" + testCase + "' doesn't exist in map with all testcases")
+			err = errors.New("testcase with uuid '" + testCase + "' doesn't exist in map with all Testcases")
 			return err
 		}
 	*/

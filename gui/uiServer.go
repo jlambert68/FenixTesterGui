@@ -60,21 +60,20 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 			availableBuildingBlocksForUITreeNodes:                                      nil,
 			grpcOut:                                                                    grpc_out.GRPCOutStruct{},
 		},
-		testCasesModel: testCaseModel.TestCaseModelsStruct{
-			TestCases:   nil,
-			CurrentUser: "s41797",
+		testCasesModel: testCaseModel.TestCasesModelsStruct{
+			TestCases:        nil,
+			CurrentUser:      "s41797",
+			GrpcOutReference: nil,
 		},
-		commandAndRuleEngine:      commandAndRuleEngine.CommandAndRuleEngineObjectStruct{},
-		grpcOut:                   grpc_out.GRPCOutStruct{},
-		subSystemsCrossReferences: SubSystemsCrossReferencesStruct{},
+		commandAndRuleEngine: commandAndRuleEngine.CommandAndRuleEngineObjectStruct{},
+		grpcOut:              grpc_out.GRPCOutStruct{},
 	}
-	// Add SubSystems References
-	uiServer.subSystemsCrossReferences = SubSystemsCrossReferencesStruct{
-		AvailableBuildingBlocksModelReference: &uiServer.availableBuildingBlocksModel,
-		TestCasesModelReference:               &uiServer.testCasesModel,
-		CommandAndRuleEnginReference:          &uiServer.commandAndRuleEngine,
-		GrpcOutReference:                      &uiServer.grpcOut,
-	}
+	// Add gRPC-out Reference
+	uiServer.commandAndRuleEngine.GrpcOutReference = &uiServer.availableBuildingBlocksModel.grpcOut
+	uiServer.testCasesModel.GrpcOutReference = &uiServer.availableBuildingBlocksModel.grpcOut
+
+	// Add TestCasesReference to CommandEngine
+	uiServer.commandAndRuleEngine.Testcases = &uiServer.testCasesModel
 
 	// Forward logger and Dail string
 	uiServer.SetLogger(globalUISServer.logger)
@@ -122,6 +121,9 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	// Get Available Building BLocks form GUI-server
 	uiServer.availableBuildingBlocksModel.loadPinnedBuildingBlocksFromServer()
+
+	// Load Available Bonds
+	uiServer.commandAndRuleEngine.LoadAvailableBondsFromServer()
 
 	// Create the Available Building Blocks adapted to Fyne tree-view
 	uiServer.availableBuildingBlocksModel.makeTreeUIModel()
@@ -310,6 +312,10 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 
 	// Load the Available TestCase BuildingBlocks TreeUI
 	availableTestCaseBuildingBlocksTreeUI := uiServer.loadAvailableTestCaseBuildingBlocksTreeUI()
+
+	//	commandParametersAndCommandLayout := container.New(layout.NewVBoxLayout(), uiServer.createTestCaseCommandParametersUI(), uiServer.createTestCaseCommandsUI())
+	//commandParametersAndCommandLayout := container.New(layout.NewVBoxLayout(), uiServer.createTestCaseCommandParametersUI(), uiServer.createTestCaseCommandsUI())
+	//commandParametersAndCommandLayout := container.New(layout.NewVBoxLayout(), uiServer.createTestCaseCommandsUI())
 
 	// Create the complete TestCase BuildingBlocks UI area
 	availableTestCaseBuildingBlocksBorderedLayout := layout.NewBorderLayout(availableAvailableBuildingBlocksUIBar, nil, nil, nil)

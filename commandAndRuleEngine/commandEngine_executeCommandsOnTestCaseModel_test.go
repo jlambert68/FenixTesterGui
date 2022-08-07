@@ -19,13 +19,13 @@ func TestNewTestCaseModelCommand(t *testing.T) {
 
 	// Initiate structure for all TestCases
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
-	testCasesObject := testCaseModel.TestCaseModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcases:         &testCasesObject,
+		Testcases:         &testCasesObject,
 	}
 
 	// Add needed data for availableBondsMap
@@ -55,7 +55,7 @@ func TestNewTestCaseModelCommand(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	testCase := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 
 	// Validate the result of the NewTestCaseModel-command, 'B0'
 	// 1) Validate B0 (1)
@@ -71,12 +71,12 @@ func TestNewTestCaseModelCommand(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
+	err = commandAndRuleEngine.Testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B0]"
 	textualTestCaseRepresentationComplex := "[B0]"
@@ -105,7 +105,7 @@ func TestRemoveElementCommandOnTestCaseModel(t *testing.T) {
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcases:         nil,
+		Testcases:         nil,
 	}
 
 	// Add needed data for availableBondsMap
@@ -198,19 +198,19 @@ func TestRemoveElementCommandOnTestCaseModel(t *testing.T) {
 	// Generate new UUID
 	testCaseUuid := uuidGenerator.New().String()
 
-	// Add myTestCaseModel to map of all testcases
+	// Add myTestCaseModel to map of all Testcases
 	allTestCases[testCaseUuid] = myTestCaseModel
 
 	// Set Current User
 	currentUser := "s41797"
 
 	// Add AddTestCases to TestCases-model
-	testCasesObject := testCaseModel.TestCaseModelsStruct{
+	testCasesObject := testCaseModel.TestCasesModelsStruct{
 		TestCases:   allTestCases,
 		CurrentUser: currentUser}
 
 	// Add reference to TestCAses in command and rule engine
-	commandAndRuleEngine.testcases = &testCasesObject
+	commandAndRuleEngine.Testcases = &testCasesObject
 
 	// Execute command
 	err := commandAndRuleEngine.executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(testCaseUuid, uuidToBeDeleted)
@@ -219,7 +219,7 @@ func TestRemoveElementCommandOnTestCaseModel(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	testCase := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 
 	// Validate the result of the NewTestCaseModel-command, 'B0'
 	// 1) Validate B0 (1)
@@ -235,12 +235,12 @@ func TestRemoveElementCommandOnTestCaseModel(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
+	err = commandAndRuleEngine.Testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B0]"
 	textualTestCaseRepresentationComplex := "[B0]"
@@ -285,7 +285,7 @@ func TestSwapElementCommandOnTestCaseModel(t *testing.T) {
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcases:         nil,
+		Testcases:         nil,
 	}
 
 	// Add needed data for availableBondsMap
@@ -356,19 +356,19 @@ func TestSwapElementCommandOnTestCaseModel(t *testing.T) {
 	// Generate new UUID
 	testCaseUuid := uuidGenerator.New().String()
 
-	// Add myTestCaseModel to map of all testcases
+	// Add myTestCaseModel to map of all Testcases
 	allTestCases[testCaseUuid] = myTestCaseModel
 
 	// Set Current User
 	currentUser := "s41797"
 
 	// Add AddTestCases to TestCases-model
-	testCasesObject := testCaseModel.TestCaseModelsStruct{
+	testCasesObject := testCaseModel.TestCasesModelsStruct{
 		TestCases:   allTestCases,
 		CurrentUser: currentUser}
 
 	// Add reference to TestCAses in command and rule engine
-	commandAndRuleEngine.testcases = &testCasesObject
+	commandAndRuleEngine.Testcases = &testCasesObject
 
 	// Create an Immature Element model for 'TIC(B10)'
 	immatureElementModel := testCaseModel.ImmatureElementStruct{
@@ -416,7 +416,7 @@ func TestSwapElementCommandOnTestCaseModel(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	testCase := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 
 	// Validate the result of the Swap-Element-command, 'B1f-TIC(B10)-B1l'
 	// 1) Validate B1f (1)
@@ -464,12 +464,12 @@ func TestSwapElementCommandOnTestCaseModel(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
+	err = commandAndRuleEngine.Testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B10)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B10)-B1l]"
@@ -514,7 +514,7 @@ func TestCopyElementCommandOnTestCaseModel(t *testing.T) {
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcases:         nil,
+		Testcases:         nil,
 	}
 
 	// Initiate a TestCaseModel
@@ -587,19 +587,19 @@ func TestCopyElementCommandOnTestCaseModel(t *testing.T) {
 	// Generate new UUID
 	testCaseUuid := uuidGenerator.New().String()
 
-	// Add myTestCaseModel to map of all testcases
+	// Add myTestCaseModel to map of all Testcases
 	allTestCases[testCaseUuid] = myTestCaseModel
 
 	// Set Current User
 	currentUser := "s41797"
 
 	// Add AddTestCases to TestCases-model
-	testCasesObject := testCaseModel.TestCaseModelsStruct{
+	testCasesObject := testCaseModel.TestCasesModelsStruct{
 		TestCases:   allTestCases,
 		CurrentUser: currentUser}
 
 	// Add reference to TestCAses in command and rule engine
-	commandAndRuleEngine.testcases = &testCasesObject
+	commandAndRuleEngine.Testcases = &testCasesObject
 
 	// Execute command
 	err := commandAndRuleEngine.executeCommandOnTestCaseModel_CopyElementInTestCaseModel(testCaseUuid, uuidToBeCopied)
@@ -608,7 +608,7 @@ func TestCopyElementCommandOnTestCaseModel(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	testCase := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 
 	// Validate the result of the Copy-Element-command, 'B1f-TIC(B10)-B1l'
 	// 1) Validate B1f (1)
@@ -656,12 +656,12 @@ func TestCopyElementCommandOnTestCaseModel(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
+	err = commandAndRuleEngine.Testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B10)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B10)-B1l]"
@@ -716,7 +716,7 @@ func TestSwapElementFromCopyBufferCommandOnTestCaseModel(t *testing.T) {
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcases:         nil,
+		Testcases:         nil,
 	}
 
 	// Add needed data for availableBondsMap
@@ -824,19 +824,19 @@ func TestSwapElementFromCopyBufferCommandOnTestCaseModel(t *testing.T) {
 	// Generate new UUID
 	testCaseUuid := uuidGenerator.New().String()
 
-	// Add myTestCaseModel to map of all testcases
+	// Add myTestCaseModel to map of all Testcases
 	allTestCases[testCaseUuid] = myTestCaseModel
 
 	// Set Current User
 	currentUser := "s41797"
 
 	// Add AddTestCases to TestCases-model
-	testCasesObject := testCaseModel.TestCaseModelsStruct{
+	testCasesObject := testCaseModel.TestCasesModelsStruct{
 		TestCases:   allTestCases,
 		CurrentUser: currentUser}
 
 	// Add reference to TestCAses in command and rule engine
-	commandAndRuleEngine.testcases = &testCasesObject
+	commandAndRuleEngine.Testcases = &testCasesObject
 
 	// Execute command Copy
 	err := commandAndRuleEngine.executeCommandOnTestCaseModel_CopyElementInTestCaseModel(testCaseUuid, uuidToBeCopied)
@@ -851,7 +851,7 @@ func TestSwapElementFromCopyBufferCommandOnTestCaseModel(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	testCase := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 
 	// Validate the result of the Copy-Element-command, 'B1f-TIC(B10)-B1l'
 	// 1) Validate B1f (1)
@@ -932,12 +932,12 @@ func TestSwapElementFromCopyBufferCommandOnTestCaseModel(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
+	err = commandAndRuleEngine.Testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B11)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B11l)-B1l]"
@@ -999,7 +999,7 @@ func TestSwapElementFromCutBufferCommandOnTestCaseModel(t *testing.T) {
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
 		logger:            myLogger,
 		availableBondsMap: nil,
-		testcases:         nil,
+		Testcases:         nil,
 	}
 
 	// Add needed data for availableBondsMap
@@ -1179,19 +1179,19 @@ func TestSwapElementFromCutBufferCommandOnTestCaseModel(t *testing.T) {
 	// Generate new UUID
 	testCaseUuid := uuidGenerator.New().String()
 
-	// Add myTestCaseModel to map of all testcases
+	// Add myTestCaseModel to map of all Testcases
 	allTestCases[testCaseUuid] = myTestCaseModel
 
 	// Set Current User
 	currentUser := "s41797"
 
 	// Add AddTestCases to TestCases-model
-	testCasesObject := testCaseModel.TestCaseModelsStruct{
+	testCasesObject := testCaseModel.TestCasesModelsStruct{
 		TestCases:   allTestCases,
 		CurrentUser: currentUser}
 
 	// Add reference to TestCases in command and rule engine
-	commandAndRuleEngine.testcases = &testCasesObject
+	commandAndRuleEngine.Testcases = &testCasesObject
 
 	// Execute command Cut
 	err := commandAndRuleEngine.executeCommandOnTestCaseModel_CutElementInTestCaseModel(testCaseUuid, uuidToBeCut)
@@ -1206,7 +1206,7 @@ func TestSwapElementFromCutBufferCommandOnTestCaseModel(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	testCase := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 
 	// Validate the result of the Copy-Element-command, 'B1f-TIC(B10)-B1l'
 	// 1) Validate B1f (1)
@@ -1320,12 +1320,12 @@ func TestSwapElementFromCutBufferCommandOnTestCaseModel(t *testing.T) {
 	assert.Equal(t, "true", fmt.Sprint(correctElement))
 
 	// Validate that there are no zombie elements in TestCaseModel
-	err = commandAndRuleEngine.testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
+	err = commandAndRuleEngine.Testcases.VerifyThatThereAreNoZombieElementsInTestCaseModel(testCaseUuid)
 
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B12-TIC(B10)-B11)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B12-TIC(B10)-B11l)-B1l]"

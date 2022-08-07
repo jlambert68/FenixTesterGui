@@ -31,9 +31,9 @@ import (
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedSimpleRules(testCaseUuid string, elementUuid string) (canBeSwapped bool, matchedRule string, err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
-		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
+		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return false, "", err
 	}
 
@@ -169,9 +169,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	ruleCanBeProcessed = false
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
-		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
+		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return "", err
 	}
 
@@ -498,9 +498,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyThatAllUuids
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveVerifyAllUuidOfChildElements(testCaseUuid string, elementsUuid string) (err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
-		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
+		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
 	}
 

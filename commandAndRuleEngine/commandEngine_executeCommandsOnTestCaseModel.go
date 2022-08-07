@@ -40,7 +40,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_NEW_TESTCASE)],
 		FirstParameter:           testCaseModel.NotApplicable,
 		SecondParameter:          testCaseModel.NotApplicable,
-		UserId:                   commandAndRuleEngine.testcases.CurrentUser,
+		UserId:                   commandAndRuleEngine.Testcases.CurrentUser,
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
@@ -50,18 +50,23 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	// Generate new TestCase-UUID
 	testCaseUuid = uuidGenerator.New().String()
 
+	// If TestCases-map is not initialized then do that
+	if commandAndRuleEngine.Testcases.TestCases == nil {
+		commandAndRuleEngine.Testcases.TestCases = make(map[string]testCaseModel.TestCaseModelStruct)
+	}
+
 	// Add the TestCaseModel into map of all TestCaseModels
-	commandAndRuleEngine.testcases.TestCases[testCaseUuid] = newTestCaseModel
+	commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = newTestCaseModel
 
 	// Add command Textual representations to Textual Representation Stack
-	textualRepresentationSimple, textualRepresentationComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+	textualRepresentationSimple, textualRepresentationComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	if err == nil {
 		newTestCaseModel.TextualTestCaseRepresentationSimpleStack = append(newTestCaseModel.TextualTestCaseRepresentationSimpleStack, textualRepresentationSimple)
 		newTestCaseModel.TextualTestCaseRepresentationComplexStack = append(newTestCaseModel.TextualTestCaseRepresentationComplexStack, textualRepresentationComplex)
 
 		// Add the TestCaseModel back into map of all TestCaseModels
-		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = newTestCaseModel
+		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = newTestCaseModel
 
 	}
 
@@ -87,12 +92,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_REMOVE_ELEMENT)],
 		FirstParameter:           elementId,
 		SecondParameter:          testCaseModel.NotApplicable,
-		UserId:                   commandAndRuleEngine.testcases.CurrentUser,
+		UserId:                   commandAndRuleEngine.Testcases.CurrentUser,
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
 		errorId := "9e42e135-e5c3-479c-8a09-0e33213a68d1"
 		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
@@ -102,17 +107,17 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
 
 	// Add the TestCaseModel back into map of all TestCaseModels
-	commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCaseModel
+	commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
 
 	// Add command Textual representations to Textual Representation Stack
-	textualRepresentationSimple, textualRepresentationComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+	textualRepresentationSimple, textualRepresentationComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	if err == nil {
 		currentTestCaseModel.TextualTestCaseRepresentationSimpleStack = append(currentTestCaseModel.TextualTestCaseRepresentationSimpleStack, textualRepresentationSimple)
 		currentTestCaseModel.TextualTestCaseRepresentationComplexStack = append(currentTestCaseModel.TextualTestCaseRepresentationComplexStack, textualRepresentationComplex)
 
 		// Add the TestCaseModel back into map of all TestCaseModels
-		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCaseModel
+		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
 	}
 
 	return err
@@ -136,12 +141,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_NEW_ELEMENT)],
 		FirstParameter:           elementToSwapOutUuid,
 		SecondParameter:          immatureElementToSwapIn.FirstElementUuid,
-		UserId:                   commandAndRuleEngine.testcases.CurrentUser,
+		UserId:                   commandAndRuleEngine.Testcases.CurrentUser,
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
 		errorId := "73cf671c-79e7-4a5e-8f42-d39cd86d94c9"
 		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
@@ -151,10 +156,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
 
 	// Add the TestCaseModel back into map of all TestCaseModels
-	// commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCaseModel
+	// commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
 
 	// Add command Textual representations to Textual Representation Stack
-	textualRepresentationSimple, textualRepresentationComplex, err := commandAndRuleEngine.testcases.CreateTextualTestCase(testCaseUuid)
+	textualRepresentationSimple, textualRepresentationComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	// If no errors then add Simple and Complex Textual Representation to their stacks
 	if err == nil {
@@ -162,7 +167,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		currentTestCaseModel.TextualTestCaseRepresentationComplexStack = append(currentTestCaseModel.TextualTestCaseRepresentationComplexStack, textualRepresentationComplex)
 
 		// Add the TestCaseModel back into map of all TestCaseModels
-		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCaseModel
+		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
 	}
 
 	return err
@@ -186,12 +191,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_COPY_ELEMENT)],
 		FirstParameter:           elementIdToCopy,
 		SecondParameter:          testCaseModel.NotApplicable,
-		UserId:                   commandAndRuleEngine.testcases.CurrentUser,
+		UserId:                   commandAndRuleEngine.Testcases.CurrentUser,
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
 		errorId := "2d6af5bd-5a1b-4cc0-b3e7-da21b5928c4f"
 		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
@@ -202,7 +207,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 
 	// If no errors then add the TestCaseModel back into map of all TestCaseModels
 	if err == nil {
-		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCaseModel
+		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
 	}
 
 	return err
@@ -226,12 +231,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_COPY_BUFFER_ELEMENT)],
 		FirstParameter:           elementIdToBeReplacedByCopyBuffer,
 		SecondParameter:          testCaseModel.NotApplicable,
-		UserId:                   commandAndRuleEngine.testcases.CurrentUser,
+		UserId:                   commandAndRuleEngine.Testcases.CurrentUser,
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
 		errorId := "10ef5496-d92e-4e35-af41-e16c51c7df71"
 		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
@@ -245,7 +250,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 
 	// If no errors then add the TestCaseModel back into map of all TestCaseModels
 	if err == nil {
-		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCaseModel
+		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
 	}
 
 	return err
@@ -269,12 +274,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_CUT_ELEMENT)],
 		FirstParameter:           elementIdToCut,
 		SecondParameter:          testCaseModel.NotApplicable,
-		UserId:                   commandAndRuleEngine.testcases.CurrentUser,
+		UserId:                   commandAndRuleEngine.Testcases.CurrentUser,
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
 		errorId := "dc1cd5d3-e809-4465-aeda-cdf6ec44070f"
 		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
@@ -285,7 +290,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 
 	// If no errors then add the TestCaseModel back into map of all TestCaseModels
 	if err == nil {
-		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCaseModel
+		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
 	}
 
 	return err
@@ -309,12 +314,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_CUT_BUFFER_ELEMENT)],
 		FirstParameter:           uuidToReplacedByCutBufferContent,
 		SecondParameter:          testCaseModel.NotApplicable,
-		UserId:                   commandAndRuleEngine.testcases.CurrentUser,
+		UserId:                   commandAndRuleEngine.Testcases.CurrentUser,
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
 		errorId := "e1f7b09a-1867-4c0d-a02a-2b513788d711"
 		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
@@ -335,7 +340,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 
 	// If no errors then add the TestCaseModel back into map of all TestCaseModels
 	if err == nil {
-		commandAndRuleEngine.testcases.TestCases[testCaseUuid] = currentTestCaseModel
+		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
 	}
 
 	return err

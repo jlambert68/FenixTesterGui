@@ -30,11 +30,11 @@ import (
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeCutSimpleRules(testCaseUuid string, elementUuid string) (canBeCut bool, matchedRule string, err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "6efc5eca-dfd4-47a8-9599-9f946bcd43e0"
-		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all testcases [ErrorID: %s]", elementUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all Testcases [ErrorID: %s]", elementUuid, errorId))
 
 		return false, "", err
 	}

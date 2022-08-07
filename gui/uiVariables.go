@@ -156,18 +156,21 @@ type UIServerStruct struct {
 	//availableBuildingBlocks            availableBuildingBlocksStruct
 	//availableBuildingBlocksModel       AvailableBuildingBlocksModelStruct
 	availableBuildingBlocksModel AvailableBuildingBlocksModelStruct
-	testCasesModel               testCaseModel.TestCaseModelsStruct
+	testCasesModel               testCaseModel.TestCasesModelsStruct
 	commandAndRuleEngine         commandAndRuleEngine.CommandAndRuleEngineObjectStruct
-	subSystemsCrossReferences    SubSystemsCrossReferencesStruct
+	//subSystemsCrossReferences    SubSystemsCrossReferencesStruct
 }
 
+/*
 type SubSystemsCrossReferencesStruct struct {
-	AvailableBuildingBlocksModelReference *AvailableBuildingBlocksModelStruct
-	TestCasesModelReference               *testCaseModel.TestCaseModelsStruct
-	CommandAndRuleEnginReference          *commandAndRuleEngine.CommandAndRuleEngineObjectStruct
-	GrpcOutReference                      *grpc_out.GRPCOutStruct
+	//AvailableBuildingBlocksModelReference *AvailableBuildingBlocksModelStruct
+	//TestCasesModelReference               *testCaseModel.TestCasesModelsStruct
+	//CommandAndRuleEnginReference          *commandAndRuleEngine.CommandAndRuleEngineObjectStruct
+	GrpcOutReference *grpc_out.GRPCOutStruct
 }
 
+
+*/
 /*
 // The testCaseModel for available Building Blocks used within the Tree-view in GUI
 type availableBuildingBlocksStruct struct {

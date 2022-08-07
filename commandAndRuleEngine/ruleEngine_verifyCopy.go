@@ -30,11 +30,11 @@ import (
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeCopiedSimpleRules(testCaseUuid string, elementUuid string) (canBeCopied bool, matchedRule string, err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "e60225ed-abcf-4339-b191-061b3084e92f"
-		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all testcases [ErrorID: %s]", elementUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all Testcases [ErrorID: %s]", elementUuid, errorId))
 
 		return false, "", err
 	}

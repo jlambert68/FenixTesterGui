@@ -9,7 +9,7 @@ import (
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCanBeSwappedForCopyBuffer(testCaseUuid string, elementUuid string) (canBeSwapped bool, matchedSimpledRule string, matchedComplexRule string, err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "0b058d20-5ce3-4da7-b9cf-c71c47b5f72d"
@@ -61,7 +61,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElement
 	}
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "6d6fff2c-a007-485e-8bef-a67d58eac518"

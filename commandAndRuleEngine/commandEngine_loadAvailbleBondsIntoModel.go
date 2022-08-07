@@ -4,13 +4,13 @@ import (
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 )
 
-// Load all Available Bonds from Gui-server
-func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) loadAvailableBondsFromServer() {
+// LoadAvailableBondsFromServer Load all Available Bonds from Gui-server
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) LoadAvailableBondsFromServer() {
 
 	var availableImmatureBondsMessage *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage
 
 	//grpcOut := grpc_out.GRPCOutStruct{}
-	availableImmatureBondsMessage = commandAndRuleEngine.subSystemsCrossReferences.GrpcOutReference.ListAllAvailableBonds("s41797") //TODO change to use current logged in to computer user
+	availableImmatureBondsMessage = commandAndRuleEngine.GrpcOutReference.ListAllAvailableBonds("s41797") //TODO change to use current logged in to computer user
 
 	commandAndRuleEngine.loadModelWithAvailableBonds(availableImmatureBondsMessage)
 

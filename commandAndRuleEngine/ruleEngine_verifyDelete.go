@@ -2,6 +2,7 @@ package commandAndRuleEngine
 
 import (
 	"errors"
+	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 )
@@ -31,7 +32,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	// Get current TestCase
 	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
-		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
+
+		errorId := "889d219a-a96b-4957-b9b6-be54e79d8389"
+		err = errors.New(fmt.Sprintf("testcase with uuid '"+testCaseUuid+"' doesn't exist in map with all Testcases [ErrorID: %s]", errorId))
+
 		return false, "", err
 	}
 
@@ -43,7 +47,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 			"elementUuid": elementUuid,
 		}).Error(elementUuid + " could not be found in in map 'TestCaseModelMap'")
 
-		err = errors.New(elementUuid + " could not be found in in map 'TestCaseModelMap'")
+		errorId := "8177c257-5db5-4146-8ea7-014ecdc810e7"
+		err = errors.New(fmt.Sprintf("element '%s' in TestCase '%s' could not be found in in map 'TestCaseModelMap' [ErrorID: %s]", elementUuid, testCaseUuid, errorId))
 
 		return false, "", err
 	}

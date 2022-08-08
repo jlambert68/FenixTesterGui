@@ -315,7 +315,6 @@ func (testCaseModel *TestCasesModelsStruct) generateUINameForTestCaseElement(ele
 
 // ListAvailableTestCases
 // List all available TestCase in TestCasesModel
-
 func (testCaseModel *TestCasesModelsStruct) ListAvailableTestCases() (availableTestCasesAsList []string) {
 
 	// Loop all available TestCases and append  UUID for TestCase to list
@@ -326,4 +325,74 @@ func (testCaseModel *TestCasesModelsStruct) ListAvailableTestCases() (availableT
 	}
 
 	return availableTestCasesAsList
+}
+
+// GetUuidFromUiName
+// Finds the UUID for from a UI-name like ' B0_BOND [3c8a3bc] [BOND] to live forever..'
+func (testCaseModel *TestCasesModelsStruct) GetUuidFromUiName(testCaseUuid string, uiName string) (elementUuid string, err error) {
+
+	// Get first square brackets, for part of UUID
+	firstSquareBracketStart := strings.Index(uiName, "[")
+	firstSquareBracketEnd := strings.Index(uiName, "]")
+
+	// Get second square brackets, for type
+	secondSquareBracketStart := strings.Index(uiName[firstSquareBracketEnd+1:], "[")
+	secondSquareBracketEnd := strings.Index(uiName[firstSquareBracketEnd+1:], "]")
+
+	// Extract UUID-part
+	uuidPart := uiName[firstSquareBracketStart+1 : firstSquareBracketEnd]
+
+	// Extract Type
+	elementTypeFromName := uiName[firstSquareBracketEnd+1:][secondSquareBracketStart+1 : secondSquareBracketEnd]
+
+	// Get current TestCase
+	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+
+	if existsInMap == false {
+		errorId := "b04c16dc-ff83-4f53-908c-4b2483cfb01a"
+		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
+
+		return "", err
+	}
+
+	// Loop all available building blocks and create list to be used in DropDown
+	var element fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
+	for elementUuid, element = range currentTestCase.TestCaseModelMap {
+
+		switch elementTypeFromName {
+
+		// TestInstructions
+		case "TI":
+			if (element.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+				element.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE) &&
+				element.MatureElementUuid[:len(uuidPart)] == uuidPart {
+
+				return elementUuid, nil
+			}
+
+			// TestInstructionContainers
+		case "TIC":
+			if (element.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER ||
+				element.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE) &&
+				element.MatureElementUuid[:len(uuidPart)] == uuidPart {
+
+				return elementUuid, nil
+			}
+
+			// Bonds
+		default:
+			if element.MatureElementUuid[:len(uuidPart)] == uuidPart {
+
+				return elementUuid, nil
+			}
+
+		}
+	}
+
+	errorId := "19144095-966d-4974-be34-2a33d6309758"
+	err = errors.New(fmt.Sprintf("couldn't find element with UI-name '%s' in testcase '%s' [ErrorID: %s]", uiName, testCaseUuid, errorId))
+
+	return "", err
+
+	return "elementUuid", err
 }

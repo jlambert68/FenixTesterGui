@@ -198,7 +198,7 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 		uiServer.newTestCase()
 	})
 	removeButton := widget.NewButton(CommandRemoveElementFromTestcase, func() {
-		uiServer.remove(availableBuildingBlocksInTestCaseSelectWidget.Selected)
+		uiServer.remove(availableTestCasesSelectWidget.Selected, availableBuildingBlocksInTestCaseSelectWidget.Selected)
 	})
 	swapFromNewButton := widget.NewButton(CommandSwapFromNewComponent, func() {
 		uiServer.swapFromNew("x", "xx")
@@ -257,16 +257,32 @@ func (uiServer *UIServerStruct) newTestCase() {
 }
 
 // Remove(ElementToBeRemoved)
-func (uiServer *UIServerStruct) remove(elementToBeRemoved string) {
+func (uiServer *UIServerStruct) remove(testcaseUuid string, elementUiNameoBeRemoved string) {
 
-	fmt.Printf("Remove(ElementToBeRemoved='%s')\n", elementToBeRemoved)
+	fmt.Printf("Remove(ElementToBeRemoved='%s' in TestCase='%s')\n", elementUiNameoBeRemoved, testcaseUuid)
 	bindedCommandListData.Prepend(CommandRemoveElementFromTestcase)
 
-	err := uiServer.commandAndRuleEngine.RemoveElement()
+	// Convert UI-name for element into elements UUID
+	elementUuid, err := uiServer.testCasesModel.GetUuidFromUiName(testcaseUuid, elementUiNameoBeRemoved)
+	if err != nil {
+		fmt.Println(err)
+
+		return
+	}
+
+	err = uiServer.commandAndRuleEngine.DeleteElementFromTestCaseModel(testcaseUuid, elementUuid)
+	if err != nil {
+		fmt.Println(err)
+
+		return
+	}
+
+	availableTestCaseElements, err := uiServer.testCasesModel.ListAllAvailableBuildingBlocksInTestCase(availableTestCasesSelectWidget.Selected)
+
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		availableTestCasesSelectWidget.Options = uiServer.testCasesModel.ListAvailableTestCases()
+		availableBuildingBlocksInTestCaseSelectWidget.Options = availableTestCaseElements
 	}
 
 }

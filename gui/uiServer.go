@@ -108,6 +108,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	// Add/Forward variables to packages to be used later
 	uiServer.availableBuildingBlocksModel.SetLogger(uiServer.logger)
+	uiServer.commandAndRuleEngine.SetLogger(uiServer.logger)
 	uiServer.availableBuildingBlocksModel.grpcOut.SetLogger(uiServer.logger)
 	uiServer.availableBuildingBlocksModel.grpcOut.SetDialAddressString(uiServer.fenixGuiBuilderServerAddressToDial)
 

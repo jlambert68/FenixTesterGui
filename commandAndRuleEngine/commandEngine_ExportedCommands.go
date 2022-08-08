@@ -11,3 +11,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) NewTestCaseModel()
 	return err
 
 }
+
+// NewTestCaseModel
+// Used, mostly from GUI, for Deleting an element from a TestCaseModel that is used within a TestCase
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) DeleteElementFromTestCaseModel(testCaseUuid string, elementId string) (err error) {
+
+	err = commandAndRuleEngine.executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(testCaseUuid, elementId)
+
+	return err
+
+}

@@ -396,3 +396,17 @@ func (testCaseModel *TestCasesModelsStruct) GetUuidFromUiName(testCaseUuid strin
 
 	return "elementUuid", err
 }
+
+// TODO ***** FIX OR REMOVE ******
+// Get ImmatureElementReference from UUID
+func (testCaseModel *TestCasesModelsStruct) getImmatureElementBuidlingBlockFromUuid(immatureElementUuid string) {
+	/*
+	   	// Get ImmatureElement
+	   currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+
+	   if existsInMap == false {
+	   errorId := "02914625-46a8-4174-800a-f519f4cf0532"
+	   err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
+	*/
+	return
+}

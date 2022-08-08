@@ -1,11 +1,14 @@
 package gui
 
 import (
+	"FenixTesterGui/testCase/testCaseModel"
+	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"strings"
 )
 
 /*
@@ -201,7 +204,7 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 		uiServer.remove(availableTestCasesSelectWidget.Selected, availableBuildingBlocksInTestCaseSelectWidget.Selected)
 	})
 	swapFromNewButton := widget.NewButton(CommandSwapFromNewComponent, func() {
-		uiServer.swapFromNew("x", "xx")
+		uiServer.swapFromNew(availableTestCasesSelectWidget.Selected, availableBuildingBlocksInTestCaseSelectWidget.Selected, availableBuildingBlocksSelectWidget.Selected)
 	})
 	copyButton := widget.NewButton(CommandCopy, func() {
 		uiServer.copy("x")
@@ -270,6 +273,7 @@ func (uiServer *UIServerStruct) remove(testcaseUuid string, elementUiNameoBeRemo
 		return
 	}
 
+	// Delete Element from TestCase
 	err = uiServer.commandAndRuleEngine.DeleteElementFromTestCaseModel(testcaseUuid, elementUuid)
 	if err != nil {
 		fmt.Println(err)
@@ -277,6 +281,7 @@ func (uiServer *UIServerStruct) remove(testcaseUuid string, elementUiNameoBeRemo
 		return
 	}
 
+	// List Available TestCase BuildingBlocks and ad the DropDown
 	availableTestCaseElements, err := uiServer.testCasesModel.ListAllAvailableBuildingBlocksInTestCase(availableTestCasesSelectWidget.Selected)
 
 	if err != nil {
@@ -288,10 +293,43 @@ func (uiServer *UIServerStruct) remove(testcaseUuid string, elementUiNameoBeRemo
 }
 
 // SwapFromNew(ElementTobeSwappedOut, NewElementTobeSwappedIn)
-func (uiServer *UIServerStruct) swapFromNew(elementTobeSwappedOut string, newElementTobeSwappedIn string) {
+func (uiServer *UIServerStruct) swapFromNew(testcaseUuid string, elementUiNameTobeSwappedOut string, newElementUiNameTobeSwappedIn string) {
 
-	fmt.Printf("SwapFromNew(ElementTobeSwappedOut='%s', NewElementTobeSwappedIn='%s')\n", elementTobeSwappedOut, newElementTobeSwappedIn)
+	fmt.Printf("SwapFromNew(elementUiNameTobeSwappedOut='%s', newElementUiNameTobeSwappedIn='%s') in TestCase '%s'\n", elementUiNameTobeSwappedOut, newElementUiNameTobeSwappedIn, testcaseUuid)
 	bindedCommandListData.Prepend(CommandSwapFromNewComponent)
+
+	// Convert UI-name for element into elements UUID
+	elementUuidTobeSwappedOut, err := uiServer.testCasesModel.GetUuidFromUiName(testcaseUuid, elementUiNameTobeSwappedOut)
+	if err != nil {
+		fmt.Println(err)
+
+		return
+	}
+
+	elementUuidTobeSwappedIn, err := uiServer.getUuidFromTreeName(newElementUiNameTobeSwappedIn)
+	if err != nil {
+		fmt.Println(err)
+
+		return
+	}
+
+	fmt.Println(elementUuidTobeSwappedOut, elementUuidTobeSwappedIn)
+
+
+
+		// Get the ImmatureElement To Swap In
+		var immatureElementToSwapIn *testCaseModel.ImmatureElementStruct
+
+		immatureElementToSwapIn, existsInMap := uiServer.availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap getAvailableBuildingBlocksModel()
+
+		// Execute Swap of Elements
+		err = uiServer.commandAndRuleEngine.SwapElementsInTestCaseModel(testcaseUuid, elementUuid)
+		if err != nil {
+			fmt.Println(err)
+
+			return
+		}
+
 
 }
 
@@ -340,5 +378,57 @@ func (uiServer *UIServerStruct) undoUndoLastCommandOnStack() {
 
 	fmt.Printf("UndoUndoLastCommandOnStack()\n")
 	bindedCommandListData.Prepend(CommandUndoUndoLastCommandOnStack)
+
+}
+
+// GetUuidFromUiName
+// Finds the UUID for from a UI-name like ' B0_BOND [3c8a3bc] [BOND] to live forever..'
+func (uiServer *UIServerStruct) getUuidFromTreeName(uiTreeName string) (buildingBlockUuid string, err error) {
+
+	// Get first square brackets, for part of UUID
+	firstSquareBracketStart := strings.Index(uiTreeName, "[")
+	firstSquareBracketEnd := strings.Index(uiTreeName, "]")
+
+	// Get second square brackets, for type
+	secondSquareBracketStart := strings.Index(uiTreeName[firstSquareBracketEnd+1:], "[")
+	secondSquareBracketEnd := strings.Index(uiTreeName[firstSquareBracketEnd+1:], "]")
+
+	// Extract UUID-part
+	uuidPart := uiTreeName[firstSquareBracketStart+1 : firstSquareBracketEnd]
+
+	// Extract Type
+	elementTypeFromName := uiTreeName[firstSquareBracketEnd+1:][secondSquareBracketStart+1 : secondSquareBracketEnd]
+
+	// Loop all available building blocks and find match
+	for _, buildingBlock := range uiServer.availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid {
+
+		switch elementTypeFromName {
+
+		// TestInstructions
+		case "TI":
+			if buildingBlock.buildingBlockType == TestInstruction &&
+				buildingBlock.uuid[:len(uuidPart)] == uuidPart {
+
+				return buildingBlock.uuid, nil
+			}
+
+			// TestInstructionContainers
+		case "TIC":
+			if buildingBlock.buildingBlockType == TestInstructionContainer &&
+				buildingBlock.uuid[:len(uuidPart)] == uuidPart {
+
+				return buildingBlock.uuid, nil
+			}
+
+			// Bonds
+		default:
+			errorId := "70335847-35cd-4551-bea8-59257075723d"
+			err = errors.New(fmt.Sprintf("couldn't find avavialbel buildingBlock with UI-name '%s' in testcase '%s' [ErrorID: %s]", uiTreeName, errorId))
+
+			return "", err
+		}
+
+	}
+	return "", err
 
 }

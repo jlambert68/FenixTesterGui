@@ -306,7 +306,7 @@ func (uiServer *UIServerStruct) swapFromNew(testcaseUuid string, elementUiNameTo
 		return
 	}
 
-	elementUuidTobeSwappedIn, err := uiServer.getUuidFromTreeName(newElementUiNameTobeSwappedIn)
+	elementUuidTobeSwappedIn, buildingBlockType, err := uiServer.getUuidFromTreeName(newElementUiNameTobeSwappedIn)
 	if err != nil {
 		fmt.Println(err)
 
@@ -315,21 +315,40 @@ func (uiServer *UIServerStruct) swapFromNew(testcaseUuid string, elementUiNameTo
 
 	fmt.Println(elementUuidTobeSwappedOut, elementUuidTobeSwappedIn)
 
+	// Get the ImmatureElement To Swap In
+	var immatureElementToSwapInTestCaseFormat testCaseModel.ImmatureElementStruct
 
+	switch buildingBlockType {
 
-		// Get the ImmatureElement To Swap In
-		var immatureElementToSwapIn *testCaseModel.ImmatureElementStruct
+	case TestInstruction:
+		tempMap := uiServer.availableBuildingBlocksModel.allImmatureTestInstructionsBuildingBlocks
+		immatureElementToSwapInOriginal := tempMap[elementUuidTobeSwappedIn].ImmatureSubTestCaseModel
+		immatureElementToSwapInTestCaseFormat = uiServer.availableBuildingBlocksModel.convertGrpcElementModelIntoTestCaseElementModel(immatureElementToSwapInOriginal)
 
-		immatureElementToSwapIn, existsInMap := uiServer.availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap getAvailableBuildingBlocksModel()
+	case TestInstructionContainer:
+		tempMap := uiServer.availableBuildingBlocksModel.allImmatureTestInstructionContainerBuildingBlocks
+		immatureElementToSwapInOriginal := tempMap[elementUuidTobeSwappedIn].ImmatureSubTestCaseModel
+		immatureElementToSwapInTestCaseFormat = uiServer.availableBuildingBlocksModel.convertGrpcElementModelIntoTestCaseElementModel(immatureElementToSwapInOriginal)
 
-		// Execute Swap of Elements
-		err = uiServer.commandAndRuleEngine.SwapElementsInTestCaseModel(testcaseUuid, elementUuid)
-		if err != nil {
-			fmt.Println(err)
+	default:
 
-			return
-		}
+		errorId := "f7f2c257-c571-4050-a8c8-99aaca1dd24f"
+		err = errors.New(fmt.Sprintf("unknown Building BLock Type: '%s' [ErrorID: %s]", buildingBlockType, errorId))
 
+		fmt.Println(err)
+
+		// Exit function
+		return
+
+	}
+
+	// Execute Swap of Elements
+	err = uiServer.commandAndRuleEngine.SwapElementsInTestCaseModel(testcaseUuid, elementUuidTobeSwappedOut, &immatureElementToSwapInTestCaseFormat)
+	if err != nil {
+		fmt.Println(err)
+
+		return
+	}
 
 }
 
@@ -383,7 +402,7 @@ func (uiServer *UIServerStruct) undoUndoLastCommandOnStack() {
 
 // GetUuidFromUiName
 // Finds the UUID for from a UI-name like ' B0_BOND [3c8a3bc] [BOND] to live forever..'
-func (uiServer *UIServerStruct) getUuidFromTreeName(uiTreeName string) (buildingBlockUuid string, err error) {
+func (uiServer *UIServerStruct) getUuidFromTreeName(uiTreeName string) (buildingBlockUuid string, buildingBlockType buildingBlock, err error) {
 
 	// Get first square brackets, for part of UUID
 	firstSquareBracketStart := strings.Index(uiTreeName, "[")
@@ -409,7 +428,7 @@ func (uiServer *UIServerStruct) getUuidFromTreeName(uiTreeName string) (building
 			if buildingBlock.buildingBlockType == TestInstruction &&
 				buildingBlock.uuid[:len(uuidPart)] == uuidPart {
 
-				return buildingBlock.uuid, nil
+				return buildingBlock.uuid, buildingBlock.buildingBlockType, nil
 			}
 
 			// TestInstructionContainers
@@ -417,7 +436,7 @@ func (uiServer *UIServerStruct) getUuidFromTreeName(uiTreeName string) (building
 			if buildingBlock.buildingBlockType == TestInstructionContainer &&
 				buildingBlock.uuid[:len(uuidPart)] == uuidPart {
 
-				return buildingBlock.uuid, nil
+				return buildingBlock.uuid, buildingBlock.buildingBlockType, nil
 			}
 
 			// Bonds
@@ -425,10 +444,10 @@ func (uiServer *UIServerStruct) getUuidFromTreeName(uiTreeName string) (building
 			errorId := "70335847-35cd-4551-bea8-59257075723d"
 			err = errors.New(fmt.Sprintf("couldn't find avavialbel buildingBlock with UI-name '%s' in testcase '%s' [ErrorID: %s]", uiTreeName, errorId))
 
-			return "", err
+			return "", -1, err
 		}
 
 	}
-	return "", err
+	return "", -1, err
 
 }

@@ -6,6 +6,7 @@ import (
 	"FenixTesterGui/testCase/testCaseModel"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
+	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 )
 
@@ -129,8 +130,11 @@ type AvailableBuildingBlocksModelStruct struct {
 	availableBuildingBlockModelSuitedForFyneTreeView                           map[string][]string
 	allBuildingBlocksTreeNameToUuid                                            map[string]uiTreeNodesNameToUuidStruct
 	clickedNodeName                                                            string
-}
 
+	allImmatureTestInstructionsBuildingBlocks         map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage          // Map of all Available Building Blocks regarding TestInstructions, Immature UUID as Map-key
+	allImmatureTestInstructionContainerBuildingBlocks map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionContainerMessage // Map of all Available Building Blocks regarding TestInstructionContainers, Immature UUID as Map-key
+
+}
 type GlobalUIServerStruct struct {
 	logger                             *logrus.Logger
 	fenixGuiBuilderServerAddressToDial string

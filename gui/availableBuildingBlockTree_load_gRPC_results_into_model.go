@@ -1,6 +1,7 @@
 package gui
 
 import (
+	"FenixTesterGui/testCase/testCaseModel"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 )
@@ -26,6 +27,10 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 
 	// Load TestInstructionContainers
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(testInstructionsAndTestContainersMessage)
+
+	// Store the full available Building Blocks Structure
+	availableBuildingBlocksModel.storeFullGrpcStructureForAvailableBuildingBlocks(testInstructionsAndTestContainersMessage)
+
 }
 
 // Load Pinned Building Blocks, TestInstructions and TestInstructionContainers, from GUI-server into testCaseModel
@@ -358,4 +363,46 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 		availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[availableTestInstructionContainerFromTreeNameModel.pinnedNameInUITree] = tempTreeNameToUuidForPinnedInstruction
 	}
 
+}
+
+// Store the full available Building Blocks Structure into the Available Building Blocks Model
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeFullGrpcStructureForAvailableBuildingBlocks(testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
+
+	// Initiate TI-BuildingBlock-map and TIC-BuildingBlockmap
+	availableBuildingBlocksModel.allImmatureTestInstructionsBuildingBlocks = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage)
+	availableBuildingBlocksModel.allImmatureTestInstructionContainerBuildingBlocks = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionContainerMessage)
+
+	// If there are no available TI or TIC then exit
+	if len(testInstructionsAndTestContainersMessage.ImmatureTestInstructions) == 0 &&
+		len(testInstructionsAndTestContainersMessage.ImmatureTestInstructionContainers) == 0 {
+		return
+	}
+
+	// Loop all TestInstruction-Building Blocks and add to model
+	for _, testInstructionBuildingBlock := range testInstructionsAndTestContainersMessage.ImmatureTestInstructions {
+		availableBuildingBlocksModel.allImmatureTestInstructionsBuildingBlocks[testInstructionBuildingBlock.BasicTestInstructionInformation.NonEditableInformation.TestInstructionUuid] = testInstructionBuildingBlock
+	}
+
+	// Loop all TestInstructionContainer-Building Blocks and add to model
+	for _, testInstructionBuildingBlock := range testInstructionsAndTestContainersMessage.ImmatureTestInstructions {
+		availableBuildingBlocksModel.allImmatureTestInstructionsBuildingBlocks[testInstructionBuildingBlock.BasicTestInstructionInformation.NonEditableInformation.TestInstructionUuid] = testInstructionBuildingBlock
+	}
+
+}
+
+// Convert gRPC-message for TI or TIC into model used within the TestCase-model
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) convertGrpcElementModelIntoTestCaseElementModel(immatureGrpcElementModelMessage *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureElementModelMessage) (immatureTestCaseElementModel testCaseModel.ImmatureElementStruct) {
+
+	// Initiate map used in TestCaseModel
+	immatureTestCaseElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+
+	// Loop over gRPC-element-model-structure
+	for _, gRpcElementModel := range immatureGrpcElementModelMessage.TestCaseModelElements {
+		immatureTestCaseElementModel.ImmatureElementMap[gRpcElementModel.ImmatureElementUuid] = *gRpcElementModel
+	}
+
+	// Set the first Element
+	immatureTestCaseElementModel.FirstElementUuid = immatureGrpcElementModelMessage.FirstImmatureElementUuid
+
+	return immatureTestCaseElementModel
 }

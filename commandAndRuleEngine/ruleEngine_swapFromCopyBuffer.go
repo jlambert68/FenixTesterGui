@@ -36,8 +36,20 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCan
 		return canBeSwapped, matchedSimpledRule, "", err
 	}
 
+	// Get ElementType for first element in Copy Buffer
+	elementToBeSwappedIn, existsInMap := currentTestCase.CopyBuffer.ImmatureElementMap[currentTestCase.CopyBuffer.FirstElementUuid]
+	if existsInMap == false {
+
+		errorId := "52d593c3-ad7a-448d-b301-87fdedcf96b0"
+		err = errors.New(fmt.Sprintf("element referenced by first element ('%s')  doesn't exist in element-map for CopyBuffer in TestCase '%s' [ErrorID: %s]", currentTestCase.CopyBuffer.FirstElementUuid, testCaseUuid, errorId))
+
+		return false, "", "", err
+	}
+
+	elementTypeForElementToBeSwappedIn := elementToBeSwappedIn.TestCaseModelElementType
+
 	// Verify towards complex rules
-	matchedComplexRule, err = commandAndRuleEngine.verifyIfComponentCanBeSwappedWithComplexRules(testCaseUuid, elementUuid)
+	matchedComplexRule, err = commandAndRuleEngine.verifyIfComponentCanBeSwappedWithComplexRules(testCaseUuid, elementUuid, elementTypeForElementToBeSwappedIn)
 
 	return canBeSwapped, matchedSimpledRule, matchedComplexRule, err
 }
@@ -45,8 +57,39 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCan
 // Swap an element for content in Copy Buffer, but first ensure that rules for swapping are used
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElementForCopyBuffer(testCaseUuid string, elementToSwapOutUuid string) (err error) {
 
+	// Get current TestCase
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	if existsInMap == false {
+
+		errorId := "91de8132-1950-41be-b567-12fe388b0440"
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+
+		return err
+	}
+
+	// Verify that there are anything in Copy Buffer, use First Element as a proxy
+	if currentTestCase.CopyBuffer.FirstElementUuid == "" {
+
+		errorId := "fc59e5d6-880e-42e7-b7a9-0b221a00825b"
+		err = errors.New(fmt.Sprintf("there is no content in Copy Buffer for TestCase '%s' [ErrorID: %s]", testCaseUuid, errorId))
+
+		return err
+	}
+
+	// Get ElementType for first element in Copy Buffer
+	elementToBeSwappedIn, existsInMap := currentTestCase.CopyBuffer.ImmatureElementMap[currentTestCase.CopyBuffer.FirstElementUuid]
+	if existsInMap == false {
+
+		errorId := "52d593c3-ad7a-448d-b301-87fdedcf96b0"
+		err = errors.New(fmt.Sprintf("element referenced by first element ('%s')  doesn't exist in element-map for CopyBuffer in TestCase '%s' [ErrorID: %s]", currentTestCase.CopyBuffer.FirstElementUuid, testCaseUuid, errorId))
+
+		return err
+	}
+
+	elementTypeToSwapIn := elementToBeSwappedIn.TestCaseModelElementType
+
 	// Verify that element is allowed, and can be swapped
-	canBeSwapped, matchedSimpleRule, matchedComplexRule, err := commandAndRuleEngine.verifyIfElementCanBeSwapped(testCaseUuid, elementToSwapOutUuid)
+	canBeSwapped, matchedSimpleRule, matchedComplexRule, err := commandAndRuleEngine.verifyIfElementCanBeSwapped(testCaseUuid, elementToSwapOutUuid, elementTypeToSwapIn)
 
 	// If there was an error from swap verification then exit
 	if err != nil {
@@ -60,21 +103,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElement
 		return err
 	}
 
-	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
-	if existsInMap == false {
-
-		errorId := "6d6fff2c-a007-485e-8bef-a67d58eac518"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
-
-		return err
-	}
-
 	// Extract element from Copy Buffer
-	immatureElementToSwapInCopyBuffer := currentTestCase.CopyBuffer
+	immatureElementToSwapInFromCopyBuffer := currentTestCase.CopyBuffer
 
 	// Execute swap out element for copy buffer content
-	err = commandAndRuleEngine.executeSwapElementBasedOnRule(testCaseUuid, elementToSwapOutUuid, &immatureElementToSwapInCopyBuffer, matchedComplexRule)
+	err = commandAndRuleEngine.executeSwapElementBasedOnRule(testCaseUuid, elementToSwapOutUuid, &immatureElementToSwapInFromCopyBuffer, matchedComplexRule)
 
 	return err
 }

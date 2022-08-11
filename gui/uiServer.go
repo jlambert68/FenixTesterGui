@@ -158,7 +158,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	//fyneMasterWindow.SetContent(widget.NewLabel("Fenix TestCase Builder"))
 	//builderUI.registerKeys(fyneMasterWindow)
 
-	fyneMasterWindow.Resize(fyne.NewSize(400, 320))
+	fyneMasterWindow.Resize(fyne.NewSize(3000, 1500))
 
 	fyneMasterWindow.ShowAndRun()
 
@@ -383,11 +383,25 @@ func (uiServer *UIServerStruct) loadCompleteCurrentTestCaseUI() (completeCurrent
 // Loads current TestCase testCaseModel and return the UI-structure for it
 func (uiServer *UIServerStruct) loadCurrentTestCaseModelAreaUI() (currentTestCaseModelAreaUI fyne.CanvasObject) {
 
-	// Set initial value
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructure = binding.NewString()
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructure.Set("'currentTestCaseModelAreaUI'")
+	// Set initial values for TestCase Textual Structure - Simple
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureSimple = binding.NewString()
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureSimple.Set("'currentTestCaseTextualStructureSimple'")
 
-	currentTestCaseModelAreaUI = widget.NewLabelWithData(uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructure)
+	// Set initial values for TestCase Textual Structure - Complex
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureComplex = binding.NewString()
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureComplex.Set("'currentTestCaseTextualStructureComplex'")
+
+	// Set initial values for TestCase Textual Structure - Simple
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureExtended = binding.NewString()
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureExtended.Set("'currentTestCaseTextualStructureExtended'")
+
+	// Create the Labels to be used for showing the TestCase Textual Structures
+	testCaseTextualStructureSimpleWidget := widget.NewLabelWithData(uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureSimple)
+	testCaseTextualStructureComplexWidget := widget.NewLabelWithData(uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureComplex)
+	testCaseTextualStructureExtendedWidget := widget.NewLabelWithData(uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureExtended)
+
+	// Create GUI Canvas object to be used
+	currentTestCaseModelAreaUI = container.NewVBox(testCaseTextualStructureSimpleWidget, testCaseTextualStructureComplexWidget, testCaseTextualStructureExtendedWidget)
 
 	return currentTestCaseModelAreaUI
 }

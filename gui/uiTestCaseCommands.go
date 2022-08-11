@@ -152,12 +152,15 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 			if err != nil {
 				fmt.Println(err)
 			} else {
+
 				// Update UI with TestCase Textual Representation
-				_, _, textualTestCaseExtended, err := uiServer.commandAndRuleEngine.Testcases.CreateTextualTestCase(availableTestCasesSelectWidget.Selected)
+				textualTestCaseSimple, textualTestCaseComplex, textualTestCaseExtended, err := uiServer.commandAndRuleEngine.Testcases.CreateTextualTestCase(availableTestCasesSelectWidget.Selected)
 				if err != nil {
 					fmt.Println(err)
 				}
-				uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructure.Set(textualTestCaseExtended)
+				uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureSimple.Set(textualTestCaseSimple)
+				uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureComplex.Set(textualTestCaseComplex)
+				uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureExtended.Set(textualTestCaseExtended)
 
 				availableBuildingBlocksInTestCaseSelectWidget.Options = availableTestCaseElements
 			}
@@ -269,11 +272,13 @@ func (uiServer *UIServerStruct) newTestCase() {
 	availableBuildingBlocksInTestCaseSelectWidget.Selected = ""
 
 	// Update UI with TestCase Textual Representation
-	_, _, textualTestCaseExtended, err := uiServer.commandAndRuleEngine.Testcases.CreateTextualTestCase(availableTestCasesSelectWidget.Selected)
+	textualTestCaseSimple, textualTestCaseComplex, textualTestCaseExtended, err := uiServer.commandAndRuleEngine.Testcases.CreateTextualTestCase(availableTestCasesSelectWidget.Selected)
 	if err != nil {
 		fmt.Println(err)
 	}
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructure.Set(textualTestCaseExtended)
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureSimple.Set(textualTestCaseSimple)
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureComplex.Set(textualTestCaseComplex)
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureExtended.Set(textualTestCaseExtended)
 
 }
 
@@ -313,11 +318,13 @@ func (uiServer *UIServerStruct) remove(testcaseUuid string, elementUiNameoBeRemo
 	availableBuildingBlocksInTestCaseSelectWidget.Selected = ""
 
 	// Update UI with TestCase Textual Representation
-	_, _, textualTestCaseExtended, err := uiServer.commandAndRuleEngine.Testcases.CreateTextualTestCase(availableTestCasesSelectWidget.Selected)
+	textualTestCaseSimple, textualTestCaseComplex, textualTestCaseExtended, err := uiServer.commandAndRuleEngine.Testcases.CreateTextualTestCase(availableTestCasesSelectWidget.Selected)
 	if err != nil {
 		fmt.Println(err)
 	}
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructure.Set(textualTestCaseExtended)
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureSimple.Set(textualTestCaseSimple)
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureComplex.Set(textualTestCaseComplex)
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureExtended.Set(textualTestCaseExtended)
 
 }
 
@@ -393,11 +400,13 @@ func (uiServer *UIServerStruct) swapFromNew(testcaseUuid string, elementUiNameTo
 	availableBuildingBlocksInTestCaseSelectWidget.Selected = ""
 
 	// Update UI with TestCase Textual Representation
-	_, _, textualTestCaseExtended, err := uiServer.commandAndRuleEngine.Testcases.CreateTextualTestCase(availableTestCasesSelectWidget.Selected)
+	textualTestCaseSimple, textualTestCaseComplex, textualTestCaseExtended, err := uiServer.commandAndRuleEngine.Testcases.CreateTextualTestCase(availableTestCasesSelectWidget.Selected)
 	if err != nil {
 		fmt.Println(err)
 	}
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructure.Set(textualTestCaseExtended)
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureSimple.Set(textualTestCaseSimple)
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureComplex.Set(textualTestCaseComplex)
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureExtended.Set(textualTestCaseExtended)
 
 }
 

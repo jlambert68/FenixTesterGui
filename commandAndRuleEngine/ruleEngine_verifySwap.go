@@ -160,7 +160,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 //No other combinations of swapping elements are allowed
 
 // Verify the Complex rules if a component can be Swapped or not
-func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedWithComplexRules(testCaseUuid string, uuidToSwapOut string) (matchedRule string, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedWithComplexRules(testCaseUuid string, uuidToSwapOut string, elementTypeToBeSwappedIn fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum) (matchedRule string, err error) {
 
 	var ruleName string
 	var ruleCanBeProcessed bool
@@ -224,6 +224,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 	//	n=TIC(X)			B0					n 		B0								B1-n-B1					TCRuleSwap101
 	if ruleCanBeProcessed == false &&
+		(elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE) &&
 		previousElementUuid == currentElementUuid &&
 		currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND &&
 		nextElementUuid == currentElementUuid {
@@ -238,6 +240,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 	//	n=TIC or TIC(X)		B10					n		TIC(B10)						TIC(B11f-n-B11l)		TCRuleSwap102
 	if ruleCanBeProcessed == false &&
+		(elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE) &&
 		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND &&
 		currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND &&
 		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND {
@@ -252,6 +258,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 	//	n=TIC or TIC(X)		B11f				n		TIC(B11f-X)						TIC(B11f-n-B12-X)		TCRuleSwap103
 	if ruleCanBeProcessed == false &&
+		(elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE) &&
 		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND &&
 		currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND &&
 		(nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
@@ -268,6 +278,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 	//	n=TIC or TIC(X)		B11l				n		TIC(X-B11l)						TIC(X-B12-n-B11l)		TCRuleSwap104
 	if ruleCanBeProcessed == false &&
+		(elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE) &&
 		(previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
 			previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE ||
 			previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER ||
@@ -285,6 +299,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 	//	n=TIC or TIC(X)		B12					n		X-B12-X							X-B12-n-B12-X			TCRuleSwap105
 	if ruleCanBeProcessed == false &&
+		(elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE) &&
 		(previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
 			previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE ||
 			previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER ||
@@ -305,6 +323,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 	//	n=TIC or TIC(X)		B10x*				n		TIC(B10*x*)						TIC(B11x-n-B11x)		TCRuleSwap106
 	if ruleCanBeProcessed == false &&
+		(elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE) &&
 		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND &&
 		currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND &&
 		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND {
@@ -319,6 +341,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 	//	n=TIC or TIC(X)		B10*x				n		TIC(B10*x)						TIC(B11x-n-B11)			TCRuleSwap107
 	if ruleCanBeProcessed == false &&
+		(elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE) &&
 		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10ox_BOND &&
 		currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10ox_BOND &&
 		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10ox_BOND {
@@ -333,6 +359,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 	//	n=TIC or TIC(X)		B10x*				n		TIC(B10x*)						TIC(B11-n-B11x)			TCRuleSwap108
 	if ruleCanBeProcessed == false &&
+		(elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER ||
+			elementTypeToBeSwappedIn == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE) &&
 		previousElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND &&
 		currentElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND &&
 		nextlementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND {

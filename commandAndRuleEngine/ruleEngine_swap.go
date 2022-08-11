@@ -3,14 +3,16 @@ package commandAndRuleEngine
 import (
 	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
+	"fmt"
+	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 )
 
 // Verify if anor element can be swapped or not, regarding swap rules
-func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCanBeSwapped(testCaseUuid string, elementUuid string) (canBeSwapped bool, matchedSimpledRule string, matchedComplexRule string, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCanBeSwapped(testCaseUuid string, elementUuidToBeSwappedOut string, elementTypeToBeSwappedIn fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum) (canBeSwapped bool, matchedSimpledRule string, matchedComplexRule string, err error) {
 
 	// First verify towards simple rules
-	canBeSwapped, matchedSimpledRule, err = commandAndRuleEngine.verifyIfComponentCanBeSwappedSimpleRules(testCaseUuid, elementUuid)
+	canBeSwapped, matchedSimpledRule, err = commandAndRuleEngine.verifyIfComponentCanBeSwappedSimpleRules(testCaseUuid, elementUuidToBeSwappedOut)
 
 	// Only check complex rules if simple rules was OK for swapping
 	if !(canBeSwapped == true &&
@@ -19,7 +21,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCan
 	}
 
 	// Verify towards complex rules
-	matchedComplexRule, err = commandAndRuleEngine.verifyIfComponentCanBeSwappedWithComplexRules(testCaseUuid, elementUuid)
+	matchedComplexRule, err = commandAndRuleEngine.verifyIfComponentCanBeSwappedWithComplexRules(testCaseUuid, elementUuidToBeSwappedOut, elementTypeToBeSwappedIn)
 
 	return canBeSwapped, matchedSimpledRule, matchedComplexRule, err
 }
@@ -27,8 +29,20 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCan
 // Swap an element, but first ensure that rules for swapping are used
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElement(testCaseUuid string, elementToSwapOutUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
 
+	// Get ElementType to be swapped in
+	topElementToBeSwappedIn, existInMap := immatureElementToSwapIn.ImmatureElementMap[immatureElementToSwapIn.FirstElementUuid]
+	if existInMap == false {
+
+		errorId := "0ba64da2-6dcd-4f4c-b742-0838eede4f49"
+		err = errors.New(fmt.Sprintf("element referenced by first element ('%s')  doesn't exist in element-map for ImmatureElement. TestCase '%s' [ErrorID: %s]", immatureElementToSwapIn.FirstElementUuid, testCaseUuid, errorId))
+
+		return err
+	}
+
+	elementTypeToBeSwappedIn := topElementToBeSwappedIn.TestCaseModelElementType
+
 	// Verify that element is allowed, and can be swapped
-	canBeSwapped, matchedSimpleRule, matchedComplexRule, err := commandAndRuleEngine.verifyIfElementCanBeSwapped(testCaseUuid, elementToSwapOutUuid)
+	canBeSwapped, matchedSimpleRule, matchedComplexRule, err := commandAndRuleEngine.verifyIfElementCanBeSwapped(testCaseUuid, elementToSwapOutUuid, elementTypeToBeSwappedIn)
 
 	// If there was an error from swap verification then exit
 	if err != nil {

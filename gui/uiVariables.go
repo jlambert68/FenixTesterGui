@@ -136,7 +136,9 @@ type AvailableBuildingBlocksModelStruct struct {
 	allImmatureTestInstructionContainerBuildingBlocks map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionContainerMessage // Map of all Available Building Blocks regarding TestInstructionContainers, Immature UUID as Map-key
 
 	// temp Variable for Current TestCase Textual Structure
-	currentTestCaseTextualStructure binding.String
+	currentTestCaseTextualStructureSimple   binding.String
+	currentTestCaseTextualStructureComplex  binding.String
+	currentTestCaseTextualStructureExtended binding.String
 }
 type GlobalUIServerStruct struct {
 	logger                             *logrus.Logger

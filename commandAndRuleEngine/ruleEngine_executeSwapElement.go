@@ -11,8 +11,20 @@ import (
 
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct, ruleNameToVerify string) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
 
+	// Get ElementType for first element to be swapped in
+	elementToBeSwappedIn, existsInMap := immatureElementToSwapIn.ImmatureElementMap[immatureElementToSwapIn.FirstElementUuid]
+	if existsInMap == false {
+
+		errorId := "3f3fbc1a-a35b-4a89-b8d2-cef7fb52d70d"
+		err = errors.New(fmt.Sprintf("element referenced by first element ('%s')  doesn't exist in Immature element-map to be swapped in for TestCase '%s' [ErrorID: %s]", immatureElementToSwapIn.FirstElementUuid, testCaseUuid, errorId))
+
+		return testCaseModel.MatureElementStruct{}, err
+	}
+
+	elementTypeToSwapIn := elementToBeSwappedIn.TestCaseModelElementType
+
 	// Verify Rules before start swapping
-	canBeSwapped, _, matchedComplexRule, err := commandAndRuleEngine.verifyIfElementCanBeSwapped(testCaseUuid, uuidToSwapOut)
+	canBeSwapped, _, matchedComplexRule, err := commandAndRuleEngine.verifyIfElementCanBeSwapped(testCaseUuid, uuidToSwapOut, elementTypeToSwapIn)
 
 	// Can't be swapped in
 	if canBeSwapped == false ||

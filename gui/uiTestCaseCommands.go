@@ -139,6 +139,7 @@ func (uiServer *UIServerStruct) createTestCaseCommandParametersUI() (testCaseCom
 func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIObject fyne.CanvasObject) {
 
 	// List alla TestCases
+	availableTestCasesLabelWidget := widget.NewLabel("Available TestCases")
 	availableTestCasesSelectWidget = widget.Select{
 		DisableableWidget: widget.DisableableWidget{},
 		Alignment:         0,
@@ -170,6 +171,7 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 	}
 
 	// List all Available BuildingBlocks
+	availableBuildingBlocksLabelWidget := widget.NewLabel("Available BuildingBlocks")
 	availableBuildingBlocksSelectWidget = widget.Select{
 		DisableableWidget: widget.DisableableWidget{},
 		Alignment:         0,
@@ -194,6 +196,7 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 	*/
 
 	// List all Elements for current TestCase
+	availableBuildingBlocksInTestCaseLabelWidget := widget.NewLabel("All Elements for current TestCase")
 	availableBuildingBlocksInTestCaseSelectWidget = widget.Select{
 		DisableableWidget: widget.DisableableWidget{},
 		Alignment:         0,
@@ -235,11 +238,21 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 		uiServer.undoUndoLastCommandOnStack()
 	})
 
+	commandHeaderLabelWidget := widget.NewLabel("Commands")
+	commandHeaderLabelCanvasObject := container.New(layout.NewHBoxLayout(), commandHeaderLabelWidget)
+
+	selectWidgetsGrid := container.New(layout.NewFormLayout(),
+		availableTestCasesLabelWidget,
+		&availableTestCasesSelectWidget,
+		availableBuildingBlocksLabelWidget,
+		&availableBuildingBlocksSelectWidget,
+		availableBuildingBlocksInTestCaseLabelWidget,
+		&availableBuildingBlocksInTestCaseSelectWidget)
+
 	testCaseCommandsUIObject_temp := container.New(
 		layout.NewVBoxLayout(),
-		&availableTestCasesSelectWidget,
-		&availableBuildingBlocksSelectWidget,
-		&availableBuildingBlocksInTestCaseSelectWidget,
+		commandHeaderLabelCanvasObject,
+		selectWidgetsGrid,
 		newTestCaseButton,
 		removeButton,
 		swapFromNewButton,

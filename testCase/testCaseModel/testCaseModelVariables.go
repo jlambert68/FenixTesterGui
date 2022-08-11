@@ -16,16 +16,17 @@ type TestCasesModelsStruct struct {
 }
 
 type TestCaseModelStruct struct {
-	LastLoadedTestCaseModelGRPCMessage        fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage
-	FirstElementUuid                          string
-	TestCaseModelMap                          map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
-	TextualTestCaseRepresentationSimpleStack  []string
-	TextualTestCaseRepresentationComplexStack []string
-	CommandStack                              []fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage_TestCaseModelCommandMessage
-	LastSavedCommandStack                     lastSavedCommandStack
-	CopyBuffer                                ImmatureElementStruct
-	CutBuffer                                 MatureElementStruct
-	CutCommandInitiated                       bool
+	LastLoadedTestCaseModelGRPCMessage         fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage
+	FirstElementUuid                           string
+	TestCaseModelMap                           map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
+	TextualTestCaseRepresentationSimpleStack   []string
+	TextualTestCaseRepresentationComplexStack  []string
+	TextualTestCaseRepresentationExtendedStack []string
+	CommandStack                               []fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage_TestCaseModelCommandMessage
+	LastSavedCommandStack                      lastSavedCommandStack
+	CopyBuffer                                 ImmatureElementStruct
+	CutBuffer                                  MatureElementStruct
+	CutCommandInitiated                        bool
 }
 
 type lastSavedCommandStack struct {

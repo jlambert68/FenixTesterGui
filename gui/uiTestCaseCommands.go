@@ -152,6 +152,13 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 			if err != nil {
 				fmt.Println(err)
 			} else {
+				// Update UI with TestCase Textual Representation
+				_, _, textualTestCaseExtended, err := uiServer.commandAndRuleEngine.Testcases.CreateTextualTestCase(availableTestCasesSelectWidget.Selected)
+				if err != nil {
+					fmt.Println(err)
+				}
+				uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructure.Set(textualTestCaseExtended)
+
 				availableBuildingBlocksInTestCaseSelectWidget.Options = availableTestCaseElements
 			}
 			//label1.Text = s
@@ -257,6 +264,17 @@ func (uiServer *UIServerStruct) newTestCase() {
 		availableTestCasesSelectWidget.Options = uiServer.testCasesModel.ListAvailableTestCases()
 	}
 
+	// Clear DropDown for 'Available Building Blocks' and 'TestCase Building Blocks'
+	availableBuildingBlocksSelectWidget.Selected = ""
+	availableBuildingBlocksInTestCaseSelectWidget.Selected = ""
+
+	// Update UI with TestCase Textual Representation
+	_, _, textualTestCaseExtended, err := uiServer.commandAndRuleEngine.Testcases.CreateTextualTestCase(availableTestCasesSelectWidget.Selected)
+	if err != nil {
+		fmt.Println(err)
+	}
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructure.Set(textualTestCaseExtended)
+
 }
 
 // Remove(ElementToBeRemoved)
@@ -281,7 +299,7 @@ func (uiServer *UIServerStruct) remove(testcaseUuid string, elementUiNameoBeRemo
 		return
 	}
 
-	// List Available TestCase BuildingBlocks and ad the DropDown
+	// List Available TestCase BuildingBlocks and add the DropDown
 	availableTestCaseElements, err := uiServer.testCasesModel.ListAllAvailableBuildingBlocksInTestCase(availableTestCasesSelectWidget.Selected)
 
 	if err != nil {
@@ -289,6 +307,17 @@ func (uiServer *UIServerStruct) remove(testcaseUuid string, elementUiNameoBeRemo
 	} else {
 		availableBuildingBlocksInTestCaseSelectWidget.Options = availableTestCaseElements
 	}
+
+	// Clear DropDown for 'Available Building Blocks' and 'TestCase Building Blocks'
+	availableBuildingBlocksSelectWidget.Selected = ""
+	availableBuildingBlocksInTestCaseSelectWidget.Selected = ""
+
+	// Update UI with TestCase Textual Representation
+	_, _, textualTestCaseExtended, err := uiServer.commandAndRuleEngine.Testcases.CreateTextualTestCase(availableTestCasesSelectWidget.Selected)
+	if err != nil {
+		fmt.Println(err)
+	}
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructure.Set(textualTestCaseExtended)
 
 }
 
@@ -349,6 +378,26 @@ func (uiServer *UIServerStruct) swapFromNew(testcaseUuid string, elementUiNameTo
 
 		return
 	}
+
+	// List Available TestCase BuildingBlocks and add the DropDown
+	availableTestCaseElements, err := uiServer.testCasesModel.ListAllAvailableBuildingBlocksInTestCase(availableTestCasesSelectWidget.Selected)
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		availableBuildingBlocksInTestCaseSelectWidget.Options = availableTestCaseElements
+	}
+
+	// Clear DropDown for 'Available Building Blocks' and 'TestCase Building Blocks'
+	availableBuildingBlocksSelectWidget.Selected = ""
+	availableBuildingBlocksInTestCaseSelectWidget.Selected = ""
+
+	// Update UI with TestCase Textual Representation
+	_, _, textualTestCaseExtended, err := uiServer.commandAndRuleEngine.Testcases.CreateTextualTestCase(availableTestCasesSelectWidget.Selected)
+	if err != nil {
+		fmt.Println(err)
+	}
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructure.Set(textualTestCaseExtended)
 
 }
 

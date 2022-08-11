@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
@@ -382,7 +383,11 @@ func (uiServer *UIServerStruct) loadCompleteCurrentTestCaseUI() (completeCurrent
 // Loads current TestCase testCaseModel and return the UI-structure for it
 func (uiServer *UIServerStruct) loadCurrentTestCaseModelAreaUI() (currentTestCaseModelAreaUI fyne.CanvasObject) {
 
-	currentTestCaseModelAreaUI = widget.NewLabel("'currentTestCaseModelAreaUI'")
+	// Set initial value
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructure = binding.NewString()
+	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructure.Set("'currentTestCaseModelAreaUI'")
+
+	currentTestCaseModelAreaUI = widget.NewLabelWithData(uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructure)
 
 	return currentTestCaseModelAreaUI
 }

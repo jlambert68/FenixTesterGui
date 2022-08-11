@@ -111,60 +111,74 @@ func findElementInSliceAndRemove(sliceToWorkOn *[]string, uuid string) (returnSl
 	return returnSlice
 }
 
-func (testCaseModel *TestCasesModelsStruct) CreateTextualTestCase(testCaseUuid string) (textualTestCaseSimple string, textualTestCaseComplex string, err error) {
+func (testCaseModel *TestCasesModelsStruct) CreateTextualTestCase(testCaseUuid string) (textualTestCaseSimple string, textualTestCaseComplex string, textualTestCaseExtended string, err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
 	if existsInMap == false {
-		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
-		return "", "", err
+
+		errorId := "591afb7e-a372-45d4-88c0-332535642a3b"
+		err = errors.New(fmt.Sprintf("testcase with uuid '%s'  doesn't exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
+
+		return "", "", "", err
 	}
 
 	// Create slice with all elementTypes in presentation order
-	testCaseModelElements, err := testCaseModel.recursiveTextualTestCaseModelExtractor(testCaseUuid, currentTestCase.FirstElementUuid, []fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum{})
+	testCaseModelElements, err := testCaseModel.recursiveTextualTestCaseModelExtractor(testCaseUuid, currentTestCase.FirstElementUuid, []fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{})
 
 	// Something wrong happen
 	if err != nil {
-		return "", "", err
+		return "", "", "", err
 	}
 
 	// If there are no elements in TestCaseModel then return empty Textual description
 	if len(testCaseModelElements) == 0 {
-		return "[]", "[]", nil
+		return "{}", "{}", "{}", nil
 	}
 
 	// Loop all elements and convert element type into presentation representation
-	for _, testCaseModelElementType := range testCaseModelElements {
+	for _, testCaseModelElement := range testCaseModelElements {
+
+		// Get short UUID for
+		shourtUuid := testCaseModel.generateShortUuidFromFullUuid(testCaseModelElement.MatureElementUuid)
 
 		// Simple presentation style, like 'B10x' for "B10oxo"
-		presentationNameSimple := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementPresentationNameEnum_name[int32(testCaseModelElementType)]
+		presentationNameSimple := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementPresentationNameEnum_name[int32(testCaseModelElement.TestCaseModelElementType)]
 		separatorIndexSimple := strings.Index(presentationNameSimple, "_")
 		presentationNameSimple = presentationNameSimple[:separatorIndexSimple]
 
 		// Complex presentation style, like 'B10oxo' for "B10oxo"
-		presentationNameComplex := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_name[int32(testCaseModelElementType)]
+		presentationNameComplex := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_name[int32(testCaseModelElement.TestCaseModelElementType)]
 		separatorIndexComplex := strings.Index(presentationNameComplex, "_")
 		presentationNameComplex = presentationNameComplex[:separatorIndexComplex]
 
-		switch testCaseModelElementType {
+		// Extended presentation style, like 'B10oxo[0291462]' for "B10oxo"
+		presentationNameExtended := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_name[int32(testCaseModelElement.TestCaseModelElementType)]
+		separatorIndexExtended := strings.Index(presentationNameExtended, "_")
+		presentationNameExtended = presentationNameExtended[:separatorIndexExtended] + "[" + shourtUuid + "]"
+
+		switch testCaseModelElement.TestCaseModelElementType {
 
 		// First element in TC
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1f_BOND_NONE_SWAPPABLE:
 
-			presentationNameSimple = "[" + presentationNameSimple
-			presentationNameComplex = "[" + presentationNameComplex
+			presentationNameSimple = "{" + presentationNameSimple
+			presentationNameComplex = "{" + presentationNameComplex
+			presentationNameExtended = "{" + presentationNameExtended
 
 			// Last element in TC
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1l_BOND_NONE_SWAPPABLE:
 
-			presentationNameSimple = "-" + presentationNameSimple + "]"
-			presentationNameComplex = "-" + presentationNameComplex + "]"
+			presentationNameSimple = "-" + presentationNameSimple + "}"
+			presentationNameComplex = "-" + presentationNameComplex + "}"
+			presentationNameExtended = "-" + presentationNameExtended + "}"
 
 			// The only element in TC
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND:
 
-			presentationNameSimple = "[" + presentationNameSimple + "]"
-			presentationNameComplex = "[" + presentationNameComplex + "]"
+			presentationNameSimple = "{" + presentationNameSimple + "}"
+			presentationNameComplex = "{" + presentationNameComplex + "}"
+			presentationNameExtended = "{" + presentationNameExtended + "}"
 
 		// First element child in TIC(x)
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND,
@@ -172,6 +186,7 @@ func (testCaseModel *TestCasesModelsStruct) CreateTextualTestCase(testCaseUuid s
 
 			presentationNameSimple = "(" + presentationNameSimple
 			presentationNameComplex = "(" + presentationNameComplex
+			presentationNameExtended = "(" + presentationNameExtended
 
 		// Last element child in TIC(x)
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND,
@@ -179,6 +194,7 @@ func (testCaseModel *TestCasesModelsStruct) CreateTextualTestCase(testCaseUuid s
 
 			presentationNameSimple = "-" + presentationNameSimple + ")"
 			presentationNameComplex = "-" + presentationNameComplex + ")"
+			presentationNameExtended = "-" + presentationNameExtended + ")"
 
 			// The only element in TIC
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND,
@@ -188,6 +204,7 @@ func (testCaseModel *TestCasesModelsStruct) CreateTextualTestCase(testCaseUuid s
 
 			presentationNameSimple = "(" + presentationNameSimple + ")"
 			presentationNameComplex = "(" + presentationNameComplex + ")"
+			presentationNameExtended = "(" + presentationNameExtended + ")"
 
 			// Element surrounded with other elements
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION,
@@ -199,26 +216,30 @@ func (testCaseModel *TestCasesModelsStruct) CreateTextualTestCase(testCaseUuid s
 
 			presentationNameSimple = "-" + presentationNameSimple
 			presentationNameComplex = "-" + presentationNameComplex
+			presentationNameExtended = "-" + presentationNameExtended
 
 			// No match in element
 		default:
 
-			err = errors.New("no match in element type for: " + testCaseModelElementType.String())
-			return "", "", err
+			errorId := "46d49c79-93a4-4e56-a74c-9c08a43b26e8"
+			err = errors.New(fmt.Sprintf("no match in element type for: '%s' [ErrorID: %s]", testCaseModelElement.TestCaseModelElementType.String(), errorId))
+
+			return "", "", "", err
 
 		}
 
 		// Add presentation name to Textual TestCase
 		textualTestCaseSimple = textualTestCaseSimple + presentationNameSimple
 		textualTestCaseComplex = textualTestCaseComplex + presentationNameComplex
+		textualTestCaseExtended = textualTestCaseExtended + presentationNameExtended
 
 	}
 
-	return textualTestCaseSimple, textualTestCaseComplex, err
+	return textualTestCaseSimple, textualTestCaseComplex, textualTestCaseExtended, err
 }
 
-// Verify all children, in TestCaseElement-model and remove the found element from 'allUuidKeys'
-func (testCaseModel *TestCasesModelsStruct) recursiveTextualTestCaseModelExtractor(testCaseUuid string, elementsUuid string, testCaseModelElementsIn []fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum) (testCaseModelElementsIOut []fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum, err error) {
+// Generate the slice with the elements in the TestCase. Order is the same as in the Textual Representation of the TestCase
+func (testCaseModel *TestCasesModelsStruct) recursiveTextualTestCaseModelExtractor(testCaseUuid string, elementsUuid string, testCaseModelElementsIn []fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) (testCaseModelElementsIOut []fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage, err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
@@ -238,8 +259,8 @@ func (testCaseModel *TestCasesModelsStruct) recursiveTextualTestCaseModelExtract
 		return nil, err
 	}
 
-	// Add elementType to slice
-	testCaseModelElementsIOut = append(testCaseModelElementsIn, currentElement.TestCaseModelElementType)
+	// Add element to slice
+	testCaseModelElementsIOut = append(testCaseModelElementsIn, currentElement)
 
 	// Element has child-element then go that path
 	if currentElement.FirstChildElementUuid != elementsUuid {
@@ -397,16 +418,10 @@ func (testCaseModel *TestCasesModelsStruct) GetUuidFromUiName(testCaseUuid strin
 	return "elementUuid", err
 }
 
-// TODO ***** FIX OR REMOVE ******
-// Get ImmatureElementReference from UUID
-func (testCaseModel *TestCasesModelsStruct) getImmatureElementBuidlingBlockFromUuid(immatureElementUuid string) {
-	/*
-	   	// Get ImmatureElement
-	   currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+// Generate a short version of the UUID to be used in GUI
+func (testCaseModel *TestCasesModelsStruct) generateShortUuidFromFullUuid(fullUuid string) (shortUuid string) {
 
-	   if existsInMap == false {
-	   errorId := "02914625-46a8-4174-800a-f519f4cf0532"
-	   err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
-	*/
-	return
+	shortUuid = fullUuid[0 : numberOfCharactersfromUuid-1]
+
+	return shortUuid
 }

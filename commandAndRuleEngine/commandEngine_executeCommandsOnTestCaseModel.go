@@ -59,11 +59,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = newTestCaseModel
 
 	// Add command Textual representations to Textual Representation Stack
-	textualRepresentationSimple, textualRepresentationComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
+	textualRepresentationSimple, textualRepresentationComplex, textualRepresentationExtended, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	if err == nil {
 		newTestCaseModel.TextualTestCaseRepresentationSimpleStack = append(newTestCaseModel.TextualTestCaseRepresentationSimpleStack, textualRepresentationSimple)
 		newTestCaseModel.TextualTestCaseRepresentationComplexStack = append(newTestCaseModel.TextualTestCaseRepresentationComplexStack, textualRepresentationComplex)
+		newTestCaseModel.TextualTestCaseRepresentationExtendedStack = append(newTestCaseModel.TextualTestCaseRepresentationExtendedStack, textualRepresentationExtended)
 
 		// Add the TestCaseModel back into map of all TestCaseModels
 		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = newTestCaseModel
@@ -110,11 +111,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
 
 	// Add command Textual representations to Textual Representation Stack
-	textualRepresentationSimple, textualRepresentationComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
+	textualRepresentationSimple, textualRepresentationComplex, textualRepresentationExtended, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	if err == nil {
 		currentTestCaseModel.TextualTestCaseRepresentationSimpleStack = append(currentTestCaseModel.TextualTestCaseRepresentationSimpleStack, textualRepresentationSimple)
 		currentTestCaseModel.TextualTestCaseRepresentationComplexStack = append(currentTestCaseModel.TextualTestCaseRepresentationComplexStack, textualRepresentationComplex)
+		currentTestCaseModel.TextualTestCaseRepresentationExtendedStack = append(currentTestCaseModel.TextualTestCaseRepresentationExtendedStack, textualRepresentationExtended)
 
 		// Add the TestCaseModel back into map of all TestCaseModels
 		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
@@ -159,12 +161,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	// commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
 
 	// Add command Textual representations to Textual Representation Stack
-	textualRepresentationSimple, textualRepresentationComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
+	textualRepresentationSimple, textualRepresentationComplex, textualRepresentationExtended, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	// If no errors then add Simple and Complex Textual Representation to their stacks
 	if err == nil {
 		currentTestCaseModel.TextualTestCaseRepresentationSimpleStack = append(currentTestCaseModel.TextualTestCaseRepresentationSimpleStack, textualRepresentationSimple)
 		currentTestCaseModel.TextualTestCaseRepresentationComplexStack = append(currentTestCaseModel.TextualTestCaseRepresentationComplexStack, textualRepresentationComplex)
+		currentTestCaseModel.TextualTestCaseRepresentationExtendedStack = append(currentTestCaseModel.TextualTestCaseRepresentationExtendedStack, textualRepresentationExtended)
 
 		// Add the TestCaseModel back into map of all TestCaseModels
 		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel

@@ -200,7 +200,7 @@ func TestTCRuleSwap101(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, _, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B10)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B10)-B1l]"
@@ -467,7 +467,7 @@ func TestTCRuleSwap102(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, _, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B11)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B11l)-B1l]"
@@ -790,7 +790,7 @@ func TestTCRuleSwap103(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, _, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B12-TIC(B10)-B11)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B12-TIC(B10)-B11l)-B1l]"
@@ -1113,7 +1113,7 @@ func TestTCRuleSwap104(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, _, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B12-TIC(B10)-B11)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B12-TIC(B10)-B11l)-B1l]"
@@ -1457,7 +1457,7 @@ func TestTCRuleSwap105(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, _, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B12-TI-B12-TI-B11)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B12-TI-B12-TI-B11l)-B1l]"
@@ -1723,7 +1723,7 @@ func TestTCRuleSwap106(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, _, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11x-TIC(B10)-B11x)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11fx-TIC(B10)-B11lx)-B1l]"
@@ -1990,7 +1990,7 @@ func TestTCRuleSwap107(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, _, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11x-TIC(B10)-B11)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11fx-TIC(B10)-B11l)-B1l]"
@@ -2257,7 +2257,7 @@ func TestTCRuleSwap108(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Validate Textual TestCase Presentation
-	textualTestCaseSimple, textualTestCaseComplex, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
+	textualTestCaseSimple, textualTestCaseComplex, _, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	textualTestCaseRepresentationSimple := "[B1-TIC(B11-TIC(B10)-B11x)-B1]"
 	textualTestCaseRepresentationComplex := "[B1f-TIC(B11f-TIC(B10)-B11lx)-B1l]"

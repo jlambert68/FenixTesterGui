@@ -35,7 +35,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifySwapRuleAndC
 	}
 
 	// If Cut-command is in progress then
-	if currentTestCaseModel.CutCommandInitiated == false {
+	if currentTestCaseModel.CutCommandInitiated == true {
 
 		//  Swap from cut-buffer then element already is in mature form
 		matureElementToSwapIn := currentTestCaseModel.CutBuffer

@@ -384,8 +384,8 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeFul
 	}
 
 	// Loop all TestInstructionContainer-Building Blocks and add to model
-	for _, testInstructionBuildingBlock := range testInstructionsAndTestContainersMessage.ImmatureTestInstructions {
-		availableBuildingBlocksModel.allImmatureTestInstructionsBuildingBlocks[testInstructionBuildingBlock.BasicTestInstructionInformation.NonEditableInformation.TestInstructionUuid] = testInstructionBuildingBlock
+	for _, testInstructionContainerBuildingBlock := range testInstructionsAndTestContainersMessage.ImmatureTestInstructionContainers {
+		availableBuildingBlocksModel.allImmatureTestInstructionContainerBuildingBlocks[testInstructionContainerBuildingBlock.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerUuid] = testInstructionContainerBuildingBlock
 	}
 
 }

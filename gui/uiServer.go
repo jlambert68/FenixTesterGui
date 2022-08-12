@@ -363,6 +363,14 @@ func (uiServer *UIServerStruct) loadCompleteCurrentTestCaseUI() (completeCurrent
 			fmt.Println("Past Node")
 		}),
 	)
+	tabs := container.NewAppTabs(
+		container.NewTabItem("Tab 1", widget.NewLabel("Hello")),
+		container.NewTabItem("Tab 2", widget.NewLabel("World!")),
+	)
+
+	tabs.Append(container.NewTabItemWithIcon("Home", theme.HomeIcon(), widget.NewLabel("Home tab")))
+
+	tabs.SetTabLocation(container.TabLocationLeading)
 
 	// Load the TestCase testCaseModel UI area
 	currentTestCaseModelAreaUI := uiServer.loadCurrentTestCaseModelAreaUI()

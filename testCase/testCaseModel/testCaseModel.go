@@ -140,7 +140,7 @@ func (testCaseModel *TestCasesModelsStruct) CreateTextualTestCase(testCaseUuid s
 	for _, testCaseModelElement := range testCaseModelElements {
 
 		// Get short UUID for
-		shourtUuid := testCaseModel.generateShortUuidFromFullUuid(testCaseModelElement.MatureElementUuid)
+		shourtUuid := testCaseModel.GenerateShortUuidFromFullUuid(testCaseModelElement.MatureElementUuid)
 
 		// Simple presentation style, like 'B10x' for "B10oxo"
 		presentationNameSimple := fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementPresentationNameEnum_name[int32(testCaseModelElement.TestCaseModelElementType)]
@@ -418,10 +418,29 @@ func (testCaseModel *TestCasesModelsStruct) GetUuidFromUiName(testCaseUuid strin
 	return "elementUuid", err
 }
 
+// GenerateShortUuidFromFullUuid
 // Generate a short version of the UUID to be used in GUI
-func (testCaseModel *TestCasesModelsStruct) generateShortUuidFromFullUuid(fullUuid string) (shortUuid string) {
+func (testCaseModel *TestCasesModelsStruct) GenerateShortUuidFromFullUuid(fullUuid string) (shortUuid string) {
 
 	shortUuid = fullUuid[0 : numberOfCharactersfromUuid-1]
 
 	return shortUuid
+}
+
+// Generate a short version of the UUID to be used in GUI
+func (testCaseModel *TestCasesModelsStruct) GetTestCaseNameUuid(testCaseUuid string) (testCaseName string, err error) {
+
+	// Get current TestCase
+	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+
+	if existsInMap == false {
+		errorId := "97198543-7717-4925-8643-240ad34bb205"
+		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
+
+		return "", err
+	}
+
+	testCaseName = currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseName
+
+	return testCaseName, err
 }

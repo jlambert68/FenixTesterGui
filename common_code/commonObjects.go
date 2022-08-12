@@ -35,4 +35,6 @@ var (
 	FenixGuiBuilderProxyServerPort    int
 )
 
+const numberOfCharactersfromUuid = 8
+
 // ***********************************************************************************************************

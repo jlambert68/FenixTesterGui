@@ -249,10 +249,15 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 		availableBuildingBlocksInTestCaseLabelWidget,
 		&availableBuildingBlocksInTestCaseSelectWidget)
 
+	separator1Widget := widget.NewSeparator()
+	separator2Widget := widget.NewSeparator()
+
 	testCaseCommandsUIObject_temp := container.New(
 		layout.NewVBoxLayout(),
 		commandHeaderLabelCanvasObject,
+		separator1Widget,
 		selectWidgetsGrid,
+		separator2Widget,
 		newTestCaseButton,
 		removeButton,
 		swapFromNewButton,

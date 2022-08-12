@@ -174,6 +174,9 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 				}
 
 				availableBuildingBlocksInTestCaseSelectWidget.Options = availableTestCaseElements
+
+				availableBuildingBlocksInTestCaseSelectWidget.Refresh()
+
 			}
 			//label1.Text = s
 			//label1.Refresh()
@@ -300,10 +303,13 @@ func (uiServer *UIServerStruct) newTestCase() {
 	// Update List with available TestCases and Select the New one
 	availableTestCasesSelectWidget.Options = uiServer.testCasesModel.ListAvailableTestCases()
 	availableTestCasesSelectWidget.Selected = testCaseUuid
+	availableTestCasesSelectWidget.Refresh()
 
 	// Clear DropDown for 'Available Building Blocks' and 'TestCase Building Blocks'
 	availableBuildingBlocksSelectWidget.Selected = ""
+	availableBuildingBlocksSelectWidget.Refresh()
 	availableBuildingBlocksInTestCaseSelectWidget.Selected = ""
+	availableBuildingBlocksInTestCaseSelectWidget.Refresh()
 
 	// Update UI with TestCase Textual Representation
 	textualTestCaseSimple, textualTestCaseComplex, textualTestCaseExtended, err := uiServer.commandAndRuleEngine.Testcases.CreateTextualTestCase(availableTestCasesSelectWidget.Selected)
@@ -461,7 +467,9 @@ func (uiServer *UIServerStruct) swapFromNew(testcaseUuid string, elementUiNameTo
 
 	// Clear DropDown for 'Available Building Blocks' and 'TestCase Building Blocks'
 	availableBuildingBlocksSelectWidget.Selected = ""
+	availableBuildingBlocksSelectWidget.Refresh()
 	availableBuildingBlocksInTestCaseSelectWidget.Selected = ""
+	availableBuildingBlocksInTestCaseSelectWidget.Refresh()
 
 	// Update UI with TestCase Textual Representation
 	textualTestCaseSimple, textualTestCaseComplex, textualTestCaseExtended, err := uiServer.commandAndRuleEngine.Testcases.CreateTextualTestCase(availableTestCasesSelectWidget.Selected)

@@ -79,8 +79,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	// Initiate TestCase UI-model
 	testCaseGraphicalAreas := testCaseGraphicalAreasStruct{}
 
-	// Generate the Textual Representation Area for the TestCase
-	testCaseTextualModelArea, err := testCasesUiCanvasObject.generateNewTextualRepresentationAreaForTestCase(testCaseToBeAddedUuid)
+	// Generate the Textual Binding Objects for Textual Representation and Textual Representation Area for the TestCase
+	newTestCaseTextualStructure, testCaseTextualModelArea, err := testCasesUiCanvasObject.generateNewTextualRepresentationAreaForTestCase(testCaseToBeAddedUuid)
 
 	if err != nil {
 		return err
@@ -139,10 +139,18 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	}
 
 	// Create canvas-object for Textual and Graphical Representation
-	textualAndGraphicalRepresentations := container.NewVBox(testCaseGraphicalAreas.TestCaseTextualModelArea, testCaseGraphicalAreas.TestCaseGraphicalModelArea)
+	textualAndGraphicalRepresentations := container.NewVBox(
+		testCaseGraphicalAreas.TestCaseTextualModelArea,
+		widget.NewSeparator(),
+		testCaseGraphicalAreas.TestCaseGraphicalModelArea)
 
 	// Create canvas-object for BaseInformation, MetaData and TestCaseAttributes
-	baseInformationMetaDataTestCaseAttributes := container.NewVBox(testCaseGraphicalAreas.TestCaseBaseInformationArea, testCaseGraphicalAreas.TestCaseMetaDataArea, testCaseGraphicalAreas.TestCaseAttributesArea)
+	baseInformationMetaDataTestCaseAttributes := container.NewVBox(
+		testCaseGraphicalAreas.TestCaseBaseInformationArea,
+		widget.NewSeparator(),
+		testCaseGraphicalAreas.TestCaseMetaDataArea,
+		widget.NewSeparator(),
+		testCaseGraphicalAreas.TestCaseAttributesArea)
 
 	// Create the UI area for all parts of one TestCase
 	testCaseAdaptiveSplitContainer := newAdaptiveSplit(textualAndGraphicalRepresentations, baseInformationMetaDataTestCaseAttributes)
@@ -156,10 +164,17 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	// Set focus on newly created Tab
 	testCasesUiCanvasObject.TestCasesTabs.Select(newTestCaseTabObject)
 
-	// Initiate Textual Representations for TestCase
-	testCaseGraphicalAreas.currentTestCaseTextualStructure.currentTestCaseTextualStructureSimple = binding.NewString()
-	testCaseGraphicalAreas.currentTestCaseTextualStructure.currentTestCaseTextualStructureComplex = binding.NewString()
-	testCaseGraphicalAreas.currentTestCaseTextualStructure.currentTestCaseTextualStructureExtended = binding.NewString()
+	/*
+		// Initiate Textual Representations for TestCase
+		testCaseGraphicalAreas.currentTestCaseTextualStructure.currentTestCaseTextualStructureSimple = binding.NewString()
+		testCaseGraphicalAreas.currentTestCaseTextualStructure.currentTestCaseTextualStructureComplex = binding.NewString()
+		testCaseGraphicalAreas.currentTestCaseTextualStructure.currentTestCaseTextualStructureExtended = binding.NewString()
+
+
+	*/
+
+	// 	Save Textual Binding Objects for Textual Representation
+	testCaseGraphicalAreas.currentTestCaseTextualStructure = newTestCaseTextualStructure
 
 	// Save TestCase UI-components-Map
 	testCasesUiCanvasObject.TestCasesUiModelMap[testCaseToBeAddedUuid] = &testCaseGraphicalAreas
@@ -168,7 +183,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 }
 
 // Generate the Textual Representation Area for the TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateNewTextualRepresentationAreaForTestCase(testCaseUuid string) (testCaseTextualModelArea fyne.CanvasObject, err error) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateNewTextualRepresentationAreaForTestCase(testCaseUuid string) (newTestCaseTextualStructure testCaseTextualStructureStruct, testCaseTextualModelArea fyne.CanvasObject, err error) {
 
 	// Get current TestCase-UI-model
 	_, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
@@ -177,11 +192,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateNewTextualReprese
 		errorId := "3308ff4c-4f70-447a-94c6-18e55e3bc1fc"
 		err = errors.New(fmt.Sprintf("testcase-UI-model with uuid '%s' allready exist in 'TestCasesUiModelMap' [ErrorID: %s]", testCaseUuid, errorId))
 
-		return nil, err
+		return testCaseTextualStructureStruct{}, nil, err
 	}
 
 	// Create a new Textual Structure to be used in TestCase-UI-model
-	newTestCaseTextualStructure := currentTestCaseTextualStructureStruct{}
+	newTestCaseTextualStructure = testCaseTextualStructureStruct{}
 
 	// Set initial values for TestCase Textual Structure - Simple
 	newTestCaseTextualStructure.currentTestCaseTextualStructureSimple = binding.NewString()
@@ -195,6 +210,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateNewTextualReprese
 	newTestCaseTextualStructure.currentTestCaseTextualStructureExtended = binding.NewString()
 	newTestCaseTextualStructure.currentTestCaseTextualStructureExtended.Set("'currentTestCaseTextualStructureExtended'")
 
+	//
+
 	// Create the Labels to be used for showing the TestCase Textual Structures
 	testCaseTextualStructureSimpleWidget := widget.NewLabelWithData(newTestCaseTextualStructure.currentTestCaseTextualStructureSimple)
 	testCaseTextualStructureComplexWidget := widget.NewLabelWithData(newTestCaseTextualStructure.currentTestCaseTextualStructureComplex)
@@ -203,7 +220,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateNewTextualReprese
 	// Create GUI Canvas object to be used
 	testCaseTextualModelArea = container.NewVBox(testCaseTextualStructureSimpleWidget, testCaseTextualStructureComplexWidget, testCaseTextualStructureExtendedWidget)
 
-	return testCaseTextualModelArea, err
+	return newTestCaseTextualStructure, testCaseTextualModelArea, err
 }
 
 // Generate the Graphical Representation Area for the TestCase
@@ -300,6 +317,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) UpdateTextualStructuresFo
 	currentTestCaseUiModel.currentTestCaseTextualStructure.currentTestCaseTextualStructureSimple.Set(testCaseTextualStructureSimple)
 	currentTestCaseUiModel.currentTestCaseTextualStructure.currentTestCaseTextualStructureComplex.Set(testCaseTextualStructureComplex)
 	currentTestCaseUiModel.currentTestCaseTextualStructure.currentTestCaseTextualStructureExtended.Set(testCaseTextualStructureExtended)
+
+	currentTestCaseUiModel.TestCaseTextualModelArea.Refresh()
 
 	return err
 }

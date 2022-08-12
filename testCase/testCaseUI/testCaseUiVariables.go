@@ -20,7 +20,7 @@ type TestCasesUiModelStruct struct {
 
 // This structure holds the UI-objects for one TestCase
 type testCaseGraphicalAreasStruct struct {
-	currentTestCaseTextualStructure currentTestCaseTextualStructureStruct // Keeps track of the latest Textual Representations for the TestCase
+	currentTestCaseTextualStructure testCaseTextualStructureStruct // Keeps track of the latest Textual Representations for the TestCase
 
 	TestCaseTextualModelArea    fyne.CanvasObject
 	TestCaseGraphicalModelArea  fyne.CanvasObject
@@ -30,7 +30,7 @@ type testCaseGraphicalAreasStruct struct {
 }
 
 // Keeps track of the latest Textual Representations for the TestCase
-type currentTestCaseTextualStructureStruct struct {
+type testCaseTextualStructureStruct struct {
 	currentTestCaseTextualStructureSimple   binding.String
 	currentTestCaseTextualStructureComplex  binding.String
 	currentTestCaseTextualStructureExtended binding.String

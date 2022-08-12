@@ -43,11 +43,15 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectF
 	testCaseBorderedLayout := layout.NewBorderLayout(testCasesUiCanvasObject.TestCaseToolUIBar, nil, nil, nil)
 	baseCanvasObjectForTestCaseUI = container.New(testCaseBorderedLayout, testCasesUiCanvasObject.TestCaseToolUIBar, testCasesUiCanvasObject.TestCasesTabs)
 
+	// Initiate map with TestCaseUI-models-Map
+	testCasesUiCanvasObject.TestCasesUiModelMap = make(map[string]*testCaseGraphicalAreasStruct)
+
 	return baseCanvasObjectForTestCaseUI
 }
 
+// GenerateNewTestCaseTabObject
 // Generate a new TestCase UI-model
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateNewTestCaseTabObject(testCaseToBeAddedUuid string) (err error) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObject(testCaseToBeAddedUuid string) (err error) {
 
 	var tabName string
 
@@ -151,6 +155,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateNewTestCaseTabObj
 
 	// Set focus on newly created Tab
 	testCasesUiCanvasObject.TestCasesTabs.Select(newTestCaseTabObject)
+
+	// Initiate Textual Representations for TestCase
+	testCaseGraphicalAreas.currentTestCaseTextualStructure.currentTestCaseTextualStructureSimple = binding.NewString()
+	testCaseGraphicalAreas.currentTestCaseTextualStructure.currentTestCaseTextualStructureComplex = binding.NewString()
+	testCaseGraphicalAreas.currentTestCaseTextualStructure.currentTestCaseTextualStructureExtended = binding.NewString()
+
+	// Save TestCase UI-components-Map
+	testCasesUiCanvasObject.TestCasesUiModelMap[testCaseToBeAddedUuid] = &testCaseGraphicalAreas
 
 	return err
 }

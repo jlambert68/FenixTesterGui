@@ -159,9 +159,19 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 				if err != nil {
 					fmt.Println(err)
 				}
-				uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureSimple.Set(textualTestCaseSimple)
-				uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureComplex.Set(textualTestCaseComplex)
-				uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureExtended.Set(textualTestCaseExtended)
+
+				// Update Textual Representations, in UI-model, for TestCase
+				err = uiServer.testCasesUiModel.UpdateTextualStructuresForTestCase(
+					availableTestCasesSelectWidget.Selected,
+					textualTestCaseSimple,
+					textualTestCaseComplex,
+					textualTestCaseExtended)
+
+				if err != nil {
+					fmt.Println(err)
+
+					return
+				}
 
 				availableBuildingBlocksInTestCaseSelectWidget.Options = availableTestCaseElements
 			}
@@ -278,12 +288,18 @@ func (uiServer *UIServerStruct) newTestCase() {
 
 	fmt.Printf("NewTestCase()\n")
 	bindedCommandListData.Prepend(CommandNewTestcase)
-	err := uiServer.commandAndRuleEngine.NewTestCaseModel()
+	testCaseUuid, err := uiServer.commandAndRuleEngine.NewTestCaseModel()
+
 	if err != nil {
 		fmt.Println(err)
-	} else {
-		availableTestCasesSelectWidget.Options = uiServer.testCasesModel.ListAvailableTestCases()
+
+		return
+
 	}
+
+	// Update List with available TestCases and Select the New one
+	availableTestCasesSelectWidget.Options = uiServer.testCasesModel.ListAvailableTestCases()
+	availableTestCasesSelectWidget.Selected = testCaseUuid
 
 	// Clear DropDown for 'Available Building Blocks' and 'TestCase Building Blocks'
 	availableBuildingBlocksSelectWidget.Selected = ""
@@ -293,10 +309,30 @@ func (uiServer *UIServerStruct) newTestCase() {
 	textualTestCaseSimple, textualTestCaseComplex, textualTestCaseExtended, err := uiServer.commandAndRuleEngine.Testcases.CreateTextualTestCase(availableTestCasesSelectWidget.Selected)
 	if err != nil {
 		fmt.Println(err)
+
+		return
 	}
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureSimple.Set(textualTestCaseSimple)
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureComplex.Set(textualTestCaseComplex)
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureExtended.Set(textualTestCaseExtended)
+
+	// Generate UI for New TestCase
+	err = uiServer.testCasesUiModel.GenerateNewTestCaseTabObject(testCaseUuid)
+	if err != nil {
+		fmt.Println(err)
+
+		return
+	}
+
+	// Update Textual Representations, in UI-model, for TestCase
+	err = uiServer.testCasesUiModel.UpdateTextualStructuresForTestCase(
+		testCaseUuid,
+		textualTestCaseSimple,
+		textualTestCaseComplex,
+		textualTestCaseExtended)
+
+	if err != nil {
+		fmt.Println(err)
+
+		return
+	}
 
 }
 
@@ -340,9 +376,19 @@ func (uiServer *UIServerStruct) remove(testcaseUuid string, elementUiNameoBeRemo
 	if err != nil {
 		fmt.Println(err)
 	}
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureSimple.Set(textualTestCaseSimple)
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureComplex.Set(textualTestCaseComplex)
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureExtended.Set(textualTestCaseExtended)
+
+	// Update Textual Representations, in UI-model, for TestCase
+	err = uiServer.testCasesUiModel.UpdateTextualStructuresForTestCase(
+		testcaseUuid,
+		textualTestCaseSimple,
+		textualTestCaseComplex,
+		textualTestCaseExtended)
+
+	if err != nil {
+		fmt.Println(err)
+
+		return
+	}
 
 }
 
@@ -422,9 +468,19 @@ func (uiServer *UIServerStruct) swapFromNew(testcaseUuid string, elementUiNameTo
 	if err != nil {
 		fmt.Println(err)
 	}
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureSimple.Set(textualTestCaseSimple)
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureComplex.Set(textualTestCaseComplex)
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureExtended.Set(textualTestCaseExtended)
+
+	// Update Textual Representations, in UI-model, for TestCase
+	err = uiServer.testCasesUiModel.UpdateTextualStructuresForTestCase(
+		testcaseUuid,
+		textualTestCaseSimple,
+		textualTestCaseComplex,
+		textualTestCaseExtended)
+
+	if err != nil {
+		fmt.Println(err)
+
+		return
+	}
 
 }
 

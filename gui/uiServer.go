@@ -83,6 +83,9 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 	// Add TestCasesReference to CommandEngine
 	uiServer.commandAndRuleEngine.Testcases = &uiServer.testCasesModel
 
+	// Add TestCasesReference to TestUI-engine
+	uiServer.testCasesUiModel.TestCasesModelReference = &uiServer.testCasesModel
+
 	// Forward logger and Dail string
 	uiServer.SetLogger(globalUISServer.logger)
 	uiServer.SetDialAddressString(globalUISServer.fenixGuiBuilderServerAddressToDial)

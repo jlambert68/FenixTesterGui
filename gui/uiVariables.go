@@ -4,6 +4,7 @@ import (
 	"FenixTesterGui/commandAndRuleEngine"
 	"FenixTesterGui/grpc_out"
 	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testCase/testCaseUI"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/widget"
@@ -168,6 +169,7 @@ type UIServerStruct struct {
 	testCasesModel               testCaseModel.TestCasesModelsStruct
 	commandAndRuleEngine         commandAndRuleEngine.CommandAndRuleEngineObjectStruct
 	//subSystemsCrossReferences    SubSystemsCrossReferencesStruct
+	testCasesUiModel testCaseUI.TestCasesUiModelStruct
 }
 
 /*

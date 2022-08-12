@@ -10,7 +10,7 @@ import (
 
 // TestCaseUiStruct
 // This structure holds all UI-objects for all the TestCases
-type TestCasesObjectForUiStruct struct {
+type TestCasesUiModelStruct struct {
 	TestCaseToolUIBar       *widget.Toolbar                          // Toolbar used copy, cut, paste Building Blocks
 	TestCasesTabs           *container.AppTabs                       // The Tab-structure where each TestCase has its own Tab
 	TestCasesUiModelMap     map[string]*testCaseGraphicalAreasStruct // Holds all UI sub-parts for a TestCase
@@ -20,13 +20,13 @@ type TestCasesObjectForUiStruct struct {
 
 // This structure holds the UI-objects for one TestCase
 type testCaseGraphicalAreasStruct struct {
-	currentTestCaseTextualStructure currentTestCaseTextualStructureStruct
+	currentTestCaseTextualStructure currentTestCaseTextualStructureStruct // Keeps track of the latest Textual Representations for the TestCase
 
-	TestCaseTextualModelArea    *fyne.CanvasObject
-	TestCaseGraphicalModelArea  *fyne.CanvasObject
-	TestCaseBaseInformationArea *fyne.CanvasObject
-	TestCaseMetaDataArea        *fyne.CanvasObject
-	TestCaseAttributesArea      *fyne.CanvasObject
+	TestCaseTextualModelArea    fyne.CanvasObject
+	TestCaseGraphicalModelArea  fyne.CanvasObject
+	TestCaseBaseInformationArea fyne.CanvasObject
+	TestCaseMetaDataArea        fyne.CanvasObject
+	TestCaseAttributesArea      fyne.CanvasObject
 }
 
 // Keeps track of the latest Textual Representations for the TestCase

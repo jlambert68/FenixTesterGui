@@ -4,6 +4,7 @@ import (
 	"FenixTesterGui/commandAndRuleEngine"
 	"FenixTesterGui/grpc_out"
 	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testCase/testCaseUI"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -68,6 +69,12 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 		},
 		commandAndRuleEngine: commandAndRuleEngine.CommandAndRuleEngineObjectStruct{},
 		grpcOut:              grpc_out.GRPCOutStruct{},
+		testCasesUiModel: testCaseUI.TestCasesUiModelStruct{
+			TestCaseToolUIBar:       nil,
+			TestCasesTabs:           nil,
+			TestCasesUiModelMap:     nil,
+			TestCasesModelReference: nil,
+		},
 	}
 	// Add gRPC-out Reference
 	uiServer.commandAndRuleEngine.GrpcOutReference = &uiServer.availableBuildingBlocksModel.grpcOut
@@ -226,7 +233,8 @@ func (uiServer *UIServerStruct) loadUI() fyne.CanvasObject {
 
 	treeSide := uiServer.loadCompleteAvailableTestCaseBuildingBlocksUI()
 
-	testCaseSide := uiServer.loadCompleteCurrentTestCaseUI()
+	// Old original solution for creating TestCase-UI:::: testCaseSide := uiServer.loadCompleteCurrentTestCaseUI()
+	testCaseSide := uiServer.testCasesUiModel.GenerateBaseCanvasObjectForTestCaseUI()
 
 	uiStructureContainer := newAdaptiveSplit(treeSide, testCaseSide)
 

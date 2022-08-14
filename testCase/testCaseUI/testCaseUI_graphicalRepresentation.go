@@ -24,7 +24,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateGraphicalRepresen
 
 	//testCaseGraphicalModelArea = widget.NewLabel("'testCaseGraphicalModelArea'")
 
-	testCaseGraphicalModelArea = testCasesUiCanvasObject.makeTestCaseGraphicalUITree()
+	testCaseGraphicalModelArea = testCasesUiCanvasObject.makeTestCaseGraphicalUITree(testCaseUuid)
 
 	// Create a Canvas Accordion type for grouping the Graphical Representation of the TestCase
 	testCaseGraphicalModelAreaAccordionItem := widget.NewAccordionItem("Graphical Representation of the TestCase", testCaseGraphicalModelArea)
@@ -36,7 +36,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateGraphicalRepresen
 var list map[string][]string
 var tree *widget.Tree
 
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITree() fyne.CanvasObject {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITree(testCaseUuid string) fyne.CanvasObject {
 	list = map[string][]string{
 		"":  {"A"},
 		"A": {"B", "D"},
@@ -45,14 +45,65 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 		"D": {"E"},
 		"E": {"F", "G"},
 	}
+	/*
+		list, err := testCasesUiCanvasObject.TestCasesModelReference.GetTreeViewModelForTestCase()
+		if err != nil {
+			return nil
+		}
 
-	tree = widget.NewTreeWithStrings(list)
-	tree.OnSelected = func(id string) {
-		fmt.Printf("Tree node selected: %s", id)
+		tree = widget.NewTreeWithStrings(list)
+		tree.OnSelected = func(id string) {
+			fmt.Printf("Tree node selected: %s", id)
 
-	}
-	tree.OnUnselected = func(id string) {
-		fmt.Printf("Tree node unselected: %s", id)
+		}
+		tree.OnUnselected = func(id string) {
+			fmt.Printf("Tree node unselected: %s", id)
+		}
+	*/
+
+	tree = &widget.Tree{
+		ChildUIDs: func(uid string) []string {
+			treeViewModelForTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.GetTreeViewModelForTestCase(testCaseUuid)
+			return treeViewModelForTestCase[uid]
+		},
+		IsBranch: func(uid string) bool {
+			treeViewModelForTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.GetTreeViewModelForTestCase(testCaseUuid)
+			children, ok := treeViewModelForTestCase[uid]
+
+			return ok && len(children) > 0
+		},
+
+		CreateNode: func(branch bool) fyne.CanvasObject {
+			fmt.Println("CreateNode: ")
+			//return newTappableLabel() //widget.NewLabel("Collection Widgets: ")
+			return widget.NewLabel("xxxx")
+		},
+
+		UpdateNode: func(uid string, branch bool, obj fyne.CanvasObject) {
+			fmt.Println("UpdateNode: ", uid)
+			/*
+				_, ok := list[uid]
+				if !ok {
+					fyne.LogError("Missing tutorial panel: "+uid, nil)
+					return
+				}
+			*/
+			//obj.(*tappableLabel).SetText(uid) //obj.(*widget.Label).SetText(uid) // + time.Now().String())
+			obj.(*widget.Label).SetText(uid)
+			fmt.Println(tree.Size())
+		},
+
+		OnSelected: func(uid string) {
+			fmt.Println(uid)
+			//fmt.Println(uid, uiServer.availableBuildingBlocksModel.getAvailableBuildingBlocksModel()[uid])
+			//uiServer.availableBuildingBlocksModel.clickedNodeName = uid
+
+			//if t, ok := list[uid]; ok {
+			//	fmt.Println(tree.Root)
+			//	fmt.Println(t)
+
+			//}
+		},
 	}
 
 	tree.OpenAllBranches()

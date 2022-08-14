@@ -16,8 +16,12 @@ func (testCaseModel *TestCasesModelsStruct) VerifyThatThereAreNoZombieElementsIn
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
 	if existsInMap == false {
-		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
-		return err
+		if existsInMap == false {
+			errorId := "c3ceca6e-849f-4edb-b759-8512722e8bca"
+			err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
+
+			return err
+		}
 	}
 
 	// Extract all elements by key from TestCaseModel
@@ -162,6 +166,13 @@ func (testCaseModel *TestCasesModelsStruct) CreateTextualTestCase(testCaseUuid s
 		textualTestCaseComplex = textualTestCaseComplex + presentationNameComplex
 		textualTestCaseExtended = textualTestCaseExtended + presentationNameExtended
 
+	}
+
+	// Update Graphical TestCase Model
+	err = testCaseModel.UpdateTreeViewModelForTestCase(testCaseUuid)
+
+	if err != nil {
+		return "", "", "", err
 	}
 
 	return textualTestCaseSimple, textualTestCaseComplex, textualTestCaseExtended, err
@@ -319,4 +330,52 @@ func (testCaseModel *TestCasesModelsStruct) GetTestCaseNameUuid(testCaseUuid str
 	testCaseName = currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseName
 
 	return testCaseName, err
+}
+
+// UpdateTreeViewModelForTestCase
+// Updates, and returns, the model adapted for a Tree View representation of the TestCase
+func (testCaseModel *TestCasesModelsStruct) UpdateTreeViewModelForTestCase(testCaseUuid string) (err error) {
+
+	// Get current TestCase
+	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+
+	if existsInMap == false {
+		errorId := "fa560732-ebab-4093-82a5-0a29dc651ee5"
+		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
+
+		return err
+	}
+
+	// Clear current TestCase UI-Tree-Model
+	currentTestCase.testCaseModelAdaptedForUiTree = make(map[string][]string)
+
+	// Generate to model adapted to be used in a UI Tree-view component
+	err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentTestCase.FirstElementUuid, []string{})
+
+	if err != nil {
+		return err
+	}
+
+	return err
+}
+
+// GetTreeViewModelForTestCase
+// Updates, and returns, the model adapted for a Tree View representation of the TestCase
+func (testCaseModel *TestCasesModelsStruct) GetTreeViewModelForTestCase(testCaseUuid string) (treeViewModel map[string][]string, err error) {
+
+	// Get current TestCase
+	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+
+	if existsInMap == false {
+		errorId := "2c5ea607-d496-4c88-8fb6-bd6f2324f435"
+		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
+
+		return nil, err
+	}
+
+	// Get the model adapted for Tree-view component
+	treeViewModel = currentTestCase.testCaseModelAdaptedForUiTree
+
+	return treeViewModel, err
+
 }

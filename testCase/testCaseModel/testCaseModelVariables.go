@@ -30,6 +30,8 @@ type TestCaseModelStruct struct {
 	CutBuffer                                  MatureElementStruct
 	CutCommandInitiated                        bool
 	LocalTestCaseMessage                       LocalTestCaseMessageStruct
+	testCaseModelAdaptedForUiTree              map[string][]string // Model used for Creating the Tree-view for the TestCase-model
+
 }
 
 type lastSavedCommandStack struct {

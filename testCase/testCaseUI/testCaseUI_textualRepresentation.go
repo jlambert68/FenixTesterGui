@@ -6,6 +6,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -44,8 +45,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateNewTextualReprese
 	testCaseTextualStructureComplexWidget := widget.NewLabelWithData(newTestCaseTextualStructure.currentTestCaseTextualStructureComplex)
 	testCaseTextualStructureExtendedWidget := widget.NewLabelWithData(newTestCaseTextualStructure.currentTestCaseTextualStructureExtended)
 
+	textualRepresentationGrid := container.New(layout.NewFormLayout(),
+		widget.NewLabel("Simple"),
+		testCaseTextualStructureSimpleWidget,
+		widget.NewLabel("Complex"),
+		testCaseTextualStructureComplexWidget,
+		widget.NewLabel("Extended"),
+		testCaseTextualStructureExtendedWidget)
+
 	// Create GUI Canvas object to be used
-	testCaseTextualModelArea = container.NewVBox(testCaseTextualStructureSimpleWidget, testCaseTextualStructureComplexWidget, testCaseTextualStructureExtendedWidget)
+	testCaseTextualModelArea = container.NewVBox(textualRepresentationGrid)
 
 	// Create a Canvas Accordion type for grouping the Textual Representations
 	testCaseTextualModelAreaAccordionItem := widget.NewAccordionItem("Texttual Representation of the TestCase", testCaseTextualModelArea)

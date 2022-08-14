@@ -141,7 +141,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	textualAndGraphicalRepresentations := container.NewVBox(
 		testCaseGraphicalAreas.TestCaseTextualModelArea,
 		widget.NewSeparator(),
-		testCaseGraphicalAreas.TestCaseGraphicalModelArea)
+		testCaseGraphicalAreas.TestCaseGraphicalModelArea,
+		layout.NewSpacer())
 
 	// Create canvas-object for BaseInformation, MetaData and TestCaseAttributes
 	baseInformationMetaDataTestCaseAttributes := container.NewVBox(
@@ -150,6 +151,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 		testCaseGraphicalAreas.TestCaseMetaDataArea,
 		widget.NewSeparator(),
 		testCaseGraphicalAreas.TestCaseAttributesArea)
+	//layout.NewSpacer())
 
 	// Create the UI area for all parts of one TestCase
 	testCaseAdaptiveSplitContainer := newAdaptiveSplit(textualAndGraphicalRepresentations, baseInformationMetaDataTestCaseAttributes)

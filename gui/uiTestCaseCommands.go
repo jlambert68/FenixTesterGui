@@ -305,10 +305,19 @@ func (uiServer *UIServerStruct) newTestCase() {
 	availableTestCasesSelectWidget.Selected = testCaseUuid
 	availableTestCasesSelectWidget.Refresh()
 
-	// Clear DropDown for 'Available Building Blocks' and 'TestCase Building Blocks'
+	// Clear DropDown for 'Available Building Blocks'
 	availableBuildingBlocksSelectWidget.Selected = ""
 	availableBuildingBlocksSelectWidget.Refresh()
+
+	// Load avaialble Building Blocks for newly created TestCase
 	availableBuildingBlocksInTestCaseSelectWidget.Selected = ""
+	availableTestCaseElements, err := uiServer.testCasesModel.ListAllAvailableBuildingBlocksInTestCase(availableTestCasesSelectWidget.Selected)
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		availableBuildingBlocksInTestCaseSelectWidget.Options = availableTestCaseElements
+	}
 	availableBuildingBlocksInTestCaseSelectWidget.Refresh()
 
 	// Update UI with TestCase Textual Representation

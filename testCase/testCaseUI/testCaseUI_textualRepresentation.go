@@ -47,7 +47,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateNewTextualReprese
 	// Create GUI Canvas object to be used
 	testCaseTextualModelArea = container.NewVBox(testCaseTextualStructureSimpleWidget, testCaseTextualStructureComplexWidget, testCaseTextualStructureExtendedWidget)
 
-	return newTestCaseTextualStructure, testCaseTextualModelArea, err
+	// Create a Canvas Accordion type for grouping the Textual Representations
+	testCaseTextualModelAreaAccordionItem := widget.NewAccordionItem("Texttual Representation of the TestCase", testCaseTextualModelArea)
+	testCaseTextualModelAreaAccordion := widget.NewAccordion(testCaseTextualModelAreaAccordionItem)
+
+	return newTestCaseTextualStructure, testCaseTextualModelAreaAccordion, err
 }
 
 // UpdateTextualStructuresForTestCase

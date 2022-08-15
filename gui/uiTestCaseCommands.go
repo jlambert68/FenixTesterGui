@@ -349,16 +349,19 @@ func (uiServer *UIServerStruct) newTestCase() {
 		return
 	}
 
+	// Update Graphical TestCase Representation
+	uiServer.testCasesUiModel.TestCasesUiModelMap[testCaseUuid].TestCaseGraphicalModelArea.Refresh()
+
 }
 
 // Remove(ElementToBeRemoved)
-func (uiServer *UIServerStruct) remove(testcaseUuid string, elementUiNameoBeRemoved string) {
+func (uiServer *UIServerStruct) remove(testCaseUuid string, elementUiNameoBeRemoved string) {
 
-	fmt.Printf("Remove(ElementToBeRemoved='%s' in TestCase='%s')\n", elementUiNameoBeRemoved, testcaseUuid)
+	fmt.Printf("Remove(ElementToBeRemoved='%s' in TestCase='%s')\n", elementUiNameoBeRemoved, testCaseUuid)
 	bindedCommandListData.Prepend(CommandRemoveElementFromTestcase)
 
 	// Convert UI-name for element into elements UUID
-	elementUuid, err := uiServer.testCasesModel.GetUuidFromUiName(testcaseUuid, elementUiNameoBeRemoved)
+	elementUuid, err := uiServer.testCasesModel.GetUuidFromUiName(testCaseUuid, elementUiNameoBeRemoved)
 	if err != nil {
 		fmt.Println(err)
 
@@ -366,7 +369,7 @@ func (uiServer *UIServerStruct) remove(testcaseUuid string, elementUiNameoBeRemo
 	}
 
 	// Delete Element from TestCase
-	err = uiServer.commandAndRuleEngine.DeleteElementFromTestCaseModel(testcaseUuid, elementUuid)
+	err = uiServer.commandAndRuleEngine.DeleteElementFromTestCaseModel(testCaseUuid, elementUuid)
 	if err != nil {
 		fmt.Println(err)
 
@@ -394,7 +397,7 @@ func (uiServer *UIServerStruct) remove(testcaseUuid string, elementUiNameoBeRemo
 
 	// Update Textual Representations, in UI-model, for TestCase
 	err = uiServer.testCasesUiModel.UpdateTextualStructuresForTestCase(
-		testcaseUuid,
+		testCaseUuid,
 		textualTestCaseSimple,
 		textualTestCaseComplex,
 		textualTestCaseExtended)
@@ -405,16 +408,19 @@ func (uiServer *UIServerStruct) remove(testcaseUuid string, elementUiNameoBeRemo
 		return
 	}
 
+	// Update Graphical TestCase Representation
+	uiServer.testCasesUiModel.TestCasesUiModelMap[testCaseUuid].TestCaseGraphicalModelArea.Refresh()
+
 }
 
 // SwapFromNew(ElementTobeSwappedOut, NewElementTobeSwappedIn)
-func (uiServer *UIServerStruct) swapFromNew(testcaseUuid string, elementUiNameTobeSwappedOut string, newElementUiNameTobeSwappedIn string) {
+func (uiServer *UIServerStruct) swapFromNew(testCaseUuid string, elementUiNameTobeSwappedOut string, newElementUiNameTobeSwappedIn string) {
 
-	fmt.Printf("SwapFromNew(elementUiNameTobeSwappedOut='%s', newElementUiNameTobeSwappedIn='%s') in TestCase '%s'\n", elementUiNameTobeSwappedOut, newElementUiNameTobeSwappedIn, testcaseUuid)
+	fmt.Printf("SwapFromNew(elementUiNameTobeSwappedOut='%s', newElementUiNameTobeSwappedIn='%s') in TestCase '%s'\n", elementUiNameTobeSwappedOut, newElementUiNameTobeSwappedIn, testCaseUuid)
 	bindedCommandListData.Prepend(CommandSwapFromNewComponent)
 
 	// Convert UI-name for element into elements UUID
-	elementUuidTobeSwappedOut, err := uiServer.testCasesModel.GetUuidFromUiName(testcaseUuid, elementUiNameTobeSwappedOut)
+	elementUuidTobeSwappedOut, err := uiServer.testCasesModel.GetUuidFromUiName(testCaseUuid, elementUiNameTobeSwappedOut)
 	if err != nil {
 		fmt.Println(err)
 
@@ -458,7 +464,7 @@ func (uiServer *UIServerStruct) swapFromNew(testcaseUuid string, elementUiNameTo
 	}
 
 	// Execute Swap of Elements
-	err = uiServer.commandAndRuleEngine.SwapElementsInTestCaseModel(testcaseUuid, elementUuidTobeSwappedOut, &immatureElementToSwapInTestCaseFormat)
+	err = uiServer.commandAndRuleEngine.SwapElementsInTestCaseModel(testCaseUuid, elementUuidTobeSwappedOut, &immatureElementToSwapInTestCaseFormat)
 	if err != nil {
 		fmt.Println(err)
 
@@ -488,7 +494,7 @@ func (uiServer *UIServerStruct) swapFromNew(testcaseUuid string, elementUiNameTo
 
 	// Update Textual Representations, in UI-model, for TestCase
 	err = uiServer.testCasesUiModel.UpdateTextualStructuresForTestCase(
-		testcaseUuid,
+		testCaseUuid,
 		textualTestCaseSimple,
 		textualTestCaseComplex,
 		textualTestCaseExtended)
@@ -498,6 +504,9 @@ func (uiServer *UIServerStruct) swapFromNew(testcaseUuid string, elementUiNameTo
 
 		return
 	}
+
+	// Update Graphical TestCase Representation
+	uiServer.testCasesUiModel.TestCasesUiModelMap[testCaseUuid].TestCaseGraphicalModelArea.Refresh()
 
 }
 

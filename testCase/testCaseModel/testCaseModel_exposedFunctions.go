@@ -346,11 +346,14 @@ func (testCaseModel *TestCasesModelsStruct) UpdateTreeViewModelForTestCase(testC
 		return err
 	}
 
-	// Clear current TestCase UI-Tree-Model
+	// Initiate/Clear current TestCase UI-Tree-Model
 	currentTestCase.testCaseModelAdaptedForUiTree = make(map[string][]string)
 
+	// Save Back the TestCase
+	testCaseModel.TestCases[testCaseUuid] = currentTestCase
+
 	// Generate to model adapted to be used in a UI Tree-view component
-	err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentTestCase.FirstElementUuid, []string{})
+	_, err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentTestCase.FirstElementUuid, []string{})
 
 	if err != nil {
 		return err

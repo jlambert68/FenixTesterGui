@@ -136,7 +136,7 @@ func (testCaseModel *TestCasesModelsStruct) generateUINameForTestCaseElement(ele
 }
 
 // Generate the slice with the elements in the TestCase. Order is the same as in the Textual Representation of the TestCase
-func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid string, currentElementsUuid string, treeViewNodeChildrenIn []string) (err error) {
+func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid string, currentElementsUuid string, treeViewNodeChildrenIn []string) (treeViewNodeChildrenOut []string, err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
@@ -144,10 +144,10 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 		errorId := "68f37aee-0b93-4d4f-9225-31ea5ccd8f8a"
 		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
 
-		return err
+		return nil, err
 	}
 
-	// Extract current elementnil
+	// Extract current element
 	currentElement, existInMap := currentTestCase.TestCaseModelMap[currentElementsUuid]
 
 	// If the element doesn't exit then there is something really wrong
@@ -156,34 +156,59 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 		errorId := "2397cd98-e5dd-4a42-9d7a-46de3f0286d2"
 		err = errors.New(fmt.Sprintf("element '%s', in testcase '%s' doesn't exist in map with all testcases [ErrorID: %s]", currentElementsUuid, testCaseUuid, errorId))
 
-		return err
+		return nil, err
+	}
+
+	// Element has child-element then go that path
+	if currentElement.FirstChildElementUuid != currentElementsUuid {
+		treeViewNodeChildrenOut, err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentElement.FirstChildElementUuid, []string{})
+
+		// reverse Slice to get correct order in Tree-view
+		treeViewNodeChildrenToBeSaved := testCaseModel.reverseSliceOfString(treeViewNodeChildrenOut)
+
+		// Save children under currentUUid
+		currentTestCase.testCaseModelAdaptedForUiTree[currentElementsUuid] = treeViewNodeChildrenToBeSaved
+		//return nil, err
+	}
+
+	// If we got an error back then something wrong happen, so just back out
+	if err != nil {
+		return nil, err
+	}
+
+	// If element has a next-element the go that path
+	if currentElement.NextElementUuid != currentElementsUuid {
+		treeViewNodeChildrenIn, err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentElement.NextElementUuid, treeViewNodeChildrenIn)
+	}
+
+	// If we got an error back then something wrong happen, so just back out
+	if err != nil {
+		return nil, err
 	}
 
 	// Add element to slice
 	treeViewNodeChildrenIn = append(treeViewNodeChildrenIn, currentElementsUuid)
 
-	// Element has child-element then go that path
-	if currentElement.FirstChildElementUuid != currentElementsUuid {
-		err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentElement.FirstChildElementUuid, []string{})
+	// Save Top-Left-Children in Map with ParentElementUuid as map-key
+	if currentElementsUuid == currentElement.ParentElementUuid &&
+		currentElementsUuid == currentElement.PreviousElementUuid {
+		// reverse Slice to get correct order in Tree-view
+		treeViewNodeChildrenToBeSaved := testCaseModel.reverseSliceOfString(treeViewNodeChildrenIn)
+
+		// Children has no defined parent, put them under "standard" Fyne UI Tree-component Top Node, ("")
+		currentTestCase.testCaseModelAdaptedForUiTree[""] = treeViewNodeChildrenToBeSaved
 	}
 
-	// If we got an error back then something wrong happen, so just back out
-	if err != nil {
-		return err
+	return treeViewNodeChildrenIn, err
+}
+
+// Reverse a slice of strings
+func (testCaseModel *TestCasesModelsStruct) reverseSliceOfString(inSlice []string) (outSlice []string) {
+
+	numberOfElementsInSlice := len(inSlice)
+
+	for positionCounter := numberOfElementsInSlice - 1; positionCounter >= 0; positionCounter-- {
+		outSlice = append(outSlice, inSlice[positionCounter])
 	}
-
-	// If element has a next-element the go that path
-	if currentElement.NextElementUuid != currentElementsUuid {
-		err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentElement.NextElementUuid, treeViewNodeChildrenIn)
-	}
-
-	// If we got an error back then something wrong happen, so just back out
-	if err != nil {
-		return err
-	}
-
-	// Add Children to Map with currenElementUuid as map-key
-	currentTestCase.testCaseModelAdaptedForUiTree[currentElementsUuid] = treeViewNodeChildrenIn
-
-	return err
+	return outSlice
 }

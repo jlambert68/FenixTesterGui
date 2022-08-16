@@ -79,16 +79,15 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	testCaseGraphicalAreas := testCaseGraphicalAreasStruct{}
 
 	// Generate the Textual Binding Objects for Textual Representation and Textual Representation Area for the TestCase
-	newTestCaseTextualStructure, testCaseTextualModelArea, err := testCasesUiCanvasObject.generateNewTextualRepresentationAreaForTestCase(testCaseToBeAddedUuid)
-
+	newTestCaseTextualStructure, canvasTextualRepresentationAccordionObject, err := testCasesUiCanvasObject.generateNewTextualRepresentationAreaForTestCase(testCaseToBeAddedUuid)
 	if err != nil {
 		return err
 	}
 	// Add newly created Textual Representation Area to object for all graphical parts of one TestCase
-	testCaseGraphicalAreas.TestCaseTextualModelArea = testCaseTextualModelArea
+	testCaseGraphicalAreas.TestCaseTextualModelArea = canvasTextualRepresentationAccordionObject
 
 	// Generate the Graphical Representation Area for the TestCase
-	testCaseGraphicalModelArea, err := testCasesUiCanvasObject.generateGraphicalRepresentationAreaForTestCase(testCaseToBeAddedUuid)
+	testCaseGraphicalModelArea, testCaseGraphicalUITree, testCaseGraphicalModelAreaAccordion, err := testCasesUiCanvasObject.generateGraphicalRepresentationAreaForTestCase(testCaseToBeAddedUuid)
 
 	if err != nil {
 		return err
@@ -174,8 +173,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 
 	*/
 
-	// 	Save Textual Binding Objects for Textual Representation
+	// 	Save Textual Binding Objects and Accordion Objectfor Textual Representation
 	testCaseGraphicalAreas.currentTestCaseTextualStructure = newTestCaseTextualStructure
+
+	// save Graphical object into TestCase, to be reachable
+	testCaseGraphicalAreas.currentTestCaseGraphicalStructure.currentTestCaseGraphicalAccordionObject = testCaseGraphicalModelAreaAccordion
+	testCaseGraphicalAreas.currentTestCaseGraphicalStructure.currentTestCaseGraphicalTreeComponent = testCaseGraphicalUITree
+
+	// Open 'Accordions' for Textual and Graphical TestCase Representation for TestCase
+	testCaseGraphicalAreas.currentTestCaseTextualStructure.currentTestCaseGraphicalAccordionObject.OpenAll()
+	testCaseGraphicalAreas.currentTestCaseGraphicalStructure.currentTestCaseGraphicalAccordionObject.OpenAll()
 
 	// Save TestCase UI-components-Map
 	testCasesUiCanvasObject.TestCasesUiModelMap[testCaseToBeAddedUuid] = &testCaseGraphicalAreas

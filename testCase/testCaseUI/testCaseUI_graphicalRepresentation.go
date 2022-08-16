@@ -10,7 +10,7 @@ import (
 )
 
 // Generate the Graphical Representation Area for the TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateGraphicalRepresentationAreaForTestCase(testCaseUuid string) (testCaseGraphicalModelArea fyne.CanvasObject, err error) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateGraphicalRepresentationAreaForTestCase(testCaseUuid string) (testCaseGraphicalModelArea fyne.CanvasObject, testCaseGraphicalUITree *widget.Tree, testCaseGraphicalModelAreaAccordion *widget.Accordion, err error) {
 
 	// Get current TestCase-UI-model
 	_, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
@@ -19,48 +19,47 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateGraphicalRepresen
 		errorId := "a058d6d3-76bd-4667-802f-5e417f76ad26"
 		err = errors.New(fmt.Sprintf("testcase-UI-model with uuid '%s' allready exist in 'TestCasesUiModelMap' [ErrorID: %s]", testCaseUuid, errorId))
 
-		return nil, err
+		return nil, nil, nil, err
 	}
 
 	//testCaseGraphicalModelArea = widget.NewLabel("'testCaseGraphicalModelArea'")
 
-	testCaseGraphicalModelArea = testCasesUiCanvasObject.makeTestCaseGraphicalUITree(testCaseUuid)
+	testCaseGraphicalUITree = testCasesUiCanvasObject.makeTestCaseGraphicalUITree(testCaseUuid)
+
+	//tree.OpenAllBranches()
+
+	//tree.Refresh()
+
+	tempContainer := container.New(layout.NewGridWrapLayout(fyne.NewSize(1, 400)))
+
+	treeExpandedContainer := container.New(layout.NewMaxLayout(), testCaseGraphicalUITree, tempContainer, layout.NewSpacer())
 
 	// Create a Canvas Accordion type for grouping the Graphical Representation of the TestCase
-	testCaseGraphicalModelAreaAccordionItem := widget.NewAccordionItem("Graphical Representation of the TestCase", testCaseGraphicalModelArea)
-	testCaseGraphicalModelAreaAccordion := widget.NewAccordion(testCaseGraphicalModelAreaAccordionItem)
+	testCaseGraphicalModelAreaAccordionItem := widget.NewAccordionItem("Graphical Representation of the TestCase", treeExpandedContainer)
+	testCaseGraphicalModelAreaAccordion = widget.NewAccordion(testCaseGraphicalModelAreaAccordionItem)
 
-	return testCaseGraphicalModelAreaAccordion, err
+	testCaseGraphicalModelArea = container.NewVBox(testCaseGraphicalModelAreaAccordion)
+
+	return testCaseGraphicalModelArea, testCaseGraphicalUITree, testCaseGraphicalModelAreaAccordion, err
 }
 
-var list map[string][]string
-var tree *widget.Tree
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITree(testCaseUuid string) (tree *widget.Tree) {
 
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITree(testCaseUuid string) fyne.CanvasObject {
-	list = map[string][]string{
-		"":  {"A"},
-		"A": {"B", "D"},
-		"B": {"C"},
-		"C": {"abc"},
-		"D": {"E"},
-		"E": {"F", "G"},
+	// Check if TestCase allready exists, shouldn't do that
+	_, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
+	if existsInMap == true {
+		errorId := "69447c68-b650-49bd-ab34-2d26964cea05"
+		err := errors.New(fmt.Sprintf("testcase with uuid '%s' allready exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
+
+		list := map[string][]string{
+			"": {err.Error()},
+		}
+
+		tree := widget.NewTreeWithStrings(list)
+		return tree
 	}
-	/*
-		list, err := testCasesUiCanvasObject.TestCasesModelReference.GetTreeViewModelForTestCase()
-		if err != nil {
-			return nil
-		}
 
-		tree = widget.NewTreeWithStrings(list)
-		tree.OnSelected = func(id string) {
-			fmt.Printf("Tree node selected: %s", id)
-
-		}
-		tree.OnUnselected = func(id string) {
-			fmt.Printf("Tree node unselected: %s", id)
-		}
-	*/
-
+	// Create Tree
 	tree = &widget.Tree{
 		ChildUIDs: func(uid string) []string {
 			treeViewModelForTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.GetTreeViewModelForTestCase(testCaseUuid)
@@ -106,14 +105,6 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 		},
 	}
 
-	tree.OpenAllBranches()
-
-	tree.Refresh()
-
-	tempContainer := container.New(layout.NewGridWrapLayout(fyne.NewSize(1, 400)))
-
-	treeExpandedContainer := container.New(layout.NewMaxLayout(), tree, tempContainer, layout.NewSpacer())
-
-	return treeExpandedContainer
+	return tree
 
 }

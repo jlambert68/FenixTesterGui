@@ -11,7 +11,7 @@ import (
 )
 
 // Generate the Textual Representation Area for the TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateNewTextualRepresentationAreaForTestCase(testCaseUuid string) (newTestCaseTextualStructure testCaseTextualStructureStruct, testCaseTextualModelArea fyne.CanvasObject, err error) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateNewTextualRepresentationAreaForTestCase(testCaseUuid string) (newTestCaseTextualStructure testCaseTextualStructureStruct, canvasTextualRepresentationAccordionObject fyne.CanvasObject, err error) {
 
 	// Get current TestCase-UI-model
 	_, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
@@ -38,8 +38,6 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateNewTextualReprese
 	newTestCaseTextualStructure.currentTestCaseTextualStructureExtended = binding.NewString()
 	newTestCaseTextualStructure.currentTestCaseTextualStructureExtended.Set("'currentTestCaseTextualStructureExtended'")
 
-	//
-
 	// Create the Labels to be used for showing the TestCase Textual Structures
 	testCaseTextualStructureSimpleWidget := widget.NewLabelWithData(newTestCaseTextualStructure.currentTestCaseTextualStructureSimple)
 	testCaseTextualStructureComplexWidget := widget.NewLabelWithData(newTestCaseTextualStructure.currentTestCaseTextualStructureComplex)
@@ -54,13 +52,18 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateNewTextualReprese
 		testCaseTextualStructureExtendedWidget)
 
 	// Create GUI Canvas object to be used
-	testCaseTextualModelArea = container.NewVBox(textualRepresentationGrid)
+	testCaseTextualModelArea := container.NewVBox(textualRepresentationGrid)
 
 	// Create a Canvas Accordion type for grouping the Textual Representations
 	testCaseTextualModelAreaAccordionItem := widget.NewAccordionItem("Texttual Representation of the TestCase", testCaseTextualModelArea)
 	testCaseTextualModelAreaAccordion := widget.NewAccordion(testCaseTextualModelAreaAccordionItem)
 
-	return newTestCaseTextualStructure, testCaseTextualModelAreaAccordion, err
+	canvasTextualRepresentationAccordionObject = container.NewVBox(testCaseTextualModelAreaAccordion)
+
+	// Save the Accordion object in Textual Structure
+	newTestCaseTextualStructure.currentTestCaseGraphicalAccordionObject = testCaseTextualModelAreaAccordion
+
+	return newTestCaseTextualStructure, canvasTextualRepresentationAccordionObject, err
 }
 
 // UpdateTextualStructuresForTestCase

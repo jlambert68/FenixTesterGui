@@ -506,7 +506,12 @@ func (uiServer *UIServerStruct) swapFromNew(testCaseUuid string, elementUiNameTo
 	}
 
 	// Update Graphical TestCase Representation
-	uiServer.testCasesUiModel.TestCasesUiModelMap[testCaseUuid].TestCaseGraphicalModelArea.Refresh()
+	err = uiServer.testCasesUiModel.UpdateGraphicalRepresentationForTestCase(testCaseUuid)
+	if err != nil {
+		fmt.Println(err)
+
+		return
+	}
 
 }
 

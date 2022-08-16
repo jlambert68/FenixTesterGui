@@ -350,7 +350,13 @@ func (uiServer *UIServerStruct) newTestCase() {
 	}
 
 	// Update Graphical TestCase Representation
-	uiServer.testCasesUiModel.TestCasesUiModelMap[testCaseUuid].TestCaseGraphicalModelArea.Refresh()
+	// Update Graphical TestCase Representation
+	err = uiServer.testCasesUiModel.UpdateGraphicalRepresentationForTestCase(testCaseUuid)
+	if err != nil {
+		fmt.Println(err)
+
+		return
+	}
 
 }
 
@@ -409,7 +415,12 @@ func (uiServer *UIServerStruct) remove(testCaseUuid string, elementUiNameoBeRemo
 	}
 
 	// Update Graphical TestCase Representation
-	uiServer.testCasesUiModel.TestCasesUiModelMap[testCaseUuid].TestCaseGraphicalModelArea.Refresh()
+	err = uiServer.testCasesUiModel.UpdateGraphicalRepresentationForTestCase(testCaseUuid)
+	if err != nil {
+		fmt.Println(err)
+
+		return
+	}
 
 }
 
@@ -560,6 +571,8 @@ func (uiServer *UIServerStruct) undoUndoLastCommandOnStack() {
 
 	fmt.Printf("UndoUndoLastCommandOnStack()\n")
 	bindedCommandListData.Prepend(CommandUndoUndoLastCommandOnStack)
+	uiServer.testCasesUiModel.UpdateGraphicalRepresentationForTestCase(availableTestCasesSelectWidget.Selected)
+	fmt.Println("hello")
 
 }
 

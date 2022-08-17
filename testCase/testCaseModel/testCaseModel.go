@@ -196,23 +196,64 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 		nodeColor       string
 		canBeDeleted    bool
 		canBeSwappedOut bool
+		isBond          bool
 	)
 
+	switch currentElement.TestCaseModelElementType {
+	// B0-Bond
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND:
+		nodeColor = nodeColor_Bond_B0
+		isBond = true
+
+	// B1-Bonds
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1f_BOND_NONE_SWAPPABLE,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1l_BOND_NONE_SWAPPABLE:
+		nodeColor = nodeColor_Bond_B1
+		isBond = true
+
+		// B10, B11, B12
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND:
+		nodeColor = nodeColor_Swappeble_Bonds
+		isBond = true
+
+		// TI, TIC
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER:
+		nodeColor = nodeColor_TI_TIC
+		isBond = false
+
+	// B11x, B12x
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE:
+		nodeColor = nodeColor_X_Bonds
+		isBond = true
+
+	// B10x
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10ox_BOND:
+		nodeColor = nodeColor_B10X_Bonds
+		isBond = true
+
+	// TIx, TICx
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE:
+		nodeColor = nodeColor_TIx_TICx
+		isBond = false
+
+	default:
+		errorId := "97e0d6e6-791e-4228-8cb4-e58f059dad1e"
+		err = errors.New(fmt.Sprintf("unknown Element Type '%s' in Element '%s' in TestCase '%s' [ErrorID: %s]", currentElement.TestCaseModelElementType, currentElementsUuid, testCaseUuid, errorId))
+
+		return nil, err
+
+	}
+
 	// Check if it is a Bond-element
-	isBond :=
-		currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND ||
-			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1f_BOND_NONE_SWAPPABLE ||
-			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1l_BOND_NONE_SWAPPABLE ||
-			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND ||
-			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND ||
-			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND ||
-			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10ox_BOND ||
-			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND ||
-			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND ||
-			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE ||
-			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE ||
-			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND ||
-			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE
 	if isBond {
 		// The Element is a Bond so extract it
 		currentImmatureBond, existInMap := testCaseModel.AvailableBondsMap[currentElement.TestCaseModelElementType]
@@ -224,15 +265,9 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 			err = errors.New(fmt.Sprintf("bond element '%s', doesn't exist in map with all Bonds [ErrorID: %s]", currentElement.TestCaseModelElementType, errorId))
 
 			return nil, err
-		} else {
-			// The Element is a TestInstruction or a TestInstructionContainer
-			nodeColor = "#FF0000"
-			canBeDeleted = true
-			canBeSwappedOut = false
 		}
 
-		// Extract the Bond data
-		nodeColor = currentImmatureBond.BasicBondInformation.VisibleBondAttributes.BondColor
+		// Extract the data
 		canBeDeleted = currentImmatureBond.BasicBondInformation.VisibleBondAttributes.CanBeDeleted
 		canBeSwappedOut = currentImmatureBond.BasicBondInformation.VisibleBondAttributes.CanBeSwappedOut
 

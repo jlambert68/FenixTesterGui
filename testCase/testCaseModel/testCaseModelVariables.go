@@ -8,6 +8,16 @@ import (
 
 const numberOfCharactersfromUuid = 8
 
+const (
+	nodeColor_Bond_B0         = "#FF0000"
+	nodeColor_Bond_B1         = "#FF0000"
+	nodeColor_Swappeble_Bonds = "#FFFF00"
+	nodeColor_TI_TIC          = "#00FF00"
+	nodeColor_X_Bonds         = "#00FFFF"
+	nodeColor_B10X_Bonds      = "#00FF0F"
+	nodeColor_TIx_TICx        = "#F0FF0F"
+)
+
 type TestCasesModelsStruct struct {
 	TestCases   map[string]TestCaseModelStruct // Holds the Model for all the TestCase-models
 	CurrentUser string                         // Current logged-in user TODO Put this in a more global structure

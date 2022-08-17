@@ -2,7 +2,6 @@ package gui
 
 import (
 	"errors"
-	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 )
@@ -87,7 +86,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvai
 
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks(testInstructionsAndTestContainersMessage)
 
-	fmt.Println(testInstructionsAndTestContainersMessage)
+	// fmt.Println(testInstructionsAndTestContainersMessage)
 
 }
 

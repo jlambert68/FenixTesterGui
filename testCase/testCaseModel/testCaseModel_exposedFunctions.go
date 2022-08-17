@@ -347,13 +347,13 @@ func (testCaseModel *TestCasesModelsStruct) UpdateTreeViewModelForTestCase(testC
 	}
 
 	// Initiate/Clear current TestCase UI-Tree-Model
-	currentTestCase.testCaseModelAdaptedForUiTree = make(map[string][]string)
+	currentTestCase.testCaseModelAdaptedForUiTree = make(map[string][]testCaseModelAdaptedForUiTreeDataStruct) //string)
 
 	// Save Back the TestCase
 	testCaseModel.TestCases[testCaseUuid] = currentTestCase
 
 	// Generate to model adapted to be used in a UI Tree-view component
-	_, err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentTestCase.FirstElementUuid, []string{})
+	_, err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentTestCase.FirstElementUuid, []testCaseModelAdaptedForUiTreeDataStruct{})
 
 	if err != nil {
 		return err
@@ -364,7 +364,7 @@ func (testCaseModel *TestCasesModelsStruct) UpdateTreeViewModelForTestCase(testC
 
 // GetTreeViewModelForTestCase
 // Updates, and returns, the model adapted for a Tree View representation of the TestCase
-func (testCaseModel *TestCasesModelsStruct) GetTreeViewModelForTestCase(testCaseUuid string) (treeViewModel map[string][]string, err error) {
+func (testCaseModel *TestCasesModelsStruct) GetTreeViewModelForTestCase(testCaseUuid string) (treeViewModel map[string][]testCaseModelAdaptedForUiTreeDataStruct, err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
@@ -381,4 +381,19 @@ func (testCaseModel *TestCasesModelsStruct) GetTreeViewModelForTestCase(testCase
 
 	return treeViewModel, err
 
+}
+
+// GetArrayOfChildUuid
+// Returns a slice of child-Uuid:s to a parent Uuid
+func (testCaseModel *TestCasesModelsStruct) GetArrayOfChildUuid(nodeUuid string, testCaseUuid string) (childrensUuidSlice []string) {
+
+	treeViewModelMapForTestCase, _ := testCaseModel.GetTreeViewModelForTestCase(testCaseUuid)
+
+	childrenWithExtraData := treeViewModelMapForTestCase[nodeUuid]
+
+	for _, child := range childrenWithExtraData {
+		childrensUuidSlice = append(childrensUuidSlice, child.Uuid)
+	}
+
+	return childrensUuidSlice
 }

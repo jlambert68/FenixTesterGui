@@ -8,6 +8,8 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+const testCaseNodeRectangleSize = 40
+
 // TestCaseUiStruct
 // This structure holds all UI-objects for all the TestCases
 type TestCasesUiModelStruct struct {

@@ -4,9 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"image/color"
 )
 
 // Generate the Graphical Representation Area for the TestCase
@@ -62,8 +64,15 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 	// Create Tree
 	tree = &widget.Tree{
 		ChildUIDs: func(uid string) []string {
-			treeViewModelForTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.GetTreeViewModelForTestCase(testCaseUuid)
-			return treeViewModelForTestCase[uid]
+			// treeViewModelMapForTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.GetTreeViewModelForTestCase(testCaseUuid)
+
+			// Create slice with children UUIDs
+			var childrenUuidSlice []string
+
+			// Get the array
+			childrenUuidSlice = testCasesUiCanvasObject.TestCasesModelReference.GetArrayOfChildUuid(uid, testCaseUuid)
+
+			return childrenUuidSlice
 		},
 		IsBranch: func(uid string) bool {
 			treeViewModelForTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.GetTreeViewModelForTestCase(testCaseUuid)
@@ -75,7 +84,30 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 		CreateNode: func(branch bool) fyne.CanvasObject {
 			fmt.Println("CreateNode: ")
 			//return newTappableLabel() //widget.NewLabel("Collection Widgets: ")
-			return widget.NewLabel("xxxx")
+
+			//return widget.NewLabel("xxxx")
+
+			nodeLabel := widget.NewLabel("This is just some text")
+
+			// Create a Canvas Accordion type for grouping the TestCase Node and any node info to be displayed
+			//testCaseNodeAreaAccordionItem := widget.NewAccordionItem("xxxx", nodeLabel)
+			//testCaseTNodeAreaAccordion := widget.NewAccordion(testCaseNodeAreaAccordionItem)
+
+			leftRectangle := canvas.NewRectangle(color.RGBA{0xff, 0x00, 0x00, 0xff})
+			leftRectangle.StrokeColor = color.Black
+			leftRectangle.StrokeWidth = 0
+
+			leftRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
+
+			greeRectangle := canvas.NewRectangle(color.Gray{0x44}) // RGBA{0x00, 0xFF, 0x00, 0xff})
+			greeRectangle.StrokeColor = color.Black
+			greeRectangle.StrokeWidth = 0
+			labelContainer := container.NewMax(greeRectangle, nodeLabel)
+
+			content := container.New(layout.NewBorderLayout(nil, nil, leftRectangle, nil),
+				leftRectangle, labelContainer)
+
+			return content
 		},
 
 		UpdateNode: func(uid string, branch bool, obj fyne.CanvasObject) {
@@ -88,7 +120,17 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 				}
 			*/
 			//obj.(*tappableLabel).SetText(uid) //obj.(*widget.Label).SetText(uid) // + time.Now().String())
-			obj.(*widget.Label).SetText(uid)
+			//obj.(*widget.Label).SetText(uid)
+			// Set the UUID as Node-Lable
+			//obj.(*fyne.Container).Objects[1].Objects[1].(*widget.Label).SetText(uid)
+			//obj.(*fyne.Container).Objects[1].(*widget.Accordion).Items[0].Title = uid
+			obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*widget.Label).SetText(uid)
+
+			// Set colored rectangle size to (labelHeight, labelHeight)
+			//labelHeight := obj.(*fyne.Container).Objects[1].(*widget.Label).MinSize().Height
+			//obj.(*fyne.Container).Objects[0].(*canvas.Rectangle).Resize(fyne.NewSize(labelHeight, labelHeight))
+			//obj.Refresh()
+
 			fmt.Println(tree.Size())
 		},
 
@@ -108,3 +150,30 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 	return tree
 
 }
+
+/*
+type testCaseTreeNodeStruct struct {
+	widget.Label
+}
+
+func newTestCaseTreeNode() *testCaseTreeNodeStruct {
+	treeNode := &testCaseTreeNodeStruct{}
+	treeNode.ExtendBaseWidget(treeNode)
+	//label.ExtendBaseWidget(label)
+	//icon.SetResource(res)
+
+	left := canvas.NewText("left", color.RGBA{
+		R: 0xFF,
+		G: 0,
+		B: 0,
+		A: 0,
+	})
+	middle := widget.NewLabel("xxxx")
+	content := container.New(layout.NewBorderLayout(nil, nil, left, nil),
+		left, middle)
+
+	return treeNode
+}
+
+
+*/

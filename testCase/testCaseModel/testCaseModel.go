@@ -136,7 +136,7 @@ func (testCaseModel *TestCasesModelsStruct) generateUINameForTestCaseElement(ele
 }
 
 // Generate the slice with the elements in the TestCase. Order is the same as in the Textual Representation of the TestCase
-func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid string, currentElementsUuid string, treeViewNodeChildrenIn []string) (treeViewNodeChildrenOut []string, err error) {
+func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid string, currentElementsUuid string, treeViewNodeChildrenIn []testCaseModelAdaptedForUiTreeDataStruct) (treeViewNodeChildrenOut []testCaseModelAdaptedForUiTreeDataStruct, err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
@@ -161,7 +161,7 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 
 	// Element has child-element then go that path
 	if currentElement.FirstChildElementUuid != currentElementsUuid {
-		treeViewNodeChildrenOut, err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentElement.FirstChildElementUuid, []string{})
+		treeViewNodeChildrenOut, err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentElement.FirstChildElementUuid, []testCaseModelAdaptedForUiTreeDataStruct{})
 
 		// reverse Slice to get correct order in Tree-view
 		treeViewNodeChildrenToBeSaved := testCaseModel.reverseSliceOfString(treeViewNodeChildrenOut)
@@ -186,8 +186,62 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 		return nil, err
 	}
 
+	// Data to extract
+	var (
+		nodeColor       string
+		canBeDeleted    bool
+		canBeSwappedOut bool
+	)
+
+	// Check if it is a Bond-element
+	isBond :=
+		currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND ||
+			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1f_BOND_NONE_SWAPPABLE ||
+			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1l_BOND_NONE_SWAPPABLE ||
+			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND ||
+			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND ||
+			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND ||
+			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10ox_BOND ||
+			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND ||
+			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND ||
+			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE ||
+			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE ||
+			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND ||
+			currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE
+	if isBond {
+		// The Element is a Bond so extract it
+		currentImmatureBond, existInMap := testCaseModel.AvailableBondsMap[currentElement.TestCaseModelElementType]
+
+		// If the element doesn't exit then there is something really wrong
+		if existInMap == false {
+			// This shouldn't happen
+			errorId := "6c3522bb-b3fc-4b65-acb0-0090df6970b9"
+			err = errors.New(fmt.Sprintf("bond element '%s', doesn't exist in map with all Bonds [ErrorID: %s]", currentElement.TestCaseModelElementType, errorId))
+
+			return nil, err
+		} else {
+			// The Element is a TestInstruction or a TestInstructionContainer
+			nodeColor = "#FF0000"
+			canBeDeleted = true
+			canBeSwappedOut = false
+		}
+
+		// Extract the Bond data
+		nodeColor = currentImmatureBond.BasicBondInformation.VisibleBondAttributes.BondColor
+		canBeDeleted = currentImmatureBond.BasicBondInformation.VisibleBondAttributes.CanBeDeleted
+		canBeSwappedOut = currentImmatureBond.BasicBondInformation.VisibleBondAttributes.CanBeSwappedOut
+
+	}
+
 	// Add element to slice
-	treeViewNodeChildrenIn = append(treeViewNodeChildrenIn, currentElementsUuid)
+	elementDataToAdd := testCaseModelAdaptedForUiTreeDataStruct{
+		Uuid:            currentElementsUuid,
+		NodeColor:       nodeColor,
+		NodeTypeEnum:    currentElement.GetTestCaseModelElementType(),
+		CanBeDeleted:    canBeDeleted,
+		CanBeSwappedOut: canBeSwappedOut,
+	}
+	treeViewNodeChildrenIn = append(treeViewNodeChildrenIn, elementDataToAdd)
 
 	// Save Top-Left-Children in Map with ParentElementUuid as map-key
 	if currentElementsUuid == currentElement.ParentElementUuid &&
@@ -203,7 +257,7 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 }
 
 // Reverse a slice of strings
-func (testCaseModel *TestCasesModelsStruct) reverseSliceOfString(inSlice []string) (outSlice []string) {
+func (testCaseModel *TestCasesModelsStruct) reverseSliceOfString(inSlice []testCaseModelAdaptedForUiTreeDataStruct) (outSlice []testCaseModelAdaptedForUiTreeDataStruct) {
 
 	numberOfElementsInSlice := len(inSlice)
 

@@ -13,7 +13,8 @@ type TestCasesModelsStruct struct {
 	CurrentUser string                         // Current logged-in user TODO Put this in a more global structure
 	//subSystemsCrossReferences *gui.SubSystemsCrossReferencesStruct
 	GrpcOutReference          *grpc_out.GRPCOutStruct
-	CurrentActiveTestCaseUuid string // The TestCase that should be worked on both by the model and UI
+	CurrentActiveTestCaseUuid string                                                                                                                                               // The TestCase that should be worked on both by the model and UI
+	AvailableBondsMap         map[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage // A copy of available Bonds //TODO should be placed in one common object
 
 }
 
@@ -30,8 +31,16 @@ type TestCaseModelStruct struct {
 	CutBuffer                                  MatureElementStruct
 	CutCommandInitiated                        bool
 	LocalTestCaseMessage                       LocalTestCaseMessageStruct
-	testCaseModelAdaptedForUiTree              map[string][]string // Model used for Creating the Tree-view for the TestCase-model
+	testCaseModelAdaptedForUiTree              map[string][]testCaseModelAdaptedForUiTreeDataStruct // Model used for Creating the Tree-view for the TestCase-model
 
+}
+
+type testCaseModelAdaptedForUiTreeDataStruct struct {
+	Uuid            string
+	NodeColor       string
+	NodeTypeEnum    fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum // TestCaseModelElementTypeEnum fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_name["int32"]
+	CanBeDeleted    bool
+	CanBeSwappedOut bool
 }
 
 type lastSavedCommandStack struct {

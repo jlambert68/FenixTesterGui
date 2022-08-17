@@ -55,7 +55,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateNewTextualReprese
 	testCaseTextualModelArea := container.NewVBox(textualRepresentationGrid)
 
 	// Create a Canvas Accordion type for grouping the Textual Representations
-	testCaseTextualModelAreaAccordionItem := widget.NewAccordionItem("Texttual Representation of the TestCase", testCaseTextualModelArea)
+	testCaseTextualModelAreaAccordionItem := widget.NewAccordionItem("Textual Representation of the TestCase", testCaseTextualModelArea)
 	testCaseTextualModelAreaAccordion := widget.NewAccordion(testCaseTextualModelAreaAccordionItem)
 
 	canvasTextualRepresentationAccordionObject = container.NewVBox(testCaseTextualModelAreaAccordion)

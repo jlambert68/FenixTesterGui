@@ -30,4 +30,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) loadModelWithAvail
 	// Save bonds-map into model for Available Bonds
 	commandAndRuleEngine.availableBondsMap = availableImmatureBondsMap
 
+	// Save Copy of Bonds in TestCase //TODO Place all Bonds and Immature TI and Immature TIC in separate object
+	commandAndRuleEngine.Testcases.AvailableBondsMap = availableImmatureBondsMap
+
 }

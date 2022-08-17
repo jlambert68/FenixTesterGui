@@ -347,13 +347,13 @@ func (testCaseModel *TestCasesModelsStruct) UpdateTreeViewModelForTestCase(testC
 	}
 
 	// Initiate/Clear current TestCase UI-Tree-Model
-	currentTestCase.testCaseModelAdaptedForUiTree = make(map[string][]testCaseModelAdaptedForUiTreeDataStruct) //string)
+	currentTestCase.testCaseModelAdaptedForUiTree = make(map[string][]TestCaseModelAdaptedForUiTreeDataStruct) //string)
 
 	// Save Back the TestCase
 	testCaseModel.TestCases[testCaseUuid] = currentTestCase
 
 	// Generate to model adapted to be used in a UI Tree-view component
-	_, err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentTestCase.FirstElementUuid, []testCaseModelAdaptedForUiTreeDataStruct{})
+	_, err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentTestCase.FirstElementUuid, []TestCaseModelAdaptedForUiTreeDataStruct{})
 
 	if err != nil {
 		return err
@@ -364,7 +364,7 @@ func (testCaseModel *TestCasesModelsStruct) UpdateTreeViewModelForTestCase(testC
 
 // GetTreeViewModelForTestCase
 // Updates, and returns, the model adapted for a Tree View representation of the TestCase
-func (testCaseModel *TestCasesModelsStruct) GetTreeViewModelForTestCase(testCaseUuid string) (treeViewModel map[string][]testCaseModelAdaptedForUiTreeDataStruct, err error) {
+func (testCaseModel *TestCasesModelsStruct) GetTreeViewModelForTestCase(testCaseUuid string) (treeViewModel map[string][]TestCaseModelAdaptedForUiTreeDataStruct, err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
@@ -383,17 +383,37 @@ func (testCaseModel *TestCasesModelsStruct) GetTreeViewModelForTestCase(testCase
 
 }
 
-// GetArrayOfChildUuid
+// GetArrayOfTestCaseTreeNodeChildrenData
 // Returns a slice of child-Uuid:s to a parent Uuid
-func (testCaseModel *TestCasesModelsStruct) GetArrayOfChildUuid(nodeUuid string, testCaseUuid string) (childrensUuidSlice []string) {
+func (testCaseModel *TestCasesModelsStruct) GetArrayOfTestCaseTreeNodeChildrenData(nodeUuid string, testCaseUuid string) (childrenUuidSlice []string) {
 
 	treeViewModelMapForTestCase, _ := testCaseModel.GetTreeViewModelForTestCase(testCaseUuid)
 
 	childrenWithExtraData := treeViewModelMapForTestCase[nodeUuid]
 
 	for _, child := range childrenWithExtraData {
-		childrensUuidSlice = append(childrensUuidSlice, child.Uuid)
+		childrenUuidSlice = append(childrenUuidSlice, child.Uuid)
 	}
 
-	return childrensUuidSlice
+	return childrenUuidSlice
+}
+
+// GetTestCaseTreeNodeChildData
+// Returns a slice of child-Uuid:s to a parent Uuid
+func (testCaseModel *TestCasesModelsStruct) GetTestCaseTreeNodeChildData(nodeUuid string, testCaseUuid string) (treeNodeChildData TestCaseModelAdaptedForUiTreeDataStruct) {
+
+	treeViewModelMapForTestCase, _ := testCaseModel.GetTreeViewModelForTestCase(testCaseUuid)
+
+	childrenWithExtraData := treeViewModelMapForTestCase[nodeUuid+"_originalUuid"]
+
+	// It should be Exact one item as result
+	if len(childrenWithExtraData) != 1 {
+		// Something is wrong, so just return nil
+
+		return TestCaseModelAdaptedForUiTreeDataStruct{}
+	}
+
+	treeNodeChildData = childrenWithExtraData[0]
+
+	return treeNodeChildData
 }

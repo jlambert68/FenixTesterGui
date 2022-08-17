@@ -31,11 +31,11 @@ type TestCaseModelStruct struct {
 	CutBuffer                                  MatureElementStruct
 	CutCommandInitiated                        bool
 	LocalTestCaseMessage                       LocalTestCaseMessageStruct
-	testCaseModelAdaptedForUiTree              map[string][]testCaseModelAdaptedForUiTreeDataStruct // Model used for Creating the Tree-view for the TestCase-model
+	testCaseModelAdaptedForUiTree              map[string][]TestCaseModelAdaptedForUiTreeDataStruct // Model used for Creating the Tree-view for the TestCase-model
 
 }
 
-type testCaseModelAdaptedForUiTreeDataStruct struct {
+type TestCaseModelAdaptedForUiTreeDataStruct struct {
 	Uuid            string
 	NodeColor       string
 	NodeTypeEnum    fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum // TestCaseModelElementTypeEnum fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_name["int32"]

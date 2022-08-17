@@ -136,7 +136,7 @@ func (testCaseModel *TestCasesModelsStruct) generateUINameForTestCaseElement(ele
 }
 
 // Generate the slice with the elements in the TestCase. Order is the same as in the Textual Representation of the TestCase
-func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid string, currentElementsUuid string, treeViewNodeChildrenIn []testCaseModelAdaptedForUiTreeDataStruct) (treeViewNodeChildrenOut []testCaseModelAdaptedForUiTreeDataStruct, err error) {
+func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid string, currentElementsUuid string, treeViewNodeChildrenIn []TestCaseModelAdaptedForUiTreeDataStruct) (treeViewNodeChildrenOut []TestCaseModelAdaptedForUiTreeDataStruct, err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
@@ -161,14 +161,19 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 
 	// Element has child-element then go that path
 	if currentElement.FirstChildElementUuid != currentElementsUuid {
-		treeViewNodeChildrenOut, err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentElement.FirstChildElementUuid, []testCaseModelAdaptedForUiTreeDataStruct{})
+		treeViewNodeChildrenOut, err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentElement.FirstChildElementUuid, []TestCaseModelAdaptedForUiTreeDataStruct{})
 
 		// reverse Slice to get correct order in Tree-view
-		treeViewNodeChildrenToBeSaved := testCaseModel.reverseSliceOfString(treeViewNodeChildrenOut)
+		treeViewNodeChildrenToBeSaved := testCaseModel.reverseSliceOfNodeObjects(treeViewNodeChildrenOut)
 
 		// Save children under currentUUid
 		currentTestCase.testCaseModelAdaptedForUiTree[currentElementsUuid] = treeViewNodeChildrenToBeSaved
-		//return nil, err
+
+		// Save Children under their own UUID to be able to find their data
+		for _, treeViewNodeChild := range treeViewNodeChildrenToBeSaved {
+			currentTestCase.testCaseModelAdaptedForUiTree[currentElementsUuid+"_originalUuid"] = []TestCaseModelAdaptedForUiTreeDataStruct{treeViewNodeChild}
+
+		}
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -234,7 +239,7 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 	}
 
 	// Add element to slice
-	elementDataToAdd := testCaseModelAdaptedForUiTreeDataStruct{
+	elementDataToAdd := TestCaseModelAdaptedForUiTreeDataStruct{
 		Uuid:            currentElementsUuid,
 		NodeColor:       nodeColor,
 		NodeTypeEnum:    currentElement.GetTestCaseModelElementType(),
@@ -247,17 +252,23 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 	if currentElementsUuid == currentElement.ParentElementUuid &&
 		currentElementsUuid == currentElement.PreviousElementUuid {
 		// reverse Slice to get correct order in Tree-view
-		treeViewNodeChildrenToBeSaved := testCaseModel.reverseSliceOfString(treeViewNodeChildrenIn)
+		treeViewNodeChildrenToBeSaved := testCaseModel.reverseSliceOfNodeObjects(treeViewNodeChildrenIn)
 
 		// Children has no defined parent, put them under "standard" Fyne UI Tree-component Top Node, ("")
 		currentTestCase.testCaseModelAdaptedForUiTree[""] = treeViewNodeChildrenToBeSaved
+
+		// Save Children under their own UUID to be able to find their data
+		for _, treeViewNodeChild := range treeViewNodeChildrenToBeSaved {
+			currentTestCase.testCaseModelAdaptedForUiTree[currentElementsUuid+"_originalUuid"] = []TestCaseModelAdaptedForUiTreeDataStruct{treeViewNodeChild}
+
+		}
 	}
 
 	return treeViewNodeChildrenIn, err
 }
 
 // Reverse a slice of strings
-func (testCaseModel *TestCasesModelsStruct) reverseSliceOfString(inSlice []testCaseModelAdaptedForUiTreeDataStruct) (outSlice []testCaseModelAdaptedForUiTreeDataStruct) {
+func (testCaseModel *TestCasesModelsStruct) reverseSliceOfNodeObjects(inSlice []TestCaseModelAdaptedForUiTreeDataStruct) (outSlice []TestCaseModelAdaptedForUiTreeDataStruct) {
 
 	numberOfElementsInSlice := len(inSlice)
 

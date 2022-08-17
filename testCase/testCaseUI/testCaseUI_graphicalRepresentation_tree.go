@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"image/color"
+	"strconv"
 )
 
 // Generate the Graphical Representation Area for the TestCase
@@ -70,7 +71,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 			var childrenUuidSlice []string
 
 			// Get the array
-			childrenUuidSlice = testCasesUiCanvasObject.TestCasesModelReference.GetArrayOfChildUuid(uid, testCaseUuid)
+			childrenUuidSlice = testCasesUiCanvasObject.TestCasesModelReference.GetArrayOfTestCaseTreeNodeChildrenData(uid, testCaseUuid)
 
 			return childrenUuidSlice
 		},
@@ -119,12 +120,104 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 					return
 				}
 			*/
+
+			var (
+				extractedNodeName string
+				//valueRed          int64
+				valueGreen          int64
+				valueBlue           int64
+				extractedColorRed   uint8
+				extractedColorGreen uint8
+				extractedColorBlue  uint8
+				err                 error
+			)
+
+			// Extract Node-data
+			treeNodeChildData := testCasesUiCanvasObject.TestCasesModelReference.GetTestCaseTreeNodeChildData(uid, testCaseUuid)
+
+			// Secure that treeNodeChildData has correct content
+			if uid != treeNodeChildData.Uuid {
+				errorId := "2a398319-d1a5-4a8b-9270-deb29746ac6c"
+				err = errors.New(fmt.Sprintf("Node-uid '%s' is not the same as UUID '%s' found in NodeData in testcase with uuid '%s' [ErrorID: %s]", uid, treeNodeChildData.Uuid, testCaseUuid, errorId))
+
+				extractedNodeName = err.Error()
+			} else {
+				// Set Node Name
+				extractedNodeName = treeNodeChildData.Uuid
+
+				// Break up into correct Red-Green-Blue
+				hexValueAsString := treeNodeChildData.NodeColor //"#FFEEFF"
+				hexRed := hexValueAsString[1:3]
+				hexGreen := hexValueAsString[3:5]
+				hexBlue := hexValueAsString[5:7]
+
+				valueRed, hexConvertionErr := strconv.ParseInt(hexRed, 16, 64)
+				if hexConvertionErr != nil {
+					// Hex conversion failed
+					errorId := "162667e9-d35e-45be-b1b4-d07877a3cd2c"
+					err = errors.New(fmt.Sprintf("hexConvertion for Color  failed with error message: '%s' in testcase with uuid '%s' [ErrorID: %s]", hexConvertionErr, testCaseUuid, errorId))
+
+					extractedNodeName = err.Error()
+
+				}
+
+				// Only do if last Hex-conversion succeeded
+				if hexConvertionErr == nil {
+					valueGreen, hexConvertionErr = strconv.ParseInt(hexGreen, 16, 64)
+					if hexConvertionErr != nil {
+						// Hex conversion failed
+						errorId := "b2b9fae0-30e3-49df-99d7-5662b78311a3"
+						err = errors.New(fmt.Sprintf("hexConvertion for Color  failed with error message: '%s' in testcase with uuid '%s' [ErrorID: %s]", hexConvertionErr, testCaseUuid, errorId))
+
+						extractedNodeName = err.Error()
+
+					}
+				}
+
+				// Only do if last Hex-conversion succeeded
+				if hexConvertionErr == nil {
+					valueBlue, hexConvertionErr = strconv.ParseInt(hexBlue, 16, 64)
+					if hexConvertionErr != nil {
+						// Hex conversion failed
+						errorId := "b2b9fae0-30e3-49df-99d7-5662b78311a3"
+						err = errors.New(fmt.Sprintf("hexConvertion for Color  failed with error message: '%s' in testcase with uuid '%s' [ErrorID: %s]", hexConvertionErr, testCaseUuid, errorId))
+
+						extractedNodeName = err.Error()
+
+					}
+				}
+
+				// Only convert to color values to use if all Hex-conversion succeeded and no Other Error occured
+				if hexConvertionErr == nil && err == nil {
+					extractedColorRed = uint8(valueRed)
+					extractedColorGreen = uint8(valueGreen)
+					extractedColorBlue = uint8(valueBlue)
+
+				} else {
+					// Set color to be used when error
+					extractedColorRed = uint8(255)
+					extractedColorGreen = uint8(0)
+					extractedColorBlue = uint8(255)
+				}
+
+			}
 			//obj.(*tappableLabel).SetText(uid) //obj.(*widget.Label).SetText(uid) // + time.Now().String())
 			//obj.(*widget.Label).SetText(uid)
 			// Set the UUID as Node-Lable
 			//obj.(*fyne.Container).Objects[1].Objects[1].(*widget.Label).SetText(uid)
 			//obj.(*fyne.Container).Objects[1].(*widget.Accordion).Items[0].Title = uid
-			obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*widget.Label).SetText(uid)
+			obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*widget.Label).SetText(extractedNodeName)
+
+			// Update Node color by replacing rectangle
+			greeRectangle := canvas.NewRectangle(color.RGBA{
+				R: extractedColorRed,
+				G: extractedColorGreen,
+				B: extractedColorBlue,
+				A: 0xff,
+			}) //color.Gray{0x66}) // RGBA{0x00, 0xFF, 0x00, 0xff})
+			greeRectangle.StrokeColor = color.Black
+			greeRectangle.StrokeWidth = 0
+			obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[0] = greeRectangle
 
 			// Set colored rectangle size to (labelHeight, labelHeight)
 			//labelHeight := obj.(*fyne.Container).Objects[1].(*widget.Label).MinSize().Height

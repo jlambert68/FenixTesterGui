@@ -272,7 +272,7 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 	// Set TestInstruction type color
 	if currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
 		currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE {
-		testInstructionTypeColor = "#FF0000"
+		testInstructionTypeColor = "#FFFF0033"
 	} else {
 		// Use transparent, alfa channel added,  if no TestInstruction
 		testInstructionTypeColor = "#00000000"

@@ -127,13 +127,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 
 			var (
 				extractedNodeName string
-				//valueRed          int64
-				valueGreen          int64
-				valueBlue           int64
-				extractedColorRed   uint8
-				extractedColorGreen uint8
-				extractedColorBlue  uint8
-				err                 error
+				err               error
 			)
 
 			// Extract Node-data
@@ -146,94 +140,47 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 
 				extractedNodeName = err.Error()
 			} else {
+
 				// Set Node Name
 				extractedNodeName = treeNodeChildData.NodeName + " - " + treeNodeChildData.Uuid
+			}
+			// Break up into correct Red-Green-Blue
+			hexValueAsString := treeNodeChildData.NodeColor //"#FFEEFF"
 
-				// Break up into correct Red-Green-Blue
-				hexValueAsString := treeNodeChildData.NodeColor //"#FFEEFF"
-				fmt.Println("hexValueAsString ", hexValueAsString)
-				hexRed := hexValueAsString[1:3]
-				hexGreen := hexValueAsString[3:5]
-				hexBlue := hexValueAsString[5:7]
+			// Convert Color
+			extractedNodeColor, err := testCasesUiCanvasObject.convertRGBAHexStringIntoRGBAColor(hexValueAsString)
+			if err != nil {
+				extractedNodeName = err.Error()
+			}
 
-				valueRed, hexConvertionErr := strconv.ParseInt(hexRed, 16, 64)
-				if hexConvertionErr != nil {
-					// Hex conversion failed
-					errorId := "162667e9-d35e-45be-b1b4-d07877a3cd2c"
-					err = errors.New(fmt.Sprintf("hexConvertion for Color  failed with error message: '%s' in testcase with uuid '%s' [ErrorID: %s]", hexConvertionErr, testCaseUuid, errorId))
+			// Extract TestInstruction Type Color and change
+			//hexValueForTestInstructionNodeColorAsString := treeNodeChildData.TestInstructionTypeColor
+			if treeNodeChildData.NodeTypeEnum == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+				treeNodeChildData.NodeTypeEnum == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE {
+				newRectangleBackgroundWithColorForTestInstructionType := canvas.NewRectangle(color.RGBA{
+					R: 255,
+					G: 255,
+					B: 0,
+					A: 0x88,
+				})
+				newRectangleBackgroundWithColorForTestInstructionType.StrokeColor = color.Black
+				newRectangleBackgroundWithColorForTestInstructionType.StrokeWidth = 0
 
-					extractedNodeName = err.Error()
+				newRectangleBackgroundWithColorForTestInstructionType.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
+				obj.(*fyne.Container).Objects[0].(*fyne.Container).Objects[0] = newRectangleBackgroundWithColorForTestInstructionType
+			} else {
+				// Not a TestInstruction so set it to be Invisible
+				newRectangleBackgroundWithColorForTestInstructionType := canvas.NewRectangle(color.RGBA{
+					R: 0,
+					G: 0,
+					B: 0,
+					A: 0x00,
+				})
+				newRectangleBackgroundWithColorForTestInstructionType.StrokeColor = color.Black
+				newRectangleBackgroundWithColorForTestInstructionType.StrokeWidth = 0
 
-				}
-
-				// Only do if last Hex-conversion succeeded
-				if hexConvertionErr == nil {
-					valueGreen, hexConvertionErr = strconv.ParseInt(hexGreen, 16, 64)
-					if hexConvertionErr != nil {
-						// Hex conversion failed
-						errorId := "b2b9fae0-30e3-49df-99d7-5662b78311a3"
-						err = errors.New(fmt.Sprintf("hexConvertion for Color  failed with error message: '%s' in testcase with uuid '%s' [ErrorID: %s]", hexConvertionErr, testCaseUuid, errorId))
-
-						extractedNodeName = err.Error()
-
-					}
-				}
-
-				// Only do if last Hex-conversion succeeded
-				if hexConvertionErr == nil {
-					valueBlue, hexConvertionErr = strconv.ParseInt(hexBlue, 16, 64)
-					if hexConvertionErr != nil {
-						// Hex conversion failed
-						errorId := "b2b9fae0-30e3-49df-99d7-5662b78311a3"
-						err = errors.New(fmt.Sprintf("hexConvertion for Color  failed with error message: '%s' in testcase with uuid '%s' [ErrorID: %s]", hexConvertionErr, testCaseUuid, errorId))
-
-						extractedNodeName = err.Error()
-
-					}
-				}
-
-				// Only convert to color values to use if all Hex-conversion succeeded and no Other Error occured
-				if hexConvertionErr == nil && err == nil {
-					extractedColorRed = uint8(valueRed)
-					extractedColorGreen = uint8(valueGreen)
-					extractedColorBlue = uint8(valueBlue)
-
-				} else {
-					// Set color to be used when error
-					extractedColorRed = uint8(255)
-					extractedColorGreen = uint8(0)
-					extractedColorBlue = uint8(255)
-				}
-
-				// Extract TestInstruction Type Color and change
-				//hexValueForTestInstructionNodeColorAsString := treeNodeChildData.TestInstructionTypeColor
-				if treeNodeChildData.NodeTypeEnum == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
-					treeNodeChildData.NodeTypeEnum == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE {
-					newRectangleBackgroundWithColorForTestInstructionType := canvas.NewRectangle(color.RGBA{
-						R: 255,
-						G: 255,
-						B: 0,
-						A: 0x88,
-					})
-					newRectangleBackgroundWithColorForTestInstructionType.StrokeColor = color.Black
-					newRectangleBackgroundWithColorForTestInstructionType.StrokeWidth = 0
-
-					newRectangleBackgroundWithColorForTestInstructionType.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
-					obj.(*fyne.Container).Objects[0].(*fyne.Container).Objects[0] = newRectangleBackgroundWithColorForTestInstructionType
-				} else {
-					// Not a TestInstruction so set it to be Invisible
-					newRectangleBackgroundWithColorForTestInstructionType := canvas.NewRectangle(color.RGBA{
-						R: 0,
-						G: 0,
-						B: 0,
-						A: 0x00,
-					})
-					newRectangleBackgroundWithColorForTestInstructionType.StrokeColor = color.Black
-					newRectangleBackgroundWithColorForTestInstructionType.StrokeWidth = 0
-
-					newRectangleBackgroundWithColorForTestInstructionType.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
-					obj.(*fyne.Container).Objects[0].(*fyne.Container).Objects[0] = newRectangleBackgroundWithColorForTestInstructionType
-				}
+				newRectangleBackgroundWithColorForTestInstructionType.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
+				obj.(*fyne.Container).Objects[0].(*fyne.Container).Objects[0] = newRectangleBackgroundWithColorForTestInstructionType
 
 			}
 			//obj.(*tappableLabel).SetText(uid) //obj.(*widget.Label).SetText(uid) // + time.Now().String())
@@ -244,12 +191,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 			obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*widget.Label).SetText(extractedNodeName)
 
 			// Update Node color by replacing rectangle
-			newRectangleBackgroundWithColor := canvas.NewRectangle(color.RGBA{
-				R: extractedColorRed,
-				G: extractedColorGreen,
-				B: extractedColorBlue,
-				A: 0xff,
-			}) //color.Gray{0x66}) // RGBA{0x00, 0xFF, 0x00, 0xff})
+			newRectangleBackgroundWithColor := canvas.NewRectangle(extractedNodeColor)
 			newRectangleBackgroundWithColor.StrokeColor = color.Black
 			newRectangleBackgroundWithColor.StrokeWidth = 0
 			obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[0] = newRectangleBackgroundWithColor
@@ -305,3 +247,92 @@ func newTestCaseTreeNode() *testCaseTreeNodeStruct {
 
 
 */
+
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) convertRGBAHexStringIntoRGBAColor(rgbaHexString string) (rgbaValue color.RGBA, err error) {
+
+	var (
+		extractedColorRed          uint8
+		extractedColorGreen        uint8
+		extractedColorBlue         uint8
+		extractedAlphaColorChannel uint8
+	)
+
+	errorColor := color.RGBA{
+		R: 0xFF,
+		G: 0x00,
+		B: 0xFF,
+		A: 0xFF}
+
+	// Checka that ther String is of correct length, '#FFEEBB33'
+	if len(rgbaHexString) != 9 {
+		errorId := "93789d03-f728-40da-a6bd-78f8a96628a5"
+		err = errors.New(fmt.Sprintf("color string with hexvalues, '%s', has not the correct lenght, '#AABBCCDDEE' in testcase with uuid '%s' [ErrorID: %s]", rgbaHexString, errorId))
+
+		return errorColor, err
+	}
+
+	hexRed := rgbaHexString[1:3]
+	hexGreen := rgbaHexString[3:5]
+	hexBlue := rgbaHexString[5:7]
+	hexAlpha := rgbaHexString[7:9]
+
+	// Hex-conversion for Red
+	valueRed, hexConvertionErr := strconv.ParseInt(hexRed, 16, 64)
+	if hexConvertionErr != nil {
+		// Hex conversion failed
+		errorId := "162667e9-d35e-45be-b1b4-d07877a3cd2c"
+		err = errors.New(fmt.Sprintf("hexConvertion for Color failed with error message: '%s' [ErrorID: %s]", hexConvertionErr, errorId))
+
+		return errorColor, err
+
+	}
+
+	// Hex-conversion for Green
+	valueGreen, hexConvertionErr := strconv.ParseInt(hexGreen, 16, 64)
+	if hexConvertionErr != nil {
+		// Hex conversion failed
+		errorId := "b2b9fae0-30e3-49df-99d7-5662b78311a3"
+		err = errors.New(fmt.Sprintf("hexConvertion for Color failed with error message: '%s' [ErrorID: %s]", hexConvertionErr, errorId))
+
+		return errorColor, err
+
+	}
+
+	// Hex-conversion for Blue
+	valueBlue, hexConvertionErr := strconv.ParseInt(hexBlue, 16, 64)
+	if hexConvertionErr != nil {
+		// Hex conversion failed
+		errorId := "b2b9fae0-30e3-49df-99d7-5662b78311a3"
+		err = errors.New(fmt.Sprintf("hexConvertion for Color failed with error message: '%s' [ErrorID: %s]", hexConvertionErr, errorId))
+
+		return errorColor, err
+
+	}
+
+	// Hex-conversion for Alpha
+	valueAlpha, hexConvertionErr := strconv.ParseInt(hexAlpha, 16, 64)
+	if hexConvertionErr != nil {
+		// Hex conversion failed
+		errorId := "f5569252-41f5-48db-8a0a-b217b1460f7d"
+		err = errors.New(fmt.Sprintf("hexConvertion for Color failed with error message: '%s' [ErrorID: %s]", hexConvertionErr, errorId))
+
+		return errorColor, err
+
+	}
+
+	// Convert to color values
+	extractedColorRed = uint8(valueRed)
+	extractedColorGreen = uint8(valueGreen)
+	extractedColorBlue = uint8(valueBlue)
+	extractedAlphaColorChannel = uint8(valueAlpha)
+
+	rgbaValue = color.RGBA{
+		R: extractedColorRed,
+		G: extractedColorGreen,
+		B: extractedColorBlue,
+		A: extractedAlphaColorChannel,
+	}
+
+	return rgbaValue, err
+
+}

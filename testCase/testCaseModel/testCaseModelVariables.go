@@ -8,14 +8,15 @@ import (
 
 const numberOfCharactersfromUuid = 8
 
+// Node colors in RGBA-format
 const (
-	nodeColor_Bond_B0         = "#404040"
-	nodeColor_Bond_B1         = "#606060"
-	nodeColor_Swappeble_Bonds = "#989898"
-	nodeColor_TI_TIC          = "#888888"
-	nodeColor_X_Bonds         = "#505050"
-	nodeColor_B10X_Bonds      = "#505050"
-	nodeColor_TIx_TICx        = "#F8F8F8"
+	nodeColor_Bond_B0         = "#404040FF"
+	nodeColor_Bond_B1         = "#606060FF"
+	nodeColor_Swappeble_Bonds = "#989898FF"
+	nodeColor_TI_TIC          = "#888888FF"
+	nodeColor_X_Bonds         = "#505050FF"
+	nodeColor_B10X_Bonds      = "#505050FF"
+	nodeColor_TIx_TICx        = "#F8F8F8FF"
 )
 
 type TestCasesModelsStruct struct {

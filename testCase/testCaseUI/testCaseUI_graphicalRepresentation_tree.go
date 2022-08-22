@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"image/color"
 	"strconv"
 )
@@ -94,19 +95,22 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 			//testCaseNodeAreaAccordionItem := widget.NewAccordionItem("xxxx", nodeLabel)
 			//testCaseTNodeAreaAccordion := widget.NewAccordion(testCaseNodeAreaAccordionItem)
 
-			leftRectangle := canvas.NewRectangle(color.RGBA{0xff, 0x00, 0x00, 0xff})
-			leftRectangle.StrokeColor = color.Black
-			leftRectangle.StrokeWidth = 0
+			testInstructionNodeColorRectangle := canvas.NewRectangle(color.RGBA{0xff, 0x00, 0x00, 0xff})
+			testInstructionNodeColorRectangle.StrokeColor = color.Black
+			testInstructionNodeColorRectangle.StrokeWidth = 0
 
-			leftRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
+			testInstructionNodeColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
+			testInstructionNodeColorContainer := container.NewMax(testInstructionNodeColorRectangle)
 
-			greeRectangle := canvas.NewRectangle(color.Gray{0x44}) // RGBA{0x00, 0xFF, 0x00, 0xff})
-			greeRectangle.StrokeColor = color.Black
-			greeRectangle.StrokeWidth = 0
-			labelContainer := container.NewMax(greeRectangle, nodeLabel)
+			nodeTextBackgroundColorectangle := canvas.NewRectangle(color.Gray{0x44}) // RGBA{0x00, 0xFF, 0x00, 0xff})
+			nodeTextBackgroundColorectangle.StrokeColor = color.Black
+			nodeTextBackgroundColorectangle.StrokeWidth = 0
+			labelContainer := container.NewMax(nodeTextBackgroundColorectangle, nodeLabel)
 
-			content := container.New(layout.NewBorderLayout(nil, nil, leftRectangle, nil),
-				leftRectangle, labelContainer)
+			content := container.NewHBox(testInstructionNodeColorContainer, labelContainer)
+
+			//content := container.New(layout.NewBorderLayout(nil, nil, testInstructionNodeColorRectangle, nil),
+			//	leftRectangleContainer, labelContainer)
 
 			return content
 		},
@@ -143,10 +147,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 				extractedNodeName = err.Error()
 			} else {
 				// Set Node Name
-				extractedNodeName = treeNodeChildData.Uuid
+				extractedNodeName = treeNodeChildData.NodeName + " - " + treeNodeChildData.Uuid
 
 				// Break up into correct Red-Green-Blue
 				hexValueAsString := treeNodeChildData.NodeColor //"#FFEEFF"
+				fmt.Println("hexValueAsString ", hexValueAsString)
 				hexRed := hexValueAsString[1:3]
 				hexGreen := hexValueAsString[3:5]
 				hexBlue := hexValueAsString[5:7]
@@ -200,6 +205,36 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 					extractedColorBlue = uint8(255)
 				}
 
+				// Extract TestInstruction Type Color and change
+				//hexValueForTestInstructionNodeColorAsString := treeNodeChildData.TestInstructionTypeColor
+				if treeNodeChildData.NodeTypeEnum == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+					treeNodeChildData.NodeTypeEnum == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE {
+					newRectangleBackgroundWithColorForTestInstructionType := canvas.NewRectangle(color.RGBA{
+						R: 255,
+						G: 255,
+						B: 0,
+						A: 0x88,
+					})
+					newRectangleBackgroundWithColorForTestInstructionType.StrokeColor = color.Black
+					newRectangleBackgroundWithColorForTestInstructionType.StrokeWidth = 0
+
+					newRectangleBackgroundWithColorForTestInstructionType.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
+					obj.(*fyne.Container).Objects[0].(*fyne.Container).Objects[0] = newRectangleBackgroundWithColorForTestInstructionType
+				} else {
+					// Not a TestInstruction so set it to be Invisible
+					newRectangleBackgroundWithColorForTestInstructionType := canvas.NewRectangle(color.RGBA{
+						R: 0,
+						G: 0,
+						B: 0,
+						A: 0x00,
+					})
+					newRectangleBackgroundWithColorForTestInstructionType.StrokeColor = color.Black
+					newRectangleBackgroundWithColorForTestInstructionType.StrokeWidth = 0
+
+					newRectangleBackgroundWithColorForTestInstructionType.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
+					obj.(*fyne.Container).Objects[0].(*fyne.Container).Objects[0] = newRectangleBackgroundWithColorForTestInstructionType
+				}
+
 			}
 			//obj.(*tappableLabel).SetText(uid) //obj.(*widget.Label).SetText(uid) // + time.Now().String())
 			//obj.(*widget.Label).SetText(uid)
@@ -209,22 +244,22 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 			obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*widget.Label).SetText(extractedNodeName)
 
 			// Update Node color by replacing rectangle
-			greeRectangle := canvas.NewRectangle(color.RGBA{
+			newRectangleBackgroundWithColor := canvas.NewRectangle(color.RGBA{
 				R: extractedColorRed,
 				G: extractedColorGreen,
 				B: extractedColorBlue,
 				A: 0xff,
 			}) //color.Gray{0x66}) // RGBA{0x00, 0xFF, 0x00, 0xff})
-			greeRectangle.StrokeColor = color.Black
-			greeRectangle.StrokeWidth = 0
-			obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[0] = greeRectangle
+			newRectangleBackgroundWithColor.StrokeColor = color.Black
+			newRectangleBackgroundWithColor.StrokeWidth = 0
+			obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[0] = newRectangleBackgroundWithColor
 
 			// Set colored rectangle size to (labelHeight, labelHeight)
 			//labelHeight := obj.(*fyne.Container).Objects[1].(*widget.Label).MinSize().Height
 			//obj.(*fyne.Container).Objects[0].(*canvas.Rectangle).Resize(fyne.NewSize(labelHeight, labelHeight))
-			//obj.Refresh()
+			obj.Refresh()
 
-			fmt.Println(tree.Size())
+			//fmt.Println(tree.Size())
 		},
 
 		OnSelected: func(uid string) {

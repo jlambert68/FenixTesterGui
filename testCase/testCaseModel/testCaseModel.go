@@ -169,11 +169,6 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 		// Save children under currentUUid
 		currentTestCase.testCaseModelAdaptedForUiTree[currentElementsUuid] = treeViewNodeChildrenToBeSaved
 
-		// Save Children under their own UUID to be able to find their data
-		for _, treeViewNodeChild := range treeViewNodeChildrenToBeSaved {
-			currentTestCase.testCaseModelAdaptedForUiTree[currentElementsUuid+"_originalUuid"] = []TestCaseModelAdaptedForUiTreeDataStruct{treeViewNodeChild}
-
-		}
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -193,10 +188,11 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 
 	// Data to extract
 	var (
-		nodeColor       string
-		canBeDeleted    bool
-		canBeSwappedOut bool
-		isBond          bool
+		nodeColor                string
+		testInstructionTypeColor string
+		canBeDeleted             bool
+		canBeSwappedOut          bool
+		isBond                   bool
 	)
 
 	switch currentElement.TestCaseModelElementType {
@@ -273,15 +269,29 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 
 	}
 
+	// Set TestInstruction type color
+	if currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+		currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE {
+		testInstructionTypeColor = "#FF0000"
+	} else {
+		// Use transparent, alfa channel added,  if no TestInstruction
+		testInstructionTypeColor = "#00000000"
+	}
+
 	// Add element to slice
 	elementDataToAdd := TestCaseModelAdaptedForUiTreeDataStruct{
-		Uuid:            currentElementsUuid,
-		NodeColor:       nodeColor,
-		NodeTypeEnum:    currentElement.GetTestCaseModelElementType(),
-		CanBeDeleted:    canBeDeleted,
-		CanBeSwappedOut: canBeSwappedOut,
+		Uuid:                     currentElementsUuid,
+		NodeName:                 currentElement.OriginalElementName,
+		NodeColor:                nodeColor,
+		TestInstructionTypeColor: testInstructionTypeColor,
+		NodeTypeEnum:             currentElement.GetTestCaseModelElementType(),
+		CanBeDeleted:             canBeDeleted,
+		CanBeSwappedOut:          canBeSwappedOut,
 	}
 	treeViewNodeChildrenIn = append(treeViewNodeChildrenIn, elementDataToAdd)
+
+	// Save the element with itself as original-uuid-key, to be able to find its data
+	currentTestCase.testCaseModelAdaptedForUiTree[currentElementsUuid+"_originalUuid"] = []TestCaseModelAdaptedForUiTreeDataStruct{elementDataToAdd}
 
 	// Save Top-Left-Children in Map with ParentElementUuid as map-key
 	if currentElementsUuid == currentElement.ParentElementUuid &&
@@ -292,11 +302,6 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 		// Children has no defined parent, put them under "standard" Fyne UI Tree-component Top Node, ("")
 		currentTestCase.testCaseModelAdaptedForUiTree[""] = treeViewNodeChildrenToBeSaved
 
-		// Save Children under their own UUID to be able to find their data
-		for _, treeViewNodeChild := range treeViewNodeChildrenToBeSaved {
-			currentTestCase.testCaseModelAdaptedForUiTree[currentElementsUuid+"_originalUuid"] = []TestCaseModelAdaptedForUiTreeDataStruct{treeViewNodeChild}
-
-		}
 	}
 
 	return treeViewNodeChildrenIn, err

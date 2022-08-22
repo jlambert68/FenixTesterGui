@@ -9,13 +9,13 @@ import (
 const numberOfCharactersfromUuid = 8
 
 const (
-	nodeColor_Bond_B0         = "#FF0000"
-	nodeColor_Bond_B1         = "#FF0000"
-	nodeColor_Swappeble_Bonds = "#FFFF00"
-	nodeColor_TI_TIC          = "#00FF00"
-	nodeColor_X_Bonds         = "#00FFFF"
-	nodeColor_B10X_Bonds      = "#00FF0F"
-	nodeColor_TIx_TICx        = "#F0FF0F"
+	nodeColor_Bond_B0         = "#404040"
+	nodeColor_Bond_B1         = "#606060"
+	nodeColor_Swappeble_Bonds = "#989898"
+	nodeColor_TI_TIC          = "#888888"
+	nodeColor_X_Bonds         = "#505050"
+	nodeColor_B10X_Bonds      = "#505050"
+	nodeColor_TIx_TICx        = "#F8F8F8"
 )
 
 type TestCasesModelsStruct struct {
@@ -46,11 +46,13 @@ type TestCaseModelStruct struct {
 }
 
 type TestCaseModelAdaptedForUiTreeDataStruct struct {
-	Uuid            string
-	NodeColor       string
-	NodeTypeEnum    fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum // TestCaseModelElementTypeEnum fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_name["int32"]
-	CanBeDeleted    bool
-	CanBeSwappedOut bool
+	Uuid                     string
+	NodeName                 string
+	NodeColor                string
+	TestInstructionTypeColor string
+	NodeTypeEnum             fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum // TestCaseModelElementTypeEnum fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_name["int32"]
+	CanBeDeleted             bool
+	CanBeSwappedOut          bool
 }
 
 type lastSavedCommandStack struct {

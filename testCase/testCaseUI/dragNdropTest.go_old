@@ -9,17 +9,16 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"image/color"
-	"log"
 )
 
+
 const (
-	stateSearch = iota
-	stateFind
-	stateGrab
-	stateDrag
-	stateRelease
-	stateDrop
+	NoMouseInAndNoDrag = iota
+	MouseInAndNoDrag
+	MouseInAndDrag
 )
+
+
 
 func makeDragNDropTestGUI(textIn *canvas.Text, recIn *canvas.Rectangle, rec2In *canvas.Rectangle, containerIn *fyne.Container) (myCanvasObject fyne.CanvasObject) {
 
@@ -93,8 +92,6 @@ type droppableLabel struct {
 
 // Structure for 'Drag-part of 'Drag-N-Drop' state machine
 type StateMachineStruct struct {
-	currentState           int
-	dragBeforeMouseIn      bool
 	mouseInBeforeDragStart bool
 	mouseInObjectUuid      string
 	dragStart              bool
@@ -116,60 +113,17 @@ var stateMachineDragFrom StateMachineStruct
 // Dragged
 // When the user press down the mouse button this event is triggered
 func (t *draggableLabel) Dragged(ev *fyne.DragEvent) {
+	//log.Println("I have been 'Dragged': ", t.Position(), " And I am ", t.myTitle)
 
-	stateMachineDragFrom.dragStart = true
-	stateMachineDragFrom.dragEnd = false
 
-	dragNDropStatMachineSwitchStateWhenDragStart(t.myTitle)
-
-	if stateMachineDragFrom.dragBeforeMouseIn == true {
-		return
-	}
-
-	log.Println("I have been 'Dragged': ", t.Position(), " And I am ", t.myTitle)
-
-	dragNDropStatMachineSwitchStateWhenDragStart(t.myTitle)
-	//fmt.Println(ev.Position, ev.AbsolutePosition)
-
-	// Change Text of 'Drag N Drop'-object
-	textRef.Text = t.myTitle
-
-	// Change size of 'Drag N Drop'-object text backgrounds
-	rectangleRef.SetMinSize(textRef.Size().Add(fyne.NewSize(40, 40)))
-	rectangle2Ref.SetMinSize(textRef.Size())
-
-	// Move 'Drag N Drop'-object container, so it is to the right of the mouse-pointer
-	diffPos := fyne.Position{
-		X: 10,
-		Y: -20,
-	}
-	newPos := ev.AbsolutePosition.Add(diffPos).Add(fyne.NewSize(rectangleRef.Size().Width/2, rectangleRef.Size().Height/2))
-	containerRef.Move(newPos)
-
-	// Refresh 'Drag N Drop'-object and show them
-	containerRef.Refresh()
-	textRef.Show()
-	rectangle2Ref.Show()
-	rectangleRef.Show()
 
 }
 
 // DragEnd
 // When the user release the mouse button this event is triggered
 func (t *draggableLabel) DragEnd() {
-
-	switch stateMachineDragFrom.currentState {
-
-	case stateSearch, stateFind, stateGrab, stateDrag:
-		prepareStateSearch()
-	case stateRelease:
-
-	case stateDrop:
-
-	default:
-		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragFrom.currentState)
-
-	}
+	//log.Println("I have been 'DragEnd' ", t.myTitle)
+	dragNDropStatMachineSwitchStateWhenDragEnd(t.myTitle)
 
 	// Hide the 'Drag N Drop'-objects
 	textRef.Hide()
@@ -181,12 +135,7 @@ func (t *draggableLabel) DragEnd() {
 
 // MouseIn is called when a desktop pointer enters the widget
 func (b *draggableLabel) MouseIn(*desktop.MouseEvent) {
-
-	if stateMachineDragFrom.dragStart == true {
-		return
-	}
-
-	log.Println("I have been 'MouseIn' ", b.myTitle)
+	//log.Println("I have been 'MouseIn' ", b.myTitle)
 	b.hovered = true
 	dragNDropStatMachineSwitchStateWhenMouseInOnDragFrom(b.myTitle)
 	//b.Refresh()
@@ -211,12 +160,7 @@ func (b *draggableLabel) MouseOut() {
 
 // MouseIn is called when a desktop pointer enters the widget
 func (b *droppableLabel) MouseIn(*desktop.MouseEvent) {
-
-	if stateMachineDragFrom.dragStart == false {
-		return
-	}
-
-	log.Println("I have been 'MouseIn' ", b.myTitle)
+	//log.Println("I have been 'MouseIn' ", b.myTitle)
 	b.hovered = true
 	dragNDropStatMachineSwitchStateWhenMouseIn(b.myTitle)
 	//b.Refresh()
@@ -230,11 +174,7 @@ func (b *droppableLabel) MouseMoved(a *desktop.MouseEvent) {
 
 // MouseOut is called when a desktop pointer exits the widget
 func (b *droppableLabel) MouseOut() {
-	if stateMachineDragFrom.dragStart == false {
-		return
-	}
-
-	log.Println("I have been 'MouseOut' ", b.myTitle)
+	//log.Println("I have been 'MouseOut' ", b.myTitle)
 	b.hovered = false
 	dragNDropStatMachineSwitchStateWhenMouseOut(b.myTitle)
 	//b.Refresh()
@@ -245,13 +185,12 @@ func dragNDropStatMachineSwitchStateWhenMouseInOnDragFrom(labelNo string) {
 	fmt.Println("dragNDropStatMachineSwitchStateWhenMouseInOnDragFrom ", labelNo)
 	// Change Mouse-state
 
+	// Drag Start is not allowed
 	if stateMachineDragFrom.dragStart == true {
-		stateMachineDragFrom.dragBeforeMouseIn = true
 		return
 	}
 
-	stateMachineDragFrom.MouseIn = true
-	stateMachineDragFrom.MouseOut = false
+	stateMachineDragFrom.mouseInBeforeDragStart = true
 	stateMachineDragFrom.mouseInObjectUuid = labelNo
 
 	// Trigger State Machine
@@ -260,14 +199,8 @@ func dragNDropStatMachineSwitchStateWhenMouseInOnDragFrom(labelNo string) {
 
 func dragNDropStatMachineSwitchStateWhenMouseOutOnDragFrom(labelNo string) {
 	fmt.Println("dragNDropStatMachineSwitchStateWhenMouseOutOnDragFrom ", labelNo)
-
 	// Change Mouse-state
-	if stateMachineDragFrom.dragStart == true {
-		return
-	}
-	stateMachineDragFrom.MouseIn = false
-	stateMachineDragFrom.MouseOut = true
-	stateMachineDragFrom.mouseInObjectUuid = ""
+	stateMachineDragFrom.mouseInBeforeDragStart = false
 
 	// Trigger State Machine
 	stateMachineExecuteEngineDragAndDrop(true)
@@ -276,11 +209,21 @@ func dragNDropStatMachineSwitchStateWhenMouseOutOnDragFrom(labelNo string) {
 func dragNDropStatMachineSwitchStateWhenDragStart(labelNo string) {
 	// Change Drag-state
 
-	if stateMachineDragFrom.dragBeforeMouseIn == true {
+	// Not MouseIn is not allowed
+	if stateMachineDragFrom.mouseInBeforeDragStart == false {
 		return
 	}
-	stateMachineDragFrom.dragStart = true
+
+	if stateMachineDragFrom.mouseInBeforeDragStart == true &&
+		stateMachineDragFrom.mouseInObjectUuid == labelNo {
+
+		stateMachineDragFrom.dragStart = true
+	} else {
+		stateMachineDragFrom.dragStart = false
+	}
 	stateMachineDragFrom.dragEnd = false
+
+	stateMachineDragFrom.dragFrom = labelNo
 
 	// Trigger State Machine
 	stateMachineExecuteEngineDragAndDrop(true)
@@ -288,12 +231,6 @@ func dragNDropStatMachineSwitchStateWhenDragStart(labelNo string) {
 
 func dragNDropStatMachineSwitchStateWhenDragEnd(labelNo string) {
 	// Change Drag-state
-
-	stateMachineDragFrom.dragBeforeMouseIn = false
-
-	if stateMachineDragFrom.MouseIn == true {
-		return
-	}
 	stateMachineDragFrom.dragStart = false
 	stateMachineDragFrom.dragEnd = true
 	stateMachineDragFrom.mouseInObjectUuid = ""
@@ -332,7 +269,8 @@ func stateMachineExecuteEngineDragAndDrop(doAction bool) {
 	stateMachineDragFrom.preLightRectangleState = stateMachineDragFrom.LightRectangle
 
 	// Logic for light up Droppable Areas when hover over them with "something"
-	if stateMachineDragFrom.dragStart == true &&
+	if stateMachineDragFrom.mouseInBeforeDragStart == true &&
+		stateMachineDragFrom.dragStart == true &&
 		stateMachineDragFrom.dragEnd == false &&
 		stateMachineDragFrom.MouseIn == true &&
 		stateMachineDragFrom.MouseOut == false &&
@@ -351,7 +289,8 @@ func stateMachineExecuteEngineDragAndDrop(doAction bool) {
 	}
 
 	// Logic for dropping something that has been dragged
-	if stateMachineDragFrom.dragStart == false &&
+	if stateMachineDragFrom.mouseInBeforeDragStart == false &&
+		stateMachineDragFrom.dragStart == false &&
 		stateMachineDragFrom.dragEnd == true &&
 		stateMachineDragFrom.MouseIn == true &&
 		stateMachineDragFrom.MouseOut == false &&
@@ -402,4 +341,4 @@ func executeDragObject() {
 	rectangleRef.Show()
 }
 
-*/
+ */

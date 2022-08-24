@@ -19,6 +19,7 @@ import (
 	"github.com/faiface/beep/mp3"
 	"github.com/faiface/beep/speaker"
 	"github.com/sirupsen/logrus"
+	"image/color"
 	"log"
 	"os"
 	"time"
@@ -129,7 +130,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	fyneMasterWindow.SetMaster()
 
 	// Get Available Building BLocks form GUI-server
-	uiServer.availableBuildingBlocksModel.loadAvailableBuildingBlocksFromServer()
+	uiServer.availableBuildingBlocksModel.loadAvailableBuildingBlocksFromServer(&uiServer.testCasesModel)
 
 	// Get Available Building BLocks form GUI-server
 	uiServer.availableBuildingBlocksModel.loadPinnedBuildingBlocksFromServer()
@@ -140,7 +141,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Create the Available Building Blocks adapted to Fyne tree-view
 	uiServer.availableBuildingBlocksModel.makeTreeUIModel()
 
-	// Initate and create the tree structure for available building blocks, of TestInstructions and TestInstructionContainers
+	// Initiate and create the tree structure for available building blocks, of TestInstructions and TestInstructionContainers
 	uiServer.makeTreeUI()
 
 	// Initiate the commandStack which describes how fyneApp TestCase is constructed
@@ -163,7 +164,23 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 		}
 
 	*/
-	fyneMasterWindow.SetContent(uiServer.loadUI())
+
+	myCanvas := fyneMasterWindow.Canvas()
+
+	//blue := color.NRGBA{R: 0, G: 0, B: 180, A: 255}
+	//rect := canvas.NewRectangle(blue)
+
+	//var rect *customRectangle
+	//rect = rect.newCustomRect()
+	//myCanvasLabel := widget.NewLabel("My Canvas Overlay Label")
+
+	applicationUI := uiServer.loadUI()
+
+	myCanvas.SetContent(applicationUI)
+
+	//myCanvas.Overlays().Add(myCanvasLabel)
+
+	//fyneMasterWindow.SetContent(myCanvas) //(uiServer.loadUI())
 
 	//fyneMasterWindow.SetContent(widget.NewLabel("Fenix TestCase Builder"))
 	//builderUI.registerKeys(fyneMasterWindow)
@@ -172,6 +189,28 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	fyneMasterWindow.ShowAndRun()
 
+}
+
+type customRectangle struct {
+	widget.Label
+	myrect canvas.Rectangle
+}
+
+func (c *customRectangle) newCustomRect() *customRectangle {
+	myRectangle := &customRectangle{}
+	c.ExtendBaseWidget(myRectangle)
+	//blue := color.NRGBA{R: 0, G: 0, B: 180, A: 255}
+	//myRectangle.FillColor = blue
+	//myRectangle.StrokeColor = color.Black
+	//myRectangle.StrokeWidth = 10
+
+	return myRectangle
+}
+
+// MouseMoved is called when a desktop pointer hovers over the widget
+func (b *customRectangle) MouseMoved(a *desktop.MouseEvent) {
+	log.Println("I have been 'MouseMoved'")
+	fmt.Println(a.Position, a.AbsolutePosition)
 }
 
 type MouseHandler struct {
@@ -241,7 +280,27 @@ func (uiServer *UIServerStruct) loadUI() fyne.CanvasObject {
 
 	uiStructureContainer := newAdaptiveSplit(treeSide, testCaseSide)
 
-	return uiStructureContainer
+	// Add Text to be used for Drag n Drop, for now it's for testing only
+	green := color.NRGBA{R: 0, G: 180, B: 0, A: 255}
+	text2 := canvas.NewText("There", green)
+	backgroundRect := canvas.NewRectangle(color.RGBA{
+		R: 0xFF,
+		G: 0xFF,
+		B: 0x00,
+		A: 0xFF,
+	})
+	backgroundRect.SetMinSize(text2.Size().Add(fyne.NewSize(50, 50)))
+	contentGroup := container.NewCenter(backgroundRect, text2)
+
+	contentGroup.Move(fyne.NewPos(120, 120))
+	content := container.NewWithoutLayout(contentGroup)
+	myLoayout := container.NewMax(uiStructureContainer, content)
+
+	uiServer.testCasesUiModel.DragNDropText = text2
+	uiServer.testCasesUiModel.DragNDropRectangle = backgroundRect
+	uiServer.testCasesUiModel.DragNDropContainer = contentGroup
+
+	return myLoayout
 }
 
 // Loads available TestInstructions and TestInstructionContainers and return the UI Bar and UI Tree-structure for them
@@ -255,7 +314,7 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 			fmt.Println("Reload Available Components from GuiServer")
 
 			// Load Available Building Blocks and Pinned Building Blocks from Server
-			uiServer.availableBuildingBlocksModel.loadAvailableBuildingBlocksFromServer()
+			uiServer.availableBuildingBlocksModel.loadAvailableBuildingBlocksFromServer((&uiServer.testCasesModel))
 			uiServer.availableBuildingBlocksModel.loadPinnedBuildingBlocksFromServer()
 
 			// Recreate the TreeUIModel

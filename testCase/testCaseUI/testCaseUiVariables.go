@@ -3,6 +3,7 @@ package testCaseUI
 import (
 	"FenixTesterGui/testCase/testCaseModel"
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/widget"
@@ -18,6 +19,9 @@ type TestCasesUiModelStruct struct {
 	TestCasesUiModelMap     map[string]*testCaseGraphicalAreasStruct // Holds all UI sub-parts for a TestCase
 	TestCasesModelReference *testCaseModel.TestCasesModelsStruct     // A reference to the model for all TestCases
 
+	DragNDropText      *canvas.Text // Text used for Drag n Drop of TI and TIC into TextCase //TODO, is this used?
+	DragNDropRectangle *canvas.Rectangle
+	DragNDropContainer *fyne.Container
 }
 
 // This structure holds the UI-objects for one TestCase

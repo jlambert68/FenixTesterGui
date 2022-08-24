@@ -1,6 +1,7 @@
 package gui
 
 import (
+	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
@@ -77,7 +78,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) makeTree
 }
 
 // Load all Available Building Blocks from Gui-server
-func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvailableBuildingBlocksFromServer() {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvailableBuildingBlocksFromServer(testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
 
 	var testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
 
@@ -85,6 +86,20 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvai
 	testInstructionsAndTestContainersMessage = availableBuildingBlocksModel.grpcOut.SendListAllAvailableTestInstructionsAndTestInstructionContainers("s41797") //TODO change to use current logged in to computer user
 
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks(testInstructionsAndTestContainersMessage)
+
+	// Load TestCase-model with available Immature TestInstruction and TestInstructionContainers TODO Put Immature TI and TIC, and BONDS, in separate object
+	testCaseModeReference.AvailableImmatureTestInstructionsMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage)
+	testCaseModeReference.AvailableImmatureTestInstructionContainersMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionContainerMessage)
+
+	// Loop TestInstructions and add to map
+	for _, immatureTestInstruction := range testInstructionsAndTestContainersMessage.ImmatureTestInstructions {
+		testCaseModeReference.AvailableImmatureTestInstructionsMap[immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionUuid] = immatureTestInstruction
+	}
+
+	// Loop TestInstructionContainers and add to map
+	for _, immatureTestInstructionContainer := range testInstructionsAndTestContainersMessage.ImmatureTestInstructionContainers {
+		testCaseModeReference.AvailableImmatureTestInstructionContainersMap[immatureTestInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerUuid] = immatureTestInstructionContainer
+	}
 
 	// fmt.Println(testInstructionsAndTestContainersMessage)
 

@@ -23,10 +23,11 @@ type TestCasesModelsStruct struct {
 	TestCases   map[string]TestCaseModelStruct // Holds the Model for all the TestCase-models
 	CurrentUser string                         // Current logged-in user TODO Put this in a more global structure
 	//subSystemsCrossReferences *gui.SubSystemsCrossReferencesStruct
-	GrpcOutReference          *grpc_out.GRPCOutStruct
-	CurrentActiveTestCaseUuid string                                                                                                                                               // The TestCase that should be worked on both by the model and UI
-	AvailableBondsMap         map[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage // A copy of available Bonds //TODO should be placed in one common object
-
+	GrpcOutReference                              *grpc_out.GRPCOutStruct
+	CurrentActiveTestCaseUuid                     string                                                                                                                                               // The TestCase that should be worked on both by the model and UI
+	AvailableBondsMap                             map[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage // A copy of available Bonds //TODO should be placed in one common object
+	AvailableImmatureTestInstructionsMap          map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage
+	AvailableImmatureTestInstructionContainersMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionContainerMessage
 }
 
 type TestCaseModelStruct struct {

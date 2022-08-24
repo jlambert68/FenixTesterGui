@@ -19,9 +19,10 @@ type TestCasesUiModelStruct struct {
 	TestCasesUiModelMap     map[string]*testCaseGraphicalAreasStruct // Holds all UI sub-parts for a TestCase
 	TestCasesModelReference *testCaseModel.TestCasesModelsStruct     // A reference to the model for all TestCases
 
-	DragNDropText      *canvas.Text // Text used for Drag n Drop of TI and TIC into TextCase //TODO, is this used?
-	DragNDropRectangle *canvas.Rectangle
-	DragNDropContainer *fyne.Container
+	DragNDropText                    *canvas.Text // Text used for Drag n Drop of TI and TIC into TextCase //TODO, is this used?
+	DragNDropRectangle               *canvas.Rectangle
+	DragNDropRectangleTextBackground *canvas.Rectangle
+	DragNDropContainer               *fyne.Container
 }
 
 // This structure holds the UI-objects for one TestCase

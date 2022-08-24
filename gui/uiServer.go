@@ -281,16 +281,31 @@ func (uiServer *UIServerStruct) loadUI() fyne.CanvasObject {
 	uiStructureContainer := newAdaptiveSplit(treeSide, testCaseSide)
 
 	// Add Text to be used for Drag n Drop, for now it's for testing only
-	green := color.NRGBA{R: 0, G: 180, B: 0, A: 255}
-	text2 := canvas.NewText("There", green)
+	black := color.NRGBA{R: 0, G: 0, B: 0, A: 255}
+	text2 := canvas.NewText("There...", black)
 	backgroundRect := canvas.NewRectangle(color.RGBA{
-		R: 0xFF,
-		G: 0xFF,
-		B: 0x00,
-		A: 0xFF,
+		R: 0x55,
+		G: 0x55,
+		B: 0x55,
+		A: 0x22,
 	})
+	backgroundRect.StrokeWidth = 2
+	backgroundRect.StrokeColor = color.RGBA{
+		R: 0x88,
+		G: 0x88,
+		B: 0x88,
+		A: 0x99,
+	}
+
+	middlebackgroundRect := canvas.NewRectangle(color.RGBA{
+		R: 0x55,
+		G: 0x55,
+		B: 0x55,
+		A: 0xaa,
+	})
+
 	backgroundRect.SetMinSize(text2.Size().Add(fyne.NewSize(50, 50)))
-	contentGroup := container.NewCenter(backgroundRect, text2)
+	contentGroup := container.NewCenter(backgroundRect, middlebackgroundRect, text2)
 
 	contentGroup.Move(fyne.NewPos(120, 120))
 	content := container.NewWithoutLayout(contentGroup)
@@ -298,6 +313,7 @@ func (uiServer *UIServerStruct) loadUI() fyne.CanvasObject {
 
 	uiServer.testCasesUiModel.DragNDropText = text2
 	uiServer.testCasesUiModel.DragNDropRectangle = backgroundRect
+	uiServer.testCasesUiModel.DragNDropRectangleTextBackground = middlebackgroundRect
 	uiServer.testCasesUiModel.DragNDropContainer = contentGroup
 
 	return myLoayout

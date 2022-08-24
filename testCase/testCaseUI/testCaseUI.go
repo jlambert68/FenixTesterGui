@@ -142,7 +142,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 		widget.NewSeparator(),
 		testCaseGraphicalAreas.TestCaseGraphicalModelArea,
 		layout.NewSpacer(),
-		makeDragNDropTestGUI(testCasesUiCanvasObject.DragNDropText, testCasesUiCanvasObject.DragNDropRectangle, testCasesUiCanvasObject.DragNDropContainer),
+		makeDragNDropTestGUI(testCasesUiCanvasObject.DragNDropText, testCasesUiCanvasObject.DragNDropRectangle, testCasesUiCanvasObject.DragNDropRectangleTextBackground, testCasesUiCanvasObject.DragNDropContainer),
 		layout.NewSpacer())
 
 	// Create canvas-object for BaseInformation, MetaData and TestCaseAttributes

@@ -12,13 +12,25 @@ import (
 	"log"
 )
 
+// Statea for handling Drag from Source object
 const (
-	stateSearch = iota
-	stateFind
-	stateGrab
-	stateDrag
-	stateRelease
-	stateDrop
+	stateFromSearching = iota
+	stateFromFinds
+	stateFromGrabs
+	stateFromDragging
+	stateFromReleasingWithOutTarget
+	stateFromEnteringTarget
+	stateFromReleasingOnTarget
+	stateReleasedOnTarget
+)
+
+// State for handling Drop-target object
+const (
+	stateWaitingForSenderToEnteringTarget = iota
+	stateSenderIsDraggingObject
+	stateSenderEnteringTarget
+	stateSenderReleasingOnTarget
+	stateSenderReleasedOnTarget
 )
 
 func makeDragNDropTestGUI(textIn *canvas.Text, recIn *canvas.Rectangle, rec2In *canvas.Rectangle, containerIn *fyne.Container) (myCanvasObject fyne.CanvasObject) {
@@ -93,23 +105,26 @@ type droppableLabel struct {
 
 // Structure for 'Drag-part of 'Drag-N-Drop' state machine
 type StateMachineStruct struct {
-	currentState           int
-	dragBeforeMouseIn      bool
-	mouseInBeforeDragStart bool
-	mouseInObjectUuid      string
-	dragStart              bool
-	dragStartObjectUuid    string
-	dragEnd                bool
-	MouseIn                bool
-	MouseOut               bool
-	LightRectangle         bool
-	preLightRectangleState bool
-	dropIsAllowed          bool
-	dragFrom               string
-	DropIn                 string
+	currentState int
+	/*
+		dragBeforeMouseIn      bool
+		mouseInBeforeDragStart bool
+		mouseInObjectUuid      string
+		dragStart              bool
+		dragStartObjectUuid    string
+		dragEnd                bool
+		MouseIn                bool
+		MouseOut               bool
+		LightRectangle         bool
+		preLightRectangleState bool
+		dropIsAllowed          bool
+		dragFrom               string
+		DropIn                 string
+	*/
 }
 
 var stateMachineDragFrom StateMachineStruct
+var stateMachineTarget StateMachineStruct
 
 // ***** The Object from the Drag starts *****
 
@@ -117,19 +132,48 @@ var stateMachineDragFrom StateMachineStruct
 // When the user press down the mouse button this event is triggered
 func (t *draggableLabel) Dragged(ev *fyne.DragEvent) {
 
-	stateMachineDragFrom.dragStart = true
-	stateMachineDragFrom.dragEnd = false
+	switch stateMachineDragFrom.currentState {
 
-	dragNDropStatMachineSwitchStateWhenDragStart(t.myTitle)
-
-	if stateMachineDragFrom.dragBeforeMouseIn == true {
+	case stateFromSearching:
+		fmt.Println("Dragged: 'stateFromSearching'")
 		return
+
+	case stateFromFinds:
+		// switch state to 'stateFromGrabs'
+		switchStateForFrom(stateFromGrabs)
+
+		return
+
+	case stateFromGrabs:
+		// switch state to 'stateFromDragging'
+		switchStateForFrom(stateFromDragging)
+
+		return
+
+	case stateFromDragging:
+		switchStateForTarget(stateSenderIsDraggingObject)
+		// Just continue
+
+	case stateFromReleasingWithOutTarget:
+		fmt.Println("Dragged: 'stateFromReleasingWithOutTarget'")
+		return
+
+	case stateFromEnteringTarget:
+		fmt.Println("Dragged: 'stateFromEnteringTarget'")
+		return
+
+	case stateFromReleasingOnTarget:
+		fmt.Println("Dragged: 'stateFromReleasingOnTarget'")
+		return
+
+	case stateReleasedOnTarget:
+		fmt.Println("Dragged: 'stateReleasedOnTarget'")
+		return
+
+	default:
+		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragFrom.currentState)
+
 	}
-
-	log.Println("I have been 'Dragged': ", t.Position(), " And I am ", t.myTitle)
-
-	dragNDropStatMachineSwitchStateWhenDragStart(t.myTitle)
-	//fmt.Println(ev.Position, ev.AbsolutePosition)
 
 	// Change Text of 'Drag N Drop'-object
 	textRef.Text = t.myTitle
@@ -160,11 +204,37 @@ func (t *draggableLabel) DragEnd() {
 
 	switch stateMachineDragFrom.currentState {
 
-	case stateSearch, stateFind, stateGrab, stateDrag:
-		prepareStateSearch()
-	case stateRelease:
+	case stateFromSearching:
+		fmt.Println("Dragged: 'stateFromSearching'")
+		return
 
-	case stateDrop:
+	case stateFromFinds:
+		fmt.Println("Dragged: 'stateFromFinds'")
+		return
+
+	case stateFromGrabs:
+		fmt.Println("Dragged: 'stateFromGrabs'")
+		return
+
+	case stateFromDragging:
+		// switch state to 'stateFromReleasingWithOutTarget'
+		switchStateForFrom(stateFromReleasingWithOutTarget)
+		switchStateForTarget(stateWaitingForSenderToEnteringTarget)
+
+	case stateFromReleasingWithOutTarget:
+		// Just continue
+
+	case stateFromEnteringTarget:
+		fmt.Println("Dragged: 'stateFromEnteringTarget'")
+		return
+
+	case stateFromReleasingOnTarget:
+		fmt.Println("Dragged: 'stateFromReleasingOnTarget'")
+		return
+
+	case stateReleasedOnTarget:
+		fmt.Println("Dragged: 'stateReleasedOnTarget'")
+		return
 
 	default:
 		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragFrom.currentState)
@@ -177,19 +247,54 @@ func (t *draggableLabel) DragEnd() {
 	rectangle2Ref.Hide()
 	containerRef.Refresh()
 
+	// switch state to 'stateFromSearching'
+	switchStateForFrom(stateFromSearching)
+
 }
 
 // MouseIn is called when a desktop pointer enters the widget
 func (b *draggableLabel) MouseIn(*desktop.MouseEvent) {
 
-	if stateMachineDragFrom.dragStart == true {
+	switch stateMachineDragFrom.currentState {
+
+	case stateFromSearching:
+		// switch state to 'stateFromFinds'
+		switchStateForFrom(stateFromFinds)
 		return
+
+	case stateFromFinds:
+		fmt.Println("MouseIn: 'stateFromFinds'")
+		return
+
+	case stateFromGrabs:
+		fmt.Println("MouseIn: 'stateFromGrabs'")
+		return
+
+	case stateFromDragging:
+		fmt.Println("MouseIn: 'stateFromDragging'")
+		return
+
+	case stateFromReleasingWithOutTarget:
+		fmt.Println("MouseIn: 'stateFromReleasingWithOutTarget'")
+		return
+
+	case stateFromEnteringTarget:
+		fmt.Println("MouseIn: 'stateFromEnteringTarget'")
+		return
+
+	case stateFromReleasingOnTarget:
+		fmt.Println("MouseIn: 'stateFromReleasingOnTarget'")
+		return
+
+	case stateReleasedOnTarget:
+		fmt.Println("MouseIn: 'stateReleasedOnTarget'")
+		return
+
+	default:
+		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragFrom.currentState)
+
 	}
 
-	log.Println("I have been 'MouseIn' ", b.myTitle)
-	b.hovered = true
-	dragNDropStatMachineSwitchStateWhenMouseInOnDragFrom(b.myTitle)
-	//b.Refresh()
 }
 
 // MouseMoved is called when a desktop pointer hovers over the widget
@@ -200,10 +305,46 @@ func (b *draggableLabel) MouseMoved(a *desktop.MouseEvent) {
 
 // MouseOut is called when a desktop pointer exits the widget
 func (b *draggableLabel) MouseOut() {
-	//log.Println("I have been 'MouseOut' ", b.myTitle)
-	b.hovered = false
-	dragNDropStatMachineSwitchStateWhenMouseOutOnDragFrom(b.myTitle)
-	//b.Refresh()
+
+	switch stateMachineDragFrom.currentState {
+
+	case stateFromSearching:
+		fmt.Println("MouseOut: 'stateFromSearching'")
+		return
+
+	case stateFromFinds:
+		// switch state to 'stateFromFinds'
+		switchStateForFrom(stateFromSearching)
+		return
+
+	case stateFromGrabs:
+		fmt.Println("MouseOut: 'stateFromGrabs'")
+		return
+
+	case stateFromDragging:
+		fmt.Println("MouseOut: 'stateFromDragging'")
+		return
+
+	case stateFromReleasingWithOutTarget:
+		fmt.Println("MouseOut: 'stateFromReleasingWithOutTarget'")
+		return
+
+	case stateFromEnteringTarget:
+		fmt.Println("MouseOut: 'stateFromEnteringTarget'")
+		return
+
+	case stateFromReleasingOnTarget:
+		fmt.Println("MouseOut: 'stateFromReleasingOnTarget'")
+		return
+
+	case stateReleasedOnTarget:
+		fmt.Println("MouseOut: 'stateReleasedOnTarget'")
+		return
+
+	default:
+		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragFrom.currentState)
+
+	}
 
 }
 
@@ -212,14 +353,33 @@ func (b *draggableLabel) MouseOut() {
 // MouseIn is called when a desktop pointer enters the widget
 func (b *droppableLabel) MouseIn(*desktop.MouseEvent) {
 
-	if stateMachineDragFrom.dragStart == false {
+	switch stateMachineTarget.currentState {
+
+	case stateWaitingForSenderToEnteringTarget:
+		fmt.Println("MouseOut: 'stateWaitingForSenderToEnteringTarget'")
 		return
+
+	case stateSenderIsDraggingObject:
+		// switch state to 'stateSenderIsDraggingObject'
+		switchStateForFrom(stateSenderEnteringTarget)
+		return
+
+	case stateSenderEnteringTarget:
+		switchStateForFrom(stateFromEnteringTarget)
+
+	case stateSenderReleasingOnTarget:
+		fmt.Println("MouseOut: 'stateSenderReleasingOnTarget'")
+		return
+
+	case stateSenderReleasedOnTarget:
+		fmt.Println("MouseOut: 'stateFromReleasingWithOutTarget'")
+		return
+
+	default:
+		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragFrom.currentState)
+
 	}
 
-	log.Println("I have been 'MouseIn' ", b.myTitle)
-	b.hovered = true
-	dragNDropStatMachineSwitchStateWhenMouseIn(b.myTitle)
-	//b.Refresh()
 }
 
 // MouseMoved is called when a desktop pointer hovers over the widget
@@ -230,17 +390,10 @@ func (b *droppableLabel) MouseMoved(a *desktop.MouseEvent) {
 
 // MouseOut is called when a desktop pointer exits the widget
 func (b *droppableLabel) MouseOut() {
-	if stateMachineDragFrom.dragStart == false {
-		return
-	}
-
-	log.Println("I have been 'MouseOut' ", b.myTitle)
-	b.hovered = false
-	dragNDropStatMachineSwitchStateWhenMouseOut(b.myTitle)
-	//b.Refresh()
 
 }
 
+/*
 func dragNDropStatMachineSwitchStateWhenMouseInOnDragFrom(labelNo string) {
 	fmt.Println("dragNDropStatMachineSwitchStateWhenMouseInOnDragFrom ", labelNo)
 	// Change Mouse-state
@@ -325,6 +478,9 @@ func dragNDropStatMachineSwitchStateWhenMouseOut(labelNo string) {
 	stateMachineExecuteEngineDragAndDrop(true)
 }
 
+
+*/
+/*
 func stateMachineExecuteEngineDragAndDrop(doAction bool) {
 
 	//fmt.Println(stateMachineDragFrom.dragStart, stateMachineDragFrom.dragEnd, stateMachineDragFrom.MouseIn, stateMachineDragFrom.MouseOut, stateMachineDragFrom.LightRectangle, stateMachineDragFrom.preLightRectangleState, stateMachineDragFrom.LightRectangle, stateMachineDragFrom.dropIsAllowed)
@@ -369,6 +525,16 @@ func stateMachineExecuteEngineDragAndDrop(doAction bool) {
 	}
 
 	//fmt.Println(stateMachineDragFrom.dragStart, stateMachineDragFrom.dragEnd, stateMachineDragFrom.MouseIn, stateMachineDragFrom.MouseOut, stateMachineDragFrom.LightRectangle, stateMachineDragFrom.preLightRectangleState, stateMachineDragFrom.LightRectangle, stateMachineDragFrom.dropIsAllowed)
+}
+
+
+*/
+func switchStateForFrom(newState int) {
+	stateMachineDragFrom.currentState = newState
+}
+
+func switchStateForTarget(newState int) {
+	stateMachineTarget.currentState = newState
 }
 
 /*

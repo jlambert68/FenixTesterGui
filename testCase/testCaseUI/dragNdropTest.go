@@ -40,19 +40,23 @@ func makeDragNDropTestGUI(textIn *canvas.Text, recIn *canvas.Rectangle, rec2In *
 	rectangle2Ref = rec2In
 	containerRef = containerIn
 
-	dragFromOneLabel := newDraggablelabel(color.Gray{0xEE}, "No 1")
-	dragFromTwoLabel := newDraggablelabel(color.Gray{0xBB}, "No 2.000000")
-	dragFromThreeLabel := newDraggablelabel(color.Gray{0x88}, "No 3..00000000000000000")
-	dragFromFourLabel := newDraggablelabel(color.Gray{0x44}, "No 4.0000000000000000000000000000000")
-	dragToDrop1label := newDropablelabel(color.Gray{0x33}, "No 5..0000000000000000000000000000000000000")
-	dragToDrop2Label := newDropablelabel(color.Gray{0x44}, "No 6.000000000000000000000000000000000000000000000000")
+	dragFromOneLabel := newDraggableLabel("No 1")
+	dragFromTwoLabel := newDraggableLabel("No 2.000000")
+	dragFromThreeLabel := newDraggableLabel("No 3..00000000000000000")
+	dragFromFourLabel := newDraggableLabel("No 4.0000000000000000000000000000000")
+	dragToDrop1Label := newNoneDroppableLabel("No 5..0000000000000000000000000000000000000")
+	dragToDrop2Label := newDroppableLabel("No 6.000000000000000000000000000000000000000000000000")
+	dragToDrop3Label := newNoneDroppableLabel("No 7.00000000000000000000000000000000000000000000000000000000000000")
 
-	DropOne := container.NewMax(dragToDrop1label.backgroundRectangle, dragToDrop1label)
+	registeredTargetLabels = append(registeredTargetLabels, dragToDrop2Label)
+
+	DropOne := container.NewMax(dragToDrop1Label)
 	DropTwo := container.NewMax(dragToDrop2Label.backgroundRectangle, dragToDrop2Label)
+	DropThree := container.NewMax(dragToDrop3Label)
 
 	fromContainer := container.NewHBox(dragFromOneLabel, dragFromTwoLabel)
 	toContainer := container.NewHBox(dragFromThreeLabel, dragFromFourLabel)
-	dropContainer := container.NewHBox(DropOne, DropTwo)
+	dropContainer := container.NewVBox(DropOne, DropTwo, DropThree)
 
 	myText := widget.NewLabel("Test Area for Drag n Drop")
 
@@ -61,80 +65,77 @@ func makeDragNDropTestGUI(textIn *canvas.Text, recIn *canvas.Rectangle, rec2In *
 	return myCanvasObject
 }
 
+var registeredTargetLabels []*droppableLabel
+
 var textRef *canvas.Text
 var rectangleRef *canvas.Rectangle
 var rectangle2Ref *canvas.Rectangle
 var containerRef *fyne.Container
 
-func newDraggablelabel(myColor color.Gray, myNewTitle string) *draggableLabel {
-	myLabel := &draggableLabel{}
-	myLabel.ExtendBaseWidget(myLabel)
-	//myLabel.FillColor = myColor
-	//myLabel.StrokeColor = color.Black
-	//myLabel.StrokeWidth = 0
-	//myLabel.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
-
-	myLabel.myTitle = myNewTitle
-	myLabel.Text = myNewTitle
-
-	return myLabel
-}
-
-func newDropablelabel(myColor color.Gray, myNewTitle string) *droppableLabel {
-	myLabel := &droppableLabel{}
-	myLabel.ExtendBaseWidget(myLabel)
-	//myLabel.FillColor = myColor
-	//myLabel.StrokeColor = color.Black
-	//myLabel.StrokeWidth = 0
-	//myLabel.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
-
-	myLabel.myTitle = myNewTitle
-	myLabel.Text = myNewTitle
-
-	myLabel.backgroundRectangle = canvas.NewRectangle(color.RGBA{
-		R: 0x00,
-		G: 0xFF,
-		B: 0x00,
-		A: 0x44,
-	})
-	myLabel.Refresh()
-	myLabel.backgroundRectangle.SetMinSize(myLabel.Size())
-	myLabel.backgroundRectangle.Hide()
-
-	return myLabel
-}
-
+//****************************************************
 type draggableLabel struct {
 	widget.Label
-	myTitle string
-	hovered bool
+	uuid string
 }
 
 type droppableLabel struct {
 	widget.Label
-	myTitle             string
-	hovered             bool
+	uuid                string
 	backgroundRectangle *canvas.Rectangle
 }
+
+type noneDroppableLabel struct {
+	widget.Label
+	uuid string
+}
+
+//****************************************************
+
+func newDraggableLabel(uuid string) *draggableLabel {
+	draggableLabel := &draggableLabel{}
+	draggableLabel.ExtendBaseWidget(draggableLabel)
+
+	draggableLabel.uuid = uuid
+	draggableLabel.Text = uuid
+
+	return draggableLabel
+}
+
+func newDroppableLabel(uuid string) *droppableLabel {
+	droppableLabel := &droppableLabel{}
+	droppableLabel.ExtendBaseWidget(droppableLabel)
+
+	droppableLabel.uuid = uuid
+
+	droppableLabel.backgroundRectangle = canvas.NewRectangle(color.RGBA{
+		R: 0x00,
+		G: 0x00,
+		B: 0x00,
+		A: 0x00,
+	})
+
+	droppableLabel.Refresh()
+	droppableLabel.backgroundRectangle.SetMinSize(droppableLabel.Size())
+	droppableLabel.backgroundRectangle.Hide()
+
+	return droppableLabel
+}
+
+func newNoneDroppableLabel(uuid string) *noneDroppableLabel {
+	nonDroppableLabel := &noneDroppableLabel{}
+	nonDroppableLabel.ExtendBaseWidget(nonDroppableLabel)
+
+	nonDroppableLabel.uuid = uuid
+	nonDroppableLabel.Text = uuid
+
+	return nonDroppableLabel
+}
+
+//****************************************************
 
 // Structure for 'Drag-part of 'Drag-N-Drop' state machine
 type StateMachineStruct struct {
 	currentState int
-	/*
-		dragBeforeMouseIn      bool
-		mouseInBeforeDragStart bool
-		mouseInObjectUuid      string
-		dragStart              bool
-		dragStartObjectUuid    string
-		dragEnd                bool
-		MouseIn                bool
-		MouseOut               bool
-		LightRectangle         bool
-		preLightRectangleState bool
-		dropIsAllowed          bool
-		dragFrom               string
-		DropIn                 string
-	*/
 }
 
 var stateMachineDragFrom StateMachineStruct
@@ -161,6 +162,18 @@ func (t *draggableLabel) Dragged(ev *fyne.DragEvent) {
 	case sourceStateGrabs:
 		// switch state to 'sourceStateDragging'
 		switchStateForSource(sourceStateDragging)
+		for _, targetLabel := range registeredTargetLabels {
+
+			targetLabel.backgroundRectangle.StrokeWidth = 2
+			targetLabel.backgroundRectangle.StrokeColor = color.RGBA{
+				R: 0xFF,
+				G: 0x00,
+				B: 0x00,
+				A: 0xAA,
+			}
+			targetLabel.backgroundRectangle.Show()
+			targetLabel.backgroundRectangle.Refresh()
+		}
 
 		return
 
@@ -190,7 +203,7 @@ func (t *draggableLabel) Dragged(ev *fyne.DragEvent) {
 	}
 
 	// Change Text of 'Drag N Drop'-object
-	textRef.Text = t.myTitle
+	textRef.Text = t.uuid
 
 	// Change size of 'Drag N Drop'-object text backgrounds
 	rectangleRef.SetMinSize(textRef.Size().Add(fyne.NewSize(40, 40)))
@@ -234,12 +247,26 @@ func (t *draggableLabel) DragEnd() {
 		// switch state to 'sourceStateReleasingWithOutTarget'
 		switchStateForSource(sourceStateReleasingWithOutTarget)
 		switchStateForTarget(targetStateWaitingForSourceToEnteringTarget)
+		for _, targetLabel := range registeredTargetLabels {
+			targetLabel.backgroundRectangle.StrokeWidth = 0
+			/*
+				targetLabel.backgroundRectangle.FillColor = color.RGBA{
+					R: 0x00,
+					G: 0x00,
+					B: 0x00,
+					A: 0x00,
+				}
+			*/
+			targetLabel.backgroundRectangle.Hide()
+			targetLabel.backgroundRectangle.Refresh()
+		}
 
 	case sourceStateReleasingWithOutTarget:
 		// Just continue
 
 	case sourceStateEnteringTarget:
 		switchStateForSource(sourceStateReleasingOnTarget)
+		switchStateForTarget(targetStateSourceReleasingOnTarget)
 		return
 
 	case sourceStateReleasingOnTarget:
@@ -305,7 +332,7 @@ func (b *draggableLabel) MouseIn(*desktop.MouseEvent) {
 
 // MouseMoved is called when a desktop pointer hovers over the widget
 func (b *draggableLabel) MouseMoved(a *desktop.MouseEvent) {
-	//log.Println("I have been 'MouseMoved' ", b.myTitle)
+	//log.Println("I have been 'MouseMoved' ", b.uuid)
 
 }
 
@@ -361,7 +388,15 @@ func (b *droppableLabel) MouseIn(*desktop.MouseEvent) {
 	case targetStateSourceIsDraggingObject:
 		switchStateForSource(sourceStateEnteringTarget)
 		switchStateForTarget(targetStateSourceEnteredTargetWithObject)
+		b.backgroundRectangle.FillColor = color.RGBA{
+			R: 0x33,
+			G: 0x33,
+			B: 0x33,
+			A: 0x22,
+		}
+
 		b.backgroundRectangle.Show()
+		b.backgroundRectangle.Refresh()
 		fmt.Println("Show")
 
 	case targetStateSourceEnteredTargetWithObject:
@@ -384,7 +419,7 @@ func (b *droppableLabel) MouseIn(*desktop.MouseEvent) {
 
 // MouseMoved is called when a desktop pointer hovers over the widget
 func (b *droppableLabel) MouseMoved(a *desktop.MouseEvent) {
-	//log.Println("I have been 'MouseMoved' ", b.myTitle)
+	//log.Println("I have been 'MouseMoved' ", b.uuid)
 
 }
 
@@ -403,10 +438,18 @@ func (b *droppableLabel) MouseOut() {
 		// switch state to 'targetStateSourceIsDraggingObject'
 		switchStateForSource(sourceStateDragging)
 		switchStateForTarget(targetStateSourceIsDraggingObject)
-		b.backgroundRectangle.Hide()
+		b.backgroundRectangle.FillColor = color.RGBA{
+			R: 0x00,
+			G: 0x00,
+			B: 0x00,
+			A: 0x00,
+		}
+		//b.backgroundRectangle.Hide()
+		b.backgroundRectangle.Refresh()
 		fmt.Println("Hide")
 
 	case targetStateSourceReleasingOnTarget:
+		fmt.Println("Out we go")
 		return
 
 	case targetStateSourceReleasedOnTarget:
@@ -421,142 +464,6 @@ func (b *droppableLabel) MouseOut() {
 
 }
 
-/*
-func dragNDropStatMachineSwitchStateWhenMouseInOnDragFrom(labelNo string) {
-	fmt.Println("dragNDropStatMachineSwitchStateWhenMouseInOnDragFrom ", labelNo)
-	// Change Mouse-state
-
-	if stateMachineDragFrom.dragStart == true {
-		stateMachineDragFrom.dragBeforeMouseIn = true
-		return
-	}
-
-	stateMachineDragFrom.MouseIn = true
-	stateMachineDragFrom.MouseOut = false
-	stateMachineDragFrom.mouseInObjectUuid = labelNo
-
-	// Trigger State Machine
-	stateMachineExecuteEngineDragAndDrop(true)
-}
-
-func dragNDropStatMachineSwitchStateWhenMouseOutOnDragFrom(labelNo string) {
-	fmt.Println("dragNDropStatMachineSwitchStateWhenMouseOutOnDragFrom ", labelNo)
-
-	// Change Mouse-state
-	if stateMachineDragFrom.dragStart == true {
-		return
-	}
-	stateMachineDragFrom.MouseIn = false
-	stateMachineDragFrom.MouseOut = true
-	stateMachineDragFrom.mouseInObjectUuid = ""
-
-	// Trigger State Machine
-	stateMachineExecuteEngineDragAndDrop(true)
-}
-
-func dragNDropStatMachineSwitchStateWhenDragStart(labelNo string) {
-	// Change Drag-state
-
-	if stateMachineDragFrom.dragBeforeMouseIn == true {
-		return
-	}
-	stateMachineDragFrom.dragStart = true
-	stateMachineDragFrom.dragEnd = false
-
-	// Trigger State Machine
-	stateMachineExecuteEngineDragAndDrop(true)
-}
-
-func dragNDropStatMachineSwitchStateWhenDragEnd(labelNo string) {
-	// Change Drag-state
-
-	stateMachineDragFrom.dragBeforeMouseIn = false
-
-	if stateMachineDragFrom.MouseIn == true {
-		return
-	}
-	stateMachineDragFrom.dragStart = false
-	stateMachineDragFrom.dragEnd = true
-	stateMachineDragFrom.mouseInObjectUuid = ""
-
-	// Trigger State Machine
-	stateMachineExecuteEngineDragAndDrop(true)
-}
-
-func dragNDropStatMachineSwitchStateWhenMouseIn(labelNo string) {
-	fmt.Println("dragNDropStatMachineSwitchStateWhenMouseIn ", labelNo)
-
-	// Change Mouse-state
-	stateMachineDragFrom.MouseIn = true
-	stateMachineDragFrom.MouseOut = false
-
-	stateMachineDragFrom.DropIn = labelNo
-
-	// Trigger State Machine
-	stateMachineExecuteEngineDragAndDrop(true)
-}
-
-func dragNDropStatMachineSwitchStateWhenMouseOut(labelNo string) {
-	fmt.Println("dragNDropStatMachineSwitchStateWhenMouseOut ", labelNo)
-	// Change Mouse-state
-	stateMachineDragFrom.MouseIn = false
-	stateMachineDragFrom.MouseOut = true
-
-	// Trigger State Machine
-	stateMachineExecuteEngineDragAndDrop(true)
-}
-
-
-*/
-/*
-func stateMachineExecuteEngineDragAndDrop(doAction bool) {
-
-	//fmt.Println(stateMachineDragFrom.dragStart, stateMachineDragFrom.dragEnd, stateMachineDragFrom.MouseIn, stateMachineDragFrom.MouseOut, stateMachineDragFrom.LightRectangle, stateMachineDragFrom.preLightRectangleState, stateMachineDragFrom.LightRectangle, stateMachineDragFrom.dropIsAllowed)
-
-	stateMachineDragFrom.preLightRectangleState = stateMachineDragFrom.LightRectangle
-
-	// Logic for light up Droppable Areas when hover over them with "something"
-	if stateMachineDragFrom.dragStart == true &&
-		stateMachineDragFrom.dragEnd == false &&
-		stateMachineDragFrom.MouseIn == true &&
-		stateMachineDragFrom.MouseOut == false &&
-		stateMachineDragFrom.DropIn != stateMachineDragFrom.dragFrom {
-
-		stateMachineDragFrom.LightRectangle = true
-		if doAction && stateMachineDragFrom.preLightRectangleState == false {
-			fmt.Println("Light up rectangle no ", stateMachineDragFrom.DropIn)
-		}
-
-	} else {
-		stateMachineDragFrom.LightRectangle = false
-		if doAction && stateMachineDragFrom.preLightRectangleState == true {
-			fmt.Println("Turn of Light for rectangle no ", stateMachineDragFrom.DropIn)
-		}
-	}
-
-	// Logic for dropping something that has been dragged
-	if stateMachineDragFrom.dragStart == false &&
-		stateMachineDragFrom.dragEnd == true &&
-		stateMachineDragFrom.MouseIn == true &&
-		stateMachineDragFrom.MouseOut == false &&
-		stateMachineDragFrom.preLightRectangleState == true &&
-		stateMachineDragFrom.DropIn != stateMachineDragFrom.dragFrom {
-
-		stateMachineDragFrom.dropIsAllowed = true
-
-		if doAction {
-			fmt.Println("Drag rectangle no ", stateMachineDragFrom.dragFrom, " and drop in rectangle no ", stateMachineDragFrom.DropIn)
-		}
-
-	} else {
-		stateMachineDragFrom.dropIsAllowed = false
-	}
-
-	//fmt.Println(stateMachineDragFrom.dragStart, stateMachineDragFrom.dragEnd, stateMachineDragFrom.MouseIn, stateMachineDragFrom.MouseOut, stateMachineDragFrom.LightRectangle, stateMachineDragFrom.preLightRectangleState, stateMachineDragFrom.LightRectangle, stateMachineDragFrom.dropIsAllowed)
-}
-
-
-*/
 func switchStateForSource(newState int) {
 	stateMachineDragFrom.currentState = newState
 }
@@ -564,36 +471,3 @@ func switchStateForSource(newState int) {
 func switchStateForTarget(newState int) {
 	stateMachineTarget.currentState = newState
 }
-
-/*
-func executeDragObject() {
-	if stateMachineDragFrom.mouseInBeforeDragStart == false {
-		return
-	}
-
-	dragNDropStatMachineSwitchStateWhenDragStart(t.myTitle)
-	//fmt.Println(ev.Position, ev.AbsolutePosition)
-
-	// Change Text of 'Drag N Drop'-object
-	textRef.Text = t.myTitle
-
-	// Change size of 'Drag N Drop'-object text backgrounds
-	rectangleRef.SetMinSize(textRef.Size().Add(fyne.NewSize(40, 40)))
-	rectangle2Ref.SetMinSize(textRef.Size())
-
-	// Move 'Drag N Drop'-object container, so it is to the right of the mouse-pointer
-	diffPos := fyne.Position{
-		X: 10,
-		Y: -20,
-	}
-	newPos := ev.AbsolutePosition.Add(diffPos).Add(fyne.NewSize(rectangleRef.Size().Width/2, rectangleRef.Size().Height/2))
-	containerRef.Move(newPos)
-
-	// Refresh 'Drag N Drop'-object and show them
-	containerRef.Refresh()
-	textRef.Show()
-	rectangle2Ref.Show()
-	rectangleRef.Show()
-}
-
-*/

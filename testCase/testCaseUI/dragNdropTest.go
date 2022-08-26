@@ -14,23 +14,23 @@ import (
 
 // Statea for handling Drag from Source object
 const (
-	stateFromSearching = iota
-	stateFromFinds
-	stateFromGrabs
-	stateFromDragging
-	stateFromReleasingWithOutTarget
-	stateFromEnteringTarget
-	stateFromReleasingOnTarget
-	stateReleasedOnTarget
+	sourceStateSearching              = iota // 0
+	sourceStateFinds                         // 1
+	sourceStateGrabs                         // 2
+	sourceStateDragging                      // 3
+	sourceStateReleasingWithOutTarget        // 4
+	sourceStateEnteringTarget                // 5
+	sourceStateReleasingOnTarget             // 6
+	sourceStateReleasedOnTarget              // 7
 )
 
 // State for handling Drop-target object
 const (
-	stateWaitingForSenderToEnteringTarget = iota
-	stateSenderIsDraggingObject
-	stateSenderEnteringTarget
-	stateSenderReleasingOnTarget
-	stateSenderReleasedOnTarget
+	targetStateWaitingForSourceToEnteringTarget = iota // 0
+	targetStateSourceIsDraggingObject                  // 1
+	targetStateSourceEnteredTargetWithObject           // 2
+	targetStateSourceReleasingOnTarget                 // 3
+	targetStateSourceReleasedOnTarget                  // 4
 )
 
 func makeDragNDropTestGUI(textIn *canvas.Text, recIn *canvas.Rectangle, rec2In *canvas.Rectangle, containerIn *fyne.Container) (myCanvasObject fyne.CanvasObject) {
@@ -40,16 +40,19 @@ func makeDragNDropTestGUI(textIn *canvas.Text, recIn *canvas.Rectangle, rec2In *
 	rectangle2Ref = rec2In
 	containerRef = containerIn
 
-	dragFromOneRectangle := newDraggablelabel(color.Gray{0xEE}, "No 1")
-	dragFromTwoRectangle := newDraggablelabel(color.Gray{0xBB}, "No 2.000000")
-	dragToOneRectangle := newDraggablelabel(color.Gray{0x88}, "No 3..00000000000000000")
-	dragToTwoRectangle := newDraggablelabel(color.Gray{0x44}, "No 4.0000000000000000000000000000000")
-	dragToDrop1Rectangle := newDropablelabel(color.Gray{0x33}, "No 5..0000000000000000000000000000000000000")
-	dragToDrop2Rectangle := newDropablelabel(color.Gray{0x44}, "No 6.000000000000000000000000000000000000000000000000")
+	dragFromOneLabel := newDraggablelabel(color.Gray{0xEE}, "No 1")
+	dragFromTwoLabel := newDraggablelabel(color.Gray{0xBB}, "No 2.000000")
+	dragFromThreeLabel := newDraggablelabel(color.Gray{0x88}, "No 3..00000000000000000")
+	dragFromFourLabel := newDraggablelabel(color.Gray{0x44}, "No 4.0000000000000000000000000000000")
+	dragToDrop1label := newDropablelabel(color.Gray{0x33}, "No 5..0000000000000000000000000000000000000")
+	dragToDrop2Label := newDropablelabel(color.Gray{0x44}, "No 6.000000000000000000000000000000000000000000000000")
 
-	fromContainer := container.NewHBox(dragFromOneRectangle, dragFromTwoRectangle)
-	toContainer := container.NewHBox(dragToOneRectangle, dragToTwoRectangle)
-	dropContainer := container.NewHBox(dragToDrop1Rectangle, dragToDrop2Rectangle)
+	DropOne := container.NewMax(dragToDrop1label.backgroundRectangle, dragToDrop1label)
+	DropTwo := container.NewMax(dragToDrop2Label.backgroundRectangle, dragToDrop2Label)
+
+	fromContainer := container.NewHBox(dragFromOneLabel, dragFromTwoLabel)
+	toContainer := container.NewHBox(dragFromThreeLabel, dragFromFourLabel)
+	dropContainer := container.NewHBox(DropOne, DropTwo)
 
 	myText := widget.NewLabel("Test Area for Drag n Drop")
 
@@ -88,6 +91,16 @@ func newDropablelabel(myColor color.Gray, myNewTitle string) *droppableLabel {
 	myLabel.myTitle = myNewTitle
 	myLabel.Text = myNewTitle
 
+	myLabel.backgroundRectangle = canvas.NewRectangle(color.RGBA{
+		R: 0x00,
+		G: 0xFF,
+		B: 0x00,
+		A: 0x44,
+	})
+	myLabel.Refresh()
+	myLabel.backgroundRectangle.SetMinSize(myLabel.Size())
+	myLabel.backgroundRectangle.Hide()
+
 	return myLabel
 }
 
@@ -99,8 +112,9 @@ type draggableLabel struct {
 
 type droppableLabel struct {
 	widget.Label
-	myTitle string
-	hovered bool
+	myTitle             string
+	hovered             bool
+	backgroundRectangle *canvas.Rectangle
 }
 
 // Structure for 'Drag-part of 'Drag-N-Drop' state machine
@@ -134,40 +148,40 @@ func (t *draggableLabel) Dragged(ev *fyne.DragEvent) {
 
 	switch stateMachineDragFrom.currentState {
 
-	case stateFromSearching:
-		fmt.Println("Dragged: 'stateFromSearching'")
+	case sourceStateSearching:
+		fmt.Println("Dragged: 'sourceStateSearching'")
 		return
 
-	case stateFromFinds:
-		// switch state to 'stateFromGrabs'
-		switchStateForFrom(stateFromGrabs)
-
-		return
-
-	case stateFromGrabs:
-		// switch state to 'stateFromDragging'
-		switchStateForFrom(stateFromDragging)
+	case sourceStateFinds:
+		// switch state to 'sourceStateGrabs'
+		switchStateForSource(sourceStateGrabs)
 
 		return
 
-	case stateFromDragging:
-		switchStateForTarget(stateSenderIsDraggingObject)
+	case sourceStateGrabs:
+		// switch state to 'sourceStateDragging'
+		switchStateForSource(sourceStateDragging)
+
+		return
+
+	case sourceStateDragging:
+		switchStateForTarget(targetStateSourceIsDraggingObject)
 		// Just continue
 
-	case stateFromReleasingWithOutTarget:
-		fmt.Println("Dragged: 'stateFromReleasingWithOutTarget'")
+	case sourceStateReleasingWithOutTarget:
+		fmt.Println("Dragged: 'sourceStateReleasingWithOutTarget'")
 		return
 
-	case stateFromEnteringTarget:
-		fmt.Println("Dragged: 'stateFromEnteringTarget'")
+	case sourceStateEnteringTarget:
+		fmt.Println("Dragged: 'sourceStateEnteringTarget'")
 		return
 
-	case stateFromReleasingOnTarget:
-		fmt.Println("Dragged: 'stateFromReleasingOnTarget'")
+	case sourceStateReleasingOnTarget:
+		fmt.Println("Dragged: 'sourceStateReleasingOnTarget'")
 		return
 
-	case stateReleasedOnTarget:
-		fmt.Println("Dragged: 'stateReleasedOnTarget'")
+	case sourceStateReleasedOnTarget:
+		fmt.Println("Dragged: 'sourceStateReleasedOnTarget'")
 		return
 
 	default:
@@ -204,37 +218,35 @@ func (t *draggableLabel) DragEnd() {
 
 	switch stateMachineDragFrom.currentState {
 
-	case stateFromSearching:
-		fmt.Println("Dragged: 'stateFromSearching'")
+	case sourceStateSearching:
+		fmt.Println("Dragged: 'sourceStateSearching'")
 		return
 
-	case stateFromFinds:
-		fmt.Println("Dragged: 'stateFromFinds'")
+	case sourceStateFinds:
+		fmt.Println("Dragged: 'sourceStateFinds'")
 		return
 
-	case stateFromGrabs:
-		fmt.Println("Dragged: 'stateFromGrabs'")
+	case sourceStateGrabs:
+		fmt.Println("Dragged: 'sourceStateGrabs'")
 		return
 
-	case stateFromDragging:
-		// switch state to 'stateFromReleasingWithOutTarget'
-		switchStateForFrom(stateFromReleasingWithOutTarget)
-		switchStateForTarget(stateWaitingForSenderToEnteringTarget)
+	case sourceStateDragging:
+		// switch state to 'sourceStateReleasingWithOutTarget'
+		switchStateForSource(sourceStateReleasingWithOutTarget)
+		switchStateForTarget(targetStateWaitingForSourceToEnteringTarget)
 
-	case stateFromReleasingWithOutTarget:
+	case sourceStateReleasingWithOutTarget:
 		// Just continue
 
-	case stateFromEnteringTarget:
-		fmt.Println("Dragged: 'stateFromEnteringTarget'")
+	case sourceStateEnteringTarget:
+		switchStateForSource(sourceStateReleasingOnTarget)
 		return
 
-	case stateFromReleasingOnTarget:
-		fmt.Println("Dragged: 'stateFromReleasingOnTarget'")
-		return
+	case sourceStateReleasingOnTarget:
+		switchStateForSource(sourceStateReleasedOnTarget)
 
-	case stateReleasedOnTarget:
-		fmt.Println("Dragged: 'stateReleasedOnTarget'")
-		return
+	case sourceStateReleasedOnTarget:
+		switchStateForTarget(targetStateSourceReleasedOnTarget)
 
 	default:
 		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragFrom.currentState)
@@ -247,8 +259,8 @@ func (t *draggableLabel) DragEnd() {
 	rectangle2Ref.Hide()
 	containerRef.Refresh()
 
-	// switch state to 'stateFromSearching'
-	switchStateForFrom(stateFromSearching)
+	// switch state to 'sourceStateSearching'
+	switchStateForSource(sourceStateSearching)
 
 }
 
@@ -257,43 +269,37 @@ func (b *draggableLabel) MouseIn(*desktop.MouseEvent) {
 
 	switch stateMachineDragFrom.currentState {
 
-	case stateFromSearching:
-		// switch state to 'stateFromFinds'
-		switchStateForFrom(stateFromFinds)
+	case sourceStateSearching:
+		// Mouse finds draggable object
+		switchStateForSource(sourceStateFinds)
+
+	case sourceStateFinds:
 		return
 
-	case stateFromFinds:
-		fmt.Println("MouseIn: 'stateFromFinds'")
+	case sourceStateGrabs:
 		return
 
-	case stateFromGrabs:
-		fmt.Println("MouseIn: 'stateFromGrabs'")
+	case sourceStateDragging:
 		return
 
-	case stateFromDragging:
-		fmt.Println("MouseIn: 'stateFromDragging'")
+	case sourceStateReleasingWithOutTarget:
 		return
 
-	case stateFromReleasingWithOutTarget:
-		fmt.Println("MouseIn: 'stateFromReleasingWithOutTarget'")
+	case sourceStateEnteringTarget:
 		return
 
-	case stateFromEnteringTarget:
-		fmt.Println("MouseIn: 'stateFromEnteringTarget'")
+	case sourceStateReleasingOnTarget:
 		return
 
-	case stateFromReleasingOnTarget:
-		fmt.Println("MouseIn: 'stateFromReleasingOnTarget'")
-		return
-
-	case stateReleasedOnTarget:
-		fmt.Println("MouseIn: 'stateReleasedOnTarget'")
+	case sourceStateReleasedOnTarget:
 		return
 
 	default:
 		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragFrom.currentState)
 
 	}
+
+	fmt.Println("MouseIn-Source: ", stateMachineDragFrom.currentState, stateMachineTarget.currentState)
 
 }
 
@@ -308,43 +314,37 @@ func (b *draggableLabel) MouseOut() {
 
 	switch stateMachineDragFrom.currentState {
 
-	case stateFromSearching:
-		fmt.Println("MouseOut: 'stateFromSearching'")
+	case sourceStateSearching:
 		return
 
-	case stateFromFinds:
-		// switch state to 'stateFromFinds'
-		switchStateForFrom(stateFromSearching)
+	case sourceStateFinds:
+		// Mouse leaves Draggable Object before grabbing it
+		switchStateForSource(sourceStateSearching)
+
+	case sourceStateGrabs:
 		return
 
-	case stateFromGrabs:
-		fmt.Println("MouseOut: 'stateFromGrabs'")
+	case sourceStateDragging:
 		return
 
-	case stateFromDragging:
-		fmt.Println("MouseOut: 'stateFromDragging'")
+	case sourceStateReleasingWithOutTarget:
 		return
 
-	case stateFromReleasingWithOutTarget:
-		fmt.Println("MouseOut: 'stateFromReleasingWithOutTarget'")
+	case sourceStateEnteringTarget:
 		return
 
-	case stateFromEnteringTarget:
-		fmt.Println("MouseOut: 'stateFromEnteringTarget'")
+	case sourceStateReleasingOnTarget:
 		return
 
-	case stateFromReleasingOnTarget:
-		fmt.Println("MouseOut: 'stateFromReleasingOnTarget'")
-		return
-
-	case stateReleasedOnTarget:
-		fmt.Println("MouseOut: 'stateReleasedOnTarget'")
+	case sourceStateReleasedOnTarget:
 		return
 
 	default:
 		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragFrom.currentState)
 
 	}
+
+	fmt.Println("MouseOut-Source: ", stateMachineDragFrom.currentState, stateMachineTarget.currentState)
 
 }
 
@@ -355,30 +355,30 @@ func (b *droppableLabel) MouseIn(*desktop.MouseEvent) {
 
 	switch stateMachineTarget.currentState {
 
-	case stateWaitingForSenderToEnteringTarget:
-		fmt.Println("MouseOut: 'stateWaitingForSenderToEnteringTarget'")
+	case targetStateWaitingForSourceToEnteringTarget:
 		return
 
-	case stateSenderIsDraggingObject:
-		// switch state to 'stateSenderIsDraggingObject'
-		switchStateForFrom(stateSenderEnteringTarget)
+	case targetStateSourceIsDraggingObject:
+		switchStateForSource(sourceStateEnteringTarget)
+		switchStateForTarget(targetStateSourceEnteredTargetWithObject)
+		b.backgroundRectangle.Show()
+		fmt.Println("Show")
+
+	case targetStateSourceEnteredTargetWithObject:
 		return
 
-	case stateSenderEnteringTarget:
-		switchStateForFrom(stateFromEnteringTarget)
-
-	case stateSenderReleasingOnTarget:
-		fmt.Println("MouseOut: 'stateSenderReleasingOnTarget'")
+	case targetStateSourceReleasingOnTarget:
 		return
 
-	case stateSenderReleasedOnTarget:
-		fmt.Println("MouseOut: 'stateFromReleasingWithOutTarget'")
+	case targetStateSourceReleasedOnTarget:
 		return
 
 	default:
 		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragFrom.currentState)
 
 	}
+
+	fmt.Println("MouseIn-Target: ", stateMachineDragFrom.currentState, stateMachineTarget.currentState)
 
 }
 
@@ -390,6 +390,34 @@ func (b *droppableLabel) MouseMoved(a *desktop.MouseEvent) {
 
 // MouseOut is called when a desktop pointer exits the widget
 func (b *droppableLabel) MouseOut() {
+
+	switch stateMachineTarget.currentState {
+
+	case targetStateWaitingForSourceToEnteringTarget:
+		return
+
+	case targetStateSourceIsDraggingObject:
+		return
+
+	case targetStateSourceEnteredTargetWithObject:
+		// switch state to 'targetStateSourceIsDraggingObject'
+		switchStateForSource(sourceStateDragging)
+		switchStateForTarget(targetStateSourceIsDraggingObject)
+		b.backgroundRectangle.Hide()
+		fmt.Println("Hide")
+
+	case targetStateSourceReleasingOnTarget:
+		return
+
+	case targetStateSourceReleasedOnTarget:
+		return
+
+	default:
+		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragFrom.currentState)
+
+	}
+
+	fmt.Println("MouseOut-Target: ", stateMachineDragFrom.currentState, stateMachineTarget.currentState)
 
 }
 
@@ -529,7 +557,7 @@ func stateMachineExecuteEngineDragAndDrop(doAction bool) {
 
 
 */
-func switchStateForFrom(newState int) {
+func switchStateForSource(newState int) {
 	stateMachineDragFrom.currentState = newState
 }
 

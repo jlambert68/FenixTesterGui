@@ -202,58 +202,8 @@ func (t *draggableLabel) Dragged(ev *fyne.DragEvent) {
 	case sourceStateGrabs:
 		// switch state to 'sourceStateDragging'
 		switchStateForSource(sourceStateDragging)
-		for _, targetLabel := range registeredDroppableTargetLabels {
 
-			targetLabel.backgroundRectangle.StrokeWidth = 2
-			/*targetLabel.backgroundRectangle.StrokeColor = color.RGBA{
-				R: 0xFF,
-				G: 0x00,
-				B: 0x00,
-				A: 0xAA,
-			}
-
-			*/
-			targetLabel.backgroundRectangle.Show()
-			go func(targetReferenceLabel *droppableLabel) {
-				rectangleColorAnimation := canvas.NewColorRGBAAnimation(color.RGBA{
-					R: 0x00,
-					G: 0x00,
-					B: 0x00,
-					A: 0x00,
-				}, color.RGBA{
-					R: 0xFF,
-					G: 0x00,
-					B: 0x00,
-					A: 0xAA,
-				}, time.Millisecond*300, func(c color.Color) {
-					targetReferenceLabel.backgroundRectangle.StrokeColor = c
-					canvas.Refresh(targetReferenceLabel.backgroundRectangle)
-				})
-
-				rectangleSizeAnimation := canvas.NewSizeAnimation(
-					fyne.NewSize(targetReferenceLabel.backgroundRectangle.Size().Width, 0),
-					fyne.NewSize(targetReferenceLabel.backgroundRectangle.Size().Width, labelStandardHeight),
-					time.Millisecond*300,
-					func(animationSize fyne.Size) {
-						targetReferenceLabel.backgroundRectangle.Resize(animationSize)
-						canvas.Refresh(targetReferenceLabel.backgroundRectangle)
-						canvas.Refresh(DropFour)
-						canvas.Refresh(dropContainer)
-					})
-
-				rectangleColorAnimation.Start()
-				rectangleSizeAnimation.Start()
-			}(targetLabel)
-
-			//targetLabel.backgroundRectangle.Refresh()
-		}
-
-		go func() {
-			time.Sleep(2400 * time.Millisecond)
-			for _, targetLabel := range registeredDroppableTargetLabels {
-				targetLabel.Show() // *** NEW ***
-			}
-		}()
+		expandDropAreas()
 
 		return
 
@@ -319,19 +269,22 @@ func (t *draggableLabel) DragEnd() {
 		// switch state to 'sourceStateReleasingWithOutTarget'
 		switchStateForSource(sourceStateReleasingWithOutTarget)
 		switchStateForTarget(targetStateWaitingForSourceToEnteringTarget)
-		for _, targetLabel := range registeredDroppableTargetLabels {
-			targetLabel.Hide() // *** NEW ***
+		/*
+			for _, targetLabel := range registeredDroppableTargetLabels {
+				targetLabel.Hide() // *** NEW ***
 
-			targetLabel.backgroundRectangle.FillColor = color.RGBA{
-				R: 0x00,
-				G: 0x00,
-				B: 0x00,
-				A: 0x00,
+				targetLabel.backgroundRectangle.FillColor = color.RGBA{
+					R: 0x00,
+					G: 0x00,
+					B: 0x00,
+					A: 0x00,
+				}
+				targetLabel.backgroundRectangle.StrokeWidth = 0
+				targetLabel.backgroundRectangle.Hide()
+				targetLabel.backgroundRectangle.Refresh()
 			}
-			targetLabel.backgroundRectangle.StrokeWidth = 0
-			targetLabel.backgroundRectangle.Hide()
-			targetLabel.backgroundRectangle.Refresh()
-		}
+		*/
+		shrinkDropAreas()
 
 	case sourceStateReleasingWithOutTarget:
 		// Just continue
@@ -339,31 +292,26 @@ func (t *draggableLabel) DragEnd() {
 	case sourceStateEnteringTarget:
 		switchStateForSource(sourceStateReleasingOnTarget)
 		switchStateForTarget(targetStateSourceReleasingOnTarget)
+
 		/*
-			stateMachineDragFrom.target.backgroundRectangle.FillColor = color.RGBA{
+			for _, targetLabel := range registeredDroppableTargetLabels {
+				targetLabel.Hide() // *** NEW ***
 
-				R: 0x00,
-				G: 0x00,
-				B: 0x00,
-				A: 0x00,
+				targetLabel.backgroundRectangle.FillColor = color.RGBA{
+					R: 0x00,
+					G: 0x00,
+					B: 0x00,
+					A: 0x00,
+				}
+				targetLabel.backgroundRectangle.StrokeWidth = 0
+
+				targetLabel.backgroundRectangle.Hide()
+				targetLabel.backgroundRectangle.Refresh()
 			}
-			//b.backgroundRectangle.Hide()
-			stateMachineDragFrom.target.backgroundRectangle.Refresh()
+
 		*/
-		for _, targetLabel := range registeredDroppableTargetLabels {
-			targetLabel.Hide() // *** NEW ***
 
-			targetLabel.backgroundRectangle.FillColor = color.RGBA{
-				R: 0x00,
-				G: 0x00,
-				B: 0x00,
-				A: 0x00,
-			}
-			targetLabel.backgroundRectangle.StrokeWidth = 0
-
-			targetLabel.backgroundRectangle.Hide()
-			targetLabel.backgroundRectangle.Refresh()
-		}
+		shrinkDropAreas()
 
 	case sourceStateReleasingOnTarget:
 		switchStateForSource(sourceStateReleasedOnTarget)
@@ -563,4 +511,108 @@ func switchStateForSource(newState int) {
 
 func switchStateForTarget(newState int) {
 	stateMachineTarget.currentState = newState
+}
+
+func expandDropAreas() {
+	for _, targetLabel := range registeredDroppableTargetLabels {
+
+		targetLabel.backgroundRectangle.StrokeWidth = 2
+		/*targetLabel.backgroundRectangle.StrokeColor = color.RGBA{
+			R: 0xFF,
+			G: 0x00,
+			B: 0x00,
+			A: 0xAA,
+		}
+
+		*/
+		targetLabel.backgroundRectangle.Show()
+		go func(targetReferenceLabel *droppableLabel) {
+			rectangleColorAnimation := canvas.NewColorRGBAAnimation(color.RGBA{
+				R: 0x00,
+				G: 0x00,
+				B: 0x00,
+				A: 0x00,
+			}, color.RGBA{
+				R: 0xFF,
+				G: 0x00,
+				B: 0x00,
+				A: 0xAA,
+			}, time.Millisecond*300, func(c color.Color) {
+				targetReferenceLabel.backgroundRectangle.StrokeColor = c
+				canvas.Refresh(targetReferenceLabel.backgroundRectangle)
+			})
+
+			rectangleSizeAnimation := canvas.NewSizeAnimation(
+				fyne.NewSize(targetReferenceLabel.backgroundRectangle.Size().Width, 0),
+				fyne.NewSize(targetReferenceLabel.backgroundRectangle.Size().Width, labelStandardHeight),
+				time.Millisecond*300,
+				func(animationSize fyne.Size) {
+					targetReferenceLabel.backgroundRectangle.SetMinSize(animationSize)
+					canvas.Refresh(targetReferenceLabel.backgroundRectangle)
+					canvas.Refresh(DropFour)
+					canvas.Refresh(dropContainer)
+				})
+
+			rectangleColorAnimation.Start()
+			rectangleSizeAnimation.Start()
+		}(targetLabel)
+
+		//targetLabel.backgroundRectangle.Refresh()
+	}
+
+	go func() {
+		time.Sleep(400 * time.Millisecond)
+		for _, targetLabel := range registeredDroppableTargetLabels {
+			targetLabel.Show() // *** NEW ***
+		}
+	}()
+}
+
+func shrinkDropAreas() {
+	for _, targetLabel := range registeredDroppableTargetLabels {
+
+		targetLabel.Hide()
+
+		targetLabel.backgroundRectangle.StrokeWidth = 2
+		go func(targetReferenceLabel *droppableLabel) {
+			rectangleColorAnimation := canvas.NewColorRGBAAnimation(color.RGBA{
+				R: 0x00,
+				G: 0x00,
+				B: 0x00,
+				A: 0x00,
+			}, color.RGBA{
+				R: 0xFF,
+				G: 0x00,
+				B: 0x00,
+				A: 0xAA,
+			}, time.Millisecond*300, func(c color.Color) {
+				targetReferenceLabel.backgroundRectangle.StrokeColor = c
+				canvas.Refresh(targetReferenceLabel.backgroundRectangle)
+			})
+
+			rectangleSizeAnimation := canvas.NewSizeAnimation(
+				fyne.NewSize(targetReferenceLabel.backgroundRectangle.Size().Width, labelStandardHeight),
+				fyne.NewSize(targetReferenceLabel.backgroundRectangle.Size().Width, 0),
+				time.Millisecond*300,
+				func(animationSize fyne.Size) {
+					targetReferenceLabel.backgroundRectangle.SetMinSize(animationSize)
+					canvas.Refresh(targetReferenceLabel.backgroundRectangle)
+					canvas.Refresh(DropFour)
+					canvas.Refresh(dropContainer)
+				})
+
+			rectangleColorAnimation.Start()
+			rectangleSizeAnimation.Start()
+		}(targetLabel)
+
+	}
+
+	go func() {
+		time.Sleep(400 * time.Millisecond)
+		for _, targetLabel := range registeredDroppableTargetLabels {
+			targetLabel.backgroundRectangle.Hide()
+			targetLabel.backgroundRectangle.Refresh()
+
+		}
+	}()
 }

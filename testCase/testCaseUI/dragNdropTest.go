@@ -266,24 +266,9 @@ func (t *draggableLabel) DragEnd() {
 		return
 
 	case sourceStateDragging:
-		// switch state to 'sourceStateReleasingWithOutTarget'
 		switchStateForSource(sourceStateReleasingWithOutTarget)
 		switchStateForTarget(targetStateWaitingForSourceToEnteringTarget)
-		/*
-			for _, targetLabel := range registeredDroppableTargetLabels {
-				targetLabel.Hide() // *** NEW ***
 
-				targetLabel.backgroundRectangle.FillColor = color.RGBA{
-					R: 0x00,
-					G: 0x00,
-					B: 0x00,
-					A: 0x00,
-				}
-				targetLabel.backgroundRectangle.StrokeWidth = 0
-				targetLabel.backgroundRectangle.Hide()
-				targetLabel.backgroundRectangle.Refresh()
-			}
-		*/
 		shrinkDropAreas()
 
 	case sourceStateReleasingWithOutTarget:
@@ -293,25 +278,23 @@ func (t *draggableLabel) DragEnd() {
 		switchStateForSource(sourceStateReleasingOnTarget)
 		switchStateForTarget(targetStateSourceReleasingOnTarget)
 
-		/*
-			for _, targetLabel := range registeredDroppableTargetLabels {
-				targetLabel.Hide() // *** NEW ***
-
-				targetLabel.backgroundRectangle.FillColor = color.RGBA{
-					R: 0x00,
-					G: 0x00,
-					B: 0x00,
-					A: 0x00,
-				}
-				targetLabel.backgroundRectangle.StrokeWidth = 0
-
-				targetLabel.backgroundRectangle.Hide()
-				targetLabel.backgroundRectangle.Refresh()
-			}
-
-		*/
-
 		shrinkDropAreas()
+
+		for _, droppableTargetLabel := range registeredDroppableTargetLabels {
+			droppableTargetLabel.backgroundRectangle.StrokeWidth = 0
+			droppableTargetLabel.backgroundRectangle.StrokeColor = color.RGBA{
+				R: 0x00,
+				G: 0x00,
+				B: 0x00,
+				A: 0x00,
+			}
+			droppableTargetLabel.backgroundRectangle.FillColor = color.RGBA{
+				R: 0x00,
+				G: 0x00,
+				B: 0x00,
+				A: 0x00,
+			}
+		}
 
 	case sourceStateReleasingOnTarget:
 		switchStateForSource(sourceStateReleasedOnTarget)

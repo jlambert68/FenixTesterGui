@@ -10,6 +10,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"image/color"
 	"log"
+	"time"
 )
 
 // Statea for handling Drag from Source object
@@ -47,30 +48,69 @@ func makeDragNDropTestGUI(textIn *canvas.Text, recIn *canvas.Rectangle, rec2In *
 	dragToDrop1Label := newNoneDroppableLabel("No 5..0000000000000000000000000000000000000")
 	dragToDrop2Label := newDroppableLabel("No 6.000000000000000000000000000000000000000000000000")
 	dragToDrop3Label := newNoneDroppableLabel("No 7.00000000000000000000000000000000000000000000000000000000000000")
+	dragToDrop4Label := newDroppableLabel("No 8.00000000000000000000000000000000000000000000000000000000000000000")
+	dragToDrop5Label := newNoneDroppableLabel("No 9.0000000000000000000000000000000000000000000000000000000000000000000")
+	dragToDrop6Label := newDroppableLabel("No 10.00000000000000000000000000000000000000000000000000000000000000000000000")
 
-	registeredTargetLabels = append(registeredTargetLabels, dragToDrop2Label)
+	registeredDroppableTargetLabels = append(registeredDroppableTargetLabels, dragToDrop2Label)
+	registeredDroppableTargetLabels = append(registeredDroppableTargetLabels, dragToDrop4Label)
+	registeredDroppableTargetLabels = append(registeredDroppableTargetLabels, dragToDrop6Label)
+
+	registeredNoneDroppableTargetLabels = append(registeredNoneDroppableTargetLabels, dragToDrop1Label)
+	registeredNoneDroppableTargetLabels = append(registeredNoneDroppableTargetLabels, dragToDrop3Label)
+	registeredNoneDroppableTargetLabels = append(registeredNoneDroppableTargetLabels, dragToDrop5Label)
 
 	DropOne := container.NewMax(dragToDrop1Label)
 	DropTwo := container.NewMax(dragToDrop2Label.backgroundRectangle, dragToDrop2Label)
 	DropThree := container.NewMax(dragToDrop3Label)
+	DropFour = container.NewMax(dragToDrop4Label.backgroundRectangle, dragToDrop4Label)
+	DropFive := container.NewMax(dragToDrop5Label)
+	DropSix := container.NewMax(dragToDrop6Label.backgroundRectangle, dragToDrop6Label)
+
+	labelStandardHeight = dragToDrop2Label.Size().Height
+
+	//DropTwoThin := container.NewGridWrap(fyne.NewSize(100, dragToDrop2Label.Size().Height/2), DropTwo)
+
+	//registeredThinDroppableContainers = append(registeredThinDroppableContainers, DropTwoThin)
 
 	fromContainer := container.NewHBox(dragFromOneLabel, dragFromTwoLabel)
 	toContainer := container.NewHBox(dragFromThreeLabel, dragFromFourLabel)
-	dropContainer := container.NewVBox(DropOne, DropTwo, DropThree)
+	dropContainer = container.NewVBox(DropOne, DropTwo, DropThree, DropFour, DropFive, DropSix)
 
 	myText := widget.NewLabel("Test Area for Drag n Drop")
 
 	myCanvasObject = container.NewVBox(myText, fromContainer, layout.NewSpacer(), toContainer, dropContainer)
 
+	myCanvasObject.Refresh()
+	/*
+		containerMinSize := myCanvasObject.MinSize()
+		thinHeight := dragToDrop2Label.Size().Height / 2
+
+		for _, thinContainer := range registeredThinDroppableContainers {
+			thinContainer.Resize(fyne.NewSize(containerMinSize.Width, thinHeight))
+		}
+
+		dragToDrop2Label.backgroundRectangle.Resize(fyne.NewSize(containerMinSize.Width, thinHeight))
+
+		dragToDrop2Label.Refresh()
+
+
+	*/
 	return myCanvasObject
 }
 
-var registeredTargetLabels []*droppableLabel
+var DropFour *fyne.Container
+var dropContainer *fyne.Container
+
+var registeredDroppableTargetLabels []*droppableLabel
+var registeredNoneDroppableTargetLabels []*noneDroppableLabel
+var registeredThinDroppableContainers []*fyne.Container
 
 var textRef *canvas.Text
 var rectangleRef *canvas.Rectangle
 var rectangle2Ref *canvas.Rectangle
 var containerRef *fyne.Container
+var labelStandardHeight float32
 
 //****************************************************
 type draggableLabel struct {
@@ -136,6 +176,7 @@ func newNoneDroppableLabel(uuid string) *noneDroppableLabel {
 // Structure for 'Drag-part of 'Drag-N-Drop' state machine
 type StateMachineStruct struct {
 	currentState int
+	target       droppableLabel
 }
 
 var stateMachineDragFrom StateMachineStruct
@@ -150,7 +191,6 @@ func (t *draggableLabel) Dragged(ev *fyne.DragEvent) {
 	switch stateMachineDragFrom.currentState {
 
 	case sourceStateSearching:
-		fmt.Println("Dragged: 'sourceStateSearching'")
 		return
 
 	case sourceStateFinds:
@@ -162,18 +202,58 @@ func (t *draggableLabel) Dragged(ev *fyne.DragEvent) {
 	case sourceStateGrabs:
 		// switch state to 'sourceStateDragging'
 		switchStateForSource(sourceStateDragging)
-		for _, targetLabel := range registeredTargetLabels {
+		for _, targetLabel := range registeredDroppableTargetLabels {
 
 			targetLabel.backgroundRectangle.StrokeWidth = 2
-			targetLabel.backgroundRectangle.StrokeColor = color.RGBA{
+			/*targetLabel.backgroundRectangle.StrokeColor = color.RGBA{
 				R: 0xFF,
 				G: 0x00,
 				B: 0x00,
 				A: 0xAA,
 			}
+
+			*/
 			targetLabel.backgroundRectangle.Show()
-			targetLabel.backgroundRectangle.Refresh()
+			go func(targetReferenceLabel *droppableLabel) {
+				rectangleColorAnimation := canvas.NewColorRGBAAnimation(color.RGBA{
+					R: 0x00,
+					G: 0x00,
+					B: 0x00,
+					A: 0x00,
+				}, color.RGBA{
+					R: 0xFF,
+					G: 0x00,
+					B: 0x00,
+					A: 0xAA,
+				}, time.Millisecond*300, func(c color.Color) {
+					targetReferenceLabel.backgroundRectangle.StrokeColor = c
+					canvas.Refresh(targetReferenceLabel.backgroundRectangle)
+				})
+
+				rectangleSizeAnimation := canvas.NewSizeAnimation(
+					fyne.NewSize(targetReferenceLabel.backgroundRectangle.Size().Width, 0),
+					fyne.NewSize(targetReferenceLabel.backgroundRectangle.Size().Width, labelStandardHeight),
+					time.Millisecond*300,
+					func(animationSize fyne.Size) {
+						targetReferenceLabel.backgroundRectangle.Resize(animationSize)
+						canvas.Refresh(targetReferenceLabel.backgroundRectangle)
+						canvas.Refresh(DropFour)
+						canvas.Refresh(dropContainer)
+					})
+
+				rectangleColorAnimation.Start()
+				rectangleSizeAnimation.Start()
+			}(targetLabel)
+
+			//targetLabel.backgroundRectangle.Refresh()
 		}
+
+		go func() {
+			time.Sleep(2400 * time.Millisecond)
+			for _, targetLabel := range registeredDroppableTargetLabels {
+				targetLabel.Show() // *** NEW ***
+			}
+		}()
 
 		return
 
@@ -182,19 +262,14 @@ func (t *draggableLabel) Dragged(ev *fyne.DragEvent) {
 		// Just continue
 
 	case sourceStateReleasingWithOutTarget:
-		fmt.Println("Dragged: 'sourceStateReleasingWithOutTarget'")
 		return
 
 	case sourceStateEnteringTarget:
-		fmt.Println("Dragged: 'sourceStateEnteringTarget'")
-		return
 
 	case sourceStateReleasingOnTarget:
-		fmt.Println("Dragged: 'sourceStateReleasingOnTarget'")
 		return
 
 	case sourceStateReleasedOnTarget:
-		fmt.Println("Dragged: 'sourceStateReleasedOnTarget'")
 		return
 
 	default:
@@ -232,31 +307,28 @@ func (t *draggableLabel) DragEnd() {
 	switch stateMachineDragFrom.currentState {
 
 	case sourceStateSearching:
-		fmt.Println("Dragged: 'sourceStateSearching'")
 		return
 
 	case sourceStateFinds:
-		fmt.Println("Dragged: 'sourceStateFinds'")
 		return
 
 	case sourceStateGrabs:
-		fmt.Println("Dragged: 'sourceStateGrabs'")
 		return
 
 	case sourceStateDragging:
 		// switch state to 'sourceStateReleasingWithOutTarget'
 		switchStateForSource(sourceStateReleasingWithOutTarget)
 		switchStateForTarget(targetStateWaitingForSourceToEnteringTarget)
-		for _, targetLabel := range registeredTargetLabels {
+		for _, targetLabel := range registeredDroppableTargetLabels {
+			targetLabel.Hide() // *** NEW ***
+
+			targetLabel.backgroundRectangle.FillColor = color.RGBA{
+				R: 0x00,
+				G: 0x00,
+				B: 0x00,
+				A: 0x00,
+			}
 			targetLabel.backgroundRectangle.StrokeWidth = 0
-			/*
-				targetLabel.backgroundRectangle.FillColor = color.RGBA{
-					R: 0x00,
-					G: 0x00,
-					B: 0x00,
-					A: 0x00,
-				}
-			*/
 			targetLabel.backgroundRectangle.Hide()
 			targetLabel.backgroundRectangle.Refresh()
 		}
@@ -267,7 +339,31 @@ func (t *draggableLabel) DragEnd() {
 	case sourceStateEnteringTarget:
 		switchStateForSource(sourceStateReleasingOnTarget)
 		switchStateForTarget(targetStateSourceReleasingOnTarget)
-		return
+		/*
+			stateMachineDragFrom.target.backgroundRectangle.FillColor = color.RGBA{
+
+				R: 0x00,
+				G: 0x00,
+				B: 0x00,
+				A: 0x00,
+			}
+			//b.backgroundRectangle.Hide()
+			stateMachineDragFrom.target.backgroundRectangle.Refresh()
+		*/
+		for _, targetLabel := range registeredDroppableTargetLabels {
+			targetLabel.Hide() // *** NEW ***
+
+			targetLabel.backgroundRectangle.FillColor = color.RGBA{
+				R: 0x00,
+				G: 0x00,
+				B: 0x00,
+				A: 0x00,
+			}
+			targetLabel.backgroundRectangle.StrokeWidth = 0
+
+			targetLabel.backgroundRectangle.Hide()
+			targetLabel.backgroundRectangle.Refresh()
+		}
 
 	case sourceStateReleasingOnTarget:
 		switchStateForSource(sourceStateReleasedOnTarget)
@@ -332,7 +428,6 @@ func (b *draggableLabel) MouseIn(*desktop.MouseEvent) {
 
 // MouseMoved is called when a desktop pointer hovers over the widget
 func (b *draggableLabel) MouseMoved(a *desktop.MouseEvent) {
-	//log.Println("I have been 'MouseMoved' ", b.uuid)
 
 }
 
@@ -397,7 +492,8 @@ func (b *droppableLabel) MouseIn(*desktop.MouseEvent) {
 
 		b.backgroundRectangle.Show()
 		b.backgroundRectangle.Refresh()
-		fmt.Println("Show")
+
+		stateMachineDragFrom.target = *b
 
 	case targetStateSourceEnteredTargetWithObject:
 		return
@@ -419,7 +515,6 @@ func (b *droppableLabel) MouseIn(*desktop.MouseEvent) {
 
 // MouseMoved is called when a desktop pointer hovers over the widget
 func (b *droppableLabel) MouseMoved(a *desktop.MouseEvent) {
-	//log.Println("I have been 'MouseMoved' ", b.uuid)
 
 }
 
@@ -446,10 +541,8 @@ func (b *droppableLabel) MouseOut() {
 		}
 		//b.backgroundRectangle.Hide()
 		b.backgroundRectangle.Refresh()
-		fmt.Println("Hide")
 
 	case targetStateSourceReleasingOnTarget:
-		fmt.Println("Out we go")
 		return
 
 	case targetStateSourceReleasedOnTarget:

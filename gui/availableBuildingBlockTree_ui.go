@@ -1,6 +1,7 @@
 package gui
 
 import (
+	"FenixTesterGui/testUIDragNDropStatemachine"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
@@ -49,13 +50,17 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 		},
 
 		CreateNode: func(branch bool) fyne.CanvasObject {
-			fmt.Println("CreateNode: ")
+			//fmt.Println("CreateNode: ")
 			//return newTappableLabel() //widget.NewLabel("Collection Widgets: ")
-			return widget.NewLabel("xxxx")
+
+			// Decide if the Node should be of standard 'Label-type' or 'Draggable-Label-type'
+
+			return uiServer.testCasesUiModel.DragNDropStateMachine.NewDraggableLabel("xxxxx")
+			//return widget.NewLabel("xxxx")
 		},
 
 		UpdateNode: func(uid string, branch bool, obj fyne.CanvasObject) {
-			fmt.Println("UpdateNode: ", uid)
+			//fmt.Println("UpdateNode: ", uid)
 			/*
 				_, ok := list[uid]
 				if !ok {
@@ -64,12 +69,19 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 				}
 			*/
 			//obj.(*tappableLabel).SetText(uid) //obj.(*widget.Label).SetText(uid) // + time.Now().String())
-			obj.(*widget.Label).SetText(uid)
-			fmt.Println(tree.Size())
+			obj.(*testUIDragNDropStatemachine.DraggableLabel).SetText(uid)
+			obj.(*testUIDragNDropStatemachine.DraggableLabel).SourceUuid = uid
+			_, existInMap := uiServer.availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid[uid]
+			if existInMap == true {
+				obj.(*testUIDragNDropStatemachine.DraggableLabel).IsDraggable = true
+			} else {
+				obj.(*testUIDragNDropStatemachine.DraggableLabel).IsDraggable = false
+			}
+
 		},
 
 		OnSelected: func(uid string) {
-			fmt.Println(uid, uiServer.availableBuildingBlocksModel.getAvailableBuildingBlocksModel()[uid])
+			//fmt.Println(uid, uiServer.availableBuildingBlocksModel.getAvailableBuildingBlocksModel()[uid])
 			uiServer.availableBuildingBlocksModel.clickedNodeName = uid
 
 			//if t, ok := list[uid]; ok {

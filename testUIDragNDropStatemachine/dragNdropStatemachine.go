@@ -94,12 +94,13 @@ var containerRef *fyne.Container
 var labelStandardHeight float32
 
 //****************************************************
-type draggableLabel struct {
+type DraggableLabel struct {
 	widget.Label
-	sourceUuid string
+	SourceUuid  string
+	IsDraggable bool
 }
 
-type droppableLabel struct {
+type DroppableLabel struct {
 	widget.Label
 	targetUuid          string
 	backgroundRectangle *canvas.Rectangle
@@ -122,18 +123,18 @@ func (stateMachine *StateMachineDragAndDropStruct) InitiateStateStateMachine(dra
 
 //****************************************************
 
-func (stateMachine *StateMachineDragAndDropStruct) NewDraggableLabel(uuid string) *draggableLabel {
-	draggableLabel := &draggableLabel{}
+func (stateMachine *StateMachineDragAndDropStruct) NewDraggableLabel(uuid string) *DraggableLabel {
+	draggableLabel := &DraggableLabel{}
 	draggableLabel.ExtendBaseWidget(draggableLabel)
 
-	draggableLabel.sourceUuid = uuid
+	draggableLabel.SourceUuid = uuid
 	draggableLabel.Text = uuid
 
 	return draggableLabel
 }
 
-func (stateMachine *StateMachineDragAndDropStruct) NewDroppableLabel(uuid string) *droppableLabel {
-	droppableLabel := &droppableLabel{}
+func (stateMachine *StateMachineDragAndDropStruct) NewDroppableLabel(uuid string) *DroppableLabel {
+	droppableLabel := &DroppableLabel{}
 	droppableLabel.ExtendBaseWidget(droppableLabel)
 
 	droppableLabel.targetUuid = uuid
@@ -167,9 +168,9 @@ func newNoneDroppableLabel(uuid string) *noneDroppableLabel {
 type StateMachineDragAndDropStruct struct {
 	sourceStateMachine              stateMachineSourceAndDestinationStruct
 	targetStateMachine              stateMachineSourceAndDestinationStruct
-	registeredDroppableTargetLabels []*droppableLabel
+	registeredDroppableTargetLabels []*DroppableLabel
 	sourceUuid                      string
-	target                          droppableLabel
+	target                          DroppableLabel
 }
 
 // Structure for 'Drag-part of 'Drag-N-Drop' state machine
@@ -183,7 +184,7 @@ var stateMachineDragAndDrop StateMachineDragAndDropStruct
 
 // Dragged
 // When the user press down the mouse button this event is triggered
-func (t *draggableLabel) Dragged(ev *fyne.DragEvent) {
+func (t *DraggableLabel) Dragged(ev *fyne.DragEvent) {
 
 	switch stateMachineDragAndDrop.sourceStateMachine.currentState {
 
@@ -199,7 +200,7 @@ func (t *draggableLabel) Dragged(ev *fyne.DragEvent) {
 	case sourceStateGrabs:
 		// switch state to 'sourceStateDragging'
 		switchStateForSource(sourceStateDragging)
-		stateMachineDragAndDrop.sourceUuid = t.sourceUuid
+		stateMachineDragAndDrop.sourceUuid = t.SourceUuid
 
 		expandDropAreas()
 
@@ -226,7 +227,7 @@ func (t *draggableLabel) Dragged(ev *fyne.DragEvent) {
 	}
 
 	// Change Text of 'Drag N Drop'-object
-	textRef.Text = t.sourceUuid
+	textRef.Text = t.SourceUuid
 
 	// Change size of 'Drag N Drop'-object text backgrounds
 	rectangleRef.SetMinSize(textRef.Size().Add(fyne.NewSize(40, 40)))
@@ -250,7 +251,7 @@ func (t *draggableLabel) Dragged(ev *fyne.DragEvent) {
 
 // DragEnd
 // When the user release the mouse button this event is triggered
-func (t *draggableLabel) DragEnd() {
+func (t *DraggableLabel) DragEnd() {
 
 	switch stateMachineDragAndDrop.sourceStateMachine.currentState {
 
@@ -321,13 +322,15 @@ func (t *draggableLabel) DragEnd() {
 }
 
 // MouseIn is called when a desktop pointer enters the widget
-func (b *draggableLabel) MouseIn(*desktop.MouseEvent) {
+func (b *DraggableLabel) MouseIn(*desktop.MouseEvent) {
 
 	switch stateMachineDragAndDrop.sourceStateMachine.currentState {
 
 	case sourceStateSearching:
 		// Mouse finds draggable object
-		switchStateForSource(sourceStateFinds)
+		if b.IsDraggable == true {
+			switchStateForSource(sourceStateFinds)
+		}
 
 	case sourceStateFinds:
 		return
@@ -358,12 +361,12 @@ func (b *draggableLabel) MouseIn(*desktop.MouseEvent) {
 }
 
 // MouseMoved is called when a desktop pointer hovers over the widget
-func (b *draggableLabel) MouseMoved(a *desktop.MouseEvent) {
+func (b *DraggableLabel) MouseMoved(a *desktop.MouseEvent) {
 
 }
 
 // MouseOut is called when a desktop pointer exits the widget
-func (b *draggableLabel) MouseOut() {
+func (b *DraggableLabel) MouseOut() {
 
 	switch stateMachineDragAndDrop.sourceStateMachine.currentState {
 
@@ -402,7 +405,7 @@ func (b *draggableLabel) MouseOut() {
 // ***** The Object from the Drop Ends *****
 
 // MouseIn is called when a desktop pointer enters the widget
-func (b *droppableLabel) MouseIn(*desktop.MouseEvent) {
+func (b *DroppableLabel) MouseIn(*desktop.MouseEvent) {
 
 	switch stateMachineDragAndDrop.targetStateMachine.currentState {
 
@@ -441,12 +444,12 @@ func (b *droppableLabel) MouseIn(*desktop.MouseEvent) {
 }
 
 // MouseMoved is called when a desktop pointer hovers over the widget
-func (b *droppableLabel) MouseMoved(a *desktop.MouseEvent) {
+func (b *DroppableLabel) MouseMoved(a *desktop.MouseEvent) {
 
 }
 
 // MouseOut is called when a desktop pointer exits the widget
-func (b *droppableLabel) MouseOut() {
+func (b *DroppableLabel) MouseOut() {
 
 	switch stateMachineDragAndDrop.targetStateMachine.currentState {
 
@@ -496,7 +499,7 @@ func expandDropAreas() {
 		targetLabel.backgroundRectangle.StrokeWidth = 2
 
 		targetLabel.backgroundRectangle.Show()
-		go func(targetReferenceLabel *droppableLabel) {
+		go func(targetReferenceLabel *DroppableLabel) {
 			rectangleColorAnimation := canvas.NewColorRGBAAnimation(color.RGBA{
 				R: 0x00,
 				G: 0x00,
@@ -543,7 +546,7 @@ func shrinkDropAreas() {
 		targetLabel.Hide()
 
 		targetLabel.backgroundRectangle.StrokeWidth = 2
-		go func(targetReferenceLabel *droppableLabel) {
+		go func(targetReferenceLabel *DroppableLabel) {
 			rectangleColorAnimation := canvas.NewColorRGBAAnimation(color.RGBA{
 				R: 0x00,
 				G: 0x00,

@@ -584,9 +584,23 @@ func (uiServer *UIServerStruct) getUuidFromTreeName(uiTreeName string) (building
 	firstSquareBracketStart := strings.Index(uiTreeName, "[")
 	firstSquareBracketEnd := strings.Index(uiTreeName, "]")
 
+	if firstSquareBracketStart == -1 || firstSquareBracketEnd == -1 {
+		errorId := "65b8f415-281d-46c9-b133-df1168683a03"
+		err = errors.New(fmt.Sprintf("problem with finding first par of '[' or ']' in avaialble building block-name '%s' in testcase '%s' [ErrorID: %s]", uiTreeName, errorId))
+
+		return "", -1, err
+	}
+
 	// Get second square brackets, for type
 	secondSquareBracketStart := strings.Index(uiTreeName[firstSquareBracketEnd+1:], "[")
 	secondSquareBracketEnd := strings.Index(uiTreeName[firstSquareBracketEnd+1:], "]")
+
+	if secondSquareBracketStart == -1 || secondSquareBracketEnd == -1 {
+		errorId := "814c80b7-3759-46ad-b9e6-ddaa84f8a642"
+		err = errors.New(fmt.Sprintf("problem with finding second par of '[' or ']' in avaialble building block-name '%s' in testcase '%s' [ErrorID: %s]", uiTreeName, errorId))
+
+		return "", -1, err
+	}
 
 	// Extract UUID-part
 	uuidPart := uiTreeName[firstSquareBracketStart+1 : firstSquareBracketEnd]

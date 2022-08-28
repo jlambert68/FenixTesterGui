@@ -317,6 +317,12 @@ func (uiServer *UIServerStruct) loadUI() fyne.CanvasObject {
 	uiServer.testCasesUiModel.DragNDropObject.DragNDropRectangleTextBackground = draggingTextBackgroundRectangle
 	uiServer.testCasesUiModel.DragNDropObject.DragNDropContainer = contentGroupDragginObject
 
+	uiServer.testCasesUiModel.DragNDropStateMachine.InitiateStateStateMachine(
+		uiServer.testCasesUiModel.DragNDropObject.DragNDropText,
+		uiServer.testCasesUiModel.DragNDropObject.DragNDropRectangle,
+		uiServer.testCasesUiModel.DragNDropObject.DragNDropRectangleTextBackground,
+		uiServer.testCasesUiModel.DragNDropObject.DragNDropContainer)
+
 	// ****************************
 	// TODO Used for Testing only and can be removed
 	// Add Text to be used for Drag n Drop, for now it's for testing only

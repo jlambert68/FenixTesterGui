@@ -1,12 +1,10 @@
-package testCaseUI
+package testUIDragNDropStatemachine
 
 import (
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"image/color"
 	"log"
@@ -34,6 +32,7 @@ const (
 	targetStateSourceReleasedOnTarget                  // 4
 )
 
+/*
 func makeDragNDropTestGUI(textIn *canvas.Text, recIn *canvas.Rectangle, rec2In *canvas.Rectangle, containerIn *fyne.Container) (myCanvasObject fyne.CanvasObject) {
 
 	textRef = textIn
@@ -41,24 +40,20 @@ func makeDragNDropTestGUI(textIn *canvas.Text, recIn *canvas.Rectangle, rec2In *
 	rectangle2Ref = rec2In
 	containerRef = containerIn
 
-	dragFromOneLabel := newDraggableLabel("No 1")
-	dragFromTwoLabel := newDraggableLabel("No 2.000000")
-	dragFromThreeLabel := newDraggableLabel("No 3..00000000000000000")
-	dragFromFourLabel := newDraggableLabel("No 4.0000000000000000000000000000000")
+	dragFromOneLabel := NewDraggableLabel("No 1")
+	dragFromTwoLabel := NewDraggableLabel("No 2.000000")
+	dragFromThreeLabel := NewDraggableLabel("No 3..00000000000000000")
+	dragFromFourLabel := NewDraggableLabel("No 4.0000000000000000000000000000000")
 	dragToDrop1Label := newNoneDroppableLabel("No 5..0000000000000000000000000000000000000")
-	dragToDrop2Label := newDroppableLabel("No 6.000000000000000000000000000000000000000000000000")
+	dragToDrop2Label := NewDroppableLabel("No 6.000000000000000000000000000000000000000000000000")
 	dragToDrop3Label := newNoneDroppableLabel("No 7.00000000000000000000000000000000000000000000000000000000000000")
-	dragToDrop4Label := newDroppableLabel("No 8.00000000000000000000000000000000000000000000000000000000000000000")
+	dragToDrop4Label := NewDroppableLabel("No 8.00000000000000000000000000000000000000000000000000000000000000000")
 	dragToDrop5Label := newNoneDroppableLabel("No 9.0000000000000000000000000000000000000000000000000000000000000000000")
-	dragToDrop6Label := newDroppableLabel("No 10.00000000000000000000000000000000000000000000000000000000000000000000000")
+	dragToDrop6Label := NewDroppableLabel("No 10.00000000000000000000000000000000000000000000000000000000000000000000000")
 
 	registeredDroppableTargetLabels = append(registeredDroppableTargetLabels, dragToDrop2Label)
 	registeredDroppableTargetLabels = append(registeredDroppableTargetLabels, dragToDrop4Label)
 	registeredDroppableTargetLabels = append(registeredDroppableTargetLabels, dragToDrop6Label)
-
-	registeredNoneDroppableTargetLabels = append(registeredNoneDroppableTargetLabels, dragToDrop1Label)
-	registeredNoneDroppableTargetLabels = append(registeredNoneDroppableTargetLabels, dragToDrop3Label)
-	registeredNoneDroppableTargetLabels = append(registeredNoneDroppableTargetLabels, dragToDrop5Label)
 
 	DropOne := container.NewMax(dragToDrop1Label)
 	DropTwo := container.NewMax(dragToDrop2Label.backgroundRectangle, dragToDrop2Label)
@@ -82,30 +77,16 @@ func makeDragNDropTestGUI(textIn *canvas.Text, recIn *canvas.Rectangle, rec2In *
 	myCanvasObject = container.NewVBox(myText, fromContainer, layout.NewSpacer(), toContainer, dropContainer)
 
 	myCanvasObject.Refresh()
-	/*
-		containerMinSize := myCanvasObject.MinSize()
-		thinHeight := dragToDrop2Label.Size().Height / 2
 
-		for _, thinContainer := range registeredThinDroppableContainers {
-			thinContainer.Resize(fyne.NewSize(containerMinSize.Width, thinHeight))
-		}
-
-		dragToDrop2Label.backgroundRectangle.Resize(fyne.NewSize(containerMinSize.Width, thinHeight))
-
-		dragToDrop2Label.Refresh()
-
-
-	*/
 	return myCanvasObject
 }
 
-var DropFour *fyne.Container
-var dropContainer *fyne.Container
+*/
 
-var registeredDroppableTargetLabels []*droppableLabel
-var registeredNoneDroppableTargetLabels []*noneDroppableLabel
-var registeredThinDroppableContainers []*fyne.Container
+//var DropFour *fyne.Container
+//var dropContainer *fyne.Container
 
+// Local variables for the Drag n Drop object
 var textRef *canvas.Text
 var rectangleRef *canvas.Rectangle
 var rectangle2Ref *canvas.Rectangle
@@ -129,9 +110,19 @@ type noneDroppableLabel struct {
 	uuid string
 }
 
+// InitiateStateStateMachine
+// InitiateState State machine
+func (stateMachine *StateMachineDragAndDropStruct) InitiateStateStateMachine(dragNDropText *canvas.Text, dragNDropRectangleRef *canvas.Rectangle, dragNDropRectangle2Ref *canvas.Rectangle, dragNDropContainerRef *fyne.Container) {
+	textRef = dragNDropText
+	rectangleRef = dragNDropRectangleRef
+	rectangle2Ref = dragNDropRectangle2Ref
+	containerRef = dragNDropContainerRef
+
+}
+
 //****************************************************
 
-func newDraggableLabel(uuid string) *draggableLabel {
+func (stateMachine *StateMachineDragAndDropStruct) NewDraggableLabel(uuid string) *draggableLabel {
 	draggableLabel := &draggableLabel{}
 	draggableLabel.ExtendBaseWidget(draggableLabel)
 
@@ -141,7 +132,7 @@ func newDraggableLabel(uuid string) *draggableLabel {
 	return draggableLabel
 }
 
-func newDroppableLabel(uuid string) *droppableLabel {
+func (stateMachine *StateMachineDragAndDropStruct) NewDroppableLabel(uuid string) *droppableLabel {
 	droppableLabel := &droppableLabel{}
 	droppableLabel.ExtendBaseWidget(droppableLabel)
 
@@ -173,23 +164,20 @@ func newNoneDroppableLabel(uuid string) *noneDroppableLabel {
 
 //****************************************************
 
-type stateMachineDragAndDropStruct struct {
-	sourceStateMachine StateMachineSouceAndDestinationStruct
-	targetStateMachine StateMachineSouceAndDestinationStruct
-	sourceUuid         string
-	target             droppableLabel
+type StateMachineDragAndDropStruct struct {
+	sourceStateMachine              stateMachineSourceAndDestinationStruct
+	targetStateMachine              stateMachineSourceAndDestinationStruct
+	registeredDroppableTargetLabels []*droppableLabel
+	sourceUuid                      string
+	target                          droppableLabel
 }
 
 // Structure for 'Drag-part of 'Drag-N-Drop' state machine
-type StateMachineSouceAndDestinationStruct struct {
+type stateMachineSourceAndDestinationStruct struct {
 	currentState int
-	//target       droppableLabel
-	//currentUuid  string
 }
 
-var stateMachineDragAndDrop stateMachineDragAndDropStruct
-var stateMachineDragFrom StateMachineSouceAndDestinationStruct
-var stateMachineTarget StateMachineSouceAndDestinationStruct
+var stateMachineDragAndDrop StateMachineDragAndDropStruct
 
 // ***** The Object from the Drag starts *****
 
@@ -197,7 +185,7 @@ var stateMachineTarget StateMachineSouceAndDestinationStruct
 // When the user press down the mouse button this event is triggered
 func (t *draggableLabel) Dragged(ev *fyne.DragEvent) {
 
-	switch stateMachineDragFrom.currentState {
+	switch stateMachineDragAndDrop.sourceStateMachine.currentState {
 
 	case sourceStateSearching:
 		return
@@ -233,7 +221,7 @@ func (t *draggableLabel) Dragged(ev *fyne.DragEvent) {
 		return
 
 	default:
-		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragFrom.currentState)
+		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragAndDrop.sourceStateMachine.currentState)
 
 	}
 
@@ -264,7 +252,7 @@ func (t *draggableLabel) Dragged(ev *fyne.DragEvent) {
 // When the user release the mouse button this event is triggered
 func (t *draggableLabel) DragEnd() {
 
-	switch stateMachineDragFrom.currentState {
+	switch stateMachineDragAndDrop.sourceStateMachine.currentState {
 
 	case sourceStateSearching:
 		return
@@ -292,7 +280,7 @@ func (t *draggableLabel) DragEnd() {
 
 		shrinkDropAreas()
 
-		for _, droppableTargetLabel := range registeredDroppableTargetLabels {
+		for _, droppableTargetLabel := range stateMachineDragAndDrop.registeredDroppableTargetLabels {
 			droppableTargetLabel.backgroundRectangle.StrokeWidth = 0
 			droppableTargetLabel.backgroundRectangle.StrokeColor = color.RGBA{
 				R: 0x00,
@@ -317,7 +305,7 @@ func (t *draggableLabel) DragEnd() {
 		switchStateForTarget(targetStateSourceReleasedOnTarget)
 
 	default:
-		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragFrom.currentState)
+		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragAndDrop.sourceStateMachine.currentState)
 
 	}
 
@@ -335,7 +323,7 @@ func (t *draggableLabel) DragEnd() {
 // MouseIn is called when a desktop pointer enters the widget
 func (b *draggableLabel) MouseIn(*desktop.MouseEvent) {
 
-	switch stateMachineDragFrom.currentState {
+	switch stateMachineDragAndDrop.sourceStateMachine.currentState {
 
 	case sourceStateSearching:
 		// Mouse finds draggable object
@@ -363,7 +351,7 @@ func (b *draggableLabel) MouseIn(*desktop.MouseEvent) {
 		return
 
 	default:
-		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragFrom.currentState)
+		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragAndDrop.sourceStateMachine.currentState)
 
 	}
 
@@ -377,7 +365,7 @@ func (b *draggableLabel) MouseMoved(a *desktop.MouseEvent) {
 // MouseOut is called when a desktop pointer exits the widget
 func (b *draggableLabel) MouseOut() {
 
-	switch stateMachineDragFrom.currentState {
+	switch stateMachineDragAndDrop.sourceStateMachine.currentState {
 
 	case sourceStateSearching:
 		return
@@ -405,7 +393,7 @@ func (b *draggableLabel) MouseOut() {
 		return
 
 	default:
-		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragFrom.currentState)
+		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragAndDrop.sourceStateMachine.currentState)
 
 	}
 
@@ -416,7 +404,7 @@ func (b *draggableLabel) MouseOut() {
 // MouseIn is called when a desktop pointer enters the widget
 func (b *droppableLabel) MouseIn(*desktop.MouseEvent) {
 
-	switch stateMachineTarget.currentState {
+	switch stateMachineDragAndDrop.targetStateMachine.currentState {
 
 	case targetStateWaitingForSourceToEnteringTarget:
 		return
@@ -446,7 +434,7 @@ func (b *droppableLabel) MouseIn(*desktop.MouseEvent) {
 		return
 
 	default:
-		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragFrom.currentState)
+		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragAndDrop.targetStateMachine.currentState)
 
 	}
 
@@ -460,7 +448,7 @@ func (b *droppableLabel) MouseMoved(a *desktop.MouseEvent) {
 // MouseOut is called when a desktop pointer exits the widget
 func (b *droppableLabel) MouseOut() {
 
-	switch stateMachineTarget.currentState {
+	switch stateMachineDragAndDrop.targetStateMachine.currentState {
 
 	case targetStateWaitingForSourceToEnteringTarget:
 		return
@@ -488,32 +476,25 @@ func (b *droppableLabel) MouseOut() {
 		return
 
 	default:
-		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragFrom.currentState)
+		log.Fatalln("Unhandled state for StateMachine(From): ", stateMachineDragAndDrop.targetStateMachine.currentState)
 
 	}
 
 }
 
 func switchStateForSource(newState int) {
-	stateMachineDragFrom.currentState = newState
+	stateMachineDragAndDrop.sourceStateMachine.currentState = newState
 }
 
 func switchStateForTarget(newState int) {
-	stateMachineTarget.currentState = newState
+	stateMachineDragAndDrop.targetStateMachine.currentState = newState
 }
 
 func expandDropAreas() {
-	for _, targetLabel := range registeredDroppableTargetLabels {
+	for _, targetLabel := range stateMachineDragAndDrop.registeredDroppableTargetLabels {
 
 		targetLabel.backgroundRectangle.StrokeWidth = 2
-		/*targetLabel.backgroundRectangle.StrokeColor = color.RGBA{
-			R: 0xFF,
-			G: 0x00,
-			B: 0x00,
-			A: 0xAA,
-		}
 
-		*/
 		targetLabel.backgroundRectangle.Show()
 		go func(targetReferenceLabel *droppableLabel) {
 			rectangleColorAnimation := canvas.NewColorRGBAAnimation(color.RGBA{
@@ -538,27 +519,26 @@ func expandDropAreas() {
 				func(animationSize fyne.Size) {
 					targetReferenceLabel.backgroundRectangle.SetMinSize(animationSize)
 					canvas.Refresh(targetReferenceLabel.backgroundRectangle)
-					canvas.Refresh(DropFour)
-					canvas.Refresh(dropContainer)
+					//canvas.Refresh(DropFour)
+					//canvas.Refresh(dropContainer)
 				})
 
 			rectangleColorAnimation.Start()
 			rectangleSizeAnimation.Start()
 		}(targetLabel)
 
-		//targetLabel.backgroundRectangle.Refresh()
 	}
 
 	go func() {
 		time.Sleep(400 * time.Millisecond)
-		for _, targetLabel := range registeredDroppableTargetLabels {
-			targetLabel.Show() // *** NEW ***
+		for _, targetLabel := range stateMachineDragAndDrop.registeredDroppableTargetLabels {
+			targetLabel.Show()
 		}
 	}()
 }
 
 func shrinkDropAreas() {
-	for _, targetLabel := range registeredDroppableTargetLabels {
+	for _, targetLabel := range stateMachineDragAndDrop.registeredDroppableTargetLabels {
 
 		targetLabel.Hide()
 
@@ -586,8 +566,8 @@ func shrinkDropAreas() {
 				func(animationSize fyne.Size) {
 					targetReferenceLabel.backgroundRectangle.SetMinSize(animationSize)
 					canvas.Refresh(targetReferenceLabel.backgroundRectangle)
-					canvas.Refresh(DropFour)
-					canvas.Refresh(dropContainer)
+					//canvas.Refresh(DropFour)
+					//canvas.Refresh(dropContainer)
 				})
 
 			rectangleColorAnimation.Start()
@@ -598,7 +578,7 @@ func shrinkDropAreas() {
 
 	go func() {
 		time.Sleep(400 * time.Millisecond)
-		for _, targetLabel := range registeredDroppableTargetLabels {
+		for _, targetLabel := range stateMachineDragAndDrop.registeredDroppableTargetLabels {
 			targetLabel.backgroundRectangle.Hide()
 			targetLabel.backgroundRectangle.Refresh()
 

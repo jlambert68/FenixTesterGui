@@ -14,7 +14,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) UpdateGraphicalRepresenta
 
 	if existsInMap == false {
 		errorId := "ec24f71b-d828-4cd0-a319-9f118ebbdccf"
-		err = errors.New(fmt.Sprintf("testcase-UI-model with uuid '%s' couldn't be foundin 'TestCasesUiModelMap' [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase-UI-model with sourceUuid '%s' couldn't be foundin 'TestCasesUiModelMap' [ErrorID: %s]", testCaseUuid, errorId))
 
 		return err
 	}

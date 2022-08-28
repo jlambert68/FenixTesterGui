@@ -131,7 +131,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 
 	if existsInMap == true {
 		errorId := "db34dee8-1b23-425c-868a-2747959ec682"
-		err = errors.New(fmt.Sprintf("testcase-UI-model with uuid '%s' allready exist in 'TestCasesUiModelMap' [ErrorID: %s]", testCaseToBeAddedUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase-UI-model with sourceUuid '%s' allready exist in 'TestCasesUiModelMap' [ErrorID: %s]", testCaseToBeAddedUuid, errorId))
 
 		return err
 	}

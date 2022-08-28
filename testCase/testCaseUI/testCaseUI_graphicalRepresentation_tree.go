@@ -21,7 +21,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateGraphicalRepresen
 
 	if existsInMap == true {
 		errorId := "a058d6d3-76bd-4667-802f-5e417f76ad26"
-		err = errors.New(fmt.Sprintf("testcase-UI-model with uuid '%s' allready exist in 'TestCasesUiModelMap' [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase-UI-model with sourceUuid '%s' allready exist in 'TestCasesUiModelMap' [ErrorID: %s]", testCaseUuid, errorId))
 
 		return nil, nil, nil, err
 	}
@@ -53,7 +53,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 	_, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
 	if existsInMap == true {
 		errorId := "69447c68-b650-49bd-ab34-2d26964cea05"
-		err := errors.New(fmt.Sprintf("testcase with uuid '%s' allready exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
+		err := errors.New(fmt.Sprintf("testcase with sourceUuid '%s' allready exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
 
 		list := map[string][]string{
 			"": {err.Error()},
@@ -136,7 +136,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 			// Secure that treeNodeChildData has correct content
 			if uid != treeNodeChildData.Uuid {
 				errorId := "2a398319-d1a5-4a8b-9270-deb29746ac6c"
-				err = errors.New(fmt.Sprintf("Node-uid '%s' is not the same as UUID '%s' found in NodeData in testcase with uuid '%s' [ErrorID: %s]", uid, treeNodeChildData.Uuid, testCaseUuid, errorId))
+				err = errors.New(fmt.Sprintf("Node-uid '%s' is not the same as UUID '%s' found in NodeData in testcase with sourceUuid '%s' [ErrorID: %s]", uid, treeNodeChildData.Uuid, testCaseUuid, errorId))
 
 				extractedNodeName = err.Error()
 			} else {
@@ -266,7 +266,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) convertRGBAHexStringIntoR
 	// Checka that ther String is of correct length, '#FFEEBB33'
 	if len(rgbaHexString) != 9 {
 		errorId := "93789d03-f728-40da-a6bd-78f8a96628a5"
-		err = errors.New(fmt.Sprintf("color string with hexvalues, '%s', has not the correct lenght, '#AABBCCDDEE' in testcase with uuid '%s' [ErrorID: %s]", rgbaHexString, errorId))
+		err = errors.New(fmt.Sprintf("color string with hexvalues, '%s', has not the correct lenght, '#AABBCCDDEE' in testcase with sourceUuid '%s' [ErrorID: %s]", rgbaHexString, errorId))
 
 		return errorColor, err
 	}

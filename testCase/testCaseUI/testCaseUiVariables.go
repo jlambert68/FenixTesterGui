@@ -2,6 +2,7 @@ package testCaseUI
 
 import (
 	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testUIDragNDropStatemachine"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
@@ -19,10 +20,23 @@ type TestCasesUiModelStruct struct {
 	TestCasesUiModelMap     map[string]*testCaseGraphicalAreasStruct // Holds all UI sub-parts for a TestCase
 	TestCasesModelReference *testCaseModel.TestCasesModelsStruct     // A reference to the model for all TestCases
 
+	DragNDropObject       DragNDropObjectStruct // The object used for Dragging TI and TIC into the TestCase
+	DragNDropStateMachine testUIDragNDropStatemachine.StateMachineDragAndDropStruct
+
+	// TODO - Remove, used for Testing only
 	DragNDropText                    *canvas.Text // Text used for Drag n Drop of TI and TIC into TextCase //TODO, is this used?
 	DragNDropRectangle               *canvas.Rectangle
 	DragNDropRectangleTextBackground *canvas.Rectangle
 	DragNDropContainer               *fyne.Container
+}
+
+// This object hold references to the object that is used when user drags a new TestInstruction or
+// TestInstructionContainer from Available Building Blocks and drops it into the TestCase
+type DragNDropObjectStruct struct {
+	DragNDropText                    *canvas.Text      // Text used for Drag n Drop of TI and TIC into TextCase //TODO, is this used?
+	DragNDropRectangle               *canvas.Rectangle // Outer rectangle
+	DragNDropRectangleTextBackground *canvas.Rectangle // The text background for text to be more readable, regarding text and background colors
+	DragNDropContainer               *fyne.Container   // The Container holding the above objects together
 }
 
 // This structure holds the UI-objects for one TestCase

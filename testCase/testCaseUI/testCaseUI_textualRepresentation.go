@@ -18,7 +18,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateNewTextualReprese
 
 	if existsInMap == true {
 		errorId := "3308ff4c-4f70-447a-94c6-18e55e3bc1fc"
-		err = errors.New(fmt.Sprintf("testcase-UI-model with uuid '%s' allready exist in 'TestCasesUiModelMap' [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase-UI-model with sourceUuid '%s' allready exist in 'TestCasesUiModelMap' [ErrorID: %s]", testCaseUuid, errorId))
 
 		return testCaseTextualStructureStruct{}, nil, err
 	}
@@ -79,7 +79,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) UpdateTextualStructuresFo
 
 	if existsInMap == false {
 		errorId := "92b67dc9-73af-4669-97be-57ac9b1ea2ea"
-		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in 'TestCasesUiModelMap' [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase with sourceUuid '%s' doesn't exist in 'TestCasesUiModelMap' [ErrorID: %s]", testCaseUuid, errorId))
 
 		return err
 	}

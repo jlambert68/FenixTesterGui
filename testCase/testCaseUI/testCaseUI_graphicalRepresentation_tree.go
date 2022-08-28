@@ -1,6 +1,7 @@
 package testCaseUI
 
 import (
+	"FenixTesterGui/testUIDragNDropStatemachine"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -66,7 +67,6 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 	// Create Tree
 	tree = &widget.Tree{
 		ChildUIDs: func(uid string) []string {
-			// treeViewModelMapForTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.GetTreeViewModelForTestCase(testCaseUuid)
 
 			// Create slice with children UUIDs
 			var childrenUuidSlice []string
@@ -84,16 +84,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 		},
 
 		CreateNode: func(branch bool) fyne.CanvasObject {
-			fmt.Println("CreateNode: ")
-			//return newTappableLabel() //widget.NewLabel("Collection Widgets: ")
 
-			//return widget.NewLabel("xxxx")
-
-			nodeLabel := widget.NewLabel("This is just some text")
-
-			// Create a Canvas Accordion type for grouping the TestCase Node and any node info to be displayed
-			//testCaseNodeAreaAccordionItem := widget.NewAccordionItem("xxxx", nodeLabel)
-			//testCaseTNodeAreaAccordion := widget.NewAccordion(testCaseNodeAreaAccordionItem)
+			//nodeLabel := widget.NewLabel("This is just some text")
 
 			testInstructionNodeColorRectangle := canvas.NewRectangle(color.RGBA{0xff, 0x00, 0x00, 0xff})
 			testInstructionNodeColorRectangle.StrokeColor = color.Black
@@ -102,28 +94,21 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 			testInstructionNodeColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
 			testInstructionNodeColorContainer := container.NewMax(testInstructionNodeColorRectangle)
 
-			nodeTextBackgroundColorectangle := canvas.NewRectangle(color.Gray{0x44}) // RGBA{0x00, 0xFF, 0x00, 0xff})
-			nodeTextBackgroundColorectangle.StrokeColor = color.Black
-			nodeTextBackgroundColorectangle.StrokeWidth = 0
-			labelContainer := container.NewMax(nodeTextBackgroundColorectangle, nodeLabel)
+			/*
+				nodeTextBackgroundColorectangle := canvas.NewRectangle(color.Gray{0x44}) // RGBA{0x00, 0xFF, 0x00, 0xff})
+				nodeTextBackgroundColorectangle.StrokeColor = color.Black
+				nodeTextBackgroundColorectangle.StrokeWidth = 0
+				labelContainer := container.NewMax(nodeTextBackgroundColorectangle, nodeLabel)
+			*/
 
-			content := container.NewHBox(testInstructionNodeColorContainer, labelContainer)
+			newDroppableLabel := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableLabel("This is just some text")
 
-			//content := container.New(layout.NewBorderLayout(nil, nil, testInstructionNodeColorRectangle, nil),
-			//	leftRectangleContainer, labelContainer)
+			content := container.NewHBox(testInstructionNodeColorContainer, newDroppableLabel) //labelContainer)
 
 			return content
 		},
 
 		UpdateNode: func(uid string, branch bool, obj fyne.CanvasObject) {
-			fmt.Println("UpdateNode: ", uid)
-			/*
-				_, ok := list[uid]
-				if !ok {
-					fyne.LogError("Missing tutorial panel: "+uid, nil)
-					return
-				}
-			*/
 
 			var (
 				extractedNodeName string
@@ -152,6 +137,39 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 			if err != nil {
 				extractedNodeName = err.Error()
 			}
+
+			/*
+				// Extract if node is droppable
+				var nodeIsDroppable bool
+				draggedUuid := testCasesUiCanvasObject.DragNDropStateMachine.SourceUuid
+				if draggedUuid == "" {
+					nodeIsDroppable = false
+				} else {
+					// Extract Dragged nodes type
+					var elementType fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum
+
+					switch testCasesUiCanvasObject.DragNDropStateMachine.SourceType {
+					case 1: //gui.TestInstruction:
+						elementType = fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION
+
+					case 2: //gui.TestInstructionContainer:
+						elementType = fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER
+
+					default:
+						errorId := "c6e74d79-9268-4c54-8338-2ed23539a5a2"
+						err = errors.New(fmt.Sprintf("unknown Source Type [ErrorID: %s]", errorId))
+
+						extractedNodeName = err.Error()
+					}
+
+					nodeIsDroppable, err = testCasesUiCanvasObject.CommandAndRuleEngineReference.VerifyIfElementCanBeSwapped(testCaseUuid, treeNodeChildData.Uuid, elementType)
+					if err != nil {
+						extractedNodeName = err.Error()
+					}
+
+
+				}
+			*/
 
 			// Extract TestInstruction Type Color and change
 			//hexValueForTestInstructionNodeColorAsString := treeNodeChildData.TestInstructionTypeColor
@@ -188,13 +206,19 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 			// Set the UUID as Node-Lable
 			//obj.(*fyne.Container).Objects[1].Objects[1].(*widget.Label).SetText(uid)
 			//obj.(*fyne.Container).Objects[1].(*widget.Accordion).Items[0].Title = uid
-			obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*widget.Label).SetText(extractedNodeName)
+
+			//obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*widget.Label).SetText(extractedNodeName)
+			obj.(*fyne.Container).Objects[1].(*testUIDragNDropStatemachine.DroppableLabel).SetText(extractedNodeName)
+			obj.(*fyne.Container).Objects[1].(*testUIDragNDropStatemachine.DroppableLabel).TargetUuid = extractedNodeName
+			//obj.(*fyne.Container).Objects[1].(*testUIDragNDropStatemachine.DroppableLabel).IsDroppable = nodeIsDroppable
+
+			//*testUIDragNDropStatemachine.DroppableLabel
 
 			// Update Node color by replacing rectangle
 			newRectangleBackgroundWithColor := canvas.NewRectangle(extractedNodeColor)
 			newRectangleBackgroundWithColor.StrokeColor = color.Black
 			newRectangleBackgroundWithColor.StrokeWidth = 0
-			obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[0] = newRectangleBackgroundWithColor
+			//obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[0] = newRectangleBackgroundWithColor
 
 			// Set colored rectangle size to (labelHeight, labelHeight)
 			//labelHeight := obj.(*fyne.Container).Objects[1].(*widget.Label).MinSize().Height

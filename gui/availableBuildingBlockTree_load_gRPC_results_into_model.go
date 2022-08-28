@@ -16,8 +16,8 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 		}).Fatalln("Code should not come here if AckNack == false")
 	}
 
-	// Reset availableBuildingBlocksForUITreeNodes
-	availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes = make(map[string]availableBuildingBlocksForUITreeNodesStruct)
+	// Reset AvailableBuildingBlocksForUITreeNodes
+	availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes = make(map[string]AvailableBuildingBlocksForUITreeNodesStruct)
 
 	// Reset 'pinnedBuildingBlocksForUITreeNodes'
 	availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid = make(map[string]uiTreeNodesNameToUuidStruct)
@@ -63,10 +63,10 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 	var existInMap bool
 
 	// Simpler structure to store Available Building Blocks for UI-tree
-	uiTreeNodes := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes
+	uiTreeNodes := availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes
 	// If not created then create the map
 	if len(uiTreeNodes) == 0 {
-		availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes = make(map[string]availableBuildingBlocksForUITreeNodesStruct)
+		availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes = make(map[string]AvailableBuildingBlocksForUITreeNodesStruct)
 	}
 
 	// Loop all TestInstructions and extract all data to be used in Available Building Block UI-tree
@@ -83,18 +83,18 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 			// If it is first occurrence in simpler structure then; Add the Domain to a simpler structure to be used vid UI-tree for Available Building Blocks
 			// Create simpler structure to be used vid UI-tree for Available Building Blocks
 			// Add the domain to a simpler structure to be used vid UI-tree for Available Building Blocks
-			tempNode := availableBuildingBlocksForUITreeNodesStruct{
+			tempNode := AvailableBuildingBlocksForUITreeNodesStruct{
 				nameInUITree:      "",
 				uuid:              testInstruction.BasicTestInstructionInformation.NonEditableInformation.DomainUuid,
 				name:              testInstruction.BasicTestInstructionInformation.NonEditableInformation.DomainName,
-				buildingBlockType: Undefined,
+				BuildingBlockType: Undefined,
 			}
 			// Set UI Node name in node
 			tempNode.nameInUITree, tempNode.pinnedNameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode, "Can not be pinned")
 
-			_, existInMap = availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.DomainUuid]
+			_, existInMap = availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.DomainUuid]
 			if existInMap == false {
-				availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.DomainUuid] = tempNode
+				availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.DomainUuid] = tempNode
 
 			}
 		}
@@ -109,18 +109,18 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 
 			// If it is first occurrence in simpler structure then; Add the Domain to a simpler structure to be used vid UI-tree for Available Building Blocks
 			// Create simpler structure to be used vid UI-tree for Available Building Blocks
-			tempNode := availableBuildingBlocksForUITreeNodesStruct{
+			tempNode := AvailableBuildingBlocksForUITreeNodesStruct{
 				nameInUITree:      "",
 				uuid:              testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeUuid,
 				name:              testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeName,
-				buildingBlockType: Undefined,
+				BuildingBlockType: Undefined,
 			}
 			// Set UI Node name in node
 			tempNode.nameInUITree, tempNode.pinnedNameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode, "Can not be pinned")
 
-			_, existInMap = availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeUuid]
+			_, existInMap = availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeUuid]
 			if existInMap == false {
-				availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeUuid] = tempNode
+				availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeUuid] = tempNode
 
 			}
 		}
@@ -140,11 +140,11 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 		}
 
 		// Create simpler structure to be used vid UI-tree for Available Building Blocks
-		tempNode := availableBuildingBlocksForUITreeNodesStruct{
+		tempNode := AvailableBuildingBlocksForUITreeNodesStruct{
 			nameInUITree:      "",
 			uuid:              testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionUuid,
 			name:              testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionName,
-			buildingBlockType: TestInstruction,
+			BuildingBlockType: TestInstruction,
 		}
 		// Set UI Node name in nodes
 		tempNode.nameInUITree, tempNode.pinnedNameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode, testInstruction.BasicTestInstructionInformation.NonEditableInformation.DomainName)
@@ -163,9 +163,9 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 			testInstructionMap[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionUuid] = tempTestInstruction
 
 			// Add the TestInstruction to a simpler structure to be used vid UI-tree for Available Building Blocks
-			_, existInMap = availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionUuid]
+			_, existInMap = availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionUuid]
 			if existInMap == false {
-				availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionUuid] = tempNode
+				availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionUuid] = tempNode
 
 			}
 
@@ -186,10 +186,10 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 	var existInMap bool
 
 	// Simpler structure to store Available Building Blocks for UI-tree
-	uiTreeNodes := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes
+	uiTreeNodes := availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes
 	// If not created then create the map
 	if len(uiTreeNodes) == 0 {
-		availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes = make(map[string]availableBuildingBlocksForUITreeNodesStruct)
+		availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes = make(map[string]AvailableBuildingBlocksForUITreeNodesStruct)
 	}
 
 	// Loop all TestInstructionContainers and extract all data to be used in Available Building Block UI-tree
@@ -206,18 +206,18 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 			// If it is first occurrence in simpler structure then; Add the Domain to a simpler structure to be used vid UI-tree for Available Building Blocks
 			// Create simpler structure to be used vid UI-tree for Available Building Blocks
 			// Add the domain to a simpler structure to be used vid UI-tree for Available Building Blocks
-			tempNode := availableBuildingBlocksForUITreeNodesStruct{
+			tempNode := AvailableBuildingBlocksForUITreeNodesStruct{
 				nameInUITree:      "",
 				uuid:              testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.DomainUuid,
 				name:              testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.DomainName,
-				buildingBlockType: Undefined,
+				BuildingBlockType: Undefined,
 			}
 			// Set UI Node name in node
 			tempNode.nameInUITree, tempNode.pinnedNameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode, "Can not be pinned")
 
-			_, existInMap = availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.DomainUuid]
+			_, existInMap = availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.DomainUuid]
 			if existInMap == false {
-				availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.DomainUuid] = tempNode
+				availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.DomainUuid] = tempNode
 
 			}
 		}
@@ -232,18 +232,18 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 
 			// If it is first occurrence in simpler structure then; Add the Domain to a simpler structure to be used vid UI-tree for Available Building Blocks
 			// Create simpler structure to be used vid UI-tree for Available Building Blocks
-			tempNode := availableBuildingBlocksForUITreeNodesStruct{
+			tempNode := AvailableBuildingBlocksForUITreeNodesStruct{
 				nameInUITree:      "",
 				uuid:              testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerTypeUuid,
 				name:              testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerTypeName,
-				buildingBlockType: Undefined,
+				BuildingBlockType: Undefined,
 			}
 			// Set UI Node name in node
 			tempNode.nameInUITree, tempNode.pinnedNameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode, "Can not be pinned")
 
-			_, existInMap = availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerTypeUuid]
+			_, existInMap = availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerTypeUuid]
 			if existInMap == false {
-				availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerTypeUuid] = tempNode
+				availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerTypeUuid] = tempNode
 
 			}
 		}
@@ -263,11 +263,11 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 		}
 
 		// Create simpler structure to be used vid UI-tree for Available Building Blocks
-		tempNode := availableBuildingBlocksForUITreeNodesStruct{
+		tempNode := AvailableBuildingBlocksForUITreeNodesStruct{
 			nameInUITree:      "",
 			uuid:              testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerUuid,
 			name:              testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerName,
-			buildingBlockType: TestInstructionContainer,
+			BuildingBlockType: TestInstructionContainer,
 		}
 		// Set UI Node name in nodes
 		tempNode.nameInUITree, tempNode.pinnedNameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode, testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.DomainName)
@@ -286,9 +286,9 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 			testInstructionContainerMap[testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerUuid] = tempTestInstructionContainer
 
 			// Add the TestInstructionContainer to a simpler structure to be used vid UI-tree for Available Building Blocks
-			_, existInMap = availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerUuid]
+			_, existInMap = availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerUuid]
 			if existInMap == false {
-				availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerUuid] = tempNode
+				availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerUuid] = tempNode
 
 			}
 
@@ -311,7 +311,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 	for _, pinnedTestInstruction := range pinnedTestInstructionsAndTestContainersMessage.AvailablePinnedTestInstructions {
 
 		// Get Tree-name from testCaseModel and create reference between Pinned Tree-name and original UUID
-		availableTestInstructionFromTreeNameModel, existsInMap := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[pinnedTestInstruction.TestInstructionUuid]
+		availableTestInstructionFromTreeNameModel, existsInMap := availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[pinnedTestInstruction.TestInstructionUuid]
 
 		// If the element is missing in map then there are something wrong
 		if existsInMap == false {
@@ -344,7 +344,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 	for _, pinnedTestInstructionContainer := range pinnedTestInstructionsAndTestInstructionsContainersMessage.AvailablePinnedPreCreatedTestInstructionContainers {
 
 		// Get Tree-name from testCaseModel and create reference between Pinned Tree-name and original UUID
-		availableTestInstructionContainerFromTreeNameModel, existsInMap := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[pinnedTestInstructionContainer.TestInstructionContainerUuid]
+		availableTestInstructionContainerFromTreeNameModel, existsInMap := availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[pinnedTestInstructionContainer.TestInstructionContainerUuid]
 
 		// If the element is missing in map then there are something wrong
 		if existsInMap == false {
@@ -368,7 +368,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 // Store the full available Building Blocks Structure into the Available Building Blocks Model
 func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeFullGrpcStructureForAvailableBuildingBlocks(testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
-	// Initiate TI-BuildingBlock-map and TIC-BuildingBlockmap
+	// Initiate TI-BuildingBlockType-map and TIC-BuildingBlockmap
 	availableBuildingBlocksModel.allImmatureTestInstructionsBuildingBlocks = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage)
 	availableBuildingBlocksModel.allImmatureTestInstructionContainerBuildingBlocks = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionContainerMessage)
 

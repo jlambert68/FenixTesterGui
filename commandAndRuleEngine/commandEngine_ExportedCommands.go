@@ -1,6 +1,9 @@
 package commandAndRuleEngine
 
-import "FenixTesterGui/testCase/testCaseModel"
+import (
+	"FenixTesterGui/testCase/testCaseModel"
+	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+)
 
 //
 
@@ -31,5 +34,15 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) SwapElementsInTest
 	err = commandAndRuleEngine.executeCommandOnTestCaseModel_SwapOutElemenAndInNewElementInTestCaseModel(testcaseUuid, elementUuidTobeSwappedOut, immatureElementToSwapIn)
 
 	return err
+
+}
+
+// VerifyIfElementCanBeSwapped
+// Verify if an element can be swapped or not, regarding swap rules
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) VerifyIfElementCanBeSwapped(testCaseUuid string, elementUuidToBeSwappedOut string, elementTypeToBeSwappedIn fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum) (canBeSwappedIn bool, err error) {
+
+	canBeSwappedIn, _, _, err = commandAndRuleEngine.verifyIfElementCanBeSwapped(testCaseUuid, elementUuidToBeSwappedOut, elementTypeToBeSwappedIn)
+
+	return canBeSwappedIn, err
 
 }

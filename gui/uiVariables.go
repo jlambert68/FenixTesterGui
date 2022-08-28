@@ -33,23 +33,23 @@ const numberOfCharactersfromUuid = 8
 
 const TopNodeForAvailableDomainsMap = "TOP_NODE"
 
-type availableBuildingBlocksForUITreeNodesStruct struct {
+type AvailableBuildingBlocksForUITreeNodesStruct struct {
 	nameInUITree       string
 	pinnedNameInUITree string
 	uuid               string
 	name               string
-	buildingBlockType  buildingBlock
+	BuildingBlockType  BuildingBlock
 }
 
 type uiTreeNodesNameToUuidStruct struct {
 	uuid              string
-	buildingBlockType buildingBlock
+	buildingBlockType BuildingBlock
 }
 
-type buildingBlock int
+type BuildingBlock int
 
 const (
-	Undefined buildingBlock = iota
+	Undefined BuildingBlock = iota
 	TestInstruction
 	TestInstructionContainer
 )
@@ -126,7 +126,7 @@ type AvailableBuildingBlocksModelStruct struct {
 	fenixGuiBuilderServerAddressToDial                                         string
 	fullDomainTestInstructionTypeTestInstructionRelationsMap                   map[string]map[string]map[string]availableTestInstructionStruct
 	fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap map[string]map[string]map[string]availableTestInstructionContainerStruct
-	availableBuildingBlocksForUITreeNodes                                      map[string]availableBuildingBlocksForUITreeNodesStruct // map[uuid]availableBuildingBlocksForUITreeNodesStruct
+	AvailableBuildingBlocksForUITreeNodes                                      map[string]AvailableBuildingBlocksForUITreeNodesStruct // map[uuid]AvailableBuildingBlocksForUITreeNodesStruct
 	pinnedBuildingBlocksForUITreeNodes                                         map[string]uiTreeNodesNameToUuidStruct                 //map[nameInUITree]uiTreeNodesNameToUuidStruct
 	grpcOut                                                                    grpc_out.GRPCOutStruct
 	availableBuildingBlockModelSuitedForFyneTreeView                           map[string][]string

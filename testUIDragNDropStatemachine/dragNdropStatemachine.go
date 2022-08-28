@@ -96,14 +96,16 @@ var labelStandardHeight float32
 //****************************************************
 type DraggableLabel struct {
 	widget.Label
-	SourceUuid  string
-	IsDraggable bool
+	SourceUuid        string
+	IsDraggable       bool
+	BuildingBlockType int
 }
 
 type DroppableLabel struct {
 	widget.Label
-	targetUuid          string
+	TargetUuid          string
 	backgroundRectangle *canvas.Rectangle
+	IsDroppable         bool
 }
 
 type noneDroppableLabel struct {
@@ -137,7 +139,8 @@ func (stateMachine *StateMachineDragAndDropStruct) NewDroppableLabel(uuid string
 	droppableLabel := &DroppableLabel{}
 	droppableLabel.ExtendBaseWidget(droppableLabel)
 
-	droppableLabel.targetUuid = uuid
+	droppableLabel.TargetUuid = uuid
+	droppableLabel.Text = uuid
 
 	droppableLabel.backgroundRectangle = canvas.NewRectangle(color.RGBA{
 		R: 0x00,
@@ -169,7 +172,8 @@ type StateMachineDragAndDropStruct struct {
 	sourceStateMachine              stateMachineSourceAndDestinationStruct
 	targetStateMachine              stateMachineSourceAndDestinationStruct
 	registeredDroppableTargetLabels []*DroppableLabel
-	sourceUuid                      string
+	SourceUuid                      string
+	SourceType                      int
 	target                          DroppableLabel
 }
 
@@ -200,7 +204,8 @@ func (t *DraggableLabel) Dragged(ev *fyne.DragEvent) {
 	case sourceStateGrabs:
 		// switch state to 'sourceStateDragging'
 		switchStateForSource(sourceStateDragging)
-		stateMachineDragAndDrop.sourceUuid = t.SourceUuid
+		stateMachineDragAndDrop.SourceUuid = t.SourceUuid
+		stateMachineDragAndDrop.SourceType = t.BuildingBlockType
 
 		expandDropAreas()
 
@@ -267,12 +272,13 @@ func (t *DraggableLabel) DragEnd() {
 	case sourceStateDragging:
 		switchStateForSource(sourceStateReleasingWithOutTarget)
 		switchStateForTarget(targetStateWaitingForSourceToEnteringTarget)
-		stateMachineDragAndDrop.sourceUuid = ""
+		stateMachineDragAndDrop.SourceUuid = ""
+		stateMachineDragAndDrop.SourceType = 0
 
 		shrinkDropAreas()
 
 	case sourceStateReleasingWithOutTarget:
-		stateMachineDragAndDrop.sourceUuid = ""
+		stateMachineDragAndDrop.SourceUuid = ""
 		// Just continue
 
 	case sourceStateEnteringTarget:
@@ -413,6 +419,8 @@ func (b *DroppableLabel) MouseIn(*desktop.MouseEvent) {
 		return
 
 	case targetStateSourceIsDraggingObject:
+
+		//if b.IsDroppable == true {
 		switchStateForSource(sourceStateEnteringTarget)
 		switchStateForTarget(targetStateSourceEnteredTargetWithObject)
 		b.backgroundRectangle.FillColor = color.RGBA{
@@ -426,6 +434,7 @@ func (b *DroppableLabel) MouseIn(*desktop.MouseEvent) {
 		b.backgroundRectangle.Refresh()
 
 		stateMachineDragAndDrop.target = *b
+		//}
 
 	case targetStateSourceEnteredTargetWithObject:
 		return
@@ -590,5 +599,5 @@ func shrinkDropAreas() {
 }
 
 func executeDropAction() {
-	fmt.Println(fmt.Sprintf("'%s' was droppen in '%s'", stateMachineDragAndDrop.sourceUuid, stateMachineDragAndDrop.target.targetUuid))
+	fmt.Println(fmt.Sprintf("'%s' was droppen in '%s'", stateMachineDragAndDrop.SourceUuid, stateMachineDragAndDrop.target.TargetUuid))
 }

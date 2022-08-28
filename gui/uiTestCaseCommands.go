@@ -578,7 +578,7 @@ func (uiServer *UIServerStruct) undoUndoLastCommandOnStack() {
 
 // GetUuidFromUiName
 // Finds the UUID for from a UI-name like ' B0_BOND [3c8a3bc] [BOND] to live forever..'
-func (uiServer *UIServerStruct) getUuidFromTreeName(uiTreeName string) (buildingBlockUuid string, buildingBlockType buildingBlock, err error) {
+func (uiServer *UIServerStruct) getUuidFromTreeName(uiTreeName string) (buildingBlockUuid string, buildingBlockType BuildingBlock, err error) {
 
 	// Get first square brackets, for part of UUID
 	firstSquareBracketStart := strings.Index(uiTreeName, "[")
@@ -632,7 +632,7 @@ func (uiServer *UIServerStruct) getUuidFromTreeName(uiTreeName string) (building
 			// Bonds
 		default:
 			errorId := "70335847-35cd-4551-bea8-59257075723d"
-			err = errors.New(fmt.Sprintf("couldn't find avavialbel buildingBlock with UI-name '%s' in testcase '%s' [ErrorID: %s]", uiTreeName, errorId))
+			err = errors.New(fmt.Sprintf("couldn't find avavialbel BuildingBlockType with UI-name '%s' in testcase '%s' [ErrorID: %s]", uiTreeName, errorId))
 
 			return "", -1, err
 		}

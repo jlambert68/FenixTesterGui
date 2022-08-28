@@ -1,6 +1,7 @@
 package testCaseUI
 
 import (
+	"FenixTesterGui/commandAndRuleEngine"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testUIDragNDropStatemachine"
 	"fyne.io/fyne/v2"
@@ -28,6 +29,8 @@ type TestCasesUiModelStruct struct {
 	DragNDropRectangle               *canvas.Rectangle
 	DragNDropRectangleTextBackground *canvas.Rectangle
 	DragNDropContainer               *fyne.Container
+
+	CommandAndRuleEngineReference *commandAndRuleEngine.CommandAndRuleEngineObjectStruct
 }
 
 // This object hold references to the object that is used when user drags a new TestInstruction or

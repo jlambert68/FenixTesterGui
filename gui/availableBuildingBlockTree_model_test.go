@@ -61,7 +61,7 @@ func TestThatNonExistingBuildBlockCanBePinned(t *testing.T) {
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
-		availableBuildingBlocksForUITreeNodes:                                      nil,
+		AvailableBuildingBlocksForUITreeNodes:                                      nil,
 		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 		pinnedBuildingBlocksForUITreeNodes:                                         nil,
@@ -130,7 +130,7 @@ func TestThatAlreadyPinnedBuildingBlockNotCanBePinned(t *testing.T) {
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
-		availableBuildingBlocksForUITreeNodes:                                      nil,
+		AvailableBuildingBlocksForUITreeNodes:                                      nil,
 		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 	}
@@ -150,7 +150,7 @@ func TestThatAlreadyPinnedBuildingBlockNotCanBePinned(t *testing.T) {
 	// Validate that an already pinned  Building Block can't be pinned again
 	pinnedBuildingBlockName := availableBuildingBlocksModel.getPinnedBuildingBlocksTreeNamesFromModel()[0]
 	pinnedBuildingBlockUuid := availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[pinnedBuildingBlockName].uuid
-	buildingBlockName := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[pinnedBuildingBlockUuid].nameInUITree
+	buildingBlockName := availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[pinnedBuildingBlockUuid].nameInUITree
 	err := availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer(buildingBlockName)
 
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_PBB002_ExpectedResultInModel_002, fmt.Sprint(err))
@@ -201,7 +201,7 @@ func TestToPinBuildingBlockCanBePinned(t *testing.T) {
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
-		availableBuildingBlocksForUITreeNodes:                                      nil,
+		AvailableBuildingBlocksForUITreeNodes:                                      nil,
 		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 	}
@@ -273,7 +273,7 @@ func TestThatNonExistingBuildingBlockCanNotBeUnPinned(t *testing.T) {
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
-		availableBuildingBlocksForUITreeNodes:                                      nil,
+		AvailableBuildingBlocksForUITreeNodes:                                      nil,
 		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 		pinnedBuildingBlocksForUITreeNodes:                                         nil,
@@ -343,7 +343,7 @@ func TestThatBuildingBlockToBeUnPinnedExistsAmongPinned(t *testing.T) {
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
-		availableBuildingBlocksForUITreeNodes:                                      nil,
+		AvailableBuildingBlocksForUITreeNodes:                                      nil,
 		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 	}
@@ -363,7 +363,7 @@ func TestThatBuildingBlockToBeUnPinnedExistsAmongPinned(t *testing.T) {
 	// Validate that an already pinned  Building Block can't be pinned again
 	pinnedBuildingBlockName := availableBuildingBlocksModel.getPinnedBuildingBlocksTreeNamesFromModel()[0]
 	pinnedBuildingBlockUuid := availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[pinnedBuildingBlockName].uuid
-	buildingBlockName := availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes[pinnedBuildingBlockUuid].nameInUITree
+	buildingBlockName := availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[pinnedBuildingBlockUuid].nameInUITree
 	err := availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer(buildingBlockName)
 
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_PBB003_ExpectedResultInModel_002, fmt.Sprint(err))
@@ -414,7 +414,7 @@ func TestUnPinBuildingBlockThatIsPinned(t *testing.T) {
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
-		availableBuildingBlocksForUITreeNodes:                                      nil,
+		AvailableBuildingBlocksForUITreeNodes:                                      nil,
 		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 	}

@@ -71,11 +71,14 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 			//obj.(*tappableLabel).SetText(uid) //obj.(*widget.Label).SetText(uid) // + time.Now().String())
 			obj.(*testUIDragNDropStatemachine.DraggableLabel).SetText(uid)
 			obj.(*testUIDragNDropStatemachine.DraggableLabel).SourceUuid = uid
-			_, existInMap := uiServer.availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid[uid]
+			element, existInMap := uiServer.availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid[uid]
 			if existInMap == true {
 				obj.(*testUIDragNDropStatemachine.DraggableLabel).IsDraggable = true
+				obj.(*testUIDragNDropStatemachine.DraggableLabel).BuildingBlockType = int(element.buildingBlockType)
+
 			} else {
 				obj.(*testUIDragNDropStatemachine.DraggableLabel).IsDraggable = false
+				obj.(*testUIDragNDropStatemachine.DraggableLabel).BuildingBlockType = 0 //Undefined
 			}
 
 		},

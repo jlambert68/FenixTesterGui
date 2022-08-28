@@ -60,7 +60,7 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 			fenixGuiBuilderServerAddressToDial: "",
 			fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 			fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
-			availableBuildingBlocksForUITreeNodes:                                      nil,
+			AvailableBuildingBlocksForUITreeNodes:                                      nil,
 			grpcOut:                                                                    grpc_out.GRPCOutStruct{},
 		},
 		testCasesModel: testCaseModel.TestCasesModelsStruct{
@@ -86,6 +86,9 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 
 	// Add TestCasesReference to TestUI-engine
 	uiServer.testCasesUiModel.TestCasesModelReference = &uiServer.testCasesModel
+
+	// Add CommandEngineReference to TestUI-engine
+	uiServer.testCasesUiModel.CommandAndRuleEngineReference = &uiServer.commandAndRuleEngine
 
 	// Forward logger and Dail string
 	uiServer.SetLogger(globalUISServer.logger)
@@ -369,7 +372,7 @@ func (uiServer *UIServerStruct) loadUI() fyne.CanvasObject {
 // Loads available TestInstructions and TestInstructionContainers and return the UI Bar and UI Tree-structure for them
 func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() (completeAvailableTestCaseBuildingBlocksUI fyne.CanvasObject) {
 
-	// Create toolbar for Available TestCase BuildingBlock area
+	// Create toolbar for Available TestCase BuildingBlockType area
 	availableAvailableBuildingBlocksUIBar := widget.NewToolbar(
 
 		// Icon for reloading Building Blocks from Server

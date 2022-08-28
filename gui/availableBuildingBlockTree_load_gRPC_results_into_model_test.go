@@ -48,7 +48,7 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testin
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
-		availableBuildingBlocksForUITreeNodes:                                      nil,
+		AvailableBuildingBlocksForUITreeNodes:                                      nil,
 		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 	}
@@ -60,8 +60,8 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testin
 
 	// fmt.Println(availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap)
 	/*
-		fmt.Println(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes)
-		b, err := json.Marshal(&availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes)
+		fmt.Println(availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
+		b, err := json.Marshal(&availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
 
 		if err != nil {
 			fmt.Println(err)
@@ -71,11 +71,11 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testin
 
 	*/
 
-	// Validate 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'
-	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_001, fmt.Sprint(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes))
+	// Validate 'availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
+	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_001, fmt.Sprint(availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes))
 	if printValues {
 		fmt.Println("TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_001")
-		fmt.Println(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes)
+		fmt.Println(availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
 	}
 
 	// Validate 'availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap'
@@ -115,7 +115,7 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
-		availableBuildingBlocksForUITreeNodes:                                      nil,
+		AvailableBuildingBlocksForUITreeNodes:                                      nil,
 		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 	}
@@ -128,8 +128,8 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(
 
 	//fmt.Println(availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap)
 	/*
-		fmt.Println(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes)
-		b, err := json.Marshal(&availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes)
+		fmt.Println(availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
+		b, err := json.Marshal(&availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
 
 		if err != nil {
 			fmt.Println(err)
@@ -142,11 +142,11 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(
 	//fmt.Println(UnitTestTestData.TestInstructionsAndTestInstructionsRespons_ABB001_ExpectedResultInModel_003)
 	//fmt.Println(UnitTestTestData.TestInstructionsAndTestInstructionsRespons_ABB001_ExpectedResultInModel_004)
 
-	// Validate 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'
-	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_003, fmt.Sprint(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes))
+	// Validate 'availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
+	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_003, fmt.Sprint(availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes))
 	if printValues {
 		fmt.Println("TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_003")
-		fmt.Println(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes)
+		fmt.Println(availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
 	}
 
 	// Validate 'availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap'
@@ -186,7 +186,7 @@ func TestLoadModelWithAvailableBuildingBlocks(t *testing.T) {
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
-		availableBuildingBlocksForUITreeNodes:                                      nil,
+		AvailableBuildingBlocksForUITreeNodes:                                      nil,
 		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 	}
@@ -196,11 +196,11 @@ func TestLoadModelWithAvailableBuildingBlocks(t *testing.T) {
 	// Load Available Building Blocks, in this case TestInstructionContainers
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks(&testInstructionsAndTestContainersMessage)
 
-	// Validate 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'
-	assertResult = assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_005, fmt.Sprint(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes))
+	// Validate 'availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
+	assertResult = assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_005, fmt.Sprint(availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes))
 	if printValues && !assertResult {
 		fmt.Println("TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_005")
-		fmt.Println(availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes)
+		fmt.Println(availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
 	}
 
 	// Validate 'availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap'
@@ -263,7 +263,7 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructions(t *testing.T
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
-		availableBuildingBlocksForUITreeNodes:                                      nil,
+		AvailableBuildingBlocksForUITreeNodes:                                      nil,
 		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 		pinnedBuildingBlocksForUITreeNodes:                                         nil,
@@ -281,7 +281,7 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructions(t *testing.T
 	// Load Pinned Building Blocks
 	availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructions(&pinnedTestInstructionsAndTestContainersMessage)
 
-	// Validate 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'
+	// Validate 'availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_PBB001_ExpectedResultInModel_001, fmt.Sprint(availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes))
 
 }
@@ -330,7 +330,7 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(t *
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
-		availableBuildingBlocksForUITreeNodes:                                      nil,
+		AvailableBuildingBlocksForUITreeNodes:                                      nil,
 		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 		pinnedBuildingBlocksForUITreeNodes:                                         nil,
@@ -348,7 +348,7 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(t *
 	// Load Pinned Building Blocks
 	availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(&pinnedTestInstructionsAndTestContainersMessage)
 
-	// Validate 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'
+	// Validate 'availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_PBB001_ExpectedResultInModel_002, fmt.Sprint(availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes))
 
 }
@@ -397,7 +397,7 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionAndTestInstruc
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
-		availableBuildingBlocksForUITreeNodes:                                      nil,
+		AvailableBuildingBlocksForUITreeNodes:                                      nil,
 		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 		pinnedBuildingBlocksForUITreeNodes:                                         nil,
@@ -409,7 +409,7 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionAndTestInstruc
 	// Load Pinned Building Blocks
 	availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks(&pinnedTestInstructionsAndTestContainersMessage)
 
-	// Validate 'availableBuildingBlocksModel.availableBuildingBlocksForUITreeNodes'
+	// Validate 'availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_PBB001_ExpectedResultInModel_003, fmt.Sprint(availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes))
 
 }

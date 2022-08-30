@@ -19,10 +19,23 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) UpdateGraphicalRepresenta
 		return err
 	}
 
+	// Generate new version of graphical TestCase based on latest TestCase-Element Model
+	testCaseGraphicalModelArea, _, accordion, err := testCasesUiCanvasObject.generateGraphicalRepresentationAreaForTestCase(testCaseUuid)
+
+	currentTestCaseUIModel.TestCaseGraphicalModelArea = testCaseGraphicalModelArea
+
 	// Open and Update Accordion object(Graphical) and Tree-model
+	currentTestCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseGraphicalAccordionObject.RemoveIndex(0)
+	currentTestCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseGraphicalAccordionObject.Append(accordion.Items[0])
 	currentTestCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseGraphicalAccordionObject.Open(0)
 	//currentTestCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseGraphicalAccordionObject.Refresh()
-	currentTestCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseGraphicalTreeComponent.OpenAllBranches()
+
+	//currentTestCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseGraphicalTreeComponent.OpenAllBranches()
+
+	// Save TestCase UI-components-Map
+	testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid] = currentTestCaseUIModel
+
+	testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid].TestCaseGraphicalModelArea.Refresh()
 
 	return err
 }

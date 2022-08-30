@@ -1,13 +1,13 @@
 package testCaseUI
 
 import (
+	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testUIDragNDropStatemachine"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"image/color"
@@ -15,42 +15,46 @@ import (
 )
 
 // Generate the Graphical Representation Area for the TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateGraphicalRepresentationAreaForTestCase(testCaseUuid string) (testCaseGraphicalModelArea fyne.CanvasObject, testCaseGraphicalUITree *widget.Tree, testCaseGraphicalModelAreaAccordion *widget.Accordion, err error) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateGraphicalRepresentationAreaForTestCase(testCaseUuid string) (testCaseGraphicalModelArea fyne.CanvasObject, graphicalTestCaseUIObject fyne.CanvasObject, testCaseGraphicalModelAreaAccordion2 *widget.Accordion, err error) {
 
-	// Get current TestCase-UI-model
-	_, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
+	/*
+		// Get current TestCase-UI-model
+		_, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
 
-	if existsInMap == true {
-		errorId := "a058d6d3-76bd-4667-802f-5e417f76ad26"
-		err = errors.New(fmt.Sprintf("testcase-UI-model with sourceUuid '%s' allready exist in 'TestCasesUiModelMap' [ErrorID: %s]", testCaseUuid, errorId))
+		if existsInMap == true {
+			errorId := "a058d6d3-76bd-4667-802f-5e417f76ad26"
+			err = errors.New(fmt.Sprintf("testcase-UI-model with sourceUuid '%s' allready exist in 'TestCasesUiModelMap' [ErrorID: %s]", testCaseUuid, errorId))
 
-		return nil, nil, nil, err
-	}
+			return nil, nil, nil, err
+		}
 
-	//testCaseGraphicalModelArea = widget.NewLabel("'testCaseGraphicalModelArea'")
+	*/
 
-	testCaseGraphicalUITree = testCasesUiCanvasObject.makeTestCaseGraphicalUITree(testCaseUuid)
+	//testCaseGraphicalUITree = testCasesUiCanvasObject.makeTestCaseGraphicalUITree(testCaseUuid)
 
-	//tree.OpenAllBranches()
+	//tempContainer := container.New(layout.NewGridWrapLayout(fyne.NewSize(1, 400)))
 
-	//tree.Refresh()
-
-	tempContainer := container.New(layout.NewGridWrapLayout(fyne.NewSize(1, 400)))
-
-	treeExpandedContainer := container.New(layout.NewMaxLayout(), testCaseGraphicalUITree, tempContainer, layout.NewSpacer())
+	//treeExpandedContainer := container.New(layout.NewMaxLayout(), testCaseGraphicalUITree, tempContainer, layout.NewSpacer())
+	//mytempText := widget.NewLabel("Temp text")
 
 	// Create a Canvas Accordion type for grouping the Graphical Representation of the TestCase
-	testCaseGraphicalModelAreaAccordionItem := widget.NewAccordionItem("Graphical Representation of the TestCase", treeExpandedContainer)
-	testCaseGraphicalModelAreaAccordion = widget.NewAccordion(testCaseGraphicalModelAreaAccordionItem)
+	testCaseGraphicalModelAreaAccordionItem := widget.NewAccordionItem("Graphical Representation of the TestCase", widget.NewLabel("temp")) //treeExpandedContainer)
+	testCaseGraphicalModelAreaAccordion := widget.NewAccordion(testCaseGraphicalModelAreaAccordionItem)
+	testCaseGraphicalModelAreaAccordion.RemoveIndex(0)
+
+	graphicalTestCaseUIObject = testCasesUiCanvasObject.makeTestCaseGraphicalUIObject(testCaseUuid, testCaseGraphicalModelAreaAccordion)
+
+	testCaseGraphicalModelAreaAccordionItem = widget.NewAccordionItem("Graphical Representation of the TestCase", graphicalTestCaseUIObject) //treeExpandedContainer)
+	testCaseGraphicalModelAreaAccordion.Append(testCaseGraphicalModelAreaAccordionItem)
 
 	testCaseGraphicalModelArea = container.NewVBox(testCaseGraphicalModelAreaAccordion)
 
-	return testCaseGraphicalModelArea, testCaseGraphicalUITree, testCaseGraphicalModelAreaAccordion, err
+	return testCaseGraphicalModelArea, graphicalTestCaseUIObject, testCaseGraphicalModelAreaAccordion, err
 }
 
 func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITree(testCaseUuid string) (tree *widget.Tree) {
 
-	// Check if TestCase allready exists, shouldn't do that
+	// Check if TestCase already exists, shouldn't do that
 	_, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
 	if existsInMap == true {
 		errorId := "69447c68-b650-49bd-ab34-2d26964cea05"
@@ -91,7 +95,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 			testInstructionNodeColorRectangle.StrokeColor = color.Black
 			testInstructionNodeColorRectangle.StrokeWidth = 0
 
-			testInstructionNodeColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
+			testInstructionNodeColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize*0.5), float32(testCaseNodeRectangleSize*0.5)))
 			testInstructionNodeColorContainer := container.NewMax(testInstructionNodeColorRectangle)
 
 			/*
@@ -101,9 +105,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 				labelContainer := container.NewMax(nodeTextBackgroundColorectangle, nodeLabel)
 			*/
 
-			newDroppableLabel := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableLabel("This is just some text")
+			newDroppableLabel := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableLabel("This is just some text", nil)
+			newDroppableContainer := container.NewMax(newDroppableLabel.BackgroundRectangle, newDroppableLabel)
 
-			content := container.NewHBox(testInstructionNodeColorContainer, newDroppableLabel) //labelContainer)
+			content := container.NewHBox(testInstructionNodeColorContainer, newDroppableContainer) //labelContainer)
 
 			return content
 		},
@@ -208,8 +213,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 			//obj.(*fyne.Container).Objects[1].(*widget.Accordion).Items[0].Title = uid
 
 			//obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*widget.Label).SetText(extractedNodeName)
-			obj.(*fyne.Container).Objects[1].(*testUIDragNDropStatemachine.DroppableLabel).SetText(extractedNodeName)
-			obj.(*fyne.Container).Objects[1].(*testUIDragNDropStatemachine.DroppableLabel).TargetUuid = extractedNodeName
+			obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*testUIDragNDropStatemachine.DroppableLabel).SetText(extractedNodeName)
+			obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*testUIDragNDropStatemachine.DroppableLabel).TargetUuid = extractedNodeName
 			//obj.(*fyne.Container).Objects[1].(*testUIDragNDropStatemachine.DroppableLabel).IsDroppable = nodeIsDroppable
 
 			//*testUIDragNDropStatemachine.DroppableLabel
@@ -358,5 +363,120 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) convertRGBAHexStringIntoR
 	}
 
 	return rgbaValue, err
+
+}
+
+// Generates the graphical structure for the TestCase
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUIObject(testCaseUuid string, testCaseGraphicalModelAreaAccordion *widget.Accordion) (testCaseCanvasObject fyne.CanvasObject) {
+
+	treeViewModelForTestCase, err := testCasesUiCanvasObject.TestCasesModelReference.GetTreeViewModelForTestCase(testCaseUuid)
+
+	if err != nil {
+		errText := widget.NewLabel(err.Error())
+		testCaseCanvasObject = container.NewVBox(errText)
+
+		return testCaseCanvasObject
+
+	}
+
+	// Clear state machine for Drag N Drop
+	testCasesUiCanvasObject.DragNDropStateMachine = testUIDragNDropStatemachine.StateMachineDragAndDropStruct{}
+
+	// Start processing model for TestCase
+	testCaseCanvasObject, _ = testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject("", &treeViewModelForTestCase, testCaseGraphicalModelAreaAccordion)
+
+	return testCaseCanvasObject
+
+}
+
+// Generates the graphical structure for the TestCase
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGraphicalUIObject(uuid string, testCaseModelForUITree *map[string][]testCaseModel.TestCaseModelAdaptedForUiTreeDataStruct, firstAccordion *widget.Accordion) (testCaseCanvasObject fyne.CanvasObject, newTestInstructionAccordion2 *widget.Accordion) {
+
+	var childObject fyne.CanvasObject
+	var newTestInstructionAccordion *widget.Accordion
+	if firstAccordion != nil {
+		newTestInstructionAccordion = firstAccordion
+	}
+
+	testCaseModelForUITreeMap := *testCaseModelForUITree
+
+	testCaseNodeChildren := testCaseModelForUITreeMap[uuid]
+
+	nodeChildrenContainer := container.NewVBox()
+
+	for _, child := range testCaseNodeChildren {
+
+		switch child.NodeTypeEnum {
+
+		// Some kind of TestInstruction
+		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION,
+			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE:
+
+			// Extract the node name
+			nodeName := child.NodeName
+
+			// Create the color for TestInstruction Type
+			rectangleColor, err := testCasesUiCanvasObject.convertRGBAHexStringIntoRGBAColor(child.NodeColor)
+			if err != nil {
+				nodeName = err.Error()
+			}
+
+			// Create rectangle to show TestInstruction-color
+			newTestInstructionColorRectangle := canvas.NewRectangle(rectangleColor)
+			newTestInstructionColorRectangle.StrokeColor = color.Black
+			newTestInstructionColorRectangle.StrokeWidth = 0
+			newTestInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
+			testInstructionNodeColorContainer := container.NewMax(newTestInstructionColorRectangle)
+
+			// Create the Accordion-object to hold information about the TestInstruction
+			dummyText := widget.NewLabel("this is just a dummy text and might show other TestInstruction-attributes later on")
+			newTestInstructionAccordionItem := widget.NewAccordionItem(nodeName, dummyText)
+			newTestInstructionAccordion = widget.NewAccordion(newTestInstructionAccordionItem)
+
+			// Create the cone container object to be put on GUI
+			nodeContainer := container.NewHBox(testInstructionNodeColorContainer, newTestInstructionAccordion)
+
+			// Add the child
+			nodeChildrenContainer.Add(nodeContainer)
+
+		// Some kind of TestInstructionContainer
+		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER,
+			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE:
+
+			childObject, newTestInstructionAccordion = testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject(child.Uuid, testCaseModelForUITree, nil)
+
+			// Create the Accordion-object to hold information about the TestInstructionContainer
+			newTestInstructionContainerAccordionItem := widget.NewAccordionItem(child.NodeName+" - "+child.Uuid, childObject)
+			newTestInstructionContainerAccordion := widget.NewAccordion(newTestInstructionContainerAccordionItem)
+
+			// Add the child
+			nodeChildrenContainer.Add(newTestInstructionContainerAccordion)
+
+		// Some kind of droppable Bond
+		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND,
+			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND,
+			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND,
+			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND,
+			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND,
+			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10ox_BOND,
+			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND,
+			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND:
+
+			newDroppableBondLabel := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableLabel(child.NodeName+" - "+child.Uuid, newTestInstructionAccordion)
+			newDroppableBondLabelContainer := container.NewMax(newDroppableBondLabel.BackgroundRectangle, newDroppableBondLabel)
+
+			// Add the child
+			nodeChildrenContainer.Add(newDroppableBondLabelContainer)
+
+		// Some kind of non-droppable Bond
+		default:
+
+		}
+
+	}
+
+	testCaseCanvasObject = nodeChildrenContainer
+
+	return testCaseCanvasObject, newTestInstructionAccordion
 
 }

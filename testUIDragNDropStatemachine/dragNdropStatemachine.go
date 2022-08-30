@@ -56,11 +56,11 @@ func makeDragNDropTestGUI(textIn *canvas.Text, recIn *canvas.Rectangle, rec2In *
 	registeredDroppableTargetLabels = append(registeredDroppableTargetLabels, dragToDrop6Label)
 
 	DropOne := container.NewMax(dragToDrop1Label)
-	DropTwo := container.NewMax(dragToDrop2Label.backgroundRectangle, dragToDrop2Label)
+	DropTwo := container.NewMax(dragToDrop2Label.BackgroundRectangle, dragToDrop2Label)
 	DropThree := container.NewMax(dragToDrop3Label)
-	DropFour = container.NewMax(dragToDrop4Label.backgroundRectangle, dragToDrop4Label)
+	DropFour = container.NewMax(dragToDrop4Label.BackgroundRectangle, dragToDrop4Label)
 	DropFive := container.NewMax(dragToDrop5Label)
-	DropSix := container.NewMax(dragToDrop6Label.backgroundRectangle, dragToDrop6Label)
+	DropSix := container.NewMax(dragToDrop6Label.BackgroundRectangle, dragToDrop6Label)
 
 	labelStandardHeight = dragToDrop2Label.Size().Height
 
@@ -103,9 +103,11 @@ type DraggableLabel struct {
 
 type DroppableLabel struct {
 	widget.Label
+	parrentAccordion    *widget.Accordion
 	TargetUuid          string
-	backgroundRectangle *canvas.Rectangle
+	BackgroundRectangle *canvas.Rectangle
 	IsDroppable         bool
+	labelStandardHeight float32
 }
 
 type noneDroppableLabel struct {
@@ -135,14 +137,15 @@ func (stateMachine *StateMachineDragAndDropStruct) NewDraggableLabel(uuid string
 	return draggableLabel
 }
 
-func (stateMachine *StateMachineDragAndDropStruct) NewDroppableLabel(uuid string) *DroppableLabel {
+func (stateMachine *StateMachineDragAndDropStruct) NewDroppableLabel(uuid string, accordionReference *widget.Accordion) *DroppableLabel {
 	droppableLabel := &DroppableLabel{}
 	droppableLabel.ExtendBaseWidget(droppableLabel)
 
+	droppableLabel.parrentAccordion = accordionReference
 	droppableLabel.TargetUuid = uuid
 	droppableLabel.Text = uuid
 
-	droppableLabel.backgroundRectangle = canvas.NewRectangle(color.RGBA{
+	droppableLabel.BackgroundRectangle = canvas.NewRectangle(color.RGBA{
 		R: 0x00,
 		G: 0x00,
 		B: 0x00,
@@ -150,8 +153,12 @@ func (stateMachine *StateMachineDragAndDropStruct) NewDroppableLabel(uuid string
 	})
 
 	droppableLabel.Refresh()
-	droppableLabel.backgroundRectangle.SetMinSize(droppableLabel.Size())
-	droppableLabel.backgroundRectangle.Hide()
+	droppableLabel.BackgroundRectangle.SetMinSize(droppableLabel.Size())
+	droppableLabel.BackgroundRectangle.Hide()
+
+	stateMachineDragAndDrop.registeredDroppableTargetLabels = append(stateMachineDragAndDrop.registeredDroppableTargetLabels, droppableLabel)
+
+	droppableLabel.labelStandardHeight = droppableLabel.MinSize().Height
 
 	return droppableLabel
 }
@@ -288,14 +295,14 @@ func (t *DraggableLabel) DragEnd() {
 		shrinkDropAreas()
 
 		for _, droppableTargetLabel := range stateMachineDragAndDrop.registeredDroppableTargetLabels {
-			droppableTargetLabel.backgroundRectangle.StrokeWidth = 0
-			droppableTargetLabel.backgroundRectangle.StrokeColor = color.RGBA{
+			droppableTargetLabel.BackgroundRectangle.StrokeWidth = 0
+			droppableTargetLabel.BackgroundRectangle.StrokeColor = color.RGBA{
 				R: 0x00,
 				G: 0x00,
 				B: 0x00,
 				A: 0x00,
 			}
-			droppableTargetLabel.backgroundRectangle.FillColor = color.RGBA{
+			droppableTargetLabel.BackgroundRectangle.FillColor = color.RGBA{
 				R: 0x00,
 				G: 0x00,
 				B: 0x00,
@@ -420,18 +427,20 @@ func (b *DroppableLabel) MouseIn(*desktop.MouseEvent) {
 
 	case targetStateSourceIsDraggingObject:
 
+		// Verify if this Draggable component can be dropped on this Element
+
 		//if b.IsDroppable == true {
 		switchStateForSource(sourceStateEnteringTarget)
 		switchStateForTarget(targetStateSourceEnteredTargetWithObject)
-		b.backgroundRectangle.FillColor = color.RGBA{
+		b.BackgroundRectangle.FillColor = color.RGBA{
 			R: 0x33,
 			G: 0x33,
 			B: 0x33,
 			A: 0x22,
 		}
 
-		b.backgroundRectangle.Show()
-		b.backgroundRectangle.Refresh()
+		b.BackgroundRectangle.Show()
+		b.BackgroundRectangle.Refresh()
 
 		stateMachineDragAndDrop.target = *b
 		//}
@@ -472,14 +481,14 @@ func (b *DroppableLabel) MouseOut() {
 		// switch state to 'targetStateSourceIsDraggingObject'
 		switchStateForSource(sourceStateDragging)
 		switchStateForTarget(targetStateSourceIsDraggingObject)
-		b.backgroundRectangle.FillColor = color.RGBA{
+		b.BackgroundRectangle.FillColor = color.RGBA{
 			R: 0x00,
 			G: 0x00,
 			B: 0x00,
 			A: 0x00,
 		}
-		//b.backgroundRectangle.Hide()
-		b.backgroundRectangle.Refresh()
+		//b.BackgroundRectangle.Hide()
+		b.BackgroundRectangle.Refresh()
 
 	case targetStateSourceReleasingOnTarget:
 		return
@@ -505,9 +514,9 @@ func switchStateForTarget(newState int) {
 func expandDropAreas() {
 	for _, targetLabel := range stateMachineDragAndDrop.registeredDroppableTargetLabels {
 
-		targetLabel.backgroundRectangle.StrokeWidth = 2
+		targetLabel.BackgroundRectangle.StrokeWidth = 2
 
-		targetLabel.backgroundRectangle.Show()
+		targetLabel.BackgroundRectangle.Show()
 		go func(targetReferenceLabel *DroppableLabel) {
 			rectangleColorAnimation := canvas.NewColorRGBAAnimation(color.RGBA{
 				R: 0x00,
@@ -520,17 +529,18 @@ func expandDropAreas() {
 				B: 0x00,
 				A: 0xAA,
 			}, time.Millisecond*300, func(c color.Color) {
-				targetReferenceLabel.backgroundRectangle.StrokeColor = c
-				canvas.Refresh(targetReferenceLabel.backgroundRectangle)
+				targetReferenceLabel.BackgroundRectangle.StrokeColor = c
+				canvas.Refresh(targetReferenceLabel.BackgroundRectangle)
 			})
 
 			rectangleSizeAnimation := canvas.NewSizeAnimation(
-				fyne.NewSize(targetReferenceLabel.backgroundRectangle.Size().Width, 0),
-				fyne.NewSize(targetReferenceLabel.backgroundRectangle.Size().Width, labelStandardHeight),
+				fyne.NewSize(targetReferenceLabel.BackgroundRectangle.Size().Width, 0),
+				fyne.NewSize(targetReferenceLabel.BackgroundRectangle.Size().Width, targetReferenceLabel.labelStandardHeight),
 				time.Millisecond*300,
 				func(animationSize fyne.Size) {
-					targetReferenceLabel.backgroundRectangle.SetMinSize(animationSize)
-					canvas.Refresh(targetReferenceLabel.backgroundRectangle)
+					targetReferenceLabel.BackgroundRectangle.SetMinSize(animationSize)
+					canvas.Refresh(targetReferenceLabel.BackgroundRectangle)
+					targetReferenceLabel.parrentAccordion.Refresh()
 					//canvas.Refresh(DropFour)
 					//canvas.Refresh(dropContainer)
 				})
@@ -554,7 +564,7 @@ func shrinkDropAreas() {
 
 		targetLabel.Hide()
 
-		targetLabel.backgroundRectangle.StrokeWidth = 2
+		targetLabel.BackgroundRectangle.StrokeWidth = 2
 		go func(targetReferenceLabel *DroppableLabel) {
 			rectangleColorAnimation := canvas.NewColorRGBAAnimation(color.RGBA{
 				R: 0x00,
@@ -567,17 +577,17 @@ func shrinkDropAreas() {
 				B: 0x00,
 				A: 0xAA,
 			}, time.Millisecond*300, func(c color.Color) {
-				targetReferenceLabel.backgroundRectangle.StrokeColor = c
-				canvas.Refresh(targetReferenceLabel.backgroundRectangle)
+				targetReferenceLabel.BackgroundRectangle.StrokeColor = c
+				canvas.Refresh(targetReferenceLabel.BackgroundRectangle)
 			})
 
 			rectangleSizeAnimation := canvas.NewSizeAnimation(
-				fyne.NewSize(targetReferenceLabel.backgroundRectangle.Size().Width, labelStandardHeight),
-				fyne.NewSize(targetReferenceLabel.backgroundRectangle.Size().Width, 0),
+				fyne.NewSize(targetReferenceLabel.BackgroundRectangle.Size().Width, targetReferenceLabel.labelStandardHeight),
+				fyne.NewSize(targetReferenceLabel.BackgroundRectangle.Size().Width, 0),
 				time.Millisecond*300,
 				func(animationSize fyne.Size) {
-					targetReferenceLabel.backgroundRectangle.SetMinSize(animationSize)
-					canvas.Refresh(targetReferenceLabel.backgroundRectangle)
+					targetReferenceLabel.BackgroundRectangle.SetMinSize(animationSize)
+					canvas.Refresh(targetReferenceLabel.BackgroundRectangle)
 					//canvas.Refresh(DropFour)
 					//canvas.Refresh(dropContainer)
 				})
@@ -591,8 +601,8 @@ func shrinkDropAreas() {
 	go func() {
 		time.Sleep(400 * time.Millisecond)
 		for _, targetLabel := range stateMachineDragAndDrop.registeredDroppableTargetLabels {
-			targetLabel.backgroundRectangle.Hide()
-			targetLabel.backgroundRectangle.Refresh()
+			targetLabel.BackgroundRectangle.Hide()
+			targetLabel.BackgroundRectangle.Refresh()
 
 		}
 	}()
@@ -601,3 +611,5 @@ func shrinkDropAreas() {
 func executeDropAction() {
 	fmt.Println(fmt.Sprintf("'%s' was droppen in '%s'", stateMachineDragAndDrop.SourceUuid, stateMachineDragAndDrop.target.TargetUuid))
 }
+
+//func RegisterDroppableLable()

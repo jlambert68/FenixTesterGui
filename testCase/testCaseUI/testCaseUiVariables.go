@@ -66,5 +66,6 @@ type testCaseTextualStructureStruct struct {
 type testCaseGraphicalStructureStruct struct {
 	currentTestCaseGraphicalModelArea       fyne.CanvasObject
 	currentTestCaseGraphicalTreeComponent   *widget.Tree
+	currentTestCaseGraphicalObject          *fyne.CanvasObject
 	currentTestCaseGraphicalAccordionObject *widget.Accordion
 }

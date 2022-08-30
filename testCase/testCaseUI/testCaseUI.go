@@ -87,7 +87,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	testCaseGraphicalAreas.TestCaseTextualModelArea = canvasTextualRepresentationAccordionObject
 
 	// Generate the Graphical Representation Area for the TestCase
-	testCaseGraphicalModelArea, testCaseGraphicalUITree, testCaseGraphicalModelAreaAccordion, err := testCasesUiCanvasObject.generateGraphicalRepresentationAreaForTestCase(testCaseToBeAddedUuid)
+	testCaseGraphicalModelArea, graphicalTestCaseUIObject, testCaseGraphicalModelAreaAccordion, err := testCasesUiCanvasObject.generateGraphicalRepresentationAreaForTestCase(testCaseToBeAddedUuid)
 
 	if err != nil {
 		return err
@@ -180,7 +180,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 
 	// save Graphical object into TestCase, to be reachable
 	testCaseGraphicalAreas.currentTestCaseGraphicalStructure.currentTestCaseGraphicalAccordionObject = testCaseGraphicalModelAreaAccordion
-	testCaseGraphicalAreas.currentTestCaseGraphicalStructure.currentTestCaseGraphicalTreeComponent = testCaseGraphicalUITree
+	//testCaseGraphicalAreas.currentTestCaseGraphicalStructure.currentTestCaseGraphicalTreeComponent = testCaseGraphicalUITree
+	testCaseGraphicalAreas.currentTestCaseGraphicalStructure.currentTestCaseGraphicalObject = &graphicalTestCaseUIObject
 
 	// Open 'Accordions' for Textual and Graphical TestCase Representation for TestCase
 	testCaseGraphicalAreas.currentTestCaseTextualStructure.currentTestCaseGraphicalAccordionObject.OpenAll()

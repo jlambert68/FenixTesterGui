@@ -79,7 +79,55 @@ func makeDragNDropTestGUI(textIn *canvas.Text, recIn *canvas.Rectangle, rec2In *
 
 	myText := widget.NewLabel("Test Area for Drag n Drop")
 
-	myCanvasObject = container.NewVBox(myText, fromContainer, layout.NewSpacer(), toContainer, dropContainer)
+	//*********************************
+
+	dragToDropAccordianLabel1 := newDroppableLabel("Accordian 1")
+	dragToDropAccordianLabel2 := newDroppableLabel("Accordian 2")
+	dragToDropAccordianLabel3 := newDroppableLabel("Accordian 3")
+	Accordian1 := container.NewMax(dragToDropAccordianLabel1.backgroundRectangle, dragToDropAccordianLabel1)
+	Accordian2 := container.NewMax(dragToDropAccordianLabel2.backgroundRectangle, dragToDropAccordianLabel2)
+	Accordian3 := container.NewMax(dragToDropAccordianLabel3.backgroundRectangle, dragToDropAccordianLabel3)
+
+	registeredDroppableTargetLabels = append(registeredDroppableTargetLabels, dragToDropAccordianLabel1)
+	registeredDroppableTargetLabels = append(registeredDroppableTargetLabels, dragToDropAccordianLabel2)
+	registeredDroppableTargetLabels = append(registeredDroppableTargetLabels, dragToDropAccordianLabel3)
+
+	textualRepresentationGrid2 := container.New(layout.NewVBoxLayout(),
+		widget.NewLabel("Extended"),
+		Accordian3)
+
+	// Create GUI Canvas object to be used
+	testCaseTextualModelArea2 := container.NewVBox(textualRepresentationGrid2)
+
+	// Create a Canvas Accordion type for grouping the Textual Representations
+	testCaseTextualModelAreaAccordionItem2 := widget.NewAccordionItem("Textual Representation of the TestCase 2", testCaseTextualModelArea2)
+
+	testCaseTextualModelAreaAccordion2 := widget.NewAccordion(testCaseTextualModelAreaAccordionItem2)
+	myrect := canvas.NewRectangle(color.White)
+	myrect.SetMinSize(fyne.NewSize(20, 20))
+	testCaseTextualModelAreaAccordion2Area := container.NewHBox(myrect, testCaseTextualModelAreaAccordion2)
+
+	textualRepresentationGrid := container.New(layout.NewVBoxLayout(),
+		widget.NewLabel("Simple"),
+		Accordian1,
+		widget.NewLabel("Complex"),
+		Accordian2,
+		testCaseTextualModelAreaAccordion2Area,
+	)
+
+	// Create GUI Canvas object to be used
+	testCaseTextualModelArea := container.NewVBox(textualRepresentationGrid)
+
+	// Create a Canvas Accordion type for grouping the Textual Representations
+	testCaseTextualModelAreaAccordionItem := widget.NewAccordionItem("Textual Representation of the TestCase", testCaseTextualModelArea)
+
+	testCaseTextualModelAreaAccordion := widget.NewAccordion(testCaseTextualModelAreaAccordionItem)
+
+	canvasTextualRepresentationAccordionObject := container.NewVBox(testCaseTextualModelAreaAccordion)
+
+	//*********************************
+
+	myCanvasObject = container.NewVBox(myText, fromContainer, layout.NewSpacer(), toContainer, dropContainer, canvasTextualRepresentationAccordionObject)
 
 	myCanvasObject.Refresh()
 	/*
@@ -586,8 +634,8 @@ func shrinkDropAreas() {
 				func(animationSize fyne.Size) {
 					targetReferenceLabel.backgroundRectangle.SetMinSize(animationSize)
 					canvas.Refresh(targetReferenceLabel.backgroundRectangle)
-					canvas.Refresh(DropFour)
-					canvas.Refresh(dropContainer)
+					//canvas.Refresh(DropFour)
+					//canvas.Refresh(dropContainer)
 				})
 
 			rectangleColorAnimation.Start()

@@ -539,7 +539,7 @@ func expandDropAreas() {
 				canvas.Refresh(targetReferenceLabel.BackgroundRectangle)
 			})
 
-			rectangleWidth := targetReferenceLabel.parrentAccordion.Size().Width - float32(targetReferenceLabel.testCaseNodeRectangleSize)*(targetReferenceLabel.nodeLevel-1)
+			rectangleWidth := float32(500)
 
 			rectangleSizeAnimation := canvas.NewSizeAnimation(
 				fyne.NewSize(rectangleWidth, 0),
@@ -589,7 +589,7 @@ func shrinkDropAreas() {
 				canvas.Refresh(targetReferenceLabel.BackgroundRectangle)
 			})
 
-			rectangleWidth := targetReferenceLabel.parrentAccordion.Size().Width - float32(targetReferenceLabel.testCaseNodeRectangleSize)*(targetReferenceLabel.nodeLevel-1)
+			rectangleWidth := float32(500)
 
 			rectangleSizeAnimation := canvas.NewSizeAnimation(
 				fyne.NewSize(rectangleWidth, targetReferenceLabel.labelStandardHeight),

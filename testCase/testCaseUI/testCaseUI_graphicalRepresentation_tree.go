@@ -469,11 +469,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 
 			childObject, newTestInstructionAccordion = testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject(child.Uuid, testCaseModelForUITree, newTestInstructionContainerAccordion, nodeTreeLevel+0.2, firstAccordion)
 
-			childBackgroundRectangle := canvas.NewRectangle(color.Black)
-			childContainer := container.NewMax(childBackgroundRectangle, childObject)
-
 			// Create the Accordion-object to hold information about the TestInstructionContainer
-			newTestInstructionContainerAccordionItem := widget.NewAccordionItem(child.NodeName+" - "+child.Uuid, childContainer)
+			newTestInstructionContainerAccordionItem := widget.NewAccordionItem(child.NodeName+" - "+child.Uuid, childObject)
 			newTestInstructionContainerAccordion.Append(newTestInstructionContainerAccordionItem)
 			newTestInstructionContainerAccordion.Open(0)
 

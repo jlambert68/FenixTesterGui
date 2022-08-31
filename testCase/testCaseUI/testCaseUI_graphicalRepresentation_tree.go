@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"image/color"
@@ -101,11 +102,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITr
 			/*
 				nodeTextBackgroundColorectangle := canvas.NewRectangle(color.Gray{0x44}) // RGBA{0x00, 0xFF, 0x00, 0xff})
 				nodeTextBackgroundColorectangle.StrokeColor = color.Black
-				nodeTextBackgroundColorectangle.StrokeWidth = 0
+				nodeTextBackgroundColorectangle.StrokeWidth = 00
 				labelContainer := container.NewMax(nodeTextBackgroundColorectangle, nodeLabel)
 			*/
 
-			newDroppableLabel := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableLabel("This is just some text", nil)
+			newDroppableLabel := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableLabel("This is just some text", nil, 0, 0, nil)
 			newDroppableContainer := container.NewMax(newDroppableLabel.BackgroundRectangle, newDroppableLabel)
 
 			content := container.NewHBox(testInstructionNodeColorContainer, newDroppableContainer) //labelContainer)
@@ -383,14 +384,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUIOb
 	testCasesUiCanvasObject.DragNDropStateMachine = testUIDragNDropStatemachine.StateMachineDragAndDropStruct{}
 
 	// Start processing model for TestCase
-	testCaseCanvasObject, _ = testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject("", &treeViewModelForTestCase, testCaseGraphicalModelAreaAccordion)
+	testCaseCanvasObject, _ = testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject("", &treeViewModelForTestCase, testCaseGraphicalModelAreaAccordion, 1, testCaseGraphicalModelAreaAccordion)
 
 	return testCaseCanvasObject
 
 }
 
 // Generates the graphical structure for the TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGraphicalUIObject(uuid string, testCaseModelForUITree *map[string][]testCaseModel.TestCaseModelAdaptedForUiTreeDataStruct, firstAccordion *widget.Accordion) (testCaseCanvasObject fyne.CanvasObject, newTestInstructionAccordion2 *widget.Accordion) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGraphicalUIObject(uuid string, testCaseModelForUITree *map[string][]testCaseModel.TestCaseModelAdaptedForUiTreeDataStruct, firstAccordion *widget.Accordion, nodeTreeLevel float32, topLevelAccordian *widget.Accordion) (testCaseCanvasObject fyne.CanvasObject, newTestInstructionAccordion2 *widget.Accordion) {
 
 	var childObject fyne.CanvasObject
 	var newTestInstructionAccordion *widget.Accordion
@@ -421,6 +422,23 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 				nodeName = err.Error()
 			}
 
+			// Create color to use
+			newTransaparentColor := color.RGBA{
+				R: 0x00,
+				G: 0x00,
+				B: 0x00,
+				A: 0x00,
+			}
+
+			// Create indentation rectangle to move node to right
+			newIndentationRectangle := canvas.NewRectangle(newTransaparentColor)
+			newIndentationRectangle.StrokeColor = color.Black
+			newIndentationRectangle.StrokeWidth = 0
+			newIndentationRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize*nodeTreeLevel), float32(0)))
+			newIndentationRectangleContainer := container.NewMax(newIndentationRectangle)
+
+			// Create indentation within TestInstructionContainer
+
 			// Create rectangle to show TestInstruction-color
 			newTestInstructionColorRectangle := canvas.NewRectangle(rectangleColor)
 			newTestInstructionColorRectangle.StrokeColor = color.Black
@@ -433,8 +451,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			newTestInstructionAccordionItem := widget.NewAccordionItem(nodeName, dummyText)
 			newTestInstructionAccordion = widget.NewAccordion(newTestInstructionAccordionItem)
 
-			// Create the cone container object to be put on GUI
-			nodeContainer := container.NewHBox(testInstructionNodeColorContainer, newTestInstructionAccordion)
+			// Create the container object to be put on GUI
+			nodeContainer := container.NewHBox(newIndentationRectangleContainer, testInstructionNodeColorContainer, newTestInstructionAccordion, layout.NewSpacer())
 
 			// Add the child
 			nodeChildrenContainer.Add(nodeContainer)
@@ -443,14 +461,50 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER,
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE:
 
-			childObject, newTestInstructionAccordion = testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject(child.Uuid, testCaseModelForUITree, nil)
+			// Create the Accordion-object to hold information about the TestInstructionContainer
+			dummyText := widget.NewLabel("this is just a dummy text")
+			newTestInstructionAccordionItem := widget.NewAccordionItem("DummyText", dummyText)
+			newTestInstructionContainerAccordion := widget.NewAccordion(newTestInstructionAccordionItem)
+			newTestInstructionContainerAccordion.RemoveIndex(0)
+
+			childObject, newTestInstructionAccordion = testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject(child.Uuid, testCaseModelForUITree, newTestInstructionContainerAccordion, nodeTreeLevel+0.2, firstAccordion)
+
+			childBackgroundRectangle := canvas.NewRectangle(color.Black)
+			childContainer := container.NewMax(childBackgroundRectangle, childObject)
 
 			// Create the Accordion-object to hold information about the TestInstructionContainer
-			newTestInstructionContainerAccordionItem := widget.NewAccordionItem(child.NodeName+" - "+child.Uuid, childObject)
-			newTestInstructionContainerAccordion := widget.NewAccordion(newTestInstructionContainerAccordionItem)
+			newTestInstructionContainerAccordionItem := widget.NewAccordionItem(child.NodeName+" - "+child.Uuid, childContainer)
+			newTestInstructionContainerAccordion.Append(newTestInstructionContainerAccordionItem)
+			newTestInstructionContainerAccordion.Open(0)
+
+			// Create color to use
+			newTransaparentColor := color.RGBA{
+				R: 0x00,
+				G: 0x00,
+				B: 0x00,
+				A: 0x00,
+			}
+
+			// Create indentation rectangle to move node to right
+			newIndentationRectangle := canvas.NewRectangle(newTransaparentColor)
+			newIndentationRectangle.StrokeColor = color.Black
+			newIndentationRectangle.StrokeWidth = 0
+			newIndentationRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize*nodeTreeLevel), float32(0)))
+			newIndentationRectangleContainer := container.NewMax(newIndentationRectangle)
+
+			// Create indentation within TestInstructionContainer
+			/*newTestInstructionColorRectangle := canvas.NewRectangle(newTransaparentColor)
+			newTestInstructionColorRectangle.StrokeColor = color.Black
+			newTestInstructionColorRectangle.StrokeWidth = 0
+			newTestInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize * 0.3), float32(0)))
+			testInstructionNodeTransparentContainer := container.NewMax(newTestInstructionColorRectangle)
+			*/
+
+			// Create the cone container object to be put on GUI
+			nodeContainer := container.NewHBox(newIndentationRectangleContainer, newTestInstructionContainerAccordion, layout.NewSpacer())
 
 			// Add the child
-			nodeChildrenContainer.Add(newTestInstructionContainerAccordion)
+			nodeChildrenContainer.Add(nodeContainer)
 
 		// Some kind of droppable Bond
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND,
@@ -462,11 +516,37 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND,
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND:
 
-			newDroppableBondLabel := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableLabel(child.NodeName+" - "+child.Uuid, newTestInstructionAccordion)
+			newDroppableBondLabel := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableLabel(child.NodeName+" - "+child.Uuid, newTestInstructionAccordion, nodeTreeLevel, testCaseNodeRectangleSize, firstAccordion)
 			newDroppableBondLabelContainer := container.NewMax(newDroppableBondLabel.BackgroundRectangle, newDroppableBondLabel)
+			newDroppableBondLabel.Hide()
+
+			// Create color to use
+			newTransaparentColor := color.RGBA{
+				R: 0x00,
+				G: 0x00,
+				B: 0x00,
+				A: 0x00,
+			}
+
+			// Create indentation rectangle to move node to right
+			newIndentationRectangle := canvas.NewRectangle(newTransaparentColor)
+			newIndentationRectangle.StrokeColor = color.Black
+			newIndentationRectangle.StrokeWidth = 0
+			newIndentationRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize*nodeTreeLevel), float32(0)))
+			newIndentationRectangleContainer := container.NewMax(newIndentationRectangle)
+
+			// Create indentation within TestInstructionContainer
+			newTestInstructionColorRectangle := canvas.NewRectangle(newTransaparentColor)
+			newTestInstructionColorRectangle.StrokeColor = color.Black
+			newTestInstructionColorRectangle.StrokeWidth = 0
+			newTestInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(0)))
+			testInstructionNodeTransparentContainer := container.NewMax(newTestInstructionColorRectangle)
+
+			// Create the cone container object to be put on GUI
+			nodeContainer := container.NewHBox(newIndentationRectangleContainer, testInstructionNodeTransparentContainer, newDroppableBondLabelContainer, layout.NewSpacer())
 
 			// Add the child
-			nodeChildrenContainer.Add(newDroppableBondLabelContainer)
+			nodeChildrenContainer.Add(nodeContainer)
 
 		// Some kind of non-droppable Bond
 		default:

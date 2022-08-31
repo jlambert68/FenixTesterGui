@@ -103,11 +103,14 @@ type DraggableLabel struct {
 
 type DroppableLabel struct {
 	widget.Label
-	parrentAccordion    *widget.Accordion
-	TargetUuid          string
-	BackgroundRectangle *canvas.Rectangle
-	IsDroppable         bool
-	labelStandardHeight float32
+	topTestCaseAccordion      *widget.Accordion
+	parrentAccordion          *widget.Accordion
+	TargetUuid                string
+	BackgroundRectangle       *canvas.Rectangle
+	IsDroppable               bool
+	labelStandardHeight       float32
+	nodeLevel                 float32
+	testCaseNodeRectangleSize int
 }
 
 type noneDroppableLabel struct {
@@ -137,13 +140,16 @@ func (stateMachine *StateMachineDragAndDropStruct) NewDraggableLabel(uuid string
 	return draggableLabel
 }
 
-func (stateMachine *StateMachineDragAndDropStruct) NewDroppableLabel(uuid string, accordionReference *widget.Accordion) *DroppableLabel {
+func (stateMachine *StateMachineDragAndDropStruct) NewDroppableLabel(uuid string, accordionReference *widget.Accordion, nodeLevel float32, testCaseNodeRectangleSize int, topTestCaseAccordion *widget.Accordion) *DroppableLabel {
 	droppableLabel := &DroppableLabel{}
 	droppableLabel.ExtendBaseWidget(droppableLabel)
 
+	droppableLabel.topTestCaseAccordion = topTestCaseAccordion
 	droppableLabel.parrentAccordion = accordionReference
 	droppableLabel.TargetUuid = uuid
 	droppableLabel.Text = uuid
+	droppableLabel.nodeLevel = nodeLevel
+	droppableLabel.testCaseNodeRectangleSize = testCaseNodeRectangleSize
 
 	droppableLabel.BackgroundRectangle = canvas.NewRectangle(color.RGBA{
 		R: 0x00,
@@ -533,9 +539,11 @@ func expandDropAreas() {
 				canvas.Refresh(targetReferenceLabel.BackgroundRectangle)
 			})
 
+			rectangleWidth := targetReferenceLabel.parrentAccordion.Size().Width - float32(targetReferenceLabel.testCaseNodeRectangleSize)*(targetReferenceLabel.nodeLevel-1)
+
 			rectangleSizeAnimation := canvas.NewSizeAnimation(
-				fyne.NewSize(targetReferenceLabel.BackgroundRectangle.Size().Width, 0),
-				fyne.NewSize(targetReferenceLabel.BackgroundRectangle.Size().Width, targetReferenceLabel.labelStandardHeight),
+				fyne.NewSize(rectangleWidth, 0),
+				fyne.NewSize(rectangleWidth, targetReferenceLabel.labelStandardHeight),
 				time.Millisecond*300,
 				func(animationSize fyne.Size) {
 					targetReferenceLabel.BackgroundRectangle.SetMinSize(animationSize)
@@ -581,9 +589,11 @@ func shrinkDropAreas() {
 				canvas.Refresh(targetReferenceLabel.BackgroundRectangle)
 			})
 
+			rectangleWidth := targetReferenceLabel.parrentAccordion.Size().Width - float32(targetReferenceLabel.testCaseNodeRectangleSize)*(targetReferenceLabel.nodeLevel-1)
+
 			rectangleSizeAnimation := canvas.NewSizeAnimation(
-				fyne.NewSize(targetReferenceLabel.BackgroundRectangle.Size().Width, targetReferenceLabel.labelStandardHeight),
-				fyne.NewSize(targetReferenceLabel.BackgroundRectangle.Size().Width, 0),
+				fyne.NewSize(rectangleWidth, targetReferenceLabel.labelStandardHeight),
+				fyne.NewSize(rectangleWidth, 0),
 				time.Millisecond*300,
 				func(animationSize fyne.Size) {
 					targetReferenceLabel.BackgroundRectangle.SetMinSize(animationSize)

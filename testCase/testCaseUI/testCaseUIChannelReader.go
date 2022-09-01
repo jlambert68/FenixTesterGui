@@ -22,6 +22,18 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) startGUICommandChannelRea
 
 func (testCasesUiCanvasObject *TestCasesUiModelStruct) updateTestCaseGraphics(incomingChannelCommandGraphicsUpdatedData sharedCode.ChannelCommandGraphicsUpdatedStruct) {
 
+	// Generate UI for New TestCase
+	if incomingChannelCommandGraphicsUpdatedData.CreateNewTestCaseUI == true {
+
+		err := testCasesUiCanvasObject.GenerateNewTestCaseTabObject(incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
+		if err != nil {
+			//TODO Send error over error-channel
+			fmt.Println(err)
+
+			return
+		}
+	}
+
 	// Update Textual Representations, in UI-model, for TestCase
 	err := testCasesUiCanvasObject.UpdateTextualStructuresForTestCase(
 		incomingChannelCommandGraphicsUpdatedData.ActiveTestCase,
@@ -30,6 +42,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) updateTestCaseGraphics(in
 		incomingChannelCommandGraphicsUpdatedData.TextualTestCaseExtended)
 
 	if err != nil {
+		//TODO Send error over error-channel
 		fmt.Println(err)
 
 		return
@@ -38,6 +51,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) updateTestCaseGraphics(in
 	// Update Graphical TestCase Representation
 	err = testCasesUiCanvasObject.UpdateGraphicalRepresentationForTestCase(incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
 	if err != nil {
+		//TODO Send error over error-channel
 		fmt.Println(err)
 
 		return

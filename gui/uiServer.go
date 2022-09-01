@@ -101,6 +101,9 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 	uiServer.testCasesUiModel.CommandAndRuleEngineReference.CommandChannelReference = mychannel
 	uiServer.testCasesUiModel.CommandChannelReference = mychannel
 
+	// Start Receiver channel for commands
+	uiServer.commandAndRuleEngine.InitiateCommandChannelReader()
+
 	// Create Channel used for triggering TestCase Graphics update
 	sharedCode.CommandChannelGraphicsUpdate = make(chan sharedCode.ChannelCommandGraphicsUpdatedStruct)
 

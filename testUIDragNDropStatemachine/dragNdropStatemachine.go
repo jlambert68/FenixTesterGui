@@ -570,8 +570,8 @@ func executeDropAction() {
 
 	commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
 		ChannelCommand:  sharedCode.ChannelCommandSwapElement,
-		FirstParameter:  stateMachineDragAndDrop.SourceUuid,
-		SecondParameter: stateMachineDragAndDrop.target.TargetUuid,
+		FirstParameter:  stateMachineDragAndDrop.target.TargetUuid,
+		SecondParameter: stateMachineDragAndDrop.SourceUuid,
 		ActiveTestCase:  stateMachineDragAndDrop.target.CurrentTestCaseUuid,
 		ElementType:     sharedCode.BuildingBlock(stateMachineDragAndDrop.SourceType),
 	}

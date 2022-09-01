@@ -1,7 +1,10 @@
 package sharedCode
 
 // CommandChannel Channel used for triggering command to CommandEngine
-var CommandChannel chan ChannelCommandStruct
+
+var CommandChannel ChannelType
+
+type ChannelType chan ChannelCommandStruct
 
 type ChannelCommandType uint8
 

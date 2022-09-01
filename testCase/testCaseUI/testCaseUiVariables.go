@@ -2,6 +2,7 @@ package testCaseUI
 
 import (
 	"FenixTesterGui/commandAndRuleEngine"
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testUIDragNDropStatemachine"
 	"fyne.io/fyne/v2"
@@ -31,6 +32,8 @@ type TestCasesUiModelStruct struct {
 	DragNDropContainer               *fyne.Container
 
 	CommandAndRuleEngineReference *commandAndRuleEngine.CommandAndRuleEngineObjectStruct
+
+	CommandChannelReference *sharedCode.ChannelType
 }
 
 // This object hold references to the object that is used when user drags a new TestInstruction or

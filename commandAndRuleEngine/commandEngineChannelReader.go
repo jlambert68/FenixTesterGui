@@ -15,7 +15,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) startCommandChanne
 
 	for {
 		// Wait for incoming command over channel
-		incomingChannelCommand = <-sharedCode.CommandChannel
+		incomingChannelCommand = <-*commandAndRuleEngine.CommandChannelReference
 
 		switch incomingChannelCommand.ChannelCommand {
 

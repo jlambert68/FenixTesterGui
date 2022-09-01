@@ -97,6 +97,9 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 
 	// Create Channel used for sending Commands to CommandsEngine
 	sharedCode.CommandChannel = make(chan sharedCode.ChannelCommandStruct)
+	mychannel := &sharedCode.CommandChannel
+	uiServer.testCasesUiModel.CommandAndRuleEngineReference.CommandChannelReference = mychannel
+	uiServer.testCasesUiModel.CommandChannelReference = mychannel
 
 	// Create Channel used for triggering TestCase Graphics update
 	sharedCode.CommandChannelGraphicsUpdate = make(chan sharedCode.ChannelCommandGraphicsUpdatedStruct)
@@ -334,7 +337,8 @@ func (uiServer *UIServerStruct) loadUI() fyne.CanvasObject {
 		uiServer.testCasesUiModel.DragNDropObject.DragNDropText,
 		uiServer.testCasesUiModel.DragNDropObject.DragNDropRectangle,
 		uiServer.testCasesUiModel.DragNDropObject.DragNDropRectangleTextBackground,
-		uiServer.testCasesUiModel.DragNDropObject.DragNDropContainer)
+		uiServer.testCasesUiModel.DragNDropObject.DragNDropContainer,
+		uiServer.commandAndRuleEngine.CommandChannelReference)
 
 	// ****************************
 	// TODO Used for Testing only and can be removed

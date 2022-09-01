@@ -1,6 +1,7 @@
 package commandAndRuleEngine
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/grpc_out"
 	"FenixTesterGui/testCase/testCaseModel"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
@@ -12,7 +13,8 @@ type CommandAndRuleEngineObjectStruct struct {
 	availableBondsMap map[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage
 	Testcases         *testCaseModel.TestCasesModelsStruct
 	// subSystemsCrossReferences *gui.SubSystemsCrossReferencesStruct
-	GrpcOutReference *grpc_out.GRPCOutStruct
+	GrpcOutReference        *grpc_out.GRPCOutStruct
+	CommandChannelReference *sharedCode.ChannelType
 }
 
 // The Complex Deletion Rules

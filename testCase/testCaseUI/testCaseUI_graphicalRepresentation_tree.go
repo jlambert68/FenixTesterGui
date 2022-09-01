@@ -54,231 +54,6 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateGraphicalRepresen
 	return testCaseGraphicalModelArea, graphicalTestCaseUIObject, testCaseGraphicalModelAreaAccordion, err
 }
 
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUITree(testCaseUuid string) (tree *widget.Tree) {
-
-	// Check if TestCase already exists, shouldn't do that
-	_, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
-	if existsInMap == true {
-		errorId := "69447c68-b650-49bd-ab34-2d26964cea05"
-		err := errors.New(fmt.Sprintf("testcase with sourceUuid '%s' allready exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
-
-		list := map[string][]string{
-			"": {err.Error()},
-		}
-
-		tree := widget.NewTreeWithStrings(list)
-		return tree
-	}
-
-	// Create Tree
-	tree = &widget.Tree{
-		ChildUIDs: func(uid string) []string {
-
-			// Create slice with children UUIDs
-			var childrenUuidSlice []string
-
-			// Get the array
-			childrenUuidSlice = testCasesUiCanvasObject.TestCasesModelReference.GetArrayOfTestCaseTreeNodeChildrenData(uid, testCaseUuid)
-
-			return childrenUuidSlice
-		},
-		IsBranch: func(uid string) bool {
-			treeViewModelForTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.GetTreeViewModelForTestCase(testCaseUuid)
-			children, ok := treeViewModelForTestCase[uid]
-
-			return ok && len(children) > 0
-		},
-
-		CreateNode: func(branch bool) fyne.CanvasObject {
-
-			//nodeLabel := widget.NewLabel("This is just some text")
-
-			testInstructionNodeColorRectangle := canvas.NewRectangle(color.RGBA{0xff, 0x00, 0x00, 0xff})
-			testInstructionNodeColorRectangle.StrokeColor = color.Black
-			testInstructionNodeColorRectangle.StrokeWidth = 0
-
-			testInstructionNodeColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize*0.5), float32(testCaseNodeRectangleSize*0.5)))
-			testInstructionNodeColorContainer := container.NewMax(testInstructionNodeColorRectangle)
-
-			/*
-				nodeTextBackgroundColorectangle := canvas.NewRectangle(color.Gray{0x44}) // RGBA{0x00, 0xFF, 0x00, 0xff})
-				nodeTextBackgroundColorectangle.StrokeColor = color.Black
-				nodeTextBackgroundColorectangle.StrokeWidth = 00
-				labelContainer := container.NewMax(nodeTextBackgroundColorectangle, nodeLabel)
-			*/
-
-			newDroppableLabel := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableLabel("This is just some text", nil, 0, 0, nil)
-			newDroppableContainer := container.NewMax(newDroppableLabel.BackgroundRectangle, newDroppableLabel)
-
-			content := container.NewHBox(testInstructionNodeColorContainer, newDroppableContainer) //labelContainer)
-
-			return content
-		},
-
-		UpdateNode: func(uid string, branch bool, obj fyne.CanvasObject) {
-
-			var (
-				extractedNodeName string
-				err               error
-			)
-
-			// Extract Node-data
-			treeNodeChildData := testCasesUiCanvasObject.TestCasesModelReference.GetTestCaseTreeNodeChildData(uid, testCaseUuid)
-
-			// Secure that treeNodeChildData has correct content
-			if uid != treeNodeChildData.Uuid {
-				errorId := "2a398319-d1a5-4a8b-9270-deb29746ac6c"
-				err = errors.New(fmt.Sprintf("Node-uid '%s' is not the same as UUID '%s' found in NodeData in testcase with sourceUuid '%s' [ErrorID: %s]", uid, treeNodeChildData.Uuid, testCaseUuid, errorId))
-
-				extractedNodeName = err.Error()
-			} else {
-
-				// Set Node Name
-				extractedNodeName = treeNodeChildData.NodeName + " - " + treeNodeChildData.Uuid
-			}
-			// Break up into correct Red-Green-Blue
-			hexValueAsString := treeNodeChildData.NodeColor //"#FFEEFF"
-
-			// Convert Color
-			extractedNodeColor, err := testCasesUiCanvasObject.convertRGBAHexStringIntoRGBAColor(hexValueAsString)
-			if err != nil {
-				extractedNodeName = err.Error()
-			}
-
-			/*
-				// Extract if node is droppable
-				var nodeIsDroppable bool
-				draggedUuid := testCasesUiCanvasObject.DragNDropStateMachine.SourceUuid
-				if draggedUuid == "" {
-					nodeIsDroppable = false
-				} else {
-					// Extract Dragged nodes type
-					var elementType fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum
-
-					switch testCasesUiCanvasObject.DragNDropStateMachine.SourceType {
-					case 1: //gui.TestInstruction:
-						elementType = fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION
-
-					case 2: //gui.TestInstructionContainer:
-						elementType = fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER
-
-					default:
-						errorId := "c6e74d79-9268-4c54-8338-2ed23539a5a2"
-						err = errors.New(fmt.Sprintf("unknown Source Type [ErrorID: %s]", errorId))
-
-						extractedNodeName = err.Error()
-					}
-
-					nodeIsDroppable, err = testCasesUiCanvasObject.CommandAndRuleEngineReference.VerifyIfElementCanBeSwapped(testCaseUuid, treeNodeChildData.Uuid, elementType)
-					if err != nil {
-						extractedNodeName = err.Error()
-					}
-
-
-				}
-			*/
-
-			// Extract TestInstruction Type Color and change
-			//hexValueForTestInstructionNodeColorAsString := treeNodeChildData.TestInstructionTypeColor
-			if treeNodeChildData.NodeTypeEnum == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
-				treeNodeChildData.NodeTypeEnum == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE {
-				newRectangleBackgroundWithColorForTestInstructionType := canvas.NewRectangle(color.RGBA{
-					R: 255,
-					G: 255,
-					B: 0,
-					A: 0x88,
-				})
-				newRectangleBackgroundWithColorForTestInstructionType.StrokeColor = color.Black
-				newRectangleBackgroundWithColorForTestInstructionType.StrokeWidth = 0
-
-				newRectangleBackgroundWithColorForTestInstructionType.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
-				obj.(*fyne.Container).Objects[0].(*fyne.Container).Objects[0] = newRectangleBackgroundWithColorForTestInstructionType
-			} else {
-				// Not a TestInstruction so set it to be Invisible
-				newRectangleBackgroundWithColorForTestInstructionType := canvas.NewRectangle(color.RGBA{
-					R: 0,
-					G: 0,
-					B: 0,
-					A: 0x00,
-				})
-				newRectangleBackgroundWithColorForTestInstructionType.StrokeColor = color.Black
-				newRectangleBackgroundWithColorForTestInstructionType.StrokeWidth = 0
-
-				newRectangleBackgroundWithColorForTestInstructionType.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
-				obj.(*fyne.Container).Objects[0].(*fyne.Container).Objects[0] = newRectangleBackgroundWithColorForTestInstructionType
-
-			}
-			//obj.(*tappableLabel).SetText(uid) //obj.(*widget.Label).SetText(uid) // + time.Now().String())
-			//obj.(*widget.Label).SetText(uid)
-			// Set the UUID as Node-Lable
-			//obj.(*fyne.Container).Objects[1].Objects[1].(*widget.Label).SetText(uid)
-			//obj.(*fyne.Container).Objects[1].(*widget.Accordion).Items[0].Title = uid
-
-			//obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*widget.Label).SetText(extractedNodeName)
-			obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*testUIDragNDropStatemachine.DroppableLabel).SetText(extractedNodeName)
-			obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*testUIDragNDropStatemachine.DroppableLabel).TargetUuid = extractedNodeName
-			//obj.(*fyne.Container).Objects[1].(*testUIDragNDropStatemachine.DroppableLabel).IsDroppable = nodeIsDroppable
-
-			//*testUIDragNDropStatemachine.DroppableLabel
-
-			// Update Node color by replacing rectangle
-			newRectangleBackgroundWithColor := canvas.NewRectangle(extractedNodeColor)
-			newRectangleBackgroundWithColor.StrokeColor = color.Black
-			newRectangleBackgroundWithColor.StrokeWidth = 0
-			//obj.(*fyne.Container).Objects[1].(*fyne.Container).Objects[0] = newRectangleBackgroundWithColor
-
-			// Set colored rectangle size to (labelHeight, labelHeight)
-			//labelHeight := obj.(*fyne.Container).Objects[1].(*widget.Label).MinSize().Height
-			//obj.(*fyne.Container).Objects[0].(*canvas.Rectangle).Resize(fyne.NewSize(labelHeight, labelHeight))
-			obj.Refresh()
-
-			//fmt.Println(tree.Size())
-		},
-
-		OnSelected: func(uid string) {
-			fmt.Println(uid)
-			//fmt.Println(uid, uiServer.availableBuildingBlocksModel.getAvailableBuildingBlocksModel()[uid])
-			//uiServer.availableBuildingBlocksModel.clickedNodeName = uid
-
-			//if t, ok := list[uid]; ok {
-			//	fmt.Println(tree.Root)
-			//	fmt.Println(t)
-
-			//}
-		},
-	}
-
-	return tree
-
-}
-
-/*
-type testCaseTreeNodeStruct struct {
-	widget.Label
-}
-
-func newTestCaseTreeNode() *testCaseTreeNodeStruct {
-	treeNode := &testCaseTreeNodeStruct{}
-	treeNode.ExtendBaseWidget(treeNode)
-	//label.ExtendBaseWidget(label)
-	//icon.SetResource(res)
-
-	left := canvas.NewText("left", color.RGBA{
-		R: 0xFF,
-		G: 0,
-		B: 0,
-		A: 0,
-	})
-	middle := widget.NewLabel("xxxx")
-	content := container.New(layout.NewBorderLayout(nil, nil, left, nil),
-		left, middle)
-
-	return treeNode
-}
-
-
-*/
-
 func (testCasesUiCanvasObject *TestCasesUiModelStruct) convertRGBAHexStringIntoRGBAColor(rgbaHexString string) (rgbaValue color.RGBA, err error) {
 
 	var (
@@ -385,14 +160,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUIOb
 	testCasesUiCanvasObject.DragNDropStateMachine = testUIDragNDropStatemachine.StateMachineDragAndDropStruct{}
 
 	// Start processing model for TestCase
-	testCaseCanvasObject, _ = testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject("", &treeViewModelForTestCase, testCaseGraphicalModelAreaAccordion, 1, testCaseGraphicalModelAreaAccordion)
+	testCaseCanvasObject, _ = testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject("", &treeViewModelForTestCase, testCaseGraphicalModelAreaAccordion, 1, testCaseUuid)
 
 	return testCaseCanvasObject
 
 }
 
 // Generates the graphical structure for the TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGraphicalUIObject(uuid string, testCaseModelForUITree *map[string][]testCaseModel.TestCaseModelAdaptedForUiTreeDataStruct, firstAccordion *widget.Accordion, nodeTreeLevel float32, topLevelAccordian *widget.Accordion) (testCaseCanvasObject fyne.CanvasObject, newTestInstructionAccordion2 *widget.Accordion) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGraphicalUIObject(uuid string, testCaseModelForUITree *map[string][]testCaseModel.TestCaseModelAdaptedForUiTreeDataStruct, firstAccordion *widget.Accordion, nodeTreeLevel float32, testCaseUuid string) (testCaseCanvasObject fyne.CanvasObject, newTestInstructionAccordion2 *widget.Accordion) {
 
 	var childObject fyne.CanvasObject
 	var newTestInstructionAccordion *widget.Accordion
@@ -468,7 +243,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			newTestInstructionContainerAccordion := widget.NewAccordion(newTestInstructionAccordionItem)
 			newTestInstructionContainerAccordion.RemoveIndex(0)
 
-			childObject, newTestInstructionAccordion = testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject(child.Uuid, testCaseModelForUITree, newTestInstructionContainerAccordion, nodeTreeLevel+0.2, firstAccordion)
+			childObject, newTestInstructionAccordion = testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject(child.Uuid, testCaseModelForUITree, newTestInstructionContainerAccordion, nodeTreeLevel+0.2, testCaseUuid)
 
 			// Create the Accordion-object to hold information about the TestInstructionContainer
 			newTestInstructionContainerAccordionItem := widget.NewAccordionItem(child.NodeName+" - "+child.Uuid, childObject)
@@ -544,7 +319,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND,
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND:
 
-			newDroppableBondLabel := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableLabel(child.NodeName+" - "+child.Uuid, newTestInstructionAccordion, nodeTreeLevel, testCaseNodeRectangleSize, firstAccordion)
+			newDroppableBondLabel := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableLabel(child.NodeName+" - "+child.Uuid, newTestInstructionAccordion, nodeTreeLevel, testCaseNodeRectangleSize, firstAccordion, child.Uuid, testCaseUuid)
 			newDroppableBondLabelContainer := container.NewMax(newDroppableBondLabel.BackgroundRectangle, newDroppableBondLabel)
 			newDroppableBondLabel.Hide()
 

@@ -1,6 +1,7 @@
 package testUIDragNDropStatemachine
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -38,6 +39,7 @@ var rectangleRef *canvas.Rectangle
 var rectangle2Ref *canvas.Rectangle
 var containerRef *fyne.Container
 var labelStandardHeight float32
+var commandChannelReference *sharedCode.ChannelType
 
 //****************************************************
 type DraggableLabel struct {
@@ -57,6 +59,7 @@ type DroppableLabel struct {
 	labelStandardHeight       float32
 	nodeLevel                 float32
 	testCaseNodeRectangleSize int
+	CurrentTestCaseUuid       string
 }
 
 type noneDroppableLabel struct {
@@ -66,11 +69,12 @@ type noneDroppableLabel struct {
 
 // InitiateStateStateMachine
 // InitiateState State machine
-func (stateMachine *StateMachineDragAndDropStruct) InitiateStateStateMachine(dragNDropText *canvas.Text, dragNDropRectangleRef *canvas.Rectangle, dragNDropRectangle2Ref *canvas.Rectangle, dragNDropContainerRef *fyne.Container) {
+func (stateMachine *StateMachineDragAndDropStruct) InitiateStateStateMachine(dragNDropText *canvas.Text, dragNDropRectangleRef *canvas.Rectangle, dragNDropRectangle2Ref *canvas.Rectangle, dragNDropContainerRef *fyne.Container, commandChannelRef *sharedCode.ChannelType) {
 	textRef = dragNDropText
 	rectangleRef = dragNDropRectangleRef
 	rectangle2Ref = dragNDropRectangle2Ref
 	containerRef = dragNDropContainerRef
+	commandChannelReference = commandChannelRef
 
 }
 
@@ -86,16 +90,17 @@ func (stateMachine *StateMachineDragAndDropStruct) NewDraggableLabel(uuid string
 	return draggableLabel
 }
 
-func (stateMachine *StateMachineDragAndDropStruct) NewDroppableLabel(uuid string, accordionReference *widget.Accordion, nodeLevel float32, testCaseNodeRectangleSize int, topTestCaseAccordion *widget.Accordion) *DroppableLabel {
+func (stateMachine *StateMachineDragAndDropStruct) NewDroppableLabel(labelText string, accordionReference *widget.Accordion, nodeLevel float32, testCaseNodeRectangleSize int, topTestCaseAccordion *widget.Accordion, uuid string, testCaseUuid string) *DroppableLabel {
 	droppableLabel := &DroppableLabel{}
 	droppableLabel.ExtendBaseWidget(droppableLabel)
 
 	droppableLabel.topTestCaseAccordion = topTestCaseAccordion
 	droppableLabel.parrentAccordion = accordionReference
 	droppableLabel.TargetUuid = uuid
-	droppableLabel.Text = uuid
+	droppableLabel.Text = labelText
 	droppableLabel.nodeLevel = nodeLevel
 	droppableLabel.testCaseNodeRectangleSize = testCaseNodeRectangleSize
+	droppableLabel.CurrentTestCaseUuid = testCaseUuid
 
 	droppableLabel.BackgroundRectangle = canvas.NewRectangle(color.RGBA{
 		R: 0x00,
@@ -561,7 +566,18 @@ func shrinkDropAreas() {
 }
 
 func executeDropAction() {
-	fmt.Println(fmt.Sprintf("'%s' was droppen in '%s'", stateMachineDragAndDrop.SourceUuid, stateMachineDragAndDrop.target.TargetUuid))
+	fmt.Println(fmt.Sprintf("'%s' was droppen in '%s'. Current TestCase is '%s'", stateMachineDragAndDrop.SourceUuid, stateMachineDragAndDrop.target.TargetUuid, stateMachineDragAndDrop.target.CurrentTestCaseUuid))
+
+	commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
+		ChannelCommand:  sharedCode.ChannelCommandSwapElement,
+		FirstParameter:  stateMachineDragAndDrop.SourceUuid,
+		SecondParameter: stateMachineDragAndDrop.target.TargetUuid,
+		ActiveTestCase:  stateMachineDragAndDrop.target.CurrentTestCaseUuid,
+		ElementType:     sharedCode.BuildingBlock(stateMachineDragAndDrop.SourceType),
+	}
+
+	// Send command message over channel to Command and Rule Engine
+	*commandChannelReference <- commandEngineChannelMessage
 
 }
 

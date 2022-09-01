@@ -45,7 +45,7 @@ func (grpcOut *GRPCOutStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMe
 	}()
 
 	// Only add access token when run on GCP
-	if common_config.ExecutionLocationForFenixGuiServer == common_config.GCP {
+	if sharedCode.ExecutionLocationForFenixGuiServer == sharedCode.GCP {
 
 		// Add Access token
 		ctx, returnMessageAckNack, returnMessageString = gcp.Gcp.GenerateGCPAccessTokenForAuthorizedUser(ctx)
@@ -118,7 +118,7 @@ func (grpcOut *GRPCOutStruct) SendListAllAvailableTestInstructionsAndTestInstruc
 	}()
 
 	// Only add access token when run on GCP
-	if common_config.ExecutionLocationForFenixGuiServer == common_config.GCP {
+	if sharedCode.ExecutionLocationForFenixGuiServer == sharedCode.GCP {
 
 		// Set logger in GCP-package
 		grpcOut.gcp.SetLogger(grpcOut.logger)
@@ -198,7 +198,7 @@ func (grpcOut *GRPCOutStruct) SendListAllAvailablePinnedTestInstructionsAndTestI
 	}()
 
 	// Only add access token when run on GCP
-	if common_config.ExecutionLocationForFenixGuiServer == common_config.GCP {
+	if sharedCode.ExecutionLocationForFenixGuiServer == sharedCode.GCP {
 
 		// Set logger in GCP-package
 		grpcOut.gcp.SetLogger(grpcOut.logger)
@@ -271,7 +271,7 @@ func (grpcOut *GRPCOutStruct) SendSaveAllPinnedTestInstructionsAndTestInstructio
 	}()
 
 	// Only add access token when run on GCP
-	if common_config.ExecutionLocationForFenixGuiServer == common_config.GCP {
+	if sharedCode.ExecutionLocationForFenixGuiServer == sharedCode.GCP {
 
 		// Set logger in GCP-package
 		grpcOut.gcp.SetLogger(grpcOut.logger)
@@ -345,7 +345,7 @@ func (grpcOut *GRPCOutStruct) ListAllAvailableBonds(userId string) (returnMessag
 	}()
 
 	// Only add access token when run on GCP
-	if common_config.ExecutionLocationForFenixGuiServer == common_config.GCP {
+	if sharedCode.ExecutionLocationForFenixGuiServer == sharedCode.GCP {
 
 		// Set logger in GCP-package
 		grpcOut.gcp.SetLogger(grpcOut.logger)

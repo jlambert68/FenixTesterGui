@@ -1,4 +1,4 @@
-package common_config
+package sharedCode
 
 import "github.com/sirupsen/logrus"
 

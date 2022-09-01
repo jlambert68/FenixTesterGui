@@ -75,13 +75,13 @@ func init() {
 
 	switch executionLocation {
 	case "LOCALHOST_NODOCKER":
-		common_config.ExecutionLocation = common_config.LocalhostNoDocker
+		sharedCode.ExecutionLocation = sharedCode.LocalhostNoDocker
 
 	case "LOCALHOST_DOCKER":
-		common_config.ExecutionLocation = common_config.LocalhostDocker
+		sharedCode.ExecutionLocation = sharedCode.LocalhostDocker
 
 	case "GCP":
-		common_config.ExecutionLocation = common_config.GCP
+		sharedCode.ExecutionLocation = sharedCode.GCP
 
 	default:
 		fmt.Println("Unknown Execution location for FenixGuiProxyServer: " + executionLocation + ". Expected one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
@@ -94,13 +94,13 @@ func init() {
 
 	switch executionLocationFenixGuiServer {
 	case "LOCALHOST_NODOCKER":
-		common_config.ExecutionLocationForFenixGuiServer = common_config.LocalhostNoDocker
+		sharedCode.ExecutionLocationForFenixGuiServer = sharedCode.LocalhostNoDocker
 
 	case "LOCALHOST_DOCKER":
-		common_config.ExecutionLocationForFenixGuiServer = common_config.LocalhostDocker
+		sharedCode.ExecutionLocationForFenixGuiServer = sharedCode.LocalhostDocker
 
 	case "GCP":
-		common_config.ExecutionLocationForFenixGuiServer = common_config.GCP
+		sharedCode.ExecutionLocationForFenixGuiServer = sharedCode.GCP
 
 	default:
 		fmt.Println("Unknown Execution location for FenixGuiServer: " + executionLocation + ". Expected one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
@@ -109,10 +109,10 @@ func init() {
 	}
 
 	// Address to GuiBuilderProxyServer
-	common_config.FenixGuiBuilderProxyServerAddress = mustGetenv("FenixGuiBuilderProxyServerAddress")
+	sharedCode.FenixGuiBuilderProxyServerAddress = mustGetenv("FenixGuiBuilderProxyServerAddress")
 
 	// Port for GuiBuilderProxyServer
-	common_config.FenixGuiBuilderProxyServerPort, err = strconv.Atoi(mustGetenv("FenixGuiBuilderProxyServerPort"))
+	sharedCode.FenixGuiBuilderProxyServerPort, err = strconv.Atoi(mustGetenv("FenixGuiBuilderProxyServerPort"))
 	if err != nil {
 		fmt.Println("Couldn't convert environment variable 'FenixGuiBuilderProxyServerPort' to an integer, error: ", err)
 		os.Exit(0)
@@ -120,10 +120,10 @@ func init() {
 	}
 
 	// Address to GuiBuilderServer
-	common_config.FenixGuiBuilderServerAddress = mustGetenv("FenixGuiBuilderServerAddress")
+	sharedCode.FenixGuiBuilderServerAddress = mustGetenv("FenixGuiBuilderServerAddress")
 
 	// Port for GuiBuilderServer
-	common_config.FenixGuiBuilderServerPort, err = strconv.Atoi(mustGetenv("FenixGuiBuilderServerPort"))
+	sharedCode.FenixGuiBuilderServerPort, err = strconv.Atoi(mustGetenv("FenixGuiBuilderServerPort"))
 	if err != nil {
 		fmt.Println("Couldn't convert environment variable 'FenixGuiBuilderServerPort' to an integer, error: ", err)
 		os.Exit(0)
@@ -131,7 +131,7 @@ func init() {
 	}
 
 	// Create address for FenixGuiServer to call
-	fenixGuiBuilderServerAddressToDial = common_config.FenixGuiBuilderServerAddress + ":" + strconv.Itoa(common_config.FenixGuiBuilderServerPort)
+	fenixGuiBuilderServerAddressToDial = sharedCode.FenixGuiBuilderServerAddress + ":" + strconv.Itoa(sharedCode.FenixGuiBuilderServerPort)
 
 	// Get Environment variable to tell if the the application should run as a Tray Application or not
 	var runAsTrayApplication = mustGetenv("RunAsTrayApplication")

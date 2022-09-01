@@ -350,7 +350,6 @@ func (uiServer *UIServerStruct) newTestCase() {
 	}
 
 	// Update Graphical TestCase Representation
-	// Update Graphical TestCase Representation
 	err = uiServer.testCasesUiModel.UpdateGraphicalRepresentationForTestCase(testCaseUuid)
 	if err != nil {
 		fmt.Println(err)

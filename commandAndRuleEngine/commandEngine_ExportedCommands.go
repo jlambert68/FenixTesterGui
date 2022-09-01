@@ -46,3 +46,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) VerifyIfElementCan
 	return canBeSwappedIn, err
 
 }
+
+// InitiateCommandChannelReader
+// Initiate the channel reader which is used for sending commands to CommandEngine
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) InitiateCommandChannelReader() {
+
+	go commandAndRuleEngine.startCommandChannelReader()
+
+	return
+}

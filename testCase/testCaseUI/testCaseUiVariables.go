@@ -24,7 +24,7 @@ type TestCasesUiModelStruct struct {
 	DragNDropObject       DragNDropObjectStruct // The object used for Dragging TI and TIC into the TestCase
 	DragNDropStateMachine testUIDragNDropStatemachine.StateMachineDragAndDropStruct
 
-	// TODO - Remove, used for Testing only
+	//TODO - Remove, used for Testing only
 	DragNDropText                    *canvas.Text // Text used for Drag n Drop of TI and TIC into TextCase //TODO, is this used?
 	DragNDropRectangle               *canvas.Rectangle
 	DragNDropRectangleTextBackground *canvas.Rectangle

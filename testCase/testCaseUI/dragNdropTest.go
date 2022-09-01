@@ -302,9 +302,7 @@ func (t *draggableLabel) Dragged(ev *fyne.DragEvent) {
 
 	// Refresh 'Drag N Drop'-object and show them
 	containerRef.Refresh()
-	textRef.Show()
-	rectangle2Ref.Show()
-	rectangleRef.Show()
+	containerRef.Show()
 
 }
 
@@ -370,9 +368,7 @@ func (t *draggableLabel) DragEnd() {
 	}
 
 	// Hide the 'Drag N Drop'-objects
-	textRef.Hide()
-	rectangleRef.Hide()
-	rectangle2Ref.Hide()
+	containerRef.Hide()
 	containerRef.Refresh()
 
 	// switch state to 'sourceStateSearching'

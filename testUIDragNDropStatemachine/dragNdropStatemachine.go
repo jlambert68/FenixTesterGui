@@ -32,60 +32,6 @@ const (
 	targetStateSourceReleasedOnTarget                  // 4
 )
 
-/*
-func makeDragNDropTestGUI(textIn *canvas.Text, recIn *canvas.Rectangle, rec2In *canvas.Rectangle, containerIn *fyne.Container) (myCanvasObject fyne.CanvasObject) {
-
-	textRef = textIn
-	rectangleRef = recIn
-	rectangle2Ref = rec2In
-	containerRef = containerIn
-
-	dragFromOneLabel := NewDraggableLabel("No 1")
-	dragFromTwoLabel := NewDraggableLabel("No 2.000000")
-	dragFromThreeLabel := NewDraggableLabel("No 3..00000000000000000")
-	dragFromFourLabel := NewDraggableLabel("No 4.0000000000000000000000000000000")
-	dragToDrop1Label := newNoneDroppableLabel("No 5..0000000000000000000000000000000000000")
-	dragToDrop2Label := NewDroppableLabel("No 6.000000000000000000000000000000000000000000000000")
-	dragToDrop3Label := newNoneDroppableLabel("No 7.00000000000000000000000000000000000000000000000000000000000000")
-	dragToDrop4Label := NewDroppableLabel("No 8.00000000000000000000000000000000000000000000000000000000000000000")
-	dragToDrop5Label := newNoneDroppableLabel("No 9.0000000000000000000000000000000000000000000000000000000000000000000")
-	dragToDrop6Label := NewDroppableLabel("No 10.00000000000000000000000000000000000000000000000000000000000000000000000")
-
-	registeredDroppableTargetLabels = append(registeredDroppableTargetLabels, dragToDrop2Label)
-	registeredDroppableTargetLabels = append(registeredDroppableTargetLabels, dragToDrop4Label)
-	registeredDroppableTargetLabels = append(registeredDroppableTargetLabels, dragToDrop6Label)
-
-	DropOne := container.NewMax(dragToDrop1Label)
-	DropTwo := container.NewMax(dragToDrop2Label.BackgroundRectangle, dragToDrop2Label)
-	DropThree := container.NewMax(dragToDrop3Label)
-	DropFour = container.NewMax(dragToDrop4Label.BackgroundRectangle, dragToDrop4Label)
-	DropFive := container.NewMax(dragToDrop5Label)
-	DropSix := container.NewMax(dragToDrop6Label.BackgroundRectangle, dragToDrop6Label)
-
-	labelStandardHeight = dragToDrop2Label.Size().Height
-
-	//DropTwoThin := container.NewGridWrap(fyne.NewSize(100, dragToDrop2Label.Size().Height/2), DropTwo)
-
-	//registeredThinDroppableContainers = append(registeredThinDroppableContainers, DropTwoThin)
-
-	fromContainer := container.NewHBox(dragFromOneLabel, dragFromTwoLabel)
-	toContainer := container.NewHBox(dragFromThreeLabel, dragFromFourLabel)
-	dropContainer = container.NewVBox(DropOne, DropTwo, DropThree, DropFour, DropFive, DropSix)
-
-	myText := widget.NewLabel("Test Area for Drag n Drop")
-
-	myCanvasObject = container.NewVBox(myText, fromContainer, layout.NewSpacer(), toContainer, dropContainer)
-
-	myCanvasObject.Refresh()
-
-	return myCanvasObject
-}
-
-*/
-
-//var DropFour *fyne.Container
-//var dropContainer *fyne.Container
-
 // Local variables for the Drag n Drop object
 var textRef *canvas.Text
 var rectangleRef *canvas.Rectangle
@@ -261,9 +207,7 @@ func (t *DraggableLabel) Dragged(ev *fyne.DragEvent) {
 
 	// Refresh 'Drag N Drop'-object and show them
 	containerRef.Refresh()
-	textRef.Show()
-	rectangle2Ref.Show()
-	rectangleRef.Show()
+	containerRef.Show()
 
 }
 
@@ -330,9 +274,7 @@ func (t *DraggableLabel) DragEnd() {
 	}
 
 	// Hide the 'Drag N Drop'-objects
-	textRef.Hide()
-	rectangleRef.Hide()
-	rectangle2Ref.Hide()
+	containerRef.Hide()
 	containerRef.Refresh()
 
 	// switch state to 'sourceStateSearching'
@@ -620,6 +562,7 @@ func shrinkDropAreas() {
 
 func executeDropAction() {
 	fmt.Println(fmt.Sprintf("'%s' was droppen in '%s'", stateMachineDragAndDrop.SourceUuid, stateMachineDragAndDrop.target.TargetUuid))
+
 }
 
 //func RegisterDroppableLable()

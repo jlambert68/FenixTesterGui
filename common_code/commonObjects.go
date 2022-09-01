@@ -1,4 +1,4 @@
-package common_config
+package sharedCode
 
 // ***********************************************************************************************************
 // The following variables receives their values from environment variables

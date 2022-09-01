@@ -11,24 +11,24 @@ import (
 func (fenixGuiBuilderProxyServerObject *fenixGuiBuilderProxyServerObjectStruct) InitLogger(filename string) {
 	fenixGuiBuilderProxyServerObject.logger = logrus.StandardLogger()
 
-	switch common_config.LoggingLevel {
+	switch sharedCode.LoggingLevel {
 
 	case logrus.DebugLevel:
-		log.Println("'common_config.LoggingLevel': ", common_config.LoggingLevel)
+		log.Println("'common_config.LoggingLevel': ", sharedCode.LoggingLevel)
 
 	case logrus.InfoLevel:
-		log.Println("'common_config.LoggingLevel': ", common_config.LoggingLevel)
+		log.Println("'common_config.LoggingLevel': ", sharedCode.LoggingLevel)
 
 	case logrus.WarnLevel:
-		log.Println("'common_config.LoggingLevel': ", common_config.LoggingLevel)
+		log.Println("'common_config.LoggingLevel': ", sharedCode.LoggingLevel)
 
 	default:
-		log.Println("Not correct value for debugging-level, this was used: ", common_config.LoggingLevel)
+		log.Println("Not correct value for debugging-level, this was used: ", sharedCode.LoggingLevel)
 		os.Exit(0)
 
 	}
 
-	logrus.SetLevel(common_config.LoggingLevel)
+	logrus.SetLevel(sharedCode.LoggingLevel)
 	logrus.SetFormatter(&logrus.TextFormatter{
 		ForceColors:     true,
 		FullTimestamp:   true,

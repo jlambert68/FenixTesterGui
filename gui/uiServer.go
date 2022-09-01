@@ -2,6 +2,7 @@ package gui
 
 import (
 	"FenixTesterGui/commandAndRuleEngine"
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/grpc_out"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testCase/testCaseUI"
@@ -94,6 +95,12 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 	uiServer.SetLogger(globalUISServer.logger)
 	uiServer.SetDialAddressString(globalUISServer.fenixGuiBuilderServerAddressToDial)
 
+	// Create Channel used for sending Commands to CommandsEngine
+	sharedCode.CommandChannel = make(chan sharedCode.ChannelCommandStruct)
+
+	// Create Channel used for triggering TestCase Graphics update
+	sharedCode.CommandChannelGraphicsUpdate = make(chan sharedCode.ChannelCommandGraphicsUpdatedStruct)
+
 	uiServer.startTestCaseUIServer()
 
 }
@@ -143,6 +150,8 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	// Create the Available Building Blocks adapted to Fyne tree-view
 	uiServer.availableBuildingBlocksModel.makeTreeUIModel()
+
+	//
 
 	// Initiate and create the tree structure for available building blocks, of TestInstructions and TestInstructionContainers
 	uiServer.makeTreeUI()
@@ -319,6 +328,7 @@ func (uiServer *UIServerStruct) loadUI() fyne.CanvasObject {
 	uiServer.testCasesUiModel.DragNDropObject.DragNDropRectangle = draggingBackgroundRectangle
 	uiServer.testCasesUiModel.DragNDropObject.DragNDropRectangleTextBackground = draggingTextBackgroundRectangle
 	uiServer.testCasesUiModel.DragNDropObject.DragNDropContainer = contentGroupDragginObject
+	uiServer.testCasesUiModel.DragNDropObject.DragNDropContainer.Hide()
 
 	uiServer.testCasesUiModel.DragNDropStateMachine.InitiateStateStateMachine(
 		uiServer.testCasesUiModel.DragNDropObject.DragNDropText,
@@ -362,6 +372,8 @@ func (uiServer *UIServerStruct) loadUI() fyne.CanvasObject {
 	uiServer.testCasesUiModel.DragNDropRectangle = backgroundRect
 	uiServer.testCasesUiModel.DragNDropRectangleTextBackground = middlebackgroundRect
 	uiServer.testCasesUiModel.DragNDropContainer = contentGroup
+	uiServer.testCasesUiModel.DragNDropContainer.Hide()
+
 	// ****************************
 
 	myLoayout := container.NewMax(uiStructureContainer, content, contentDraggingObject)

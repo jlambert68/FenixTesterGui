@@ -49,6 +49,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateGraphicalRepresen
 	testCaseGraphicalModelAreaAccordion.Append(testCaseGraphicalModelAreaAccordionItem)
 
 	testCaseGraphicalModelArea = container.NewVBox(testCaseGraphicalModelAreaAccordion)
+	//testCaseGraphicalModelAreaWithScroll := container.NewHScroll(testCaseGraphicalModelArea)
 
 	return testCaseGraphicalModelArea, graphicalTestCaseUIObject, testCaseGraphicalModelAreaAccordion, err
 }
@@ -497,9 +498,39 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			testInstructionNodeTransparentContainer := container.NewMax(newTestInstructionColorRectangle)
 			*/
 
-			// Create the cone container object to be put on GUI
-			nodeContainer := container.NewHBox(newIndentationRectangleContainer, newTestInstructionContainerAccordion, layout.NewSpacer())
+			// Create the Horizontal node container object to be put on GUI
+			nodeHContainer := container.NewHBox(newIndentationRectangleContainer, newTestInstructionContainerAccordion, layout.NewSpacer())
 
+			// Create trailer rectangle for TestInstructionContainer
+			newITrailerRectangle := canvas.NewRectangle(newTransaparentColor)
+			newITrailerRectangle.StrokeColor = color.Black
+			newITrailerRectangle.StrokeWidth = 0
+			newITrailerRectangle.SetMinSize(fyne.NewSize(1, 4))
+			newITrailerRectangleContainer := container.NewMax(newITrailerRectangle)
+
+			// Create the node container object to be put on GUI
+			nodeContainer := container.NewVBox(nodeHContainer, newITrailerRectangleContainer)
+
+			/*
+				// Create background for TestInstructionContainer
+				newTestInstructionContainerBackgroundFillColor := color.RGBA{
+					R: 0x22,
+					G: 0x22,
+					B: 0x22,
+					A: 0x22,
+				}
+				newTestInstructionContainerBackgroundBorderColor := color.RGBA{
+					R: 0xFF,
+					G: 0xFF,
+					B: 0x22,
+					A: 0xFF,
+				}
+				newTestInstructionContainerBackgroundRectangle := canvas.NewRectangle(newTestInstructionContainerBackgroundFillColor)
+				newTestInstructionContainerBackgroundRectangle.StrokeWidth = 2
+				newTestInstructionContainerBackgroundRectangle.StrokeColor = newTestInstructionContainerBackgroundBorderColor
+
+				newTestInstructionContainerContainer := container.NewMax(newTestInstructionContainerBackgroundRectangle, nodeContainer)
+			*/
 			// Add the child
 			nodeChildrenContainer.Add(nodeContainer)
 

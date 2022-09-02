@@ -13,8 +13,9 @@ type CommandAndRuleEngineObjectStruct struct {
 	availableBondsMap map[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage
 	Testcases         *testCaseModel.TestCasesModelsStruct
 	// subSystemsCrossReferences *gui.SubSystemsCrossReferencesStruct
-	GrpcOutReference        *grpc_out.GRPCOutStruct
-	CommandChannelReference *sharedCode.ChannelType
+	GrpcOutReference               *grpc_out.GRPCOutStruct
+	CommandChannelReference        *sharedCode.CommandChannelType
+	GraphicsUpdateChannelReference *sharedCode.CommandChannelGraphicsUpdateType
 }
 
 // The Complex Deletion Rules

@@ -33,7 +33,8 @@ type TestCasesUiModelStruct struct {
 
 	CommandAndRuleEngineReference *commandAndRuleEngine.CommandAndRuleEngineObjectStruct
 
-	CommandChannelReference *sharedCode.ChannelType
+	CommandChannelReference        *sharedCode.CommandChannelType
+	GraphicsUpdateChannelReference *sharedCode.CommandChannelGraphicsUpdateType
 }
 
 // This object hold references to the object that is used when user drags a new TestInstruction or

@@ -12,7 +12,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) startGUICommandChannelRea
 
 	for {
 		// Wait for incoming trigger command over channel
-		incomingChannelCommandGraphicsUpdatedData = <-sharedCode.CommandChannelGraphicsUpdate
+		incomingChannelCommandGraphicsUpdatedData = <-*testCasesUiCanvasObject.GraphicsUpdateChannelReference
 
 		testCasesUiCanvasObject.updateTestCaseGraphics(incomingChannelCommandGraphicsUpdatedData)
 

@@ -39,3 +39,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) UpdateGraphicalRepresenta
 
 	return err
 }
+
+// InitiateGraphicsUpdateChannelReader
+// Initiate the channel reader which is used for sending commands to Graphics Update Engine
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) InitiateGraphicsUpdateChannelReader() {
+
+	go testCasesUiCanvasObject.startGUICommandChannelReader()
+
+	return
+}

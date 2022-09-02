@@ -2,9 +2,9 @@ package sharedCode
 
 // CommandChannel Channel used for triggering command to CommandEngine
 
-var CommandChannel ChannelType
+var CommandChannel CommandChannelType
 
-type ChannelType chan ChannelCommandStruct
+type CommandChannelType chan ChannelCommandStruct
 
 type ChannelCommandType uint8
 
@@ -23,7 +23,9 @@ type ChannelCommandStruct struct {
 }
 
 // CommandChannelGraphicsUpdate - Channel for updating TestCase Graphics
-var CommandChannelGraphicsUpdate chan ChannelCommandGraphicsUpdatedStruct
+var CommandChannelGraphicsUpdate CommandChannelGraphicsUpdateType
+
+type CommandChannelGraphicsUpdateType chan ChannelCommandGraphicsUpdatedStruct
 
 type ChannelCommandGraphicsUpdatedStruct struct {
 	CreateNewTestCaseUI     bool

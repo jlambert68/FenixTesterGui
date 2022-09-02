@@ -97,15 +97,21 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 
 	// Create Channel used for sending Commands to CommandsEngine
 	sharedCode.CommandChannel = make(chan sharedCode.ChannelCommandStruct)
-	mychannel := &sharedCode.CommandChannel
-	uiServer.testCasesUiModel.CommandAndRuleEngineReference.CommandChannelReference = mychannel
-	uiServer.testCasesUiModel.CommandChannelReference = mychannel
+	myCommandChannelRef := &sharedCode.CommandChannel
+	uiServer.testCasesUiModel.CommandAndRuleEngineReference.CommandChannelReference = myCommandChannelRef
+	uiServer.testCasesUiModel.CommandChannelReference = myCommandChannelRef
 
-	// Start Receiver channel for commands
+	// Start Receiver channel for Commands
 	uiServer.commandAndRuleEngine.InitiateCommandChannelReader()
 
 	// Create Channel used for triggering TestCase Graphics update
 	sharedCode.CommandChannelGraphicsUpdate = make(chan sharedCode.ChannelCommandGraphicsUpdatedStruct)
+	myGraphicsUpdateChannelRef := &sharedCode.CommandChannelGraphicsUpdate
+	uiServer.testCasesUiModel.CommandAndRuleEngineReference.GraphicsUpdateChannelReference = myGraphicsUpdateChannelRef
+	uiServer.testCasesUiModel.GraphicsUpdateChannelReference = myGraphicsUpdateChannelRef
+
+	// Start Receiver channel for Graphics Update
+	uiServer.testCasesUiModel.InitiateGraphicsUpdateChannelReader()
 
 	uiServer.startTestCaseUIServer()
 
@@ -161,6 +167,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	// Initiate and create the tree structure for available building blocks, of TestInstructions and TestInstructionContainers
 	uiServer.makeTreeUI()
+	tree.OpenAllBranches()
 
 	// Initiate the commandStack which describes how fyneApp TestCase is constructed
 	uiServer.makeCommandStackUI()

@@ -64,7 +64,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandCrea
 		TextualTestCaseExtended: textualTestCaseExtended,
 	}
 
-	sharedCode.CommandChannelGraphicsUpdate <- outgoingChannelCommandGraphicsUpdatedData
+	*commandAndRuleEngine.GraphicsUpdateChannelReference <- outgoingChannelCommandGraphicsUpdatedData
 
 }
 
@@ -98,7 +98,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandRemo
 		TextualTestCaseExtended: textualTestCaseExtended,
 	}
 
-	sharedCode.CommandChannelGraphicsUpdate <- outgoingChannelCommandGraphicsUpdatedData
+	*commandAndRuleEngine.GraphicsUpdateChannelReference <- outgoingChannelCommandGraphicsUpdatedData
 
 }
 
@@ -161,7 +161,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSwap
 		TextualTestCaseExtended: textualTestCaseExtended,
 	}
 
-	sharedCode.CommandChannelGraphicsUpdate <- outgoingChannelCommandGraphicsUpdatedData
+	*commandAndRuleEngine.GraphicsUpdateChannelReference <- outgoingChannelCommandGraphicsUpdatedData
 
 }
 

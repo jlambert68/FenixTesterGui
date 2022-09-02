@@ -39,7 +39,7 @@ var rectangleRef *canvas.Rectangle
 var rectangle2Ref *canvas.Rectangle
 var containerRef *fyne.Container
 var labelStandardHeight float32
-var commandChannelReference *sharedCode.ChannelType
+var commandChannelReference *sharedCode.CommandChannelType
 
 //****************************************************
 type DraggableLabel struct {
@@ -69,7 +69,7 @@ type noneDroppableLabel struct {
 
 // InitiateStateStateMachine
 // InitiateState State machine
-func (stateMachine *StateMachineDragAndDropStruct) InitiateStateStateMachine(dragNDropText *canvas.Text, dragNDropRectangleRef *canvas.Rectangle, dragNDropRectangle2Ref *canvas.Rectangle, dragNDropContainerRef *fyne.Container, commandChannelRef *sharedCode.ChannelType) {
+func (stateMachine *StateMachineDragAndDropStruct) InitiateStateStateMachine(dragNDropText *canvas.Text, dragNDropRectangleRef *canvas.Rectangle, dragNDropRectangle2Ref *canvas.Rectangle, dragNDropContainerRef *fyne.Container, commandChannelRef *sharedCode.CommandChannelType) {
 	textRef = dragNDropText
 	rectangleRef = dragNDropRectangleRef
 	rectangle2Ref = dragNDropRectangle2Ref
@@ -489,9 +489,9 @@ func expandDropAreas() {
 			rectangleWidth := float32(500)
 
 			rectangleSizeAnimation := canvas.NewSizeAnimation(
-				fyne.NewSize(rectangleWidth, 0),
+				fyne.NewSize(rectangleWidth, targetReferenceLabel.labelStandardHeight/2),
 				fyne.NewSize(rectangleWidth, targetReferenceLabel.labelStandardHeight),
-				time.Millisecond*300,
+				time.Millisecond*600,
 				func(animationSize fyne.Size) {
 					targetReferenceLabel.BackgroundRectangle.SetMinSize(animationSize)
 					canvas.Refresh(targetReferenceLabel.BackgroundRectangle)
@@ -507,7 +507,7 @@ func expandDropAreas() {
 	}
 
 	go func() {
-		time.Sleep(400 * time.Millisecond)
+		time.Sleep(800 * time.Millisecond)
 		for _, targetLabel := range stateMachineDragAndDrop.registeredDroppableTargetLabels {
 			targetLabel.Show()
 		}
@@ -540,7 +540,7 @@ func shrinkDropAreas() {
 
 			rectangleSizeAnimation := canvas.NewSizeAnimation(
 				fyne.NewSize(rectangleWidth, targetReferenceLabel.labelStandardHeight),
-				fyne.NewSize(rectangleWidth, 0),
+				fyne.NewSize(rectangleWidth, targetReferenceLabel.labelStandardHeight/2),
 				time.Millisecond*300,
 				func(animationSize fyne.Size) {
 					targetReferenceLabel.BackgroundRectangle.SetMinSize(animationSize)
@@ -563,6 +563,7 @@ func shrinkDropAreas() {
 
 		}
 	}()
+
 }
 
 func executeDropAction() {

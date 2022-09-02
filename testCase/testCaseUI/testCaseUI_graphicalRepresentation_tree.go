@@ -43,7 +43,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateGraphicalRepresen
 	testCaseGraphicalModelAreaAccordion := widget.NewAccordion(testCaseGraphicalModelAreaAccordionItem)
 	testCaseGraphicalModelAreaAccordion.RemoveIndex(0)
 
-	graphicalTestCaseUIObject = testCasesUiCanvasObject.makeTestCaseGraphicalUIObject(testCaseUuid, testCaseGraphicalModelAreaAccordion)
+	graphicalTestCaseUIObject = testCasesUiCanvasObject.makeTestCaseGraphicalUIObject(testCaseUuid)
 
 	testCaseGraphicalModelAreaAccordionItem = widget.NewAccordionItem("Graphical Representation of the TestCase", graphicalTestCaseUIObject) //treeExpandedContainer)
 	testCaseGraphicalModelAreaAccordion.Append(testCaseGraphicalModelAreaAccordionItem)
@@ -144,7 +144,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) convertRGBAHexStringIntoR
 }
 
 // Generates the graphical structure for the TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUIObject(testCaseUuid string, testCaseGraphicalModelAreaAccordion *widget.Accordion) (testCaseCanvasObject fyne.CanvasObject) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUIObject(testCaseUuid string) (testCaseCanvasObject fyne.CanvasObject) {
 
 	treeViewModelForTestCase, err := testCasesUiCanvasObject.TestCasesModelReference.GetTreeViewModelForTestCase(testCaseUuid)
 
@@ -160,17 +160,19 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUIOb
 	testCasesUiCanvasObject.DragNDropStateMachine = testUIDragNDropStatemachine.StateMachineDragAndDropStruct{}
 
 	// Start processing model for TestCase
-	testCaseCanvasObject, _ = testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject("", &treeViewModelForTestCase, testCaseGraphicalModelAreaAccordion, 1, testCaseUuid)
+	testCaseCanvasObject, _ = testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject("", &treeViewModelForTestCase, nil, 1, testCaseUuid)
 
 	return testCaseCanvasObject
 
 }
 
 // Generates the graphical structure for the TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGraphicalUIObject(uuid string, testCaseModelForUITree *map[string][]testCaseModel.TestCaseModelAdaptedForUiTreeDataStruct, firstAccordion *widget.Accordion, nodeTreeLevel float32, testCaseUuid string) (testCaseCanvasObject fyne.CanvasObject, newTestInstructionAccordion2 *widget.Accordion) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGraphicalUIObject(uuid string, testCaseModelForUITree *map[string][]testCaseModel.TestCaseModelAdaptedForUiTreeDataStruct, firstAccordion *clickableAccordion, nodeTreeLevel float32, testCaseUuid string) (testCaseCanvasObject fyne.CanvasObject, newTestInstructionAccordion2 *clickableAccordion) {
 
 	var childObject fyne.CanvasObject
-	var newTestInstructionAccordion *widget.Accordion
+	//var newTestInstructionAccordion *widget.Accordion
+	var newTestInstructionAccordion *clickableAccordion
+
 	if firstAccordion != nil {
 		newTestInstructionAccordion = firstAccordion
 	}
@@ -199,7 +201,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			}
 
 			// Create color to use
-			newTransaparentColor := color.RGBA{
+			newTransparentColor := color.RGBA{
 				R: 0x00,
 				G: 0x00,
 				B: 0x00,
@@ -207,7 +209,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			}
 
 			// Create indentation rectangle to move node to right
-			newIndentationRectangle := canvas.NewRectangle(newTransaparentColor)
+			newIndentationRectangle := canvas.NewRectangle(newTransparentColor)
 			newIndentationRectangle.StrokeColor = color.Black
 			newIndentationRectangle.StrokeWidth = 0
 			newIndentationRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize*nodeTreeLevel), float32(0)))
@@ -225,7 +227,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			// Create the Accordion-object to hold information about the TestInstruction
 			dummyText := widget.NewLabel("this is just a dummy text and might show other TestInstruction-attributes later on")
 			newTestInstructionAccordionItem := widget.NewAccordionItem(nodeName, dummyText)
-			newTestInstructionAccordion = widget.NewAccordion(newTestInstructionAccordionItem)
+			newTestInstructionAccordion = testCasesUiCanvasObject.newClickableAccordion(newTestInstructionAccordionItem, true) //widget.NewAccordion(newTestInstructionAccordionItem)
 
 			// Create the container object to be put on GUI
 			nodeContainer := container.NewHBox(newIndentationRectangleContainer, testInstructionNodeColorContainer, newTestInstructionAccordion, layout.NewSpacer())
@@ -240,7 +242,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			// Create the Accordion-object to hold information about the TestInstructionContainer
 			dummyText := widget.NewLabel("this is just a dummy text")
 			newTestInstructionAccordionItem := widget.NewAccordionItem("DummyText", dummyText)
-			newTestInstructionContainerAccordion := widget.NewAccordion(newTestInstructionAccordionItem)
+			newTestInstructionContainerAccordion := testCasesUiCanvasObject.newClickableAccordion(newTestInstructionAccordionItem, true) //widget.NewAccordion(newTestInstructionAccordionItem)
 			newTestInstructionContainerAccordion.RemoveIndex(0)
 
 			childObject, newTestInstructionAccordion = testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject(child.Uuid, testCaseModelForUITree, newTestInstructionContainerAccordion, nodeTreeLevel+0.2, testCaseUuid)
@@ -251,7 +253,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			newTestInstructionContainerAccordion.Open(0)
 
 			// Create color to use
-			newTransaparentColor := color.RGBA{
+			newTransparentColor := color.RGBA{
 				R: 0x00,
 				G: 0x00,
 				B: 0x00,
@@ -259,14 +261,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			}
 
 			// Create indentation rectangle to move node to right
-			newIndentationRectangle := canvas.NewRectangle(newTransaparentColor)
+			newIndentationRectangle := canvas.NewRectangle(newTransparentColor)
 			newIndentationRectangle.StrokeColor = color.Black
 			newIndentationRectangle.StrokeWidth = 0
 			newIndentationRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize*nodeTreeLevel), float32(0)))
 			newIndentationRectangleContainer := container.NewMax(newIndentationRectangle)
 
 			// Create indentation within TestInstructionContainer
-			/*newTestInstructionColorRectangle := canvas.NewRectangle(newTransaparentColor)
+			/*newTestInstructionColorRectangle := canvas.NewRectangle(newTransparentColor)
 			newTestInstructionColorRectangle.StrokeColor = color.Black
 			newTestInstructionColorRectangle.StrokeWidth = 0
 			newTestInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize * 0.3), float32(0)))
@@ -277,7 +279,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			nodeHContainer := container.NewHBox(newIndentationRectangleContainer, newTestInstructionContainerAccordion, layout.NewSpacer())
 
 			// Create trailer rectangle for TestInstructionContainer
-			newITrailerRectangle := canvas.NewRectangle(newTransaparentColor)
+			newITrailerRectangle := canvas.NewRectangle(newTransparentColor)
 			newITrailerRectangle.StrokeColor = color.Black
 			newITrailerRectangle.StrokeWidth = 0
 			newITrailerRectangle.SetMinSize(fyne.NewSize(1, 4))
@@ -319,7 +321,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND,
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND:
 
-			newDroppableBondLabel := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableLabel(child.NodeName+" - "+child.Uuid, newTestInstructionAccordion, nodeTreeLevel, testCaseNodeRectangleSize, firstAccordion, child.Uuid, testCaseUuid)
+			newDroppableBondLabel := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableLabel(child.NodeName+" - "+child.Uuid, nodeTreeLevel, testCaseNodeRectangleSize, child.Uuid, testCaseUuid)
 			newDroppableBondLabelContainer := container.NewMax(newDroppableBondLabel.BackgroundRectangle, newDroppableBondLabel)
 			newDroppableBondLabel.Hide()
 

@@ -1,6 +1,7 @@
 package testCaseUI
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -19,12 +20,28 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectF
 		widget.NewToolbarAction(theme.ContentRedoIcon(), func() {
 			fmt.Println("Reload GUI TestCase from testCaseModel")
 		}),
+
+		widget.NewToolbarAction(theme.DocumentIcon(), func() {
+			commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
+				ChannelCommand:  sharedCode.ChannelCommandNewTestCase,
+				FirstParameter:  "",
+				SecondParameter: "",
+				ActiveTestCase:  "",
+				ElementType:     sharedCode.BuildingBlock(sharedCode.Undefined),
+			}
+
+			// Send command message over channel to Command and Rule Engine
+			*testCasesUiCanvasObject.CommandChannelReference <- commandEngineChannelMessage
+		}),
+
 		widget.NewToolbarAction(theme.ContentCopyIcon(), func() {
 			fmt.Println("Copy Node")
 		}),
+
 		widget.NewToolbarAction(theme.ContentCutIcon(), func() {
 			fmt.Println("Cut Node")
 		}),
+
 		widget.NewToolbarAction(theme.ContentPasteIcon(), func() {
 			fmt.Println("Past Node")
 		}),

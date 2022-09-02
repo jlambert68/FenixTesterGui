@@ -51,8 +51,8 @@ type DraggableLabel struct {
 
 type DroppableLabel struct {
 	widget.Label
-	topTestCaseAccordion      *widget.Accordion
-	parrentAccordion          *widget.Accordion
+	//topTestCaseAccordion      *widget.Accordion
+	//parrentAccordion           *widget.Accordion
 	TargetUuid                string
 	BackgroundRectangle       *canvas.Rectangle
 	IsDroppable               bool
@@ -90,12 +90,12 @@ func (stateMachine *StateMachineDragAndDropStruct) NewDraggableLabel(uuid string
 	return draggableLabel
 }
 
-func (stateMachine *StateMachineDragAndDropStruct) NewDroppableLabel(labelText string, accordionReference *widget.Accordion, nodeLevel float32, testCaseNodeRectangleSize int, topTestCaseAccordion *widget.Accordion, uuid string, testCaseUuid string) *DroppableLabel {
+func (stateMachine *StateMachineDragAndDropStruct) NewDroppableLabel(labelText string, nodeLevel float32, testCaseNodeRectangleSize int, uuid string, testCaseUuid string) *DroppableLabel {
 	droppableLabel := &DroppableLabel{}
 	droppableLabel.ExtendBaseWidget(droppableLabel)
 
-	droppableLabel.topTestCaseAccordion = topTestCaseAccordion
-	droppableLabel.parrentAccordion = accordionReference
+	//droppableLabel.topTestCaseAccordion = topTestCaseAccordion
+	//droppableLabel.parrentAccordion = accordionReference
 	droppableLabel.TargetUuid = uuid
 	droppableLabel.Text = labelText
 	droppableLabel.nodeLevel = nodeLevel
@@ -196,7 +196,7 @@ func (t *DraggableLabel) Dragged(ev *fyne.DragEvent) {
 	}
 
 	// Change Text of 'Drag N Drop'-object
-	textRef.Text = t.SourceUuid
+	textRef.Text = t.Text
 
 	// Change size of 'Drag N Drop'-object text backgrounds
 	rectangleRef.SetMinSize(textRef.Size().Add(fyne.NewSize(40, 40)))
@@ -456,6 +456,12 @@ func (b *DroppableLabel) MouseOut() {
 
 }
 
+/*
+func (b *DroppableLabel) TappedSecondary(_ *fyne.PointEvent) {
+	log.Println("I have been Secondary tapped")
+}
+*/
+
 func switchStateForSource(newState int) {
 	stateMachineDragAndDrop.sourceStateMachine.currentState = newState
 }
@@ -495,7 +501,7 @@ func expandDropAreas() {
 				func(animationSize fyne.Size) {
 					targetReferenceLabel.BackgroundRectangle.SetMinSize(animationSize)
 					canvas.Refresh(targetReferenceLabel.BackgroundRectangle)
-					targetReferenceLabel.parrentAccordion.Refresh()
+					//targetReferenceLabel.parrentAccordion.Refresh()
 					//canvas.Refresh(DropFour)
 					//canvas.Refresh(dropContainer)
 				})

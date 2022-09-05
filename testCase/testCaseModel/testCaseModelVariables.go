@@ -28,6 +28,7 @@ type TestCasesModelsStruct struct {
 	AvailableBondsMap                             map[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage // A copy of available Bonds //TODO should be placed in one common object
 	AvailableImmatureTestInstructionsMap          map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage
 	AvailableImmatureTestInstructionContainersMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionContainerMessage
+	immatureTestInstructionAttributesMap          map[string]map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionAttributesMessage_TestInstructionAttributeMessage // map[TestInstructionUuid]map[TestInstructionAttributeUuid]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionAttributesMessage_TestInstructionAttributeMessage
 	//AvailableBuildingBlocksModel                  *gui.AvailableBuildingBlocksModelStruct
 }
 

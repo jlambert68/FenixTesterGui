@@ -160,6 +160,9 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Load Available Bonds
 	uiServer.commandAndRuleEngine.LoadAvailableBondsFromServer()
 
+	// Load Immature TestInstruction Attributes into TestCase-model
+	uiServer.testCasesModel.LoadModelWithImmatureTestInstructionAttributes()
+
 	// Create the Available Building Blocks adapted to Fyne tree-view
 	uiServer.availableBuildingBlocksModel.makeTreeUIModel()
 

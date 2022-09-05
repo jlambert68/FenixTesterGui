@@ -58,7 +58,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateNewTextualReprese
 	testCaseTextualModelAreaAccordionItem := widget.NewAccordionItem("Textual Representation of the TestCase", testCaseTextualModelArea)
 	testCaseTextualModelAreaAccordion := widget.NewAccordion(testCaseTextualModelAreaAccordionItem)
 
-	canvasTextualRepresentationAccordionObject = container.NewVBox(testCaseTextualModelAreaAccordion)
+	canvasTextualRepresentationAccordionObject = container.NewHScroll(testCaseTextualModelAreaAccordion) // container.NewVBox(testCaseTextualModelAreaAccordion)
 
 	// Save the Accordion object in Textual Structure
 	newTestCaseTextualStructure.currentTestCaseGraphicalAccordionObject = testCaseTextualModelAreaAccordion

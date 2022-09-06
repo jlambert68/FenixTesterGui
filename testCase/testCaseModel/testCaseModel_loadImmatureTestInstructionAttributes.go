@@ -41,6 +41,6 @@ func (testCaseModel *TestCasesModelsStruct) LoadModelWithImmatureTestInstruction
 	}
 
 	// Save Attributes in TestCase-model //TODO Place Attributes, Bonds and Immature TI and Immature TIC in separate object
-	testCaseModel.immatureTestInstructionAttributesMap = immatureTestInstructionAttributesMap
+	testCaseModel.ImmatureTestInstructionAttributesMap = immatureTestInstructionAttributesMap
 
 }

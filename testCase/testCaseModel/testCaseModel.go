@@ -281,6 +281,7 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 	// Add element to slice
 	elementDataToAdd := TestCaseModelAdaptedForUiTreeDataStruct{
 		Uuid:                     currentElementsUuid,
+		OriginalUuid:             currentElement.OriginalElementUuid,
 		NodeName:                 currentElement.OriginalElementName,
 		NodeColor:                nodeColor,
 		TestInstructionTypeColor: testInstructionTypeColor,

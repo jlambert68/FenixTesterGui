@@ -68,8 +68,9 @@ type testCaseTextualStructureStruct struct {
 
 // Keeps track of important object for the Graphical Representations for the TestCase
 type testCaseGraphicalStructureStruct struct {
-	currentTestCaseGraphicalModelArea       fyne.CanvasObject
-	currentTestCaseGraphicalTreeComponent   *widget.Tree
-	currentTestCaseGraphicalObject          *fyne.CanvasObject
-	currentTestCaseGraphicalAccordionObject *widget.Accordion
+	currentTestCaseGraphicalModelArea                       fyne.CanvasObject
+	currentTestCaseGraphicalTreeComponent                   *widget.Tree
+	currentTestCaseGraphicalObject                          *fyne.CanvasObject
+	currentTestCaseGraphicalAccordionObject                 *widget.Accordion
+	currentTestCaseTestInstructionAttributesAccordionObject *widget.Accordion
 }

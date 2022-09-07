@@ -101,8 +101,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	matureElementToSwapIn.MatureElementMap[matureElementToSwapIn.FirstElementUuid] = newTopElement
 
 	// Add new Bonds to TestCase Element Model
-	currentTestCase.TestCaseModelMap[newPreviousB1fBond.MatureElementUuid] = newPreviousB1fBond
-	currentTestCase.TestCaseModelMap[newNextB1lBond.MatureElementUuid] = newNextB1lBond
+	elementToBeAdded := currentTestCase.TestCaseModelMap[newPreviousB1fBond.MatureElementUuid]
+	elementToBeAdded.MatureTestCaseModelElementMessage = newPreviousB1fBond
+	currentTestCase.TestCaseModelMap[newPreviousB1fBond.MatureElementUuid] = elementToBeAdded
+
+	elementToBeAdded = currentTestCase.TestCaseModelMap[newNextB1lBond.MatureElementUuid]
+	elementToBeAdded.MatureTestCaseModelElementMessage = newNextB1lBond
+	currentTestCase.TestCaseModelMap[newNextB1lBond.MatureElementUuid] = elementToBeAdded
 
 	// Set First Element
 	currentTestCase.FirstElementUuid = newPreviousB1fBond.MatureElementUuid
@@ -110,7 +115,14 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	// Add 'matureElementToSwapIn' to TestCase Element Model
 	for elementUuid, element := range matureElementToSwapIn.MatureElementMap {
 
-		currentTestCase.TestCaseModelMap[elementUuid] = element
+		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
+		elementToBeAdded.MatureTestCaseModelElementMessage = element
+
+		// Add Color to first Top Element that was swapped in
+		if elementUuid == matureElementToSwapIn.FirstElementUuid {
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+		}
+		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
 
@@ -146,7 +158,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 	// Extract parent-TIC to element to swap out
 	elementToSwapOut, _ := currentTestCase.TestCaseModelMap[uuidToSwapOut]
-	parentElementUuid := elementToSwapOut.ParentElementUuid
+	parentElementUuid := elementToSwapOut.MatureTestCaseModelElementMessage.ParentElementUuid
 	parentElement := currentTestCase.TestCaseModelMap[parentElementUuid]
 
 	// Create the Bonds connecting the TIC
@@ -169,19 +181,31 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	matureElementToSwapIn.MatureElementMap[matureElementToSwapIn.FirstElementUuid] = topElementInModel
 
 	// Update "first child" in parent element
-	parentElement.FirstChildElementUuid = newPreviousB11fBond.MatureElementUuid
+	parentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid = newPreviousB11fBond.MatureElementUuid
 
 	// Save updated parent element back to TestCase model
 	currentTestCase.TestCaseModelMap[parentElementUuid] = parentElement
 
 	// Add new Bonds to TestCase Element Model
-	currentTestCase.TestCaseModelMap[newPreviousB11fBond.MatureElementUuid] = newPreviousB11fBond
-	currentTestCase.TestCaseModelMap[newNextB11lBond.MatureElementUuid] = newNextB11lBond
+	elementToBeAdded := currentTestCase.TestCaseModelMap[newPreviousB11fBond.MatureElementUuid]
+	elementToBeAdded.MatureTestCaseModelElementMessage = newPreviousB11fBond
+	currentTestCase.TestCaseModelMap[newPreviousB11fBond.MatureElementUuid] = elementToBeAdded
+
+	elementToBeAdded = currentTestCase.TestCaseModelMap[newNextB11lBond.MatureElementUuid]
+	elementToBeAdded.MatureTestCaseModelElementMessage = newNextB11lBond
+	currentTestCase.TestCaseModelMap[newNextB11lBond.MatureElementUuid] = elementToBeAdded
 
 	// Add 'matureElementToSwapIn' to TestCase Element Model
 	for elementUuid, element := range matureElementToSwapIn.MatureElementMap {
 
-		currentTestCase.TestCaseModelMap[elementUuid] = element
+		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
+		elementToBeAdded.MatureTestCaseModelElementMessage = element
+
+		// Add Color to first Top Element that was swapped in
+		if elementUuid == matureElementToSwapIn.FirstElementUuid {
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+		}
+		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
 
@@ -217,8 +241,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 	// Extract parent-TIC to element to swap out
 	elementToSwapOut, _ := currentTestCase.TestCaseModelMap[uuidToSwapOut]
-	parentElementUuid := elementToSwapOut.ParentElementUuid
-	nextElement := currentTestCase.TestCaseModelMap[elementToSwapOut.NextElementUuid]
+	parentElementUuid := elementToSwapOut.MatureTestCaseModelElementMessage.ParentElementUuid
+	nextElement := currentTestCase.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.NextElementUuid]
 
 	// Create the new Bonds
 	newB12Bond := commandAndRuleEngine.createNewBondB12Element(parentElementUuid)
@@ -227,31 +251,41 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	topElementInModelToBeSwappedIn := matureElementToSwapIn.MatureElementMap[matureElementToSwapIn.FirstElementUuid]
 
 	// Connect the new structure
-	elementToSwapOut.NextElementUuid = topElementInModelToBeSwappedIn.MatureElementUuid
+	elementToSwapOut.MatureTestCaseModelElementMessage.NextElementUuid = topElementInModelToBeSwappedIn.MatureElementUuid
 
-	topElementInModelToBeSwappedIn.PreviousElementUuid = elementToSwapOut.MatureElementUuid
+	topElementInModelToBeSwappedIn.PreviousElementUuid = elementToSwapOut.MatureTestCaseModelElementMessage.MatureElementUuid
 	topElementInModelToBeSwappedIn.NextElementUuid = newB12Bond.MatureElementUuid
 	topElementInModelToBeSwappedIn.ParentElementUuid = parentElementUuid
 
 	newB12Bond.PreviousElementUuid = topElementInModelToBeSwappedIn.MatureElementUuid
-	newB12Bond.NextElementUuid = nextElement.MatureElementUuid
+	newB12Bond.NextElementUuid = nextElement.MatureTestCaseModelElementMessage.MatureElementUuid
 
-	nextElement.PreviousElementUuid = newB12Bond.MatureElementUuid
+	nextElement.MatureTestCaseModelElementMessage.PreviousElementUuid = newB12Bond.MatureElementUuid
 
 	// Add updated element back to 'matureElementToSwapIn'
 	matureElementToSwapIn.MatureElementMap[topElementInModelToBeSwappedIn.MatureElementUuid] = topElementInModelToBeSwappedIn
 
 	// Update elements in TestCaseModel
-	currentTestCase.TestCaseModelMap[elementToSwapOut.MatureElementUuid] = elementToSwapOut
-	currentTestCase.TestCaseModelMap[nextElement.MatureElementUuid] = nextElement
+	currentTestCase.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.MatureElementUuid] = elementToSwapOut
+	currentTestCase.TestCaseModelMap[nextElement.MatureTestCaseModelElementMessage.MatureElementUuid] = nextElement
 
 	// Add new Bonds to TestCase Element Model
-	currentTestCase.TestCaseModelMap[newB12Bond.MatureElementUuid] = newB12Bond
+	currentTestCase.TestCaseModelMap[newB12Bond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+		MatureTestCaseModelElementMessage:  newB12Bond,
+		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
+	}
 
 	// Add 'matureElementToSwapIn' to TestCase Element Model
 	for elementUuid, element := range matureElementToSwapIn.MatureElementMap {
 
-		currentTestCase.TestCaseModelMap[elementUuid] = element
+		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
+		elementToBeAdded.MatureTestCaseModelElementMessage = element
+
+		// Add Color to first Top Element that was swapped in
+		if elementUuid == matureElementToSwapIn.FirstElementUuid {
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+		}
+		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
 
@@ -284,8 +318,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 	// Extract parent-TIC to element to swap out
 	elementToSwapOut, _ := currentTestCase.TestCaseModelMap[uuidToSwapOut]
-	parentElementUuid := elementToSwapOut.ParentElementUuid
-	previousElement := currentTestCase.TestCaseModelMap[elementToSwapOut.PreviousElementUuid]
+	parentElementUuid := elementToSwapOut.MatureTestCaseModelElementMessage.ParentElementUuid
+	previousElement := currentTestCase.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.PreviousElementUuid]
 
 	// Create the new Bonds
 	newB12Bond := commandAndRuleEngine.createNewBondB12Element(parentElementUuid)
@@ -294,31 +328,41 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	topElementInModelToBeSwappedIn := matureElementToSwapIn.MatureElementMap[matureElementToSwapIn.FirstElementUuid]
 
 	// Connect the new structure
-	previousElement.NextElementUuid = newB12Bond.MatureElementUuid
+	previousElement.MatureTestCaseModelElementMessage.NextElementUuid = newB12Bond.MatureElementUuid
 
-	newB12Bond.PreviousElementUuid = previousElement.MatureElementUuid
+	newB12Bond.PreviousElementUuid = previousElement.MatureTestCaseModelElementMessage.MatureElementUuid
 	newB12Bond.NextElementUuid = topElementInModelToBeSwappedIn.MatureElementUuid
 
 	topElementInModelToBeSwappedIn.PreviousElementUuid = newB12Bond.MatureElementUuid
-	topElementInModelToBeSwappedIn.NextElementUuid = elementToSwapOut.MatureElementUuid
+	topElementInModelToBeSwappedIn.NextElementUuid = elementToSwapOut.MatureTestCaseModelElementMessage.MatureElementUuid
 	topElementInModelToBeSwappedIn.ParentElementUuid = parentElementUuid
 
-	elementToSwapOut.PreviousElementUuid = topElementInModelToBeSwappedIn.MatureElementUuid
+	elementToSwapOut.MatureTestCaseModelElementMessage.PreviousElementUuid = topElementInModelToBeSwappedIn.MatureElementUuid
 
 	// Add updated element back to 'matureElementToSwapIn'
 	matureElementToSwapIn.MatureElementMap[topElementInModelToBeSwappedIn.MatureElementUuid] = topElementInModelToBeSwappedIn
 
 	// Update elements in TestCaseModel
-	currentTestCase.TestCaseModelMap[elementToSwapOut.MatureElementUuid] = elementToSwapOut
-	currentTestCase.TestCaseModelMap[previousElement.MatureElementUuid] = previousElement
+	currentTestCase.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.MatureElementUuid] = elementToSwapOut
+	currentTestCase.TestCaseModelMap[previousElement.MatureTestCaseModelElementMessage.MatureElementUuid] = previousElement
 
 	// Add new Bonds to TestCase Element Model
-	currentTestCase.TestCaseModelMap[newB12Bond.MatureElementUuid] = newB12Bond
+	currentTestCase.TestCaseModelMap[newB12Bond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+		MatureTestCaseModelElementMessage:  newB12Bond,
+		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
+	}
 
 	// Add 'matureElementToSwapIn' to TestCase Element Model
 	for elementUuid, element := range matureElementToSwapIn.MatureElementMap {
 
-		currentTestCase.TestCaseModelMap[elementUuid] = element
+		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
+		elementToBeAdded.MatureTestCaseModelElementMessage = element
+
+		// Add Color to first Top Element that was swapped in
+		if elementUuid == matureElementToSwapIn.FirstElementUuid {
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+		}
+		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
 
@@ -351,8 +395,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 	// Extract parent-TIC to element to swap out
 	elementToSwapOut, _ := currentTestCase.TestCaseModelMap[uuidToSwapOut]
-	parentElementUuid := elementToSwapOut.ParentElementUuid
-	previousElement := currentTestCase.TestCaseModelMap[elementToSwapOut.PreviousElementUuid]
+	parentElementUuid := elementToSwapOut.MatureTestCaseModelElementMessage.ParentElementUuid
+	previousElement := currentTestCase.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.PreviousElementUuid]
 
 	// Create the new Bonds
 	newB12Bond := commandAndRuleEngine.createNewBondB12Element(parentElementUuid)
@@ -361,31 +405,41 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	topElementInModelToBeSwappedIn := matureElementToSwapIn.MatureElementMap[matureElementToSwapIn.FirstElementUuid]
 
 	// Connect the new structure
-	previousElement.NextElementUuid = newB12Bond.MatureElementUuid
+	previousElement.MatureTestCaseModelElementMessage.NextElementUuid = newB12Bond.MatureElementUuid
 
-	newB12Bond.PreviousElementUuid = previousElement.MatureElementUuid
+	newB12Bond.PreviousElementUuid = previousElement.MatureTestCaseModelElementMessage.MatureElementUuid
 	newB12Bond.NextElementUuid = topElementInModelToBeSwappedIn.MatureElementUuid
 
 	topElementInModelToBeSwappedIn.PreviousElementUuid = newB12Bond.MatureElementUuid
-	topElementInModelToBeSwappedIn.NextElementUuid = elementToSwapOut.MatureElementUuid
+	topElementInModelToBeSwappedIn.NextElementUuid = elementToSwapOut.MatureTestCaseModelElementMessage.MatureElementUuid
 	topElementInModelToBeSwappedIn.ParentElementUuid = parentElementUuid
 
-	elementToSwapOut.PreviousElementUuid = topElementInModelToBeSwappedIn.MatureElementUuid
+	elementToSwapOut.MatureTestCaseModelElementMessage.PreviousElementUuid = topElementInModelToBeSwappedIn.MatureElementUuid
 
 	// Add updated element back to 'matureElementToSwapIn'
 	matureElementToSwapIn.MatureElementMap[topElementInModelToBeSwappedIn.MatureElementUuid] = topElementInModelToBeSwappedIn
 
 	// Update elements in TestCaseModel
-	currentTestCase.TestCaseModelMap[elementToSwapOut.MatureElementUuid] = elementToSwapOut
-	currentTestCase.TestCaseModelMap[previousElement.MatureElementUuid] = previousElement
+	currentTestCase.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.MatureElementUuid] = elementToSwapOut
+	currentTestCase.TestCaseModelMap[previousElement.MatureTestCaseModelElementMessage.MatureElementUuid] = previousElement
 
 	// Add new Bonds to TestCase Element Model
-	currentTestCase.TestCaseModelMap[newB12Bond.MatureElementUuid] = newB12Bond
+	currentTestCase.TestCaseModelMap[newB12Bond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+		MatureTestCaseModelElementMessage:  newB12Bond,
+		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
+	}
 
 	// Add 'matureElementToSwapIn' to TestCase Element Model
 	for elementUuid, element := range matureElementToSwapIn.MatureElementMap {
 
-		currentTestCase.TestCaseModelMap[elementUuid] = element
+		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
+		elementToBeAdded.MatureTestCaseModelElementMessage = element
+
+		// Add Color to first Top Element that was swapped in
+		if elementUuid == matureElementToSwapIn.FirstElementUuid {
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+		}
+		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
 
@@ -418,7 +472,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 	// Extract parent-TIC to element to swap out
 	elementToSwapOut, _ := currentTestCase.TestCaseModelMap[uuidToSwapOut]
-	parentElementUuid := elementToSwapOut.ParentElementUuid
+	parentElementUuid := elementToSwapOut.MatureTestCaseModelElementMessage.ParentElementUuid
 	parentElement := currentTestCase.TestCaseModelMap[parentElementUuid]
 
 	// Create the Bonds connecting the TIC
@@ -441,19 +495,33 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	matureElementToSwapIn.MatureElementMap[matureElementToSwapIn.FirstElementUuid] = topElementInModel
 
 	// Update "first child" in parent element
-	parentElement.FirstChildElementUuid = newPreviousB11fxBond.MatureElementUuid
+	parentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid = newPreviousB11fxBond.MatureElementUuid
 
 	// Save updated parent element back to TestCase model
 	currentTestCase.TestCaseModelMap[parentElementUuid] = parentElement
 
 	// Add new Bonds to TestCase Element Model
-	currentTestCase.TestCaseModelMap[newPreviousB11fxBond.MatureElementUuid] = newPreviousB11fxBond
-	currentTestCase.TestCaseModelMap[newNextB11lxBond.MatureElementUuid] = newNextB11lxBond
+	currentTestCase.TestCaseModelMap[newPreviousB11fxBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+		MatureTestCaseModelElementMessage:  newPreviousB11fxBond,
+		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
+	}
+
+	currentTestCase.TestCaseModelMap[newNextB11lxBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+		MatureTestCaseModelElementMessage:  newNextB11lxBond,
+		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
+	}
 
 	// Add 'matureElementToSwapIn' to TestCase Element Model
 	for elementUuid, element := range matureElementToSwapIn.MatureElementMap {
 
-		currentTestCase.TestCaseModelMap[elementUuid] = element
+		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
+		elementToBeAdded.MatureTestCaseModelElementMessage = element
+
+		// Add Color to first Top Element that was swapped in
+		if elementUuid == matureElementToSwapIn.FirstElementUuid {
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+		}
+		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
 
@@ -489,7 +557,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 	// Extract parent-TIC to element to swap out
 	elementToSwapOut, _ := currentTestCase.TestCaseModelMap[uuidToSwapOut]
-	parentElementUuid := elementToSwapOut.ParentElementUuid
+	parentElementUuid := elementToSwapOut.MatureTestCaseModelElementMessage.ParentElementUuid
 	parentElement := currentTestCase.TestCaseModelMap[parentElementUuid]
 
 	// Create the Bonds connecting the TIC
@@ -512,19 +580,33 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	matureElementToSwapIn.MatureElementMap[matureElementToSwapIn.FirstElementUuid] = topElementInModel
 
 	// Update "first child" in parent element
-	parentElement.FirstChildElementUuid = newPreviousB11fxBond.MatureElementUuid
+	parentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid = newPreviousB11fxBond.MatureElementUuid
 
 	// Save updated parent element back to TestCase model
 	currentTestCase.TestCaseModelMap[parentElementUuid] = parentElement
 
 	// Add new Bonds to TestCase Element Model
-	currentTestCase.TestCaseModelMap[newPreviousB11fxBond.MatureElementUuid] = newPreviousB11fxBond
-	currentTestCase.TestCaseModelMap[newNextB11lBond.MatureElementUuid] = newNextB11lBond
+	currentTestCase.TestCaseModelMap[newPreviousB11fxBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+		MatureTestCaseModelElementMessage:  newPreviousB11fxBond,
+		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
+	}
+
+	currentTestCase.TestCaseModelMap[newNextB11lBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+		MatureTestCaseModelElementMessage:  newNextB11lBond,
+		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
+	}
 
 	// Add 'matureElementToSwapIn' to TestCase Element Model
 	for elementUuid, element := range matureElementToSwapIn.MatureElementMap {
 
-		currentTestCase.TestCaseModelMap[elementUuid] = element
+		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
+		elementToBeAdded.MatureTestCaseModelElementMessage = element
+
+		// Add Color to first Top Element that was swapped in
+		if elementUuid == matureElementToSwapIn.FirstElementUuid {
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+		}
+		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
 
@@ -560,7 +642,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 	// Extract parent-TIC to element to swap out
 	elementToSwapOut, _ := currentTestCase.TestCaseModelMap[uuidToSwapOut]
-	parentElementUuid := elementToSwapOut.ParentElementUuid
+	parentElementUuid := elementToSwapOut.MatureTestCaseModelElementMessage.ParentElementUuid
 	parentElement := currentTestCase.TestCaseModelMap[parentElementUuid]
 
 	// Create the Bonds connecting the TIC
@@ -583,19 +665,32 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	matureElementToSwapIn.MatureElementMap[matureElementToSwapIn.FirstElementUuid] = topElementInModel
 
 	// Update "first child" in parent element
-	parentElement.FirstChildElementUuid = newPreviousB11fBond.MatureElementUuid
+	parentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid = newPreviousB11fBond.MatureElementUuid
 
 	// Save updated parent element back to TestCase model
 	currentTestCase.TestCaseModelMap[parentElementUuid] = parentElement
 
 	// Add new Bonds to TestCase Element Model
-	currentTestCase.TestCaseModelMap[newPreviousB11fBond.MatureElementUuid] = newPreviousB11fBond
-	currentTestCase.TestCaseModelMap[newNextB11lxBond.MatureElementUuid] = newNextB11lxBond
+	currentTestCase.TestCaseModelMap[newPreviousB11fBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+		MatureTestCaseModelElementMessage:  newPreviousB11fBond,
+		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
+	}
+	currentTestCase.TestCaseModelMap[newNextB11lxBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+		MatureTestCaseModelElementMessage:  newNextB11lxBond,
+		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
+	}
 
 	// Add 'matureElementToSwapIn' to TestCase Element Model
 	for elementUuid, element := range matureElementToSwapIn.MatureElementMap {
 
-		currentTestCase.TestCaseModelMap[elementUuid] = element
+		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
+		elementToBeAdded.MatureTestCaseModelElementMessage = element
+
+		// Add Color to first Top Element that was swapped in
+		if elementUuid == matureElementToSwapIn.FirstElementUuid {
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+		}
+		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
 

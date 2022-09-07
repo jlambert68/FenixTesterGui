@@ -51,7 +51,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	}
 
 	// Extract component type to verify
-	componentType := element.TestCaseModelElementType
+	componentType := element.MatureTestCaseModelElementMessage.TestCaseModelElementType
 
 	// Check simple rules of component can be Swapped or not
 	switch componentType {
@@ -188,10 +188,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 
 		return "", err
 	}
-	currentElementType := currentElement.TestCaseModelElementType
+	currentElementType := currentElement.MatureTestCaseModelElementMessage.TestCaseModelElementType
 
 	// Extract data for Previous Element
-	previousElementUuid := currentTestCase.TestCaseModelMap[currentElementUuid].PreviousElementUuid
+	previousElementUuid := currentTestCase.TestCaseModelMap[currentElementUuid].MatureTestCaseModelElementMessage.PreviousElementUuid
 	previousElement, existInMap := currentTestCase.TestCaseModelMap[previousElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
@@ -203,10 +203,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 
 		return "", err
 	}
-	previousElementType := previousElement.TestCaseModelElementType
+	previousElementType := previousElement.MatureTestCaseModelElementMessage.TestCaseModelElementType
 
 	// Extract data for Next Element
-	nextElementUuid := currentTestCase.TestCaseModelMap[currentElementUuid].NextElementUuid
+	nextElementUuid := currentTestCase.TestCaseModelMap[currentElementUuid].MatureTestCaseModelElementMessage.NextElementUuid
 	nextElement, existInMap := currentTestCase.TestCaseModelMap[nextElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
@@ -218,7 +218,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 
 		return "", err
 	}
-	nextlementType := nextElement.TestCaseModelElementType
+	nextlementType := nextElement.MatureTestCaseModelElementMessage.TestCaseModelElementType
 
 	// TCRuleSwap101
 	//	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
@@ -550,8 +550,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveVerifyAll
 	}
 
 	// Element has child-element then go that path
-	if currentElement.FirstChildElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElement.FirstChildElementUuid)
+	if currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid != elementsUuid {
+		err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -560,8 +560,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveVerifyAll
 	}
 
 	// If element has a next-element the go that path
-	if currentElement.NextElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElement.NextElementUuid)
+	if currentElement.MatureTestCaseModelElementMessage.NextElementUuid != elementsUuid {
+		err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElement.MatureTestCaseModelElementMessage.NextElementUuid)
 	}
 
 	// If we got an error back then something wrong happen, so just back out

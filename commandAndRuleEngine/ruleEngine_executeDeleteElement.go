@@ -48,10 +48,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentElementUuid := uuidToDelete
 
 	// Extract data for Previous Element
-	previousElementUuid := currentElement.PreviousElementUuid
+	previousElementUuid := currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid
 
 	// Extract data for Next Element
-	nextElementUuid := currentElement.NextElementUuid
+	nextElementUuid := currentElement.MatureTestCaseModelElementMessage.NextElementUuid
 
 	// Create the structure after Delete
 
@@ -59,18 +59,21 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	newB0BondElement := commandAndRuleEngine.createNewBondB0Element()
 
 	// Add New Elements to Map
-	currentTestCase.TestCaseModelMap[newB0BondElement.MatureElementUuid] = newB0BondElement
+	currentTestCase.TestCaseModelMap[newB0BondElement.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+		MatureTestCaseModelElementMessage:  newB0BondElement,
+		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
+	}
 
 	// Remove Old Elements from Map
 	delete(currentTestCase.TestCaseModelMap, previousElementUuid)
 	delete(currentTestCase.TestCaseModelMap, nextElementUuid)
 
 	// Remove references in currentElement to already removed Previous and Next Elements
-	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
-	currentElement.NextElementUuid = currentElement.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.NextElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
 
 	// Save updated currentElement back into TestCase-map
-	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
+	currentTestCase.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
 	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
@@ -138,13 +141,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentElementUuid := uuidToDelete
 
 	// Extract data for Previous Element
-	previousElementUuid := currentElement.PreviousElementUuid
+	previousElementUuid := currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid
 
 	// Extract data for Next Element
-	nextElementUuid := currentElement.NextElementUuid
+	nextElementUuid := currentElement.MatureTestCaseModelElementMessage.NextElementUuid
 
 	// Extract dta for Parent Element
-	parentElementUuid := currentElement.ParentElementUuid
+	parentElementUuid := currentElement.MatureTestCaseModelElementMessage.ParentElementUuid
 
 	// Create the structure after Delete
 
@@ -152,18 +155,21 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	newB10BondElement := commandAndRuleEngine.createNewBondB10Element(parentElementUuid)
 
 	// Add New Elements to Map
-	currentTestCase.TestCaseModelMap[newB10BondElement.MatureElementUuid] = newB10BondElement
+	currentTestCase.TestCaseModelMap[newB10BondElement.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+		MatureTestCaseModelElementMessage:  newB10BondElement,
+		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
+	}
 
 	// Remove Old Elements from Map
 	delete(currentTestCase.TestCaseModelMap, previousElementUuid)
 	delete(currentTestCase.TestCaseModelMap, nextElementUuid)
 
 	// Remove references in currentElement to already removed Previous and Next Elements
-	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
-	currentElement.NextElementUuid = currentElement.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.NextElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
 
 	// Save updated currentElement back into TestCase-map
-	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
+	currentTestCase.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
 	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
@@ -191,7 +197,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 		return err
 	}
 
-	tempParentElement.FirstChildElementUuid = newB10BondElement.MatureElementUuid
+	tempParentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid = newB10BondElement.MatureElementUuid
 
 	// Add updated parent-element back into TestCaseModelMap
 	currentTestCase.TestCaseModelMap[parentElementUuid] = tempParentElement
@@ -246,13 +252,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentElementUuid := uuidToDelete
 
 	// Extract data for Previous Element
-	previousElementUuid := currentElement.PreviousElementUuid
+	previousElementUuid := currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid
 
 	// Extract data for Next Element
-	nextElementUuid := currentElement.NextElementUuid
+	nextElementUuid := currentElement.MatureTestCaseModelElementMessage.NextElementUuid
 
 	// Extract dta for Parent Element
-	parentElementUuid := currentElement.ParentElementUuid
+	parentElementUuid := currentElement.MatureTestCaseModelElementMessage.ParentElementUuid
 
 	// Create the structure after Delete
 
@@ -260,18 +266,21 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	newB10oxoBondElement := commandAndRuleEngine.createNewBondB10oxoElement(parentElementUuid)
 
 	// Add New Elements to Map
-	currentTestCase.TestCaseModelMap[newB10oxoBondElement.MatureElementUuid] = newB10oxoBondElement
+	currentTestCase.TestCaseModelMap[newB10oxoBondElement.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+		MatureTestCaseModelElementMessage:  newB10oxoBondElement,
+		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
+	}
 
 	// Remove Old Elements from Map
 	delete(currentTestCase.TestCaseModelMap, previousElementUuid)
 	delete(currentTestCase.TestCaseModelMap, nextElementUuid)
 
 	// Remove references in currentElement to already removed Previous and Next Elements
-	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
-	currentElement.NextElementUuid = currentElement.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.NextElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
 
 	// Save updated currentElement back into TestCase-map
-	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
+	currentTestCase.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
 	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
@@ -299,7 +308,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 		return err
 	}
 
-	tempParentElement.FirstChildElementUuid = newB10oxoBondElement.MatureElementUuid
+	tempParentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid = newB10oxoBondElement.MatureElementUuid
 
 	// Add updated parent-element back into TestCaseModelMap
 	currentTestCase.TestCaseModelMap[parentElementUuid] = tempParentElement
@@ -354,13 +363,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentElementUuid := uuidToDelete
 
 	// Extract data for Previous Element
-	previousElementUuid := currentElement.PreviousElementUuid
+	previousElementUuid := currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid
 
 	// Extract data for Next Element
-	nextElementUuid := currentElement.NextElementUuid
+	nextElementUuid := currentElement.MatureTestCaseModelElementMessage.NextElementUuid
 
 	// Extract dta for Parent Element
-	parentElementUuid := currentElement.ParentElementUuid
+	parentElementUuid := currentElement.MatureTestCaseModelElementMessage.ParentElementUuid
 
 	// Create the structure after Delete
 
@@ -368,18 +377,21 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	newB10xoBondElement := commandAndRuleEngine.createNewBondB10xoElement(parentElementUuid)
 
 	// Add New Elements to Map
-	currentTestCase.TestCaseModelMap[newB10xoBondElement.MatureElementUuid] = newB10xoBondElement
+	currentTestCase.TestCaseModelMap[newB10xoBondElement.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+		MatureTestCaseModelElementMessage:  newB10xoBondElement,
+		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
+	}
 
 	// Remove Old Elements from Map
 	delete(currentTestCase.TestCaseModelMap, previousElementUuid)
 	delete(currentTestCase.TestCaseModelMap, nextElementUuid)
 
 	// Remove references in currentElement to already removed Previous and Next Elements
-	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
-	currentElement.NextElementUuid = currentElement.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.NextElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
 
 	// Save updated currentElement back into TestCase-map
-	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
+	currentTestCase.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
 	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
@@ -407,7 +419,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 		return err
 	}
 
-	tempParentElement.FirstChildElementUuid = newB10xoBondElement.MatureElementUuid
+	tempParentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid = newB10xoBondElement.MatureElementUuid
 
 	// Add updated parent-element back into TestCaseModelMap
 	currentTestCase.TestCaseModelMap[parentElementUuid] = tempParentElement
@@ -462,13 +474,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentElementUuid := uuidToDelete
 
 	// Extract data for Previous Element
-	previousElementUuid := currentElement.PreviousElementUuid
+	previousElementUuid := currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid
 
 	// Extract data for Next Element
-	nextElementUuid := currentElement.NextElementUuid
+	nextElementUuid := currentElement.MatureTestCaseModelElementMessage.NextElementUuid
 
 	// Extract dta for Parent Element
-	parentElementUuid := currentElement.ParentElementUuid
+	parentElementUuid := currentElement.MatureTestCaseModelElementMessage.ParentElementUuid
 
 	// Create the structure after Delete
 
@@ -476,18 +488,21 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	newB10oxBondElement := commandAndRuleEngine.createNewBondB10oxElement(parentElementUuid)
 
 	// Add New Elements to Map
-	currentTestCase.TestCaseModelMap[newB10oxBondElement.MatureElementUuid] = newB10oxBondElement
+	currentTestCase.TestCaseModelMap[newB10oxBondElement.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+		MatureTestCaseModelElementMessage:  newB10oxBondElement,
+		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
+	}
 
 	// Remove Old Elements from Map
 	delete(currentTestCase.TestCaseModelMap, previousElementUuid)
 	delete(currentTestCase.TestCaseModelMap, nextElementUuid)
 
 	// Remove references in currentElement to already removed Previous and Next Elements
-	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
-	currentElement.NextElementUuid = currentElement.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.NextElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
 
 	// Save updated currentElement back into TestCase-map
-	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
+	currentTestCase.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
 	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
@@ -515,7 +530,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 		return err
 	}
 
-	tempParentElement.FirstChildElementUuid = newB10oxBondElement.MatureElementUuid
+	tempParentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid = newB10oxBondElement.MatureElementUuid
 
 	// Add updated parent-element back into TestCaseModelMap
 	currentTestCase.TestCaseModelMap[parentElementUuid] = tempParentElement
@@ -611,7 +626,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentElementUuid := uuidToDelete
 
 	// Extract data for Previous Element
-	previousElementUuid := currentElement.PreviousElementUuid
+	previousElementUuid := currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid
 	previousElement, existInMap := currentTestCase.TestCaseModelMap[previousElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
@@ -625,7 +640,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	}
 
 	// Extract data for Next Element
-	nextElementUuid := currentElement.NextElementUuid
+	nextElementUuid := currentElement.MatureTestCaseModelElementMessage.NextElementUuid
 	nextElement, existInMap := currentTestCase.TestCaseModelMap[nextElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
@@ -639,7 +654,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	}
 
 	// Extract data for Next-Next Element
-	nextNextElementUuid := nextElement.NextElementUuid
+	nextNextElementUuid := nextElement.MatureTestCaseModelElementMessage.NextElementUuid
 	nextNextElement, existInMap := currentTestCase.TestCaseModelMap[nextNextElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
@@ -653,27 +668,27 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	}
 
 	// Connect new structure
-	previousElement.NextElementUuid = nextNextElementUuid
-	nextNextElement.PreviousElementUuid = previousElementUuid
+	previousElement.MatureTestCaseModelElementMessage.NextElementUuid = nextNextElementUuid
+	nextNextElement.MatureTestCaseModelElementMessage.PreviousElementUuid = previousElementUuid
 
 	// Remove Old Elements from Map
 	delete(currentTestCase.TestCaseModelMap, nextElementUuid)
 
 	// Remove references in currentElement to already removed Next Elements
-	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
-	currentElement.NextElementUuid = currentElement.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.NextElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
 
 	// Handle special case for switching 'b11f' into 'b11fx' when there is a 'b12x' that is auto-deleted
-	if previousElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND &&
-		nextElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE {
+	if previousElement.MatureTestCaseModelElementMessage.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND &&
+		nextElement.MatureTestCaseModelElementMessage.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE {
 
-		previousElement.TestCaseModelElementType = fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE
+		previousElement.MatureTestCaseModelElementMessage.TestCaseModelElementType = fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE
 	}
 
 	// Save updated back into TestCase-map
-	currentTestCase.TestCaseModelMap[previousElement.MatureElementUuid] = previousElement
-	currentTestCase.TestCaseModelMap[nextNextElement.MatureElementUuid] = nextNextElement
-	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
+	currentTestCase.TestCaseModelMap[previousElement.MatureTestCaseModelElementMessage.MatureElementUuid] = previousElement
+	currentTestCase.TestCaseModelMap[nextNextElement.MatureTestCaseModelElementMessage.MatureElementUuid] = nextNextElement
+	currentTestCase.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
 	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
@@ -779,7 +794,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentElementUuid := uuidToDelete
 
 	// Extract data for Previous Element
-	previousElementUuid := currentElement.PreviousElementUuid
+	previousElementUuid := currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid
 	previousElement, existInMap := currentTestCase.TestCaseModelMap[previousElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
@@ -793,7 +808,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	}
 
 	// Extract data for Next Element
-	nextElementUuid := currentElement.NextElementUuid
+	nextElementUuid := currentElement.MatureTestCaseModelElementMessage.NextElementUuid
 	nextElement, existInMap := currentTestCase.TestCaseModelMap[nextElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
@@ -807,7 +822,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	}
 
 	// Extract data for Previous-Previous Element
-	previousPreviousElementUuid := previousElement.PreviousElementUuid
+	previousPreviousElementUuid := previousElement.MatureTestCaseModelElementMessage.PreviousElementUuid
 	previousPreviousElement, existInMap := currentTestCase.TestCaseModelMap[previousPreviousElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
@@ -821,26 +836,26 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	}
 
 	// Connect new structure
-	nextElement.PreviousElementUuid = previousPreviousElementUuid
-	previousPreviousElement.NextElementUuid = nextElementUuid
+	nextElement.MatureTestCaseModelElementMessage.PreviousElementUuid = previousPreviousElementUuid
+	previousPreviousElement.MatureTestCaseModelElementMessage.NextElementUuid = nextElementUuid
 
 	// Remove Old Elements from Map
 	delete(currentTestCase.TestCaseModelMap, previousElementUuid)
 
 	// Remove references in currentElement to already removed Next Elements
-	currentElement.NextElementUuid = currentElement.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.NextElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
 
 	// Handle special case for switching 'b11l' into 'b11lx' when there is a 'b12x' that is auto-deleted
-	if previousElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE &&
-		nextElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND {
+	if previousElement.MatureTestCaseModelElementMessage.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE &&
+		nextElement.MatureTestCaseModelElementMessage.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND {
 
-		nextElement.TestCaseModelElementType = fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE
+		nextElement.MatureTestCaseModelElementMessage.TestCaseModelElementType = fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE
 	}
 
 	// Save updated back into TestCase-map
-	currentTestCase.TestCaseModelMap[previousPreviousElement.MatureElementUuid] = previousPreviousElement
-	currentTestCase.TestCaseModelMap[nextElement.MatureElementUuid] = nextElement
-	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
+	currentTestCase.TestCaseModelMap[previousPreviousElement.MatureTestCaseModelElementMessage.MatureElementUuid] = previousPreviousElement
+	currentTestCase.TestCaseModelMap[nextElement.MatureTestCaseModelElementMessage.MatureElementUuid] = nextElement
+	currentTestCase.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
 	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
@@ -946,7 +961,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentElementUuid := uuidToDelete
 
 	// Extract data for Previous Element
-	previousElementUuid := currentElement.PreviousElementUuid
+	previousElementUuid := currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid
 	previousElement, existInMap := currentTestCase.TestCaseModelMap[previousElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
@@ -960,7 +975,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	}
 
 	// Extract data for Next Element
-	nextElementUuid := currentElement.NextElementUuid
+	nextElementUuid := currentElement.MatureTestCaseModelElementMessage.NextElementUuid
 	nextElement, existInMap := currentTestCase.TestCaseModelMap[nextElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
@@ -974,11 +989,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	}
 
 	// Decide which of the Bond (Previous or Next to keep)
-	var elementToKeep *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
-	var elementToRemove *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
+	var elementToKeep *testCaseModel.MatureTestCaseModelElementStruct
+	var elementToRemove *testCaseModel.MatureTestCaseModelElementStruct
 
-	if previousElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND &&
-		nextElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE {
+	if previousElement.MatureTestCaseModelElementMessage.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND &&
+		nextElement.MatureTestCaseModelElementMessage.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE {
 		// Keep Next Element
 		elementToKeep = &nextElement
 		elementToRemove = &previousElement
@@ -990,7 +1005,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	}
 
 	// Extract data for Previous-Previous Element
-	previousPreviousElementUuid := previousElement.PreviousElementUuid
+	previousPreviousElementUuid := previousElement.MatureTestCaseModelElementMessage.PreviousElementUuid
 	previousPreviousElement, existInMap := currentTestCase.TestCaseModelMap[previousPreviousElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
@@ -1004,7 +1019,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	}
 
 	// Extract data for Next-Next Element
-	nextNextElementUuid := nextElement.NextElementUuid
+	nextNextElementUuid := nextElement.MatureTestCaseModelElementMessage.NextElementUuid
 	nextNextElement, existInMap := currentTestCase.TestCaseModelMap[nextNextElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
@@ -1018,24 +1033,24 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	}
 
 	// Connect new structure
-	previousPreviousElement.NextElementUuid = elementToKeep.MatureElementUuid
-	elementToKeep.PreviousElementUuid = previousPreviousElement.MatureElementUuid
+	previousPreviousElement.MatureTestCaseModelElementMessage.NextElementUuid = elementToKeep.MatureTestCaseModelElementMessage.MatureElementUuid
+	elementToKeep.MatureTestCaseModelElementMessage.PreviousElementUuid = previousPreviousElement.MatureTestCaseModelElementMessage.MatureElementUuid
 
-	elementToKeep.NextElementUuid = nextNextElement.MatureElementUuid
-	nextNextElement.PreviousElementUuid = elementToKeep.MatureElementUuid
+	elementToKeep.MatureTestCaseModelElementMessage.NextElementUuid = nextNextElement.MatureTestCaseModelElementMessage.MatureElementUuid
+	nextNextElement.MatureTestCaseModelElementMessage.PreviousElementUuid = elementToKeep.MatureTestCaseModelElementMessage.MatureElementUuid
 
 	// Remove Old Elements from Map
-	delete(currentTestCase.TestCaseModelMap, elementToRemove.MatureElementUuid)
+	delete(currentTestCase.TestCaseModelMap, elementToRemove.MatureTestCaseModelElementMessage.MatureElementUuid)
 
 	// Remove references in currentElement to already removed Next Elements
-	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
-	currentElement.NextElementUuid = currentElement.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.NextElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
 
 	// Save updated back into TestCase-map
-	currentTestCase.TestCaseModelMap[previousPreviousElement.MatureElementUuid] = previousPreviousElement
-	currentTestCase.TestCaseModelMap[nextNextElement.MatureElementUuid] = nextNextElement
-	currentTestCase.TestCaseModelMap[elementToKeep.MatureElementUuid] = *elementToKeep
-	currentTestCase.TestCaseModelMap[currentElement.MatureElementUuid] = currentElement
+	currentTestCase.TestCaseModelMap[previousPreviousElement.MatureTestCaseModelElementMessage.MatureElementUuid] = previousPreviousElement
+	currentTestCase.TestCaseModelMap[nextNextElement.MatureTestCaseModelElementMessage.MatureElementUuid] = nextNextElement
+	currentTestCase.TestCaseModelMap[elementToKeep.MatureTestCaseModelElementMessage.MatureElementUuid] = *elementToKeep
+	currentTestCase.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
 	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
@@ -1083,8 +1098,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveDeleteOfC
 	}
 
 	// Element has child-element then go that path
-	if currentElement.FirstChildElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentTestCase, currentElement.FirstChildElementUuid)
+	if currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid != elementsUuid {
+		err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentTestCase, currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -1093,8 +1108,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveDeleteOfC
 	}
 
 	// If element has a next-element the go that path
-	if currentElement.NextElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentTestCase, currentElement.NextElementUuid)
+	if currentElement.MatureTestCaseModelElementMessage.NextElementUuid != elementsUuid {
+		err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentTestCase, currentElement.MatureTestCaseModelElementMessage.NextElementUuid)
 	}
 
 	// If we got an error back then something wrong happen, so just back out

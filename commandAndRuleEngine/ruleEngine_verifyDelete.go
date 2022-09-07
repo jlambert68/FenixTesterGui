@@ -54,7 +54,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	}
 
 	// Extract component type to verify
-	componentType := element.TestCaseModelElementType
+	componentType := element.MatureTestCaseModelElementMessage.TestCaseModelElementType
 
 	// Check simple rules of component can be deleted or not
 	switch componentType {
@@ -197,10 +197,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 
 		return "", err
 	}
-	currentElementType := currentElement.TestCaseModelElementType
+	currentElementType := currentElement.MatureTestCaseModelElementMessage.TestCaseModelElementType
 
 	// Extract data for Previous Element
-	previousElementUuid := currentTestCase.TestCaseModelMap[currentElementUuid].PreviousElementUuid
+	previousElementUuid := currentTestCase.TestCaseModelMap[currentElementUuid].MatureTestCaseModelElementMessage.PreviousElementUuid
 	previousElement, existInMap := currentTestCase.TestCaseModelMap[previousElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
@@ -212,10 +212,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 
 		return "", err
 	}
-	previousElementType := previousElement.TestCaseModelElementType
+	previousElementType := previousElement.MatureTestCaseModelElementMessage.TestCaseModelElementType
 
 	// Extract data for Next Element
-	nextElementUuid := currentTestCase.TestCaseModelMap[currentElementUuid].NextElementUuid
+	nextElementUuid := currentTestCase.TestCaseModelMap[currentElementUuid].MatureTestCaseModelElementMessage.NextElementUuid
 	nextElement, existInMap := currentTestCase.TestCaseModelMap[nextElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
@@ -227,7 +227,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 
 		return "", err
 	}
-	nextlementType := nextElement.TestCaseModelElementType
+	nextlementType := nextElement.MatureTestCaseModelElementMessage.TestCaseModelElementType
 
 	// TCRuleDeletion101
 	// What to remove			Remove in structure				Result after deletion		Rule

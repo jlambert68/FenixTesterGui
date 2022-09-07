@@ -26,7 +26,7 @@ func (testCaseModel *TestCasesModelsStruct) VerifyThatThereAreNoZombieElementsIn
 
 	// Extract all elements by key from TestCaseModel
 	for _, elementKey := range currentTestCase.TestCaseModelMap {
-		allUuidKeys = append(allUuidKeys, elementKey.MatureElementUuid)
+		allUuidKeys = append(allUuidKeys, elementKey.MatureTestCaseModelElementMessage.MatureElementUuid)
 	}
 
 	// Follow the path from "first element and remove the found element from 'allUuidKeys'
@@ -197,7 +197,7 @@ func (testCaseModel *TestCasesModelsStruct) ListAllAvailableBuildingBlocksInTest
 
 		elementUiName := testCaseModel.generateUINameForTestCaseElement(&element)
 
-		switch element.TestCaseModelElementType {
+		switch element.MatureTestCaseModelElementMessage.TestCaseModelElementType {
 
 		// TestInstructions
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION,
@@ -263,32 +263,32 @@ func (testCaseModel *TestCasesModelsStruct) GetUuidFromUiName(testCaseUuid strin
 	}
 
 	// Loop all available building blocks and create list to be used in DropDown
-	var element fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
+	var element MatureTestCaseModelElementStruct
 	for elementUuid, element = range currentTestCase.TestCaseModelMap {
 
 		switch elementTypeFromName {
 
 		// TestInstructions
 		case "TI":
-			if (element.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
-				element.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE) &&
-				element.MatureElementUuid[:len(uuidPart)] == uuidPart {
+			if (element.MatureTestCaseModelElementMessage.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+				element.MatureTestCaseModelElementMessage.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE) &&
+				element.MatureTestCaseModelElementMessage.MatureElementUuid[:len(uuidPart)] == uuidPart {
 
 				return elementUuid, nil
 			}
 
 			// TestInstructionContainers
 		case "TIC":
-			if (element.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER ||
-				element.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE) &&
-				element.MatureElementUuid[:len(uuidPart)] == uuidPart {
+			if (element.MatureTestCaseModelElementMessage.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER ||
+				element.MatureTestCaseModelElementMessage.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE) &&
+				element.MatureTestCaseModelElementMessage.MatureElementUuid[:len(uuidPart)] == uuidPart {
 
 				return elementUuid, nil
 			}
 
 			// Bonds
 		default:
-			if element.MatureElementUuid[:len(uuidPart)] == uuidPart {
+			if element.MatureTestCaseModelElementMessage.MatureElementUuid[:len(uuidPart)] == uuidPart {
 
 				return elementUuid, nil
 			}

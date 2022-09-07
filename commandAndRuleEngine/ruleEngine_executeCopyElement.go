@@ -12,7 +12,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCopyFullELe
 
 	var tempTestCase *testCaseModel.TestCaseModelStruct
 
-	tempTestCaseModelMap := make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage)
+	tempTestCaseModelMap := make(map[string]testCaseModel.MatureTestCaseModelElementStruct)
 
 	// Get current TestCase
 	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
@@ -51,9 +51,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCopyFullELe
 	currentElementUuid := uuidToCopy
 
 	// Remove references in currentElement to Previous- , Next- and Parent Elements
-	currentElement.PreviousElementUuid = currentElement.MatureElementUuid
-	currentElement.NextElementUuid = currentElement.MatureElementUuid
-	currentElement.ParentElementUuid = currentElement.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.NextElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
+	currentElement.MatureTestCaseModelElementMessage.ParentElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
 
 	// Save updated element back into tempMap
 	tempTestCase.TestCaseModelMap[currentElementUuid] = currentElement
@@ -71,7 +71,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCopyFullELe
 	if err != nil {
 
 		errorId := "c2d1e439-ef76-4486-a7f5-3c7a54dc156c"
-		err = errors.New(fmt.Sprintf("something went wrong when creating element structure from element '%s' and its children, in 'TestCaseModelMap', using recursive calls [ErrorID: %s]", currentElement.MatureElementUuid, errorId))
+		err = errors.New(fmt.Sprintf("something went wrong when creating element structure from element '%s' and its children, in 'TestCaseModelMap', using recursive calls [ErrorID: %s]", currentElement.MatureTestCaseModelElementMessage.MatureElementUuid, errorId))
 
 		return err
 	}
@@ -113,8 +113,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveCopyingOf
 	}
 
 	// Element has child-element then go that path
-	if currentElement.FirstChildElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveCopyingOfFullElementStructure(currentTestCase, currentElement.FirstChildElementUuid, copiedElementStructure)
+	if currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid != elementsUuid {
+		err = commandAndRuleEngine.recursiveCopyingOfFullElementStructure(currentTestCase, currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid, copiedElementStructure)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -123,8 +123,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveCopyingOf
 	}
 
 	// If element has a next-element the go that path
-	if currentElement.NextElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveCopyingOfFullElementStructure(currentTestCase, currentElement.NextElementUuid, copiedElementStructure)
+	if currentElement.MatureTestCaseModelElementMessage.NextElementUuid != elementsUuid {
+		err = commandAndRuleEngine.recursiveCopyingOfFullElementStructure(currentTestCase, currentElement.MatureTestCaseModelElementMessage.NextElementUuid, copiedElementStructure)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -134,18 +134,18 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveCopyingOf
 
 	// Copy the element
 	newCopiedElement := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
-		OriginalElementUuid:      currentElement.OriginalElementUuid,
-		OriginalElementName:      currentElement.OriginalElementName,
-		ImmatureElementUuid:      currentElement.MatureElementUuid,
-		PreviousElementUuid:      currentElement.PreviousElementUuid,
-		NextElementUuid:          currentElement.NextElementUuid,
-		FirstChildElementUuid:    currentElement.FirstChildElementUuid,
-		ParentElementUuid:        currentElement.ParentElementUuid,
-		TestCaseModelElementType: currentElement.TestCaseModelElementType,
+		OriginalElementUuid:      currentElement.MatureTestCaseModelElementMessage.OriginalElementUuid,
+		OriginalElementName:      currentElement.MatureTestCaseModelElementMessage.OriginalElementName,
+		ImmatureElementUuid:      currentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
+		PreviousElementUuid:      currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid,
+		NextElementUuid:          currentElement.MatureTestCaseModelElementMessage.NextElementUuid,
+		FirstChildElementUuid:    currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid,
+		ParentElementUuid:        currentElement.MatureTestCaseModelElementMessage.ParentElementUuid,
+		TestCaseModelElementType: currentElement.MatureTestCaseModelElementMessage.TestCaseModelElementType,
 	}
 
 	// Add the element to the referenced map
-	copiedElementStructure.ImmatureElementMap[currentElement.MatureElementUuid] = newCopiedElement
+	copiedElementStructure.ImmatureElementMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = newCopiedElement
 
 	return err
 }

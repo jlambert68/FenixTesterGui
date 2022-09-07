@@ -54,7 +54,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	}
 
 	// Extract component type to verify
-	componentType := element.TestCaseModelElementType
+	componentType := element.MatureTestCaseModelElementMessage.TestCaseModelElementType
 
 	// Check simple rules of component can be Cut or not
 	switch componentType {

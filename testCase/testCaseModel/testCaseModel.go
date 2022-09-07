@@ -28,8 +28,8 @@ func (testCaseModel *TestCasesModelsStruct) recursiveZombieElementSearchInTestCa
 	}
 
 	// Element has child-element then go that path
-	if currentElement.FirstChildElementUuid != elementsUuid {
-		allUuidKeys, err = testCaseModel.recursiveZombieElementSearchInTestCaseModel(testCaseUuid, currentElement.FirstChildElementUuid, allUuidKeys)
+	if currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid != elementsUuid {
+		allUuidKeys, err = testCaseModel.recursiveZombieElementSearchInTestCaseModel(testCaseUuid, currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid, allUuidKeys)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -38,8 +38,8 @@ func (testCaseModel *TestCasesModelsStruct) recursiveZombieElementSearchInTestCa
 	}
 
 	// If element has a next-element the go that path
-	if currentElement.NextElementUuid != elementsUuid {
-		allUuidKeys, err = testCaseModel.recursiveZombieElementSearchInTestCaseModel(testCaseUuid, currentElement.NextElementUuid, allUuidKeys)
+	if currentElement.MatureTestCaseModelElementMessage.NextElementUuid != elementsUuid {
+		allUuidKeys, err = testCaseModel.recursiveZombieElementSearchInTestCaseModel(testCaseUuid, currentElement.MatureTestCaseModelElementMessage.NextElementUuid, allUuidKeys)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -102,11 +102,11 @@ func (testCaseModel *TestCasesModelsStruct) recursiveTextualTestCaseModelExtract
 	}
 
 	// Add element to slice
-	testCaseModelElementsIOut = append(testCaseModelElementsIn, currentElement)
+	testCaseModelElementsIOut = append(testCaseModelElementsIn, currentElement.MatureTestCaseModelElementMessage)
 
 	// Element has child-element then go that path
-	if currentElement.FirstChildElementUuid != elementsUuid {
-		testCaseModelElementsIOut, err = testCaseModel.recursiveTextualTestCaseModelExtractor(testCaseUuid, currentElement.FirstChildElementUuid, testCaseModelElementsIOut)
+	if currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid != elementsUuid {
+		testCaseModelElementsIOut, err = testCaseModel.recursiveTextualTestCaseModelExtractor(testCaseUuid, currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid, testCaseModelElementsIOut)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -115,8 +115,8 @@ func (testCaseModel *TestCasesModelsStruct) recursiveTextualTestCaseModelExtract
 	}
 
 	// If element has a next-element the go that path
-	if currentElement.NextElementUuid != elementsUuid {
-		testCaseModelElementsIOut, err = testCaseModel.recursiveTextualTestCaseModelExtractor(testCaseUuid, currentElement.NextElementUuid, testCaseModelElementsIOut)
+	if currentElement.MatureTestCaseModelElementMessage.NextElementUuid != elementsUuid {
+		testCaseModelElementsIOut, err = testCaseModel.recursiveTextualTestCaseModelExtractor(testCaseUuid, currentElement.MatureTestCaseModelElementMessage.NextElementUuid, testCaseModelElementsIOut)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -128,9 +128,9 @@ func (testCaseModel *TestCasesModelsStruct) recursiveTextualTestCaseModelExtract
 }
 
 // Generate name to be used when presenting TestCase Element
-func (testCaseModel *TestCasesModelsStruct) generateUINameForTestCaseElement(element *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) (elementUiName string) {
+func (testCaseModel *TestCasesModelsStruct) generateUINameForTestCaseElement(element *MatureTestCaseModelElementStruct) (elementUiName string) {
 
-	elementUiName = element.OriginalElementName + " [" + element.MatureElementUuid[0:numberOfCharactersfromUuid-1] + "]"
+	elementUiName = element.MatureTestCaseModelElementMessage.OriginalElementName + " [" + element.MatureTestCaseModelElementMessage.MatureElementUuid[0:numberOfCharactersfromUuid-1] + "]"
 
 	return elementUiName
 }
@@ -160,8 +160,8 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 	}
 
 	// Element has child-element then go that path
-	if currentElement.FirstChildElementUuid != currentElementsUuid {
-		treeViewNodeChildrenOut, err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentElement.FirstChildElementUuid, []TestCaseModelAdaptedForUiTreeDataStruct{})
+	if currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid != currentElementsUuid {
+		treeViewNodeChildrenOut, err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid, []TestCaseModelAdaptedForUiTreeDataStruct{})
 
 		// reverse Slice to get correct order in Tree-view
 		treeViewNodeChildrenToBeSaved := testCaseModel.reverseSliceOfNodeObjects(treeViewNodeChildrenOut)
@@ -177,8 +177,8 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 	}
 
 	// If element has a next-element the go that path
-	if currentElement.NextElementUuid != currentElementsUuid {
-		treeViewNodeChildrenIn, err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentElement.NextElementUuid, treeViewNodeChildrenIn)
+	if currentElement.MatureTestCaseModelElementMessage.NextElementUuid != currentElementsUuid {
+		treeViewNodeChildrenIn, err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentElement.MatureTestCaseModelElementMessage.NextElementUuid, treeViewNodeChildrenIn)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -195,7 +195,7 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 		isBond                   bool
 	)
 
-	switch currentElement.TestCaseModelElementType {
+	switch currentElement.MatureTestCaseModelElementMessage.TestCaseModelElementType {
 	// B0-Bond
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND:
 		nodeColor = nodeColor_Bond_B0
@@ -218,7 +218,7 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 		// TI, TIC
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION,
 		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER:
-		nodeColor = nodeColor_TI_TIC
+		nodeColor = currentElement.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString //nodeColor_TI_TIC
 		isBond = false
 
 	// B11x, B12x
@@ -243,7 +243,7 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 
 	default:
 		errorId := "97e0d6e6-791e-4228-8cb4-e58f059dad1e"
-		err = errors.New(fmt.Sprintf("unknown Element Type '%s' in Element '%s' in TestCase '%s' [ErrorID: %s]", currentElement.TestCaseModelElementType, currentElementsUuid, testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("unknown Element Type '%s' in Element '%s' in TestCase '%s' [ErrorID: %s]", currentElement.MatureTestCaseModelElementMessage.TestCaseModelElementType, currentElementsUuid, testCaseUuid, errorId))
 
 		return nil, err
 
@@ -252,13 +252,13 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 	// Check if it is a Bond-element
 	if isBond {
 		// The Element is a Bond so extract it
-		currentImmatureBond, existInMap := testCaseModel.AvailableBondsMap[currentElement.TestCaseModelElementType]
+		currentImmatureBond, existInMap := testCaseModel.AvailableBondsMap[currentElement.MatureTestCaseModelElementMessage.TestCaseModelElementType]
 
 		// If the element doesn't exit then there is something really wrong
 		if existInMap == false {
 			// This shouldn't happen
 			errorId := "6c3522bb-b3fc-4b65-acb0-0090df6970b9"
-			err = errors.New(fmt.Sprintf("bond element '%s', doesn't exist in map with all Bonds [ErrorID: %s]", currentElement.TestCaseModelElementType, errorId))
+			err = errors.New(fmt.Sprintf("bond element '%s', doesn't exist in map with all Bonds [ErrorID: %s]", currentElement.MatureTestCaseModelElementMessage.TestCaseModelElementType, errorId))
 
 			return nil, err
 		}
@@ -270,8 +270,8 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 	}
 
 	// Set TestInstruction type color
-	if currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
-		currentElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE {
+	if currentElement.MatureTestCaseModelElementMessage.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+		currentElement.MatureTestCaseModelElementMessage.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE {
 		testInstructionTypeColor = "#FFFF0033"
 	} else {
 		// Use transparent, alfa channel added,  if no TestInstruction
@@ -281,11 +281,11 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 	// Add element to slice
 	elementDataToAdd := TestCaseModelAdaptedForUiTreeDataStruct{
 		Uuid:                     currentElementsUuid,
-		OriginalUuid:             currentElement.OriginalElementUuid,
-		NodeName:                 currentElement.OriginalElementName,
+		OriginalUuid:             currentElement.MatureTestCaseModelElementMessage.OriginalElementUuid,
+		NodeName:                 currentElement.MatureTestCaseModelElementMessage.OriginalElementName,
 		NodeColor:                nodeColor,
 		TestInstructionTypeColor: testInstructionTypeColor,
-		NodeTypeEnum:             currentElement.GetTestCaseModelElementType(),
+		NodeTypeEnum:             currentElement.MatureTestCaseModelElementMessage.GetTestCaseModelElementType(),
 		CanBeDeleted:             canBeDeleted,
 		CanBeSwappedOut:          canBeSwappedOut,
 	}
@@ -295,8 +295,8 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 	currentTestCase.testCaseModelAdaptedForUiTree[currentElementsUuid+"_originalUuid"] = []TestCaseModelAdaptedForUiTreeDataStruct{elementDataToAdd}
 
 	// Save Top-Left-Children in Map with ParentElementUuid as map-key
-	if currentElementsUuid == currentElement.ParentElementUuid &&
-		currentElementsUuid == currentElement.PreviousElementUuid {
+	if currentElementsUuid == currentElement.MatureTestCaseModelElementMessage.ParentElementUuid &&
+		currentElementsUuid == currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid {
 		// reverse Slice to get correct order in Tree-view
 		treeViewNodeChildrenToBeSaved := testCaseModel.reverseSliceOfNodeObjects(treeViewNodeChildrenIn)
 

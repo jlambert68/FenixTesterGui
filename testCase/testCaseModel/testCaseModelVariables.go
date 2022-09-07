@@ -35,7 +35,7 @@ type TestCasesModelsStruct struct {
 type TestCaseModelStruct struct {
 	LastLoadedTestCaseModelGRPCMessage         fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage
 	FirstElementUuid                           string
-	TestCaseModelMap                           map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
+	TestCaseModelMap                           map[string]MatureTestCaseModelElementStruct
 	TextualTestCaseRepresentationSimpleStack   []string
 	TextualTestCaseRepresentationComplexStack  []string
 	TextualTestCaseRepresentationExtendedStack []string
@@ -47,6 +47,16 @@ type TestCaseModelStruct struct {
 	LocalTestCaseMessage                       LocalTestCaseMessageStruct
 	testCaseModelAdaptedForUiTree              map[string][]TestCaseModelAdaptedForUiTreeDataStruct // Model used for Creating the Tree-view for the TestCase-model
 
+}
+
+type MatureTestCaseModelElementStruct struct {
+	MatureTestCaseModelElementMessage  fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
+	MatureTestCaseModelElementMetaData MatureTestCaseModelElementMetaDataStruct
+}
+
+type MatureTestCaseModelElementMetaDataStruct struct {
+	ChosenDropZoneUuid        string
+	ChosenDropZoneColorString string
 }
 
 type TestCaseModelAdaptedForUiTreeDataStruct struct {

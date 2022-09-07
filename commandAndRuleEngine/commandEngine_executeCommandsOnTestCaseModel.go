@@ -26,10 +26,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	}
 
 	// Initiate TestCaseModel-map
-	newTestCaseModel.TestCaseModelMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage)
+	newTestCaseModel.TestCaseModelMap = make(map[string]testCaseModel.MatureTestCaseModelElementStruct)
 
 	// Add B0-bond to the TestCaseModel-map
-	newTestCaseModel.TestCaseModelMap[b0Bond.MatureElementUuid] = b0Bond
+	newTestCaseModel.TestCaseModelMap[b0Bond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+		MatureTestCaseModelElementMessage:  b0Bond,
+		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
+	}
 
 	// Set the B0-bond as first element in TestCaseModel
 	newTestCaseModel.FirstElementUuid = b0Bond.MatureElementUuid

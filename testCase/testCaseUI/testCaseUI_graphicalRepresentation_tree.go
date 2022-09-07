@@ -80,7 +80,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 				A: 0x00,
 			}
 
-			// Create indentation rectangle to move node to right
+			// Create indentation colorRectangle to move node to right
 			newIndentationRectangle := canvas.NewRectangle(newTransparentColor)
 			newIndentationRectangle.StrokeColor = color.Black
 			newIndentationRectangle.StrokeWidth = 0
@@ -89,7 +89,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 
 			// Create indentation within TestInstructionContainer
 
-			// Create rectangle to show TestInstruction-color
+			// Create colorRectangle to show TestInstruction-color
 			newTestInstructionColorRectangle := testCasesUiCanvasObject.NewClickableRectangle(rectangleColor, testCaseUuid, child.Uuid)
 			/*
 				newTestInstructionColorRectangle := canvas.NewRectangle(rectangleColor)
@@ -97,7 +97,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 				newTestInstructionColorRectangle.StrokeWidth = 0
 				newTestInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
 			*/
-			testInstructionNodeColorContainer := container.NewMax(newTestInstructionColorRectangle.rectangle, newTestInstructionColorRectangle)
+			testInstructionNodeColorContainer := container.NewMax(newTestInstructionColorRectangle.colorRectangle, newTestInstructionColorRectangle.selectedRectangle, newTestInstructionColorRectangle)
 
 			// Create the Accordion-object to hold information about the TestInstruction
 			dummyText := widget.NewLabel("this is just a dummy text and might show other TestInstruction-attributes later on")
@@ -113,7 +113,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 					A: 0x33,
 				}
 
-				// Create rectangle to show TestInstruction-command
+				// Create colorRectangle to show TestInstruction-command
 				newTestInstructionCommandColorRectangle := canvas.NewRectangle(newTICommandtColor)
 				newTestInstructionCommandColorRectangle.StrokeColor = color.RGBA{R: 0xFF, G: 0x00, B: 0x00, A: 0x77}
 				newTestInstructionCommandColorRectangle.StrokeWidth = 2
@@ -153,7 +153,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 				A: 0x00,
 			}
 
-			// Create indentation rectangle to move node to right
+			// Create indentation colorRectangle to move node to right
 			newIndentationRectangle := canvas.NewRectangle(newTransparentColor)
 			newIndentationRectangle.StrokeColor = color.Black
 			newIndentationRectangle.StrokeWidth = 0
@@ -171,7 +171,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			// Create the Horizontal node container object to be put on GUI
 			nodeHContainer := container.NewHBox(newIndentationRectangleContainer, newTestInstructionContainerAccordion, layout.NewSpacer())
 
-			// Create trailer rectangle for TestInstructionContainer
+			// Create trailer colorRectangle for TestInstructionContainer
 			newITrailerRectangle := canvas.NewRectangle(newTransparentColor)
 			newITrailerRectangle.StrokeColor = color.Black
 			newITrailerRectangle.StrokeWidth = 0
@@ -226,7 +226,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 				A: 0x00,
 			}
 
-			// Create indentation rectangle to move node to right
+			// Create indentation colorRectangle to move node to right
 			newIndentationRectangle := canvas.NewRectangle(newTransaparentColor)
 			newIndentationRectangle.StrokeColor = color.Black
 			newIndentationRectangle.StrokeWidth = 0

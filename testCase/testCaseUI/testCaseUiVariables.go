@@ -35,13 +35,15 @@ type TestCasesUiModelStruct struct {
 
 	CommandChannelReference        *sharedCode.CommandChannelType
 	GraphicsUpdateChannelReference *sharedCode.CommandChannelGraphicsUpdateType
+
+	CurrentSelectedTestCaseUIElement *ClickableRectangle
 }
 
 // This object hold references to the object that is used when user drags a new TestInstruction or
 // TestInstructionContainer from Available Building Blocks and drops it into the TestCase
 type DragNDropObjectStruct struct {
 	DragNDropText                    *canvas.Text      // Text used for Drag n Drop of TI and TIC into TextCase //TODO, is this used?
-	DragNDropRectangle               *canvas.Rectangle // Outer rectangle
+	DragNDropRectangle               *canvas.Rectangle // Outer colorRectangle
 	DragNDropRectangleTextBackground *canvas.Rectangle // The text background for text to be more readable, regarding text and background colors
 	DragNDropContainer               *fyne.Container   // The Container holding the above objects together
 }

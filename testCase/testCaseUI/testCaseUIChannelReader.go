@@ -57,4 +57,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) updateTestCaseGraphics(in
 		return
 	}
 
+	// Set the active TestCase, from UI-perspective
+	testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid = incomingChannelCommandGraphicsUpdatedData.ActiveTestCase
+
 }

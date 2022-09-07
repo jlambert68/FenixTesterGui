@@ -90,7 +90,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			// Create indentation within TestInstructionContainer
 
 			// Create rectangle to show TestInstruction-color
-			newTestInstructionColorRectangle := testCasesUiCanvasObject.NewClickableRectangle(rectangleColor, testCaseUuid, child.OriginalUuid)
+			newTestInstructionColorRectangle := testCasesUiCanvasObject.NewClickableRectangle(rectangleColor, testCaseUuid, child.Uuid)
 			/*
 				newTestInstructionColorRectangle := canvas.NewRectangle(rectangleColor)
 				newTestInstructionColorRectangle.StrokeColor = color.Black

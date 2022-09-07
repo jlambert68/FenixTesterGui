@@ -233,7 +233,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			newTestInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(0)))
 			testInstructionNodeTransparentContainer := container.NewMax(newTestInstructionColorRectangle)
 
-			// Create the cone container object to be put on GUI
+			// Create the none container object to be put on GUI
 			nodeContainer := container.NewHBox(newIndentationRectangleContainer, testInstructionNodeTransparentContainer, newDroppableBondLabelContainer, layout.NewSpacer())
 
 			// Add the child

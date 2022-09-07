@@ -151,6 +151,8 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	fyneMasterWindow := uiServer.fyneApp.NewWindow("Fenix TestCase Builder")
 	fyneMasterWindow.SetMaster()
 
+	uiServer.commandAndRuleEngine.MasterFenixWindow = &fyneMasterWindow
+
 	// Get Available Building BLocks form GUI-server
 	uiServer.availableBuildingBlocksModel.loadAvailableBuildingBlocksFromServer(&uiServer.testCasesModel)
 

@@ -69,15 +69,17 @@ type lastSavedCommandStack struct {
 // ImmatureElementStruct
 // Used for Swapping in a New Element-structure or the Copy-Buffer
 type ImmatureElementStruct struct {
-	FirstElementUuid   string
-	ImmatureElementMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage
+	FirstElementUuid    string
+	ChosenDropZoneColor string
+	ImmatureElementMap  map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage
 }
 
 // MatureElementStruct
 // Used when converting an Immature Element-structure into a Mature-structure to be used in the TestCase. Cut-buffer also use this structure
 type MatureElementStruct struct {
-	FirstElementUuid string
-	MatureElementMap map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
+	FirstElementUuid    string
+	ChosenDropZoneColor string
+	MatureElementMap    map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
 }
 
 // LocalTestCaseMessageStruct

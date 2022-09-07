@@ -4,6 +4,7 @@ import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/grpc_out"
 	"FenixTesterGui/testCase/testCaseModel"
+	"fyne.io/fyne/v2"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 )
@@ -16,6 +17,7 @@ type CommandAndRuleEngineObjectStruct struct {
 	GrpcOutReference               *grpc_out.GRPCOutStruct
 	CommandChannelReference        *sharedCode.CommandChannelType
 	GraphicsUpdateChannelReference *sharedCode.CommandChannelGraphicsUpdateType
+	MasterFenixWindow              *fyne.Window
 }
 
 // The Complex Deletion Rules

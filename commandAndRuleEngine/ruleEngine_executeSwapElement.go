@@ -690,5 +690,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) transformImmatureE
 
 		err = errors.New("there is no top element 'immatureElementToSwapIn'")
 	}
+
+	// Move Color for Element
+	matureElementModel.ChosenDropZoneColor = immatureElementToSwapIn.ChosenDropZoneColor
+
 	return matureElementModel, err
 }

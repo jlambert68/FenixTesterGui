@@ -130,24 +130,32 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSwap
 		immatureElementToSwapInOriginal := tempMap[elementUuidToBeSwappedIn].ImmatureSubTestCaseModel
 		immatureElementToSwapInTestCaseFormat = commandAndRuleEngine.convertGrpcElementModelIntoTestCaseElementModel(immatureElementToSwapInOriginal)
 
+		// Handle DropZones
 		availableDropZones := tempMap[elementUuidToBeSwappedIn].ImmatureTestInstructionInformation.AvailableDropZones
 		numberOfDropZones := len(availableDropZones)
 
+		// If there are more than one DropZone then pop up window so user can choose
 		if numberOfDropZones > 1 {
 			numberOfDropZones = 2
 		}
 
+		// Create DropZone window
 		dropZoneContainer := container.NewVBox()
 		var dropZoneWindow dialog.Dialog
 		var dropZoneWaitGroup sync.WaitGroup
 		dropZoneWaitGroup.Add(1)
-		choosenDropZoneName := "NO_DROPZONE_WAS_CHOSEN"
+		chosenDropZoneName := "NO_DROPZONE_WAS_CHOSEN"
 
 		switch numberOfDropZones {
 		case 0:
-			fmt.Println("Number of DropZones is 0")
+
+			// Set the TestInstructionColor to transparent
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneColor = "#00000000"
+
 		case 1:
-			fmt.Println("Number of DropZones is 1")
+			// Choose the color for theonly DropZone
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneColor = availableDropZones[0].DropZoneColor
+
 		case 2:
 			for _, dropZoneItem := range availableDropZones {
 
@@ -164,23 +172,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSwap
 				// Create the DropZone Button
 				dropZoneButton.OnTapped = func() {
 					fmt.Println(dropZoneButton.Text)
-					choosenDropZoneName = dropZoneButton.Text
+					chosenDropZoneName = dropZoneButton.Text
 					defer dropZoneWaitGroup.Done()
 				}
-
-				// Create the DropZone Button
-				/*
-					dropZoneButton2 = widget.NewButton(dropZoneItem.DropZoneName,
-						func() {
-
-							dropZoneWindow.MinSize()
-							dropZoneWindow.SetDismissText("Fooled you")
-							defer dropZoneWaitGroup.Done()
-						},
-					)
-
-
-				*/
 
 				// Create the Background colored rectangle
 				dropZoneColor, err := sharedCode.ConvertRGBAHexStringIntoRGBAColor(dropZoneItem.DropZoneColor)
@@ -201,13 +195,14 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSwap
 
 			// Open up the DropZone-choser to the user
 			dropZoneWindow = dialog.NewCustom("Choose DropZone", "Cancel", dropZoneContainer, *commandAndRuleEngine.MasterFenixWindow)
-
 			dropZoneWindow.Show()
+
+			// Wait for user to choose a DropZone
 			dropZoneWaitGroup.Wait()
 			dropZoneWindow.Hide()
 
 			// If no DropZone was chosen then just exit
-			if choosenDropZoneName == "NO_DROPZONE_WAS_CHOSEN" {
+			if chosenDropZoneName == "NO_DROPZONE_WAS_CHOSEN" {
 				return
 			}
 
@@ -215,7 +210,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSwap
 			var dropZoneColorAsHexString string
 			for _, dropZoneItem := range availableDropZones {
 
-				if dropZoneItem.DropZoneName == choosenDropZoneName {
+				if dropZoneItem.DropZoneName == chosenDropZoneName {
 					dropZoneColorAsHexString = dropZoneItem.DropZoneColor
 					break
 				}

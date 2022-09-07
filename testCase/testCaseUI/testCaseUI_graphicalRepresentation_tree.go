@@ -90,11 +90,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			// Create indentation within TestInstructionContainer
 
 			// Create rectangle to show TestInstruction-color
-			newTestInstructionColorRectangle := canvas.NewRectangle(rectangleColor)
-			newTestInstructionColorRectangle.StrokeColor = color.Black
-			newTestInstructionColorRectangle.StrokeWidth = 0
-			newTestInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
-			testInstructionNodeColorContainer := container.NewMax(newTestInstructionColorRectangle)
+			newTestInstructionColorRectangle := testCasesUiCanvasObject.NewClickableRectangle(rectangleColor, testCaseUuid, child.OriginalUuid)
+			/*
+				newTestInstructionColorRectangle := canvas.NewRectangle(rectangleColor)
+				newTestInstructionColorRectangle.StrokeColor = color.Black
+				newTestInstructionColorRectangle.StrokeWidth = 0
+				newTestInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
+			*/
+			testInstructionNodeColorContainer := container.NewMax(newTestInstructionColorRectangle.rectangle, newTestInstructionColorRectangle)
 
 			// Create the Accordion-object to hold information about the TestInstruction
 			dummyText := widget.NewLabel("this is just a dummy text and might show other TestInstruction-attributes later on")

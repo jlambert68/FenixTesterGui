@@ -17,7 +17,7 @@ type attributeStruct struct {
 var attributesList []attributeStruct
 
 // Generate the TestCaseAttributes Area for the TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttributesAreaForTestCase(testCaseUuid string, testInstructionElementOriginalUuid string) (testCaseAttributesArea fyne.CanvasObject, err error) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttributesAreaForTestCase(testCaseUuid string, testInstructionElementOriginalUuid string) (testCaseAttributesArea fyne.CanvasObject, testInstructionAttributesAccordion *widget.Accordion, err error) {
 
 	testCasesUiCanvasObject.generateAttributeStringListData(testInstructionElementOriginalUuid)
 
@@ -36,6 +36,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 
 	*/
 
+	// Extract the current TestCase model
+	testCaseModel, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
+
 	// Create Form-layout container to be used for attributes
 	attributesContainer := container.New(layout.NewFormLayout())
 
@@ -52,12 +55,35 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 	} else {
 		// No attributes so return simple label
 		newLabel := widget.NewLabel("No Attributes for TestInstruction")
-		attributesContainer = container.NewVBox(newLabel)
+
+		// Create the AccordionItem
+		testInstructionAttributesAccordionItem := widget.NewAccordionItem("TestInstruction Attributes", newLabel)
+
+		if existsInMap == true {
+			// Accordion exist so just replace the AccordionItem
+			testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.RemoveIndex(0)
+			testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Append(testInstructionAttributesAccordionItem)
+
+			// Open the Accordion
+			testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Open(0)
+
+			return attributesContainer, testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject, err
+
+		} else {
+			// Accordion doesn't exit so create it and add the AccordionItem
+			testInstructionAttributesAccordion = widget.NewAccordion(testInstructionAttributesAccordionItem)
+
+			attributesContainer = container.NewVBox(testInstructionAttributesAccordion)
+
+			// Open the Accordion
+			testInstructionAttributesAccordion.Open(0)
+
+		}
 
 	}
 
 	// Save Accordion to be able to update with new attributes for other TestInstruction
-	testCaseModel, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
+
 	if existsInMap == true {
 
 		// Create the AccordionItem
@@ -66,22 +92,33 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 		// Check if Accordion already  exist
 		if testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject == nil {
 			// Accordion doesn't exit so create it and add the AccordionItem
-			testInstructionAttributesAccordion := widget.NewAccordion(testInstructionAttributesAccordionItem)
+			testInstructionAttributesAccordion = widget.NewAccordion(testInstructionAttributesAccordionItem)
 
 			// save the Accordion to UI-model
 			testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject = testInstructionAttributesAccordion
 
+			// Open the Accordion
+			testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Open(0)
+
 		} else {
-			// Accordion exist so,  add AccordionItem to be the Accordion
+			// Accordion exist so,  add new AccordionItem to be the Accordion
 
 			// Accordion already exists so remove the old AccordionItem and add the new one
 			testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.RemoveIndex(0)
 			testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Append(testInstructionAttributesAccordionItem)
 
 		}
+
+		// Open the Accordion and refresh
+		testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Close(0)
+		testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Open(0)
+		testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Refresh()
+
+		attributesContainer = container.NewVBox(testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject)
+
 	}
 
-	return attributesContainer, err
+	return attributesContainer, testInstructionAttributesAccordion, err
 }
 
 // Generate structure for 'binding.StringList' regarding Attribute values

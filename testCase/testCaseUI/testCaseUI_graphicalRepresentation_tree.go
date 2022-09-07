@@ -104,22 +104,26 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			newTestInstructionAccordionItem := widget.NewAccordionItem(nodeName, dummyText)
 			newTestInstructionAccordion = testCasesUiCanvasObject.newClickableAccordion(newTestInstructionAccordionItem, true, testCaseUuid, child.OriginalUuid) //widget.NewAccordion(newTestInstructionAccordionItem)
 
-			// Create color to use
-			newTICommandtColor := color.RGBA{
-				R: 0x33,
-				G: 0x33,
-				B: 0x33,
-				A: 0x33,
-			}
-			// Create rectangle to show TestInstruction-command
-			newTestInstructionCommandColorRectangle := canvas.NewRectangle(newTICommandtColor)
-			newTestInstructionCommandColorRectangle.StrokeColor = color.RGBA{R: 0xFF, G: 0x00, B: 0x00, A: 0x77}
-			newTestInstructionCommandColorRectangle.StrokeWidth = 2
-			newTestInstructionCommandColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
-			testInstructionCommandColorContainer := container.NewMax(newTestInstructionCommandColorRectangle)
+			/*
+				// Create color to use
+				newTICommandtColor := color.RGBA{
+					R: 0x33,
+					G: 0x33,
+					B: 0x33,
+					A: 0x33,
+				}
 
+				// Create rectangle to show TestInstruction-command
+				newTestInstructionCommandColorRectangle := canvas.NewRectangle(newTICommandtColor)
+				newTestInstructionCommandColorRectangle.StrokeColor = color.RGBA{R: 0xFF, G: 0x00, B: 0x00, A: 0x77}
+				newTestInstructionCommandColorRectangle.StrokeWidth = 2
+				newTestInstructionCommandColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
+				testInstructionCommandColorContainer := container.NewMax(newTestInstructionCommandColorRectangle)
+
+
+			*/
 			// Create the container object to be put on GUI
-			nodeContainer := container.NewHBox(newIndentationRectangleContainer, testInstructionNodeColorContainer, newTestInstructionAccordion, testInstructionCommandColorContainer, layout.NewSpacer())
+			nodeContainer := container.NewHBox(newIndentationRectangleContainer, testInstructionNodeColorContainer, newTestInstructionAccordion)
 
 			// Add the child
 			nodeChildrenContainer.Add(nodeContainer)

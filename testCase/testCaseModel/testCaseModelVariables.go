@@ -46,7 +46,12 @@ type TestCaseModelStruct struct {
 	CutCommandInitiated                        bool
 	LocalTestCaseMessage                       LocalTestCaseMessageStruct
 	testCaseModelAdaptedForUiTree              map[string][]TestCaseModelAdaptedForUiTreeDataStruct // Model used for Creating the Tree-view for the TestCase-model
+	CurrentSelectedTestCaseElement             currentSelectedTestCaseElementStruct
+}
 
+type currentSelectedTestCaseElementStruct struct {
+	CurrentSelectedTestCaseElementUuid string
+	CurrentSelectedTestCaseElementName string
 }
 
 type MatureTestCaseModelElementStruct struct {

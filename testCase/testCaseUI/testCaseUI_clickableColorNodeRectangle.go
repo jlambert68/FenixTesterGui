@@ -29,16 +29,38 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) NewClickableRectangle(rec
 
 	// Create rectangle to show TestInstruction-color
 	myClickableRectangle.rectangle = canvas.NewRectangle(rectangleColor)
-	myClickableRectangle.rectangle.StrokeColor = color.Black
-	myClickableRectangle.rectangle.StrokeWidth = 0
+
+	myClickableRectangle.rectangle.StrokeColor = color.RGBA{
+		R: 0xFF,
+		G: 0x00,
+		B: 0x00,
+		A: 0x33,
+	}
+	myClickableRectangle.rectangle.StrokeWidth = 1
 	myClickableRectangle.rectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
 	myClickableRectangle.rectangle.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(testCaseNodeRectangleSize)))
 
 	return myClickableRectangle
 }
 
-func (t *clickableRectangle) Tapped(_ *fyne.PointEvent) {
+// Tapped - Single Click on rectangle
+func (c *clickableRectangle) Tapped(_ *fyne.PointEvent) {
 
-	t.testCasesUiModelStruct.generateTestCaseAttributesAreaForTestCase(t.testCaseUuid, t.testInstructionUuid)
+	// Set Node to selected
+	currentTestCaseModel, _ := c.testCasesUiModelStruct.TestCasesModelReference.TestCases[c.testCaseUuid]
+	currentTestCaseModel.CurrentSelectedTestCaseElement.CurrentSelectedTestCaseElementUuid = c.testInstructionUuid
+	c.testCasesUiModelStruct.TestCasesModelReference.TestCases[c.testCaseUuid] = currentTestCaseModel
+
+	// Update Attributes for TestInstruction
+	c.testCasesUiModelStruct.generateTestCaseAttributesAreaForTestCase(c.testCaseUuid, c.testInstructionUuid)
+
+}
+
+// TappedSecondary - Right Click on rectangle
+func (c *clickableRectangle) TappedSecondary(_ *fyne.PointEvent) {
+
+	currentTestCaseModel, _ := c.testCasesUiModelStruct.TestCasesModelReference.TestCases[c.testCaseUuid]
+	currentTestCaseModel.CurrentSelectedTestCaseElement.CurrentSelectedTestCaseElementUuid = c.testInstructionUuid
+	c.testCasesUiModelStruct.TestCasesModelReference.TestCases[c.testCaseUuid] = currentTestCaseModel
 
 }

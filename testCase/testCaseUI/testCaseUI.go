@@ -34,6 +34,19 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectF
 			*testCasesUiCanvasObject.CommandChannelReference <- commandEngineChannelMessage
 		}),
 
+		widget.NewToolbarAction(theme.ContentRemoveIcon(), func() {
+			commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
+				ChannelCommand:  sharedCode.ChannelCommandRemoveElement,
+				FirstParameter:  testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid].CurrentSelectedTestCaseElement.CurrentSelectedTestCaseElementUuid,
+				SecondParameter: "",
+				ActiveTestCase:  testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid,
+				ElementType:     sharedCode.BuildingBlock(sharedCode.TestInstruction),
+			}
+
+			// Send command message over channel to Command and Rule Engine
+			*testCasesUiCanvasObject.CommandChannelReference <- commandEngineChannelMessage
+		}),
+
 		widget.NewToolbarAction(theme.ContentCopyIcon(), func() {
 			fmt.Println("Copy Node")
 		}),

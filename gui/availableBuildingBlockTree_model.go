@@ -3,6 +3,7 @@ package gui
 import (
 	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
+	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 )
@@ -91,6 +92,8 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvai
 	testCaseModeReference.AvailableImmatureTestInstructionsMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage)
 	testCaseModeReference.AvailableImmatureTestInstructionContainersMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionContainerMessage)
 
+	testCaseModeReference.ImmatureDropZonesDataMap = make(map[string]testCaseModel.ImmatureDropZoneDataMapStruct)
+
 	// Loop TestInstructions and add to map
 	for immatureTestInstructionCounter, _ := range testInstructionsAndTestContainersMessage.ImmatureTestInstructions {
 
@@ -98,26 +101,73 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvai
 		var immatureTestInstruction *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage
 		immatureTestInstruction = testInstructionsAndTestContainersMessage.ImmatureTestInstructions[immatureTestInstructionCounter]
 
-		var temp *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage
-		temp = &fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage{
+		var tempImmatureTestInstructionMessage *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage
+		tempImmatureTestInstructionMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage{
 			BasicTestInstructionInformation:    immatureTestInstruction.BasicTestInstructionInformation,
 			ImmatureTestInstructionInformation: immatureTestInstruction.ImmatureTestInstructionInformation,
 			ImmatureSubTestCaseModel:           immatureTestInstruction.ImmatureSubTestCaseModel,
 		}
 
 		/*
-			temp = testCaseModeReference.AvailableImmatureTestInstructionsMap[immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid]
+			tempImmatureTestInstructionMessage = testCaseModeReference.AvailableImmatureTestInstructionsMap[immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid]
 
-			temp.BasicTestInstructionInformation = immatureTestInstruction.BasicTestInstructionInformation
-			temp.ImmatureTestInstructionInformation = immatureTestInstruction.ImmatureTestInstructionInformation
-			temp.ImmatureSubTestCaseModel = immatureTestInstruction.ImmatureSubTestCaseModel
+			tempImmatureTestInstructionMessage.BasicTestInstructionInformation = immatureTestInstruction.BasicTestInstructionInformation
+			tempImmatureTestInstructionMessage.ImmatureTestInstructionInformation = immatureTestInstruction.ImmatureTestInstructionInformation
+			tempImmatureTestInstructionMessage.ImmatureSubTestCaseModel = immatureTestInstruction.ImmatureSubTestCaseModel
 		*/
-		testCaseModeReference.AvailableImmatureTestInstructionsMap[immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid] = temp
+		testCaseModeReference.AvailableImmatureTestInstructionsMap[immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid] = tempImmatureTestInstructionMessage
 
 		//testCaseModeReference.AvailableImmatureTestInstructionsMap[immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid] = immatureTestInstruction
 
-	}
+		// Extract DropZone and add ti Map
+		for _, dropZoneMessage := range immatureTestInstruction.ImmatureTestInstructionInformation.AvailableDropZones {
 
+			// Verify that DropZoneUuid doesn't already exit in Map
+			_, existInMap := testCaseModeReference.ImmatureDropZonesDataMap[dropZoneMessage.DropZoneUuid]
+			if existInMap == true {
+
+				errorId := "53d0d63d-777a-413e-a0e5-61102d73df0a"
+				err := errors.New(fmt.Sprintf("dropZoneUuid %s already exist in ImmatureDropZonesDataMap [ErrorID: %s]", dropZoneMessage.DropZoneUuid, errorId))
+
+				fmt.Println(err) //TODO Send error over error-channel
+
+				return
+			}
+
+			var tempImmatureDropZoneData testCaseModel.ImmatureDropZoneDataMapStruct
+
+			tempImmatureDropZoneData = testCaseModel.ImmatureDropZoneDataMapStruct{
+				DropZoneUuid:        "",
+				DropZoneName:        "",
+				DropZoneDescription: "",
+				DropZoneMouseOver:   "",
+				DropZoneColor:       "",
+				DropZonePreSetTestInstructionAttributesMap: make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage),
+			}
+
+			for _, dropZoneAttribute := range dropZoneMessage.DropZonePreSetTestInstructionAttributes {
+
+				tempDropZonePreSetTestInstructionAttributeMessage := &fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage{
+					TestInstructionAttributeType: 0,
+					TestInstructionAttributeUuid: "",
+					TestInstructionAttributeName: "",
+					AttributeValueAsString:       "",
+					AttributeValueUuid:           "",
+					AttributeActionCommand:       0,
+				}
+
+				// Add DropZone Attribute to DropZone Attributes Map
+				tempImmatureDropZoneData.DropZonePreSetTestInstructionAttributesMap[dropZoneAttribute.TestInstructionAttributeUuid] = tempDropZonePreSetTestInstructionAttributeMessage
+
+			}
+
+			// Add all DropZone to DropZones-map
+			testCaseModeReference.ImmatureDropZonesDataMap[dropZoneMessage.DropZoneUuid] = tempImmatureDropZoneData
+
+		}
+
+	}
+	//TODO make same changes to TestInstructionContainers as for TestInstructions
 	// Loop TestInstructionContainers and add to map
 	for immatureTestInstructionContainerCounter, _ := range testInstructionsAndTestContainersMessage.ImmatureTestInstructionContainers {
 

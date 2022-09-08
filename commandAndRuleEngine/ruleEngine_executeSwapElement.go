@@ -66,20 +66,20 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifySwapRuleAndC
 // TCRuleSwap101
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC(X)			B0					n 		B0								B1-n-B1					TCRuleSwap101
-func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap101(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap101(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
 
-	matureElementToSwapIn, err := commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap101)
+	matureElementToSwapIn, err = commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap101)
 
 	// Couldn't convert immature element component into mature element component
 	if err != nil {
-		return err
+		return testCaseModel.MatureElementStruct{}, err
 	}
 
 	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 
-		return err
+		return testCaseModel.MatureElementStruct{}, err
 	}
 
 	// Create the Bonds connecting the TIC
@@ -134,7 +134,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
 	}
 
-	return err
+	return matureElementToSwapIn, err
 }
 
 // TCRuleSwap102
@@ -786,7 +786,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) transformImmatureE
 		err = errors.New("there is no top element 'immatureElementToSwapIn'")
 	}
 
-	// Move Color for Element
+	// Move UUID and Color for Element
+	matureElementModel.ChosenDropZoneUuid = immatureElementToSwapIn.ChosenDropZoneUuid
+	matureElementModel.ChosenDropZoneName = immatureElementToSwapIn.ChosenDropZoneName
 	matureElementModel.ChosenDropZoneColor = immatureElementToSwapIn.ChosenDropZoneColor
 
 	return matureElementModel, err

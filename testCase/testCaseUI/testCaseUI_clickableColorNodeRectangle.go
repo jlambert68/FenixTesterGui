@@ -56,6 +56,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) NewClickableRectangle(rec
 
 	myClickableRectangle.selectedRectangle.Hide()
 
+	// Update Selected Node/Element to be selected
+	myClickableRectangle.updateSelectedUINode()
+
 	return myClickableRectangle
 }
 

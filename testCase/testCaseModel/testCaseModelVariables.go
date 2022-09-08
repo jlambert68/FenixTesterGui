@@ -47,6 +47,14 @@ type TestCaseModelStruct struct {
 	LocalTestCaseMessage                       LocalTestCaseMessageStruct
 	testCaseModelAdaptedForUiTree              map[string][]TestCaseModelAdaptedForUiTreeDataStruct // Model used for Creating the Tree-view for the TestCase-model
 	CurrentSelectedTestCaseElement             currentSelectedTestCaseElementStruct
+	MatureTestInstructionMap                   map[string]MatureTestInstructionStruct
+}
+
+type MatureTestInstructionStruct struct {
+	MatureBasicTestInstructionInformation *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_MatureBasicTestInstructionInformationMessage `protobuf:"bytes,1,opt,name=MatureBasicTestInstructionInformation,proto3" json:"MatureBasicTestInstructionInformation,omitempty"` // The Basic information for the Matures TestInstruction
+	CreatedAndUpdatedInformation          *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_CreatedAndUpdatedInformationMessage          `protobuf:"bytes,2,opt,name=CreatedAndUpdatedInformation,proto3" json:"CreatedAndUpdatedInformation,omitempty"`                   // Information regarding who did what and when
+	TestInstructionAttributesList         map[string]*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage   `protobuf:"bytes,3,rep,name=TestInstructionAttributesList,proto3" json:"TestInstructionAttributesList,omitempty"`                 // All attributes that belongs to the TestInstruction
+
 }
 
 type currentSelectedTestCaseElementStruct struct {
@@ -57,11 +65,17 @@ type currentSelectedTestCaseElementStruct struct {
 type MatureTestCaseModelElementStruct struct {
 	MatureTestCaseModelElementMessage  fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
 	MatureTestCaseModelElementMetaData MatureTestCaseModelElementMetaDataStruct
+	//MatureTestCaseModelElementAttributes MatureTestCaseModelElementAttributesStruct
 }
 
 type MatureTestCaseModelElementMetaDataStruct struct {
 	ChosenDropZoneUuid        string
 	ChosenDropZoneColorString string
+}
+
+// MatureTestCaseModelElementAttributesStruct - AttributeUuid as map-key
+type MatureTestCaseModelElementAttributesStruct struct {
+	AttributesMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage
 }
 
 type TestCaseModelAdaptedForUiTreeDataStruct struct {
@@ -85,6 +99,8 @@ type lastSavedCommandStack struct {
 // Used for Swapping in a New Element-structure or the Copy-Buffer
 type ImmatureElementStruct struct {
 	FirstElementUuid    string
+	ChosenDropZoneUuid  string
+	ChosenDropZoneName  string
 	ChosenDropZoneColor string
 	ImmatureElementMap  map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage
 }
@@ -93,6 +109,8 @@ type ImmatureElementStruct struct {
 // Used when converting an Immature Element-structure into a Mature-structure to be used in the TestCase. Cut-buffer also use this structure
 type MatureElementStruct struct {
 	FirstElementUuid    string
+	ChosenDropZoneUuid  string
+	ChosenDropZoneName  string
 	ChosenDropZoneColor string
 	MatureElementMap    map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
 }

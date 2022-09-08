@@ -6,6 +6,7 @@ import (
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // Verify if anor element can be swapped or not, regarding swap rules
@@ -63,32 +64,34 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElement
 }
 
 // Execute a swap on an element based on specific rule
-func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElementBasedOnRule(testCaseUuid string, elementUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct, matchedComplexRule string) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElementBasedOnRule(testCaseUuid string, elementToBeSwappedIOutUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct, matchedComplexRule string) (err error) {
+
+	var matureElementToSwapIn testCaseModel.MatureElementStruct
 
 	switch matchedComplexRule {
 	case TCRuleSwap101:
-		err = commandAndRuleEngine.executeTCRuleSwap101(testCaseUuid, elementUuid, immatureElementToSwapIn)
+		matureElementToSwapIn, err = commandAndRuleEngine.executeTCRuleSwap101(testCaseUuid, elementToBeSwappedIOutUuid, immatureElementToSwapIn)
 
 	case TCRuleSwap102:
-		err = commandAndRuleEngine.executeTCRuleSwap102(testCaseUuid, elementUuid, immatureElementToSwapIn)
+		matureElementToSwapIn, err = commandAndRuleEngine.executeTCRuleSwap102(testCaseUuid, elementToBeSwappedIOutUuid, immatureElementToSwapIn)
 
 	case TCRuleSwap103:
-		err = commandAndRuleEngine.executeTCRuleSwap103(testCaseUuid, elementUuid, immatureElementToSwapIn)
+		matureElementToSwapIn, err = commandAndRuleEngine.executeTCRuleSwap103(testCaseUuid, elementToBeSwappedIOutUuid, immatureElementToSwapIn)
 
 	case TCRuleSwap104:
-		err = commandAndRuleEngine.executeTCRuleSwap104(testCaseUuid, elementUuid, immatureElementToSwapIn)
+		matureElementToSwapIn, err = commandAndRuleEngine.executeTCRuleSwap104(testCaseUuid, elementToBeSwappedIOutUuid, immatureElementToSwapIn)
 
 	case TCRuleSwap105:
-		commandAndRuleEngine.executeTCRuleSwap105(testCaseUuid, elementUuid, immatureElementToSwapIn)
+		commandAndRuleEngine.executeTCRuleSwap105(testCaseUuid, elementToBeSwappedIOutUuid, immatureElementToSwapIn)
 
 	case TCRuleSwap106:
-		err = commandAndRuleEngine.executeTCRuleSwap106(testCaseUuid, elementUuid, immatureElementToSwapIn)
+		matureElementToSwapIn, err = commandAndRuleEngine.executeTCRuleSwap106(testCaseUuid, elementToBeSwappedIOutUuid, immatureElementToSwapIn)
 
 	case TCRuleSwap107:
-		err = commandAndRuleEngine.executeTCRuleSwap107(testCaseUuid, elementUuid, immatureElementToSwapIn)
+		matureElementToSwapIn, err = commandAndRuleEngine.executeTCRuleSwap107(testCaseUuid, elementToBeSwappedIOutUuid, immatureElementToSwapIn)
 
 	case TCRuleSwap108:
-		err = commandAndRuleEngine.executeTCRuleSwap108(testCaseUuid, elementUuid, immatureElementToSwapIn)
+		matureElementToSwapIn, err = commandAndRuleEngine.executeTCRuleSwap108(testCaseUuid, elementToBeSwappedIOutUuid, immatureElementToSwapIn)
 
 	default:
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
@@ -98,8 +101,87 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElement
 
 		err = errors.New("'" + matchedComplexRule + "' is an unknown complex Swap rule")
 
+		return err
 	}
+
+	// Exit if there was an error
+	if err != nil {
+		return err
+	}
+
+	// Move TestInstruction data to TestCase
+	err = commandAndRuleEngine.addTestInstructionDataToTestCaseModel(testCaseUuid, immatureElementToSwapIn, &matureElementToSwapIn)
 
 	return err
 
+}
+
+// Add All TestInstruction-data for the new TestInstruction into the TestCase-model
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstructionDataToTestCaseModel(testCaseUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct, matureElementToSwapIn *testCaseModel.MatureElementStruct) (err error) {
+
+	// Extract TestCase to work with
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	if existsInMap == false {
+
+		errorId := "ea7e4f3f-f6c8-4391-a191-116f60c6b5f5"
+		err = errors.New(fmt.Sprintf("testCase-model with UUID ('%s') doesn't exist in TestModel-map [ErrorID: %s]", testCaseUuid, errorId))
+
+		fmt.Println(err.Error()) //TODO Send to Error-channel
+
+		return err
+	}
+
+	// Verify that TestInstruction doesn't exit in TestInstructionMap
+	_, existsInMap = currentTestCase.MatureTestInstructionMap[matureElementToSwapIn.FirstElementUuid]
+	if existsInMap == true {
+
+		errorId := "9f659bc5-7088-4bf7-900e-c9e12b4ce36d"
+		err = errors.New(fmt.Sprintf("Mature TestInstruction with UUID '%s' already exist in MatureTestInstructionMap in TestCase: %s [ErrorID: %s]", matureElementToSwapIn.FirstElementUuid, testCaseUuid, errorId))
+
+		fmt.Println(err.Error()) //TODO Send to Error-channel
+
+		return err
+	}
+
+	// Loop over all elements in 'matureElementToSwapIn' and only process TestInstructions , TI or TIx
+	for _, matureElement := range matureElementToSwapIn.MatureElementMap {
+
+		// If found a TI or TIx, then process that one
+		if matureElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			matureElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE {
+
+			// Create timestamp when TestInstruction was added
+			createdTimeStamp := timestamppb.Now()
+
+			// Create a new Mature TestInstruction to be added
+			newMatureTestInstruction := testCaseModel.MatureTestInstructionStruct{
+				MatureBasicTestInstructionInformation: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_MatureBasicTestInstructionInformationMessage{
+					TestCaseUuid:                             testCaseUuid,
+					TestInstructionMatureUuid:                matureElementToSwapIn.FirstElementUuid,
+					ParentTestInstructionContainerUuid:       "",
+					ParentTestInstructionContainerMatureUuid: "",
+					ChosenDropZoneUuid:                       immatureElementToSwapIn.ChosenDropZoneColor,
+					ChosenDropZoneName:                       matureElementToSwapIn.ChosenDropZoneName,
+					TestInstructionType:                      matureElement.TestCaseModelElementType,
+				},
+				CreatedAndUpdatedInformation: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_CreatedAndUpdatedInformationMessage{
+					AddedToTestCaseTimeStamp:       createdTimeStamp,
+					AddedToTestCaseByUserId:        "",
+					LastUpdatedInTestCaseTimeStamp: createdTimeStamp,
+					LastUpdatedInTestCaseByUserId:  commandAndRuleEngine.Testcases.CurrentUser,
+					DeletedFromTestCaseTimeStamp: &timestamppb.Timestamp{
+						Seconds: 0,
+						Nanos:   0,
+					},
+					DeletedFromTestCaseByUserId: "",
+				},
+				TestInstructionAttributesList: make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage),
+			}
+
+			// Add attributes-data to newly created TestInstruction
+
+		}
+	}
+
+	return err
 }

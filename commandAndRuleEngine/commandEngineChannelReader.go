@@ -151,9 +151,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSwap
 
 			// Set the TestInstructionColor to transparent
 			immatureElementToSwapInTestCaseFormat.ChosenDropZoneColor = "#00000000"
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneUuid = "No DropZone exists"
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneName = "No DropZone exists"
 
 		case 1:
-			// Choose the color for theonly DropZone
+			// Move the uuid and color for the only DropZone
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneUuid = availableDropZones[0].DropZoneUuid
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneName = availableDropZones[0].DropZoneName
 			immatureElementToSwapInTestCaseFormat.ChosenDropZoneColor = availableDropZones[0].DropZoneColor
 
 		case 2:
@@ -208,16 +212,21 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSwap
 
 			// Find correct DropZone
 			var dropZoneColorAsHexString string
+			var dropZoneUuid string
+			var dropZoneName string
 			for _, dropZoneItem := range availableDropZones {
 
 				if dropZoneItem.DropZoneName == chosenDropZoneName {
 					dropZoneColorAsHexString = dropZoneItem.DropZoneColor
+					dropZoneUuid = dropZoneItem.DropZoneUuid
 					break
 				}
 
 			}
 
-			// Set the TestInstructionColor from Chosen DropZone
+			// Set the DropZoneUuid and TestInstructionColor from Chosen DropZone
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneUuid = dropZoneUuid
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneName = dropZoneName
 			immatureElementToSwapInTestCaseFormat.ChosenDropZoneColor = dropZoneColorAsHexString
 
 		}
@@ -250,11 +259,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSwap
 
 	default:
 
-		//TODO Send error over error-channel
 		errorId := "6e8ed2ec-84df-42eb-a95d-41ba6920a9cb"
 		err := errors.New(fmt.Sprintf("unknown Building BLock Type: '%s' [ErrorID: %s]", elementType, errorId))
 
-		fmt.Println(err)
+		fmt.Println(err) //TODO Send error over error-channel
 
 		// Exit function
 		return
@@ -266,13 +274,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSwap
 	if err != nil {
 		fmt.Println(err)
 
-		return
+		return //TODO Send error over error-channel
 	}
 
 	// Update UI with TestCase Textual Representation
 	textualTestCaseSimple, textualTestCaseComplex, textualTestCaseExtended, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(currentTestCaseUuid)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(err) //TODO Send error over error-channel
 	}
 
 	// Send 'update TestCase graphics' command over channel

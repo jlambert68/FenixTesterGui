@@ -10,16 +10,16 @@ import (
 )
 
 type attributeStruct struct {
-	attributeName  string
-	attributeValue string
+	attributeUuid     string
+	attributeName     string
+	attributeValue    string
+	attributeTypeName string
 }
 
-var attributesList []attributeStruct
-
 // Generate the TestCaseAttributes Area for the TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttributesAreaForTestCase(testCaseUuid string, testInstructionElementOriginalUuid string) (testCaseAttributesArea fyne.CanvasObject, testInstructionAttributesAccordion *widget.Accordion, err error) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttributesAreaForTestCase(testCaseUuid string, testInstructionElementMatureUuidUuid string) (testCaseAttributesArea fyne.CanvasObject, testInstructionAttributesAccordion *widget.Accordion, err error) {
 
-	testCasesUiCanvasObject.generateAttributeStringListData(testInstructionElementOriginalUuid)
+	attributesList := testCasesUiCanvasObject.generateAttributeStringListData(testCaseUuid, testInstructionElementMatureUuidUuid)
 
 	/*
 		// Get current TestCase-UI-model
@@ -40,18 +40,42 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 	testCaseModel, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
 
 	// Create Form-layout container to be used for attributes
-	attributesContainer := container.New(layout.NewFormLayout())
+	var attributesContainer *fyne.Container
+	var attributesFormContainer *fyne.Container
+	attributesContainer = container.New(layout.NewVBoxLayout())
+	attributesFormContainer = container.New(layout.NewFormLayout())
 
 	// Only add attributes if there are any, otherwise write simple text
 	if len(attributesList) > 0 {
+		var previousAttributeTypeName string
+		var firstTime bool = true
+
 		// Loop attributes and create label en entry field for each attribut
 		for _, attributeItem := range attributesList {
-			attributesContainer.Add(widget.NewLabel(attributeItem.attributeName))
+			if attributeItem.attributeTypeName != previousAttributeTypeName {
+				if firstTime == true {
+					attributesContainer.Add(widget.NewLabel(attributeItem.attributeTypeName))
+					firstTime = false
+				} else {
+					attributesContainer.Add(widget.NewLabel(attributeItem.attributeTypeName))
+					attributesContainer.Add(attributesFormContainer)
+					attributesFormContainer = container.New(layout.NewFormLayout())
+				}
+
+				previousAttributeTypeName = attributeItem.attributeTypeName
+
+			}
+
+			attributesFormContainer.Add(widget.NewLabel(attributeItem.attributeName))
 
 			newAttributeEntry := widget.NewEntry()
 			newAttributeEntry.SetText(attributeItem.attributeValue)
-			attributesContainer.Add(newAttributeEntry)
+			attributesFormContainer.Add(newAttributeEntry)
 		}
+
+		// Handle last batch of batch Attributes
+		attributesContainer.Add(attributesFormContainer)
+
 	} else {
 		// No attributes so return simple label
 		newLabel := widget.NewLabel("No Attributes for TestInstruction")
@@ -122,35 +146,53 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 }
 
 // Generate structure for 'binding.StringList' regarding Attribute values
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringListData(testInstructionElementOriginalUuid string) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringListData(testCaseUuid string, testInstructionElementMatureUuid string) (attributesList []attributeStruct) {
 
 	// Clear variable
 	attributesList = []attributeStruct{}
 
 	// Used when creating th UI for first time
-	if testInstructionElementOriginalUuid == "" {
+	if testInstructionElementMatureUuid == "" {
 		return
 	}
 
-	immatureTestInstructionAttributesMap, existInMap := testCasesUiCanvasObject.TestCasesModelReference.ImmatureTestInstructionAttributesMap[testInstructionElementOriginalUuid]
-	//TODO change to read from TestCase instead
+	// Extract TestCase-model
+	currentTestCaseModel, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+
+	if existsInMap == false {
+		errorId := "50346c17-be7d-4929-b9f2-5367e464b0e7"
+		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCases [ErrorID: %s]", testCaseUuid, errorId))
+
+		//TODO Send ERRORS over error-channel
+		fmt.Println(err)
+
+		return
+
+	}
+
+	// Extract the map for the TestInstructions Attributes
+	matureTestInstruction, existInMap := currentTestCaseModel.MatureTestInstructionMap[testInstructionElementMatureUuid]
 
 	if existInMap == false {
 		errorId := "406439e8-1802-4a5f-b9ef-9024adf75ead"
-		err := errors.New(fmt.Sprintf("testinstruction with uuid '%s' is missing in 'AvailableImmatureTestInstructionsMap' [ErrorID: %s]", testInstructionElementOriginalUuid, errorId))
+		err := errors.New(fmt.Sprintf("testinstruction with uuid '%s' is missing in 'MatureTestInstructionMap' [ErrorID: %s]", testInstructionElementMatureUuid, errorId))
 
-		fmt.Println(err.Error()) //TODO send to error channel
+		//TODO Send ERRORS over error-channel
+		fmt.Println(err.Error())
 
 		return
 
 	}
 
 	// Loop over attributes and append to slice of attributes with 'Name' and 'value'
-	for _, testInstructionAttribute := range immatureTestInstructionAttributesMap {
+	for _, testInstructionAttribute := range matureTestInstruction.TestInstructionAttributesList {
 		attributesList = append(attributesList, attributeStruct{
-			attributeName:  testInstructionAttribute.TestInstructionAttributeName,
-			attributeValue: testInstructionAttribute.TestInstructionAttributeName,
+			attributeUuid:     testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeUuid,
+			attributeName:     testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeName,
+			attributeValue:    testInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxAttributeValue,
+			attributeTypeName: testInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxAttributeTypeName,
 		})
 	}
 
+	return attributesList
 }

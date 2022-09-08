@@ -29,7 +29,20 @@ type TestCasesModelsStruct struct {
 	AvailableImmatureTestInstructionsMap          map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage
 	AvailableImmatureTestInstructionContainersMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionContainerMessage
 	ImmatureTestInstructionAttributesMap          map[string]map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionAttributesMessage_TestInstructionAttributeMessage // map[TestInstructionUuid]map[TestInstructionAttributeUuid]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionAttributesMessage_TestInstructionAttributeMessage
+	ImmatureDropZonesDataMap                      map[string]ImmatureDropZoneDataMapStruct                                                                                             // map[DropZoneUuid]ImmatureDropZoneDataMapStruct
+	//TODO Load ImmatureDropZonesDataMap with data at start
 	//AvailableBuildingBlocksModel                  *gui.AvailableBuildingBlocksModelStruct
+
+}
+
+type ImmatureDropZoneDataMapStruct struct {
+	DropZoneUuid                               string                                                                                                                                                            `protobuf:"bytes,1,opt,name=DropZoneUuid,proto3" json:"DropZoneUuid,omitempty"`                                                       // A DropZone, UUID, for the TestInstruction
+	DropZoneName                               string                                                                                                                                                            `protobuf:"bytes,2,opt,name=DropZoneName,proto3" json:"DropZoneName,omitempty"`                                                       // A DropZone, Name, for the TestInstruction
+	DropZoneDescription                        string                                                                                                                                                            `protobuf:"bytes,3,opt,name=DropZoneDescription,proto3" json:"DropZoneDescription,omitempty"`                                         // Description of the DropZone
+	DropZoneMouseOver                          string                                                                                                                                                            `protobuf:"bytes,4,opt,name=DropZoneMouseOver,proto3" json:"DropZoneMouseOver,omitempty"`                                             // The mouse over text for the DropZone
+	DropZoneColor                              string                                                                                                                                                            `protobuf:"bytes,5,opt,name=DropZoneColor,proto3" json:"DropZoneColor,omitempty"`                                                     // The color used for presenting the DropsZone, e.g. #FAF437
+	DropZonePreSetTestInstructionAttributesMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage `protobuf:"bytes,6,rep,name=DropZonePreSetTestInstructionAttributes,proto3" json:"DropZonePreSetTestInstructionAttributes,omitempty"` // A list of the attributes and their pre-set values
+
 }
 
 type TestCaseModelStruct struct {

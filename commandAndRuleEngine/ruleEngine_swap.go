@@ -143,6 +143,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 		return err
 	}
 
+	// Generate searchable map of
+
 	// Loop over all elements in 'matureElementToSwapIn' and only process TestInstructions , TI or TIx
 	for _, matureElement := range matureElementToSwapIn.MatureElementMap {
 
@@ -179,9 +181,101 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 			}
 
 			// Add attributes-data to newly created TestInstruction
+			newTestInstructionAttributes := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage{
+				BaseAttributeInformation: nil,
+				AttributeInformation:     nil,
+			}
 
+			// Get all attributes for the immature TestInstruction
+			immatureTestInstructionAttributesMap, existsInMap := commandAndRuleEngine.Testcases.ImmatureTestInstructionAttributesMap[matureElement.OriginalElementUuid]
+			if existsInMap == false {
+
+				errorId := "8713aa0a-60f0-4892-aaac-2302320e3019"
+				err = errors.New(fmt.Sprintf("can't find Immature TestInstruction with UUID '%s' already exist in ImmatureTestInstructionAttributesMap [ErrorID: %s]", matureElement.OriginalElementUuid, errorId))
+
+				fmt.Println(err.Error()) //TODO Send to Error-channel
+
+				return err
+			}
+
+			// Loop alla attributes for the ImmatureTestInstruction
+			for attributeUuid, attribute := range immatureTestInstructionAttributesMap {
+
+				// Extract the correct DropZone
+				dropZoneData, existsInMap := commandAndRuleEngine.Testcases.ImmatureDropZonesDataMap[matureElementToSwapIn.ChosenDropZoneUuid]
+				if existsInMap == false {
+
+					errorId := "7a255e6b-c6ac-40f3-9d09-5ef44a6fd7db"
+					err = errors.New(fmt.Sprintf("dropZone with UUID '%s' couldn't be found in ImmatureDropZonesDataMap [ErrorID: %s]", matureElementToSwapIn.ChosenDropZoneName, errorId))
+
+					fmt.Println(err.Error()) //TODO Send to Error-channel
+
+					return err
+				}
+
+				// Extract attribute from DropZone-data if it exists
+				attributeDataFromDropZone, existsInMap := dropZoneData.DropZonePreSetTestInstructionAttributesMap[attributeUuid]
+				if existsInMap == true {
+					// Attribute exist in DropZone data, so use that data as specified
+					switch attributeDataFromDropZone.TestInstructionAttributeType {
+					
+					// Use the value from the DropZone when adding the attribute to the Model
+					case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage_USE_DROPZONE_VALUE_FOR_ATTRIBUTE):
+						
+					// Don't add the attribute to the Model
+					case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage_REMOVE_ATTRIBUTE_FROM_TESTINSTRUCTION):
+
+					}
+
+				} else {
+					// Attribute doesn't exist in DropZone so just att the Attribute to the Model
+					newTestInstructionBaseAttributeInformation := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_BaseAttributeInformationMessage{
+						TestInstructionAttributeUuid:                  immatureTestInstructionAttributesMap[attributeUuid].TestInstructionAttributeUuid,
+						TestInstructionAttributeName:                  immatureTestInstructionAttributesMap[attributeUuid].TestInstructionAttributeName,
+						TestInstructionAttributeTypeUuid:              immatureTestInstructionAttributesMap[attributeUuid].TestInstructionAttributeTypeUuid,
+						TestInstructionAttributeTypeName:              immatureTestInstructionAttributesMap[attributeUuid].TestInstructionAttributeTypeName,
+						TestInstructionAttributeDescription:           immatureTestInstructionAttributesMap[attributeUuid].TestInstructionAttributeDescription,
+						TestInstructionAttributeMouseOver:             immatureTestInstructionAttributesMap[attributeUuid].TestInstructionAttributeMouseOver,
+						TestInstructionAttributeVisible:               immatureTestInstructionAttributesMap[attributeUuid].TestInstructionAttributeVisible,
+						TestInstructionAttributeEnable:                immatureTestInstructionAttributesMap[attributeUuid].TestInstructionAttributeEnable,
+						TestInstructionAttributeMandatory:             immatureTestInstructionAttributesMap[attributeUuid].TestInstructionAttributeMandatory,
+						TestInstructionAttributeVisibleInTestCaseArea: immatureTestInstructionAttributesMap[attributeUuid].TestInstructionAttributeVisibleInTestCaseArea,
+						TestInstructionAttributeIsDeprecated:          immatureTestInstructionAttributesMap[attributeUuid].TestInstructionAttributeIsDeprecated,
+						TestInstructionAttributeType:                  fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(immatureTestInstructionAttributesMap[attributeUuid].e,
+					}
+
+					// TODO handle other types then normal TEXTBOX
+					newTestInstructionAttributeInformation := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage{
+						InputTextBoxProperty: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputTextBoxProperty{
+							TestInstructionAttributeInputTextBoUuid:  immatureTestInstructionAttributesMap[attributeUuid].TestInstructionAttributeUuid,
+							TestInstructionAttributeInputTextBoxName: immatureTestInstructionAttributesMap[attributeUuid].TestInstructionAttributeName,
+							TextBoxEditable:                          immatureTestInstructionAttributesMap[attributeUuid].TestInstructionAttributeEnable,
+							TextBoxInputMask:                         "",
+							TextBoxAttributeTypeUuid:                 immatureTestInstructionAttributesMap[attributeUuid].TestInstructionAttributeTypeUuid,
+							TextBoxAttributeTypeName:                 immatureTestInstructionAttributesMap[attributeUuid].TestInstructionAttributeTypeName,
+							TextBoxAttributeValue:                    immatureTestInstructionAttributesMap[attributeUuid].TestInstructionAttributeValueAsString,
+						},
+						InputComboBoxProperty: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputComboBoxProperty{},
+						InputFileSelectorProperty: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputFileSelectorProperty{},
+					}
+
+				// Create the attribute object with all data
+					newTestInstructionAttributes.BaseAttributeInformation = &newTestInstructionBaseAttributeInformation
+					newTestInstructionAttributes.AttributeInformation = &newTestInstructionAttributeInformation
+
+					// Save Attribute in TestInstruction
+					newMatureTestInstruction.TestInstructionAttributesList[attributeUuid] = &newTestInstructionAttributes
+
+
+				}
+				// Save Mature TestInstruction in TestCase
+				currentTestCase.MatureTestInstructionMap[matureElementToSwapIn.FirstElementUuid] = newMatureTestInstruction
+			}
 		}
 	}
+
+	// // Save TestCase back into model
+	commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
 
 	return err
 }

@@ -219,6 +219,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSwap
 				if dropZoneItem.DropZoneName == chosenDropZoneName {
 					dropZoneColorAsHexString = dropZoneItem.DropZoneColor
 					dropZoneUuid = dropZoneItem.DropZoneUuid
+					dropZoneName = dropZoneItem.DropZoneName
 					break
 				}
 

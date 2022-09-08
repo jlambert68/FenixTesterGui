@@ -92,12 +92,39 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvai
 	testCaseModeReference.AvailableImmatureTestInstructionContainersMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionContainerMessage)
 
 	// Loop TestInstructions and add to map
-	for _, immatureTestInstruction := range testInstructionsAndTestContainersMessage.ImmatureTestInstructions {
-		testCaseModeReference.AvailableImmatureTestInstructionsMap[immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionUuid] = immatureTestInstruction
+	for immatureTestInstructionCounter, _ := range testInstructionsAndTestContainersMessage.ImmatureTestInstructions {
+
+		// Need to do this because otherwise I don't get all subObjects(DropZone-data). Seems to be some bug
+		var immatureTestInstruction *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage
+		immatureTestInstruction = testInstructionsAndTestContainersMessage.ImmatureTestInstructions[immatureTestInstructionCounter]
+
+		var temp *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage
+		temp = &fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage{
+			BasicTestInstructionInformation:    immatureTestInstruction.BasicTestInstructionInformation,
+			ImmatureTestInstructionInformation: immatureTestInstruction.ImmatureTestInstructionInformation,
+			ImmatureSubTestCaseModel:           immatureTestInstruction.ImmatureSubTestCaseModel,
+		}
+
+		/*
+			temp = testCaseModeReference.AvailableImmatureTestInstructionsMap[immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid]
+
+			temp.BasicTestInstructionInformation = immatureTestInstruction.BasicTestInstructionInformation
+			temp.ImmatureTestInstructionInformation = immatureTestInstruction.ImmatureTestInstructionInformation
+			temp.ImmatureSubTestCaseModel = immatureTestInstruction.ImmatureSubTestCaseModel
+		*/
+		testCaseModeReference.AvailableImmatureTestInstructionsMap[immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid] = temp
+
+		//testCaseModeReference.AvailableImmatureTestInstructionsMap[immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid] = immatureTestInstruction
+
 	}
 
 	// Loop TestInstructionContainers and add to map
-	for _, immatureTestInstructionContainer := range testInstructionsAndTestContainersMessage.ImmatureTestInstructionContainers {
+	for immatureTestInstructionContainerCounter, _ := range testInstructionsAndTestContainersMessage.ImmatureTestInstructionContainers {
+
+		// Need to do this because otherwise I don't get all subObjects(DropZone-data). Seems to be some bug
+		var immatureTestInstructionContainer *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionContainerMessage
+		immatureTestInstructionContainer = testInstructionsAndTestContainersMessage.ImmatureTestInstructionContainers[immatureTestInstructionContainerCounter]
+
 		testCaseModeReference.AvailableImmatureTestInstructionContainersMap[immatureTestInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerUuid] = immatureTestInstructionContainer
 	}
 

@@ -122,6 +122,14 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvai
 		// Extract DropZone and add ti Map
 		for _, dropZoneMessage := range immatureTestInstruction.ImmatureTestInstructionInformation.AvailableDropZones {
 
+			// DropZoneUuid should not be empty
+			if dropZoneMessage.DropZoneUuid == "" {
+				errorId := "a8226610-8203-4305-a71d-1eb80923374c"
+				err := errors.New(fmt.Sprintf("dropZoneUuid is emtpy in TestInstruction %s with name %s 'immatureTestInstruction.ImmatureTestInstructionInformation.AvailableDropZones ' [ErrorID: %s]", immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid, immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOriginalName, errorId))
+
+				fmt.Println(err) //TODO Send error over error-channel
+			}
+
 			// Verify that DropZoneUuid doesn't already exit in Map
 			_, existInMap := testCaseModeReference.ImmatureDropZonesDataMap[dropZoneMessage.DropZoneUuid]
 			if existInMap == true {
@@ -131,39 +139,38 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvai
 
 				fmt.Println(err) //TODO Send error over error-channel
 
-				return
-			}
+			} else {
 
-			var tempImmatureDropZoneData testCaseModel.ImmatureDropZoneDataMapStruct
+				var tempImmatureDropZoneData testCaseModel.ImmatureDropZoneDataMapStruct
 
-			tempImmatureDropZoneData = testCaseModel.ImmatureDropZoneDataMapStruct{
-				DropZoneUuid:        "",
-				DropZoneName:        "",
-				DropZoneDescription: "",
-				DropZoneMouseOver:   "",
-				DropZoneColor:       "",
-				DropZonePreSetTestInstructionAttributesMap: make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage),
-			}
-
-			for _, dropZoneAttribute := range dropZoneMessage.DropZonePreSetTestInstructionAttributes {
-
-				tempDropZonePreSetTestInstructionAttributeMessage := &fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage{
-					TestInstructionAttributeType: 0,
-					TestInstructionAttributeUuid: "",
-					TestInstructionAttributeName: "",
-					AttributeValueAsString:       "",
-					AttributeValueUuid:           "",
-					AttributeActionCommand:       0,
+				tempImmatureDropZoneData = testCaseModel.ImmatureDropZoneDataMapStruct{
+					DropZoneUuid:        dropZoneMessage.DropZoneUuid,
+					DropZoneName:        dropZoneMessage.DropZoneName,
+					DropZoneDescription: dropZoneMessage.DropZoneDescription,
+					DropZoneMouseOver:   dropZoneMessage.DropZoneMouseOver,
+					DropZoneColor:       dropZoneMessage.DropZoneColor,
+					DropZonePreSetTestInstructionAttributesMap: make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage),
 				}
 
-				// Add DropZone Attribute to DropZone Attributes Map
-				tempImmatureDropZoneData.DropZonePreSetTestInstructionAttributesMap[dropZoneAttribute.TestInstructionAttributeUuid] = tempDropZonePreSetTestInstructionAttributeMessage
+				for _, dropZoneAttribute := range dropZoneMessage.DropZonePreSetTestInstructionAttributes {
 
+					tempDropZonePreSetTestInstructionAttributeMessage := &fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage{
+						TestInstructionAttributeType: dropZoneAttribute.TestInstructionAttributeType,
+						TestInstructionAttributeUuid: dropZoneAttribute.TestInstructionAttributeUuid,
+						TestInstructionAttributeName: dropZoneAttribute.TestInstructionAttributeName,
+						AttributeValueAsString:       dropZoneAttribute.AttributeValueAsString,
+						AttributeValueUuid:           dropZoneAttribute.AttributeValueUuid,
+						AttributeActionCommand:       dropZoneAttribute.AttributeActionCommand,
+					}
+
+					// Add DropZone Attribute to DropZone Attributes Map
+					tempImmatureDropZoneData.DropZonePreSetTestInstructionAttributesMap[dropZoneAttribute.TestInstructionAttributeUuid] = tempDropZonePreSetTestInstructionAttributeMessage
+
+				}
+
+				// Add all DropZone to DropZones-map
+				testCaseModeReference.ImmatureDropZonesDataMap[dropZoneMessage.DropZoneUuid] = tempImmatureDropZoneData
 			}
-
-			// Add all DropZone to DropZones-map
-			testCaseModeReference.ImmatureDropZonesDataMap[dropZoneMessage.DropZoneUuid] = tempImmatureDropZoneData
-
 		}
 
 	}

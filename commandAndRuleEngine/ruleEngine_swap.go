@@ -131,6 +131,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 		return err
 	}
 
+	// If 'currentTestCase.MatureTestInstructionMap' then initialize it
+	if currentTestCase.MatureTestInstructionMap == nil {
+		currentTestCase.MatureTestInstructionMap = make(map[string]testCaseModel.MatureTestInstructionStruct)
+	}
+
 	// Verify that TestInstruction doesn't exit in TestInstructionMap
 	_, existsInMap = currentTestCase.MatureTestInstructionMap[matureElementToSwapIn.FirstElementUuid]
 	if existsInMap == true {
@@ -156,7 +161,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 			createdTimeStamp := timestamppb.Now()
 
 			// Create a new Mature TestInstruction to be added
-			newMatureTestInstruction := testCaseModel.MatureTestInstructionStruct{
+			var newMatureTestInstruction testCaseModel.MatureTestInstructionStruct
+			newMatureTestInstruction = testCaseModel.MatureTestInstructionStruct{
 				MatureBasicTestInstructionInformation: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_MatureBasicTestInstructionInformationMessage{
 					TestCaseUuid:                             testCaseUuid,
 					TestInstructionMatureUuid:                matureElementToSwapIn.FirstElementUuid,
@@ -180,12 +186,6 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 				TestInstructionAttributesList: make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage),
 			}
 
-			// Add attributes-data to newly created TestInstruction
-			newTestInstructionAttributes := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage{
-				BaseAttributeInformation: nil,
-				AttributeInformation:     nil,
-			}
-
 			// Get all attributes for the immature TestInstruction
 			immatureTestInstructionAttributesMap, existsInMap := commandAndRuleEngine.Testcases.ImmatureTestInstructionAttributesMap[matureElement.OriginalElementUuid]
 			if existsInMap == false {
@@ -200,6 +200,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 
 			// Loop alla attributes for the ImmatureTestInstruction
 			for attributeUuid, attribute := range immatureTestInstructionAttributesMap {
+
+				// Add attributes-data to newly created TestInstruction
+				var newTestInstructionAttributes *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage
+				newTestInstructionAttributes = &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage{
+					BaseAttributeInformation: nil,
+					AttributeInformation:     nil,
+				}
 
 				// Extract the correct DropZone
 				dropZoneData, existsInMap := commandAndRuleEngine.Testcases.ImmatureDropZonesDataMap[matureElementToSwapIn.ChosenDropZoneUuid]
@@ -221,7 +228,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 
 					// Use the value from the DropZone when adding the attribute to the Model
 					case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage_USE_DROPZONE_VALUE_FOR_ATTRIBUTE):
-						newTestInstructionBaseAttributeInformation := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_BaseAttributeInformationMessage{
+						var newTestInstructionBaseAttributeInformation *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_BaseAttributeInformationMessage
+						newTestInstructionBaseAttributeInformation = &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_BaseAttributeInformationMessage{
 							TestInstructionAttributeUuid:                  attribute.TestInstructionAttributeUuid,
 							TestInstructionAttributeName:                  attribute.TestInstructionAttributeName,
 							TestInstructionAttributeTypeUuid:              attribute.TestInstructionAttributeTypeUuid,
@@ -238,7 +246,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 						}
 
 						// TODO handle other types then normal TEXTBOX
-						newTestInstructionAttributeInformation := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage{
+						var newTestInstructionAttributeInformation *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage
+						newTestInstructionAttributeInformation = &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage{
 							InputTextBoxProperty: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputTextBoxProperty{
 								TestInstructionAttributeInputTextBoUuid:  attribute.TestInstructionAttributeUuid,
 								TestInstructionAttributeInputTextBoxName: attribute.TestInstructionAttributeName,
@@ -253,11 +262,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 						}
 
 						// Create the attribute object with all data
-						newTestInstructionAttributes.BaseAttributeInformation = &newTestInstructionBaseAttributeInformation
-						newTestInstructionAttributes.AttributeInformation = &newTestInstructionAttributeInformation
+						newTestInstructionAttributes.BaseAttributeInformation = newTestInstructionBaseAttributeInformation
+						newTestInstructionAttributes.AttributeInformation = newTestInstructionAttributeInformation
 
 						// Save Attribute in TestInstruction
-						newMatureTestInstruction.TestInstructionAttributesList[attributeUuid] = &newTestInstructionAttributes
+						newMatureTestInstruction.TestInstructionAttributesList[attributeUuid] = newTestInstructionAttributes
 
 					// Don't add the attribute to the Model
 					case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage_REMOVE_ATTRIBUTE_FROM_TESTINSTRUCTION):
@@ -276,7 +285,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 
 				} else {
 					// Attribute doesn't exist in DropZone so just att the Attribute to the Model
-					newTestInstructionBaseAttributeInformation := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_BaseAttributeInformationMessage{
+					var newTestInstructionBaseAttributeInformation *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_BaseAttributeInformationMessage
+					newTestInstructionBaseAttributeInformation = &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_BaseAttributeInformationMessage{
 						TestInstructionAttributeUuid:                  attribute.TestInstructionAttributeUuid,
 						TestInstructionAttributeName:                  attribute.TestInstructionAttributeName,
 						TestInstructionAttributeTypeUuid:              attribute.TestInstructionAttributeTypeUuid,
@@ -293,7 +303,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 					}
 
 					// TODO handle other types then normal TEXTBOX
-					newTestInstructionAttributeInformation := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage{
+					var newTestInstructionAttributeInformation *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage
+					newTestInstructionAttributeInformation = &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage{
 						InputTextBoxProperty: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputTextBoxProperty{
 							TestInstructionAttributeInputTextBoUuid:  attribute.TestInstructionAttributeUuid,
 							TestInstructionAttributeInputTextBoxName: attribute.TestInstructionAttributeName,
@@ -308,11 +319,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 					}
 
 					// Create the attribute object with all data
-					newTestInstructionAttributes.BaseAttributeInformation = &newTestInstructionBaseAttributeInformation
-					newTestInstructionAttributes.AttributeInformation = &newTestInstructionAttributeInformation
+					newTestInstructionAttributes.BaseAttributeInformation = newTestInstructionBaseAttributeInformation
+					newTestInstructionAttributes.AttributeInformation = newTestInstructionAttributeInformation
 
 					// Save Attribute in TestInstruction
-					newMatureTestInstruction.TestInstructionAttributesList[attributeUuid] = &newTestInstructionAttributes
+					newMatureTestInstruction.TestInstructionAttributesList[attributeUuid] = newTestInstructionAttributes
 
 				}
 				// Save Mature TestInstruction in TestCase

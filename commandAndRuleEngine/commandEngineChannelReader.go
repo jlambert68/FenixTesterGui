@@ -183,7 +183,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSwap
 				// Create the Background colored rectangle
 				dropZoneColor, err := sharedCode.ConvertRGBAHexStringIntoRGBAColor(dropZoneItem.DropZoneColor)
 				if err != nil {
-					fmt.Println(err.Error()) // TODO Send on Error-channel
+					return
 				}
 				backgroundColorRectangle := canvas.NewRectangle(dropZoneColor)
 

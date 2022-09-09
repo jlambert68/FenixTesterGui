@@ -188,15 +188,18 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 
 			// Get all attributes for the immature TestInstruction
 			immatureTestInstructionAttributesMap, existsInMap := commandAndRuleEngine.Testcases.ImmatureTestInstructionAttributesMap[matureElement.OriginalElementUuid]
+
+			/* Removed because there are TI without any DropZones
 			if existsInMap == false {
 
-				errorId := "8713aa0a-60f0-4892-aaac-2302320e3019"
-				err = errors.New(fmt.Sprintf("can't find Immature TestInstruction with UUID '%s' already exist in ImmatureTestInstructionAttributesMap [ErrorID: %s]", matureElement.OriginalElementUuid, errorId))
+			errorId := "8713aa0a-60f0-4892-aaac-2302320e3019"
+			err = errors.New(fmt.Sprintf("can't find Immature TestInstruction with UUID '%s' in ImmatureTestInstructionAttributesMap [ErrorID: %s]", matureElement.OriginalElementUuid, errorId))
 
-				fmt.Println(err.Error()) //TODO Send to Error-channel
+			fmt.Println(err.Error()) //TODO Send to Error-channel
 
-				return err
+			return err
 			}
+			*/
 
 			// Loop alla attributes for the ImmatureTestInstruction
 			for attributeUuid, attribute := range immatureTestInstructionAttributesMap {

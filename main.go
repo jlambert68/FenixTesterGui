@@ -53,6 +53,7 @@ func mustGetenv(environmentVariable string) string {
 
 func main() {
 	//time.Sleep(15 * time.Second)
+	//defer profile.Start(profile.ProfilePath(".")).Stop()
 
 	// Start up application as SysTray if environment variable says that
 	if tempRunAsTrayApplication == true {
@@ -63,6 +64,7 @@ func main() {
 }
 
 func init() {
+
 	//executionLocation := flag.String("startupType", "0", "The application should be started with one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
 	//flag.Parse()
 

@@ -187,7 +187,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 			}
 
 			// Get all attributes for the immature TestInstruction
-			immatureTestInstructionAttributesMap, existsInMap := commandAndRuleEngine.Testcases.ImmatureTestInstructionAttributesMap[matureElement.OriginalElementUuid]
+			immatureTestInstructionAttributesMap, _ := commandAndRuleEngine.Testcases.ImmatureTestInstructionAttributesMap[matureElement.OriginalElementUuid]
 
 			/* Removed because there are TI without any DropZones
 			if existsInMap == false {

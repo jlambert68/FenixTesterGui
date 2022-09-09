@@ -16,6 +16,7 @@ require (
 	github.com/gorilla/sessions v1.2.1
 	github.com/jlambert68/FenixGrpcApi v0.0.0-20220908104825-5b0a81785f9e
 	github.com/markbates/goth v1.73.0
+	github.com/pkg/profile v1.6.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.7.1
 	github.com/toqueteos/webbrowser v1.2.0
@@ -28,6 +29,7 @@ require (
 
 require (
 	cloud.google.com/go/compute v1.6.1 // indirect
+	github.com/chzyer/readline v1.5.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fredbi/uri v0.0.0-20181227131451-3dcfdacbaaf3 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
@@ -42,10 +44,12 @@ require (
 	github.com/godbus/dbus/v5 v5.0.4 // indirect
 	github.com/goki/freetype v0.0.0-20181231101311-fa8a33aabaff // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
+	github.com/google/pprof v0.0.0-20220829040838-70bd9ae97f40 // indirect
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/hajimehoshi/go-mp3 v0.3.0 // indirect
 	github.com/hajimehoshi/oto v0.7.1 // indirect
+	github.com/ianlancetaylor/demangle v0.0.0-20220517205856-0058ec4f073c // indirect
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
@@ -57,7 +61,7 @@ require (
 	golang.org/x/exp/shiny v0.0.0-20220613132600-b0d781184e0d // indirect
 	golang.org/x/image v0.0.0-20210216034530-4410531fe030 // indirect
 	golang.org/x/mobile v0.0.0-20201217150744-e6ae53a27f4f // indirect
-	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
+	golang.org/x/sys v0.0.0-20220909162455-aba9fc2a8ff2 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gonum.org/v1/gonum v0.9.1 // indirect
 	google.golang.org/appengine v1.6.7 // indirect

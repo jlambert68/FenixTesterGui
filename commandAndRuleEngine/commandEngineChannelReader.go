@@ -5,11 +5,14 @@ import (
 	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	"image/color"
 	"log"
 	"sync"
 )
@@ -187,22 +190,27 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSwap
 				}
 				backgroundColorRectangle := canvas.NewRectangle(dropZoneColor)
 
-				/*
-					// Create text background rectangle for text to be more visible
-					textbackgroundColor := color.RGBA{
-						R: 0x33,
-						G: 0x33,
-						B: 0x33,
-						A: 0xFF,
-					}
-					textBackgroundColorRectangle := canvas.NewRectangle(textbackgroundColor)
-				*/
+				// Create text background rectangle for text to be more visible
+				textbackgroundColor := color.RGBA{
+					R: 0x33,
+					G: 0x33,
+					B: 0x33,
+					A: 0xFF,
+				}
+				textBackgroundColorRectangle := canvas.NewRectangle(textbackgroundColor)
 
 				// Create the DropZoneContainer
-				dropZoneButtonContainer := container.NewMax(backgroundColorRectangle, dropZoneButton)
+				dropZoneButtonContainer := container.NewMax(textBackgroundColorRectangle, dropZoneButton)
+				dropZoneButtonContainer2 := container.NewHBox(layout.NewSpacer(), dropZoneButtonContainer, layout.NewSpacer())
+				dropZoneButtonContainer2b := container.NewVBox(layout.NewSpacer(), dropZoneButtonContainer2, layout.NewSpacer())
+				dropZoneButtonContainer3 := container.NewMax(backgroundColorRectangle, dropZoneButtonContainer2b)
+				dropZoneButtonContainer3.Refresh()
+				backgroundColorRectangle.SetMinSize(fyne.NewSize(0, dropZoneButton.Size().Height*1.3))
+				textBackgroundColorRectangle.SetMinSize(fyne.NewSize(0, dropZoneButton.Size().Height*0.7))
+				dropZoneButtonContainer3.Refresh()
 
 				// Add the DropZoneButton-container to the object to be put up for user to chose DropZone from
-				dropZoneContainer.Add(dropZoneButtonContainer)
+				dropZoneContainer.Add(dropZoneButtonContainer3)
 
 			}
 

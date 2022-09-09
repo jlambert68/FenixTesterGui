@@ -283,6 +283,8 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 
 	testCaseCommandsUIObject = container.NewScroll(testCaseCommandsUIObject_temp)
 
+	testCaseCommandsUIObject.Hide()
+
 	return testCaseCommandsUIObject
 }
 

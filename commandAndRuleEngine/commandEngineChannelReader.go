@@ -187,6 +187,17 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSwap
 				}
 				backgroundColorRectangle := canvas.NewRectangle(dropZoneColor)
 
+				/*
+					// Create text background rectangle for text to be more visible
+					textbackgroundColor := color.RGBA{
+						R: 0x33,
+						G: 0x33,
+						B: 0x33,
+						A: 0xFF,
+					}
+					textBackgroundColorRectangle := canvas.NewRectangle(textbackgroundColor)
+				*/
+
 				// Create the DropZoneContainer
 				dropZoneButtonContainer := container.NewMax(backgroundColorRectangle, dropZoneButton)
 

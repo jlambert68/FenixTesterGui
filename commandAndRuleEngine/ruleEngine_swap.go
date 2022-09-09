@@ -224,10 +224,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 				attributeDataFromDropZone, existsInMap := dropZoneData.DropZonePreSetTestInstructionAttributesMap[attributeUuid]
 				if existsInMap == true {
 					// Attribute exist in DropZone data, so use that data as specified
-					switch attributeDataFromDropZone.TestInstructionAttributeType {
+					switch attributeDataFromDropZone.AttributeActionCommand {
 
 					// Use the value from the DropZone when adding the attribute to the Model
-					case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage_USE_DROPZONE_VALUE_FOR_ATTRIBUTE):
+					case fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage_USE_DROPZONE_VALUE_FOR_ATTRIBUTE:
 						var newTestInstructionBaseAttributeInformation *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_BaseAttributeInformationMessage
 						newTestInstructionBaseAttributeInformation = &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_BaseAttributeInformationMessage{
 							TestInstructionAttributeUuid:                  attribute.TestInstructionAttributeUuid,
@@ -269,7 +269,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 						newMatureTestInstruction.TestInstructionAttributesList[attributeUuid] = newTestInstructionAttributes
 
 					// Don't add the attribute to the Model
-					case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage_REMOVE_ATTRIBUTE_FROM_TESTINSTRUCTION):
+					case fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage_REMOVE_ATTRIBUTE_FROM_TESTINSTRUCTION:
 						// Do nothing
 
 					// Shouldn't happen
@@ -284,7 +284,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 					}
 
 				} else {
-					// Attribute doesn't exist in DropZone so just att the Attribute to the Model
+					// Attribute doesn't exist in DropZone so just add the Attribute to the Model
 					var newTestInstructionBaseAttributeInformation *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_BaseAttributeInformationMessage
 					newTestInstructionBaseAttributeInformation = &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_BaseAttributeInformationMessage{
 						TestInstructionAttributeUuid:                  attribute.TestInstructionAttributeUuid,

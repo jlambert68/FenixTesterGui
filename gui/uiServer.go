@@ -23,6 +23,7 @@ import (
 	"image/color"
 	"log"
 	"os"
+	"strconv"
 	"time"
 	//"FenixTesterGui/resources"
 )
@@ -151,6 +152,13 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	fyneMasterWindow := uiServer.fyneApp.NewWindow("Fenix TestCase Builder")
 	fyneMasterWindow.SetMaster()
 
+	var w fyne.Window
+	if drv, ok := fyne.CurrentApp().Driver().(desktop.Driver); ok {
+		w = drv.CreateSplashWindow()
+		w.SetContent(widget.NewLabel("Splash Window"))
+		w.Show()
+	}
+
 	uiServer.commandAndRuleEngine.MasterFenixWindow = &fyneMasterWindow
 
 	// Get Available Building BLocks form GUI-server
@@ -206,7 +214,55 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	applicationUI := uiServer.loadUI()
 
-	myCanvas.SetContent(applicationUI)
+	mySliderDataAsString := binding.NewString()
+
+	uiServer.fyneApp.Settings().Scale()
+	scaleEnvKey := "FYNE_SCALE"
+	envVal := os.Getenv(scaleEnvKey)
+	fmt.Println(envVal)
+	//defer os.Setenv(scaleEnvKey, envVal)
+
+	//	_ = os.Setenv(scaleEnvKey, "auto")
+
+	_ = os.Setenv(scaleEnvKey, "1.2")
+
+	sizeSlider := widget.NewSlider(40, 200)
+	sizeSliderSizeLabel := widget.NewLabelWithData(mySliderDataAsString)
+	sizeContainer := container.NewVBox(sizeSliderSizeLabel, sizeSlider)
+	sizeSlider.Resize(fyne.NewSize(300, 0))
+
+	configContainerGrid := container.New(layout.NewAdaptiveGridLayout(2), sizeContainer, widget.NewLabel("Test"))
+
+	tabs := container.NewAppTabs(
+		container.NewTabItem("TestCases", applicationUI),
+		container.NewTabItem("Config", configContainerGrid),
+	)
+
+	//tabs.Append(container.NewTabItemWithIcon("Home", theme.HomeIcon(), widget.NewLabel("Home tab")))
+
+	tabs.SetTabLocation(container.TabLocationLeading)
+
+	sizeSlider.OnChanged = func(f float64) {
+
+		err := os.Setenv(scaleEnvKey, "0.4")
+		fmt.Println("err: ", err)
+		//		_ = os.Setenv(scaleEnvKey, s)
+		set := uiServer.fyneApp.Settings().Scale()
+		fmt.Println(set)
+		set = fyne.CurrentApp().Settings().Scale()
+		fmt.Println(set)
+
+		myInt := int(f)
+		myString := strconv.Itoa(myInt)
+		s := "Screen zoomm: " + myString + "%"
+
+		mySliderDataAsString.Set(s)
+
+		_ = fyne.CurrentApp().Settings().Scale()
+
+	}
+
+	myCanvas.SetContent(tabs)
 
 	//myCanvas.Overlays().Add(myCanvasLabel)
 
@@ -217,6 +273,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	fyneMasterWindow.Resize(fyne.NewSize(3000, 1500))
 
+	w.Hide()
 	fyneMasterWindow.ShowAndRun()
 
 }

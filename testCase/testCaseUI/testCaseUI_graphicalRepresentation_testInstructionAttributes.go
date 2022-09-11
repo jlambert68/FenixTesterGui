@@ -7,34 +7,40 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"sort"
 )
 
 type attributeStruct struct {
-	attributeUuid     string
-	attributeName     string
-	attributeValue    string
-	attributeTypeName string
+	attributeUuid                        string
+	attributeName                        string
+	attributeValue                       string
+	attributeChangedValue                string
+	attributeTypeName                    string
+	entryRef                             *widget.Entry
+	attributeIsChanged                   bool
+	testInstructionElementMatureUuidUuid string
 }
+
+var attributesList []*attributeStruct
 
 // Generate the TestCaseAttributes Area for the TestCase
 func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttributesAreaForTestCase(testCaseUuid string, testInstructionElementMatureUuidUuid string) (testCaseAttributesArea fyne.CanvasObject, testInstructionAttributesAccordion *widget.Accordion, err error) {
 
-	attributesList := testCasesUiCanvasObject.generateAttributeStringListData(testCaseUuid, testInstructionElementMatureUuidUuid)
-
-	/*
-		// Get current TestCase-UI-model
-		_, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
-
-		if existsInMap == true {
-			errorId := "c4110d4f-3dca-48bd-a8e4-57cb040fe079"
-			err = errors.New(fmt.Sprintf("testcase-UI-model with sourceUuid '%s' allready exist in 'TestCasesUiModelMap' [ErrorID: %s]", testCaseUuid, errorId))
-
-			fmt.Println(err.Error()) //TODO send to error channel
-
-			return nil, err
+	// If previous call to this method resulted in attributes then check if any of them were changed
+	if len(attributesList) > 0 {
+		for _, attribute := range attributesList {
+			if attribute.attributeIsChanged == true {
+				err = testCasesUiCanvasObject.saveChangedTestCaseAttributeInTestCase(testCaseUuid)
+				break
+			}
 		}
+	}
 
-	*/
+	if err != nil {
+		return nil, nil, err
+	}
+
+	attributesList = testCasesUiCanvasObject.generateAttributeStringListData(testCaseUuid, testInstructionElementMatureUuidUuid)
 
 	// Extract the current TestCase model
 	testCaseModel, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
@@ -61,15 +67,33 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 					attributesContainer.Add(attributesFormContainer)
 					attributesFormContainer = container.New(layout.NewFormLayout())
 				}
-
-				previousAttributeTypeName = attributeItem.attributeTypeName
-
 			}
 
+			previousAttributeTypeName = attributeItem.attributeTypeName
+
+			// Add the label for the Entry-widget
 			attributesFormContainer.Add(widget.NewLabel(attributeItem.attributeName))
 
-			newAttributeEntry := widget.NewEntry()
+			// Add the Entry-widget
+			newAttributeEntry := widget.NewEntry() // testCasesUiCanvasObject.NewAttributeEntry(attributeItem.attributeUuid)
+			attributeItem.entryRef = newAttributeEntry
 			newAttributeEntry.SetText(attributeItem.attributeValue)
+			newAttributeEntry.OnChanged = func(newValue string) {
+				// Find which attributes that we are dealing with
+				var tempAttributeItem *attributeStruct
+				for _, tempAttributeItem = range attributesList {
+					if tempAttributeItem.entryRef == newAttributeEntry {
+						break
+					}
+				}
+				if newValue != tempAttributeItem.attributeValue {
+					tempAttributeItem.attributeIsChanged = true
+					tempAttributeItem.attributeChangedValue = newValue
+				} else {
+					tempAttributeItem.attributeIsChanged = false
+					tempAttributeItem.attributeChangedValue = newValue
+				}
+			}
 			attributesFormContainer.Add(newAttributeEntry)
 		}
 
@@ -146,10 +170,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 }
 
 // Generate structure for 'binding.StringList' regarding Attribute values
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringListData(testCaseUuid string, testInstructionElementMatureUuid string) (attributesList []attributeStruct) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringListData(testCaseUuid string, testInstructionElementMatureUuid string) (attributesList []*attributeStruct) {
 
 	// Clear variable
-	attributesList = []attributeStruct{}
+	attributesList = []*attributeStruct{}
 
 	// Used when creating th UI for first time
 	if testInstructionElementMatureUuid == "" {
@@ -186,13 +210,76 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringLi
 
 	// Loop over attributes and append to slice of attributes with 'Name' and 'value'
 	for _, testInstructionAttribute := range matureTestInstruction.TestInstructionAttributesList {
-		attributesList = append(attributesList, attributeStruct{
-			attributeUuid:     testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeUuid,
-			attributeName:     testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeName,
-			attributeValue:    testInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxAttributeValue,
-			attributeTypeName: testInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxAttributeTypeName,
+		attributesList = append(attributesList, &attributeStruct{
+			attributeUuid:                        testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeUuid,
+			attributeName:                        testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeName,
+			attributeValue:                       testInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxAttributeValue,
+			attributeTypeName:                    testInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxAttributeTypeName,
+			testInstructionElementMatureUuidUuid: testInstructionElementMatureUuid,
 		})
 	}
 
+	// Sort Attributes in Name-order, within each Type
+	sort.SliceStable(attributesList, func(i, j int) bool {
+		if attributesList[i].attributeTypeName != attributesList[j].attributeTypeName {
+			return attributesList[i].attributeTypeName < attributesList[j].attributeTypeName
+		}
+
+		return attributesList[i].attributeName < attributesList[j].attributeName
+	})
+
 	return attributesList
+}
+
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) saveChangedTestCaseAttributeInTestCase(testCaseUuid string) (err error) {
+
+	// Extract current TestCase
+	testCase, existInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+	if existInMap == false {
+
+		errorId := "40fc730f-87d4-4c44-96ff-ab1003e40751"
+		err := errors.New(fmt.Sprintf("testCase %s is missing in TestCases-map [ErrorID: %s]", testCaseUuid, errorId))
+
+		fmt.Println(err) //TODO Send error over error-channel
+		return err
+	}
+
+	// Extract testInstructionElementMatureUuidUuid
+	testInstructionElementMatureUuidUuid := attributesList[0].testInstructionElementMatureUuidUuid
+
+	// Check if any attribute is changed
+	if len(attributesList) > 0 {
+		for _, attribute := range attributesList {
+			if attribute.attributeIsChanged == true {
+				// Attribute is changed so save it,
+
+				// Extract TestInstruction
+				tempMatureTestInstruction, existInMap := testCase.MatureTestInstructionMap[testInstructionElementMatureUuidUuid]
+				if existInMap == false {
+					errorId := "83b64181-3a02-4b98-8eba-d1fbad61dcd5"
+					err := errors.New(fmt.Sprintf("mature testInstruction %s is missing in MatureTestInstructionMap [ErrorID: %s]", testInstructionElementMatureUuidUuid, errorId))
+
+					fmt.Println(err) //TODO Send error over error-channel
+					return err
+				}
+
+				// Extract  Attribute
+				tempTestInstructionAttribute, existInMap := tempMatureTestInstruction.TestInstructionAttributesList[attribute.attributeUuid]
+				if existInMap == false {
+					errorId := "77e03442-7ccc-46c7-891e-0c5e0dd5bd1c"
+					err := errors.New(fmt.Sprintf("testInstruction attribute %s is missing in MatureTestInstructionMap [ErrorID: %s]", attribute.attributeUuid, errorId))
+
+					fmt.Println(err) //TODO Send error over error-channel
+					return err
+				}
+
+				// Save changed value for Attribute
+				tempTestInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxAttributeValue = attribute.attributeChangedValue
+
+			}
+		}
+	}
+
+	return err
+
 }

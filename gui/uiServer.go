@@ -224,8 +224,6 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	//	_ = os.Setenv(scaleEnvKey, "auto")
 
-	_ = os.Setenv(scaleEnvKey, "1.2")
-
 	sizeSlider := widget.NewSlider(40, 200)
 	sizeSliderSizeLabel := widget.NewLabelWithData(mySliderDataAsString)
 	sizeContainer := container.NewVBox(sizeSliderSizeLabel, sizeSlider)
@@ -244,7 +242,9 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	sizeSlider.OnChanged = func(f float64) {
 
-		err := os.Setenv(scaleEnvKey, "0.4")
+		err := os.Setenv(scaleEnvKey, "1.5")
+		fyneMasterWindow.Hide()
+		fyneMasterWindow.Show()
 		fmt.Println("err: ", err)
 		//		_ = os.Setenv(scaleEnvKey, s)
 		set := uiServer.fyneApp.Settings().Scale()
@@ -263,6 +263,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	}
 
 	myCanvas.SetContent(tabs)
+	_ = os.Setenv(scaleEnvKey, "0.7")
 
 	//myCanvas.Overlays().Add(myCanvasLabel)
 
@@ -274,6 +275,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	fyneMasterWindow.Resize(fyne.NewSize(3000, 1500))
 
 	w.Hide()
+
 	fyneMasterWindow.ShowAndRun()
 
 }

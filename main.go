@@ -63,6 +63,96 @@ func main() {
 	fenixGuiBuilderServerMain()
 }
 
+func Init() {
+
+	//executionLocation := flag.String("startupType", "0", "The application should be started with one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
+	//flag.Parse()
+
+	convertVariablesToMap()
+
+	var err error
+
+	// Get Environment variable to tell how this program was started
+	var executionLocation = mustGetenv("ExecutionLocation")
+
+	switch executionLocation {
+	case "LOCALHOST_NODOCKER":
+		sharedCode.ExecutionLocation = sharedCode.LocalhostNoDocker
+
+	case "LOCALHOST_DOCKER":
+		sharedCode.ExecutionLocation = sharedCode.LocalhostDocker
+
+	case "GCP":
+		sharedCode.ExecutionLocation = sharedCode.GCP
+
+	default:
+		fmt.Println("Unknown Execution location for FenixGuiProxyServer: " + executionLocation + ". Expected one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
+		os.Exit(0)
+
+	}
+
+	// Get Environment variable to tell how this program was started
+	var executionLocationFenixGuiServer = mustGetenv("ExecutionLocationFenixGuiServer")
+
+	switch executionLocationFenixGuiServer {
+	case "LOCALHOST_NODOCKER":
+		sharedCode.ExecutionLocationForFenixGuiServer = sharedCode.LocalhostNoDocker
+
+	case "LOCALHOST_DOCKER":
+		sharedCode.ExecutionLocationForFenixGuiServer = sharedCode.LocalhostDocker
+
+	case "GCP":
+		sharedCode.ExecutionLocationForFenixGuiServer = sharedCode.GCP
+
+	default:
+		fmt.Println("Unknown Execution location for FenixGuiServer: " + executionLocation + ". Expected one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
+		os.Exit(0)
+
+	}
+
+	// Address to GuiBuilderProxyServer
+	sharedCode.FenixGuiBuilderProxyServerAddress = mustGetenv("FenixGuiBuilderProxyServerAddress")
+
+	// Port for GuiBuilderProxyServer
+	sharedCode.FenixGuiBuilderProxyServerPort, err = strconv.Atoi(mustGetenv("FenixGuiBuilderProxyServerPort"))
+	if err != nil {
+		fmt.Println("Couldn't convert environment variable 'FenixGuiBuilderProxyServerPort' to an integer, error: ", err)
+		os.Exit(0)
+
+	}
+
+	// Address to GuiBuilderServer
+	sharedCode.FenixGuiBuilderServerAddress = mustGetenv("FenixGuiBuilderServerAddress")
+
+	// Port for GuiBuilderServer
+	sharedCode.FenixGuiBuilderServerPort, err = strconv.Atoi(mustGetenv("FenixGuiBuilderServerPort"))
+	if err != nil {
+		fmt.Println("Couldn't convert environment variable 'FenixGuiBuilderServerPort' to an integer, error: ", err)
+		os.Exit(0)
+
+	}
+
+	// Create address for FenixGuiServer to call
+	fenixGuiBuilderServerAddressToDial = sharedCode.FenixGuiBuilderServerAddress + ":" + strconv.Itoa(sharedCode.FenixGuiBuilderServerPort)
+
+	// Get Environment variable to tell if the the application should run as a Tray Application or not
+	var runAsTrayApplication = mustGetenv("RunAsTrayApplication")
+
+	switch runAsTrayApplication {
+	case "YES":
+		tempRunAsTrayApplication = true
+
+	case "NO":
+		tempRunAsTrayApplication = false
+
+	default:
+		fmt.Println("Unknown value for 'RunAsTrayApplication': " + runAsTrayApplication + ". Expected one of the following: 'YES', 'NO'")
+		os.Exit(0)
+
+	}
+
+}
+
 func init() {
 
 	//executionLocation := flag.String("startupType", "0", "The application should be started with one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")

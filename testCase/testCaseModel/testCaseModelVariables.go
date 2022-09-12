@@ -2,6 +2,7 @@ package testCaseModel
 
 import (
 	"FenixTesterGui/grpc_out"
+	"fyne.io/fyne/v2/widget"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"time"
 )
@@ -61,6 +62,20 @@ type TestCaseModelStruct struct {
 	testCaseModelAdaptedForUiTree              map[string][]TestCaseModelAdaptedForUiTreeDataStruct // Model used for Creating the Tree-view for the TestCase-model
 	CurrentSelectedTestCaseElement             currentSelectedTestCaseElementStruct
 	MatureTestInstructionMap                   map[string]MatureTestInstructionStruct
+	AttributesList                             *AttributeStructSliceReference
+}
+
+type AttributeStructSliceReference []*AttributeStruct
+
+type AttributeStruct struct {
+	AttributeUuid                        string
+	AttributeName                        string
+	AttributeValue                       string
+	AttributeChangedValue                string
+	AttributeTypeName                    string
+	EntryRef                             *widget.Entry
+	AttributeIsChanged                   bool
+	TestInstructionElementMatureUuidUuid string
 }
 
 type MatureTestInstructionStruct struct {

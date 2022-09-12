@@ -211,7 +211,9 @@ func (t *DraggableLabel) Dragged(ev *fyne.DragEvent) {
 
 	// Refresh 'Drag N Drop'-object and show them
 	containerRef.Refresh()
-	containerRef.Show()
+	if containerRef.Hidden == true {
+		containerRef.Show()
+	}
 
 }
 

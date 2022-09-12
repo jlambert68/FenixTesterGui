@@ -1,6 +1,7 @@
 package testCaseUI
 
 import (
+	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -10,40 +11,47 @@ import (
 	"sort"
 )
 
-type attributeStruct struct {
-	attributeUuid                        string
-	attributeName                        string
-	attributeValue                       string
-	attributeChangedValue                string
-	attributeTypeName                    string
-	entryRef                             *widget.Entry
-	attributeIsChanged                   bool
-	testInstructionElementMatureUuidUuid string
-}
-
-var attributesList []*attributeStruct
-
 // Generate the TestCaseAttributes Area for the TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttributesAreaForTestCase(testCaseUuid string, testInstructionElementMatureUuidUuid string) (testCaseAttributesArea fyne.CanvasObject, testInstructionAttributesAccordion *widget.Accordion, err error) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttributesAreaForTestCase(testCaseUuid string, testInstructionElementMatureUuid string) (testCaseAttributesArea fyne.CanvasObject, testInstructionAttributesAccordion *widget.Accordion, err error) {
+
+	// Extract the current TestCase UI model
+	testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+	if existsInMap == false {
+		errorId := "07f8c5db-5a2a-4f1a-87ca-0c2e11f747a2"
+		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCases [ErrorID: %s]", testCaseUuid, errorId))
+
+		//TODO Send ERRORS over error-channel
+		fmt.Println(err)
+
+		return nil, nil, err
+
+	}
+
+	//testCase_Model.AttributesList = tempAttributesList
+	//*attributesList = testCase_Model.AttributesList
 
 	// If previous call to this method resulted in attributes then check if any of them were changed
-	if len(attributesList) > 0 {
-		for _, attribute := range attributesList {
-			if attribute.attributeIsChanged == true {
-				err = testCasesUiCanvasObject.saveChangedTestCaseAttributeInTestCase(testCaseUuid)
+	if testCase_Model.AttributesList != nil &&
+		len(*testCase_Model.AttributesList) > 0 {
+		for _, attribute := range *testCase_Model.AttributesList {
+			if attribute.AttributeIsChanged == true {
+				err = testCasesUiCanvasObject.TestCasesModelReference.SaveChangedTestCaseAttributeInTestCase(testCaseUuid)
 				break
 			}
 		}
+	}
+	// Generate Data to be used for  Attributes
+	attributesList, err := testCasesUiCanvasObject.generateAttributeStringListData(testCaseUuid, testInstructionElementMatureUuid)
+	if err != nil {
+		return nil, nil, err
 	}
 
 	if err != nil {
 		return nil, nil, err
 	}
 
-	attributesList = testCasesUiCanvasObject.generateAttributeStringListData(testCaseUuid, testInstructionElementMatureUuidUuid)
-
-	// Extract the current TestCase model
-	testCaseModel, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
+	// Extract the current TestCase UI model
+	testCaseUIModel, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
 
 	// Create Form-layout container to be used for attributes
 	var attributesContainer *fyne.Container
@@ -58,41 +66,43 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 
 		// Loop attributes and create label en entry field for each attribut
 		for _, attributeItem := range attributesList {
-			if attributeItem.attributeTypeName != previousAttributeTypeName {
+			if attributeItem.AttributeTypeName != previousAttributeTypeName {
 				if firstTime == true {
-					attributesContainer.Add(widget.NewLabel(attributeItem.attributeTypeName))
+					attributesContainer.Add(widget.NewLabel(attributeItem.AttributeTypeName))
 					firstTime = false
 				} else {
-					attributesContainer.Add(widget.NewLabel(attributeItem.attributeTypeName))
+					attributesContainer.Add(widget.NewLabel(attributeItem.AttributeTypeName))
 					attributesContainer.Add(attributesFormContainer)
 					attributesFormContainer = container.New(layout.NewFormLayout())
 				}
 			}
 
-			previousAttributeTypeName = attributeItem.attributeTypeName
+			previousAttributeTypeName = attributeItem.AttributeTypeName
 
 			// Add the label for the Entry-widget
-			attributesFormContainer.Add(widget.NewLabel(attributeItem.attributeName))
+			attributesFormContainer.Add(widget.NewLabel(attributeItem.AttributeName))
 
 			// Add the Entry-widget
 			newAttributeEntry := widget.NewEntry() // testCasesUiCanvasObject.NewAttributeEntry(attributeItem.attributeUuid)
-			attributeItem.entryRef = newAttributeEntry
-			newAttributeEntry.SetText(attributeItem.attributeValue)
+			attributeItem.EntryRef = newAttributeEntry
+			newAttributeEntry.SetText(attributeItem.AttributeValue)
 			newAttributeEntry.OnChanged = func(newValue string) {
 				// Find which attributes that we are dealing with
-				var tempAttributeItem *attributeStruct
+				var tempAttributeItem *testCaseModel.AttributeStruct
+
 				for _, tempAttributeItem = range attributesList {
-					if tempAttributeItem.entryRef == newAttributeEntry {
+					if tempAttributeItem.EntryRef == newAttributeEntry {
 						break
 					}
 				}
-				if newValue != tempAttributeItem.attributeValue {
-					tempAttributeItem.attributeIsChanged = true
-					tempAttributeItem.attributeChangedValue = newValue
+				if newValue != tempAttributeItem.AttributeValue {
+					tempAttributeItem.AttributeIsChanged = true
+					tempAttributeItem.AttributeChangedValue = newValue
 				} else {
-					tempAttributeItem.attributeIsChanged = false
-					tempAttributeItem.attributeChangedValue = newValue
+					tempAttributeItem.AttributeIsChanged = false
+					tempAttributeItem.AttributeChangedValue = newValue
 				}
+
 			}
 			attributesFormContainer.Add(newAttributeEntry)
 		}
@@ -109,13 +119,13 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 
 		if existsInMap == true {
 			// Accordion exist so just replace the AccordionItem
-			testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.RemoveIndex(0)
-			testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Append(testInstructionAttributesAccordionItem)
+			testCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.RemoveIndex(0)
+			testCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Append(testInstructionAttributesAccordionItem)
 
 			// Open the Accordion
-			testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Open(0)
+			testCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Open(0)
 
-			return attributesContainer, testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject, err
+			return attributesContainer, testCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject, err
 
 		} else {
 			// Accordion doesn't exit so create it and add the AccordionItem
@@ -138,31 +148,31 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 		testInstructionAttributesAccordionItem := widget.NewAccordionItem("TestInstruction Attributes", attributesContainer)
 
 		// Check if Accordion already  exist
-		if testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject == nil {
+		if testCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject == nil {
 			// Accordion doesn't exit so create it and add the AccordionItem
 			testInstructionAttributesAccordion = widget.NewAccordion(testInstructionAttributesAccordionItem)
 
 			// save the Accordion to UI-model
-			testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject = testInstructionAttributesAccordion
+			testCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject = testInstructionAttributesAccordion
 
 			// Open the Accordion
-			testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Open(0)
+			testCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Open(0)
 
 		} else {
 			// Accordion exist so,  add new AccordionItem to be the Accordion
 
 			// Accordion already exists so remove the old AccordionItem and add the new one
-			testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.RemoveIndex(0)
-			testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Append(testInstructionAttributesAccordionItem)
+			testCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.RemoveIndex(0)
+			testCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Append(testInstructionAttributesAccordionItem)
 
 		}
 
 		// Open the Accordion and refresh
-		testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Close(0)
-		testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Open(0)
-		testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Refresh()
+		testCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Close(0)
+		testCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Open(0)
+		testCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Refresh()
 
-		attributesContainer = container.NewVBox(testCaseModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject)
+		attributesContainer = container.NewVBox(testCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject)
 
 	}
 
@@ -170,15 +180,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 }
 
 // Generate structure for 'binding.StringList' regarding Attribute values
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringListData(testCaseUuid string, testInstructionElementMatureUuid string) (attributesList []*attributeStruct) {
-
-	// Clear variable
-	attributesList = []*attributeStruct{}
-
-	// Used when creating th UI for first time
-	if testInstructionElementMatureUuid == "" {
-		return
-	}
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringListData(testCaseUuid string, testInstructionElementMatureUuid string) (attributesListRef testCaseModel.AttributeStructSliceReference, err error) {
 
 	// Extract TestCase-model
 	currentTestCaseModel, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
@@ -190,96 +192,62 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringLi
 		//TODO Send ERRORS over error-channel
 		fmt.Println(err)
 
-		return
+		return nil, err
 
 	}
+
+	// Used when creating th UI for first time
+
+	if testInstructionElementMatureUuid == "" {
+
+		// Clear variable
+		attributesList := testCaseModel.AttributeStructSliceReference{}
+
+		// Save AttributesList-reference back to TestCase
+		currentTestCaseModel.AttributesList = &attributesList
+		testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = currentTestCaseModel
+
+		return attributesList, err
+	}
+
+	// Clear content of AttributesReference
+	attributesList := testCaseModel.AttributeStructSliceReference{}
 
 	// Extract the map for the TestInstructions Attributes
 	matureTestInstruction, existInMap := currentTestCaseModel.MatureTestInstructionMap[testInstructionElementMatureUuid]
 
+	//If the matureTestInstruction doesn't exist in map then it hasn't any attributes. So just return empty attributesLis
 	if existInMap == false {
-		errorId := "406439e8-1802-4a5f-b9ef-9024adf75ead"
-		err := errors.New(fmt.Sprintf("testinstruction with uuid '%s' is missing in 'MatureTestInstructionMap' [ErrorID: %s]", testInstructionElementMatureUuid, errorId))
 
-		//TODO Send ERRORS over error-channel
-		fmt.Println(err.Error())
+		*currentTestCaseModel.AttributesList = attributesList
 
-		return
+		return attributesList, err
 
 	}
 
 	// Loop over attributes and append to slice of attributes with 'Name' and 'value'
 	for _, testInstructionAttribute := range matureTestInstruction.TestInstructionAttributesList {
-		attributesList = append(attributesList, &attributeStruct{
-			attributeUuid:                        testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeUuid,
-			attributeName:                        testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeName,
-			attributeValue:                       testInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxAttributeValue,
-			attributeTypeName:                    testInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxAttributeTypeName,
-			testInstructionElementMatureUuidUuid: testInstructionElementMatureUuid,
+		attributesList = append(attributesList, &testCaseModel.AttributeStruct{
+			AttributeUuid:                        testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeUuid,
+			AttributeName:                        testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeName,
+			AttributeValue:                       testInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxAttributeValue,
+			AttributeTypeName:                    testInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxAttributeTypeName,
+			TestInstructionElementMatureUuidUuid: testInstructionElementMatureUuid,
 		})
 	}
 
 	// Sort Attributes in Name-order, within each Type
 	sort.SliceStable(attributesList, func(i, j int) bool {
-		if attributesList[i].attributeTypeName != attributesList[j].attributeTypeName {
-			return attributesList[i].attributeTypeName < attributesList[j].attributeTypeName
+		if attributesList[i].AttributeTypeName != attributesList[j].AttributeTypeName {
+			return attributesList[i].AttributeTypeName < attributesList[j].AttributeTypeName
 		}
 
-		return attributesList[i].attributeName < attributesList[j].attributeName
+		return attributesList[i].AttributeName < attributesList[j].AttributeName
 	})
 
-	return attributesList
-}
+	*currentTestCaseModel.AttributesList = attributesList
 
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) saveChangedTestCaseAttributeInTestCase(testCaseUuid string) (err error) {
+	//attributesListRef = &attributesList
 
-	// Extract current TestCase
-	testCase, existInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
-	if existInMap == false {
-
-		errorId := "40fc730f-87d4-4c44-96ff-ab1003e40751"
-		err := errors.New(fmt.Sprintf("testCase %s is missing in TestCases-map [ErrorID: %s]", testCaseUuid, errorId))
-
-		fmt.Println(err) //TODO Send error over error-channel
-		return err
-	}
-
-	// Extract testInstructionElementMatureUuidUuid
-	testInstructionElementMatureUuidUuid := attributesList[0].testInstructionElementMatureUuidUuid
-
-	// Check if any attribute is changed
-	if len(attributesList) > 0 {
-		for _, attribute := range attributesList {
-			if attribute.attributeIsChanged == true {
-				// Attribute is changed so save it,
-
-				// Extract TestInstruction
-				tempMatureTestInstruction, existInMap := testCase.MatureTestInstructionMap[testInstructionElementMatureUuidUuid]
-				if existInMap == false {
-					errorId := "83b64181-3a02-4b98-8eba-d1fbad61dcd5"
-					err := errors.New(fmt.Sprintf("mature testInstruction %s is missing in MatureTestInstructionMap [ErrorID: %s]", testInstructionElementMatureUuidUuid, errorId))
-
-					fmt.Println(err) //TODO Send error over error-channel
-					return err
-				}
-
-				// Extract  Attribute
-				tempTestInstructionAttribute, existInMap := tempMatureTestInstruction.TestInstructionAttributesList[attribute.attributeUuid]
-				if existInMap == false {
-					errorId := "77e03442-7ccc-46c7-891e-0c5e0dd5bd1c"
-					err := errors.New(fmt.Sprintf("testInstruction attribute %s is missing in MatureTestInstructionMap [ErrorID: %s]", attribute.attributeUuid, errorId))
-
-					fmt.Println(err) //TODO Send error over error-channel
-					return err
-				}
-
-				// Save changed value for Attribute
-				tempTestInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxAttributeValue = attribute.attributeChangedValue
-
-			}
-		}
-	}
-
-	return err
-
+	return attributesList, err
 }

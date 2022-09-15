@@ -37,6 +37,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) startCommandChanne
 		case sharedCode.ChannelCommandRemoveElement:
 			commandAndRuleEngine.channelCommandRemove(incomingChannelCommand)
 
+		case sharedCode.ChannelCommandSaveTestCase:
+			commandAndRuleEngine.channelCommandSaveTestCase(incomingChannelCommand)
+
 		// No other command is supported
 		default:
 			//TODO Send Error over ERROR-channel
@@ -74,6 +77,29 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandCrea
 	}
 
 	*commandAndRuleEngine.GraphicsUpdateChannelReference <- outgoingChannelCommandGraphicsUpdatedData
+
+}
+
+// Execute command 'Sace TestCase' received from Channel reader
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSaveTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct) {
+
+	currentTestCaseUuid := commandAndRuleEngine.Testcases.CurrentActiveTestCaseUuid
+
+	// Save TestCase
+	err := commandAndRuleEngine.Testcases.SaveFullTestCase(currentTestCaseUuid, commandAndRuleEngine.Testcases.CurrentUser)
+
+	if err != nil {
+
+		errorId := "b91f4270-babc-4432-9a9b-4769f1d662f9"
+		err = errors.New(fmt.Sprintf("couldn't execute command 'SaveFullTestCase', {error: %s} [ErrorID: %s]", err, errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return
+
+	}
+
+	fmt.Println("TestCase was saved in Cloud-DB")
 
 }
 

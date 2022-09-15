@@ -12,6 +12,7 @@ const (
 	ChannelCommandNewTestCase ChannelCommandType = iota
 	ChannelCommandSwapElement
 	ChannelCommandRemoveElement
+	ChannelCommandSaveTestCase
 )
 
 type ChannelCommandStruct struct {

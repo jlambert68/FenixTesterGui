@@ -58,6 +58,38 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		commandAndRuleEngine.Testcases.TestCases = make(map[string]testCaseModel.TestCaseModelStruct)
 	}
 
+	// Add BasicTestCaseInformation
+	d
+	localTestCaseMessageStruct := testCaseModel.LocalTestCaseMessageStruct{
+		BasicTestCaseInformationMessageNoneEditableInformation: fenixGuiTestCaseBuilderServerGrpcApi.BasicTestCaseInformationMessage_NonEditableBasicInformationMessage{
+			TestCaseUuid:    testCaseUuid,
+			DomainUuid:      "",
+			DomainName:      "",
+			TestCaseVersion: 1,
+		},
+		BasicTestCaseInformationMessageEditableInformation: fenixGuiTestCaseBuilderServerGrpcApi.BasicTestCaseInformationMessage_EditableBasicInformationMessage{
+			TestCaseName:        commandAndRuleEngine.Testcases.,
+			TestCaseDescription: "",
+		},
+		CreatedAndUpdatedInformation: fenixGuiTestCaseBuilderServerGrpcApi.TestCaseBasicInformationMessage_CreatedAndUpdatedInformationMessage{
+			AddedToTestCaseTimeStamp: &timestamppb.Timestamp{
+				Seconds: 0,
+				Nanos:   0,
+			},
+			AddedToTestCaseByUserId: "",
+			LastUpdatedInTestCaseTimeStamp: &timestamppb.Timestamp{
+				Seconds: 0,
+				Nanos:   0,
+			},
+			LastUpdatedInTestCaseByUserId: "",
+			DeletedFromTestCaseTimeStamp: &timestamppb.Timestamp{
+				Seconds: 0,
+				Nanos:   0,
+			},
+			DeletedFromTestCaseByUserId: "",
+		},
+	}
+
 	// Add the TestCaseModel into map of all TestCaseModels
 	commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = newTestCaseModel
 

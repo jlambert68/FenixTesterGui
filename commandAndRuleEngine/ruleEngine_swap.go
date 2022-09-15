@@ -184,8 +184,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 
 			newMatureTestInstruction = testCaseModel.MatureTestInstructionStruct{
 				BasicTestInstructionInformation_NonEditableInformation: &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage_NonEditableBasicInformationMessage{
-					DomainUuid:                  "",
-					DomainName:                  "",
+					DomainUuid:                  commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionInformation.NonEditableInformation.DomainUuid,
+					DomainName:                  commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionInformation.NonEditableInformation.DomainName,
 					TestInstructionOrignalUuid:  immatureElementToSwapIn.ImmatureElementMap[immatureElementToSwapIn.FirstElementUuid].OriginalElementUuid,
 					TestInstructionOriginalName: immatureElementToSwapIn.ImmatureElementMap[immatureElementToSwapIn.FirstElementUuid].OriginalElementName,
 					TestInstructionTypeUuid:     commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeUuid,

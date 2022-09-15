@@ -21,6 +21,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectF
 			fmt.Println("Reload GUI TestCase from testCaseModel")
 		}),
 
+		// New TestCase
 		widget.NewToolbarAction(theme.DocumentIcon(), func() {
 			commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
 				ChannelCommand:  sharedCode.ChannelCommandNewTestCase,
@@ -34,6 +35,21 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectF
 			*testCasesUiCanvasObject.CommandChannelReference <- commandEngineChannelMessage
 		}),
 
+		// Save TestCase
+		widget.NewToolbarAction(theme.DocumentSaveIcon(), func() {
+			commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
+				ChannelCommand:  sharedCode.ChannelCommandSaveTestCase,
+				FirstParameter:  "",
+				SecondParameter: "",
+				ActiveTestCase:  "",
+				ElementType:     sharedCode.BuildingBlock(sharedCode.Undefined),
+			}
+
+			// Send command message over channel to Command and Rule Engine
+			*testCasesUiCanvasObject.CommandChannelReference <- commandEngineChannelMessage
+		}),
+
+		// Remove Node in TestCase
 		widget.NewToolbarAction(theme.ContentRemoveIcon(), func() {
 			commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
 				ChannelCommand:  sharedCode.ChannelCommandRemoveElement,

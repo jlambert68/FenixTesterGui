@@ -46,14 +46,14 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 	gRPCFullTestCaseMessageToSend := fenixGuiTestCaseBuilderServerGrpcApi.FullTestCaseMessage{
 		TestCaseBasicInformation: &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseBasicInformationMessage{
 			BasicTestCaseInformation: &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestCaseInformationMessage{
-				NonEditableInformation:  &currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation,
-				EditableInformation: &currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation,
+				NonEditableInformation: &currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation,
+				EditableInformation:    &currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation,
 			},
 			CreatedAndUpdatedInformation: &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseBasicInformationMessage_CreatedAndUpdatedInformationMessage{
-				AddedToTestCaseTimeStamp: timeStampForTestCaseUpdate,
-				AddedToTestCaseByUserId: currentActiveUser,
+				AddedToTestCaseTimeStamp:       timeStampForTestCaseUpdate,
+				AddedToTestCaseByUserId:        currentActiveUser,
 				LastUpdatedInTestCaseTimeStamp: timeStampForTestCaseUpdate,
-				LastUpdatedInTestCaseByUserId: currentActiveUser,
+				LastUpdatedInTestCaseByUserId:  currentActiveUser,
 				DeletedFromTestCaseTimeStamp: &timestamppb.Timestamp{
 					Seconds: 0,
 					Nanos:   0,
@@ -67,9 +67,9 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 				TestCaseModelCommands:  []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage_TestCaseModelCommandMessage{},
 			},
 			TestCaseMetaData: &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseMetaDataMessage{},
-			TestCaseFiles: &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseFilesMessage{},
+			TestCaseFiles:    &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseFilesMessage{},
 			UserIdentification: &fenixGuiTestCaseBuilderServerGrpcApi.UserIdentificationMessage{
-				UserId:                       currentActiveUser,
+				UserId: currentActiveUser,
 				ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
 					testCaseModel.GrpcOutReference.GetHighestFenixGuiServerProtoFileVersion()),
 			},
@@ -80,14 +80,13 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 		MatureTestInstructionContainers: []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainerMessage{},
 	}
 
-
 	// Send using gRPC
 	returnMessage := testCaseModel.GrpcOutReference.SendSaveFullTestCase(&gRPCFullTestCaseMessageToSend)
 
 	if returnMessage.AckNack == false {
 
 		errorId := "cb68859b-5c99-48a5-8f8b-9af472a9a45a"
-		err = errors.New(fmt.Sprintf(returnMessage.Comments + "[ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf(returnMessage.Comments+"[ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -97,8 +96,6 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 	return err
 
 }
-
-
 
 // Convert the MatureTestCaseModelElementMessage-map into its gRPC-version
 func (testCaseModel *TestCasesModelsStruct) generateatureTestInstructionsForGrpc(testCaseUuid string) (gRPCMatureTestInstructions []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage_MatureTestInstructionMessage, err error) {
@@ -120,39 +117,34 @@ func (testCaseModel *TestCasesModelsStruct) generateatureTestInstructionsForGrpc
 	// Loop map with all 'MatureTestCaseModelElements' in the TestCase and create a slice
 	for _, matureTestInstruction := range currentTestCase.MatureTestInstructionMap {
 
-		MatureTestInstructionMessage := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage_MatureTestInstructionMessage{
-			BasicTestInstructionInformation:  &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage{
-				NonEditableInformation:    &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage_NonEditableBasicInformationMessage{
-					DomainUuid:                  currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid,
-					DomainName:                  currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainName,
-					TestInstructionOrignalUuid:  currentTestCase.TestCaseModelMap[currentTestCase.FirstElementUuid].MatureTestCaseModelElementMessage.OriginalElementUuid ,
-					TestInstructionOriginalName: currentTestCase.TestCaseModelMap[currentTestCase.FirstElementUuid].MatureTestCaseModelElementMessage.OriginalElementName,
-					TestInstructionTypeUuid: string(currentTestCase.TestCaseModelMap[currentTestCase.FirstElementUuid].MatureTestCaseModelElementMessage.TestCaseModelElementType),
-					TestInstructionTypeName:     ,
-					Deprecated:                  false,
-					MajorVersionNumber:          currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.,
-					MinorVersionNumber:          0,
-					UpdatedTimeStamp:            nil,
-					TestInstructionColor:        matureTestInstruction.,
-					TCRuleDeletion:              "",
-					TCRuleSwap:                  "",
-				},
-				EditableInformation:       &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage_EditableBasicInformationMessage{
-					TestInstructionDescription:   "",
-					TestInstructionMouseOverText: "",
-				},
-				InvisibleBasicInformation: &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage_InvisibleBasicInformationMessage{
-					Enabled: true},
-			},
-			MatureTestInstructionInformation: nil,
+		// Loop over all 'TestInstruction Attributes' in the TestInstruction and create slice
+		var testInstructionAttributesList []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage
+		for _, testInstructionAttribute := range matureTestInstruction.TestInstructionAttributesList {
+			testInstructionAttributesList = append(testInstructionAttributesList, testInstructionAttribute)
 		}
+
+		// Create one 'MatureTestInstructionMessage'
+		MatureTestInstructionMessage := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage_MatureTestInstructionMessage{
+			BasicTestInstructionInformation: &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage{
+				NonEditableInformation:    matureTestInstruction.BasicTestInstructionInformation_NonEditableInformation,
+				EditableInformation:       matureTestInstruction.BasicTestInstructionInformation_EditableInformation,
+				InvisibleBasicInformation: matureTestInstruction.BasicTestInstructionInformation_InvisibleBasicInformation,
+			},
+			MatureTestInstructionInformation: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage{
+				MatureBasicTestInstructionInformation: matureTestInstruction.MatureBasicTestInstructionInformation,
+				CreatedAndUpdatedInformation:          matureTestInstruction.CreatedAndUpdatedInformation,
+				TestInstructionAttributesList:         testInstructionAttributesList,
+			},
+		}
+
+		// Add 'MatureTestInstructionMessage' to slice
 		gRPCMatureTestInstructions = append(gRPCMatureTestInstructions, &MatureTestInstructionMessage)
 	}
 
 	return gRPCMatureTestInstructions, err
 
-
 }
+
 // Convert the MatureTestCaseModelElementMessage-map into its gRPC-version
 func (testCaseModel *TestCasesModelsStruct) generateTestCaseModelElementsForGrpc(testCaseUuid string) (gRPCMatureTestCaseModelElements []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage, err error) {
 
@@ -175,8 +167,6 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseModelElementsForGrpc
 
 	return gRPCMatureTestCaseModelElements, err
 }
-
-
 
 // SaveChangedTestCaseAttributeInTestCase - Save changed Attributes into the TestCase-model under correct TestInstruction
 func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCase(testCaseUuid string) (err error) {

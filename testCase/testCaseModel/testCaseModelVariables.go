@@ -80,10 +80,40 @@ type AttributeStruct struct {
 }
 
 type MatureTestInstructionStruct struct {
+	/*
+		MatureTestInstructions          *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage
+			[]*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage_MatureTestInstructionMessage
+				BasicTestInstructionInformation  *fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage
+					xy NonEditableInformation    *fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage_NonEditableBasicInformationMessage
+					xy EditableInformation       *fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage_EditableBasicInformationMessage
+					xy InvisibleBasicInformation *fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage_InvisibleBasicInformationMessage
+				MatureTestInstructionInformation *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage
+					xy MatureBasicTestInstructionInformation *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_MatureBasicTestInstructionInformationMessage
+					xy CreatedAndUpdatedInformation          *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_CreatedAndUpdatedInformationMessage
+					TestInstructionAttributesList         []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage
+						xy BaseAttributeInformation *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_BaseAttributeInformationMessage
+						AttributeInformation     *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage
+							xy InputTextBoxProperty      *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputTextBoxProperty
+							xy InputComboBoxProperty     *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputComboBoxProperty
+							xy InputFileSelectorProperty *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputFileSelectorProperty
+	*/
+
+	// BasicTestInstructionInformation
+	BasicTestInstructionInformation_NonEditableInformation    *fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage_NonEditableBasicInformationMessage
+	BasicTestInstructionInformation_EditableInformation       *fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage_EditableBasicInformationMessage
+	BasicTestInstructionInformation_InvisibleBasicInformation *fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage_InvisibleBasicInformationMessage
+
+	// Specific Mature information
 	MatureBasicTestInstructionInformation *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_MatureBasicTestInstructionInformationMessage `protobuf:"bytes,1,opt,name=MatureBasicTestInstructionInformation,proto3" json:"MatureBasicTestInstructionInformation,omitempty"` // The Basic information for the Matures TestInstruction
 	CreatedAndUpdatedInformation          *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_CreatedAndUpdatedInformationMessage          `protobuf:"bytes,2,opt,name=CreatedAndUpdatedInformation,proto3" json:"CreatedAndUpdatedInformation,omitempty"`                   // Information regarding who did what and when
 	TestInstructionAttributesList         map[string]*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage   `protobuf:"bytes,3,rep,name=TestInstructionAttributesList,proto3" json:"TestInstructionAttributesList,omitempty"`                 // All attributes that belongs to the TestInstruction
 
+	/*
+		FullTestCaseMessage *fenixGuiTestCaseBuilderServerGrpcApi.FullTestCaseMessage
+			TestCaseBasicInformation        *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseBasicInformationMessage
+			MatureTestInstructions          *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage
+			MatureTestInstructionContainers []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainerMessage
+	*/
 }
 
 type currentSelectedTestCaseElementStruct struct {

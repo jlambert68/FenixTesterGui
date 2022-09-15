@@ -63,6 +63,7 @@ type TestCaseModelStruct struct {
 	CurrentSelectedTestCaseElement             currentSelectedTestCaseElementStruct
 	MatureTestInstructionMap                   map[string]MatureTestInstructionStruct
 	AttributesList                             *AttributeStructSliceReference
+	ThisIsANewTestCase                         bool
 }
 
 type AttributeStructSliceReference []*AttributeStruct
@@ -146,9 +147,9 @@ type MatureElementStruct struct {
 // LocalTestCaseMessageStruct
 // A message holding one TestCase in
 type LocalTestCaseMessageStruct struct {
-	BasicTestCaseInformationMessageNoneEditableInformation fenixGuiTestCaseBuilderServerGrpcApi.BasicTestCaseInformationMessage_NonEditableBasicInformationMessage // All Basic information that can be shown in GUI but can't be changed by the user
-	BasicTestCaseInformationMessageEditableInformation     fenixGuiTestCaseBuilderServerGrpcApi.BasicTestCaseInformationMessage_EditableBasicInformationMessage    // All Basic information that can be shown in GUI and can be changed by the user
-	CreatedAndUpdatedInformation                           fenixGuiTestCaseBuilderServerGrpcApi.TestCaseMessage_CreatedAndUpdatedInformationMessage                // Information regarding who did what and when
+	BasicTestCaseInformationMessageNoneEditableInformation fenixGuiTestCaseBuilderServerGrpcApi.BasicTestCaseInformationMessage_NonEditableBasicInformationMessage  // All Basic information that can be shown in GUI but can't be changed by the user
+	BasicTestCaseInformationMessageEditableInformation     fenixGuiTestCaseBuilderServerGrpcApi.BasicTestCaseInformationMessage_EditableBasicInformationMessage     // All Basic information that can be shown in GUI and can be changed by the user
+	CreatedAndUpdatedInformation                           fenixGuiTestCaseBuilderServerGrpcApi.TestCaseBasicInformationMessage_CreatedAndUpdatedInformationMessage // Information regarding who did what and when
 
 	//TestCaseModel                fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage                                // Hold the model of how the TestCase is constructed
 	//TestCaseMetaData             fenixGuiTestCaseBuilderServerGrpcApi.TestCaseMetaDataMessage                             // Holds the metadata for the TestCase, set by the user to classify the TestCase

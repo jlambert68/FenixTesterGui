@@ -59,16 +59,15 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	}
 
 	// Add BasicTestCaseInformation
-	d
 	localTestCaseMessageStruct := testCaseModel.LocalTestCaseMessageStruct{
 		BasicTestCaseInformationMessageNoneEditableInformation: fenixGuiTestCaseBuilderServerGrpcApi.BasicTestCaseInformationMessage_NonEditableBasicInformationMessage{
 			TestCaseUuid:    testCaseUuid,
-			DomainUuid:      "",
-			DomainName:      "",
+			DomainUuid:      "78a97c41-a098-4122-88d2-01ed4b6c4844", //TODO Add dropdown for user to chose among available Domains in available building blocks
+			DomainName:      "Custody Arrangement",                  //TODO Add dropdown for user to chose among available Domains in available building blocks
 			TestCaseVersion: 1,
 		},
 		BasicTestCaseInformationMessageEditableInformation: fenixGuiTestCaseBuilderServerGrpcApi.BasicTestCaseInformationMessage_EditableBasicInformationMessage{
-			TestCaseName:        commandAndRuleEngine.Testcases.,
+			TestCaseName:        "<New TestCase>",
 			TestCaseDescription: "",
 		},
 		CreatedAndUpdatedInformation: fenixGuiTestCaseBuilderServerGrpcApi.TestCaseBasicInformationMessage_CreatedAndUpdatedInformationMessage{
@@ -89,6 +88,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 			DeletedFromTestCaseByUserId: "",
 		},
 	}
+	newTestCaseModel.LocalTestCaseMessage = localTestCaseMessageStruct
 
 	// Add the TestCaseModel into map of all TestCaseModels
 	commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = newTestCaseModel

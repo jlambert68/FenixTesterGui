@@ -112,8 +112,6 @@ func (testCaseModel *TestCasesModelsStruct) generateatureTestInstructionsForGrpc
 		return nil, err
 	}
 
-	// Loop map with all 'MatureTestCaseModelElementMessage' in the TestCase
-
 	// Loop map with all 'MatureTestCaseModelElements' in the TestCase and create a slice
 	for _, matureTestInstruction := range currentTestCase.MatureTestInstructionMap {
 

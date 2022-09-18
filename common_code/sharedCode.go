@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"image/color"
+	"sort"
 	"strconv"
 )
 
@@ -97,4 +98,24 @@ func ConvertRGBAHexStringIntoRGBAColor(rgbaHexString string) (rgbaValue color.RG
 
 	return rgbaValue, err
 
+}
+
+type sortBytes []byte
+
+func (s sortBytes) Less(i, j int) bool {
+	return s[i] < s[j]
+}
+
+func (s sortBytes) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+
+func (s sortBytes) Len() int {
+	return len(s)
+}
+
+func SortString(s string) string {
+	r := []byte(s)
+	sort.Sort(sortBytes(r))
+	return string(r)
 }

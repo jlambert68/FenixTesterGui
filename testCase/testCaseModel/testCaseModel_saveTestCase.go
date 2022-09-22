@@ -263,6 +263,12 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionContain
 			},
 		}
 
+		//TODO change the row below to have the orignal date, but it need to be like this otherwise there is an error when sending over gRPC
+		MatureTestInstructionContainerMessage.BasicTestInstructionContainerInformation.NonEditableInformation.UpdatedTimeStamp = &timestamppb.Timestamp{
+			Seconds: 0,
+			Nanos:   0,
+		}
+
 		// Add 'MatureTestInstructionContainerMessage' to slice
 		gRPCMatureTestInstructionContainers = append(gRPCMatureTestInstructionContainers, &MatureTestInstructionContainerMessage)
 	}

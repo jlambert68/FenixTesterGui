@@ -285,7 +285,7 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 		NodeName:                 currentElement.MatureTestCaseModelElementMessage.OriginalElementName,
 		NodeColor:                nodeColor,
 		TestInstructionTypeColor: testInstructionTypeColor,
-		NodeTypeEnum:             currentElement.MatureTestCaseModelElementMessage.GetTestCaseModelElementType(),
+		NodeTypeEnum:             currentElement.MatureTestCaseModelElementMessage.TestCaseModelElementType,
 		CanBeDeleted:             canBeDeleted,
 		CanBeSwappedOut:          canBeSwappedOut,
 	}

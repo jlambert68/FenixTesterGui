@@ -62,9 +62,11 @@ type TestCaseModelStruct struct {
 	testCaseModelAdaptedForUiTree              map[string][]TestCaseModelAdaptedForUiTreeDataStruct // Model used for Creating the Tree-view for the TestCase-model
 	CurrentSelectedTestCaseElement             currentSelectedTestCaseElementStruct
 	MatureTestInstructionMap                   map[string]MatureTestInstructionStruct
-	AttributesList                             *AttributeStructSliceReference
-	ThisIsANewTestCase                         bool
-	TestCaseHash                               string
+	MatureTestInstructionContainerMap          map[string]MatureTestInstructionContainerStruct
+
+	AttributesList     *AttributeStructSliceReference
+	ThisIsANewTestCase bool
+	TestCaseHash       string
 }
 
 type AttributeStructSliceReference []*AttributeStruct
@@ -113,8 +115,18 @@ type MatureTestInstructionStruct struct {
 		FullTestCaseMessage *fenixGuiTestCaseBuilderServerGrpcApi.FullTestCaseMessage
 			TestCaseBasicInformation        *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseBasicInformationMessage
 			MatureTestInstructions          *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage
-			MatureTestInstructionContainers []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainerMessage
+			MatureTestInstructionContainers *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage
 	*/
+}
+
+type MatureTestInstructionContainerStruct struct {
+	NonEditableInformation                     *fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionContainerInformationMessage_NonEditableBasicInformationMessage
+	EditableInformation                        *fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionContainerInformationMessage_EditableBasicInformationMessage
+	InvisibleBasicInformation                  *fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionContainerInformationMessage_InvisibleBasicInformationMessage
+	EditableTestInstructionContainerAttributes *fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionContainerInformationMessage_EditableTestInstructionContainerAttributesMessage
+
+	MatureTestInstructionContainerInformation *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainerInformationMessage_MatureTestInstructionContainerInformationMessage
+	CreatedAndUpdatedInformation              *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainerInformationMessage_CreatedAndUpdatedInformationMessage
 }
 
 type currentSelectedTestCaseElementStruct struct {

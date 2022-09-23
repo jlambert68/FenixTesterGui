@@ -169,19 +169,23 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionsForGrp
 	// Loop map with all 'MatureTestInstructions' in the TestCase and create a slice
 	for _, matureTestInstruction := range currentTestCase.MatureTestInstructionMap {
 
+		var tempMatureTestInstruction MatureTestInstructionStruct
+		tempMatureTestInstruction = matureTestInstruction
+
 		// Generate Hashes for  'matureTestInstruction'
-		tempJson := protojson.Format(matureTestInstruction.BasicTestInstructionInformation_NonEditableInformation)
+		tempJson := protojson.Format(tempMatureTestInstruction.BasicTestInstructionInformation_NonEditableInformation)
 		hashSlice = append(hashSlice, tempJson)
-		tempJson = protojson.Format(matureTestInstruction.BasicTestInstructionInformation_EditableInformation)
+		tempJson = protojson.Format(tempMatureTestInstruction.BasicTestInstructionInformation_EditableInformation)
 		hashSlice = append(hashSlice, tempJson)
-		tempJson = protojson.Format(matureTestInstruction.BasicTestInstructionInformation_InvisibleBasicInformation)
+		tempJson = protojson.Format(tempMatureTestInstruction.BasicTestInstructionInformation_InvisibleBasicInformation)
 		hashSlice = append(hashSlice, tempJson)
-		tempJson = protojson.Format(matureTestInstruction.MatureBasicTestInstructionInformation)
+		tempJson = protojson.Format(tempMatureTestInstruction.MatureBasicTestInstructionInformation)
 		hashSlice = append(hashSlice, tempJson)
 
 		// Loop over all 'TestInstruction Attributes' in the TestInstruction and create slice
 		var testInstructionAttributesList []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage
-		for _, testInstructionAttribute := range matureTestInstruction.TestInstructionAttributesList {
+		for _, testInstructionAttribute := range tempMatureTestInstruction.TestInstructionAttributesList {
+
 			testInstructionAttributesList = append(testInstructionAttributesList, testInstructionAttribute)
 
 			// Generate Hash for  'testInstructionAttribute'
@@ -193,13 +197,13 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionsForGrp
 		// Create one 'MatureTestInstructionMessage'
 		MatureTestInstructionMessage := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage_MatureTestInstructionMessage{
 			BasicTestInstructionInformation: &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage{
-				NonEditableInformation:    matureTestInstruction.BasicTestInstructionInformation_NonEditableInformation,
-				EditableInformation:       matureTestInstruction.BasicTestInstructionInformation_EditableInformation,
-				InvisibleBasicInformation: matureTestInstruction.BasicTestInstructionInformation_InvisibleBasicInformation,
+				NonEditableInformation:    tempMatureTestInstruction.BasicTestInstructionInformation_NonEditableInformation,
+				EditableInformation:       tempMatureTestInstruction.BasicTestInstructionInformation_EditableInformation,
+				InvisibleBasicInformation: tempMatureTestInstruction.BasicTestInstructionInformation_InvisibleBasicInformation,
 			},
 			MatureTestInstructionInformation: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage{
-				MatureBasicTestInstructionInformation: matureTestInstruction.MatureBasicTestInstructionInformation,
-				CreatedAndUpdatedInformation:          matureTestInstruction.CreatedAndUpdatedInformation,
+				MatureBasicTestInstructionInformation: tempMatureTestInstruction.MatureBasicTestInstructionInformation,
+				CreatedAndUpdatedInformation:          tempMatureTestInstruction.CreatedAndUpdatedInformation,
 				TestInstructionAttributesList:         testInstructionAttributesList,
 			},
 		}
@@ -234,32 +238,34 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionContain
 
 	// Loop map with all 'MatureTestInstructionContainers' in the TestCase and create a slice
 	for _, matureTestInstructionContainer := range currentTestCase.MatureTestInstructionContainerMap {
+		var tempMatureTestInstructionContainer MatureTestInstructionContainerStruct
+		tempMatureTestInstructionContainer = matureTestInstructionContainer
 
 		// Generate Hashes for  'matureTestInstruction'
-		tempJson := protojson.Format(matureTestInstructionContainer.NonEditableInformation)
+		tempJson := protojson.Format(tempMatureTestInstructionContainer.NonEditableInformation)
 		hashSlice = append(hashSlice, tempJson)
-		tempJson = protojson.Format(matureTestInstructionContainer.EditableInformation)
+		tempJson = protojson.Format(tempMatureTestInstructionContainer.EditableInformation)
 		hashSlice = append(hashSlice, tempJson)
-		tempJson = protojson.Format(matureTestInstructionContainer.InvisibleBasicInformation)
+		tempJson = protojson.Format(tempMatureTestInstructionContainer.InvisibleBasicInformation)
 		hashSlice = append(hashSlice, tempJson)
-		tempJson = protojson.Format(matureTestInstructionContainer.EditableTestInstructionContainerAttributes)
+		tempJson = protojson.Format(tempMatureTestInstructionContainer.EditableTestInstructionContainerAttributes)
 		hashSlice = append(hashSlice, tempJson)
-		tempJson = protojson.Format(matureTestInstructionContainer.MatureTestInstructionContainerInformation)
+		tempJson = protojson.Format(tempMatureTestInstructionContainer.MatureTestInstructionContainerInformation)
 		hashSlice = append(hashSlice, tempJson)
-		tempJson = protojson.Format(matureTestInstructionContainer.CreatedAndUpdatedInformation)
+		tempJson = protojson.Format(tempMatureTestInstructionContainer.CreatedAndUpdatedInformation)
 		hashSlice = append(hashSlice, tempJson)
 
 		// Create one 'MatureTestInstructionContainerMessage'
 		MatureTestInstructionContainerMessage := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage_MatureTestInstructionContainerMessage{
 			BasicTestInstructionContainerInformation: &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionContainerInformationMessage{
-				NonEditableInformation:                     matureTestInstructionContainer.NonEditableInformation,
-				EditableInformation:                        matureTestInstructionContainer.EditableInformation,
-				InvisibleBasicInformation:                  matureTestInstructionContainer.InvisibleBasicInformation,
-				EditableTestInstructionContainerAttributes: matureTestInstructionContainer.EditableTestInstructionContainerAttributes,
+				NonEditableInformation:                     tempMatureTestInstructionContainer.NonEditableInformation,
+				EditableInformation:                        tempMatureTestInstructionContainer.EditableInformation,
+				InvisibleBasicInformation:                  tempMatureTestInstructionContainer.InvisibleBasicInformation,
+				EditableTestInstructionContainerAttributes: tempMatureTestInstructionContainer.EditableTestInstructionContainerAttributes,
 			},
 			MatureTestInstructionContainerInformation: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainerInformationMessage{
-				MatureTestInstructionContainerInformation: matureTestInstructionContainer.MatureTestInstructionContainerInformation,
-				CreatedAndUpdatedInformation:              matureTestInstructionContainer.CreatedAndUpdatedInformation,
+				MatureTestInstructionContainerInformation: tempMatureTestInstructionContainer.MatureTestInstructionContainerInformation,
+				CreatedAndUpdatedInformation:              tempMatureTestInstructionContainer.CreatedAndUpdatedInformation,
 			},
 		}
 
@@ -299,7 +305,9 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseModelElementsForGrpc
 
 	// Loop map with all 'MatureTestCaseModelElementMessage' in the TestCase and create a slice
 	for _, matureTestCaseModelElement := range currentTestCase.TestCaseModelMap {
-		gRPCMatureTestCaseModelElements = append(gRPCMatureTestCaseModelElements, &matureTestCaseModelElement.MatureTestCaseModelElementMessage)
+		var tempMatureTestCaseModelElement MatureTestCaseModelElementStruct
+		tempMatureTestCaseModelElement = matureTestCaseModelElement
+		gRPCMatureTestCaseModelElements = append(gRPCMatureTestCaseModelElements, &tempMatureTestCaseModelElement.MatureTestCaseModelElementMessage)
 
 		// Generate Hash for  'matureTestCaseModelElement'
 		tempJson := protojson.Format(&matureTestCaseModelElement.MatureTestCaseModelElementMessage)

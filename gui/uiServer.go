@@ -155,8 +155,14 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	var w fyne.Window
 	if drv, ok := fyne.CurrentApp().Driver().(desktop.Driver); ok {
 		w = drv.CreateSplashWindow()
-		w.SetContent(widget.NewLabel("Splash Window"))
+		w.SetContent(widget.NewLabel("\"If you want to change the world, don't protest. Write code!\" - Hal Finney (1994)"))
 		w.Show()
+
+		go func() {
+			time.Sleep(time.Second * 5)
+			w.Close()
+
+		}()
 	}
 
 	uiServer.commandAndRuleEngine.MasterFenixWindow = &fyneMasterWindow

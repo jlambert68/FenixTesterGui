@@ -82,7 +82,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElement
 		matureElementToSwapIn, err = commandAndRuleEngine.executeTCRuleSwap104(testCaseUuid, elementToBeSwappedIOutUuid, immatureElementToSwapIn)
 
 	case TCRuleSwap105:
-		commandAndRuleEngine.executeTCRuleSwap105(testCaseUuid, elementToBeSwappedIOutUuid, immatureElementToSwapIn)
+		matureElementToSwapIn, err = commandAndRuleEngine.executeTCRuleSwap105(testCaseUuid, elementToBeSwappedIOutUuid, immatureElementToSwapIn)
 
 	case TCRuleSwap106:
 		matureElementToSwapIn, err = commandAndRuleEngine.executeTCRuleSwap106(testCaseUuid, elementToBeSwappedIOutUuid, immatureElementToSwapIn)
@@ -259,8 +259,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 				}
 
 				// Extract the correct DropZone
-				dropZoneData, existsInMap := commandAndRuleEngine.Testcases.ImmatureDropZonesDataMap[matureElementToSwapIn.ChosenDropZoneUuid]
-				if existsInMap == false {
+				dropZoneData, dropZoneExistsInMap := commandAndRuleEngine.Testcases.ImmatureDropZonesDataMap[matureElementToSwapIn.ChosenDropZoneUuid]
+				/* TODO This part should be remove
+				if dropZoneExistsInMap == false {
+
 
 					errorId := "7a255e6b-c6ac-40f3-9d09-5ef44a6fd7db"
 					err = errors.New(fmt.Sprintf("dropZone with UUID '%s' couldn't be found in ImmatureDropZonesDataMap [ErrorID: %s]", matureElementToSwapIn.ChosenDropZoneName, errorId))
@@ -270,9 +272,15 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 					return err
 				}
 
-				// Extract attribute from DropZone-data if it exists
-				attributeDataFromDropZone, existsInMap := dropZoneData.DropZonePreSetTestInstructionAttributesMap[attributeUuid]
-				if existsInMap == true {
+				*/
+
+				// Extract attribute from DropZone-data if it exists, but only if there are any DropZones
+				var attributeDataFromDropZone *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage
+				var existsInMap bool
+				if dropZoneExistsInMap == true {
+					attributeDataFromDropZone, existsInMap = dropZoneData.DropZonePreSetTestInstructionAttributesMap[attributeUuid]
+				}
+				if existsInMap == true && dropZoneExistsInMap == true {
 					// Attribute exist in DropZone data, so use that data as specified
 					switch attributeDataFromDropZone.AttributeActionCommand {
 
@@ -348,8 +356,30 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 						TestInstructionAttributeMandatory:             attribute.TestInstructionAttributeMandatory,
 						TestInstructionAttributeVisibleInTestCaseArea: attribute.TestInstructionAttributeVisibleInTestCaseArea,
 						TestInstructionAttributeIsDeprecated:          attribute.TestInstructionAttributeIsDeprecated,
-						// TODO Change to dynamic type on next row
-						TestInstructionAttributeType: fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_TEXTBOX),
+						//TestInstructionAttributeType: attribute.TestInstructionAttributeUIType//fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_TEXTBOX),
+					}
+
+					// Set correct GUI-attribute type
+					switch attribute.TestInstructionAttributeUIType {
+					case "TEXTBOX":
+						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_TEXTBOX)
+
+					case "COMBOBOX":
+						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_COMBOBOX)
+
+					case "FILE_SELECTOR":
+						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_FILE_SELECTOR)
+
+					case "FUNCTION_SELECTOR":
+						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_FUNCTION_SELECTOR)
+
+					default:
+						errorId := "117d964e-860f-4497-b367-02c041553615"
+						err = errors.New(fmt.Sprintf("unknown 'attribute.TestInstructionAttributeUIType' %s [ErrorID: %s]", attribute.TestInstructionAttributeUIType, errorId))
+
+						fmt.Println(err.Error()) //TODO Send to Error-channel
+						return err
+
 					}
 
 					// TODO handle other types then normal TEXTBOX
@@ -366,6 +396,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 						},
 						InputComboBoxProperty:     &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputComboBoxProperty{},
 						InputFileSelectorProperty: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputFileSelectorProperty{},
+					}
+
+					// If it shouldn't be any value in the Textbox then adjust that
+					// TODO import TestDataProject to get correct UUID from there instead of using hardcoded value
+					if newTestInstructionAttributeInformation.InputTextBoxProperty.TextBoxAttributeValue == "#NO_VALUE#" {
+						newTestInstructionAttributeInformation.InputTextBoxProperty.TextBoxAttributeValue = ""
 					}
 
 					// Create the attribute object with all data

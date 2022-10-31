@@ -4,6 +4,7 @@ import (
 	"FenixTesterGui/commandAndRuleEngine"
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/grpc_out"
+	"FenixTesterGui/resources"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testCase/testCaseUI"
 	"fmt"
@@ -152,15 +153,60 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	fyneMasterWindow := uiServer.fyneApp.NewWindow("Fenix TestCase Builder")
 	fyneMasterWindow.SetMaster()
 
-	var w fyne.Window
+	/*
+		var w fyne.Window
+		if drv, ok := fyne.CurrentApp().Driver().(desktop.Driver); ok {
+			w = drv.CreateSplashWindow()
+			w.SetContent(widget.NewLabel("\"If you want to change the world, don't protest. Write code!\" - Hal Finney (1994)"))
+			w.Show()
+
+			go func() {
+				time.Sleep(time.Second * 5)
+				w.Close()
+
+			}()
+		}
+
+	*/
+	// Create Fenix Splash screen
+	var splashWindow fyne.Window
 	if drv, ok := fyne.CurrentApp().Driver().(desktop.Driver); ok {
-		w = drv.CreateSplashWindow()
-		w.SetContent(widget.NewLabel("\"If you want to change the world, don't protest. Write code!\" - Hal Finney (1994)"))
-		w.Show()
+		splashWindow = drv.CreateSplashWindow()
+
+		// Fenix Header
+		fenixHeaderText := canvas.Text{
+			Alignment: fyne.TextAlignCenter,
+			Color:     nil,
+			Text:      "Fenix Inception - SaaS",
+			TextSize:  20,
+			TextStyle: fyne.TextStyle{Bold: true},
+		}
+
+		// Text Footer
+		//halFinney := widget.NewLabel("\"If you want to change the world, don't protest. Write code!\" - Hal Finney (1994)")
+		halFinneyText := canvas.Text{
+			Alignment: fyne.TextAlignCenter,
+			Color:     nil,
+			Text:      "\"If you want to change the world, don't protest. Write code!\" - Hal Finney (1994)",
+			TextSize:  20,
+			TextStyle: fyne.TextStyle{Italic: true},
+		}
+
+		// Fenix picture
+		image := canvas.NewImageFromResource(resources.ResourceFenix61Png)
+		image.FillMode = canvas.ImageFillOriginal
+
+		// Container holding Header, picture and Footer
+		spashContainer := container.New(layout.NewVBoxLayout(), &fenixHeaderText, image, &halFinneyText)
+
+		splashWindow.SetContent(spashContainer)
+		splashWindow.CenterOnScreen()
+		splashWindow.Show()
 
 		go func() {
-			time.Sleep(time.Second * 5)
-			w.Close()
+
+			time.Sleep(time.Second * 8)
+			splashWindow.Close()
 
 		}()
 	}
@@ -192,8 +238,9 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	uiServer.makeCommandStackUI()
 
 	// Create fyneApp window for the Command Stack
+	//TODO Remove StackWindow
 	commandStackWindow := uiServer.fyneApp.NewWindow("Command Stack")
-	commandStackWindow.SetContent(commandStackListUI)
+	//commandStackWindow.SetContent(commandStackListUI)
 	commandStackWindow.Show()
 
 	//list := &notelist{pref: fyneApp.Preferences()}
@@ -280,7 +327,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	fyneMasterWindow.Resize(fyne.NewSize(3000, 1500))
 
-	w.Hide()
+	//w.Hide()
 
 	fyneMasterWindow.ShowAndRun()
 

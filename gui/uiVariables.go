@@ -2,7 +2,7 @@ package gui
 
 import (
 	"FenixTesterGui/commandAndRuleEngine"
-	"FenixTesterGui/grpc_out"
+	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testCase/testCaseUI"
 	"fyne.io/fyne/v2"
@@ -128,7 +128,7 @@ type AvailableBuildingBlocksModelStruct struct {
 	fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap map[string]map[string]map[string]availableTestInstructionContainerStruct
 	AvailableBuildingBlocksForUITreeNodes                                      map[string]AvailableBuildingBlocksForUITreeNodesStruct // map[uuid]AvailableBuildingBlocksForUITreeNodesStruct
 	pinnedBuildingBlocksForUITreeNodes                                         map[string]uiTreeNodesNameToUuidStruct                 //map[nameInUITree]uiTreeNodesNameToUuidStruct
-	grpcOut                                                                    grpc_out.GRPCOutStruct
+	grpcOut                                                                    grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct
 	availableBuildingBlockModelSuitedForFyneTreeView                           map[string][]string
 	allBuildingBlocksTreeNameToUuid                                            map[string]uiTreeNodesNameToUuidStruct
 	clickedNodeName                                                            string
@@ -147,7 +147,7 @@ type GlobalUIServerStruct struct {
 	//fyneApp                            fyne.App
 	//tree                               *widget.Label
 	//content                            *widget.Entry
-	//grpcOut                            grpc_out.GRPCOutStruct
+	//grpcOut                            grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct
 
 	//availableBuildingBlocks            availableBuildingBlocksStruct
 	//availableBuildingBlocksModel       AvailableBuildingBlocksModelStruct
@@ -161,7 +161,7 @@ type UIServerStruct struct {
 	fyneApp                            fyne.App
 	tree                               *widget.Label
 	content                            *widget.Entry
-	grpcOut                            grpc_out.GRPCOutStruct
+	grpcOut                            grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct
 	fenixGuiBuilderServerAddressToDial string
 	//availableBuildingBlocks            availableBuildingBlocksStruct
 	//availableBuildingBlocksModel       AvailableBuildingBlocksModelStruct
@@ -177,7 +177,7 @@ type SubSystemsCrossReferencesStruct struct {
 	//AvailableBuildingBlocksModelReference *AvailableBuildingBlocksModelStruct
 	//TestCasesModelReference               *testCaseModel.TestCasesModelsStruct
 	//CommandAndRuleEnginReference          *commandAndRuleEngine.CommandAndRuleEngineObjectStruct
-	GrpcOutReference *grpc_out.GRPCOutStruct
+	GrpcOutReference *grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct
 }
 
 

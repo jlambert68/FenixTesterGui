@@ -1,7 +1,7 @@
 package gui
 
 import (
-	"FenixTesterGui/grpc_out"
+	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	"fmt"
 	"github.com/golang/protobuf/jsonpb"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
@@ -49,7 +49,7 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testin
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
 		AvailableBuildingBlocksForUITreeNodes:                                      nil,
-		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
+		grpcOut:                                                                    grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 	}
 
@@ -116,7 +116,7 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
 		AvailableBuildingBlocksForUITreeNodes:                                      nil,
-		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
+		grpcOut:                                                                    grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 	}
 
@@ -187,7 +187,7 @@ func TestLoadModelWithAvailableBuildingBlocks(t *testing.T) {
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
 		AvailableBuildingBlocksForUITreeNodes:                                      nil,
-		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
+		grpcOut:                                                                    grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 	}
 
@@ -264,7 +264,7 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructions(t *testing.T
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
 		AvailableBuildingBlocksForUITreeNodes:                                      nil,
-		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
+		grpcOut:                                                                    grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 		pinnedBuildingBlocksForUITreeNodes:                                         nil,
 	}
@@ -331,7 +331,7 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(t *
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
 		AvailableBuildingBlocksForUITreeNodes:                                      nil,
-		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
+		grpcOut:                                                                    grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 		pinnedBuildingBlocksForUITreeNodes:                                         nil,
 	}
@@ -398,7 +398,7 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionAndTestInstruc
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
 		AvailableBuildingBlocksForUITreeNodes:                                      nil,
-		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
+		grpcOut:                                                                    grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 		pinnedBuildingBlocksForUITreeNodes:                                         nil,
 	}

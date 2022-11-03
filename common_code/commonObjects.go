@@ -6,11 +6,10 @@ package sharedCode
 // Where is the client running
 var ExecutionLocation ExecutionLocationTypeType
 
-// Where is the Fenix TestDataSync server running
-// LocationForFenixTestDataServer
-var ExecutionLocationForFenixGuiServer ExecutionLocationTypeType
+// ExecutionLocationForFenixGuiTestCaseBuilderServer - Where is the FenixGuiTestCaseBuilderServer running
+var ExecutionLocationForFenixGuiTestCaseBuilderServer ExecutionLocationTypeType
 
-// Definitions for where client and Fenix Server is running
+// ExecutionLocationTypeType - Definition type for where the different programs are running
 type ExecutionLocationTypeType int
 
 // Constants used for where stuff is running
@@ -20,17 +19,18 @@ const (
 	GCP
 )
 
-// FenixGuiBuilderProxyServer
+// enixGuiBuilderProxyServer
 var LocationForFenixGuiBuilderProxyServerTypeMapping = map[ExecutionLocationTypeType]string{
 	LocalhostNoDocker: "LOCALHOST_NODOCKER",
 	LocalhostDocker:   "LOCALHOST_DOCKER",
 	GCP:               "GCP",
 }
 
-// Address to Fenix TestData Server & Client, will have their values from Environment variables at startup
+// Address and port to 'FenixGuiTestCaseBuilderServer' and 'FenixGuiExecutionServer', will get their values from Environment variables at startup
 var (
-	FenixGuiBuilderServerAddress      string //
-	FenixGuiBuilderServerPort         int    // TODO remove,
+	FenixGuiTestCaseBuilderServerAddress string //
+	FenixGuiTestCaseBuilderServerPort    int    // TODO remove,
+
 	FenixGuiBuilderProxyServerAddress string
 	FenixGuiBuilderProxyServerPort    int
 )

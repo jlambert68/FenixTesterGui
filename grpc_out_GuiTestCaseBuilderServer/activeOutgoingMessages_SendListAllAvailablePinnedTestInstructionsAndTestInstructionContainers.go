@@ -1,4 +1,4 @@
-package grpc_out
+package grpc_out_GuiTestCaseBuilderServer
 
 import (
 	sharedCode "FenixTesterGui/common_code"
@@ -8,8 +8,8 @@ import (
 	"time"
 )
 
-// SendListAllAvailableTestInstructionsAndTestInstructionContainers - Get available TestInstructions and TestInstructionContainers
-func (grpcOut *GRPCOutStruct) SendListAllAvailableTestInstructionsAndTestInstructionContainers(userId string) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
+// SendListAllAvailablePinnedTestInstructionsAndTestInstructionContainers - Get pinned TestInstructions and TestInstructionContainers
+func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllAvailablePinnedTestInstructionsAndTestInstructionContainers(userId string) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -17,13 +17,13 @@ func (grpcOut *GRPCOutStruct) SendListAllAvailableTestInstructionsAndTestInstruc
 	var err error
 
 	// Set up connection to Server
-	grpcOut.setConnectionToFenixGuiBuilderServer()
+	grpcOut.setConnectionToFenixGuiTestCaseBuilderServer()
 
 	// Create the request message
 	userIdentificationMessage := &fenixGuiTestCaseBuilderServerGrpcApi.UserIdentificationMessage{
 		UserId: userId,
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
-			grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
+			grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 	}
 
 	// Do gRPC-call
@@ -32,13 +32,13 @@ func (grpcOut *GRPCOutStruct) SendListAllAvailableTestInstructionsAndTestInstruc
 	defer func() {
 		//TODO Fixa så att denna inte görs som allt går bra
 		grpcOut.logger.WithFields(logrus.Fields{
-			"ID": "797c00e1-510d-4cbe-a48b-dc63828ecd7e",
+			"ID": "c5ba19bd-75ff-4366-818d-745d4d7f1a52",
 		}).Error("Running Defer Cancel function")
 		cancel()
 	}()
 
 	// Only add access token when run on GCP
-	if sharedCode.ExecutionLocationForFenixGuiServer == sharedCode.GCP {
+	if sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer == sharedCode.GCP {
 
 		// Set logger in GCP-package
 		grpcOut.gcp.SetLogger(grpcOut.logger)
@@ -52,13 +52,13 @@ func (grpcOut *GRPCOutStruct) SendListAllAvailableTestInstructionsAndTestInstruc
 				Comments:   returnMessageString,
 				ErrorCodes: nil,
 				ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
-					grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
+					grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 			}
 
-			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage{
-				ImmatureTestInstructions:          nil,
-				ImmatureTestInstructionContainers: nil,
-				AckNackResponse:                   ackNackResponse,
+			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage{
+				AvailablePinnedTestInstructions:                    nil,
+				AvailablePinnedPreCreatedTestInstructionContainers: nil,
+				AckNackResponse: ackNackResponse,
 			}
 
 			return returnMessage
@@ -67,21 +67,21 @@ func (grpcOut *GRPCOutStruct) SendListAllAvailableTestInstructionsAndTestInstruc
 	}
 
 	// Do the gRPC-call
-	returnMessage, err = fenixGuiBuilderServerGrpcClient.ListAllAvailableTestInstructionsAndTestInstructionContainers(ctx, userIdentificationMessage)
+	returnMessage, err = fenixGuiTestCaseCaseBuilderServerGrpcClient.ListAllAvailablePinnedTestInstructionsAndTestInstructionContainers(ctx, userIdentificationMessage)
 
 	// Shouldn't happen
 	if err != nil {
 		grpcOut.logger.WithFields(logrus.Fields{
-			"ID":    "d7235084-33e5-43a2-9fa7-dfb05ec6869e",
+			"ID":    "7bff3257-a193-4d07-83aa-f106f6f734a0",
 			"error": err,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListAllAvailableTestInstructionsAndTestInstructionContainers'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListAllAvailablePinnedTestInstructionsAndTestInstructionContainers'")
 
 	} else if returnMessage.AckNackResponse.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
 		grpcOut.logger.WithFields(logrus.Fields{
-			"ID":                                     "30e6f1ee-202a-47bf-a2c4-5066d0f8cf75",
+			"ID":                                     "72f79764-2549-4ce7-867e-16cd0f414dff",
 			"Message from FenixTestGuiBuilderServer": returnMessage.AckNackResponse.Comments,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListAllAvailableTestInstructionsAndTestInstructionContainers'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListAllAvailablePinnedTestInstructionsAndTestInstructionContainers'")
 	}
 
 	return returnMessage

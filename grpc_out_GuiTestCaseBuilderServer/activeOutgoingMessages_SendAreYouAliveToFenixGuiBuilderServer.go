@@ -1,4 +1,4 @@
-package grpc_out
+package grpc_out_GuiTestCaseBuilderServer
 
 import (
 	"FenixTesterGui/common_code"
@@ -12,7 +12,7 @@ import (
 // ********************************************************************************************************************
 
 // SendAreYouAliveToFenixGuiBuilderServer - Check if FenixGuiBuilderServer is alive
-func (grpcOut *GRPCOutStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse) {
+func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse) {
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -20,7 +20,7 @@ func (grpcOut *GRPCOutStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMe
 	var err error
 
 	// Set up connection to Server
-	returnMessage = grpcOut.setConnectionToFenixGuiBuilderServer()
+	returnMessage = grpcOut.setConnectionToFenixGuiTestCaseBuilderServer()
 	// If there was no connection to backend then return that message
 	if returnMessage != nil {
 		return returnMessage
@@ -30,7 +30,7 @@ func (grpcOut *GRPCOutStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMe
 	emptyParameter := &fenixGuiTestCaseBuilderServerGrpcApi.EmptyParameter{
 
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
-			grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
+			grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 	}
 
 	// Do gRPC-call
@@ -45,7 +45,7 @@ func (grpcOut *GRPCOutStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMe
 	}()
 
 	// Only add access token when run on GCP
-	if sharedCode.ExecutionLocationForFenixGuiServer == sharedCode.GCP {
+	if sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer == sharedCode.GCP {
 
 		// Add Access token
 		ctx, returnMessageAckNack, returnMessageString = gcp.Gcp.GenerateGCPAccessTokenForAuthorizedUser(ctx)
@@ -56,7 +56,7 @@ func (grpcOut *GRPCOutStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMe
 				Comments:   returnMessageString,
 				ErrorCodes: nil,
 				ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
-					grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
+					grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 			}
 
 			return returnMessage
@@ -65,7 +65,7 @@ func (grpcOut *GRPCOutStruct) SendAreYouAliveToFenixGuiBuilderServer() (returnMe
 	}
 
 	// Do the gRPC-call
-	returnMessage, err = fenixGuiBuilderServerGrpcClient.AreYouAlive(ctx, emptyParameter)
+	returnMessage, err = fenixGuiTestCaseCaseBuilderServerGrpcClient.AreYouAlive(ctx, emptyParameter)
 
 	// Shouldn't happen
 	if err != nil {

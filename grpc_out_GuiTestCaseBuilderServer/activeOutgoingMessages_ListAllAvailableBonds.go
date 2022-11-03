@@ -1,4 +1,4 @@
-package grpc_out
+package grpc_out_GuiTestCaseBuilderServer
 
 import (
 	sharedCode "FenixTesterGui/common_code"
@@ -9,7 +9,7 @@ import (
 )
 
 // ListAllAvailableBonds - Get all Bonds that can be used within a TestCase
-func (grpcOut *GRPCOutStruct) ListAllAvailableBonds(userId string) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage) {
+func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListAllAvailableBonds(userId string) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage) {
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -17,13 +17,13 @@ func (grpcOut *GRPCOutStruct) ListAllAvailableBonds(userId string) (returnMessag
 	var err error
 
 	// Set up connection to Server
-	grpcOut.setConnectionToFenixGuiBuilderServer()
+	grpcOut.setConnectionToFenixGuiTestCaseBuilderServer()
 
 	// Create the request message
 	userIdentificationMessage := &fenixGuiTestCaseBuilderServerGrpcApi.UserIdentificationMessage{
 		UserId: userId,
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
-			grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
+			grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 	}
 
 	// Do gRPC-call
@@ -38,7 +38,7 @@ func (grpcOut *GRPCOutStruct) ListAllAvailableBonds(userId string) (returnMessag
 	}()
 
 	// Only add access token when run on GCP
-	if sharedCode.ExecutionLocationForFenixGuiServer == sharedCode.GCP {
+	if sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer == sharedCode.GCP {
 
 		// Set logger in GCP-package
 		grpcOut.gcp.SetLogger(grpcOut.logger)
@@ -52,7 +52,7 @@ func (grpcOut *GRPCOutStruct) ListAllAvailableBonds(userId string) (returnMessag
 				Comments:   returnMessageString,
 				ErrorCodes: nil,
 				ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
-					grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
+					grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 			}
 
 			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage{
@@ -65,7 +65,7 @@ func (grpcOut *GRPCOutStruct) ListAllAvailableBonds(userId string) (returnMessag
 	}
 
 	// Do the gRPC-call
-	returnMessage, err = fenixGuiBuilderServerGrpcClient.ListAllAvailableBonds(ctx, userIdentificationMessage)
+	returnMessage, err = fenixGuiTestCaseCaseBuilderServerGrpcClient.ListAllAvailableBonds(ctx, userIdentificationMessage)
 
 	// Shouldn't happen
 	if err != nil {

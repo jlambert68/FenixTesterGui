@@ -3,7 +3,7 @@ package gui
 import (
 	"FenixTesterGui/commandAndRuleEngine"
 	sharedCode "FenixTesterGui/common_code"
-	"FenixTesterGui/grpc_out"
+	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	"FenixTesterGui/resources"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testCase/testCaseUI"
@@ -64,7 +64,7 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 			fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 			fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
 			AvailableBuildingBlocksForUITreeNodes:                                      nil,
-			grpcOut:                                                                    grpc_out.GRPCOutStruct{},
+			grpcOut:                                                                    grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct{},
 		},
 		testCasesModel: testCaseModel.TestCasesModelsStruct{
 			TestCases:        nil,
@@ -72,7 +72,7 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 			GrpcOutReference: nil,
 		},
 		commandAndRuleEngine: commandAndRuleEngine.CommandAndRuleEngineObjectStruct{},
-		grpcOut:              grpc_out.GRPCOutStruct{},
+		grpcOut:              grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct{},
 		testCasesUiModel: testCaseUI.TestCasesUiModelStruct{
 			TestCaseToolUIBar:       nil,
 			TestCasesTabs:           nil,
@@ -124,7 +124,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	/*
 		myUIServer = UIServerStruct{
 			logger:  callersLoggerReference,
-			grpcOut: grpc_out.GRPCOutStruct{Logger: callersLoggerReference},
+			grpcOut: grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct{Logger: callersLoggerReference},
 		}
 
 	*/
@@ -139,7 +139,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	*/
 	//myUIServer = UIServerStruct{}
 
-	//var grpcOut grpc_out.GRPCOutStruct
+	//var grpcOut grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct
 	// myUIServer.grpcOut.SetLogger(myUIServer.logger)
 
 	// Add/Forward variables to packages to be used later

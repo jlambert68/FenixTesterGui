@@ -117,7 +117,7 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 			UserIdentification: &fenixGuiTestCaseBuilderServerGrpcApi.UserIdentificationMessage{
 				UserId: currentActiveUser,
 				ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
-					testCaseModel.GrpcOutReference.GetHighestFenixGuiServerProtoFileVersion()),
+					testCaseModel.GrpcOutReference.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 			},
 		},
 		MatureTestInstructions: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage{

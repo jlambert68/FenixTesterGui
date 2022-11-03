@@ -2,7 +2,7 @@ package commandAndRuleEngine
 
 import (
 	sharedCode "FenixTesterGui/common_code"
-	"FenixTesterGui/grpc_out"
+	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	"FenixTesterGui/testCase/testCaseModel"
 	"fyne.io/fyne/v2"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
@@ -14,7 +14,7 @@ type CommandAndRuleEngineObjectStruct struct {
 	availableBondsMap map[fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage_ImmatureBondMessage
 	Testcases         *testCaseModel.TestCasesModelsStruct
 	// subSystemsCrossReferences *gui.SubSystemsCrossReferencesStruct
-	GrpcOutReference               *grpc_out.GRPCOutStruct
+	GrpcOutReference               *grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct
 	CommandChannelReference        *sharedCode.CommandChannelType
 	GraphicsUpdateChannelReference *sharedCode.CommandChannelGraphicsUpdateType
 	MasterFenixWindow              *fyne.Window

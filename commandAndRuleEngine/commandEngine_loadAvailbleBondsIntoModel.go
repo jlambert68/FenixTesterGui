@@ -9,7 +9,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) LoadAvailableBonds
 
 	var availableImmatureBondsMessage *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage
 
-	//grpcOut := grpc_out.GRPCOutStruct{}
+	//grpcOut := grpc_out_GuiTestCaseBuilderServer.GRPCOutStruct{}
 	availableImmatureBondsMessage = commandAndRuleEngine.GrpcOutReference.ListAllAvailableBonds("s41797") //TODO change to use current logged in to computer user
 
 	commandAndRuleEngine.loadModelWithAvailableBonds(availableImmatureBondsMessage)

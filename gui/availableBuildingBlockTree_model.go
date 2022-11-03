@@ -83,7 +83,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvai
 
 	var testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
 
-	//grpcOut := grpc_out.GRPCOutStruct{}
+	//grpcOut := grpc_out_GuiTestCaseBuilderServer.GRPCOutStruct{}
 	testInstructionsAndTestContainersMessage = availableBuildingBlocksModel.grpcOut.SendListAllAvailableTestInstructionsAndTestInstructionContainers("s41797") //TODO change to use current logged in to computer user
 
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks(testInstructionsAndTestContainersMessage)
@@ -194,7 +194,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadPinn
 
 	var testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
 
-	//grpcOut := grpc_out.GRPCOutStruct{}
+	//grpcOut := grpc_out_GuiTestCaseBuilderServer.GRPCOutStruct{}
 	testInstructionsAndTestContainersMessage = availableBuildingBlocksModel.grpcOut.SendListAllAvailablePinnedTestInstructionsAndTestInstructionContainers("s41797") //TODO change to use current logged in to computer user
 
 	availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks(testInstructionsAndTestContainersMessage)
@@ -238,7 +238,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) savePinn
 	pinnedTestInstructionsAndTestContainersMessage = &fenixGuiTestCaseBuilderServerGrpcApi.SavePinnedTestInstructionsAndPreCreatedTestInstructionContainersMessage{
 		UserId: "s41797", //TODO change to use dynamic or defined from GUI user-id
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
-			availableBuildingBlocksModel.grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
+			availableBuildingBlocksModel.grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 		AvailablePinnedTestInstructions:                    availablePinnedTestInstructions,
 		AvailablePinnedPreCreatedTestInstructionContainers: availablePinnedPreCreatedTestInstructionContainers,
 	}

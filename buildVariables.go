@@ -19,6 +19,7 @@ var (
 	BuildVariableFenixGuiBuilderServerPort           string
 	BuildVariableTemp                                string
 	BuildVariableRunAsTrayApplication                string
+	BuildVariableFYNE_SCALE                          string
 )
 
 var buildVariablesMap = map[string]string{
@@ -37,4 +38,5 @@ var buildVariablesMap = map[string]string{
 	"BuildVariableFenixGuiBuilderServerPort":           "string",
 	"BuildVariableTemp":                                "string",
 	"BuildVariableRunAsTrayApplication":                "string",
+	"BuildVariableFYNE_SCALE":                          "string",
 }

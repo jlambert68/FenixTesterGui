@@ -1,4 +1,4 @@
-package grpc_out
+package grpc_out_GuiTestCaseBuilderServer
 
 import (
 	common_config "FenixTesterGui/common_code"
@@ -11,13 +11,13 @@ import (
 
 // ********************************************************************************************************************
 
-// SetConnectionToFenixTestDataSyncServer - Set upp connection and Dial to FenixTestDataSyncServer
-func (grpcOut *GRPCOutStruct) setConnectionToFenixGuiBuilderServer() (returnMessage *fenixTestCaseBuilderServerGrpcApi.AckNackResponse) {
+// Set upp connection and Dial to FenixGuiTestCaseBuilderServer
+func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) setConnectionToFenixGuiTestCaseBuilderServer() (returnMessage *fenixTestCaseBuilderServerGrpcApi.AckNackResponse) {
 	var err error
 	var opts []grpc.DialOption
 
 	//When running on GCP then use credential otherwise not
-	if common_config.ExecutionLocationForFenixGuiServer == common_config.GCP {
+	if common_config.ExecutionLocationForFenixGuiTestCaseBuilderServer == common_config.GCP {
 		creds := credentials.NewTLS(&tls.Config{
 			InsecureSkipVerify: true,
 		})
@@ -29,12 +29,12 @@ func (grpcOut *GRPCOutStruct) setConnectionToFenixGuiBuilderServer() (returnMess
 
 	// Set up connection to FenixTestDataSyncServer
 	// When run on GCP, use credentials
-	if common_config.ExecutionLocationForFenixGuiServer == common_config.GCP {
+	if common_config.ExecutionLocationForFenixGuiTestCaseBuilderServer == common_config.GCP {
 		// Run on GCP
-		remoteFenixGuiBuilderServerConnection, err = grpc.Dial(grpcOut.fenixGuiBuilderServerAddressToDial, opts...)
+		remoteFenixGuiTestCaseBuilderServerConnection, err = grpc.Dial(grpcOut.fenixGuiBuilderServerAddressToDial, opts...)
 	} else {
 		// Run Local
-		remoteFenixGuiBuilderServerConnection, err = grpc.Dial(grpcOut.fenixGuiBuilderServerAddressToDial, grpc.WithInsecure())
+		remoteFenixGuiTestCaseBuilderServerConnection, err = grpc.Dial(grpcOut.fenixGuiBuilderServerAddressToDial, grpc.WithInsecure())
 	}
 	if err != nil {
 		grpcOut.logger.WithFields(logrus.Fields{
@@ -69,20 +69,20 @@ func (grpcOut *GRPCOutStruct) setConnectionToFenixGuiBuilderServer() (returnMess
 		}).Info("gRPC connection OK to FenixTestDataSyncServer")
 
 		// Creates a new Clients
-		fenixGuiBuilderServerGrpcClient = fenixTestCaseBuilderServerGrpcApi.NewFenixTestCaseBuilderServerGrpcServicesClient(remoteFenixGuiBuilderServerConnection)
+		fenixGuiTestCaseCaseBuilderServerGrpcClient = fenixTestCaseBuilderServerGrpcApi.NewFenixTestCaseBuilderServerGrpcServicesClient(remoteFenixGuiTestCaseBuilderServerConnection)
 
 	}
 
 	return nil
 }
 
-// GetHighestFenixGuiServerProtoFileVersion ********************************************************************************************************************
+// GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion ********************************************************************************************************************
 // Get the highest FenixProtoFileVersionEnumeration
-func (grpcOut *GRPCOutStruct) GetHighestFenixGuiServerProtoFileVersion() int32 {
+func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion() int32 {
 
 	// Check if there already is a 'highestFenixProtoFileVersion' saved, if so use that one
-	if highestFenixGuiServerProtoFileVersion != -1 {
-		return highestFenixGuiServerProtoFileVersion
+	if highestFenixGuiTestCaseBuilderServerProtoFileVersion != -1 {
+		return highestFenixGuiTestCaseBuilderServerProtoFileVersion
 	}
 
 	// Find the highest value for proto-file version
@@ -95,16 +95,16 @@ func (grpcOut *GRPCOutStruct) GetHighestFenixGuiServerProtoFileVersion() int32 {
 		}
 	}
 
-	highestFenixGuiServerProtoFileVersion = maxValue
+	highestFenixGuiTestCaseBuilderServerProtoFileVersion = maxValue
 
-	return highestFenixGuiServerProtoFileVersion
+	return highestFenixGuiTestCaseBuilderServerProtoFileVersion
 }
 
 // SetLogger
 // Set to use the same Logger reference as is used by central part of system
-func (grpcOut *GRPCOutStruct) SetLogger(logger *logrus.Logger) {
+func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SetLogger(logger *logrus.Logger) {
 
-	//grpcOutVaraible = GRPCOutStruct{}
+	//grpcOutGuiTestCaseBuilderServerObject = GRPCOutGuiTestCaseBuilderServerStruct{}
 
 	grpcOut.logger = logger
 
@@ -114,7 +114,7 @@ func (grpcOut *GRPCOutStruct) SetLogger(logger *logrus.Logger) {
 
 // SetDialAddressString
 // Set the Dial Address, which was received from environment variables
-func (grpcOut *GRPCOutStruct) SetDialAddressString(dialAddress string) {
+func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SetDialAddressString(dialAddress string) {
 	grpcOut.fenixGuiBuilderServerAddressToDial = dialAddress
 
 	return

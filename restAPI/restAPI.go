@@ -1,7 +1,7 @@
 package restAPI
 
 import (
-	"FenixTesterGui/grpc_out"
+	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
@@ -249,13 +249,13 @@ func (restAPI *RestApiStruct) RestSendSavePinnedInstructionsAndTestInstructionCo
 	// Create gRPC -response variable
 	var response *fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse
 
-	grpcOut := grpc_out.GRPCOutStruct{}
+	grpcOut := grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct{}
 
 	// Create input message for gRPC-call
 	pinnedTestInstructionsAndTestContainersMessage := &fenixGuiTestCaseBuilderServerGrpcApi.SavePinnedTestInstructionsAndPreCreatedTestInstructionContainersMessage{
 		UserId: jsonData.UserId,
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
-			grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
+			grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 		AvailablePinnedTestInstructions:                    jsonData.PinnedTestInstructionMessages,
 		AvailablePinnedPreCreatedTestInstructionContainers: jsonData.PinnedTestInstructionContainerMessages,
 	}

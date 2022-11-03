@@ -1,7 +1,7 @@
 package gui
 
 import (
-	"FenixTesterGui/grpc_out"
+	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	"fmt"
 	"github.com/golang/protobuf/jsonpb"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
@@ -62,7 +62,7 @@ func TestThatNonExistingBuildBlockCanBePinned(t *testing.T) {
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
 		AvailableBuildingBlocksForUITreeNodes:                                      nil,
-		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
+		grpcOut:                                                                    grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 		pinnedBuildingBlocksForUITreeNodes:                                         nil,
 	}
@@ -131,7 +131,7 @@ func TestThatAlreadyPinnedBuildingBlockNotCanBePinned(t *testing.T) {
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
 		AvailableBuildingBlocksForUITreeNodes:                                      nil,
-		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
+		grpcOut:                                                                    grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 	}
 
@@ -202,7 +202,7 @@ func TestToPinBuildingBlockCanBePinned(t *testing.T) {
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
 		AvailableBuildingBlocksForUITreeNodes:                                      nil,
-		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
+		grpcOut:                                                                    grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 	}
 
@@ -274,7 +274,7 @@ func TestThatNonExistingBuildingBlockCanNotBeUnPinned(t *testing.T) {
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
 		AvailableBuildingBlocksForUITreeNodes:                                      nil,
-		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
+		grpcOut:                                                                    grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 		pinnedBuildingBlocksForUITreeNodes:                                         nil,
 	}
@@ -344,7 +344,7 @@ func TestThatBuildingBlockToBeUnPinnedExistsAmongPinned(t *testing.T) {
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
 		AvailableBuildingBlocksForUITreeNodes:                                      nil,
-		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
+		grpcOut:                                                                    grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 	}
 
@@ -415,7 +415,7 @@ func TestUnPinBuildingBlockThatIsPinned(t *testing.T) {
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
 		fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap: nil,
 		AvailableBuildingBlocksForUITreeNodes:                                      nil,
-		grpcOut:                                                                    grpc_out.GRPCOutStruct{},
+		grpcOut:                                                                    grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct{},
 		availableBuildingBlockModelSuitedForFyneTreeView:                           nil,
 	}
 

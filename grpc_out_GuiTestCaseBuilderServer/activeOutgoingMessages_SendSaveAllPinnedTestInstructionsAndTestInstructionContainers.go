@@ -1,4 +1,4 @@
-package grpc_out
+package grpc_out_GuiTestCaseBuilderServer
 
 import (
 	sharedCode "FenixTesterGui/common_code"
@@ -9,7 +9,7 @@ import (
 )
 
 // SendSaveAllPinnedTestInstructionsAndTestInstructionContainers - Save pinned TestInstructions and TestInstructionContainers
-func (grpcOut *GRPCOutStruct) SendSaveAllPinnedTestInstructionsAndTestInstructionContainers(pinnedTestInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.SavePinnedTestInstructionsAndPreCreatedTestInstructionContainersMessage) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse) {
+func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendSaveAllPinnedTestInstructionsAndTestInstructionContainers(pinnedTestInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.SavePinnedTestInstructionsAndPreCreatedTestInstructionContainersMessage) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse) {
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -17,7 +17,7 @@ func (grpcOut *GRPCOutStruct) SendSaveAllPinnedTestInstructionsAndTestInstructio
 	var err error
 
 	// Set up connection to Server
-	grpcOut.setConnectionToFenixGuiBuilderServer()
+	grpcOut.setConnectionToFenixGuiTestCaseBuilderServer()
 
 	// Do gRPC-call
 	//ctx := context.Background()
@@ -31,7 +31,7 @@ func (grpcOut *GRPCOutStruct) SendSaveAllPinnedTestInstructionsAndTestInstructio
 	}()
 
 	// Only add access token when run on GCP
-	if sharedCode.ExecutionLocationForFenixGuiServer == sharedCode.GCP {
+	if sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer == sharedCode.GCP {
 
 		// Set logger in GCP-package
 		grpcOut.gcp.SetLogger(grpcOut.logger)
@@ -45,7 +45,7 @@ func (grpcOut *GRPCOutStruct) SendSaveAllPinnedTestInstructionsAndTestInstructio
 				Comments:   returnMessageString,
 				ErrorCodes: nil,
 				ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
-					grpcOut.GetHighestFenixGuiServerProtoFileVersion()),
+					grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 			}
 
 			return returnMessage
@@ -54,7 +54,7 @@ func (grpcOut *GRPCOutStruct) SendSaveAllPinnedTestInstructionsAndTestInstructio
 	}
 
 	// Do the gRPC-call
-	returnMessage, err = fenixGuiBuilderServerGrpcClient.SaveAllPinnedTestInstructionsAndTestInstructionContainers(ctx, pinnedTestInstructionsAndTestContainersMessage)
+	returnMessage, err = fenixGuiTestCaseCaseBuilderServerGrpcClient.SaveAllPinnedTestInstructionsAndTestInstructionContainers(ctx, pinnedTestInstructionsAndTestContainersMessage)
 
 	// Shouldn't happen
 	if err != nil {

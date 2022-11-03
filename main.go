@@ -96,13 +96,13 @@ func Init() {
 
 	switch executionLocationFenixGuiServer {
 	case "LOCALHOST_NODOCKER":
-		sharedCode.ExecutionLocationForFenixGuiServer = sharedCode.LocalhostNoDocker
+		sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer = sharedCode.LocalhostNoDocker
 
 	case "LOCALHOST_DOCKER":
-		sharedCode.ExecutionLocationForFenixGuiServer = sharedCode.LocalhostDocker
+		sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer = sharedCode.LocalhostDocker
 
 	case "GCP":
-		sharedCode.ExecutionLocationForFenixGuiServer = sharedCode.GCP
+		sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer = sharedCode.GCP
 
 	default:
 		fmt.Println("Unknown Execution location for FenixGuiServer: " + executionLocation + ". Expected one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
@@ -122,18 +122,18 @@ func Init() {
 	}
 
 	// Address to GuiBuilderServer
-	sharedCode.FenixGuiBuilderServerAddress = mustGetenv("FenixGuiBuilderServerAddress")
+	sharedCode.FenixGuiTestCaseBuilderServerAddress = mustGetenv("FenixGuiTestCaseBuilderServerAddress")
 
 	// Port for GuiBuilderServer
-	sharedCode.FenixGuiBuilderServerPort, err = strconv.Atoi(mustGetenv("FenixGuiBuilderServerPort"))
+	sharedCode.FenixGuiTestCaseBuilderServerPort, err = strconv.Atoi(mustGetenv("FenixGuiTestCaseBuilderServerPort"))
 	if err != nil {
-		fmt.Println("Couldn't convert environment variable 'FenixGuiBuilderServerPort' to an integer, error: ", err)
+		fmt.Println("Couldn't convert environment variable 'FenixGuiTestCaseBuilderServerPort' to an integer, error: ", err)
 		os.Exit(0)
 
 	}
 
 	// Create address for FenixGuiServer to call
-	fenixGuiBuilderServerAddressToDial = sharedCode.FenixGuiBuilderServerAddress + ":" + strconv.Itoa(sharedCode.FenixGuiBuilderServerPort)
+	fenixGuiBuilderServerAddressToDial = sharedCode.FenixGuiTestCaseBuilderServerAddress + ":" + strconv.Itoa(sharedCode.FenixGuiTestCaseBuilderServerPort)
 
 	// Get Environment variable to tell if the the application should run as a Tray Application or not
 	var runAsTrayApplication = mustGetenv("RunAsTrayApplication")
@@ -186,13 +186,13 @@ func init() {
 
 	switch executionLocationFenixGuiServer {
 	case "LOCALHOST_NODOCKER":
-		sharedCode.ExecutionLocationForFenixGuiServer = sharedCode.LocalhostNoDocker
+		sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer = sharedCode.LocalhostNoDocker
 
 	case "LOCALHOST_DOCKER":
-		sharedCode.ExecutionLocationForFenixGuiServer = sharedCode.LocalhostDocker
+		sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer = sharedCode.LocalhostDocker
 
 	case "GCP":
-		sharedCode.ExecutionLocationForFenixGuiServer = sharedCode.GCP
+		sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer = sharedCode.GCP
 
 	default:
 		fmt.Println("Unknown Execution location for FenixGuiServer: " + executionLocation + ". Expected one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
@@ -212,18 +212,18 @@ func init() {
 	}
 
 	// Address to GuiBuilderServer
-	sharedCode.FenixGuiBuilderServerAddress = mustGetenv("FenixGuiBuilderServerAddress")
+	sharedCode.FenixGuiTestCaseBuilderServerAddress = mustGetenv("FenixGuiTestCaseBuilderServerAddress")
 
 	// Port for GuiBuilderServer
-	sharedCode.FenixGuiBuilderServerPort, err = strconv.Atoi(mustGetenv("FenixGuiBuilderServerPort"))
+	sharedCode.FenixGuiTestCaseBuilderServerPort, err = strconv.Atoi(mustGetenv("FenixGuiTestCaseBuilderServerPort"))
 	if err != nil {
-		fmt.Println("Couldn't convert environment variable 'FenixGuiBuilderServerPort' to an integer, error: ", err)
+		fmt.Println("Couldn't convert environment variable 'FenixGuiTestCaseBuilderServerPort' to an integer, error: ", err)
 		os.Exit(0)
 
 	}
 
 	// Create address for FenixGuiServer to call
-	fenixGuiBuilderServerAddressToDial = sharedCode.FenixGuiBuilderServerAddress + ":" + strconv.Itoa(sharedCode.FenixGuiBuilderServerPort)
+	fenixGuiBuilderServerAddressToDial = sharedCode.FenixGuiTestCaseBuilderServerAddress + ":" + strconv.Itoa(sharedCode.FenixGuiTestCaseBuilderServerPort)
 
 	// Get Environment variable to tell if the the application should run as a Tray Application or not
 	var runAsTrayApplication = mustGetenv("RunAsTrayApplication")
@@ -292,5 +292,6 @@ func convertVariablesToMap() {
 	buildVariablesMap["BuildVariableFenixGuiBuilderServerPort"] = BuildVariableFenixGuiBuilderServerPort
 	buildVariablesMap["BuildVariableTemp"] = BuildVariableTemp
 	buildVariablesMap["BuildVariableRunAsTrayApplication"] = BuildVariableRunAsTrayApplication
+	buildVariablesMap["BuildVariableFYNE_SCALE"] = BuildVariableFYNE_SCALE
 
 }

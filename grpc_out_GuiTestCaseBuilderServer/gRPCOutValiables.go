@@ -8,9 +8,8 @@ import (
 )
 
 type GRPCOutGuiTestCaseBuilderServerStruct struct {
-	logger                             *logrus.Logger
-	fenixGuiBuilderServerAddressToDial string
-	gcp                                gcp.GcpObjectStruct
+	logger *logrus.Logger
+	gcp    gcp.GcpObjectStruct
 }
 
 var grpcOutGuiTestCaseBuilderServerObject GRPCOutGuiTestCaseBuilderServerStruct

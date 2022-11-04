@@ -3,7 +3,7 @@ package grpc_out_GuiExecutionServer
 import (
 	common_config "FenixTesterGui/common_code"
 	"crypto/tls"
-	fenixTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -12,12 +12,12 @@ import (
 // ********************************************************************************************************************
 
 // Set upp connection and Dial to FenixGuiExecutionServer
-func (grpcOut *GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecutionServer() (returnMessage *fenixTestCaseBuilderServerGrpcApi.AckNackResponse) {
+func (grpcOut *GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecutionServer() (returnMessage *fenixExecutionServerGuiGrpcApi.AckNackResponse) {
 	var err error
 	var opts []grpc.DialOption
 
 	//When running on GCP then use credential otherwise not
-	if common_config.ExecutionLocationForFenixGuiTestCaseBuilderServer == common_config.GCP {
+	if common_config.ExecutionLocationForFenixGuiExecutionServer == common_config.GCP {
 		creds := credentials.NewTLS(&tls.Config{
 			InsecureSkipVerify: true,
 		})
@@ -29,7 +29,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecution
 
 	// Set up connection to FenixTestDataSyncServer
 	// When run on GCP, use credentials
-	if common_config.ExecutionLocationForFenixGuiTestCaseBuilderServer == common_config.GCP {
+	if common_config.ExecutionLocationForFenixGuiExecutionServer == common_config.GCP {
 		// Run on GCP
 		remoteFenixGuiExecutionServerConnection, err = grpc.Dial(FenixGuiExecutionServerAddressToDial, opts...)
 	} else {
@@ -42,22 +42,21 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecution
 			"FenixGuiExecutionServerAddressToDial": FenixGuiExecutionServerAddressToDial,
 			"error message":                        err,
 		}).Error("Did not connect to FenixGuiExecutionServer via gRPC")
-		//os.Exit(0)
 
-		// Create response message for when no success dail was able to be made
-
+		// Create response message for when no success Dial was to be made
 		// Set Error codes to return message
-		var errorCodes []fenixTestCaseBuilderServerGrpcApi.ErrorCodesEnum
-		var errorCode fenixTestCaseBuilderServerGrpcApi.ErrorCodesEnum
+		var errorCodes []fenixExecutionServerGuiGrpcApi.ErrorCodesEnum
+		var errorCode fenixExecutionServerGuiGrpcApi.ErrorCodesEnum
 
-		errorCode = fenixTestCaseBuilderServerGrpcApi.ErrorCodesEnum_ERROR_UNSPECIFIED
+		errorCode = fenixExecutionServerGuiGrpcApi.ErrorCodesEnum_ERROR_UNSPECIFIED
 		errorCodes = append(errorCodes, errorCode)
 
 		// Create Return message
-		returnMessage = &fenixTestCaseBuilderServerGrpcApi.AckNackResponse{
-			AckNack:    false,
-			Comments:   "Couldn't call FenixGuiExecutionServer",
-			ErrorCodes: errorCodes,
+		returnMessage = &fenixExecutionServerGuiGrpcApi.AckNackResponse{
+			AckNack:                      false,
+			Comments:                     "Couldn't call FenixGuiExecutionServer",
+			ErrorCodes:                   errorCodes,
+			ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(grpcOut.GetHighestFenixGuiExecutionServerProtoFileVersion()),
 		}
 
 		return returnMessage
@@ -69,7 +68,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecution
 		}).Info("gRPC connection OK to FenixGuiExecutionServer")
 
 		// Creates a new Clients
-		fenixGuiTestCaseCaseBuilderServerGrpcClient = fenixTestCaseBuilderServerGrpcApi.NewFenixTestCaseBuilderServerGrpcServicesClient(remoteFenixGuiExecutionServerConnection)
+		fenixGuiExecutionServerGrpcClient = fenixExecutionServerGuiGrpcApi.NewFenixExecutionServerGuiGrpcServicesClient(remoteFenixGuiExecutionServerConnection)
 
 	}
 
@@ -78,9 +77,9 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecution
 
 // GetHighestFenixGuiServerProtoFileVersion ********************************************************************************************************************
 // Get the highest FenixProtoFileVersionEnumeration
-func (grpcOut *GRPCOutGuiExecutionServerStruct) GetHighestFenixGuiServerProtoFileVersion() int32 {
+func (grpcOut *GRPCOutGuiExecutionServerStruct) GetHighestFenixGuiExecutionServerProtoFileVersion() int32 {
 
-	// Check if there already is a 'highestFenixProtoFileVersion' saved, if so use that one
+	// Check if there already is a 'highestFenixGuiExecutionServerProtoFileVersion' saved, if so use that one
 	if highestFenixGuiExecutionServerProtoFileVersion != -1 {
 		return highestFenixGuiExecutionServerProtoFileVersion
 	}
@@ -89,7 +88,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) GetHighestFenixGuiServerProtoFil
 	var maxValue int32
 	maxValue = 0
 
-	for _, v := range fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum_value {
+	for _, v := range fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum_value {
 		if v > maxValue {
 			maxValue = v
 		}

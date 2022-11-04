@@ -46,4 +46,4 @@ type ecServer struct {
 //var tempRunAsTrayApplication bool
 
 // Create address for FenixGuiServer to call
-var fenixGuiBuilderServerAddressToDial string
+//var fenixGuiBuilderServerAddressToDial string

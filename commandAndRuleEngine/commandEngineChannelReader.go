@@ -127,13 +127,14 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 		TestDataSetUuid: testCaseUuidToBeExecuted, //TODO change into a correct 'TestDataSetUuid' when that is supported
 	}
 
-	// Save TestCase
-	err := commandAndRuleEngine.Testcases.SaveFullTestCase(currentTestCaseUuid, commandAndRuleEngine.Testcases.CurrentUser)
+	// Initiate TestCaseExecution
+	var initiateSingleTestCaseExecutionResponseMessage *fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionResponseMessage
+	initiateSingleTestCaseExecutionResponseMessage = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.SendInitiateTestCaseExecution(initiateSingleTestCaseExecutionRequestMessage)
 
-	if err != nil {
+	if initiateSingleTestCaseExecutionResponseMessage.AckNackResponse.AckNack == false {
 
-		errorId := "b91f4270-babc-4432-9a9b-4769f1d662f9"
-		err = errors.New(fmt.Sprintf("couldn't execute command 'SaveFullTestCase', {error: %s} [ErrorID: %s]", err, errorId))
+		errorId := "524d549f-58b9-4b29-8668-0a322137b3cf"
+		err := errors.New(fmt.Sprintf("couldn't execute command 'ExecuteTestCase' due to error: '%s', {error: %s} [ErrorID: %s]", initiateSingleTestCaseExecutionResponseMessage.AckNackResponse.Comments, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -141,7 +142,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 
 	}
 
-	fmt.Println("TestCase was saved in Cloud-DB")
+	fmt.Sprintf("Initiated TestCaseExecution for TestCase: '%s', testCaseUuidToBeExecuted")
 
 }
 

@@ -56,7 +56,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecution
 			AckNack:                      false,
 			Comments:                     "Couldn't call FenixGuiExecutionServer",
 			ErrorCodes:                   errorCodes,
-			ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(grpcOut.GetHighestFenixGuiExecutionServerProtoFileVersion()),
+			ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(GetHighestFenixGuiExecutionServerProtoFileVersion()),
 		}
 
 		return returnMessage
@@ -77,7 +77,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecution
 
 // GetHighestFenixGuiServerProtoFileVersion ********************************************************************************************************************
 // Get the highest FenixProtoFileVersionEnumeration
-func (grpcOut *GRPCOutGuiExecutionServerStruct) GetHighestFenixGuiExecutionServerProtoFileVersion() int32 {
+func GetHighestFenixGuiExecutionServerProtoFileVersion() int32 {
 
 	// Check if there already is a 'highestFenixGuiExecutionServerProtoFileVersion' saved, if so use that one
 	if highestFenixGuiExecutionServerProtoFileVersion != -1 {

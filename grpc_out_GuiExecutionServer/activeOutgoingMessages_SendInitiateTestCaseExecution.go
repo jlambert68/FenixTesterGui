@@ -11,8 +11,8 @@ import (
 
 // ********************************************************************************************************************
 
-// SendAreYouAliveToGuiExecutionServer - Check if 'GuiExecutionServer' is alive
-func (grpcOut *GRPCOutGuiExecutionServerStruct) SendAreYouAliveToGuiExecutionServer() (returnMessage *fenixExecutionServerGuiGrpcApi.AckNackResponse) {
+// SendInitiateTestCaseExecution - Initiate a TestCaseExecution
+func (grpcOut *GRPCOutGuiExecutionServerStruct) SendInitiateTestCaseExecution() (returnMessage *fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionResponseMessage) {
 
 	var ctx context.Context
 	var returnMessageAckNack bool

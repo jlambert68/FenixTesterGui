@@ -2,6 +2,7 @@ package commandAndRuleEngine
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/grpc_out_GuiExecutionServer"
 	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
@@ -11,7 +12,9 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+
 	"image/color"
 	"log"
 	"sync"
@@ -39,6 +42,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) startCommandChanne
 
 		case sharedCode.ChannelCommandSaveTestCase:
 			commandAndRuleEngine.channelCommandSaveTestCase(incomingChannelCommand)
+
+		case sharedCode.ChannelCommandExecuteTestCase:
+			commandAndRuleEngine.channelCommandExecuteTestCase(incomingChannelCommand)
 
 		// No other command is supported
 		default:
@@ -80,10 +86,46 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandCrea
 
 }
 
-// Execute command 'Sace TestCase' received from Channel reader
+// Execute command 'Save TestCase' received from Channel reader
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSaveTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct) {
 
 	currentTestCaseUuid := commandAndRuleEngine.Testcases.CurrentActiveTestCaseUuid
+
+	// Save TestCase
+	err := commandAndRuleEngine.Testcases.SaveFullTestCase(currentTestCaseUuid, commandAndRuleEngine.Testcases.CurrentUser)
+
+	if err != nil {
+
+		errorId := "b91f4270-babc-4432-9a9b-4769f1d662f9"
+		err = errors.New(fmt.Sprintf("couldn't execute command 'SaveFullTestCase', {error: %s} [ErrorID: %s]", err, errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return
+
+	}
+
+	fmt.Println("TestCase was saved in Cloud-DB")
+
+}
+
+// Execute command 'Sace TestCase' received from Channel reader
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExecuteTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct) {
+
+	// TestCaseUuid to execute
+	var testCaseUuidToBeExecuted string
+	testCaseUuidToBeExecuted = incomingChannelCommand.FirstParameter
+
+	// Create message to be sent to GuiExecutionServer
+	var initiateSingleTestCaseExecutionRequestMessage *fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionRequestMessage
+	initiateSingleTestCaseExecutionRequestMessage = &fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionRequestMessage{
+		UserIdentification: &fenixExecutionServerGuiGrpcApi.UserIdentificationMessage{
+			UserId:                       commandAndRuleEngine.Testcases.CurrentUser,
+			ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion()),
+		},
+		TestCaseUuid:    testCaseUuidToBeExecuted,
+		TestDataSetUuid: testCaseUuidToBeExecuted, //TODO change into a correct 'TestDataSetUuid' when that is supported
+	}
 
 	// Save TestCase
 	err := commandAndRuleEngine.Testcases.SaveFullTestCase(currentTestCaseUuid, commandAndRuleEngine.Testcases.CurrentUser)

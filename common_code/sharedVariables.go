@@ -15,6 +15,7 @@ const (
 	ChannelCommandSwapElement
 	ChannelCommandRemoveElement
 	ChannelCommandSaveTestCase
+	ChannelCommandExecuteTestCase
 )
 
 type ChannelCommandStruct struct {

@@ -63,6 +63,20 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectF
 			*testCasesUiCanvasObject.CommandChannelReference <- commandEngineChannelMessage
 		}),
 
+		// Execute 'current' TestCase
+		widget.NewToolbarAction(theme.MediaPlayIcon(), func() {
+			commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
+				ChannelCommand:  sharedCode.ChannelCommandExecuteTestCase,
+				FirstParameter:  testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid,
+				SecondParameter: "",
+				ActiveTestCase:  "",
+				ElementType:     sharedCode.BuildingBlock(sharedCode.Undefined),
+			}
+
+			// Send command message over channel to Command and Rule Engine
+			*testCasesUiCanvasObject.CommandChannelReference <- commandEngineChannelMessage
+		}),
+
 		widget.NewToolbarAction(theme.ContentCopyIcon(), func() {
 			fmt.Println("Copy Node")
 		}),

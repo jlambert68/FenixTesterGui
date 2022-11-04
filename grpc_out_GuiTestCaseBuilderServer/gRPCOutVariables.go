@@ -11,7 +11,7 @@ type GRPCOutGuiTestCaseBuilderServerStruct struct {
 	//gcp    gcp.GcpObjectStruct
 }
 
-var grpcOutGuiTestCaseBuilderServerObject GRPCOutGuiTestCaseBuilderServerStruct
+var GrpcOutGuiTestCaseBuilderServerObject GRPCOutGuiTestCaseBuilderServerStruct
 
 var (
 	// Standard gRPC Client

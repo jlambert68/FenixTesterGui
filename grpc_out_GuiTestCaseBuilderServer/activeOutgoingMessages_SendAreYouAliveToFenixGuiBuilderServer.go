@@ -38,7 +38,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendAreYouAliveToFenixGuiB
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer func() {
 		//TODO Fixa så att denna inte görs som allt går bra
-		grpcOut.logger.WithFields(logrus.Fields{
+		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID": "88bbfecb-b9a4-4e2f-92e0-cabbbdf75dc8",
 		}).Error("Running Defer Cancel function")
 		cancel()
@@ -69,14 +69,14 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendAreYouAliveToFenixGuiB
 
 	// Shouldn't happen
 	if err != nil {
-		grpcOut.logger.WithFields(logrus.Fields{
+		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":    "818aaf0b-4112-4be4-97b9-21cc084c7b8b",
 			"error": err,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendAreYouAliveToFenixGuiBuilderServer'")
 
 	} else if returnMessage.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
-		grpcOut.logger.WithFields(logrus.Fields{
+		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":                                     "2ecbc800-2fb6-4e88-858d-a421b61c5529",
 			"Message from FenixTestGuiBuilderServer": returnMessage.Comments,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendAreYouAliveToFenixGuiBuilderServer'")

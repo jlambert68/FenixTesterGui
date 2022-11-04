@@ -11,7 +11,7 @@ type GRPCOutGuiExecutionServerStruct struct {
 	//gcp    gcp.GcpObjectStruct
 }
 
-var grpcOutGuiExecutionServerObject GRPCOutGuiExecutionServerStruct
+var GrpcOutGuiExecutionServerObject GRPCOutGuiExecutionServerStruct
 
 var (
 	// Standard gRPC Clientr

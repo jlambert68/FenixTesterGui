@@ -8,7 +8,7 @@ import (
 )
 
 // AreYouAlive - *********************************************************************
-//Anyone can check if Fenix TestCase Builder server is alive with this service
+// Anyone can check if 'FenixUserGui'-server is alive with this service
 func (s *fenixUserGuiGrpcServicesServer) AreYouAlive(_ context.Context, _ *fenixUserGuiGrpcApi.EmptyParameter) (*fenixUserGuiGrpcApi.AckNackResponse, error) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{

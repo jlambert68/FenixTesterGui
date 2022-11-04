@@ -1,7 +1,7 @@
 package grpc_out_GuiTestCaseBuilderServer
 
 import (
-	common_config "FenixTesterGui/common_code"
+	sharedCode "FenixTesterGui/common_code"
 	"crypto/tls"
 	fenixTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
@@ -17,7 +17,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) setConnectionToFenixGuiTes
 	var opts []grpc.DialOption
 
 	//When running on GCP then use credential otherwise not
-	if common_config.ExecutionLocationForFenixGuiTestCaseBuilderServer == common_config.GCP {
+	if sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer == sharedCode.GCP {
 		creds := credentials.NewTLS(&tls.Config{
 			InsecureSkipVerify: true,
 		})
@@ -29,7 +29,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) setConnectionToFenixGuiTes
 
 	// Set up connection to FenixTestDataSyncServer
 	// When run on GCP, use credentials
-	if common_config.ExecutionLocationForFenixGuiTestCaseBuilderServer == common_config.GCP {
+	if sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer == sharedCode.GCP {
 		// Run on GCP
 		remoteFenixGuiTestCaseBuilderServerConnection, err = grpc.Dial(FenixGuiTestCaseBuilderServerAddressToDial, opts...)
 	} else {
@@ -37,7 +37,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) setConnectionToFenixGuiTes
 		remoteFenixGuiTestCaseBuilderServerConnection, err = grpc.Dial(FenixGuiTestCaseBuilderServerAddressToDial, grpc.WithInsecure())
 	}
 	if err != nil {
-		grpcOut.logger.WithFields(logrus.Fields{
+		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID": "50b59b1b-57ce-4c27-aa84-617f0cde3100",
 			"FenixGuiTestCaseBuilderServerAddressToDial": FenixGuiTestCaseBuilderServerAddressToDial,
 			"error message": err,
@@ -63,7 +63,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) setConnectionToFenixGuiTes
 		return returnMessage
 
 	} else {
-		grpcOut.logger.WithFields(logrus.Fields{
+		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID": "526e3dad-3534-49ab-b107-9c26d1d45d0e",
 			"FenixGuiTestCaseBuilderServerAddressToDial": FenixGuiTestCaseBuilderServerAddressToDial,
 		}).Info("gRPC connection OK to FenixGuiTestCaseBuilderServer")
@@ -104,7 +104,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) GetHighestFenixGuiTestCase
 // Set to use the same Logger reference as is used by central part of system
 func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SetLogger(logger *logrus.Logger) {
 
-	//grpcOutGuiTestCaseBuilderServerObject = GRPCOutGuiTestCaseBuilderServerStruct{}
+	//GrpcOutGuiTestCaseBuilderServerObject = GRPCOutGuiTestCaseBuilderServerStruct{}
 
 	grpcOut.logger = logger
 

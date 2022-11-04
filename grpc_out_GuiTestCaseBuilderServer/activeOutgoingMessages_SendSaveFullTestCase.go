@@ -25,7 +25,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendSaveFullTestCase(gRPCF
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer func() {
 		//TODO Fixa så att denna inte görs som allt går bra
-		grpcOut.logger.WithFields(logrus.Fields{
+		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID": "8f935725-745f-4aa9-b647-335cba045b08",
 		}).Error("Running Defer Cancel function")
 		cancel()
@@ -59,14 +59,14 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendSaveFullTestCase(gRPCF
 
 	// Shouldn't happen
 	if err != nil {
-		grpcOut.logger.WithFields(logrus.Fields{
+		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":    "dc065973-cbab-4cf9-8091-a0f687cd2d36",
 			"error": err,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SaveFullTestCase'")
 
 	} else if returnMessage.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
-		grpcOut.logger.WithFields(logrus.Fields{
+		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":                                     "146af5d6-336c-4653-b8a1-b59f809a7b8b",
 			"Message from FenixTestGuiBuilderServer": returnMessage.Comments,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SaveFullTestCase'")

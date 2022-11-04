@@ -32,7 +32,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListAllTestInstructionAttr
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer func() {
 		//TODO Fixa så att denna inte görs som allt går bra
-		grpcOut.logger.WithFields(logrus.Fields{
+		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID": "0ae9bacb-de78-48dc-baba-01dbe56349e0",
 		}).Error("Running Defer Cancel function")
 		cancel()
@@ -70,14 +70,14 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListAllTestInstructionAttr
 
 	// Shouldn't happen
 	if err != nil {
-		grpcOut.logger.WithFields(logrus.Fields{
+		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":    "010c58f4-7897-4faa-bb7e-8e529e37dc2a",
 			"error": err,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'ListAllImmatureTestInstructionAttributes'")
 
 	} else if returnMessage.AckNackResponse.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
-		grpcOut.logger.WithFields(logrus.Fields{
+		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":                                     "a0f27ee6-9137-4a18-83cc-bf6a7bddac8e",
 			"Message from FenixTestGuiBuilderServer": returnMessage.AckNackResponse.Comments,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'ListAllImmatureTestInstructionAttributes'")

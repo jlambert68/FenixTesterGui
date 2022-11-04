@@ -32,7 +32,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListAllAvailableBonds(user
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer func() {
 		//TODO Fixa så att denna inte görs som allt går bra
-		grpcOut.logger.WithFields(logrus.Fields{
+		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID": "793227a3-fe75-4e69-9634-e16096038bd1",
 		}).Error("Running Defer Cancel function")
 		cancel()
@@ -70,14 +70,14 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListAllAvailableBonds(user
 
 	// Shouldn't happen
 	if err != nil {
-		grpcOut.logger.WithFields(logrus.Fields{
+		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":    "8d0dc097-420e-447a-8d8f-53ec9f55c53b",
 			"error": err,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'ListAllAvailableBonds'")
 
 	} else if returnMessage.AckNackResponse.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
-		grpcOut.logger.WithFields(logrus.Fields{
+		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":                                     "83a9cab0-3a1d-41de-a38f-81ddd492092d",
 			"Message from FenixTestGuiBuilderServer": returnMessage.AckNackResponse.Comments,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'ListAllAvailableBonds'")

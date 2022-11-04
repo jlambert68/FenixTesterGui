@@ -1,7 +1,7 @@
 package grpc_out_GuiExecutionServer
 
 import (
-	common_config "FenixTesterGui/common_code"
+	"FenixTesterGui/common_code"
 	"crypto/tls"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
@@ -17,7 +17,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecution
 	var opts []grpc.DialOption
 
 	//When running on GCP then use credential otherwise not
-	if common_config.ExecutionLocationForFenixGuiExecutionServer == common_config.GCP {
+	if sharedCode.ExecutionLocationForFenixGuiExecutionServer == sharedCode.GCP {
 		creds := credentials.NewTLS(&tls.Config{
 			InsecureSkipVerify: true,
 		})
@@ -29,7 +29,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecution
 
 	// Set up connection to FenixTestDataSyncServer
 	// When run on GCP, use credentials
-	if common_config.ExecutionLocationForFenixGuiExecutionServer == common_config.GCP {
+	if sharedCode.ExecutionLocationForFenixGuiExecutionServer == sharedCode.GCP {
 		// Run on GCP
 		remoteFenixGuiExecutionServerConnection, err = grpc.Dial(FenixGuiExecutionServerAddressToDial, opts...)
 	} else {
@@ -37,7 +37,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecution
 		remoteFenixGuiExecutionServerConnection, err = grpc.Dial(FenixGuiExecutionServerAddressToDial, grpc.WithInsecure())
 	}
 	if err != nil {
-		grpcOut.logger.WithFields(logrus.Fields{
+		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":                                   "50b59b1b-57ce-4c27-aa84-617f0cde3100",
 			"FenixGuiExecutionServerAddressToDial": FenixGuiExecutionServerAddressToDial,
 			"error message":                        err,
@@ -62,7 +62,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecution
 		return returnMessage
 
 	} else {
-		grpcOut.logger.WithFields(logrus.Fields{
+		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":                                   "0c650bbc-45d0-4029-bd25-4ced9925a059",
 			"FenixGuiExecutionServerAddressToDial": FenixGuiExecutionServerAddressToDial,
 		}).Info("gRPC connection OK to FenixGuiExecutionServer")
@@ -103,7 +103,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) GetHighestFenixGuiExecutionServe
 // Set to use the same Logger reference as is used by central part of system
 func (grpcOut *GRPCOutGuiExecutionServerStruct) SetLogger(logger *logrus.Logger) {
 
-	//grpcOutGuiExecutionServerObject = GRPCOutGuiExecutionServerStruct{}
+	//GrpcOutGuiExecutionServerObject = GRPCOutGuiExecutionServerStruct{}
 
 	grpcOut.logger = logger
 

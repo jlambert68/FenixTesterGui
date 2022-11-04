@@ -20,10 +20,10 @@ func (grpcIn *GRPCInStruct) InitGrpcServer() {
 	}).Info("Backend Server tries to start")
 
 	grpcIn.logger.WithFields(logrus.Fields{
-		"Id": "ca3593b1-466b-4536-be91-5e038de178f4",
-		"common_config.FenixGuiBuilderProxyServerPort: ": sharedCode.FenixGuiBuilderProxyServerPort,
+		"Id":                                  "ca3593b1-466b-4536-be91-5e038de178f4",
+		"common_config.ApplicationGrpcPort: ": sharedCode.ApplicationGrpcPort,
 	}).Info("Start listening on:")
-	lis, err = net.Listen("tcp", ":"+strconv.Itoa(sharedCode.FenixGuiBuilderProxyServerPort))
+	lis, err = net.Listen("tcp", ":"+strconv.Itoa(sharedCode.ApplicationGrpcPort))
 
 	if err != nil {
 		grpcIn.logger.WithFields(logrus.Fields{
@@ -32,8 +32,8 @@ func (grpcIn *GRPCInStruct) InitGrpcServer() {
 		}).Error("failed to listen:")
 	} else {
 		grpcIn.logger.WithFields(logrus.Fields{
-			"Id": "ba070b9b-5d57-4c0a-ab4c-a76247a50fd3",
-			"common_config.FenixGuiBuilderProxyServerPort: ": sharedCode.FenixGuiBuilderProxyServerPort,
+			"Id":                                  "ba070b9b-5d57-4c0a-ab4c-a76247a50fd3",
+			"common_config.ApplicationGrpcPort: ": sharedCode.ApplicationGrpcPort,
 		}).Info("Success in listening on port:")
 
 	}
@@ -44,22 +44,22 @@ func (grpcIn *GRPCInStruct) InitGrpcServer() {
 		"Id": "b0ccffb5-4367-464c-a3bc-460cafed16cb",
 	}).Info("Starting Backend gRPC Server")
 
-	registerfenixGuiBuilderProxyServerServer = grpc.NewServer()
-	fenixGuiTestCaseBuilderServerGrpcApi.RegisterFenixTestCaseBuilderServerGrpcServicesServer(registerfenixGuiBuilderProxyServerServer, &fenixGuiTestCaseBuilderGrpcServicesServer{})
+	registerFenixGuiBuilderServer = grpc.NewServer()
+	fenixGuiTestCaseBuilderServerGrpcApi.RegisterFenixTestCaseBuilderServerGrpcServicesServer(registerFenixGuiBuilderServer, &fenixGuiTestCaseBuilderGrpcServicesServer{})
 
 	// Register RouteGuide on the same server.
-	//reflection.Register(registerfenixGuiBuilderProxyServerServer)
+	//reflection.Register(registerFenixGuiBuilderServer)
 
 	grpcIn.logger.WithFields(logrus.Fields{
-		"Id": "e843ece9-b707-4c60-b1d8-14464305e68f",
-		"common_config.FenixGuiBuilderProxyServerPort: ": sharedCode.FenixGuiBuilderProxyServerPort,
+		"Id":                                  "e843ece9-b707-4c60-b1d8-14464305e68f",
+		"common_config.ApplicationGrpcPort: ": sharedCode.ApplicationGrpcPort,
 	}).Info("'RegisterFenixTestCaseBuilderServerGrpcServicesServer' for FenixGuiBuilderProxyServer")
-	err = registerfenixGuiBuilderProxyServerServer.Serve(lis)
+	err = registerFenixGuiBuilderServer.Serve(lis)
 	if err != nil {
 		grpcIn.logger.WithFields(logrus.Fields{
 			"Id":  "d0f4de61-32fd-4ca9-868b-bdc4765e2d44",
 			"err": err,
-		}).Error("Couldn't register gRPC-server: 'registerfenixGuiBuilderProxyServerServer'")
+		}).Error("Couldn't register gRPC-server: 'registerFenixGuiBuilderServer'")
 	}
 
 	//}()
@@ -69,11 +69,11 @@ func (grpcIn *GRPCInStruct) InitGrpcServer() {
 // StopGrpcServer - Stop Backend gRPC-server
 func (grpcIn *GRPCInStruct) StopGrpcServer() {
 
-	grpcIn.logger.WithFields(logrus.Fields{}).Info("Gracefully stop for: 'registerfenixGuiBuilderProxyServerServer'")
-	registerfenixGuiBuilderProxyServerServer.GracefulStop()
+	grpcIn.logger.WithFields(logrus.Fields{}).Info("Gracefully stop for: 'registerFenixGuiBuilderServer'")
+	registerFenixGuiBuilderServer.GracefulStop()
 
 	grpcIn.logger.WithFields(logrus.Fields{
-		"common_config.FenixGuiBuilderProxyServerPort: ": sharedCode.FenixGuiBuilderProxyServerPort,
+		"common_config.ApplicationGrpcPort: ": sharedCode.ApplicationGrpcPort,
 	}).Info("Close net.Listing")
 	_ = lis.Close()
 

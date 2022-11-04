@@ -2,6 +2,8 @@ package main
 
 import (
 	"FenixTesterGui/common_code"
+	"FenixTesterGui/grpc_out_GuiExecutionServer"
+	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	_ "embed"
 	"strconv"
 
@@ -43,7 +45,7 @@ func mustGetenv(environmentVariable string) string {
 
 		// If the 'Build Injected Variable' is empty then end this misery programs life
 		if buildInjectedVariableValue == "" {
-			log.Fatalf("Warning: %s environment variable not set.\n", environmentVariable)
+			log.Fatalf("Warning: %s environment variable not set by injecting value at build time.\n", environmentVariable)
 		} else {
 			environmentVariableValue = buildInjectedVariableValue
 		}
@@ -56,135 +58,83 @@ func main() {
 	//defer profile.Start(profile.ProfilePath(".")).Stop()
 
 	// Start up application as SysTray if environment variable says that
-	if tempRunAsTrayApplication == true {
+	if sharedCode.RunAsTrayApplication == true {
 		go systray.Run(onReady, onExit)
 	}
 
 	fenixGuiBuilderServerMain()
 }
 
-func Init() {
-
-	//executionLocation := flag.String("startupType", "0", "The application should be started with one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
-	//flag.Parse()
-
-	convertVariablesToMap()
-
-	var err error
-
-	// Get Environment variable to tell how this program was started
-	var executionLocation = mustGetenv("ExecutionLocation")
-
-	switch executionLocation {
-	case "LOCALHOST_NODOCKER":
-		sharedCode.ExecutionLocation = sharedCode.LocalhostNoDocker
-
-	case "LOCALHOST_DOCKER":
-		sharedCode.ExecutionLocation = sharedCode.LocalhostDocker
-
-	case "GCP":
-		sharedCode.ExecutionLocation = sharedCode.GCP
-
-	default:
-		fmt.Println("Unknown Execution location for FenixGuiProxyServer: " + executionLocation + ". Expected one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
-		os.Exit(0)
-
-	}
-
-	// Get Environment variable to tell how this program was started
-	var executionLocationFenixGuiServer = mustGetenv("ExecutionLocationFenixGuiServer")
-
-	switch executionLocationFenixGuiServer {
-	case "LOCALHOST_NODOCKER":
-		sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer = sharedCode.LocalhostNoDocker
-
-	case "LOCALHOST_DOCKER":
-		sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer = sharedCode.LocalhostDocker
-
-	case "GCP":
-		sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer = sharedCode.GCP
-
-	default:
-		fmt.Println("Unknown Execution location for FenixGuiServer: " + executionLocation + ". Expected one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
-		os.Exit(0)
-
-	}
-
-	// Address to GuiBuilderProxyServer
-	sharedCode.FenixGuiBuilderProxyServerAddress = mustGetenv("FenixGuiBuilderProxyServerAddress")
-
-	// Port for GuiBuilderProxyServer
-	sharedCode.FenixGuiBuilderProxyServerPort, err = strconv.Atoi(mustGetenv("FenixGuiBuilderProxyServerPort"))
-	if err != nil {
-		fmt.Println("Couldn't convert environment variable 'FenixGuiBuilderProxyServerPort' to an integer, error: ", err)
-		os.Exit(0)
-
-	}
-
-	// Address to GuiBuilderServer
-	sharedCode.FenixGuiTestCaseBuilderServerAddress = mustGetenv("FenixGuiTestCaseBuilderServerAddress")
-
-	// Port for GuiBuilderServer
-	sharedCode.FenixGuiTestCaseBuilderServerPort, err = strconv.Atoi(mustGetenv("FenixGuiTestCaseBuilderServerPort"))
-	if err != nil {
-		fmt.Println("Couldn't convert environment variable 'FenixGuiTestCaseBuilderServerPort' to an integer, error: ", err)
-		os.Exit(0)
-
-	}
-
-	// Create address for FenixGuiServer to call
-	fenixGuiBuilderServerAddressToDial = sharedCode.FenixGuiTestCaseBuilderServerAddress + ":" + strconv.Itoa(sharedCode.FenixGuiTestCaseBuilderServerPort)
-
-	// Get Environment variable to tell if the the application should run as a Tray Application or not
-	var runAsTrayApplication = mustGetenv("RunAsTrayApplication")
-
-	switch runAsTrayApplication {
-	case "YES":
-		tempRunAsTrayApplication = true
-
-	case "NO":
-		tempRunAsTrayApplication = false
-
-	default:
-		fmt.Println("Unknown value for 'RunAsTrayApplication': " + runAsTrayApplication + ". Expected one of the following: 'YES', 'NO'")
-		os.Exit(0)
-
-	}
-
-}
-
 func init() {
 
-	//executionLocation := flag.String("startupType", "0", "The application should be started with one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
+	//executionLocationForThisApplication := flag.String("startupType", "0", "The application should be started with one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
 	//flag.Parse()
 
-	convertVariablesToMap()
+	convertBuildInjectedVariablesToMapStructure()
 
 	var err error
 
-	// Get Environment variable to tell how this program was started
-	var executionLocation = mustGetenv("ExecutionLocation")
+	// *********************** Extract environment variables for 'This Application' ***********************
+	// Get Environment variable to tell how 'this program' was started
+	var executionLocationForThisApplication = mustGetenv("ExecutionLocationForThisApplication")
 
-	switch executionLocation {
+	switch executionLocationForThisApplication {
 	case "LOCALHOST_NODOCKER":
-		sharedCode.ExecutionLocation = sharedCode.LocalhostNoDocker
+		sharedCode.ExecutionLocationForThisApplication = sharedCode.LocalhostNoDocker
 
 	case "LOCALHOST_DOCKER":
-		sharedCode.ExecutionLocation = sharedCode.LocalhostDocker
+		sharedCode.ExecutionLocationForThisApplication = sharedCode.LocalhostDocker
 
 	case "GCP":
-		sharedCode.ExecutionLocation = sharedCode.GCP
+		sharedCode.ExecutionLocationForThisApplication = sharedCode.GCP
 
 	default:
-		fmt.Println("Unknown Execution location for FenixGuiProxyServer: " + executionLocation + ". Expected one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
+		fmt.Println("Unknown Execution location for 'This application': " + executionLocationForThisApplication + ". Expected one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
 		os.Exit(0)
 
 	}
 
-	// Get Environment variable to tell how this program was started
-	var executionLocationFenixGuiServer = mustGetenv("ExecutionLocationFenixGuiServer")
+	// Get Environment variable for how to scale this applications GUI
+	fyneScale := mustGetenv("FYNE_SCALE")
 
-	switch executionLocationFenixGuiServer {
+	// Secure that it is a number
+	_, err = strconv.ParseFloat(fyneScale, 64)
+	if err != nil {
+		fmt.Println("Couldn't convert environment variable 'FYNE_SCALE' to a numeric, error: ", err)
+		os.Exit(0)
+
+	} else {
+		sharedCode.FYNE_SCALE = fyneScale
+	}
+
+	// Get Environment variable to tell if the application should run as a Tray Application or not
+	var runAsTrayApplication = mustGetenv("RunAsTrayApplication")
+
+	switch runAsTrayApplication {
+	case "YES":
+		sharedCode.RunAsTrayApplication = true
+
+	case "NO":
+		sharedCode.RunAsTrayApplication = false
+
+	default:
+		fmt.Println("Unknown value for 'RunAsTrayApplication': " + runAsTrayApplication + ". Expected one of the following: 'YES', 'NO'")
+		os.Exit(0)
+
+	}
+
+	// Get local gRPC port for this application. gRPC is used for checking connection to backend services among other stuff
+	sharedCode.ApplicationGrpcPort, err = strconv.Atoi(mustGetenv("ApplicationGrpcPort"))
+	if err != nil {
+		fmt.Println("Couldn't convert environment variable 'ApplicationGrpcPort' to an integer, error: ", err)
+		os.Exit(0)
+	}
+
+	// *********************** Extract environment variables for 'GUI-TestCaseBuilderServer' ***********************
+	// Get Environment variable to tell how 'GUI-TestCaseBuilderServer' was started
+	var executionLocationForFenixGuiTestCaseBuilderServer = mustGetenv("ExecutionLocationForFenixGuiTestCaseBuilderServer")
+
+	switch executionLocationForFenixGuiTestCaseBuilderServer {
 	case "LOCALHOST_NODOCKER":
 		sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer = sharedCode.LocalhostNoDocker
 
@@ -195,26 +145,15 @@ func init() {
 		sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer = sharedCode.GCP
 
 	default:
-		fmt.Println("Unknown Execution location for FenixGuiServer: " + executionLocation + ". Expected one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
+		fmt.Println("Unknown Execution location for FenixGuiTestCaseBuilderServer: " + executionLocationForFenixGuiTestCaseBuilderServer + ". Expected one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
 		os.Exit(0)
 
 	}
 
-	// Address to GuiBuilderProxyServer
-	sharedCode.FenixGuiBuilderProxyServerAddress = mustGetenv("FenixGuiBuilderProxyServerAddress")
-
-	// Port for GuiBuilderProxyServer
-	sharedCode.FenixGuiBuilderProxyServerPort, err = strconv.Atoi(mustGetenv("FenixGuiBuilderProxyServerPort"))
-	if err != nil {
-		fmt.Println("Couldn't convert environment variable 'FenixGuiBuilderProxyServerPort' to an integer, error: ", err)
-		os.Exit(0)
-
-	}
-
-	// Address to GuiBuilderServer
+	// Get Environment variable for Address to 'GUI-TestCaseBuilderServer'
 	sharedCode.FenixGuiTestCaseBuilderServerAddress = mustGetenv("FenixGuiTestCaseBuilderServerAddress")
 
-	// Port for GuiBuilderServer
+	// Get Environment variable regarding Port for 'GUI-TestCaseBuilderServer'
 	sharedCode.FenixGuiTestCaseBuilderServerPort, err = strconv.Atoi(mustGetenv("FenixGuiTestCaseBuilderServerPort"))
 	if err != nil {
 		fmt.Println("Couldn't convert environment variable 'FenixGuiTestCaseBuilderServerPort' to an integer, error: ", err)
@@ -222,24 +161,42 @@ func init() {
 
 	}
 
-	// Create address for FenixGuiServer to call
-	fenixGuiBuilderServerAddressToDial = sharedCode.FenixGuiTestCaseBuilderServerAddress + ":" + strconv.Itoa(sharedCode.FenixGuiTestCaseBuilderServerPort)
+	// Create Dial-address to 'GUI-TestCaseBuilderServer'
+	grpc_out_GuiTestCaseBuilderServer.FenixGuiTestCaseBuilderServerAddressToDial = sharedCode.FenixGuiTestCaseBuilderServerAddress + ":" + strconv.Itoa(sharedCode.FenixGuiTestCaseBuilderServerPort)
 
-	// Get Environment variable to tell if the the application should run as a Tray Application or not
-	var runAsTrayApplication = mustGetenv("RunAsTrayApplication")
+	// *********************** Extract environment variables for 'GUI-ExecutionServer' ***********************
+	// Get Environment variable to tell how 'GUI-ExecutionServer' was started
+	var executionLocationForFenixGuiExecutionServer = mustGetenv("ExecutionLocationForFenixGuiExecutionServer")
 
-	switch runAsTrayApplication {
-	case "YES":
-		tempRunAsTrayApplication = true
+	switch executionLocationForFenixGuiExecutionServer {
+	case "LOCALHOST_NODOCKER":
+		sharedCode.ExecutionLocationForFenixGuiExecutionServer = sharedCode.LocalhostNoDocker
 
-	case "NO":
-		tempRunAsTrayApplication = false
+	case "LOCALHOST_DOCKER":
+		sharedCode.ExecutionLocationForFenixGuiExecutionServer = sharedCode.LocalhostDocker
+
+	case "GCP":
+		sharedCode.ExecutionLocationForFenixGuiExecutionServer = sharedCode.GCP
 
 	default:
-		fmt.Println("Unknown value for 'RunAsTrayApplication': " + runAsTrayApplication + ". Expected one of the following: 'YES', 'NO'")
+		fmt.Println("Unknown Execution location for FenixGuiExecutionServer: " + executionLocationForFenixGuiExecutionServer + ". Expected one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
 		os.Exit(0)
 
 	}
+
+	// Get Environment variable for Address to 'GUI-ExecutionServer'
+	sharedCode.FenixGuiExecutionServerAddress = mustGetenv("FenixGuiExecutionServerAddress")
+
+	// Get Environment variable regarding Port for 'GUI-ExecutionServer'
+	sharedCode.FenixGuiExecutionServerPort, err = strconv.Atoi(mustGetenv("FenixGuiExecutionServerPort"))
+	if err != nil {
+		fmt.Println("Couldn't convert environment variable 'FenixGuiExecutionServerPort' to an integer, error: ", err)
+		os.Exit(0)
+
+	}
+
+	// Create Dial-address to 'GUI-ExecutionServer'
+	grpc_out_GuiExecutionServer.FenixGuiExecutionServerAddressToDial = sharedCode.FenixGuiExecutionServerAddress + ":" + strconv.Itoa(sharedCode.FenixGuiExecutionServerPort)
 
 }
 
@@ -274,24 +231,23 @@ func onExit() {
 
 }
 
-// Convert variables that can be injected at build time into Map, to be able to dynamically find value
-func convertVariablesToMap() {
+// Convert variables that can be injected at build time into Map, to be able to be dynamically used when getting Environment variables
+func convertBuildInjectedVariablesToMapStructure() {
 
-	buildVariablesMap["BuildVariableDB_HOST"] = BuildVariableDB_HOST
-	buildVariablesMap["BuildVariableDB_NAME"] = BuildVariableDB_NAME
-	buildVariablesMap["BuildVariableDB_PASS"] = BuildVariableDB_PASS
-	buildVariablesMap["BuildVariableDB_PORT"] = BuildVariableDB_PORT
-	buildVariablesMap["BuildVariableDB_SCHEMA"] = BuildVariableDB_SCHEMA
-	buildVariablesMap["BuildVariableDB_USER"] = BuildVariableDB_USER
-	buildVariablesMap["BuildVariableExecutionLocation"] = BuildVariableExecutionLocation
-	buildVariablesMap["BuildVariableExecutionLocationFenixGuiServer"] = BuildVariableExecutionLocationFenixGuiServer
-	buildVariablesMap["BuildVariableFenixGuiBuilderProxyServerAddress"] = BuildVariableFenixGuiBuilderProxyServerAddress
-	buildVariablesMap["BuildVariableFenixGuiBuilderProxyServerAdminPort"] = BuildVariableFenixGuiBuilderProxyServerAdminPort
-	buildVariablesMap["BuildVariableFenixGuiBuilderProxyServerPort"] = BuildVariableFenixGuiBuilderProxyServerPort
-	buildVariablesMap["BuildVariableFenixGuiBuilderServerAddress"] = BuildVariableFenixGuiBuilderServerAddress
-	buildVariablesMap["BuildVariableFenixGuiBuilderServerPort"] = BuildVariableFenixGuiBuilderServerPort
-	buildVariablesMap["BuildVariableTemp"] = BuildVariableTemp
-	buildVariablesMap["BuildVariableRunAsTrayApplication"] = BuildVariableRunAsTrayApplication
+	// GUI-ExecutionServer
+	buildVariablesMap["BuildVariableExecutionLocationForFenixGuiExecutionServer"] = BuildVariableExecutionLocationForFenixGuiExecutionServer
+	buildVariablesMap["BuildVariableFenixGuiExecutionServerAddress"] = BuildVariableFenixGuiExecutionServerAddress
+	buildVariablesMap["BuildVariableFenixGuiExecutionServerPort"] = BuildVariableFenixGuiExecutionServerPort
+
+	// GUI-TestCaseBuilderServer
+	buildVariablesMap["BuildVariableExecutionLocationForFenixGuiTestCaseBuilderServer"] = BuildVariableExecutionLocationForFenixGuiTestCaseBuilderServer
+	buildVariablesMap["BuildVariableFenixGuiTestCaseBuilderServerAddress"] = BuildVariableFenixGuiTestCaseBuilderServerAddress
+	buildVariablesMap["BuildVariableFenixGuiTestCaseBuilderServerPort"] = BuildVariableFenixGuiTestCaseBuilderServerPort
+
+	// This Application
+	buildVariablesMap["BuildVariableExecutionLocationForThisApplication"] = BuildVariableExecutionLocationForThisApplication
 	buildVariablesMap["BuildVariableFYNE_SCALE"] = BuildVariableFYNE_SCALE
+	buildVariablesMap["BuildVariableRunAsTrayApplication"] = BuildVariableRunAsTrayApplication
+	buildVariablesMap["BuildVariableApplicationGrpcPort"] = BuildVariableApplicationGrpcPort
 
 }

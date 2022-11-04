@@ -4,39 +4,37 @@ package main
 // Used when building a Tray Application
 
 var (
-	BuildVariableDB_HOST                             string
-	BuildVariableDB_NAME                             string
-	BuildVariableDB_PASS                             string
-	BuildVariableDB_PORT                             string
-	BuildVariableDB_SCHEMA                           string
-	BuildVariableDB_USER                             string
-	BuildVariableExecutionLocation                   string
-	BuildVariableExecutionLocationFenixGuiServer     string
-	BuildVariableFenixGuiBuilderProxyServerAddress   string
-	BuildVariableFenixGuiBuilderProxyServerAdminPort string
-	BuildVariableFenixGuiBuilderProxyServerPort      string
-	BuildVariableFenixGuiBuilderServerAddress        string
-	BuildVariableFenixGuiBuilderServerPort           string
-	BuildVariableTemp                                string
-	BuildVariableRunAsTrayApplication                string
+	// GUI-ExecutionServer
+	BuildVariableExecutionLocationForFenixGuiExecutionServer string
+	BuildVariableFenixGuiExecutionServerAddress              string
+	BuildVariableFenixGuiExecutionServerPort                 string
+
+	// GUI-TestCaseBuilderServer
+	BuildVariableExecutionLocationForFenixGuiTestCaseBuilderServer string
+	BuildVariableFenixGuiTestCaseBuilderServerAddress              string
+	BuildVariableFenixGuiTestCaseBuilderServerPort                 string
+
+	// This Application
+	BuildVariableExecutionLocationForThisApplication string
 	BuildVariableFYNE_SCALE                          string
+	BuildVariableRunAsTrayApplication                string
+	BuildVariableApplicationGrpcPort                 string
 )
 
 var buildVariablesMap = map[string]string{
-	"BuildVariableDB_HOST":                             "string",
-	"BuildVariableDB_NAME":                             "string",
-	"BuildVariableDB_PASS":                             "string",
-	"BuildVariableDB_PORT":                             "string",
-	"BuildVariableDB_SCHEMA":                           "string",
-	"BuildVariableDB_USER":                             "string",
-	"BuildVariableExecutionLocation":                   "string",
-	"BuildVariableExecutionLocationFenixGuiServer":     "string",
-	"BuildVariableFenixGuiBuilderProxyServerAddress":   "string",
-	"BuildVariableFenixGuiBuilderProxyServerAdminPort": "string",
-	"BuildVariableFenixGuiBuilderProxyServerPort":      "string",
-	"BuildVariableFenixGuiBuilderServerAddress":        "string",
-	"BuildVariableFenixGuiBuilderServerPort":           "string",
-	"BuildVariableTemp":                                "string",
-	"BuildVariableRunAsTrayApplication":                "string",
+	// GUI-ExecutionServer
+	"BuildVariableExecutionLocationForFenixGuiExecutionServer": "string",
+	"BuildVariableFenixGuiExecutionServerAddress":              "string",
+	"BuildVariableFenixGuiExecutionServerPort":                 "string",
+
+	// GUI TestCaseBuilderServer
+	"BuildVariableExecutionLocationForFenixGuiTestCaseBuilderServer": "string",
+	"BuildVariableFenixGuiTestCaseBuilderServerAddress":              "string",
+	"BuildVariableFenixGuiTestCaseBuilderServerPort":                 "string",
+
+	// This Application
+	"BuildVariableExecutionLocationForThisApplication": "string",
 	"BuildVariableFYNE_SCALE":                          "string",
+	"BuildVariableRunAsTrayApplication":                "string",
+	"BuildVariableApplicationGrpcPort":                 "string",
 }

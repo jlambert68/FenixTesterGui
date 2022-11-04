@@ -86,7 +86,6 @@ func fenixGuiBuilderServerMain() {
 	go fenixTesterGuiObject.subPackageObjects.grpcIn.InitGrpcServer()
 
 	// Start UI Server
-	//fenixTesterGuiObject.subPackageObjects.uiServer. StartUIServer()
 	fenixTesterGuiObject.subPackageObjects.uiServer.StartUIServer()
 
 }

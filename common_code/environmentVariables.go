@@ -3,12 +3,6 @@ package sharedCode
 // ***********************************************************************************************************
 // The following variables receives their values from environment variables
 
-// Where is the client running
-var ExecutionLocation ExecutionLocationTypeType
-
-// ExecutionLocationForFenixGuiTestCaseBuilderServer - Where is the FenixGuiTestCaseBuilderServer running
-var ExecutionLocationForFenixGuiTestCaseBuilderServer ExecutionLocationTypeType
-
 // ExecutionLocationTypeType - Definition type for where the different programs are running
 type ExecutionLocationTypeType int
 
@@ -28,11 +22,24 @@ var LocationForFenixGuiBuilderProxyServerTypeMapping = map[ExecutionLocationType
 
 // Address and port to 'FenixGuiTestCaseBuilderServer' and 'FenixGuiExecutionServer', will get their values from Environment variables at startup
 var (
-	FenixGuiTestCaseBuilderServerAddress string //
-	FenixGuiTestCaseBuilderServerPort    int    // TODO remove,
+	// GUI-ExecutionServer
+	ExecutionLocationForFenixGuiExecutionServer ExecutionLocationTypeType
+	FenixGuiExecutionServerAddress              string
+	FenixGuiExecutionServerPort                 int
 
-	FenixGuiBuilderProxyServerAddress string
-	FenixGuiBuilderProxyServerPort    int
+	// GUI TestCaseBuilderServer
+	ExecutionLocationForFenixGuiTestCaseBuilderServer ExecutionLocationTypeType
+	FenixGuiTestCaseBuilderServerAddress              string
+	FenixGuiTestCaseBuilderServerPort                 int
+
+	// This Application
+	ExecutionLocationForThisApplication ExecutionLocationTypeType
+	FYNE_SCALE                          string
+	RunAsTrayApplication                bool
+	ApplicationGrpcPort                 int
+
+	//TODO REMOVE FenixGuiTestCaseBuilderProxyServerAddress string
+	//TODO REMOVE FenixGuiTestCaseBuilderProxyServerPort    int
 )
 
 const numberOfCharactersfromUuid = 8

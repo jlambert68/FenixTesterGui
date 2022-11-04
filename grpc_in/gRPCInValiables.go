@@ -15,8 +15,8 @@ var GrpcIn GRPCInStruct
 
 // gRPC variables
 var (
-	registerfenixGuiBuilderProxyServerServer *grpc.Server
-	lis                                      net.Listener
+	registerFenixGuiBuilderServer *grpc.Server
+	lis                           net.Listener
 )
 
 // gRPC Server used for register clients Name, Ip and Port and Clients Test Environments and Clients Test Commands

@@ -43,7 +43,7 @@ type ecServer struct {
 */
 
 // Bad solution but using temp storage before real variable is initiated
-var tempRunAsTrayApplication bool
+//var tempRunAsTrayApplication bool
 
 // Create address for FenixGuiServer to call
 var fenixGuiBuilderServerAddressToDial string

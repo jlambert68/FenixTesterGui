@@ -31,17 +31,17 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) setConnectionToFenixGuiTes
 	// When run on GCP, use credentials
 	if common_config.ExecutionLocationForFenixGuiTestCaseBuilderServer == common_config.GCP {
 		// Run on GCP
-		remoteFenixGuiTestCaseBuilderServerConnection, err = grpc.Dial(grpcOut.fenixGuiBuilderServerAddressToDial, opts...)
+		remoteFenixGuiTestCaseBuilderServerConnection, err = grpc.Dial(FenixGuiTestCaseBuilderServerAddressToDial, opts...)
 	} else {
 		// Run Local
-		remoteFenixGuiTestCaseBuilderServerConnection, err = grpc.Dial(grpcOut.fenixGuiBuilderServerAddressToDial, grpc.WithInsecure())
+		remoteFenixGuiTestCaseBuilderServerConnection, err = grpc.Dial(FenixGuiTestCaseBuilderServerAddressToDial, grpc.WithInsecure())
 	}
 	if err != nil {
 		grpcOut.logger.WithFields(logrus.Fields{
-			"ID":                                 "50b59b1b-57ce-4c27-aa84-617f0cde3100",
-			"fenixGuiBuilderServerAddressToDial": grpcOut.fenixGuiBuilderServerAddressToDial,
-			"error message":                      err,
-		}).Error("Did not connect to FenixGuiBuilderServer via gRPC")
+			"ID": "50b59b1b-57ce-4c27-aa84-617f0cde3100",
+			"FenixGuiTestCaseBuilderServerAddressToDial": FenixGuiTestCaseBuilderServerAddressToDial,
+			"error message": err,
+		}).Error("Did not connect to FenixGuiTestCaseBuilderServer via gRPC")
 		//os.Exit(0)
 
 		// Create response message for when no success dail was able to be made
@@ -64,9 +64,9 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) setConnectionToFenixGuiTes
 
 	} else {
 		grpcOut.logger.WithFields(logrus.Fields{
-			"ID": "0c650bbc-45d0-4029-bd25-4ced9925a059",
-			"fenixGuiTestCaseBuilderServer_address_to_dial": grpcOut.fenixGuiBuilderServerAddressToDial,
-		}).Info("gRPC connection OK to FenixTestDataSyncServer")
+			"ID": "526e3dad-3534-49ab-b107-9c26d1d45d0e",
+			"FenixGuiTestCaseBuilderServerAddressToDial": FenixGuiTestCaseBuilderServerAddressToDial,
+		}).Info("gRPC connection OK to FenixGuiTestCaseBuilderServer")
 
 		// Creates a new Clients
 		fenixGuiTestCaseCaseBuilderServerGrpcClient = fenixTestCaseBuilderServerGrpcApi.NewFenixTestCaseBuilderServerGrpcServicesClient(remoteFenixGuiTestCaseBuilderServerConnection)
@@ -115,7 +115,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SetLogger(logger *logrus.L
 // SetDialAddressString
 // Set the Dial Address, which was received from environment variables
 func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SetDialAddressString(dialAddress string) {
-	grpcOut.fenixGuiBuilderServerAddressToDial = dialAddress
+	FenixGuiTestCaseBuilderServerAddressToDial = dialAddress
 
 	return
 

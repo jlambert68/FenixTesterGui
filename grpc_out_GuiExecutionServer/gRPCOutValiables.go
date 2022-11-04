@@ -1,7 +1,6 @@
 package grpc_out_GuiExecutionServer
 
 import (
-	"FenixTesterGui/gcp"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -9,7 +8,7 @@ import (
 
 type GRPCOutGuiExecutionServerStruct struct {
 	logger *logrus.Logger
-	gcp    gcp.GcpObjectStruct
+	//gcp    gcp.GcpObjectStruct
 }
 
 var grpcOutGuiExecutionServerObject GRPCOutGuiExecutionServerStruct

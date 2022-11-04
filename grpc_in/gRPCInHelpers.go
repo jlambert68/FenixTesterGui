@@ -1,7 +1,8 @@
 package grpc_in
 
 import (
-	fenixTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	sharedCode "FenixTesterGui/common_code"
+	fenixUserGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixUserGui/fenixUserGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 )
 
@@ -10,14 +11,14 @@ var highestFenixProtoFileVersion int32 = -1
 
 // IsClientUsingCorrectTestDataProtoFileVersion ********************************************************************************************************************
 // Check if Calling Client is using correct proto-file version
-func (grpcIn *GRPCInStruct) IsClientUsingCorrectTestDataProtoFileVersion(callingClientUuid string, usedProtoFileVersion fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum) (returnMessage *fenixTestCaseBuilderServerGrpcApi.AckNackResponse) {
+func IsClientUsingCorrectTestDataProtoFileVersion(callingClientUuid string, usedProtoFileVersion fenixUserGuiGrpcApi.CurrentFenixUserGuiProtoFileVersionEnum) (returnMessage *fenixUserGuiGrpcApi.AckNackResponse) {
 
 	var clientUseCorrectProtoFileVersion bool
-	var protoFileExpected fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum
-	var protoFileUsed fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum
+	var protoFileExpected fenixUserGuiGrpcApi.CurrentFenixUserGuiProtoFileVersionEnum
+	var protoFileUsed fenixUserGuiGrpcApi.CurrentFenixUserGuiProtoFileVersionEnum
 
 	protoFileUsed = usedProtoFileVersion
-	protoFileExpected = fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(grpcIn.getHighestFenixGuiServerProtoFileVersion())
+	protoFileExpected = fenixUserGuiGrpcApi.CurrentFenixUserGuiProtoFileVersionEnum(getHighestFenixUserGuiServerProtoFileVersion())
 
 	// Check if correct proto files is used
 	if protoFileExpected == protoFileUsed {
@@ -31,22 +32,22 @@ func (grpcIn *GRPCInStruct) IsClientUsingCorrectTestDataProtoFileVersion(calling
 		// Not correct proto-file version is used
 
 		// Set Error codes to return message
-		var errorCodes []fenixTestCaseBuilderServerGrpcApi.ErrorCodesEnum
-		var errorCode fenixTestCaseBuilderServerGrpcApi.ErrorCodesEnum
+		var errorCodes []fenixUserGuiGrpcApi.ErrorCodesEnum
+		var errorCode fenixUserGuiGrpcApi.ErrorCodesEnum
 
-		errorCode = fenixTestCaseBuilderServerGrpcApi.ErrorCodesEnum_ERROR_WRONG_PROTO_FILE_VERSION
+		errorCode = fenixUserGuiGrpcApi.ErrorCodesEnum_ERROR_WRONG_PROTO_FILE_VERSION
 		errorCodes = append(errorCodes, errorCode)
 
 		// Create Return message
-		returnMessage = &fenixTestCaseBuilderServerGrpcApi.AckNackResponse{
+		returnMessage = &fenixUserGuiGrpcApi.AckNackResponse{
 			AckNack:    false,
 			Comments:   "Wrong proto file used. Expected: '" + protoFileExpected.String() + "', but got: '" + protoFileUsed.String() + "'",
 			ErrorCodes: errorCodes,
 		}
 
-		grpcIn.logger.WithFields(logrus.Fields{
+		sharedCode.Logger.WithFields(logrus.Fields{
 			"id": "513dd8fb-a0bb-4738-9a0b-b7eaf7bb8adb",
-		}).Debug("Wrong proto file used. Expected: '" + protoFileExpected.String() + "', but got: '" + protoFileUsed.String() + "' for Client: " + callingClientUuid)
+		}).Info("Wrong proto file used. Expected: '" + protoFileExpected.String() + "', but got: '" + protoFileUsed.String() + "' for Client: " + callingClientUuid)
 
 		return returnMessage
 
@@ -58,7 +59,7 @@ func (grpcIn *GRPCInStruct) IsClientUsingCorrectTestDataProtoFileVersion(calling
 
 // ********************************************************************************************************************
 // Get the highest FenixProtoFileVersionEnumeration
-func (grpcIn *GRPCInStruct) getHighestFenixGuiServerProtoFileVersion() int32 {
+func getHighestFenixUserGuiServerProtoFileVersion() int32 {
 
 	// Check if there already is a 'highestFenixProtoFileVersion' saved, if so use that one
 	if highestFenixProtoFileVersion != -1 {
@@ -69,7 +70,7 @@ func (grpcIn *GRPCInStruct) getHighestFenixGuiServerProtoFileVersion() int32 {
 	var maxValue int32
 	maxValue = 0
 
-	for _, v := range fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum_value {
+	for _, v := range fenixUserGuiGrpcApi.CurrentFenixUserGuiProtoFileVersionEnum_value {
 		if v > maxValue {
 			maxValue = v
 		}

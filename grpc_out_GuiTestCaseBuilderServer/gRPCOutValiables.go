@@ -1,7 +1,6 @@
 package grpc_out_GuiTestCaseBuilderServer
 
 import (
-	"FenixTesterGui/gcp"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -9,13 +8,13 @@ import (
 
 type GRPCOutGuiTestCaseBuilderServerStruct struct {
 	logger *logrus.Logger
-	gcp    gcp.GcpObjectStruct
+	//gcp    gcp.GcpObjectStruct
 }
 
 var grpcOutGuiTestCaseBuilderServerObject GRPCOutGuiTestCaseBuilderServerStruct
 
 var (
-	// Standard gRPC Clientr
+	// Standard gRPC Client
 	remoteFenixGuiTestCaseBuilderServerConnection *grpc.ClientConn
 	// FenixGuiTestCaseBuilderServerAddressToDial gRpcClientForFenixGuiBuilderServer fenixTestDataSyncServerGrpcApi.FenixTestDataGrpcServicesClient
 	FenixGuiTestCaseBuilderServerAddressToDial string

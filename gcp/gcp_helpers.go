@@ -225,7 +225,7 @@ func (gcp *GcpObjectStruct) startLocalWebServer(webServer *http.Server) {
 	}()
 	err := webServer.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
-		Gcp.logger.WithFields(logrus.Fields{
+		GcpObject.logger.WithFields(logrus.Fields{
 			"ID": "8226cf74-0cdc-4e29-a441-116504b4b333",
 		}).Fatalf("Local Web Server failed to listen: %s\n", err)
 

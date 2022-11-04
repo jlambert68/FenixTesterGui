@@ -2,9 +2,10 @@ package grpc_in
 
 import (
 	"FenixTesterGui/common_code"
-	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	fenixUserGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixUserGui/fenixUserGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"net"
 	"strconv"
 )
@@ -44,22 +45,22 @@ func (grpcIn *GRPCInStruct) InitGrpcServer() {
 		"Id": "b0ccffb5-4367-464c-a3bc-460cafed16cb",
 	}).Info("Starting Backend gRPC Server")
 
-	registerFenixGuiBuilderServer = grpc.NewServer()
-	fenixGuiTestCaseBuilderServerGrpcApi.RegisterFenixTestCaseBuilderServerGrpcServicesServer(registerFenixGuiBuilderServer, &fenixGuiTestCaseBuilderGrpcServicesServer{})
+	registerFenixUserGuiServer = grpc.NewServer()
+	fenixUserGuiGrpcApi.RegisterFenixUserGuiGrpcServicesServer(registerFenixUserGuiServer, &fenixUserGuiGrpcServicesServer{})
 
-	// Register RouteGuide on the same server.
-	//reflection.Register(registerFenixGuiBuilderServer)
+	// Register Reflection for this gRPC-server.
+	reflection.Register(registerFenixUserGuiServer)
 
 	grpcIn.logger.WithFields(logrus.Fields{
 		"Id":                                  "e843ece9-b707-4c60-b1d8-14464305e68f",
 		"common_config.ApplicationGrpcPort: ": sharedCode.ApplicationGrpcPort,
 	}).Info("'RegisterFenixTestCaseBuilderServerGrpcServicesServer' for FenixGuiBuilderProxyServer")
-	err = registerFenixGuiBuilderServer.Serve(lis)
+	err = registerFenixUserGuiServer.Serve(lis)
 	if err != nil {
 		grpcIn.logger.WithFields(logrus.Fields{
 			"Id":  "d0f4de61-32fd-4ca9-868b-bdc4765e2d44",
 			"err": err,
-		}).Error("Couldn't register gRPC-server: 'registerFenixGuiBuilderServer'")
+		}).Error("Couldn't register gRPC-server: 'registerFenixUserGuiServer'")
 	}
 
 	//}()
@@ -69,8 +70,8 @@ func (grpcIn *GRPCInStruct) InitGrpcServer() {
 // StopGrpcServer - Stop Backend gRPC-server
 func (grpcIn *GRPCInStruct) StopGrpcServer() {
 
-	grpcIn.logger.WithFields(logrus.Fields{}).Info("Gracefully stop for: 'registerFenixGuiBuilderServer'")
-	registerFenixGuiBuilderServer.GracefulStop()
+	grpcIn.logger.WithFields(logrus.Fields{}).Info("Gracefully stop for: 'registerFenixUserGuiServer'")
+	registerFenixUserGuiServer.GracefulStop()
 
 	grpcIn.logger.WithFields(logrus.Fields{
 		"common_config.ApplicationGrpcPort: ": sharedCode.ApplicationGrpcPort,

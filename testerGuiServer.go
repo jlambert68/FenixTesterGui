@@ -1,6 +1,7 @@
 package main
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/grpc_in"
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	"FenixTesterGui/gui"
@@ -65,7 +66,11 @@ func fenixGuiBuilderServerMain() {
 		}
 	}
 
+	// Initiate logging
 	fenixTesterGuiObject.InitLogger(filePathName)
+
+	// Store logger reference in shared code 'for all to use'
+	sharedCode.Logger = fenixTesterGuiObject.logger
 
 	// Set logger for sub packages
 	fenixTesterGuiObject.subPackageObjects.grpcIn.SetLogger(fenixTesterGuiObject.logger)

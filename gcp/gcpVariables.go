@@ -12,4 +12,4 @@ type GcpObjectStruct struct {
 	gcpAccessTokenForAuthorizedAccounts goth.User
 }
 
-var Gcp GcpObjectStruct
+var GcpObject GcpObjectStruct

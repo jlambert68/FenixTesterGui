@@ -1,5 +1,7 @@
 package sharedCode
 
+import "github.com/sirupsen/logrus"
+
 // CommandChannel Channel used for triggering command to CommandEngine
 
 var CommandChannel CommandChannelType
@@ -44,3 +46,5 @@ const (
 	TestInstruction
 	TestInstructionContainer
 )
+
+var Logger *logrus.Logger

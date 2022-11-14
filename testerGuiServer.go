@@ -85,7 +85,7 @@ func fenixGuiBuilderServerMain() {
 	defer cleanup()
 
 	// Start RestApi-server
-	go fenixTesterGuiObject.subPackageObjects.restAPI.RestAPIServer()
+	//go fenixTesterGuiObject.subPackageObjects.restAPI.RestAPIServer()
 
 	// Start Backend gRPC-server
 	go fenixTesterGuiObject.subPackageObjects.grpcIn.InitGrpcServer()

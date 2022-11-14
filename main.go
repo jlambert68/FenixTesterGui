@@ -198,6 +198,17 @@ func init() {
 	// Create Dial-address to 'GUI-ExecutionServer'
 	grpc_out_GuiExecutionServer.FenixGuiExecutionServerAddressToDial = sharedCode.FenixGuiExecutionServerAddress + ":" + strconv.Itoa(sharedCode.FenixGuiExecutionServerPort)
 
+	// Get Environment variable 'GCPAuthentication' to decide if we should use GCP-authenticfication or not
+	var tempBoolAsString string
+	var tempBool bool
+	tempBoolAsString = mustGetenv("GCPAuthentication")
+	tempBool, err = strconv.ParseBool(tempBoolAsString)
+	if err != nil {
+		fmt.Println("Couldn't convert environment variable 'GCPAuthentication' to a boolean, error: ", err)
+		os.Exit(0)
+	}
+	sharedCode.GCPAuthentication = tempBool
+
 }
 
 // SysTray Application - StartUp
@@ -233,6 +244,9 @@ func onExit() {
 
 // Convert variables that can be injected at build time into Map, to be able to be dynamically used when getting Environment variables
 func convertBuildInjectedVariablesToMapStructure() {
+
+	//GCP
+	buildVariablesMap["BuildVariableGCPAuthentication"] = BuildVariableGCPAuthentication
 
 	// GUI-ExecutionServer
 	buildVariablesMap["BuildVariableExecutionLocationForFenixGuiExecutionServer"] = BuildVariableExecutionLocationForFenixGuiExecutionServer

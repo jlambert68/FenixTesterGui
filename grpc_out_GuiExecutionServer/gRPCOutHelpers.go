@@ -12,7 +12,7 @@ import (
 // ********************************************************************************************************************
 
 // Set upp connection and Dial to FenixGuiExecutionServer
-func (grpcOut *GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecutionServer() (returnMessage *fenixExecutionServerGuiGrpcApi.AckNackResponse) {
+func (grpcOut *GRPCOutGuiExecutionServerStruct) SetConnectionToFenixGuiExecutionServer() (returnMessage *fenixExecutionServerGuiGrpcApi.AckNackResponse) {
 	var err error
 	var opts []grpc.DialOption
 

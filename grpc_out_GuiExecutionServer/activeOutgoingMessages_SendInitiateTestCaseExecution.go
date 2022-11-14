@@ -3,6 +3,7 @@ package grpc_out_GuiExecutionServer
 import (
 	"FenixTesterGui/common_code"
 	"FenixTesterGui/gcp"
+	"fmt"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
@@ -21,7 +22,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendInitiateTestCaseExecution(in
 
 	// Set up connection to Server
 	var ackNackresponse *fenixExecutionServerGuiGrpcApi.AckNackResponse
-	ackNackresponse = grpcOut.setConnectionToFenixGuiExecutionServer()
+	ackNackresponse = grpcOut.SetConnectionToFenixGuiExecutionServer()
 	// If there was no connection to backend then return that message
 	if ackNackresponse != nil {
 		initiateSingleTestCaseExecutionResponseMessage = &fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionResponseMessage{
@@ -74,6 +75,18 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendInitiateTestCaseExecution(in
 			"ID":    "258310aa-1162-48ff-9a8c-3efc3d7d5b7c",
 			"error": err,
 		}).Error("Problem to do gRPC-call to FenixGuiExecutionServer for 'SendInitiateTestCaseExecution'")
+
+		initiateSingleTestCaseExecutionResponseMessage = &fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionResponseMessage{
+			TestCaseExecutionUuid: "",
+			AckNackResponse: &fenixExecutionServerGuiGrpcApi.AckNackResponse{
+				AckNack:    false,
+				Comments:   fmt.Sprintf("Problem to do gRPC-call to FenixGuiExecutionServer for 'SendInitiateTestCaseExecution'. ErrorMessage: '%s'", err.Error()),
+				ErrorCodes: nil,
+				ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
+					GetHighestFenixGuiExecutionServerProtoFileVersion()),
+			},
+		}
+		return initiateSingleTestCaseExecutionResponseMessage
 
 	} else if initiateSingleTestCaseExecutionResponseMessage.AckNackResponse.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call

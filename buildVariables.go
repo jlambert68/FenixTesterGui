@@ -4,6 +4,9 @@ package main
 // Used when building a Tray Application
 
 var (
+	//GCP
+	BuildVariableGCPAuthentication string
+
 	// GUI-ExecutionServer
 	BuildVariableExecutionLocationForFenixGuiExecutionServer string
 	BuildVariableFenixGuiExecutionServerAddress              string
@@ -22,6 +25,9 @@ var (
 )
 
 var buildVariablesMap = map[string]string{
+	//GCP
+	"BuildVariableGCPAuthentication": "string",
+
 	// GUI-ExecutionServer
 	"BuildVariableExecutionLocationForFenixGuiExecutionServer": "string",
 	"BuildVariableFenixGuiExecutionServerAddress":              "string",

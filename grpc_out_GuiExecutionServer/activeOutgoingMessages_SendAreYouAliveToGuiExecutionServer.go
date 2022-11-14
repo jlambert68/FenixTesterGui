@@ -20,7 +20,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendAreYouAliveToGuiExecutionSer
 	var err error
 
 	// Set up connection to Server
-	returnMessage = grpcOut.setConnectionToFenixGuiExecutionServer()
+	returnMessage = grpcOut.SetConnectionToFenixGuiExecutionServer()
 	// If there was no connection to backend then return that message
 	if returnMessage != nil {
 		return returnMessage

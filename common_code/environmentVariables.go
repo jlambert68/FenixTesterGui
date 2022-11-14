@@ -22,6 +22,10 @@ var LocationForFenixGuiBuilderProxyServerTypeMapping = map[ExecutionLocationType
 
 // Address and port to 'FenixGuiTestCaseBuilderServer' and 'FenixGuiExecutionServer', will get their values from Environment variables at startup
 var (
+
+	// GCP
+	GCPAuthentication bool
+
 	// GUI-ExecutionServer
 	ExecutionLocationForFenixGuiExecutionServer ExecutionLocationTypeType
 	FenixGuiExecutionServerAddress              string

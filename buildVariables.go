@@ -5,7 +5,8 @@ package main
 
 var (
 	//GCP
-	BuildVariableGCPAuthentication string
+	BuildVariableGCPAuthentication                      string
+	BuildVariableUseServiceAccountForGuiExecutionServer string
 
 	// GUI-ExecutionServer
 	BuildVariableExecutionLocationForFenixGuiExecutionServer string
@@ -26,7 +27,8 @@ var (
 
 var buildVariablesMap = map[string]string{
 	//GCP
-	"BuildVariableGCPAuthentication": "string",
+	"BuildVariableGCPAuthentication":                      "string",
+	"BuildVariableUseServiceAccountForGuiExecutionServer": "string",
 
 	// GUI-ExecutionServer
 	"BuildVariableExecutionLocationForFenixGuiExecutionServer": "string",

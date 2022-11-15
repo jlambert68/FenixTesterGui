@@ -18,7 +18,7 @@ var (
 	remoteFenixGuiExecutionServerConnection *grpc.ClientConn
 	FenixGuiExecutionServerAddressToDial    string
 
-	fenixGuiExecutionServerGrpcClient fenixExecutionServerGuiGrpcApi.FenixExecutionServerGuiGrpcServicesClient
+	fenixGuiExecutionServerGrpcClient fenixExecutionServerGuiGrpcApi.FenixExecutionServerGuiGrpcServicesForGuiClientClient
 )
 
 var highestFenixGuiExecutionServerProtoFileVersion int32 = -1

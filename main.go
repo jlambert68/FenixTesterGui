@@ -209,6 +209,15 @@ func init() {
 	}
 	sharedCode.GCPAuthentication = tempBool
 
+	// Get Environment variable 'UseServiceAccountForGuiExecutionServer' to decide if we should use a service account to log into GCP or to use Users login credentials
+	tempBoolAsString = mustGetenv("UseServiceAccountForGuiExecutionServer")
+	tempBool, err = strconv.ParseBool(tempBoolAsString)
+	if err != nil {
+		fmt.Println("Couldn't convert environment variable 'UseServiceAccountForGuiExecutionServer' to a boolean, error: ", err)
+		os.Exit(0)
+	}
+	sharedCode.UseServiceAccountForGuiExecutionServer = tempBool
+
 }
 
 // SysTray Application - StartUp

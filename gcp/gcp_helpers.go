@@ -1,6 +1,7 @@
 package gcp
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/notToBeSentToGithub"
 	"fmt"
 	"github.com/gorilla/pat"
@@ -17,6 +18,21 @@ import (
 	"net/http"
 	"time"
 )
+
+func (gcp *GcpObjectStruct) GenerateGCPAccessToken(ctx context.Context) (appendedCtx context.Context, returnAckNack bool, returnMessage string) {
+
+	// Chose correct method for authentication
+	if sharedCode.UseServiceAccountForGuiExecutionServer == true {
+		// Use Service account
+		appendedCtx, returnAckNack, returnMessage = gcp.GenerateGCPAccessTokenForServiceAccount(ctx)
+	} else {
+		// User log into GCP via web
+		appendedCtx, returnAckNack, returnMessage = gcp.GenerateGCPAccessTokenForAuthorizedUser(ctx)
+	}
+
+	return appendedCtx, returnAckNack, returnMessage
+
+}
 
 // GenerateGCPAccessTokenForServiceAccount Generate Google access token for a service account. Used when running in GCP
 func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForServiceAccount(ctx context.Context) (appendedCtx context.Context, returnAckNack bool, returnMessage string) {
@@ -61,8 +77,8 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForServiceAccount(ctx context.
 		tokenSource, err := idtoken.NewTokenSource(ctx, notToBeSentToGithub.Gcp_scope, idtoken.WithCredentialsJSON(notToBeSentToGithub.ServiceAccountKeyJson))
 
 		if err != nil {
-			gcp.logger.WithFields(logrus.Fields{
-				"ID":  "8ba622d8-b4cd-46c7-9f81-d9ade2568eca",
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":  "c11aba6d-a177-4b88-a521-15bec26a3312",
 				"err": err,
 			}).Error("Couldn't generate access token")
 
@@ -73,15 +89,15 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForServiceAccount(ctx context.
 		//token, err := config.TokenSource(oauth2.NoContext).Token()
 
 		if err != nil {
-			gcp.logger.WithFields(logrus.Fields{
-				"ID":  "0cf31da5-9e6b-41bc-96f1-6b78fb446194",
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":  "0e0dd854-2088-419d-a0d1-035b6242c585",
 				"err": err,
 			}).Error("Problem getting the token")
 
 			return nil, false, "Problem getting the token"
 		} else {
-			gcp.logger.WithFields(logrus.Fields{
-				"ID":    "8b1ca089-0797-4ee6-bf9d-f9b06f606ae9",
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":    "1ee9fd6d-c83d-4dbb-bce7-fd4901ff3f87",
 				"token": "Nothing to see", //token,
 			}).Debug("Got Bearer Token")
 		}
@@ -90,8 +106,8 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForServiceAccount(ctx context.
 
 	}
 
-	gcp.logger.WithFields(logrus.Fields{
-		"ID": "cd124ca3-87bb-431b-9e7f-e044c52b4960",
+	sharedCode.Logger.WithFields(logrus.Fields{
+		"ID": "fa86e0bd-9c47-4f1e-b9dd-2b1f08880b2b",
 		"fenixGuiBuilderProxyServerObject.gcpAccessTokenForServiceAccounts": "Nothing to see", //fenixGuiBuilderProxyServerObject.gcpAccessTokenForServiceAccounts,
 	}).Debug("Will use Bearer Token")
 

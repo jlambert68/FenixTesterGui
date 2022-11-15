@@ -68,7 +68,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SetConnectionToFenixGuiExecution
 		}).Info("gRPC connection OK to FenixGuiExecutionServer")
 
 		// Creates a new Clients
-		fenixGuiExecutionServerGrpcClient = fenixExecutionServerGuiGrpcApi.NewFenixExecutionServerGuiGrpcServicesClient(remoteFenixGuiExecutionServerConnection)
+		fenixGuiExecutionServerGrpcClient = fenixExecutionServerGuiGrpcApi.NewFenixExecutionServerGuiGrpcServicesForGuiClientClient(remoteFenixGuiExecutionServerConnection)
 
 	}
 

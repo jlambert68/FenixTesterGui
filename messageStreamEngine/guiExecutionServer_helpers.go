@@ -1,4 +1,4 @@
-package messageEngine
+package messageStreamEngine
 
 import (
 	sharedCode "FenixTesterGui/common_code"
@@ -19,8 +19,23 @@ import (
 
 // ********************************************************************************************************************
 
+// InitiateAndStartMessageStreamChannelReader
+// Initiate the channel reader which is used for reading and processing messages that were received from GuiExecutionServer
+func InitiateAndStartMessageStreamChannelReader() {
+
+	messageStreamEngineObject = MessageStreamEngineStruct{}
+
+	executionStatusCommandChannel = make(chan ChannelCommandStruct, messageChannelMaxSize)
+
+	go messageStreamEngineObject.startCommandChannelReader()
+
+	go messageStreamEngineObject.initiateOpenMessageStreamToGuiExecutionServer()
+
+	return
+}
+
 // SetConnectionToFenixExecutionWorkerServer - Set upp connection and Dial to FenixExecutionServer
-func (messageEngineServerObject *messageEngineServerStruct) setConnectionToFenixGuiExecutionMessageServer(ctx context.Context) (_ context.Context, err error) {
+func (messageStreamEngineObject *MessageStreamEngineStruct) setConnectionToFenixGuiExecutionMessageServer(ctx context.Context) (_ context.Context, err error) {
 	/* THis is done in the new
 	var opts []grpc.DialOption
 
@@ -90,7 +105,7 @@ func (messageEngineServerObject *messageEngineServerStruct) setConnectionToFenix
 			}).Info("gRPC connection OK to FenixGuiExecutionServer")
 
 			// Creates a new Client
-			fenixGuiExecutionServerGrpcClient = fenixExecutionServerGuiGrpcApi.NewFenixExecutionServerGuiGrpcServicesClient(remoteFenixGuiExecutionServerConnection)
+			fenixGuiExecutionServerSubscribeToMessagesClient = fenixExecutionServerGuiGrpcApi.NewFenixExecutionServerGuiGrpcServicesForGuiClientClient(remoteFenixGuiExecutionServerConnection)
 
 			break
 		}

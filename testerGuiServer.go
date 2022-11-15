@@ -5,6 +5,7 @@ import (
 	"FenixTesterGui/grpc_in"
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	"FenixTesterGui/gui"
+	"FenixTesterGui/messageStreamEngine"
 	"FenixTesterGui/restAPI"
 	"github.com/sirupsen/logrus"
 	"log"
@@ -89,6 +90,9 @@ func fenixGuiBuilderServerMain() {
 
 	// Start Backend gRPC-server
 	go fenixTesterGuiObject.subPackageObjects.grpcIn.InitGrpcServer()
+
+	// Start up MessageStreamEngine
+	messageStreamEngine.InitiateAndStartMessageStreamChannelReader()
 
 	// Start UI Server
 	fenixTesterGuiObject.subPackageObjects.uiServer.StartUIServer()

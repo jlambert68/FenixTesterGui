@@ -48,4 +48,11 @@ const (
 	TestInstructionContainer
 )
 
+// Logger that can be used in every part of the code
 var Logger *logrus.Logger
+
+// Unique 'Uuid' for this running instance. Created at start up. Used as identification
+var ApplicationRunTimeUuid string
+
+// The current user of the TesterGui
+var CurrentUserId string

@@ -7,6 +7,8 @@ import (
 	"FenixTesterGui/gui"
 	"FenixTesterGui/messageStreamEngine"
 	"FenixTesterGui/restAPI"
+	"fmt"
+	uuidGenerator "github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	"log"
 	"os"
@@ -37,8 +39,9 @@ func cleanup() {
 
 func fenixGuiBuilderServerMain() {
 
-	// Connect to CloudDB
-	//fenixSyncShared.ConnectToDB()
+	// Create Unique Uuid for run time instance used as identification when communication with GuiExecutionServer
+	sharedCode.ApplicationRunTimeUuid = uuidGenerator.New().String()
+	fmt.Println("sharedCode.ApplicationRunTimeUuid: " + sharedCode.ApplicationRunTimeUuid)
 
 	// Set up BackendObjec 	t
 	fenixTesterGuiObject = &fenixGuiBuilderProxyServerObjectStruct{

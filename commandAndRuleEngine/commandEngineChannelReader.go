@@ -119,9 +119,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 	// Create message to be sent to GuiExecutionServer
 	var initiateSingleTestCaseExecutionRequestMessage *fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionRequestMessage
 	initiateSingleTestCaseExecutionRequestMessage = &fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionRequestMessage{
-		UserIdentification: &fenixExecutionServerGuiGrpcApi.UserIdentificationMessage{
-			UserId:                       commandAndRuleEngine.Testcases.CurrentUser,
-			ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion()),
+		UserAndApplicationRunTimeIdentification: &fenixExecutionServerGuiGrpcApi.UserAndApplicationRunTimeIdentificationMessage{
+			ApplicationRunTimeUuid: sharedCode.ApplicationRunTimeUuid,
+			UserId:                 sharedCode.CurrentUserId,
+			ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
+				grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion()),
 		},
 		TestCaseUuid:    testCaseUuidToBeExecuted,
 		TestDataSetUuid: testCaseUuidToBeExecuted, //TODO change into a correct 'TestDataSetUuid' when that is supported

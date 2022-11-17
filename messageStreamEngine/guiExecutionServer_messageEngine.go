@@ -54,13 +54,15 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) initiateGuiExecution
 	}
 
 	// Set up call parameter
-	emptyParameter := &fenixExecutionServerGuiGrpcApi.EmptyParameter{
+	userAndApplicationRunTimeIdentificationMessage := &fenixExecutionServerGuiGrpcApi.UserAndApplicationRunTimeIdentificationMessage{
+		ApplicationRunTimeUuid: sharedCode.ApplicationRunTimeUuid,
+		UserId:                 sharedCode.CurrentUserId,
 		ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
 			grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion()),
 	}
 
 	// Start up streamClient from TestGui
-	streamClient, err := fenixGuiExecutionServerSubscribeToMessagesClient.SubscribeToMessageStream(ctx, emptyParameter)
+	streamClient, err := fenixGuiExecutionServerSubscribeToMessagesClient.SubscribeToMessageStream(ctx, userAndApplicationRunTimeIdentificationMessage)
 
 	// Couldn't connect to GuiExecutionServer
 	if err != nil {

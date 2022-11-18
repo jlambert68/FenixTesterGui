@@ -6,6 +6,7 @@ import (
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
+	"sort"
 )
 
 // Gets the testCaseModel used to drive the Available Building Blocks-Tree
@@ -26,6 +27,16 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) makeTree
 
 	// Loop all Domains
 	availableDomains := availableBuildingBlocksModel.getAvailableDomainsFromModel()
+
+	// Sort 'Domains' in Name-order
+	sort.SliceStable(availableDomains, func(i, j int) bool {
+		if availableDomains[i].nameInUITree != availableDomains[j].nameInUITree {
+			return availableDomains[i].nameInUITree < availableDomains[j].nameInUITree
+		}
+
+		return availableDomains[i].nameInUITree < availableDomains[j].nameInUITree
+	})
+
 	for _, domain := range availableDomains {
 		// For each domain add TestInstructionHeaderName and TestInstructionContainerHeaderName
 		availableBuildingBlocksModel.availableBuildingBlockModelSuitedForFyneTreeView[domain.nameInUITree] = []string{
@@ -39,6 +50,16 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) makeTree
 		for _, availableTestInstructionTypeFromModel := range availableTestInstructionTypesFromModel {
 			testInstructionTypeNamesInUITree = append(testInstructionTypeNamesInUITree, availableTestInstructionTypeFromModel.nameInUITree)
 		}
+
+		// Sort 'TestInstructionTypes' in Name-order
+		sort.SliceStable(testInstructionTypeNamesInUITree, func(i, j int) bool {
+			if testInstructionTypeNamesInUITree[i] != testInstructionTypeNamesInUITree[j] {
+				return testInstructionTypeNamesInUITree[i] < testInstructionTypeNamesInUITree[j]
+			}
+
+			return testInstructionTypeNamesInUITree[i] < testInstructionTypeNamesInUITree[j]
+		})
+
 		// Add TestInstructionType to UI-tree testCaseModel
 		availableBuildingBlocksModel.availableBuildingBlockModelSuitedForFyneTreeView[availableBuildingBlocksModel.generateUITreeNameForTestInstructionsHeader(domain)] = testInstructionTypeNamesInUITree
 
@@ -49,6 +70,16 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) makeTree
 		for _, testInstructionContainerTypeInUITree := range availableTestInstructionContainerTypesFromModel {
 			testInstructionContainerTypeNamesInUITree = append(testInstructionContainerTypeNamesInUITree, testInstructionContainerTypeInUITree.nameInUITree)
 		}
+
+		// Sort 'TestInstructionContainerTypes' in Name-order
+		sort.SliceStable(testInstructionContainerTypeNamesInUITree, func(i, j int) bool {
+			if testInstructionContainerTypeNamesInUITree[i] != testInstructionContainerTypeNamesInUITree[j] {
+				return testInstructionContainerTypeNamesInUITree[i] < testInstructionContainerTypeNamesInUITree[j]
+			}
+
+			return testInstructionContainerTypeNamesInUITree[i] < testInstructionContainerTypeNamesInUITree[j]
+		})
+
 		// Add TestInstructionContainerType to UI-tree testCaseModel
 		availableBuildingBlocksModel.availableBuildingBlockModelSuitedForFyneTreeView[availableBuildingBlocksModel.generateUITreeNameForTestInstructionContainersHeader(domain)] = testInstructionContainerTypeNamesInUITree
 
@@ -60,6 +91,16 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) makeTree
 			for _, availableTestInstruction := range availableTestInstructions {
 				testInstructionNamesInUITree = append(testInstructionNamesInUITree, availableTestInstruction.nameInUITree)
 			}
+
+			// Sort 'TestInstructions' in Name-order
+			sort.SliceStable(testInstructionNamesInUITree, func(i, j int) bool {
+				if testInstructionNamesInUITree[i] != testInstructionNamesInUITree[j] {
+					return testInstructionNamesInUITree[i] < testInstructionNamesInUITree[j]
+				}
+
+				return testInstructionNamesInUITree[i] < testInstructionNamesInUITree[j]
+			})
+
 			// Add TestInstructions to UI-tree testCaseModel
 			availableBuildingBlocksModel.availableBuildingBlockModelSuitedForFyneTreeView[availableTestInstructionTypeFromModel.nameInUITree] = testInstructionNamesInUITree
 		}
@@ -72,6 +113,16 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) makeTree
 			for _, availableTestInstructionContainer := range availableTestInstructionContainers {
 				testInstructionContainerNamesInUITree = append(testInstructionContainerNamesInUITree, availableTestInstructionContainer.nameInUITree)
 			}
+
+			// Sort 'TestInstructionContainers' in Name-order
+			sort.SliceStable(testInstructionContainerNamesInUITree, func(i, j int) bool {
+				if testInstructionContainerNamesInUITree[i] != testInstructionContainerNamesInUITree[j] {
+					return testInstructionContainerNamesInUITree[i] < testInstructionContainerNamesInUITree[j]
+				}
+
+				return testInstructionContainerNamesInUITree[i] < testInstructionContainerNamesInUITree[j]
+			})
+
 			// Add TestInstructionContainers to UI-tree testCaseModel
 			availableBuildingBlocksModel.availableBuildingBlockModelSuitedForFyneTreeView[availableTestInstructionContainerTypeFromModel.nameInUITree] = testInstructionContainerNamesInUITree
 		}

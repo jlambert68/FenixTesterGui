@@ -3,6 +3,7 @@ package gui
 import (
 	"FenixTesterGui/commandAndRuleEngine"
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/executions/executionsModel"
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	"FenixTesterGui/resources"
 	"FenixTesterGui/testCase/testCaseModel"
@@ -228,7 +229,18 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Create the Available Building Blocks adapted to Fyne tree-view
 	uiServer.availableBuildingBlocksModel.makeTreeUIModel()
 
-	//
+	// Load TestCaseExecutionsOnExecutionQueue
+	var domainsList []string
+	domainsList = nil
+	executionsModel.ExecutionsModelObject.LoadAndCreateModelForTestCasesOnExecutionQueue(domainsList)
+
+	// Load TestCaseExecutionsUnderExecution
+	domainsList = nil
+	executionsModel.ExecutionsModelObject.LoadAndCreateModelForTestCaseUnderExecutions(domainsList)
+
+	// Load TestCaseExecutionsWithFinishedExecutions
+	domainsList = nil
+	executionsModel.ExecutionsModelObject.LoadAndCreateModelForTestCaseWithFinishedExecutions(domainsList)
 
 	// Initiate and create the tree structure for available building blocks, of TestInstructions and TestInstructionContainers
 	uiServer.makeTreeUI()

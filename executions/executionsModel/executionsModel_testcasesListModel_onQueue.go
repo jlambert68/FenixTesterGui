@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// LoadAndCreateModelForTestCasesOnExecutionQueue - Load TestCaseExecutions that waits on ExecutionQueue and transform them into model used
 func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForTestCasesOnExecutionQueue(domainsToInclude []string) (err error) {
 
 	// Prepare message to be sent to GuiExecutionServer to be able to get TestCasesOnExecutionQueue
@@ -58,7 +59,7 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 	for _, tempTestCaseExecutionsOnQueue := range allTestCaseExecutionsOnQueue.testCaseExecutionsOnQueue {
 
 		var testCaseExecutionsOnQueue *fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage
-		*testCaseExecutionsOnQueue = *tempTestCaseExecutionsOnQueue
+		testCaseExecutionsOnQueue = tempTestCaseExecutionsOnQueue
 
 		// Create Key
 		var testCaseExecutionVersionAsString string

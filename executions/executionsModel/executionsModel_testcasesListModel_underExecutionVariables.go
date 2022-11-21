@@ -6,13 +6,13 @@ import (
 )
 
 // Object, direct from database, holding TestCaseExecutions that is ongoing and belongs to all or some Domains
-var allTestCaseExecutionsOngoingExecutions allTestCaseExecutionsOngoingExecutionsStruct
+var allTestCaseExecutionsUnderExecution allTestCaseExecutionsOngoingUnderExecutionStruct
 
-type allTestCaseExecutionsOngoingExecutionsStruct struct {
+type allTestCaseExecutionsOngoingUnderExecutionStruct struct {
 	databaseReadTimeStamp                   time.Time
 	testCaseExecutionsBelongsToTheseDomains []string // When empty then there are no restrictions
-	testCaseExecutionsOngoingExecutions     []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage
+	testCaseExecutionsUnderExecution        []*fenixExecutionServerGuiGrpcApi.TestCaseUnderExecutionMessage
 }
 
 // Object model for TestCaseExecutions that is ongoing and belongs to all or some Domains
-var allTestCaseExecutionsOngoingExecutionsModel map[testCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage
+var allTestCaseExecutionsUnderExecutionModel map[testCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseUnderExecutionMessage

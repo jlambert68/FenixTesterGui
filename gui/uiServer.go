@@ -4,6 +4,7 @@ import (
 	"FenixTesterGui/commandAndRuleEngine"
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/executionsModel"
+	"FenixTesterGui/executions/executionsUI/testCaseExecutionUI_testCaseLExecutionsList"
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	"FenixTesterGui/resources"
 	"FenixTesterGui/testCase/testCaseModel"
@@ -296,9 +297,11 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	configContainerGrid := container.New(layout.NewAdaptiveGridLayout(2), sizeContainer, widget.NewLabel("Test"))
 
+	myTable := testCaseExecutionUI_testCaseLExecutionsList.MySortTable() //CreateTableObject()
+
 	tabs := container.NewAppTabs(
 		container.NewTabItem("TestCases", applicationUI),
-		container.NewTabItem("Executions", configContainerGrid),
+		container.NewTabItem("Executions", myTable),
 		container.NewTabItem("Config", configContainerGrid),
 	)
 

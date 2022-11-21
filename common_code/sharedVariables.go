@@ -56,3 +56,5 @@ var ApplicationRunTimeUuid string
 
 // The current user of the TesterGui
 var CurrentUserId string
+
+const ZeroUuid = "00000000-0000-0000-0000-000000000000"

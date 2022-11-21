@@ -286,6 +286,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	tabs := container.NewAppTabs(
 		container.NewTabItem("TestCases", applicationUI),
+		container.NewTabItem("Executions", configContainerGrid),
 		container.NewTabItem("Config", configContainerGrid),
 	)
 

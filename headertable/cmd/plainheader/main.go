@@ -1,33 +1,16 @@
-package testCaseExecutionUI_testCaseLExecutionsList
+package main
 
 import (
-	"FenixTesterGui/headertable"
 	"fmt"
+	"math/rand"
+	"time"
+
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/widget"
+	"github.com/PaulWaldo/fyne-headertable/headertable"
 )
-
-var data = [][]string{[]string{"top left", "top right"},
-	[]string{"bottom left", "bottom right"}}
-
-func createTable() (mytable *widget.Table) {
-
-	mytable = widget.NewTable(
-		func() (int, int) {
-			return len(data), len(data[0])
-		},
-		func() fyne.CanvasObject {
-			return widget.NewLabel("wide content")
-		},
-		func(i widget.TableCellID, o fyne.CanvasObject) {
-			o.(*widget.Label).SetText(data[i.Row][i.Col])
-		})
-
-	return mytable
-}
 
 var myTableOpts = headertable.TableOpts{
 	RefWidth: "reference width",
@@ -85,7 +68,7 @@ var animals = []Animal{
 	{Name: "Mickey", Type: "mouse", Color: "black", Weight: "1"},
 }
 
-func MySortTable() *fyne.Container {
+func main() {
 	var AnimalBindings []binding.DataMap
 
 	// Create a binding for each animal data
@@ -93,39 +76,20 @@ func MySortTable() *fyne.Container {
 		AnimalBindings = append(AnimalBindings, binding.BindStruct(&animals[i]))
 	}
 	myTableOpts.Bindings = AnimalBindings
-
-	ht := headertable.NewSortingHeaderTable(&myTableOpts)
-	mySortTable := container.NewMax(ht)
-
-	return mySortTable
-
-}
-
-func CreateTableObject() (testCaseTextualModelAreaAccordion *fyne.Container) {
-
-	mytable := createTable()
-
-	newTableSize := fyne.NewSize(mytable.MinSize().Width, mytable.MinSize().Height*3)
-
-	mytable.Resize(newTableSize)
-
-	myTableContainer := container.New(layout.NewVBoxLayout(), mytable, widget.NewLabel("Test"))
-	myTableContainer.Resize(newTableSize)
-	fmt.Println(mytable.MinSize())
-
-	// Create a Canvas Accordion type for grouping the Textual Representations
-	testCaseTextualModelAreaAccordionItem := widget.NewAccordionItem("TestCaseExecutions on ExecutionQueue", myTableContainer)
-
-	myAccordian := widget.NewAccordion(testCaseTextualModelAreaAccordionItem)
-
-	myAccordian.Open(0)
-	myAccordian.Refresh()
-
-	//testCaseTextualModelAreaAccordion.Resize(newTableSize)
-
-	//testCaseTextualModelAreaAccordion.Refresh()
-
-	myContainer := container.New(layout.NewMaxLayout(), myAccordian)
-
-	return myContainer
+	a := app.New()
+	w := a.NewWindow("Header Table Test")
+	w.Resize(fyne.NewSize(624, 428))
+	ht := headertable.NewHeaderTable(&myTableOpts)
+	w.SetContent(container.NewMax(ht))
+	w.CenterOnScreen()
+	go func() {
+		for range time.Tick(50 * time.Millisecond) {
+			// Pick a random animal and adjust the Weight randomly
+			row := rand.Intn(len(animals))
+			newWeight := fmt.Sprintf("%d", rand.Intn(100))
+			animals[row].Weight = newWeight
+			ht.Refresh()
+		}
+	}()
+	w.ShowAndRun()
 }

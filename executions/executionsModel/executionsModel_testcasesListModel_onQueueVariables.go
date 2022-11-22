@@ -16,3 +16,12 @@ type allTestCaseExecutionsOnQueueStruct struct {
 
 // Object model for TestCaseExecutions that exists on the TestCaseExecutionQueue and belongs to all or some Domains
 var allTestCaseExecutionsOnQueueModel map[testCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage
+
+type allTestCaseExecutionsOnQueueAdaptedForUiTableStruct struct {
+	RestDataRows []TestCaseExecutionsOnQueueTableHeaderStruct
+}
+fundera på om man ska använda samma struktur som den man läser in den i istället. Och sen styra vilka kolumner som ska visas med ett attribut istället
+type TestCaseExecutionsOnQueueTableHeaderStruct struct {
+	TestCaseName string
+	TestCaseUUid string
+}

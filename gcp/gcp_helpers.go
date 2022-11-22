@@ -74,7 +74,7 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForServiceAccount(ctx context.
 
 		*/
 
-		tokenSource, err := idtoken.NewTokenSource(ctx, notToBeSentToGithub.Gcp_scope, idtoken.WithCredentialsJSON(notToBeSentToGithub.ServiceAccountKeyJson))
+		tokenSource, err := idtoken.NewTokenSource(ctx, notToBeSentToGithub.Gcp_scope_GuiExecutionServer, idtoken.WithCredentialsJSON(notToBeSentToGithub.ServiceAccountKeyJson_GuiExecutionServer))
 
 		if err != nil {
 			sharedCode.Logger.WithFields(logrus.Fields{

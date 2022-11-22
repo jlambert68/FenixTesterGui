@@ -15,6 +15,16 @@ import (
 // SendInitiateTestCaseExecution - Initiate a TestCaseExecution
 func (grpcOut *GRPCOutGuiExecutionServerStruct) SendInitiateTestCaseExecution(initiateSingleTestCaseExecutionRequestMessage *fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionRequestMessage) (initiateSingleTestCaseExecutionResponseMessage *fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionResponseMessage) {
 
+	sharedCode.Logger.WithFields(logrus.Fields{
+		"id": "f5672b96-c58b-45eb-a2bb-bf399a6de9e6",
+		"initiateSingleTestCaseExecutionRequestMessage": initiateSingleTestCaseExecutionRequestMessage,
+	}).Debug("Incoming 'grpcOut - SendInitiateTestCaseExecution'")
+
+	defer sharedCode.Logger.WithFields(logrus.Fields{
+		"id": "694fa3af-8344-4fc6-8f99-5f14fa0c2765",
+		"initiateSingleTestCaseExecutionResponseMessage": &initiateSingleTestCaseExecutionResponseMessage,
+	}).Debug("Outgoing 'grpcOut - SendInitiateTestCaseExecution'")
+
 	var ctx context.Context
 	var returnMessageAckNack bool
 	var returnMessageString string

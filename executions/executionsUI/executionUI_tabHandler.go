@@ -11,7 +11,7 @@ import (
 
 // GenerateBaseUITabForExecutions
 // Create the Base-UI-canvas-object for the TestCases object. This base doesn't contain any specific TestCase-parts, and they will be added in other function
-func (executionsUIObject *ExecutionsUIModelStruct) GenerateBaseUITabForExecutions() (exectionsCanvasObjectUI fyne.CanvasObject) {
+func (executionsUIObject *ExecutionsUIModelStruct) GenerateBaseUITabForExecutions() (executionsCanvasObjectUI fyne.CanvasObject) {
 
 	// Create toolbar for Executions Area
 	executionsUIObject.ExecutionsToolUIBar = widget.NewToolbar(
@@ -40,10 +40,10 @@ func (executionsUIObject *ExecutionsUIModelStruct) GenerateBaseUITabForExecution
 	// Create the complete Executions UI area
 	var exectuinsBorderedLayout fyne.Layout
 	exectuinsBorderedLayout = layout.NewBorderLayout(executionsUIObject.ExecutionsToolUIBar, nil, nil, nil)
-	exectionsCanvasObjectUI = container.New(exectuinsBorderedLayout, executionsUIObject.ExecutionsToolUIBar, executionsUIObject.ExecutionsTabs)
+	executionsCanvasObjectUI = container.New(exectuinsBorderedLayout, executionsUIObject.ExecutionsToolUIBar, executionsUIObject.ExecutionsTabs)
 
 	// Initiate map for ExecutionsUI-models-Map
 	//executionsUIObject.TestCasesUiModelMap = make(map[string]*testCaseGraphicalAreasStruct)
 
-	return exectionsCanvasObjectUI
+	return executionsCanvasObjectUI
 }

@@ -297,6 +297,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	configContainerGrid := container.New(layout.NewAdaptiveGridLayout(2), sizeContainer, widget.NewLabel("Test"))
 
+	// Generate 'left' Execution Tab, that holds listings for Executions and individual detailed Exececutions
 	executionsUITab := executionsUI.ExecutionsUIObject.GenerateBaseUITabForExecutions() //MySortTable() //CreateTableObject()
 
 	tabs := container.NewAppTabs(

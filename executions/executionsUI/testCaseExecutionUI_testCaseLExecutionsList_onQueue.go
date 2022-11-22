@@ -1,4 +1,4 @@
-package testCaseExecutionUI_testCaseLExecutionsList
+package executionsUI
 
 import (
 	"FenixTesterGui/headertable"

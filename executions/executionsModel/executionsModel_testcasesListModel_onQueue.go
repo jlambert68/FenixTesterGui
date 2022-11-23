@@ -50,7 +50,7 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 	// Create Model from 'loaded' testCaseExecutions on Queue
 
 	// Initiate map for model
-	allTestCaseExecutionsOnQueueModel = make(map[testCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage)
+	AllTestCaseExecutionsOnQueueModel = make(map[testCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage)
 
 	// Key to map: Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
 	var testCaseExecutionMapKey testCaseExecutionMapKeyType
@@ -68,7 +68,30 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 		testCaseExecutionMapKey = testCaseExecutionMapKeyType(tempTestCaseExecutionsOnQueue.TestCaseExecutionUuid + testCaseExecutionVersionAsString)
 
 		// Add TestCaseExecutions to map
-		allTestCaseExecutionsOnQueueModel[testCaseExecutionMapKey] = testCaseExecutionsOnQueue
+		AllTestCaseExecutionsOnQueueModel[testCaseExecutionMapKey] = testCaseExecutionsOnQueue
+
+		// Convert 'raw' TestCaseExecutionsOnQueue-data into format to be used in UI
+		var tempTestCaseExecutionsOnQueueAdaptedForUiTable TestCaseExecutionsOnQueueAdaptedForUiTableStruct
+		tempTestCaseExecutionsOnQueueAdaptedForUiTable = TestCaseExecutionsOnQueueAdaptedForUiTableStruct{
+			DomainUuid:                          tempTestCaseExecutionsOnQueue.DomainUuid,
+			DomainName:                          tempTestCaseExecutionsOnQueue.DomainName,
+			TestSuiteUuid:                       tempTestCaseExecutionsOnQueue.TestSuiteUuid,
+			TestSuiteName:                       tempTestCaseExecutionsOnQueue.TestSuiteName,
+			TestSuiteVersion:                    strconv.Itoa(int(tempTestCaseExecutionsOnQueue.TestSuiteVersion)),
+			TestSuiteExecutionUuid:              tempTestCaseExecutionsOnQueue.TestSuiteExecutionUuid,
+			TestSuiteExecutionVersion:           strconv.Itoa(int(tempTestCaseExecutionsOnQueue.TestSuiteExecutionVersion)),
+			TestCaseUuid:                        tempTestCaseExecutionsOnQueue.TestCaseUuid,
+			TestCaseName:                        tempTestCaseExecutionsOnQueue.TestCaseName,
+			TestCaseVersion:                     strconv.Itoa(int(tempTestCaseExecutionsOnQueue.TestCaseVersion)),
+			TestCaseExecutionUuid:               tempTestCaseExecutionsOnQueue.TestCaseExecutionUuid,
+			TestCaseExecutionVersion:            strconv.Itoa(int(tempTestCaseExecutionsOnQueue.TestCaseExecutionVersion)),
+			PlacedOnTestExecutionQueueTimeStamp: tempTestCaseExecutionsOnQueue.PlacedOnTestExecutionQueueTimeStamp.AsTime().String(),
+			ExecutionPriority:                   fenixExecutionServerGuiGrpcApi.ExecutionPriorityEnum_name[int32(tempTestCaseExecutionsOnQueue.ExecutionPriority)],
+		}
+
+		// Append to slice for TestCaseExecutionsOnQueue-data used by UI-table
+		TestCaseExecutionsOnQueueAdaptedForUiTable = append(TestCaseExecutionsOnQueueAdaptedForUiTable, tempTestCaseExecutionsOnQueueAdaptedForUiTable)
+
 	}
 
 	return err

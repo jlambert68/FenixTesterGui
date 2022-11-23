@@ -1,6 +1,7 @@
 package executionsUI
 
 import (
+	"FenixTesterGui/executions/executionsModel"
 	"FenixTesterGui/headertable"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -128,4 +129,20 @@ func CreateTableObject() (testCaseTextualModelAreaAccordion *fyne.Container) {
 	myContainer := container.New(layout.NewMaxLayout(), myAccordian)
 
 	return myContainer
+}
+
+func CreateTableForTestCaseExecutionsOnQueue() *fyne.Container {
+	var TableForTestCaseExecutionsOnQueueBindings []binding.DataMap
+
+	// Create a binding for each TestExecutionOnQueueRow data
+	for testDataRowCounter := 0; testDataRowCounter < len(executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTable); testDataRowCounter++ {
+		TableForTestCaseExecutionsOnQueueBindings = append(TableForTestCaseExecutionsOnQueueBindings, binding.BindStruct(&executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTable[testDataRowCounter]))
+	}
+	executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings = TableForTestCaseExecutionsOnQueueBindings
+
+	ht := headertable.NewSortingHeaderTable(&executionsModel.TestCaseExecutionsOnQueueTableOptions)
+	mySortTable := container.NewMax(ht)
+
+	return mySortTable
+
 }

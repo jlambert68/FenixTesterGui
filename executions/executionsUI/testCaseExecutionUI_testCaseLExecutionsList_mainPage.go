@@ -6,7 +6,7 @@ import (
 
 func (executionsUIObject *ExecutionsUIModelStruct) CreateExecutionsListTabPage() (executionsListTabPage *fyne.Container) {
 
-	executionsListTabPage = newThreePartAdaptiveSplit(MySortTable(), MySortTable(), MySortTable())
+	executionsListTabPage = newThreePartAdaptiveSplit(CreateTableForTestCaseExecutionsOnQueue(), MySortTable(), MySortTable())
 
 	return executionsListTabPage
 }

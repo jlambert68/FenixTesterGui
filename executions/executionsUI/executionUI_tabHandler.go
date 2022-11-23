@@ -37,6 +37,8 @@ func (executionsUIObject *ExecutionsUIModelStruct) GenerateBaseUITabForExecution
 	// Set the Tabs to be positioned in upper part of the object
 	executionsUIObject.ExecutionsTabs.SetTabLocation(container.TabLocationTop)
 
+	executionsUIObject.ExecutionsTabs.Refresh()
+
 	// Create the complete Executions UI area
 	var executionsBorderedLayout fyne.Layout
 	executionsBorderedLayout = layout.NewBorderLayout(executionsUIObject.ExecutionsToolUIBar, nil, nil, nil)

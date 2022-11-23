@@ -252,9 +252,9 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	// Create fyneApp window for the Command Stack
 	//TODO Remove StackWindow
-	commandStackWindow := uiServer.fyneApp.NewWindow("Command Stack")
+	//commandStackWindow := uiServer.fyneApp.NewWindow("Command Stack")
 	//commandStackWindow.SetContent(commandStackListUI)
-	commandStackWindow.Show()
+	//commandStackWindow.Show()
 
 	//list := &notelist{pref: fyneApp.Preferences()}
 	//list.load()

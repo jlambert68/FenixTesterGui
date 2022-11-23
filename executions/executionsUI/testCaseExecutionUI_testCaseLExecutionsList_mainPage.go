@@ -11,5 +11,7 @@ func (executionsUIObject *ExecutionsUIModelStruct) CreateExecutionsListTabPage()
 		CreateTableForTestCaseExecutionsUnderExecution(),
 		CreateTableForTestCaseExecutionsWithFinishedExecution())
 
+	executionsListTabPage.Refresh()
+
 	return executionsListTabPage
 }

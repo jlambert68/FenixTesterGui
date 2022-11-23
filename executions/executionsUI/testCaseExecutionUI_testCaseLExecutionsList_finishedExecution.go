@@ -13,7 +13,7 @@ func CreateTableForTestCaseExecutionsWithFinishedExecution() *fyne.Container {
 
 	// Create a binding for each TestExecutionWithFinishedExecutionRow data
 	for testDataRowCounter := 0; testDataRowCounter < len(executionsModel.TestCaseExecutionsFinishedExecutionAdaptedForUiTable); testDataRowCounter++ {
-		tableForTestCaseExecutionsWithFinishedExecutionBindings = append(tableForTestCaseExecutionsWithFinishedExecutionBindings, binding.BindStruct(&executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTable[testDataRowCounter]))
+		tableForTestCaseExecutionsWithFinishedExecutionBindings = append(tableForTestCaseExecutionsWithFinishedExecutionBindings, binding.BindStruct(&executionsModel.TestCaseExecutionsFinishedExecutionAdaptedForUiTable[testDataRowCounter]))
 	}
 	executionsModel.TestCaseExecutionsFinishedExecutionTableOptions.Bindings = tableForTestCaseExecutionsWithFinishedExecutionBindings
 

@@ -91,6 +91,7 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 	bindings := t.TableOpts.Bindings
 	numberOfRows, _ := t.Data.Length()
 	var columnWidthToBeUsed float32
+	var totalTableWidth float32
 
 	// Loop columns
 	for i, colAttr := range t.TableOpts.ColAttrs {
@@ -134,11 +135,21 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 			columnWidthToBeUsed = currentColumnsMaxWidth
 		}
 
+		// Add to total Table Width
+		totalTableWidth = totalTableWidth + columnWidthToBeUsed
+
 		// Set Width for Header and data column
 		t.Header.SetColumnWidth(i, float32(colAttr.WidthPercent)/100.0*columnWidthToBeUsed)
 		t.Data.SetColumnWidth(i, float32(colAttr.WidthPercent)/100.0*columnWidthToBeUsed)
 
 	}
+
+	//t.Resize(fyne.NewSize(totalTableWidth, 200))
+	t.Header.Resize(fyne.NewSize(totalTableWidth, t.Header.MinSize().Height))
+	t.Data.Resize(fyne.NewSize(totalTableWidth, t.Data.MinSize().Height*float32(len(t.TableOpts.Bindings))))
+
+	t.Hide()
+	t.Show()
 
 	return t
 }

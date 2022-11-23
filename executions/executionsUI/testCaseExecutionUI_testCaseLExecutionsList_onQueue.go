@@ -143,6 +143,17 @@ func CreateTableForTestCaseExecutionsOnQueue() *fyne.Container {
 	ht := headertable.NewSortingHeaderTable(&executionsModel.TestCaseExecutionsOnQueueTableOptions)
 	mySortTable := container.NewMax(ht)
 
+	/*
+		first := container.NewHBox(widget.NewLabel("Första"), mySortTable, widget.NewLabel("Sista"))
+
+		second := container.NewHBox(first)
+
+		scrollableTable := container.NewScroll(second)
+
+		scrollableTableContainer := container.NewMax(scrollableTable)
+	*/
+	// ht.Header.ScrollToLeading()
+
 	return mySortTable
 
 }

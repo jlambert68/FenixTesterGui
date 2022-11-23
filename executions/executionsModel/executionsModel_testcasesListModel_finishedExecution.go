@@ -11,7 +11,7 @@ import (
 )
 
 // LoadAndCreateModelForTestCaseFinishedExecutions - Load TestCaseExecutions that have been finished Execution and transform them into model used
-func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForTestCaseFinishedExecutions(domainsToInclude []string) (err error) {
+func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForTestCaseWithFinishedExecutions(domainsToInclude []string) (err error) {
 
 	// Prepare message to be sent to GuiExecutionServer to be able to get Ongoing TestCaseExecutions
 	var listTestCasesWithFinishedExecutionsRequest *fenixExecutionServerGuiGrpcApi.ListTestCasesWithFinishedExecutionsRequest

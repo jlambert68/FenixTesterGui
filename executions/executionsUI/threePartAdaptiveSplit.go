@@ -20,9 +20,9 @@ type adaptiveLayout struct {
 }
 
 func (a *adaptiveLayout) Layout(objects []fyne.CanvasObject, size fyne.Size) {
-	dev := fyne.CurrentDevice()
+	//dev := fyne.CurrentDevice()
 
-	a.split.Horizontal = !dev.IsMobile() || fyne.IsHorizontal(dev.Orientation())
+	//a.split.Horizontal = !dev.IsMobile() || fyne.IsHorizontal(dev.Orientation())
 	objects[0].Resize(size)
 }
 

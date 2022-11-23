@@ -10,8 +10,8 @@ import (
 	"time"
 )
 
-// LoadAndCreateModelForTestCaseWithFinishedExecutions - Load TestCaseExecutions that have been finished their Executions and transform them into model used
-func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForTestCaseWithFinishedExecutions(domainsToInclude []string) (err error) {
+// LoadAndCreateModelForTestCaseFinishedExecutions - Load TestCaseExecutions that have been finished Execution and transform them into model used
+func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForTestCaseFinishedExecutions(domainsToInclude []string) (err error) {
 
 	// Prepare message to be sent to GuiExecutionServer to be able to get Ongoing TestCaseExecutions
 	var listTestCasesWithFinishedExecutionsRequest *fenixExecutionServerGuiGrpcApi.ListTestCasesWithFinishedExecutionsRequest
@@ -27,13 +27,13 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 		TestCaseExecutionToTimeStamp:   nil,
 	}
 
-	// Load TestCases, from GuiExecutionServer, that have been finished
+	// Load TestCases, from GuiExecutionServer, that exists on the TestCaseExecutionQueue
 	var listTestCasesWithFinishedExecutionsResponse *fenixExecutionServerGuiGrpcApi.ListTestCasesWithFinishedExecutionsResponse
 	listTestCasesWithFinishedExecutionsResponse = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.SendListTestCasesWithFinishedExecutions(listTestCasesWithFinishedExecutionsRequest)
 
 	if listTestCasesWithFinishedExecutionsResponse.AckNackResponse.AckNack == false {
-		ErrorID := "6a45f94c-3ed1-4e08-84c8-6236c9e4a02f"
-		err = errors.New(fmt.Sprintf("couldn't load TestCaseExecutions with finished Executions from GuiExecutionServer. Got message: '%s'. [ErrorID:'%s']", listTestCasesWithFinishedExecutionsResponse.AckNackResponse.Comments, ErrorID))
+		ErrorID := "e43d3385-dc3e-426e-98fb-13a86d6375aa"
+		err = errors.New(fmt.Sprintf("couldn't load TestCaseExecutions that have been finsihed its Execution, from GuiExecutionServer. Got message: '%s'. [ErrorID:'%s']", listTestCasesWithFinishedExecutionsResponse.AckNackResponse.Comments, ErrorID))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -41,34 +41,65 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 	}
 
 	// Save loaded data
-	allTestCaseExecutionFinishedExecutions = allTestCaseExecutionsThatHaveBeenFinishedExecutedStruct{
-		databaseReadTimeStamp:                    time.Now(),
-		testCaseExecutionsBelongsToTheseDomains:  domainsToInclude,
-		testCaseExecutionsWithFinishedExecutions: listTestCasesWithFinishedExecutionsResponse.TestCaseWithFinishedExecution,
+	allTestCaseExecutionsFinishedExecution = allTestCaseExecutionsOngoingFinishedExecutionStruct{
+		databaseReadTimeStamp:                   time.Now(),
+		testCaseExecutionsBelongsToTheseDomains: domainsToInclude,
+		testCaseExecutionsFinishedExecution:     listTestCasesWithFinishedExecutionsResponse.TestCaseWithFinishedExecution,
 	}
 
-	// Create Model from 'loaded' testCases with finished Executions
+	// Create Model from 'loaded' testCases under Execution
 
 	// Initiate map for model
-	allTestCaseExecutionsThatHaveBeenFinishedExecutedModel = make(map[testCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseWithFinishedExecutionMessage)
+	AllTestCaseExecutionsFinishedExecutionModel = make(map[testCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseWithFinishedExecutionMessage)
 
 	// Key to map: Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
 	var testCaseExecutionMapKey testCaseExecutionMapKeyType
 
 	// Loop all TestCasesExecutions that were received from GuiExecutionServer
-	for _, tempTestCaseExecutionWithFinishedExecution := range allTestCaseExecutionFinishedExecutions.testCaseExecutionsWithFinishedExecutions {
+	for _, tempTestCaseExecutionsFinishedExecution := range allTestCaseExecutionsFinishedExecution.testCaseExecutionsFinishedExecution {
 
-		var testCaseWithFinishedExecutionMessage *fenixExecutionServerGuiGrpcApi.TestCaseWithFinishedExecutionMessage
-		testCaseWithFinishedExecutionMessage = tempTestCaseExecutionWithFinishedExecution
+		var testCaseExecutionsFinishedExecution *fenixExecutionServerGuiGrpcApi.TestCaseWithFinishedExecutionMessage
+		testCaseExecutionsFinishedExecution = tempTestCaseExecutionsFinishedExecution
 
 		// Create Key
 		var testCaseExecutionVersionAsString string
-		testCaseExecutionVersionAsString = strconv.Itoa(int(tempTestCaseExecutionWithFinishedExecution.TestCaseExecutionBasicInformation.TestCaseExecutionVersion))
+		testCaseExecutionVersionAsString = strconv.Itoa(int(tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.TestCaseExecutionVersion))
 
-		testCaseExecutionMapKey = testCaseExecutionMapKeyType(tempTestCaseExecutionWithFinishedExecution.TestCaseExecutionBasicInformation.TestCaseExecutionUuid + testCaseExecutionVersionAsString)
+		testCaseExecutionMapKey = testCaseExecutionMapKeyType(tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.TestCaseExecutionUuid + testCaseExecutionVersionAsString)
 
 		// Add TestCaseExecution to map
-		allTestCaseExecutionsThatHaveBeenFinishedExecutedModel[testCaseExecutionMapKey] = testCaseWithFinishedExecutionMessage
+		AllTestCaseExecutionsFinishedExecutionModel[testCaseExecutionMapKey] = testCaseExecutionsFinishedExecution
+
+		// Convert 'raw' TestCaseExecutionsFinishedExecutione-data into format to be used in UI
+		var tempTestCaseExecutionFinishedExecutionAdaptedForUiTable TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct
+		tempTestCaseExecutionFinishedExecutionAdaptedForUiTable = TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct{
+			// TestCaseExecutionBasicInformation
+			DomainUuid:                          tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.DomainUuid,
+			DomainName:                          tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.DomainName,
+			TestSuiteUuid:                       tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.TestSuiteUuid,
+			TestSuiteName:                       tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.TestSuiteName,
+			TestSuiteVersion:                    strconv.Itoa(int(tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.TestSuiteVersion)),
+			TestSuiteExecutionUuid:              tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.TestSuiteExecutionUuid,
+			TestSuiteExecutionVersion:           strconv.Itoa(int(tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.TestSuiteExecutionVersion)),
+			TestCaseUuid:                        tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.TestCaseUuid,
+			TestCaseName:                        tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.TestCaseName,
+			TestCaseVersion:                     strconv.Itoa(int(tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.TestCaseVersion)),
+			TestCaseExecutionUuid:               tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.TestCaseExecutionUuid,
+			TestCaseExecutionVersion:            strconv.Itoa(int(tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.TestCaseExecutionVersion)),
+			PlacedOnTestExecutionQueueTimeStamp: tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.PlacedOnTestExecutionQueueTimeStamp.AsTime().String(),
+			ExecutionPriority:                   fenixExecutionServerGuiGrpcApi.ExecutionPriorityEnum_name[int32(tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.ExecutionPriority)],
+
+			// TestCaseExecutionDetails
+			ExecutionStartTimeStamp:        tempTestCaseExecutionsFinishedExecution.TestCaseExecutionDetails.ExecutionStartTimeStamp.AsTime().String(),
+			ExecutionStopTimeStamp:         tempTestCaseExecutionsFinishedExecution.TestCaseExecutionDetails.ExecutionStopTimeStamp.AsTime().String(),
+			TestCaseExecutionStatus:        fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_name[int32(tempTestCaseExecutionsFinishedExecution.TestCaseExecutionDetails.TestCaseExecutionStatus)],
+			ExecutionHasFinished:           strconv.FormatBool(tempTestCaseExecutionsFinishedExecution.TestCaseExecutionDetails.ExecutionHasFinished),
+			ExecutionStatusUpdateTimeStamp: tempTestCaseExecutionsFinishedExecution.TestCaseExecutionDetails.ExecutionStatusUpdateTimeStamp.AsTime().String(),
+		}
+
+		// Append to slice for TestCaseExecutionsFinishedExecution-data used by UI-table
+		TestCaseExecutionsFinishedExecutionAdaptedForUiTable = append(TestCaseExecutionsFinishedExecutionAdaptedForUiTable, tempTestCaseExecutionFinishedExecutionAdaptedForUiTable)
+
 	}
 
 	return err

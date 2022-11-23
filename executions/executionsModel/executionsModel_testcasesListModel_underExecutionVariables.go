@@ -106,8 +106,8 @@ var TestCaseExecutionsUnderExecutionTableOptions = headertable.TableOpts{
 			WidthPercent: 100,
 		},
 		{
-			Name:         "PlacedOnTestExecutiUnderExecutionTimeStamp",
-			Header:       "PlacedOnTestExecutiUnderExecutionTimeStamp",
+			Name:         "PlacedOnTestExecutionQueueTimeStamp",
+			Header:       "PlacedOnTestExecutionQueueTimeStamp",
 			Alignment:    fyne.TextAlignCenter,
 			TextStyle:    fyne.TextStyle{Bold: true},
 			WidthPercent: 100,
@@ -133,6 +133,7 @@ var TestCaseExecutionsUnderExecutionTableOptions = headertable.TableOpts{
 			TextStyle:    fyne.TextStyle{Bold: true},
 			WidthPercent: 100,
 		},
+
 		{
 			Name:         "TestCaseExecutionStatus",
 			Header:       "TestCaseExecutionStatus",
@@ -140,6 +141,7 @@ var TestCaseExecutionsUnderExecutionTableOptions = headertable.TableOpts{
 			TextStyle:    fyne.TextStyle{Bold: true},
 			WidthPercent: 100,
 		},
+
 		{
 			Name:         "ExecutionHasFinished",
 			Header:       "ExecutionHasFinished",

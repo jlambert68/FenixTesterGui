@@ -9,7 +9,7 @@ func (executionsUIObject *ExecutionsUIModelStruct) CreateExecutionsListTabPage()
 	executionsListTabPage = newThreePartAdaptiveSplit(
 		CreateTableForTestCaseExecutionsOnQueue(),
 		CreateTableForTestCaseExecutionsUnderExecution(),
-		MySortTable())
+		CreateTableForTestCaseExecutionsWithFinishedExecution())
 
 	return executionsListTabPage
 }

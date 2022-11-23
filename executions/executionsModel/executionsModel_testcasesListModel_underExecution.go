@@ -89,7 +89,7 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 			PlacedOnTestExecutionQueueTimeStamp: tempTestCaseExecutionsUnderExecution.TestCaseExecutionBasicInformation.PlacedOnTestExecutionQueueTimeStamp.AsTime().String(),
 			ExecutionPriority:                   fenixExecutionServerGuiGrpcApi.ExecutionPriorityEnum_name[int32(tempTestCaseExecutionsUnderExecution.TestCaseExecutionBasicInformation.ExecutionPriority)],
 
-			//
+			// TestCaseExecutionDetails
 			ExecutionStartTimeStamp:        tempTestCaseExecutionsUnderExecution.TestCaseExecutionDetails.ExecutionStartTimeStamp.AsTime().String(),
 			ExecutionStopTimeStamp:         tempTestCaseExecutionsUnderExecution.TestCaseExecutionDetails.ExecutionStopTimeStamp.AsTime().String(),
 			TestCaseExecutionStatus:        fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_name[int32(tempTestCaseExecutionsUnderExecution.TestCaseExecutionDetails.TestCaseExecutionStatus)],

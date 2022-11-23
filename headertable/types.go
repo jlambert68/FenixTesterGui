@@ -7,12 +7,14 @@ import (
 )
 
 type ColAttr struct {
-	Alignment    fyne.TextAlign
-	Header       string
-	Name         string
-	TextStyle    fyne.TextStyle
-	WidthPercent int
-	Wrapping     fyne.TextWrap
+	Alignment          fyne.TextAlign
+	Header             string
+	Name               string
+	TextStyle          fyne.TextStyle
+	WidthPercent       int
+	Wrapping           fyne.TextWrap
+	HeaderWidth        float32
+	MaxColumnDataWidth float32
 }
 
 type TableOpts struct {

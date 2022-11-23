@@ -1,6 +1,7 @@
 package headertable
 
 import (
+	"fmt"
 	"log"
 	"math"
 	"sort"
@@ -10,6 +11,8 @@ import (
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/widget"
 )
+
+const headerColumnExtraWidth float32 = 75
 
 var _ fyne.Widget = &HeaderTable{}
 
@@ -84,10 +87,43 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 	t.ExtendBaseWidget(t)
 
 	// Set Column widths
-	refWidth := widget.NewLabel(t.TableOpts.RefWidth).MinSize().Width
+	bindings := t.TableOpts.Bindings
+	numberOfRows, _ := t.Data.Length()
+	var columnWidthToBeUsed float32
+
+	// Loop columns
 	for i, colAttr := range t.TableOpts.ColAttrs {
-		t.Data.SetColumnWidth(i, float32(colAttr.WidthPercent)/100.0*refWidth)
-		t.Header.SetColumnWidth(i, float32(colAttr.WidthPercent)/100.0*refWidth)
+
+		// Loop Rows to get MaxTestDataWidth
+		var currentColumnsMaxWidth float32
+		var tempColumnWidth float32
+		for rowCounter := 0; rowCounter < numberOfRows; rowCounter++ {
+			b1 := bindings[rowCounter]
+			d1, err := b1.GetItem(colAttr.Name)
+			str1, err := d1.(binding.String).Get()
+			fmt.Sprintf("str1='%s', err='%s' :", err, str1)
+
+			// Check if width for row data is greater than previous max width for column
+			tempColumnWidth = widget.NewLabel(str1).MinSize().Width
+			if tempColumnWidth > currentColumnsMaxWidth {
+				currentColumnsMaxWidth = tempColumnWidth
+			}
+		}
+
+		// Get HeaderWidth
+		headerWidth := widget.NewLabel(colAttr.Header).MinSize().Width + headerColumnExtraWidth
+
+		// Decide to used HeaderWidth or DataWidth
+		if headerWidth > currentColumnsMaxWidth {
+			columnWidthToBeUsed = headerWidth
+		} else {
+			columnWidthToBeUsed = currentColumnsMaxWidth
+		}
+
+		// Set Width for Headcer
+		t.Header.SetColumnWidth(i, float32(colAttr.WidthPercent)/100.0*columnWidthToBeUsed)
+		t.Data.SetColumnWidth(i, float32(colAttr.WidthPercent)/100.0*columnWidthToBeUsed)
+
 	}
 
 	return t

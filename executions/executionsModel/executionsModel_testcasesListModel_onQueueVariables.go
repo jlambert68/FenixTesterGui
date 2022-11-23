@@ -41,6 +41,8 @@ type TestCaseExecutionsOnQueueAdaptedForUiTableStruct struct {
 	ExecutionPriority                   string // The priority for the execution. Depends on who started it and if it belongs to a suite, scheduled or not
 }
 
+// TestCaseExecutionsOnQueueTableOptions
+// Defines the structure, and column order, for TestCaseExecutions-OnQueue-Table
 var TestCaseExecutionsOnQueueTableOptions = headertable.TableOpts{
 	RefWidth: "reference width",
 	ColAttrs: []headertable.ColAttr{
@@ -112,35 +114,35 @@ var TestCaseExecutionsOnQueueTableOptions = headertable.TableOpts{
 			Header:       "TestSuiteUuid",
 			Alignment:    fyne.TextAlignCenter,
 			TextStyle:    fyne.TextStyle{Bold: true},
-			WidthPercent: 80,
+			WidthPercent: 100,
 		},
 		{
 			Name:         "TestSuiteName",
 			Header:       "TestSuiteName",
 			Alignment:    fyne.TextAlignCenter,
 			TextStyle:    fyne.TextStyle{Bold: true},
-			WidthPercent: 200,
+			WidthPercent: 100,
 		},
 		{
 			Name:         "TestSuiteVersion",
 			Header:       "TestSuiteVersion",
 			Alignment:    fyne.TextAlignCenter,
 			TextStyle:    fyne.TextStyle{Bold: true},
-			WidthPercent: 200,
+			WidthPercent: 100,
 		},
 		{
 			Name:         "TestSuiteExecutionUuid",
 			Header:       "TestSuiteExecutionUuid",
 			Alignment:    fyne.TextAlignCenter,
 			TextStyle:    fyne.TextStyle{Bold: true},
-			WidthPercent: 200,
+			WidthPercent: 100,
 		},
 		{
 			Name:         "TestSuiteExecutionVersion",
 			Header:       "TestSuiteExecutionVersion",
 			Alignment:    fyne.TextAlignCenter,
 			TextStyle:    fyne.TextStyle{Bold: true},
-			WidthPercent: 200,
+			WidthPercent: 100,
 		},
 	},
 }

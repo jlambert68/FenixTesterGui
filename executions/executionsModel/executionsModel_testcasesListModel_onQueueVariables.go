@@ -16,15 +16,18 @@ type allTestCaseExecutionsOnQueueStruct struct {
 	testCaseExecutionsOnQueue               []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage
 }
 
+// AllTestCaseExecutionsOnQueueModel
 // Object model for TestCaseExecutions that exists on the TestCaseExecutionQueue and belongs to all or some Domains
 var AllTestCaseExecutionsOnQueueModel map[testCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage
 
+// TestCaseExecutionsOnQueueAdaptedForUiTable
 // Object holding the testdata to be shown in UI regarding which TestCaseExecutions that is waiting on ExecutionQueue
 var TestCaseExecutionsOnQueueAdaptedForUiTable []TestCaseExecutionsOnQueueAdaptedForUiTableStruct
 
-// TestCaseExecutionsOnQueueTableHeaderStruct
+// TestCaseExecutionsOnQueueAdaptedForUiTableStruct
 // Type for holding one row of data
 type TestCaseExecutionsOnQueueAdaptedForUiTableStruct struct {
+	// TestCaseExecutionBasicInformation
 	DomainUuid                          string // The Domain, UUID, where the TestCase 'has its home'
 	DomainName                          string // The Domain, Name, where the TestCase 'has its home'
 	TestSuiteUuid                       string // The TestSuite, UUID, that the TestCase was executed from

@@ -50,7 +50,7 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 	// Create Model from 'loaded' testCases under Execution
 
 	// Initiate map for model
-	allTestCaseExecutionsUnderExecutionModel = make(map[testCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseUnderExecutionMessage)
+	AllTestCaseExecutionsUnderExecutionModel = make(map[testCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseUnderExecutionMessage)
 
 	// Key to map: Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
 	var testCaseExecutionMapKey testCaseExecutionMapKeyType
@@ -68,7 +68,38 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 		testCaseExecutionMapKey = testCaseExecutionMapKeyType(tempTestCaseExecutionsUnderExecution.TestCaseExecutionBasicInformation.TestCaseExecutionUuid + testCaseExecutionVersionAsString)
 
 		// Add TestCaseExecution to map
-		allTestCaseExecutionsUnderExecutionModel[testCaseExecutionMapKey] = testCaseExecutionsUnderExecution
+		AllTestCaseExecutionsUnderExecutionModel[testCaseExecutionMapKey] = testCaseExecutionsUnderExecution
+
+		// Convert 'raw' TestCaseExecutionsUnderExecutione-data into format to be used in UI
+		var tempTestCaseExecutionUnderExecutionAdaptedForUiTable TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
+		tempTestCaseExecutionUnderExecutionAdaptedForUiTable = TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct{
+			// TestCaseExecutionBasicInformation
+			DomainUuid:                          tempTestCaseExecutionsUnderExecution.TestCaseExecutionBasicInformation.DomainUuid,
+			DomainName:                          tempTestCaseExecutionsUnderExecution.TestCaseExecutionBasicInformation.DomainName,
+			TestSuiteUuid:                       tempTestCaseExecutionsUnderExecution.TestCaseExecutionBasicInformation.TestSuiteUuid,
+			TestSuiteName:                       tempTestCaseExecutionsUnderExecution.TestCaseExecutionBasicInformation.TestSuiteName,
+			TestSuiteVersion:                    strconv.Itoa(int(tempTestCaseExecutionsUnderExecution.TestCaseExecutionBasicInformation.TestSuiteVersion)),
+			TestSuiteExecutionUuid:              tempTestCaseExecutionsUnderExecution.TestCaseExecutionBasicInformation.TestSuiteExecutionUuid,
+			TestSuiteExecutionVersion:           strconv.Itoa(int(tempTestCaseExecutionsUnderExecution.TestCaseExecutionBasicInformation.TestSuiteExecutionVersion)),
+			TestCaseUuid:                        tempTestCaseExecutionsUnderExecution.TestCaseExecutionBasicInformation.TestCaseUuid,
+			TestCaseName:                        tempTestCaseExecutionsUnderExecution.TestCaseExecutionBasicInformation.TestCaseName,
+			TestCaseVersion:                     strconv.Itoa(int(tempTestCaseExecutionsUnderExecution.TestCaseExecutionBasicInformation.TestCaseVersion)),
+			TestCaseExecutionUuid:               tempTestCaseExecutionsUnderExecution.TestCaseExecutionBasicInformation.TestCaseExecutionUuid,
+			TestCaseExecutionVersion:            strconv.Itoa(int(tempTestCaseExecutionsUnderExecution.TestCaseExecutionBasicInformation.TestCaseExecutionVersion)),
+			PlacedOnTestExecutionQueueTimeStamp: tempTestCaseExecutionsUnderExecution.TestCaseExecutionBasicInformation.PlacedOnTestExecutionQueueTimeStamp.AsTime().String(),
+			ExecutionPriority:                   fenixExecutionServerGuiGrpcApi.ExecutionPriorityEnum_name[int32(tempTestCaseExecutionsUnderExecution.TestCaseExecutionBasicInformation.ExecutionPriority)],
+
+			//
+			ExecutionStartTimeStamp:        tempTestCaseExecutionsUnderExecution.TestCaseExecutionDetails.ExecutionStartTimeStamp.AsTime().String(),
+			ExecutionStopTimeStamp:         tempTestCaseExecutionsUnderExecution.TestCaseExecutionDetails.ExecutionStopTimeStamp.AsTime().String(),
+			TestCaseExecutionStatus:        fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_name[int32(tempTestCaseExecutionsUnderExecution.TestCaseExecutionDetails.TestCaseExecutionStatus)],
+			ExecutionHasFinished:           strconv.FormatBool(tempTestCaseExecutionsUnderExecution.TestCaseExecutionDetails.ExecutionHasFinished),
+			ExecutionStatusUpdateTimeStamp: tempTestCaseExecutionsUnderExecution.TestCaseExecutionDetails.ExecutionStatusUpdateTimeStamp.AsTime().String(),
+		}
+
+		// Append to slice for TestCaseExecutionsUnderExecution-data used by UI-table
+		TestCaseExecutionsUnderExecutionAdaptedForUiTable = append(TestCaseExecutionsUnderExecutionAdaptedForUiTable, tempTestCaseExecutionUnderExecutionAdaptedForUiTable)
+
 	}
 
 	return err

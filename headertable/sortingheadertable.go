@@ -1,7 +1,8 @@
 package headertable
 
 import (
-	"fmt"
+	sharedCode "FenixTesterGui/common_code"
+	"github.com/sirupsen/logrus"
 	"log"
 	"math"
 	"sort"
@@ -100,11 +101,24 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 		for rowCounter := 0; rowCounter < numberOfRows; rowCounter++ {
 			b1 := bindings[rowCounter]
 			d1, err := b1.GetItem(colAttr.Name)
-			str1, err := d1.(binding.String).Get()
-			fmt.Sprintf("str1='%s', err='%s' :", err, str1)
+			if err != nil {
+				sharedCode.Logger.WithFields(logrus.Fields{
+					"id":      "584ebb7e-9e35-4c60-b1a7-0713f973d838",
+					"colAttr": colAttr,
+					"b1":      b1,
+				}).Fatalln("Couldn't get TestCaseExecution data due to no match")
+			}
+
+			cellData, err := d1.(binding.String).Get()
+			if err != nil {
+				sharedCode.Logger.WithFields(logrus.Fields{
+					"id": "14e392a6-390e-4321-96c1-1da2bcbd33e1",
+					"d1": d1,
+				}).Fatalln("Couldn't get TestCaseExecution data due to no match")
+			}
 
 			// Check if width for row data is greater than previous max width for column
-			tempColumnWidth = widget.NewLabel(str1).MinSize().Width
+			tempColumnWidth = widget.NewLabel(cellData).MinSize().Width
 			if tempColumnWidth > currentColumnsMaxWidth {
 				currentColumnsMaxWidth = tempColumnWidth
 			}
@@ -120,7 +134,7 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 			columnWidthToBeUsed = currentColumnsMaxWidth
 		}
 
-		// Set Width for Headcer
+		// Set Width for Header and data column
 		t.Header.SetColumnWidth(i, float32(colAttr.WidthPercent)/100.0*columnWidthToBeUsed)
 		t.Data.SetColumnWidth(i, float32(colAttr.WidthPercent)/100.0*columnWidthToBeUsed)
 

@@ -38,9 +38,9 @@ func (executionsUIObject *ExecutionsUIModelStruct) GenerateBaseUITabForExecution
 	executionsUIObject.ExecutionsTabs.SetTabLocation(container.TabLocationTop)
 
 	// Create the complete Executions UI area
-	var exectuinsBorderedLayout fyne.Layout
-	exectuinsBorderedLayout = layout.NewBorderLayout(executionsUIObject.ExecutionsToolUIBar, nil, nil, nil)
-	executionsCanvasObjectUI = container.New(exectuinsBorderedLayout, executionsUIObject.ExecutionsToolUIBar, executionsUIObject.ExecutionsTabs)
+	var executionsBorderedLayout fyne.Layout
+	executionsBorderedLayout = layout.NewBorderLayout(executionsUIObject.ExecutionsToolUIBar, nil, nil, nil)
+	executionsCanvasObjectUI = container.New(executionsBorderedLayout, executionsUIObject.ExecutionsToolUIBar, executionsUIObject.ExecutionsTabs)
 
 	// Initiate map for ExecutionsUI-models-Map
 	//executionsUIObject.TestCasesUiModelMap = make(map[string]*testCaseGraphicalAreasStruct)

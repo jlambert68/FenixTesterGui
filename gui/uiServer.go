@@ -9,6 +9,7 @@ import (
 	"FenixTesterGui/resources"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testCase/testCaseUI"
+	"FenixTesterGui/testCaseSubscriptionHandler"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -133,6 +134,8 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	uiServer.logger.WithFields(logrus.Fields{
 		"id": "a4d2716f-ded1-4062-bffb-fd0c03d69ca3",
 	}).Debug("Starting UI server")
+
+	// var err error
 	/*
 		myTestCase = &testCaseUIStruct{
 			logger: myUIServer.logger,
@@ -230,18 +233,21 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Create the Available Building Blocks adapted to Fyne tree-view
 	uiServer.availableBuildingBlocksModel.makeTreeUIModel()
 
+	// Initiate all variables needed by the TestCaseExecution-SubscriptionHandler
+	testCaseSubscriptionHandler.TestCaseExecutionStatusSubscriptionHandlerObject.InitiateTestCaseExecutionStatusSubscriptionHandler()
+
 	// Load TestCaseExecutionsOnExecutionQueue
 	var domainsList []string
 	domainsList = nil
-	executionsModel.ExecutionsModelObject.LoadAndCreateModelForTestCasesOnExecutionQueue(domainsList)
+	_ = executionsModel.ExecutionsModelObject.LoadAndCreateModelForTestCasesOnExecutionQueue(domainsList)
 
 	// Load TestCaseExecutionsUnderExecution
 	domainsList = nil
-	executionsModel.ExecutionsModelObject.LoadAndCreateModelForTestCaseUnderExecutions(domainsList)
+	_ = executionsModel.ExecutionsModelObject.LoadAndCreateModelForTestCaseUnderExecutions(domainsList)
 
 	// Load TestCaseExecutionsWithFinishedExecutions
 	domainsList = nil
-	executionsModel.ExecutionsModelObject.LoadAndCreateModelForTestCaseWithFinishedExecutions(domainsList)
+	_ = executionsModel.ExecutionsModelObject.LoadAndCreateModelForTestCaseWithFinishedExecutions(domainsList)
 
 	// Initiate and create the tree structure for available building blocks, of TestInstructions and TestInstructionContainers
 	uiServer.makeTreeUI()

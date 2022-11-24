@@ -17,7 +17,7 @@ func CreateTableForTestCaseExecutionsWithFinishedExecution() *fyne.Container {
 	}
 	executionsModel.TestCaseExecutionsFinishedExecutionTableOptions.Bindings = tableForTestCaseExecutionsWithFinishedExecutionBindings
 
-	ht := headertable.NewSortingHeaderTable(&executionsModel.TestCaseExecutionsUnderExecutionTableOptions)
+	ht := headertable.NewSortingHeaderTable(&executionsModel.TestCaseExecutionsFinishedExecutionTableOptions)
 	mySortTable := container.NewMax(ht)
 
 	return mySortTable

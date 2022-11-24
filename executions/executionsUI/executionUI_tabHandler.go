@@ -28,11 +28,37 @@ func (executionsUIObject *ExecutionsUIModelStruct) GenerateBaseUITabForExecution
 	var testCaseExecutionsTabPage *fyne.Container
 	testCaseExecutionsTabPage = executionsUIObject.CreateExecutionsListTabPage()
 
+	/*
+		// Create The Tab-object, where each TestCase will have its own Tab
+		executionsUIObject.ExecutionsTabs = container.NewAppTabs(
+			container.NewTabItemWithIcon("TestCase Executions", theme.HomeIcon(), testCaseExecutionsTabPage),
+			container.NewTabItemWithIcon("TestSuite Executions", theme.HomeIcon(), widget.NewLabel("Home tab")),
+		)
+	*/
+
 	// Create The Tab-object, where each TestCase will have its own Tab
-	executionsUIObject.ExecutionsTabs = container.NewAppTabs(
-		container.NewTabItemWithIcon("TestCase Executions", theme.HomeIcon(), testCaseExecutionsTabPage),
-		container.NewTabItemWithIcon("TestSuite Executions", theme.HomeIcon(), widget.NewLabel("Home tab")),
-	)
+	executionsUIObject.ExecutionsTabs = &container.AppTabs{
+		Items:     nil,
+		OnChanged: nil,
+		OnSelected: func(tabItem *container.TabItem) {
+			tabItem.Content.Refresh()
+		},
+		OnUnselected: nil,
+	}
+
+	// Append TestCaseExecutions-List-page
+	executionsUIObject.ExecutionsTabs.Append(&container.TabItem{
+		Text:    "TestCase Executions",
+		Icon:    theme.HomeIcon(),
+		Content: testCaseExecutionsTabPage,
+	})
+
+	// Append TestSuiteExecutions-List-page
+	executionsUIObject.ExecutionsTabs.Append(&container.TabItem{
+		Text:    "TestSuite Executions",
+		Icon:    theme.HomeIcon(),
+		Content: widget.NewLabel("Tab for 'TestSuite Executions'"),
+	})
 
 	// Set the Tabs to be positioned in upper part of the object
 	executionsUIObject.ExecutionsTabs.SetTabLocation(container.TabLocationTop)

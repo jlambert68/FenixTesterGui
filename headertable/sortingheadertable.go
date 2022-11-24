@@ -19,14 +19,16 @@ var _ fyne.Widget = &HeaderTable{}
 
 type SortingHeaderTable struct {
 	widget.BaseWidget
-	TableOpts  *TableOpts
-	Header     *widget.Table
-	Data       *widget.Table
+	TableOpts *TableOpts
+	Header    *widget.Table
+	Data      *widget.Table
+	//MagicTable *widget.Table
 	sortLabels []*sortingLabel
 }
 
 func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 	sortLabels := make([]*sortingLabel, len(tableOpts.ColAttrs))
+
 	dataTable := widget.NewTable(
 		// Dimensions (rows, cols)
 		func() (int, int) { return len(tableOpts.Bindings), len(tableOpts.ColAttrs) },
@@ -53,8 +55,10 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 	headerTable := widget.NewTable(
 		// Dimensions (rows, cols)
 		func() (int, int) { return 1, len(tableOpts.ColAttrs) },
+
 		// Default value
 		func() fyne.CanvasObject { return NewSortingLabel("the content") },
+
 		// Cell values
 		func(cellID widget.TableCellID, o fyne.CanvasObject) {
 			l := o.(*sortingLabel)
@@ -79,11 +83,66 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 			l.Refresh()
 		},
 	)
+	/*
+		myMagicTable := widget.NewTable(
+			// Dimensions (rows, cols)
+			func() (int, int) { return 1 + len(tableOpts.Bindings), len(tableOpts.ColAttrs) },
+
+			// Default value
+			func() fyne.CanvasObject { return widget.NewLabel("magic content") },
+			func() fyne.CanvasObject { return NewSortingLabel("the content") },
+
+			func(cellID widget.TableCellID, cnvObj fyne.CanvasObject) {
+				if cellID.Row == 0 {
+					// Header
+
+					l := cnvObj.(*sortingLabel)
+					sortLabels[cellID.Col] = l
+					col := cellID.Col
+					opts := tableOpts.ColAttrs[col]
+					l.Sorter = stringSort(tableOpts, col)
+					l.OnAfterSort = func() {
+						dataTable.Refresh()
+						// Set all but this column to unsorted
+						for i, sl := range sortLabels {
+							if i != cellID.Col {
+								sl.SetState(SortUnsorted)
+							}
+						}
+					}
+					l.Col = col
+					l.Label.SetText(opts.Header)
+					l.Label.TextStyle = opts.TextStyle
+					l.Label.Alignment = opts.Alignment
+					l.Label.Wrapping = opts.Wrapping
+					l.Refresh()
+
+				} else {
+					// Data
+
+					b := tableOpts.Bindings[cellID.Row-1]
+					itemKey := tableOpts.ColAttrs[cellID.Col].Name
+					d, err := b.GetItem(itemKey)
+					if err != nil {
+						log.Fatalf("Data table Update Cell callback, GetItem(%s): %s", itemKey, err)
+					}
+					str, err := d.(binding.String).Get()
+					if err != nil {
+						log.Fatalf("Data table Update Cell callback, Get: %s", err)
+					}
+					l := cnvObj.(*widget.Label)
+					l.SetText(str)
+				}
+
+			},
+		)
+	*/
 	t := &SortingHeaderTable{
 		sortLabels: sortLabels,
 		TableOpts:  tableOpts,
 		Header:     headerTable,
 		Data:       dataTable,
+		//MagicTable: myMagicTable,
 	}
 	t.ExtendBaseWidget(t)
 

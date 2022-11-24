@@ -98,7 +98,7 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 		}
 
 		// Append to slice for TestCaseExecutionsUnderExecution-data used by UI-table
-		TestCaseExecutionsUnderExecutionAdaptedForUiTable = append(TestCaseExecutionsUnderExecutionAdaptedForUiTable, tempTestCaseExecutionUnderExecutionAdaptedForUiTable)
+		TestCaseExecutionsUnderExecutionMapAdaptedForUiTable = append(TestCaseExecutionsUnderExecutionMapAdaptedForUiTable, tempTestCaseExecutionUnderExecutionAdaptedForUiTable)
 
 	}
 

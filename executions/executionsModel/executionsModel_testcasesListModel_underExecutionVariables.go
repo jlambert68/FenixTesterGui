@@ -20,9 +20,13 @@ type allTestCaseExecutionsOngoingUnderExecutionStruct struct {
 // Object model for TestCaseExecutions that is ongoing and belongs to all or some Domains
 var AllTestCaseExecutionsUnderExecutionModel map[testCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseUnderExecutionMessage
 
-// TestCaseExecutionsUnderExecutionAdaptedForUiTable
+// TestCaseExecutionsUnderExecutionMapAdaptedForUiTable
 // Object holding the testdata to be shown in UI regarding which TestCaseExecutions that is waiting on ExecutiUnderExecution
-var TestCaseExecutionsUnderExecutionAdaptedForUiTable []TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
+var TestCaseExecutionsUnderExecutionMapAdaptedForUiTable map[TestCaseExecutionsUnderExecutionMapAdaptedForUiTableMapKeyType]TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
+
+// TestCaseExecutionsUnderExecutionMapAdaptedForUiTableMapKeyType
+//Defines the key to the TestCaseExecutionsUnderExecutionMapAdaptedForUiTable-map['TestCaseExecutionUuid' + 'TestCaseExecutionVersion']
+type TestCaseExecutionsUnderExecutionMapAdaptedForUiTableMapKeyType string
 
 // TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
 // Type for holding one row of data

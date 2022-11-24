@@ -2,13 +2,13 @@ package headertable
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"fyne.io/fyne/v2/container"
 	"github.com/sirupsen/logrus"
 	"log"
 	"math"
 	"sort"
 
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/widget"
 )
@@ -249,6 +249,7 @@ func (h *SortingHeaderTable) CreateRenderer() fyne.WidgetRenderer {
 	return sortingHeaderTableRenderer{
 		headerTable: h,
 		container:   container.NewBorder(h.Header, nil, nil, nil, h.Data),
+		//container: container.NewVBox(h.Header, h.Data),
 	}
 }
 

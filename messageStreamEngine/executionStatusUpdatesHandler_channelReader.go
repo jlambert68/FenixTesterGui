@@ -33,7 +33,7 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) startCommandChannelR
 		case ChannelCommandExecutionsStatusesHaveBeUpdated:
 			// TestCaseExecutionStatus or TestInstructionExecutionStatus has been updated
 			fmt.Println(incomingChannelCommandAndMessage)
-			xxx
+			//xxx
 
 		case ChannelCommandTriggerRequestForTestInstructionExecutionToProcess:
 			messageStreamEngineObject.initiateOpenMessageStreamToGuiExecutionServer()

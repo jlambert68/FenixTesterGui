@@ -12,8 +12,10 @@ func CreateTableForTestCaseExecutionsUnderExecution() *fyne.Container {
 	var tableForTestCaseExecutionsUnderExecutionBindings []binding.DataMap
 
 	// Create a binding for each TestExecutionUnderExecutionRow data
-	for testDataRowCounter := 0; testDataRowCounter < len(executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTable); testDataRowCounter++ {
-		tableForTestCaseExecutionsUnderExecutionBindings = append(tableForTestCaseExecutionsUnderExecutionBindings, binding.BindStruct(&executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTable[testDataRowCounter]))
+	for testDataRowCounter := 0; testDataRowCounter < len(executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable); testDataRowCounter++ {
+		tableForTestCaseExecutionsUnderExecutionBindings = append(
+			tableForTestCaseExecutionsUnderExecutionBindings,
+			binding.BindStruct(&executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[testDataRowCounter]))
 	}
 	executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings = tableForTestCaseExecutionsUnderExecutionBindings
 

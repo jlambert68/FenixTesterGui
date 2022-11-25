@@ -132,13 +132,16 @@ func CreateTableObject() (testCaseTextualModelAreaAccordion *fyne.Container) {
 }
 
 func CreateTableForTestCaseExecutionsOnQueue() *fyne.Container {
-	var TableForTestCaseExecutionsOnQueueBindings []binding.DataMap
+	var tableForTestCaseExecutionsOnQueueBindings []binding.DataMap
 
 	// Create a binding for each TestExecutionOnQueueRow data
-	for testDataRowCounter := 0; testDataRowCounter < len(executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTable); testDataRowCounter++ {
-		TableForTestCaseExecutionsOnQueueBindings = append(TableForTestCaseExecutionsOnQueueBindings, binding.BindStruct(&executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTable[testDataRowCounter]))
+	for _, tempTestCaseExecutionsUnderExecutionDataAdaptedForUiTableReference := range executionsModel.TestCaseExecutionsOnQueueMapAdaptedForUiTable {
+		tableForTestCaseExecutionsOnQueueBindings = append(
+			tableForTestCaseExecutionsOnQueueBindings,
+			binding.BindStruct(tempTestCaseExecutionsUnderExecutionDataAdaptedForUiTableReference))
 	}
-	executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings = TableForTestCaseExecutionsOnQueueBindings
+
+	executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings = tableForTestCaseExecutionsOnQueueBindings
 
 	ht := headertable.NewSortingHeaderTable(&executionsModel.TestCaseExecutionsOnQueueTableOptions)
 	mySortTable := container.NewMax(ht)

@@ -14,4 +14,4 @@ type domainsStruct struct {
 }
 
 // Type used to define that this is TestCaseExecutionKey for model-maps
-type testCaseExecutionMapKeyType string // Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
+type TestCaseExecutionMapKeyType string // Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'

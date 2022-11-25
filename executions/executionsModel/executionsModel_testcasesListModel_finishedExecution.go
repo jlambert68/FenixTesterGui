@@ -50,10 +50,16 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 	// Create Model from 'loaded' testCases under Execution
 
 	// Initiate map for model
-	AllTestCaseExecutionsFinishedExecutionModel = make(map[testCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseWithFinishedExecutionMessage)
+	AllTestCaseExecutionsFinishedExecutionModel =
+		make(map[TestCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseWithFinishedExecutionMessage)
+
+	// Initiate map-model for UI-table-data
+	TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable =
+		make(map[TestCaseExecutionMapKeyType]*TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct)
 
 	// Key to map: Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
-	var testCaseExecutionMapKey testCaseExecutionMapKeyType
+	var testCaseExecutionMapKey TestCaseExecutionMapKeyType
+	var existInMap bool
 
 	// Loop all TestCasesExecutions that were received from GuiExecutionServer
 	for _, tempTestCaseExecutionsFinishedExecution := range allTestCaseExecutionsFinishedExecution.testCaseExecutionsFinishedExecution {
@@ -65,7 +71,7 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 		var testCaseExecutionVersionAsString string
 		testCaseExecutionVersionAsString = strconv.Itoa(int(tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.TestCaseExecutionVersion))
 
-		testCaseExecutionMapKey = testCaseExecutionMapKeyType(tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.TestCaseExecutionUuid + testCaseExecutionVersionAsString)
+		testCaseExecutionMapKey = TestCaseExecutionMapKeyType(tempTestCaseExecutionsFinishedExecution.TestCaseExecutionBasicInformation.TestCaseExecutionUuid + testCaseExecutionVersionAsString)
 
 		// Add TestCaseExecution to map
 		AllTestCaseExecutionsFinishedExecutionModel[testCaseExecutionMapKey] = testCaseExecutionsFinishedExecution
@@ -97,8 +103,20 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 			ExecutionStatusUpdateTimeStamp: tempTestCaseExecutionsFinishedExecution.TestCaseExecutionDetails.ExecutionStatusUpdateTimeStamp.AsTime().String(),
 		}
 
-		// Append to slice for TestCaseExecutionsFinishedExecution-data used by UI-table
-		TestCaseExecutionsFinishedExecutionAdaptedForUiTable = append(TestCaseExecutionsFinishedExecutionAdaptedForUiTable, tempTestCaseExecutionFinishedExecutionAdaptedForUiTable)
+		// Verify that key is not already used in map
+		_, existInMap = TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable[testCaseExecutionMapKey]
+		if existInMap == true {
+
+			errorId := "b32b17bd-f4cc-40fe-9181-3e5f0284bc88"
+			err = errors.New(fmt.Sprintf("'testCaseExecutionMapKey', '%s' already exist in TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable [ErrorID: %s]", testCaseExecutionMapKey, errorId))
+
+			fmt.Println(err) // TODO Send on Error Channel
+
+			return err
+		}
+
+		// Append to map for TestCaseExecutionsUnderExecution-data used by UI-table
+		TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable[testCaseExecutionMapKey] = &tempTestCaseExecutionFinishedExecutionAdaptedForUiTable
 
 	}
 

@@ -18,11 +18,11 @@ type allTestCaseExecutionsOngoingFinishedExecutionStruct struct {
 
 // AllTestCaseExecutionsFinishedExecutionModel
 // Object model for TestCaseExecutions that is ongoing and belongs to all or some Domains
-var AllTestCaseExecutionsFinishedExecutionModel map[testCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseWithFinishedExecutionMessage
+var AllTestCaseExecutionsFinishedExecutionModel map[TestCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseWithFinishedExecutionMessage
 
-// TestCaseExecutionsFinishedExecutionAdaptedForUiTable
-// Object holding the testdata to be shown in UI regarding which TestCaseExecutions that is waiting on ExecutiFinishedExecution
-var TestCaseExecutionsFinishedExecutionAdaptedForUiTable []TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct
+// TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable
+// Object holding the testdata to be shown in UI regarding which TestCaseExecutions that is FinishedExecution
+var TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable map[TestCaseExecutionMapKeyType]*TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct
 
 // TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct
 // Type for holding one row of data

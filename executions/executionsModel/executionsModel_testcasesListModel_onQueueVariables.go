@@ -18,11 +18,11 @@ type allTestCaseExecutionsOnQueueStruct struct {
 
 // AllTestCaseExecutionsOnQueueModel
 // Object model for TestCaseExecutions that exists on the TestCaseExecutionQueue and belongs to all or some Domains
-var AllTestCaseExecutionsOnQueueModel map[testCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage
+var AllTestCaseExecutionsOnQueueModel map[TestCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage
 
-// TestCaseExecutionsOnQueueAdaptedForUiTable
+// TestCaseExecutionsOnQueueMapAdaptedForUiTable
 // Object holding the testdata to be shown in UI regarding which TestCaseExecutions that is waiting on ExecutionQueue
-var TestCaseExecutionsOnQueueAdaptedForUiTable []TestCaseExecutionsOnQueueAdaptedForUiTableStruct
+var TestCaseExecutionsOnQueueMapAdaptedForUiTable map[TestCaseExecutionMapKeyType]*TestCaseExecutionsOnQueueAdaptedForUiTableStruct
 
 // TestCaseExecutionsOnQueueAdaptedForUiTableStruct
 // Type for holding one row of data

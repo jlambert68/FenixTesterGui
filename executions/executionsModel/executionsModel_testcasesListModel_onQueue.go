@@ -50,10 +50,16 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 	// Create Model from 'loaded' testCaseExecutions on Queue
 
 	// Initiate map for model
-	AllTestCaseExecutionsOnQueueModel = make(map[testCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage)
+	AllTestCaseExecutionsOnQueueModel =
+		make(map[TestCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage)
+
+	// Initiate map-model for UI-table-data
+	TestCaseExecutionsOnQueueMapAdaptedForUiTable =
+		make(map[TestCaseExecutionMapKeyType]*TestCaseExecutionsOnQueueAdaptedForUiTableStruct)
 
 	// Key to map: Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
-	var testCaseExecutionMapKey testCaseExecutionMapKeyType
+	var testCaseExecutionMapKey TestCaseExecutionMapKeyType
+	var existInMap bool
 
 	// Loop all TestCasesExecutions that were received from GuiExecutionServer
 	for _, tempTestCaseExecutionsOnQueue := range allTestCaseExecutionsOnQueue.testCaseExecutionsOnQueue {
@@ -65,7 +71,7 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 		var testCaseExecutionVersionAsString string
 		testCaseExecutionVersionAsString = strconv.Itoa(int(tempTestCaseExecutionsOnQueue.TestCaseExecutionVersion))
 
-		testCaseExecutionMapKey = testCaseExecutionMapKeyType(tempTestCaseExecutionsOnQueue.TestCaseExecutionUuid + testCaseExecutionVersionAsString)
+		testCaseExecutionMapKey = TestCaseExecutionMapKeyType(tempTestCaseExecutionsOnQueue.TestCaseExecutionUuid + testCaseExecutionVersionAsString)
 
 		// Add TestCaseExecutions to map
 		AllTestCaseExecutionsOnQueueModel[testCaseExecutionMapKey] = testCaseExecutionsOnQueue
@@ -89,8 +95,20 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 			ExecutionPriority:                   fenixExecutionServerGuiGrpcApi.ExecutionPriorityEnum_name[int32(tempTestCaseExecutionsOnQueue.ExecutionPriority)],
 		}
 
-		// Append to slice for TestCaseExecutionsOnQueue-data used by UI-table
-		TestCaseExecutionsOnQueueAdaptedForUiTable = append(TestCaseExecutionsOnQueueAdaptedForUiTable, tempTestCaseExecutionsOnQueueAdaptedForUiTable)
+		// Verify that key is not already used in map
+		_, existInMap = TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey]
+		if existInMap == true {
+
+			errorId := "e5fba95a-2e69-4428-ac7d-a85c9a1819ac"
+			err = errors.New(fmt.Sprintf("'testCaseExecutionMapKey', '%s' already exist in TestCaseExecutionsOnQueueMapAdaptedForUiTable [ErrorID: %s]", testCaseExecutionMapKey, errorId))
+
+			fmt.Println(err) // TODO Send on Error Channel
+
+			return err
+		}
+
+		// Append to map for TestCaseExecutionsUnderExecution-data used by UI-table
+		TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey] = &tempTestCaseExecutionsOnQueueAdaptedForUiTable
 
 	}
 

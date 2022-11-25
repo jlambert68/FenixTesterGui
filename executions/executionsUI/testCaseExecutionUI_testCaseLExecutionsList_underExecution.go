@@ -33,34 +33,45 @@ func CreateTableForTestCaseExecutionsUnderExecution() *fyne.Container {
 	executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings = tableForTestCaseExecutionsUnderExecutionBindings
 
 	ht := headertable.NewSortingHeaderTable(&executionsModel.TestCaseExecutionsUnderExecutionTableOptions)
+	ExecutionsUIObject.UnderExecutionTable = ht
+
 	mySortTable := container.NewMax(ht)
 
 	key1 := reflect.ValueOf(executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable).MapKeys()[1]
 	fmt.Println(key1)
 	value := executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[executionsModel.TestCaseExecutionMapKeyType("d9c6fa2e-3d6a-477d-9727-a3083260777c1")]
-	//executionsModel.TestCaseExecutionMapKeyType
+	fmt.Println(value)
 	_ = RemoveBindingToTableDataForUnderExecutionTable(value)
 
 	return mySortTable
 
 }
 
-// R
-// afas
 func RemoveBindingToTableDataForUnderExecutionTable(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct) (err error) {
 
 	// Key to map: Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
-	//var testCaseExecutionMapKey executionsModel.TestCaseExecutionMapKeyType
+	var testCaseExecutionMapKey executionsModel.TestCaseExecutionMapKeyType
 
-	Testa att ta bort i orginaldatat och se om det påverkar det "bindade" datat
-	var tempTestCaseExecutionUuidFromBindedData binding.DataItem
-	var tempTestCaseExecutionVersionFromBindedData binding.DataItem
+	testCaseExecutionMapKey = executionsModel.TestCaseExecutionMapKeyType(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseExecutionUuid +
+		testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseExecutionVersion)
+
+	delete(executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable, executionsModel.TestCaseExecutionMapKeyType("d9c6fa2e-3d6a-477d-9727-a3083260777c1"))
+	var tempTestCaseExecutionUuidDataItem binding.DataItem
+	var tempTestCaseExecutionVersionFromDataItem binding.DataItem
+	var tempTestCaseExecutionUuidDataItemValue string
+	var tempTestCaseExecutionVersionFromDataItemValue string
 
 	// Loop all binding data and find the one to be removed
 	for binderSlicePosition, tempTestCaseExecutionsUnderExecutionDataRowBinding := range executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings {
+		fmt.Println(tempTestCaseExecutionsUnderExecutionDataRowBinding)
+
+		dataMapBinding := executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings[binderSlicePosition]
+
+		str, err := dataMapBinding.(binding.String).Get()
+		fmt.Println(str)
 
 		// Extract first part if MapKey from 'Binded data'
-		tempTestCaseExecutionUuidFromBindedData, err = tempTestCaseExecutionsUnderExecutionDataRowBinding.GetItem("TestCaseExecutionUuid")
+		tempTestCaseExecutionUuidDataItem, err = dataMapBinding.GetItem("TestCaseExecutionUuid")
 		if err != nil {
 			// 'TestCaseExecutionUuid' doesn't exist within data
 			errorId := "329d10ca-b804-48f2-b91f-a3bf83f64386"
@@ -70,8 +81,18 @@ func RemoveBindingToTableDataForUnderExecutionTable(testCaseExecutionsUnderExecu
 
 			return err
 		}
+		tempTestCaseExecutionUuidDataItemValue, err = tempTestCaseExecutionUuidDataItem.(binding.String).Get()
+		if err != nil {
+			// Couldn't extract value for 'TestCaseExecutionUuid'
+			errorId := "dd8edb6c-f3be-4e69-9372-82e0251e7689"
+			err = errors.New(fmt.Sprintf("couldn't get value from DataItem for 'TestCaseExecutionUuid', [ErrorID: %s]", errorId))
 
-		tempTestCaseExecutionVersionFromBindedData, err = tempTestCaseExecutionsUnderExecutionDataRowBinding.GetItem("TestCaseExecutionVersion")
+			fmt.Println(err) // TODO Send on Error Channel
+
+			return err
+		}
+
+		tempTestCaseExecutionVersionFromDataItem, err = dataMapBinding.GetItem("TestCaseExecutionVersion")
 		if err != nil {
 			// 'TestCaseExecutionVersion' doesn't exist within data
 			errorId := "04c9968a-c930-4f3e-8c6e-0d76515df1a5"
@@ -81,14 +102,36 @@ func RemoveBindingToTableDataForUnderExecutionTable(testCaseExecutionsUnderExecu
 
 			return err
 		}
+		tempTestCaseExecutionVersionFromDataItemValue, err = tempTestCaseExecutionVersionFromDataItem.(binding.String).Get()
+		if err != nil {
+			// Couldn't extract value for 'TestCaseExecutionVersion'
+			errorId := "aa2c7277-f0a6-4c9a-9517-1f3a41502a25"
+			err = errors.New(fmt.Sprintf("couldn't get value from DataItem for 'TestCaseExecutionVersion', [ErrorID: %s]", errorId))
 
-		// If this is the 'binded' data that should be removed then remove it stopp looping
-		fmt.Println(binderSlicePosition)
-		fmt.Println(tempTestCaseExecutionUuidFromBindedData)
-		fmt.Println(tempTestCaseExecutionVersionFromBindedData)
+			fmt.Println(err) // TODO Send on Error Channel
+
+			return err
+		}
+
+		// Check if this is the 'row' to delete
+		if testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseExecutionUuid == tempTestCaseExecutionUuidDataItemValue &&
+			testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseExecutionVersion == tempTestCaseExecutionVersionFromDataItemValue {
+
+			// Remove the element at index 'binderSlicePosition' from slice.
+			executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings = remove(executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings, binderSlicePosition)
+
+			// Delete data from original data adapted for Table
+			delete(executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable, testCaseExecutionMapKey)
+
+			ExecutionsUIObject.UnderExecutionTable.Data.Refresh()
+		}
 
 	}
 
 	return err
 
+}
+
+func remove(slice []binding.DataMap, s int) []binding.DataMap {
+	return append(slice[:s], slice[s+1:]...)
 }

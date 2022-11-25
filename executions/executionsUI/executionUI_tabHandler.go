@@ -1,6 +1,7 @@
 package executionsUI
 
 import (
+	"FenixTesterGui/executions/executionsModel"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -21,6 +22,12 @@ func (executionsUIObject *ExecutionsUIModelStruct) GenerateBaseUITabForExecution
 
 		widget.NewToolbarAction(theme.ContentCopyIcon(), func() {
 			fmt.Println("Show Executions in a read only undocked page")
+		}),
+		widget.NewToolbarAction(theme.ContentRemoveIcon(), func() {
+			fmt.Println("Remove")
+			delete(executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable, executionsModel.TestCaseExecutionMapKeyType("d9c6fa2e-3d6a-477d-9727-a3083260777c1"))
+			ExecutionsUIObject.UnderExecutionTable.Refresh()
+
 		}),
 	)
 

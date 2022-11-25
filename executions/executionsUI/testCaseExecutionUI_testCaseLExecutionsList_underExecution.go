@@ -41,7 +41,7 @@ func CreateTableForTestCaseExecutionsUnderExecution() *fyne.Container {
 	fmt.Println(key1)
 	value := executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[executionsModel.TestCaseExecutionMapKeyType("d9c6fa2e-3d6a-477d-9727-a3083260777c1")]
 	fmt.Println(value)
-	_ = RemoveBindingToTableDataForUnderExecutionTable(value)
+	//_ = RemoveBindingToTableDataForUnderExecutionTable(value)
 
 	return mySortTable
 
@@ -55,7 +55,6 @@ func RemoveBindingToTableDataForUnderExecutionTable(testCaseExecutionsUnderExecu
 	testCaseExecutionMapKey = executionsModel.TestCaseExecutionMapKeyType(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseExecutionUuid +
 		testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseExecutionVersion)
 
-	delete(executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable, executionsModel.TestCaseExecutionMapKeyType("d9c6fa2e-3d6a-477d-9727-a3083260777c1"))
 	var tempTestCaseExecutionUuidDataItem binding.DataItem
 	var tempTestCaseExecutionVersionFromDataItem binding.DataItem
 	var tempTestCaseExecutionUuidDataItemValue string
@@ -66,9 +65,6 @@ func RemoveBindingToTableDataForUnderExecutionTable(testCaseExecutionsUnderExecu
 		fmt.Println(tempTestCaseExecutionsUnderExecutionDataRowBinding)
 
 		dataMapBinding := executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings[binderSlicePosition]
-
-		str, err := dataMapBinding.(binding.String).Get()
-		fmt.Println(str)
 
 		// Extract first part if MapKey from 'Binded data'
 		tempTestCaseExecutionUuidDataItem, err = dataMapBinding.GetItem("TestCaseExecutionUuid")
@@ -124,6 +120,8 @@ func RemoveBindingToTableDataForUnderExecutionTable(testCaseExecutionsUnderExecu
 			delete(executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable, testCaseExecutionMapKey)
 
 			ExecutionsUIObject.UnderExecutionTable.Data.Refresh()
+
+			break
 		}
 
 	}

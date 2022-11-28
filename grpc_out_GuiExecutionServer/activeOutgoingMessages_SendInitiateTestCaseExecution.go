@@ -35,10 +35,12 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendInitiateTestCaseExecution(in
 	ackNackresponse = grpcOut.SetConnectionToFenixGuiExecutionServer()
 	// If there was no connection to backend then return that message
 	if ackNackresponse != nil {
+
 		initiateSingleTestCaseExecutionResponseMessage = &fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionResponseMessage{
-			TestCaseExecutionUuid: "",
-			AckNackResponse:       ackNackresponse,
+			TestCasesInExecutionQueue: nil,
+			AckNackResponse:           ackNackresponse,
 		}
+
 		return initiateSingleTestCaseExecutionResponseMessage
 	}
 
@@ -61,7 +63,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendInitiateTestCaseExecution(in
 		if returnMessageAckNack == false {
 			// When error
 			initiateSingleTestCaseExecutionResponseMessage = &fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionResponseMessage{
-				TestCaseExecutionUuid: "",
+				TestCasesInExecutionQueue: nil,
 				AckNackResponse: &fenixExecutionServerGuiGrpcApi.AckNackResponse{
 					AckNack:    false,
 					Comments:   returnMessageString,
@@ -87,7 +89,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendInitiateTestCaseExecution(in
 		}).Error("Problem to do gRPC-call to FenixGuiExecutionServer for 'SendInitiateTestCaseExecution'")
 
 		initiateSingleTestCaseExecutionResponseMessage = &fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionResponseMessage{
-			TestCaseExecutionUuid: "",
+			TestCasesInExecutionQueue: nil,
 			AckNackResponse: &fenixExecutionServerGuiGrpcApi.AckNackResponse{
 				AckNack:    false,
 				Comments:   fmt.Sprintf("Problem to do gRPC-call to FenixGuiExecutionServer for 'SendInitiateTestCaseExecution'. ErrorMessage: '%s'", err.Error()),

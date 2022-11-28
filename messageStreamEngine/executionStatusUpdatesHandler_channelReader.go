@@ -3,6 +3,7 @@ package messageStreamEngine
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"fmt"
+	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"time"
 )
@@ -33,7 +34,7 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) startCommandChannelR
 		case ChannelCommandExecutionsStatusesHaveBeUpdated:
 			// TestCaseExecutionStatus or TestInstructionExecutionStatus has been updated
 			fmt.Println(incomingChannelCommandAndMessage)
-			//xxx
+			//messageStreamEngineObject.processTestExecutionStatusChange(incomingChannelCommandAndMessage.ExecutionsStatusMessage)
 
 		case ChannelCommandTriggerRequestForTestInstructionExecutionToProcess:
 			messageStreamEngineObject.initiateOpenMessageStreamToGuiExecutionServer()
@@ -95,4 +96,28 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) initiateOpenMessageS
 		executionStatusCommandChannel <- channelCommandAndMessage
 
 	}()
+}
+
+// Process TestExecutionStatus-change
+func (messageStreamEngineObject *MessageStreamEngineStruct) processTestExecutionStatusChange(executionsStatusMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage) {
+
+	// Process TestCaseExecutionStatus-change
+	if executionsStatusMessage.TestCaseExecutionsStatus != nil {
+		// Loop TestExecutionStatusMessage
+		for _, testCaseExecutionStatusMessage := range executionsStatusMessage.TestCaseExecutionsStatus {
+
+			//
+			switch testCaseExecutionStatusMessage.TestCaseExecutionDetails.TestCaseExecutionStatus {
+
+			}
+			//testCaseExecutionStatusMessage.
+
+		}
+	}
+
+	// Process TestInstructionExecutionStatus-change
+	if executionsStatusMessage.TestCaseExecutionsStatus != nil {
+
+	}
+
 }

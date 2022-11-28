@@ -292,7 +292,7 @@ func AddTestCaseExecutionToOnQueueTable(testCaseExecutionBasicInformation *fenix
 		return err
 	}
 
-	// Append to map for TestCaseExecutionsUnderExecution-data used by UI-table
+	// Append to map for TestCaseExecutionsOnQueue-data used by UI-table
 	executionsModel.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey] = tempTestCaseExecutionsOnQueueAdaptedForUiTable
 
 	// Add a binding for TestExecutionOnQueueRow data

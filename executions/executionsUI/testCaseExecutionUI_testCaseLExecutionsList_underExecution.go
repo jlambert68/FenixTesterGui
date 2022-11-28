@@ -8,7 +8,9 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
+	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"reflect"
+	"strconv"
 )
 
 func CreateTableForTestCaseExecutionsUnderExecution() *fyne.Container {
@@ -47,6 +49,8 @@ func CreateTableForTestCaseExecutionsUnderExecution() *fyne.Container {
 
 }
 
+// RemoveTestCaseExecutionFromUnderExecutionTable
+// Remove from both table-slice and from Map that Table-slice got its data from
 func RemoveTestCaseExecutionFromUnderExecutionTable(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct) (err error) {
 
 	// Key to map: Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
@@ -130,7 +134,136 @@ func RemoveTestCaseExecutionFromUnderExecutionTable(testCaseExecutionsUnderExecu
 
 }
 
-// Remove item from the DataItem-slice and keep order
-func remove(slice []binding.DataMap, s int) []binding.DataMap {
-	return append(slice[:s], slice[s+1:]...)
+func MoveTestCaseInstructionExecutionFromOnQueueToUnderExecution(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTableStruct, testCaseExecutionDetails *fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage) (err error) {
+
+	var existInMap bool
+
+	// Key to map: Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
+	var testCaseExecutionMapKey executionsModel.TestCaseExecutionMapKeyType
+
+	testCaseExecutionMapKey = executionsModel.TestCaseExecutionMapKeyType(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestCaseExecutionUuid +
+		testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestCaseExecutionVersion)
+
+	// Extract OnQueueData to be moved to UnderExecution
+	var tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTableStruct
+	tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference, existInMap = executionsModel.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey]
+
+	if existInMap == false {
+
+		errorId := "2942f959-6ceb-4f78-b06c-a8ff314b11f3"
+		err = errors.New(fmt.Sprintf("'testCaseExecutionMapKey', '%s' doesn't exist in TestCaseExecutionsOnQueueMapAdaptedForUiTable [ErrorID: %s]", testCaseExecutionMapKey, errorId))
+
+		fmt.Println(err) // TODO Send on Error Channel
+
+		return err
+	}
+
+	//Create the new object to be added to UnderExecution-table
+	var testCaseExecutionUnderExecutionAdaptedForUiTable *executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
+	testCaseExecutionUnderExecutionAdaptedForUiTable = &executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct{
+		DomainUuid:                          tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.DomainUuid,
+		DomainName:                          tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.DomainName,
+		TestSuiteUuid:                       tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestSuiteUuid,
+		TestSuiteName:                       tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestSuiteName,
+		TestSuiteVersion:                    tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestSuiteVersion,
+		TestSuiteExecutionUuid:              tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestSuiteExecutionUuid,
+		TestSuiteExecutionVersion:           tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestSuiteExecutionVersion,
+		TestCaseUuid:                        tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestCaseUuid,
+		TestCaseName:                        tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestCaseName,
+		TestCaseVersion:                     tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestCaseVersion,
+		TestCaseExecutionUuid:               tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestCaseExecutionUuid,
+		TestCaseExecutionVersion:            tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestCaseExecutionVersion,
+		PlacedOnTestExecutionQueueTimeStamp: tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.PlacedOnTestExecutionQueueTimeStamp,
+		ExecutionPriority:                   tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.ExecutionPriority,
+		ExecutionStartTimeStamp:             testCaseExecutionDetails.ExecutionStartTimeStamp.AsTime().String(),
+		ExecutionStopTimeStamp:              testCaseExecutionDetails.ExecutionStopTimeStamp.AsTime().String(),
+		TestCaseExecutionStatus:             testCaseExecutionDetails.TestCaseExecutionStatus.String(),
+		ExecutionHasFinished:                strconv.FormatBool(testCaseExecutionDetails.ExecutionHasFinished),
+		ExecutionStatusUpdateTimeStamp:      testCaseExecutionDetails.ExecutionStatusUpdateTimeStamp.AsTime().String(),
+	}
+
+	// if 'testCaseExecutionMapKey' already exist in TestCaseExecutionsUnderExecutionMapAdaptedForUiTable''
+	_, existInMap = executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[testCaseExecutionMapKey]
+	if existInMap == true {
+
+		errorId := "3177ff88-46f5-4572-b722-ac541c761a64"
+		err = errors.New(fmt.Sprintf("'testCaseExecutionMapKey', '%s' already exist in TestCaseExecutionsUnderExecutionMapAdaptedForUiTable [ErrorID: %s]", testCaseExecutionMapKey, errorId))
+
+		fmt.Println(err) // TODO Send on Error Channel
+
+		return err
+	}
+
+	// Append to map for TestCaseExecutionsUnderExecution-data used by UI-table
+	executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[testCaseExecutionMapKey] = testCaseExecutionUnderExecutionAdaptedForUiTable
+
+	// Add a binding for TestExecutionUnderExecutionRow data
+	executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings = append(
+		executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings,
+		binding.BindStruct(testCaseExecutionUnderExecutionAdaptedForUiTable))
+
+	// Update TestCaseExecutionOnQueue-table
+	ExecutionsUIObject.OnQueueTable.Data.Refresh()
+
+	err = RemoveTestCaseExecutionFromUnderExecutionTable(testCaseExecutionUnderExecutionAdaptedForUiTable)
+
+	return err
+}
+
+func AddTestCaseExecutionUnderExecutionTable(testCaseExecutionBasicInformation *fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage) (err error) {
+
+	if testCaseExecutionBasicInformation == nil {
+		return err
+	}
+	// Convert 'raw' TestCaseExecutionsOnQueue-data into format to be used in UI
+	var tempTestCaseExecutionsOnQueueAdaptedForUiTable *executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTableStruct
+	tempTestCaseExecutionsOnQueueAdaptedForUiTable = &executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTableStruct{
+		DomainUuid:                          testCaseExecutionBasicInformation.DomainUuid,
+		DomainName:                          testCaseExecutionBasicInformation.DomainName,
+		TestSuiteUuid:                       testCaseExecutionBasicInformation.TestSuiteUuid,
+		TestSuiteName:                       testCaseExecutionBasicInformation.TestSuiteName,
+		TestSuiteVersion:                    strconv.Itoa(int(testCaseExecutionBasicInformation.TestSuiteVersion)),
+		TestSuiteExecutionUuid:              testCaseExecutionBasicInformation.TestSuiteExecutionUuid,
+		TestSuiteExecutionVersion:           strconv.Itoa(int(testCaseExecutionBasicInformation.TestSuiteExecutionVersion)),
+		TestCaseUuid:                        testCaseExecutionBasicInformation.TestCaseUuid,
+		TestCaseName:                        testCaseExecutionBasicInformation.TestCaseName,
+		TestCaseVersion:                     strconv.Itoa(int(testCaseExecutionBasicInformation.TestCaseVersion)),
+		TestCaseExecutionUuid:               testCaseExecutionBasicInformation.TestCaseExecutionUuid,
+		TestCaseExecutionVersion:            strconv.Itoa(int(testCaseExecutionBasicInformation.TestCaseExecutionVersion)),
+		PlacedOnTestExecutionQueueTimeStamp: testCaseExecutionBasicInformation.PlacedOnTestExecutionQueueTimeStamp.AsTime().String(),
+		ExecutionPriority:                   fenixExecutionServerGuiGrpcApi.ExecutionPriorityEnum_name[int32(testCaseExecutionBasicInformation.ExecutionPriority)],
+	}
+
+	// Verify that key is not already used in map
+	// Key to map: Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
+	var testCaseExecutionMapKey executionsModel.TestCaseExecutionMapKeyType
+
+	testCaseExecutionMapKey = executionsModel.TestCaseExecutionMapKeyType(tempTestCaseExecutionsOnQueueAdaptedForUiTable.TestCaseExecutionUuid +
+		tempTestCaseExecutionsOnQueueAdaptedForUiTable.TestCaseExecutionVersion)
+
+	var existInMap bool
+	_, existInMap = executionsModel.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey]
+	if existInMap == true {
+
+		errorId := "c51f60c4-2f27-495d-8e5e-0be0900dad03"
+		err = errors.New(fmt.Sprintf("'testCaseExecutionMapKey', '%s' already exist in TestCaseExecutionsOnQueueMapAdaptedForUiTable [ErrorID: %s]", testCaseExecutionMapKey, errorId))
+
+		fmt.Println(err) // TODO Send on Error Channel
+
+		return err
+	}
+
+	// Append to map for TestCaseExecutionsUnderExecution-data used by UI-table
+	executionsModel.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey] = tempTestCaseExecutionsOnQueueAdaptedForUiTable
+
+	// Add a binding for TestExecutionOnQueueRow data
+	executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings = append(
+		executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings,
+		binding.BindStruct(tempTestCaseExecutionsOnQueueAdaptedForUiTable))
+
+	// Update TestCaseExecutionOnQueue-table
+	ExecutionsUIObject.OnQueueTable.Data.Refresh()
+
+	return err
+
 }

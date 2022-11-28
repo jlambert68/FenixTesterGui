@@ -129,13 +129,13 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) processTestExecution
 					TestCaseExecutionVersion: testCaseExecutionVersionAsString,
 				}
 
-				err = executionsUI.RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference)
+				// Move TestCaseInstructionExecution from OnQueue-table to UnderExecution-table
 				if err != nil {
 					// There were some error som continue to next item in slice
 					continue
 				}
 
-				// Add TestCaseInstructionExecution to UnderExecution-table
+				err = executionsUI.RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference)
 				if err != nil {
 					// There were some error som continue to next item in slice
 					continue

@@ -205,7 +205,7 @@ func MoveTestCaseInstructionExecutionFromOnQueueToUnderExecution(testCaseExecuti
 	// Update TestCaseExecutionOnQueue-table
 	ExecutionsUIObject.OnQueueTable.Data.Refresh()
 
-	err = RemoveTestCaseExecutionFromUnderExecutionTable(testCaseExecutionUnderExecutionAdaptedForUiTable)
+	err = RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference)
 
 	return err
 }

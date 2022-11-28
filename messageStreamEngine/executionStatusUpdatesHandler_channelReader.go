@@ -130,16 +130,17 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) processTestExecution
 				}
 
 				// Move TestCaseInstructionExecution from OnQueue-table to UnderExecution-table
+				err = executionsUI.MoveTestCaseInstructionExecutionFromOnQueueToUnderExecution(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference, testCaseExecutionStatusMessage.TestCaseExecutionDetails)
 				if err != nil {
 					// There were some error som continue to next item in slice
 					continue
 				}
 
-				err = executionsUI.RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference)
-				if err != nil {
-					// There were some error som continue to next item in slice
-					continue
-				}
+				//err = executionsUI.RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference)
+				//if err != nil {
+				// There were some error som continue to next item in slice
+				//	continue
+				//}
 
 			case fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_CONTROLLED_INTERRUPTION,
 				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_CONTROLLED_INTERRUPTION_CAN_BE_RERUN,

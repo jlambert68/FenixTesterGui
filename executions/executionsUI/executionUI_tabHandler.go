@@ -27,7 +27,7 @@ func (executionsUIObject *ExecutionsUIModelStruct) GenerateBaseUITabForExecution
 			fmt.Println("Remove")
 			//delete(executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable, executionsModel.TestCaseExecutionMapKeyType("d9c6fa2e-3d6a-477d-9727-a3083260777c1"))
 
-			_ = RemoveBindingToTableDataForUnderExecutionTable(executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[executionsModel.TestCaseExecutionMapKeyType("d9c6fa2e-3d6a-477d-9727-a3083260777c1")])
+			_ = RemoveTestCaseExecutionFromUnderExecutionTable(executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[executionsModel.TestCaseExecutionMapKeyType("d9c6fa2e-3d6a-477d-9727-a3083260777c1")])
 
 		}),
 	)

@@ -6,12 +6,14 @@ import (
 
 func (executionsUIObject *ExecutionsUIModelStruct) CreateExecutionsListTabPage() (executionsListTabPage *fyne.Container) {
 
+	onQueueTableObject := CreateTableForTestCaseExecutionsOnQueue()
 	underExecutionTableObject := CreateTableForTestCaseExecutionsUnderExecution()
+	finishedExecutionTableObject := CreateTableForTestCaseExecutionsWithFinishedExecution()
 
 	executionsListTabPage = newThreePartAdaptiveSplit(
-		CreateTableForTestCaseExecutionsOnQueue(),
+		onQueueTableObject,
 		underExecutionTableObject,
-		CreateTableForTestCaseExecutionsWithFinishedExecution())
+		finishedExecutionTableObject)
 
 	executionsListTabPage.Refresh()
 

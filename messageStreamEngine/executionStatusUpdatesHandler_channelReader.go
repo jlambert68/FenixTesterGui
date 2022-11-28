@@ -2,9 +2,13 @@ package messageStreamEngine
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/executions/executionsModel"
+	"FenixTesterGui/executions/executionsUI"
+	"errors"
 	"fmt"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
+	"strconv"
 	"time"
 )
 
@@ -34,7 +38,7 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) startCommandChannelR
 		case ChannelCommandExecutionsStatusesHaveBeUpdated:
 			// TestCaseExecutionStatus or TestInstructionExecutionStatus has been updated
 			fmt.Println(incomingChannelCommandAndMessage)
-			//messageStreamEngineObject.processTestExecutionStatusChange(incomingChannelCommandAndMessage.ExecutionsStatusMessage)
+			messageStreamEngineObject.processTestExecutionStatusChange(incomingChannelCommandAndMessage.ExecutionsStatusMessage)
 
 		case ChannelCommandTriggerRequestForTestInstructionExecutionToProcess:
 			messageStreamEngineObject.initiateOpenMessageStreamToGuiExecutionServer()
@@ -101,16 +105,84 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) initiateOpenMessageS
 // Process TestExecutionStatus-change
 func (messageStreamEngineObject *MessageStreamEngineStruct) processTestExecutionStatusChange(executionsStatusMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage) {
 
+	var err error
+
 	// Process TestCaseExecutionStatus-change
 	if executionsStatusMessage.TestCaseExecutionsStatus != nil {
 		// Loop TestExecutionStatusMessage
 		for _, testCaseExecutionStatusMessage := range executionsStatusMessage.TestCaseExecutionsStatus {
 
-			//
+			// Convert TestCaseExecutionVersion into string
+			var testCaseExecutionVersionAsString string
+			testCaseExecutionVersionAsString = strconv.Itoa(int(testCaseExecutionStatusMessage.TestCaseExecutionVersion))
+
+			//Depending on TestCase-status then act differently
 			switch testCaseExecutionStatusMessage.TestCaseExecutionDetails.TestCaseExecutionStatus {
 
+			case fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_INITIATED,
+				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_EXECUTING:
+
+				// Remove TestCaseInstructionExecution to OnQueue-table
+				var testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTableStruct
+				testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference = &executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTableStruct{
+					TestCaseExecutionUuid:    testCaseExecutionStatusMessage.TestCaseExecutionUuid,
+					TestCaseExecutionVersion: testCaseExecutionVersionAsString,
+				}
+
+				err = executionsUI.RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference)
+				if err != nil {
+					// There were some error som continue to next item in slice
+					continue
+				}
+
+				// Add TestCaseInstructionExecution to UnderExecution-table
+				if err != nil {
+					// There were some error som continue to next item in slice
+					continue
+				}
+
+			case fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_CONTROLLED_INTERRUPTION,
+				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_CONTROLLED_INTERRUPTION_CAN_BE_RERUN,
+				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_FINISHED_OK,
+				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_FINISHED_OK_CAN_BE_RERUN,
+				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_FINISHED_NOT_OK,
+				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_FINISHED_NOT_OK_CAN_BE_RERUN,
+				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_UNEXPECTED_INTERRUPTION,
+				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_UNEXPECTED_INTERRUPTION_CAN_BE_RERUN:
+				// Remove TestCaseInstructionExecution to UnderExecution-table
+				var testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
+				testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference = &executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct{
+					TestCaseExecutionUuid:    testCaseExecutionStatusMessage.TestCaseExecutionUuid,
+					TestCaseExecutionVersion: testCaseExecutionVersionAsString,
+				}
+				err = executionsUI.RemoveTestCaseExecutionFromUnderExecutionTable(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference)
+				if err != nil {
+					// There were some error som continue to next item in slice
+					continue
+				}
+
+				// Add TestCaseInstructionExecution to FinishedExecution-table
+				if err != nil {
+					// There were some error som continue to next item in slice
+					continue
+				}
+
+			default:
+				// Unknown TestCaseExecutionStatus
+				sharedCode.Logger.WithFields(logrus.Fields{
+					"ID": "b4164d7a-a485-411d-ad18-feb50ed98566",
+					"testCaseExecutionStatusMessage.TestCaseExecutionDetails.TestCaseExecutionStatus": testCaseExecutionStatusMessage.TestCaseExecutionDetails.TestCaseExecutionStatus,
+					"executionsStatusMessage": executionsStatusMessage,
+				}).Error("Unknown TestCaseExecutionStatus")
+
+				errorId := "6650d51a-787d-48ef-a596-67d7fe9c49cc"
+				err := errors.New(fmt.Sprintf("unknown TestCaseExecutionStatus, '%s', in executionsStatusMessage: '%s' [ErrorID: %s]", testCaseExecutionStatusMessage.TestCaseExecutionDetails.TestCaseExecutionStatus, executionsStatusMessage, errorId))
+
+				fmt.Println(err) //TODO send on Error channel
+
+				return
+
 			}
-			//testCaseExecutionStatusMessage.
 
 		}
 	}

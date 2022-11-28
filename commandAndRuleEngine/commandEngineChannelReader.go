@@ -2,6 +2,7 @@ package commandAndRuleEngine
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/executions/executionsUI"
 	"FenixTesterGui/grpc_out_GuiExecutionServer"
 	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
@@ -143,6 +144,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 		return
 
 	}
+
+	// Add TestCaseExecution to Executions-table for TestCaseExecutionOnQueue
+	_ = executionsUI.AddTestCaseExecutionToOnQueueTable(initiateSingleTestCaseExecutionResponseMessage.TestCasesInExecutionQueue)
 
 	fmt.Sprintf("Initiated TestCaseExecution for TestCase: '%s', testCaseUuidToBeExecuted")
 

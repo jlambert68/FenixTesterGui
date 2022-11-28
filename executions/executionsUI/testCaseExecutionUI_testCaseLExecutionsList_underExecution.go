@@ -41,13 +41,13 @@ func CreateTableForTestCaseExecutionsUnderExecution() *fyne.Container {
 	fmt.Println(key1)
 	value := executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[executionsModel.TestCaseExecutionMapKeyType("d9c6fa2e-3d6a-477d-9727-a3083260777c1")]
 	fmt.Println(value)
-	//_ = RemoveBindingToTableDataForUnderExecutionTable(value)
+	//_ = RemoveTestCaseExecutionFromUnderExecutionTable(value)
 
 	return mySortTable
 
 }
 
-func RemoveBindingToTableDataForUnderExecutionTable(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct) (err error) {
+func RemoveTestCaseExecutionFromUnderExecutionTable(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct) (err error) {
 
 	// Key to map: Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
 	var testCaseExecutionMapKey executionsModel.TestCaseExecutionMapKeyType
@@ -130,6 +130,7 @@ func RemoveBindingToTableDataForUnderExecutionTable(testCaseExecutionsUnderExecu
 
 }
 
+// Remove item from the DataItem-slice and keep order
 func remove(slice []binding.DataMap, s int) []binding.DataMap {
 	return append(slice[:s], slice[s+1:]...)
 }

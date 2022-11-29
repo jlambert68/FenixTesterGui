@@ -24,8 +24,9 @@ var LocationForFenixGuiBuilderProxyServerTypeMapping = map[ExecutionLocationType
 var (
 
 	// GCP
-	GCPAuthentication                      bool
-	UseServiceAccountForGuiExecutionServer bool
+	GCPAuthentication                            bool
+	UseServiceAccountForGuiExecutionServer       bool
+	UseServiceAccountForGuiTestCaseBuilderServer bool
 
 	// GUI-ExecutionServer
 	ExecutionLocationForFenixGuiExecutionServer ExecutionLocationTypeType

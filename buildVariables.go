@@ -5,8 +5,9 @@ package main
 
 var (
 	//GCP
-	BuildVariableGCPAuthentication                      string
-	BuildVariableUseServiceAccountForGuiExecutionServer string
+	BuildVariableGCPAuthentication                            string
+	BuildVariableUseServiceAccountForGuiExecutionServer       string
+	BuildVariableUseServiceAccountForGuiTestCaseBuilderServer string
 
 	// GUI-ExecutionServer
 	BuildVariableExecutionLocationForFenixGuiExecutionServer string
@@ -25,24 +26,25 @@ var (
 	BuildVariableApplicationGrpcPort                 string
 )
 
-var buildVariablesMap = map[string]string{
+var buildVariablesMap = map[string]*string{
 	//GCP
-	"BuildVariableGCPAuthentication":                      "string",
-	"BuildVariableUseServiceAccountForGuiExecutionServer": "string",
+	"BuildVariableGCPAuthentication":                            &BuildVariableGCPAuthentication,
+	"BuildVariableUseServiceAccountForGuiExecutionServer":       &BuildVariableUseServiceAccountForGuiExecutionServer,
+	"BuildVariableUseServiceAccountForGuiTestCaseBuilderServer": &BuildVariableUseServiceAccountForGuiTestCaseBuilderServer,
 
 	// GUI-ExecutionServer
-	"BuildVariableExecutionLocationForFenixGuiExecutionServer": "string",
-	"BuildVariableFenixGuiExecutionServerAddress":              "string",
-	"BuildVariableFenixGuiExecutionServerPort":                 "string",
+	"BuildVariableExecutionLocationForFenixGuiExecutionServer": &BuildVariableExecutionLocationForFenixGuiExecutionServer,
+	"BuildVariableFenixGuiExecutionServerAddress":              &BuildVariableFenixGuiExecutionServerAddress,
+	"BuildVariableFenixGuiExecutionServerPort":                 &BuildVariableFenixGuiExecutionServerPort,
 
 	// GUI TestCaseBuilderServer
-	"BuildVariableExecutionLocationForFenixGuiTestCaseBuilderServer": "string",
-	"BuildVariableFenixGuiTestCaseBuilderServerAddress":              "string",
-	"BuildVariableFenixGuiTestCaseBuilderServerPort":                 "string",
+	"BuildVariableExecutionLocationForFenixGuiTestCaseBuilderServer": &BuildVariableExecutionLocationForFenixGuiTestCaseBuilderServer,
+	"BuildVariableFenixGuiTestCaseBuilderServerAddress":              &BuildVariableFenixGuiTestCaseBuilderServerAddress,
+	"BuildVariableFenixGuiTestCaseBuilderServerPort":                 &BuildVariableFenixGuiTestCaseBuilderServerPort,
 
 	// This Application
-	"BuildVariableExecutionLocationForThisApplication": "string",
-	"BuildVariableFYNE_SCALE":                          "string",
-	"BuildVariableRunAsTrayApplication":                "string",
-	"BuildVariableApplicationGrpcPort":                 "string",
+	"BuildVariableExecutionLocationForThisApplication": &BuildVariableExecutionLocationForThisApplication,
+	"BuildVariableFYNE_SCALE":                          &BuildVariableFYNE_SCALE,
+	"BuildVariableRunAsTrayApplication":                &BuildVariableRunAsTrayApplication,
+	"BuildVariableApplicationGrpcPort":                 &BuildVariableApplicationGrpcPort,
 }

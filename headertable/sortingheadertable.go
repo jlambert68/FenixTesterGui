@@ -139,6 +139,7 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 		)
 	*/
 	headerLabel := widget.NewLabel(tableOpts.HeaderLable)
+	headerLabel.TextStyle = fyne.TextStyle{Bold: true}
 
 	t := &SortingHeaderTable{
 		sortLabels:  sortLabels,

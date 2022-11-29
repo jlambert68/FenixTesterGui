@@ -29,7 +29,7 @@ func mustGetenv(environmentVariable string) string {
 
 	// Create the build variable name
 	var buildInjectedVariableNameAsString string
-	var buildInjectedVariableValue string
+	var buildInjectedVariableValue *string
 	buildInjectedVariableNameAsString = "BuildVariable" + environmentVariable
 
 	buildInjectedVariableValue, exist := buildVariablesMap[buildInjectedVariableNameAsString]
@@ -44,10 +44,10 @@ func mustGetenv(environmentVariable string) string {
 		// No environment variable found so try for build injected variable instead
 
 		// If the 'Build Injected Variable' is empty then end this misery programs life
-		if buildInjectedVariableValue == "" {
+		if *buildInjectedVariableValue == "" {
 			log.Fatalf("Warning: %s environment variable not set by injecting value at build time.\n", environmentVariable)
 		} else {
-			environmentVariableValue = buildInjectedVariableValue
+			environmentVariableValue = *buildInjectedVariableValue
 		}
 	}
 	return environmentVariableValue
@@ -70,7 +70,7 @@ func init() {
 	//executionLocationForThisApplication := flag.String("startupType", "0", "The application should be started with one of the following: LOCALHOST_NODOCKER, LOCALHOST_DOCKER, GCP")
 	//flag.Parse()
 
-	convertBuildInjectedVariablesToMapStructure()
+	//convertBuildInjectedVariablesToMapStructure()
 
 	var err error
 
@@ -213,10 +213,19 @@ func init() {
 	tempBoolAsString = mustGetenv("UseServiceAccountForGuiExecutionServer")
 	tempBool, err = strconv.ParseBool(tempBoolAsString)
 	if err != nil {
-		fmt.Println("Couldn't convert environment variable 'UseServiceAccountForGuiExecutionServer' to a boolean, error: ", err)
+		fmt.Println("Couldn't convert environment variable 'UseServiceAccountForGuiExecutionServer' to a boolean, error: ", tempBoolAsString, err)
 		os.Exit(0)
 	}
 	sharedCode.UseServiceAccountForGuiExecutionServer = tempBool
+
+	// Get Environment variable 'UseServiceAccountForGuiTestCaseBuilderServer' to decide if we should use a service account to log into GCP or to use Users login credentials
+	tempBoolAsString = mustGetenv("UseServiceAccountForGuiTestCaseBuilderServer")
+	tempBool, err = strconv.ParseBool(tempBoolAsString)
+	if err != nil {
+		fmt.Println("Couldn't convert environment variable 'UseServiceAccountForGuiTestCaseBuilderServer' to a boolean, error: ", tempBoolAsString, err)
+		os.Exit(0)
+	}
+	sharedCode.UseServiceAccountForGuiTestCaseBuilderServer = tempBool
 
 }
 
@@ -251,6 +260,7 @@ func onExit() {
 
 }
 
+/*
 // Convert variables that can be injected at build time into Map, to be able to be dynamically used when getting Environment variables
 func convertBuildInjectedVariablesToMapStructure() {
 
@@ -274,3 +284,4 @@ func convertBuildInjectedVariablesToMapStructure() {
 	buildVariablesMap["BuildVariableApplicationGrpcPort"] = BuildVariableApplicationGrpcPort
 
 }
+*/

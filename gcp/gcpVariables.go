@@ -13,3 +13,10 @@ type GcpObjectStruct struct {
 }
 
 var GcpObject GcpObjectStruct
+
+const (
+	TargetServerGuiTestCaseBuilderServer TargetServerType = iota
+	TargetServerGuiExecutionServer
+)
+
+type TargetServerType int

@@ -19,12 +19,13 @@ import (
 	"time"
 )
 
-func (gcp *GcpObjectStruct) GenerateGCPAccessToken(ctx context.Context) (appendedCtx context.Context, returnAckNack bool, returnMessage string) {
+func (gcp *GcpObjectStruct) GenerateGCPAccessToken(ctx context.Context, targetServer TargetServerType) (appendedCtx context.Context, returnAckNack bool, returnMessage string) {
 
 	// Chose correct method for authentication
 	if sharedCode.UseServiceAccountForGuiExecutionServer == true {
 		// Use Service account
-		appendedCtx, returnAckNack, returnMessage = gcp.GenerateGCPAccessTokenForServiceAccount(ctx)
+
+		appendedCtx, returnAckNack, returnMessage = gcp.GenerateGCPAccessTokenForServiceAccount(ctx, targetServer)
 	} else {
 		// User log into GCP via web
 		appendedCtx, returnAckNack, returnMessage = gcp.GenerateGCPAccessTokenForAuthorizedUser(ctx)
@@ -35,7 +36,7 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessToken(ctx context.Context) (appende
 }
 
 // GenerateGCPAccessTokenForServiceAccount Generate Google access token for a service account. Used when running in GCP
-func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForServiceAccount(ctx context.Context) (appendedCtx context.Context, returnAckNack bool, returnMessage string) {
+func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForServiceAccount(ctx context.Context, tagetServer TargetServerType) (appendedCtx context.Context, returnAckNack bool, returnMessage string) {
 
 	// Only create the token if there is none, or it has expired
 	if gcp.gcpAccessTokenForServiceAccounts == nil || gcp.gcpAccessTokenForServiceAccounts.Expiry.Before(time.Now()) {
@@ -74,7 +75,30 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForServiceAccount(ctx context.
 
 		*/
 
-		tokenSource, err := idtoken.NewTokenSource(ctx, notToBeSentToGithub.Gcp_scope_GuiExecutionServer, idtoken.WithCredentialsJSON(notToBeSentToGithub.ServiceAccountKeyJson_GuiExecutionServer))
+		var gcpScope string
+		var serviceAccountKeyJson []byte
+
+		// Chose correct GCP-scope and Service Account-data
+		switch tagetServer {
+		case TargetServerGuiTestCaseBuilderServer:
+			gcpScope = notToBeSentToGithub.Gcp_scope_GuiTestCaseBuilderServer
+			serviceAccountKeyJson = notToBeSentToGithub.ServiceAccountKeyJson_GuiTestCaseBuilderServer
+
+		case TargetServerGuiExecutionServer:
+			gcpScope = notToBeSentToGithub.Gcp_scope_GuiExecutionServer
+			serviceAccountKeyJson = notToBeSentToGithub.ServiceAccountKeyJson_GuiExecutionServer
+
+		default:
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":          "49781e38-0cf6-4b4f-9210-0257feea06a5",
+				"tagetServer": tagetServer,
+			}).Error("Unknown TargetServer")
+
+			return nil, false, "Unknown TargetServer"
+
+		}
+
+		tokenSource, err := idtoken.NewTokenSource(ctx, gcpScope, idtoken.WithCredentialsJSON(serviceAccountKeyJson))
 
 		if err != nil {
 			sharedCode.Logger.WithFields(logrus.Fields{

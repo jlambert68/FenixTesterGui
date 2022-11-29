@@ -46,7 +46,7 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) initiateGuiExecution
 	if sharedCode.ExecutionLocationForFenixGuiExecutionServer == sharedCode.GCP && sharedCode.GCPAuthentication == true {
 
 		// Add Access token
-		ctx, returnMessageAckNack, _ = gcp.GcpObject.GenerateGCPAccessToken(ctx)
+		ctx, returnMessageAckNack, _ = gcp.GcpObject.GenerateGCPAccessToken(ctx, gcp.TargetServerGuiExecutionServer)
 		if returnMessageAckNack == false {
 			return
 		}

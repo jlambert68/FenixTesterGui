@@ -126,7 +126,7 @@ func dialFromGrpcurl(ctx context.Context, target string) (context.Context, *grpc
 
 	//target := grpc_out_GuiExecutionServer.FenixGuiExecutionServerAddressToDial
 
-	dialTime := 10 * time.Second
+	dialTime := 20 * time.Second
 
 	ctx, cancel := context.WithTimeout(ctx, dialTime)
 	defer cancel()

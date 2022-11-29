@@ -56,7 +56,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendSaveAllPinnedTestInstr
 		gcp.GcpObject.SetLogger(grpcOut.logger)
 
 		// Add Access token
-		ctx, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessToken(ctx)
+		ctx, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessToken(ctx, gcp.TargetServerGuiTestCaseBuilderServer)
 		if returnMessageAckNack == false {
 			// When error
 			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{

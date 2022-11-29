@@ -59,7 +59,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendListTestCasesOnExecutionQueu
 	if sharedCode.ExecutionLocationForFenixGuiExecutionServer == sharedCode.GCP {
 
 		// Add Access token
-		ctx, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessToken(ctx)
+		ctx, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessToken(ctx, gcp.TargetServerGuiExecutionServer)
 		if returnMessageAckNack == false {
 			// When error
 			listTestCasesInExecutionQueueResponse = &fenixExecutionServerGuiGrpcApi.ListTestCasesInExecutionQueueResponse{

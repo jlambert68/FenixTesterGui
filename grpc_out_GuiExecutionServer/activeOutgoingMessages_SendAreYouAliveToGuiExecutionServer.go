@@ -70,7 +70,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendAreYouAliveToGuiExecutionSer
 	if sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer == sharedCode.GCP {
 
 		// Add Access token
-		ctx, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessToken(ctx)
+		ctx, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessToken(ctx, gcp.TargetServerGuiExecutionServer)
 		if returnMessageAckNack == false {
 			// When error
 			returnMessage = &fenixExecutionServerGuiGrpcApi.AckNackResponse{

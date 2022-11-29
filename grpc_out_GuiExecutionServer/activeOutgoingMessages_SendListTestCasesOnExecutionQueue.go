@@ -7,7 +7,6 @@ import (
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
-	"time"
 )
 
 // ********************************************************************************************************************
@@ -20,35 +19,47 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendListTestCasesOnExecutionQueu
 	var returnMessageString string
 	var err error
 
-	// Set up connection to Server
-	var ackNackresponse *fenixExecutionServerGuiGrpcApi.AckNackResponse
-	ackNackresponse = grpcOut.SetConnectionToFenixGuiExecutionServer()
-	// If there was no connection to backend then return that message
-	if ackNackresponse != nil {
-		listTestCasesInExecutionQueueResponse = &fenixExecutionServerGuiGrpcApi.ListTestCasesInExecutionQueueResponse{
-			AckNackResponse:           ackNackresponse,
-			TestCasesInExecutionQueue: nil,
-		}
+	ctx = context.Background()
 
-		return listTestCasesInExecutionQueueResponse
+	// Set up connection to Server
+	ctx, err = grpcOut.setConnectionToFenixGuiExecutionMessageServer_new(ctx)
+	//grpcOut.setConnectionToFenixGuiTestCaseBuilderServer()
+	if err != nil {
+		if err != nil {
+			// When error
+			listTestCasesInExecutionQueueResponse = &fenixExecutionServerGuiGrpcApi.ListTestCasesInExecutionQueueResponse{
+				TestCasesInExecutionQueue: nil,
+				AckNackResponse: &fenixExecutionServerGuiGrpcApi.AckNackResponse{
+					AckNack:    false,
+					Comments:   err.Error(),
+					ErrorCodes: nil,
+					ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
+						GetHighestFenixGuiExecutionServerProtoFileVersion()),
+				},
+			}
+			return listTestCasesInExecutionQueueResponse
+		}
 	}
 
 	// Do gRPC-call
 	//ctx := context.Background()
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer func() {
-		//TODO Fixa så att denna inte görs som allt går bra
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID": "66c2dcf3-0b51-417b-b402-438a60c7eb86",
-		}).Error("Running Defer Cancel function")
-		cancel()
-	}()
+	/*
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer func() {
+			//TODO Fixa så att denna inte görs som allt går bra
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID": "66c2dcf3-0b51-417b-b402-438a60c7eb86",
+			}).Error("Running Defer Cancel function")
+			cancel()
+		}()
+
+	*/
 
 	// Only add access token when run on GCP
 	if sharedCode.ExecutionLocationForFenixGuiExecutionServer == sharedCode.GCP {
 
 		// Add Access token
-		ctx, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessTokenForAuthorizedUser(ctx)
+		ctx, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessToken(ctx)
 		if returnMessageAckNack == false {
 			// When error
 			listTestCasesInExecutionQueueResponse = &fenixExecutionServerGuiGrpcApi.ListTestCasesInExecutionQueueResponse{

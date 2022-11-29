@@ -6,7 +6,6 @@ import (
 	"context"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
-	"time"
 )
 
 // SendListAllAvailablePinnedTestInstructionsAndTestInstructionContainers - Get pinned TestInstructions and TestInstructionContainers
@@ -17,8 +16,30 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllAvailablePinned
 	var returnMessageString string
 	var err error
 
+	ctx = context.Background()
+
 	// Set up connection to Server
-	grpcOut.setConnectionToFenixGuiTestCaseBuilderServer()
+	ctx, err = grpcOut.setConnectionToFenixGuiTestCaseBuilderServer_new(ctx)
+	//grpcOut.setConnectionToFenixGuiTestCaseBuilderServer()
+	if err != nil {
+		// When error
+		ackNackResponse := &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{
+			AckNack:    false,
+			Comments:   err.Error(),
+			ErrorCodes: nil,
+			ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
+				grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
+		}
+
+		returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage{
+			AvailablePinnedTestInstructions:                    nil,
+			AvailablePinnedPreCreatedTestInstructionContainers: nil,
+			AckNackResponse: ackNackResponse,
+		}
+
+		return returnMessage
+
+	}
 
 	// Create the request message
 	userIdentificationMessage := &fenixGuiTestCaseBuilderServerGrpcApi.UserIdentificationMessage{
@@ -29,14 +50,17 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllAvailablePinned
 
 	// Do gRPC-call
 	//ctx := context.Background()
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer func() {
-		//TODO Fixa så att denna inte görs som allt går bra
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID": "c5ba19bd-75ff-4366-818d-745d4d7f1a52",
-		}).Error("Running Defer Cancel function")
-		cancel()
-	}()
+	/*
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer func() {
+			//TODO Fixa så att denna inte görs som allt går bra
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID": "c5ba19bd-75ff-4366-818d-745d4d7f1a52",
+			}).Error("Running Defer Cancel function")
+			cancel()
+		}()
+
+	*/
 
 	// Only add access token when run on GCP
 	if sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer == sharedCode.GCP {
@@ -45,7 +69,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllAvailablePinned
 		gcp.GcpObject.SetLogger(grpcOut.logger)
 
 		// Add Access token
-		ctx, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessTokenForAuthorizedUser(ctx)
+		ctx, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessToken(ctx)
 		if returnMessageAckNack == false {
 			// When error
 			ackNackResponse := &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{

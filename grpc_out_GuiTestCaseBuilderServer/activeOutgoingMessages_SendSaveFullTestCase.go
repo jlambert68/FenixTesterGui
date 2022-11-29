@@ -6,7 +6,6 @@ import (
 	"context"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
-	"time"
 )
 
 // SendSaveFullTestCase - Save full TestCase to database
@@ -17,19 +16,38 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendSaveFullTestCase(gRPCF
 	var returnMessageString string
 	var err error
 
+	ctx = context.Background()
+
 	// Set up connection to Server
-	grpcOut.setConnectionToFenixGuiTestCaseBuilderServer()
+	ctx, err = grpcOut.setConnectionToFenixGuiTestCaseBuilderServer_new(ctx)
+	//grpcOut.setConnectionToFenixGuiTestCaseBuilderServer()
+	if err != nil {
+		// When error
+		returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{
+			AckNack:    false,
+			Comments:   err.Error(),
+			ErrorCodes: nil,
+			ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
+				grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
+		}
+
+		return returnMessage
+
+	}
 
 	// Do gRPC-call
 	//ctx := context.Background()
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer func() {
-		//TODO Fixa så att denna inte görs som allt går bra
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID": "8f935725-745f-4aa9-b647-335cba045b08",
-		}).Error("Running Defer Cancel function")
-		cancel()
-	}()
+	/*
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer func() {
+			//TODO Fixa så att denna inte görs som allt går bra
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID": "8f935725-745f-4aa9-b647-335cba045b08",
+			}).Error("Running Defer Cancel function")
+			cancel()
+		}()
+
+	*/
 
 	// Only add access token when run on GCP
 	if sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer == sharedCode.GCP {
@@ -38,7 +56,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendSaveFullTestCase(gRPCF
 		gcp.GcpObject.SetLogger(grpcOut.logger)
 
 		// Add Access token
-		ctx, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessTokenForAuthorizedUser(ctx)
+		ctx, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessToken(ctx)
 		if returnMessageAckNack == false {
 			// When error
 			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{

@@ -75,7 +75,7 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) setConnectionToFenix
 		var newGrpcClientConnection *grpc.ClientConn
 		if sharedCode.ExecutionLocationForFenixGuiExecutionServer == sharedCode.GCP {
 			// Run on GCP
-			ctx, newGrpcClientConnection = dialFromGrpcurl(ctx)
+			ctx, newGrpcClientConnection = dialFromGrpcurl(ctx, grpc_out_GuiExecutionServer.FenixGuiExecutionServerAddressToDial)
 			remoteFenixGuiExecutionServerConnection = newGrpcClientConnection
 			//remoteFenixExecutionWorkerServerConnection, err = grpc.Dial(common_config.FenixExecutionWorkerAddressToDial, opts...)
 		} else {
@@ -122,9 +122,9 @@ var (
 	isUnixSocket func() bool
 )
 
-func dialFromGrpcurl(ctx context.Context) (context.Context, *grpc.ClientConn) {
+func dialFromGrpcurl(ctx context.Context, target string) (context.Context, *grpc.ClientConn) {
 
-	target := grpc_out_GuiExecutionServer.FenixGuiExecutionServerAddressToDial
+	//target := grpc_out_GuiExecutionServer.FenixGuiExecutionServerAddressToDial
 
 	dialTime := 10 * time.Second
 

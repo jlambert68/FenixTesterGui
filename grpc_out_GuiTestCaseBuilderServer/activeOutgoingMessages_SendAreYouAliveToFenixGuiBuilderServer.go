@@ -6,7 +6,6 @@ import (
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
-	"time"
 )
 
 // ********************************************************************************************************************
@@ -19,11 +18,23 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendAreYouAliveToFenixGuiB
 	var returnMessageString string
 	var err error
 
+	ctx = context.Background()
+
 	// Set up connection to Server
-	returnMessage = grpcOut.setConnectionToFenixGuiTestCaseBuilderServer()
-	// If there was no connection to backend then return that message
-	if returnMessage != nil {
+	ctx, err = grpcOut.setConnectionToFenixGuiTestCaseBuilderServer_new(ctx)
+	//grpcOut.setConnectionToFenixGuiTestCaseBuilderServer()
+	if err != nil {
+		// When error
+		returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{
+			AckNack:    false,
+			Comments:   err.Error(),
+			ErrorCodes: nil,
+			ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
+				grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
+		}
+
 		return returnMessage
+
 	}
 
 	// Create the request message
@@ -35,20 +46,22 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendAreYouAliveToFenixGuiB
 
 	// Do gRPC-call
 	//ctx := context.Background()
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer func() {
-		//TODO Fixa så att denna inte görs som allt går bra
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID": "88bbfecb-b9a4-4e2f-92e0-cabbbdf75dc8",
-		}).Error("Running Defer Cancel function")
-		cancel()
-	}()
+	/*
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer func() {
+			//TODO Fixa så att denna inte görs som allt går bra
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID": "88bbfecb-b9a4-4e2f-92e0-cabbbdf75dc8",
+			}).Error("Running Defer Cancel function")
+			cancel()
+		}()
+	*/
 
 	// Only add access token when run on GCP
 	if sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer == sharedCode.GCP {
 
 		// Add Access token
-		ctx, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessTokenForAuthorizedUser(ctx)
+		ctx, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessToken(ctx)
 		if returnMessageAckNack == false {
 			// When error
 			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{

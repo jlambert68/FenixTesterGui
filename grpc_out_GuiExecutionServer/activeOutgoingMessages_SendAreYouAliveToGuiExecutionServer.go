@@ -6,7 +6,6 @@ import (
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
-	"time"
 )
 
 // ********************************************************************************************************************
@@ -18,6 +17,26 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendAreYouAliveToGuiExecutionSer
 	var returnMessageAckNack bool
 	var returnMessageString string
 	var err error
+
+	ctx = context.Background()
+
+	// Set up connection to Server
+	ctx, err = grpcOut.setConnectionToFenixGuiExecutionMessageServer_new(ctx)
+	//grpcOut.setConnectionToFenixGuiTestCaseBuilderServer()
+	if err != nil {
+		if returnMessageAckNack == false {
+			// When error
+			returnMessage = &fenixExecutionServerGuiGrpcApi.AckNackResponse{
+				AckNack:    false,
+				Comments:   err.Error(),
+				ErrorCodes: nil,
+				ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
+					GetHighestFenixGuiExecutionServerProtoFileVersion()),
+			}
+
+			return returnMessage
+		}
+	}
 
 	// Set up connection to Server
 	returnMessage = grpcOut.SetConnectionToFenixGuiExecutionServer()
@@ -34,21 +53,24 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendAreYouAliveToGuiExecutionSer
 	}
 
 	// Do gRPC-call
-	//ctx := context.Background()
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer func() {
-		//TODO Fixa så att denna inte görs som allt går bra
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID": "5094f038-ce5b-4374-af59-45a519bffffa",
-		}).Error("Running Defer Cancel function")
-		cancel()
-	}()
+	/*
+		//ctx := context.Background()
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer func() {
+			//TODO Fixa så att denna inte görs som allt går bra
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID": "5094f038-ce5b-4374-af59-45a519bffffa",
+			}).Error("Running Defer Cancel function")
+			cancel()
+		}()
+
+	*/
 
 	// Only add access token when run on GCP
 	if sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer == sharedCode.GCP {
 
 		// Add Access token
-		ctx, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessTokenForAuthorizedUser(ctx)
+		ctx, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessToken(ctx)
 		if returnMessageAckNack == false {
 			// When error
 			returnMessage = &fenixExecutionServerGuiGrpcApi.AckNackResponse{

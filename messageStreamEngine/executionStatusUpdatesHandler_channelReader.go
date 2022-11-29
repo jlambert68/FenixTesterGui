@@ -156,17 +156,19 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) processTestExecution
 					TestCaseExecutionUuid:    testCaseExecutionStatusMessage.TestCaseExecutionUuid,
 					TestCaseExecutionVersion: testCaseExecutionVersionAsString,
 				}
-				err = executionsUI.RemoveTestCaseExecutionFromUnderExecutionTable(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference)
+
+				// Move TestCaseInstructionExecution from UnderExecution-table to FinishedExecution-table
+				err = executionsUI.MoveTestCaseInstructionExecutionFromUnderExecutionToFinishedExecution(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference, testCaseExecutionStatusMessage.TestCaseExecutionDetails)
 				if err != nil {
 					// There were some error som continue to next item in slice
 					continue
 				}
 
-				// Add TestCaseInstructionExecution to FinishedExecution-table
-				if err != nil {
-					// There were some error som continue to next item in slice
-					continue
-				}
+				//err = executionsUI.RemoveTestCaseExecutionFromUnderExecutionTable(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference)
+				//if err != nil {
+				// There were some error som continue to next item in slice
+				//	continue
+				//}
 
 			default:
 				// Unknown TestCaseExecutionStatus

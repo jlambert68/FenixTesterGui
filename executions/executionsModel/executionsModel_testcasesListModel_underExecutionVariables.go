@@ -54,7 +54,8 @@ type TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct struct {
 // TestCaseExecutionsUnderExecutionTableOptions
 // Defines the structure, and column order, for TestCaseExecutions-UnderExecution-Table
 var TestCaseExecutionsUnderExecutionTableOptions = headertable.TableOpts{
-	RefWidth: "reference width",
+	RefWidth:    "reference width",
+	HeaderLable: "TestExecutions under Execution",
 	ColAttrs: []headertable.ColAttr{
 		{
 			Name:         "DomainUuid",

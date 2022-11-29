@@ -9,7 +9,6 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
-	"reflect"
 	"strconv"
 )
 
@@ -38,12 +37,6 @@ func CreateTableForTestCaseExecutionsUnderExecution() *fyne.Container {
 	ExecutionsUIObject.UnderExecutionTable = ht
 
 	mySortTable := container.NewMax(ht)
-
-	key1 := reflect.ValueOf(executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable).MapKeys()[1]
-	fmt.Println(key1)
-	value := executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[executionsModel.TestCaseExecutionMapKeyType("d9c6fa2e-3d6a-477d-9727-a3083260777c1")]
-	fmt.Println(value)
-	//_ = RemoveTestCaseExecutionFromUnderExecutionTable(value)
 
 	return mySortTable
 
@@ -202,9 +195,10 @@ func MoveTestCaseInstructionExecutionFromOnQueueToUnderExecution(testCaseExecuti
 		executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings,
 		binding.BindStruct(testCaseExecutionUnderExecutionAdaptedForUiTable))
 
-	// Update TestCaseExecutionOnQueue-table
-	ExecutionsUIObject.OnQueueTable.Data.Refresh()
+	// Update TestCaseExecutionUnderExecution-table
+	ExecutionsUIObject.UnderExecutionTable.Data.Refresh()
 
+	// Remove the old Execution from OnQueue
 	err = RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference)
 
 	return err

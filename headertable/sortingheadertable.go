@@ -23,7 +23,8 @@ type SortingHeaderTable struct {
 	Header    *widget.Table
 	Data      *widget.Table
 	//MagicTable *widget.Table
-	sortLabels []*sortingLabel
+	sortLabels  []*sortingLabel
+	HeaderLabel *widget.Label
 }
 
 func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
@@ -137,11 +138,14 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 			},
 		)
 	*/
+	headerLabel := widget.NewLabel(tableOpts.HeaderLable)
+
 	t := &SortingHeaderTable{
-		sortLabels: sortLabels,
-		TableOpts:  tableOpts,
-		Header:     headerTable,
-		Data:       dataTable,
+		sortLabels:  sortLabels,
+		TableOpts:   tableOpts,
+		Header:      headerTable,
+		Data:        dataTable,
+		HeaderLabel: headerLabel,
 		//MagicTable: myMagicTable,
 	}
 	t.ExtendBaseWidget(t)
@@ -246,9 +250,12 @@ func stringSort(tableOpts *TableOpts, col int) SortFn {
 }
 
 func (h *SortingHeaderTable) CreateRenderer() fyne.WidgetRenderer {
+
+	topContainer := container.NewVBox(h.HeaderLabel, h.Header)
+
 	return sortingHeaderTableRenderer{
 		headerTable: h,
-		container:   container.NewBorder(h.Header, nil, nil, nil, h.Data),
+		container:   container.NewBorder(topContainer, nil, nil, nil, h.Data),
 		//container: container.NewVBox(h.Header, h.Data),
 	}
 }

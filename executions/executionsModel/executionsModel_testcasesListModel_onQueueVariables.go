@@ -47,7 +47,8 @@ type TestCaseExecutionsOnQueueAdaptedForUiTableStruct struct {
 // TestCaseExecutionsOnQueueTableOptions
 // Defines the structure, and column order, for TestCaseExecutions-OnQueue-Table
 var TestCaseExecutionsOnQueueTableOptions = headertable.TableOpts{
-	RefWidth: "reference width",
+	RefWidth:    "reference width",
+	HeaderLable: "TestExecutions waiting on Queue to be Executed",
 	ColAttrs: []headertable.ColAttr{
 		{
 			Name:         "DomainUuid",

@@ -22,6 +22,7 @@ type TableOpts struct {
 	ColAttrs         []ColAttr
 	OnDataCellSelect func(cellID widget.TableCellID)
 	RefWidth         string
+	HeaderLable      string
 }
 
 type Header struct {

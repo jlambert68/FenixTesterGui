@@ -8,6 +8,8 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
+	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
+	"strconv"
 )
 
 // CreateTableForTestCaseExecutionsWithFinishedExecution
@@ -114,4 +116,81 @@ func RemoveTestCaseExecutionFromFinishedTable(testCaseExecutionsFinishedDataRowA
 
 	return err
 
+}
+
+func MoveTestCaseInstructionExecutionFromUnderExecutionToFinishedExecution(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct, testCaseExecutionDetails *fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage) (err error) {
+
+	var existInMap bool
+
+	// Key to map: Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
+	var testCaseExecutionMapKey executionsModel.TestCaseExecutionMapKeyType
+
+	testCaseExecutionMapKey = executionsModel.TestCaseExecutionMapKeyType(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseExecutionUuid +
+		testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseExecutionVersion)
+
+	// Extract UnderExecutionData to be moved to UnderExecution
+	var tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
+	tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference, existInMap = executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[testCaseExecutionMapKey]
+
+	if existInMap == false {
+
+		errorId := "7433e805-5687-483c-9e5d-4dd5d5f5d0b7"
+		err = errors.New(fmt.Sprintf("'testCaseExecutionMapKey', '%s' doesn't exist in TestCaseExecutionsOnQueueMapAdaptedForUiTable [ErrorID: %s]", testCaseExecutionMapKey, errorId))
+
+		fmt.Println(err) // TODO Send on Error Channel
+
+		return err
+	}
+
+	//Create the new object to be added to FinishedExecution-table
+	var testCaseExecutionFinishedExecutionAdaptedForUiTable *executionsModel.TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct
+	testCaseExecutionFinishedExecutionAdaptedForUiTable = &executionsModel.TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct{
+		DomainUuid:                          tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.DomainUuid,
+		DomainName:                          tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.DomainName,
+		TestSuiteUuid:                       tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestSuiteUuid,
+		TestSuiteName:                       tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestSuiteName,
+		TestSuiteVersion:                    tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestSuiteVersion,
+		TestSuiteExecutionUuid:              tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestSuiteExecutionUuid,
+		TestSuiteExecutionVersion:           tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestSuiteExecutionVersion,
+		TestCaseUuid:                        tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseUuid,
+		TestCaseName:                        tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseName,
+		TestCaseVersion:                     tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseVersion,
+		TestCaseExecutionUuid:               tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseExecutionUuid,
+		TestCaseExecutionVersion:            tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseExecutionVersion,
+		PlacedOnTestExecutionQueueTimeStamp: tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.PlacedOnTestExecutionQueueTimeStamp,
+		ExecutionPriority:                   tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.ExecutionPriority,
+		ExecutionStartTimeStamp:             testCaseExecutionDetails.ExecutionStartTimeStamp.AsTime().String(),
+		ExecutionStopTimeStamp:              testCaseExecutionDetails.ExecutionStopTimeStamp.AsTime().String(),
+		TestCaseExecutionStatus:             testCaseExecutionDetails.TestCaseExecutionStatus.String(),
+		ExecutionHasFinished:                strconv.FormatBool(testCaseExecutionDetails.ExecutionHasFinished),
+		ExecutionStatusUpdateTimeStamp:      testCaseExecutionDetails.ExecutionStatusUpdateTimeStamp.AsTime().String(),
+	}
+
+	// if 'testCaseExecutionMapKey' already exist in TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable''
+	_, existInMap = executionsModel.TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable[testCaseExecutionMapKey]
+	if existInMap == true {
+
+		errorId := "2101afd8-4b1d-4f16-ae14-8458f42d7b81"
+		err = errors.New(fmt.Sprintf("'testCaseExecutionMapKey', '%s' already exist in TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable [ErrorID: %s]", testCaseExecutionMapKey, errorId))
+
+		fmt.Println(err) // TODO Send on Error Channel
+
+		return err
+	}
+
+	// Append to map for TestCaseExecutionsFinishedExecution-data used by UI-table
+	executionsModel.TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable[testCaseExecutionMapKey] = testCaseExecutionFinishedExecutionAdaptedForUiTable
+
+	// Add a binding for TestExecutionFinishedExecutionRow data
+	executionsModel.TestCaseExecutionsFinishedExecutionTableOptions.Bindings = append(
+		executionsModel.TestCaseExecutionsFinishedExecutionTableOptions.Bindings,
+		binding.BindStruct(testCaseExecutionFinishedExecutionAdaptedForUiTable))
+
+	// Update TestCaseExecutionFinishedExecution-table
+	ExecutionsUIObject.FinishedExecutionTable.Data.Refresh()
+
+	// Remove the old Execution from UnderExecutions
+	err = RemoveTestCaseExecutionFromUnderExecutionTable(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference)
+
+	return err
 }

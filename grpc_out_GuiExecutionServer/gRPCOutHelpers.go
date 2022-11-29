@@ -65,10 +65,10 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecution
 		}
 		if err != nil {
 			sharedCode.Logger.WithFields(logrus.Fields{
-				"ID": "50b59b1b-57ce-4c27-aa84-617f0cde3100",
-				"grpc_out_GuiExecutionServer.FenixGuiExecutionServerAddressToDial": FenixGuiExecutionServerAddressToDial,
-				"error message":      err,
-				"dialAttemptCounter": dialAttemptCounter,
+				"ID":                                   "50b59b1b-57ce-4c27-aa84-617f0cde3100",
+				"FenixGuiExecutionServerAddressToDial": FenixGuiExecutionServerAddressToDial,
+				"error message":                        err,
+				"dialAttemptCounter":                   dialAttemptCounter,
 			}).Error("Did not connect to FenixExecutionServer via gRPC")
 
 			// Add to counter for how many Dial attempts that have been done
@@ -81,8 +81,8 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecution
 
 		} else {
 			sharedCode.Logger.WithFields(logrus.Fields{
-				"ID": "0c650bbc-45d0-4029-bd25-4ced9925a059",
-				"grpc_out_GuiExecutionServer.FenixGuiExecutionServerAddressToDial": FenixGuiExecutionServerAddressToDial,
+				"ID":                                   "556f52bf-630c-44e8-b666-cd7c562bc100",
+				"FenixGuiExecutionServerAddressToDial": FenixGuiExecutionServerAddressToDial,
 			}).Info("gRPC connection OK to FenixGuiExecutionServer")
 
 			// Creates a new Client
@@ -192,7 +192,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SetConnectionToFenixGuiExecution
 
 	} else {
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":                                   "0c650bbc-45d0-4029-bd25-4ced9925a059",
+			"ID":                                   "4f90c990-b3c7-4d53-88cf-f354504357a3",
 			"FenixGuiExecutionServerAddressToDial": FenixGuiExecutionServerAddressToDial,
 		}).Info("gRPC connection OK to FenixGuiExecutionServer")
 

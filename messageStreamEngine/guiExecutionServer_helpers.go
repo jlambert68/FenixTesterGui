@@ -100,7 +100,7 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) setConnectionToFenix
 
 		} else {
 			sharedCode.Logger.WithFields(logrus.Fields{
-				"ID": "0c650bbc-45d0-4029-bd25-4ced9925a059",
+				"ID": "b267f74c-9fd8-4b39-8584-73d5224bc6a8",
 				"grpc_out_GuiExecutionServer.FenixGuiExecutionServerAddressToDial": grpc_out_GuiExecutionServer.FenixGuiExecutionServerAddressToDial,
 			}).Info("gRPC connection OK to FenixGuiExecutionServer")
 

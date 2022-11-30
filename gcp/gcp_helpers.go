@@ -21,14 +21,38 @@ import (
 
 func (gcp *GcpObjectStruct) GenerateGCPAccessToken(ctx context.Context, targetServer TargetServerType) (appendedCtx context.Context, returnAckNack bool, returnMessage string) {
 
-	// Chose correct method for authentication
-	if sharedCode.UseServiceAccountForGuiExecutionServer == true {
-		// Use Service account
+	// Chose correct Authentication method
+	switch targetServer {
+	case TargetServerGuiTestCaseBuilderServer:
+		// Chose correct method for authentication
+		if sharedCode.UseServiceAccountForGuiTestCaseBuilderServer == true {
+			// Use Service account
 
-		appendedCtx, returnAckNack, returnMessage = gcp.GenerateGCPAccessTokenForServiceAccount(ctx, targetServer)
-	} else {
-		// User log into GCP via web
-		appendedCtx, returnAckNack, returnMessage = gcp.GenerateGCPAccessTokenForAuthorizedUser(ctx)
+			appendedCtx, returnAckNack, returnMessage = gcp.GenerateGCPAccessTokenForServiceAccount(ctx, targetServer)
+		} else {
+			// User log into GCP via web
+			appendedCtx, returnAckNack, returnMessage = gcp.GenerateGCPAccessTokenForAuthorizedUser(ctx)
+		}
+
+	case TargetServerGuiExecutionServer:
+		// Chose correct method for authentication
+		if sharedCode.UseServiceAccountForGuiExecutionServer == true {
+			// Use Service account
+
+			appendedCtx, returnAckNack, returnMessage = gcp.GenerateGCPAccessTokenForServiceAccount(ctx, targetServer)
+		} else {
+			// User log into GCP via web
+			appendedCtx, returnAckNack, returnMessage = gcp.GenerateGCPAccessTokenForAuthorizedUser(ctx)
+		}
+
+	default:
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"ID":           "6427a019-047d-4663-ae17-86446485ccc9",
+			"targetServer": targetServer,
+		}).Error("Unknown TargetServer")
+
+		return nil, false, "Unknown TargetServer"
+
 	}
 
 	return appendedCtx, returnAckNack, returnMessage
@@ -36,50 +60,16 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessToken(ctx context.Context, targetSe
 }
 
 // GenerateGCPAccessTokenForServiceAccount Generate Google access token for a service account. Used when running in GCP
-func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForServiceAccount(ctx context.Context, tagetServer TargetServerType) (appendedCtx context.Context, returnAckNack bool, returnMessage string) {
+func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForServiceAccount(ctx context.Context, targetServer TargetServerType) (appendedCtx context.Context, returnAckNack bool, returnMessage string) {
 
 	// Only create the token if there is none, or it has expired
 	if gcp.gcpAccessTokenForServiceAccounts == nil || gcp.gcpAccessTokenForServiceAccounts.Expiry.Before(time.Now()) {
-
-		// Create an identity token.
-		// With a global TokenSource tokens would be reused and auto-refreshed at need.
-		// A given TokenSource is specific to the audience.
-		/*
-			tokenSource, err := idtoken.NewTokenSource(ctx, "https://"+common_config.FenixGuiBuilderServerAddress)
-			if err != nil {
-				fenixGuiBuilderProxyServerObject.logger.WithFields(logrus.Fields{
-					"ID":  "8ba622d8-b4cd-46c7-9f81-d9ade2568eca",
-					"err": err,
-				}).Error("Couldn't generate access token")
-
-				return nil, false, "Couldn't generate access token"
-			}
-
-			token, err := tokenSource.Token()
-		*/
-		/*
-			var eMailAndPrivateKey = struct {
-				Email      string `json:"client_email"`
-				PrivateKey string `json:"private_key"`
-			}{}
-			json.Unmarshal(serviceAccountKeyJson, &eMailAndPrivateKey)
-			config := &jwt.Config{
-				Email:      eMailAndPrivateKey.Email,
-				PrivateKey: []byte(eMailAndPrivateKey.PrivateKey),
-				Scopes: []string{
-					gcp_scope,
-				},
-				TokenURL:   google.JWTTokenURL,
-				UseIDToken: false,
-			}
-
-		*/
 
 		var gcpScope string
 		var serviceAccountKeyJson []byte
 
 		// Chose correct GCP-scope and Service Account-data
-		switch tagetServer {
+		switch targetServer {
 		case TargetServerGuiTestCaseBuilderServer:
 			gcpScope = notToBeSentToGithub.Gcp_scope_GuiTestCaseBuilderServer
 			serviceAccountKeyJson = notToBeSentToGithub.ServiceAccountKeyJson_GuiTestCaseBuilderServer
@@ -90,8 +80,8 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForServiceAccount(ctx context.
 
 		default:
 			sharedCode.Logger.WithFields(logrus.Fields{
-				"ID":          "49781e38-0cf6-4b4f-9210-0257feea06a5",
-				"tagetServer": tagetServer,
+				"ID":           "49781e38-0cf6-4b4f-9210-0257feea06a5",
+				"targetServer": targetServer,
 			}).Error("Unknown TargetServer")
 
 			return nil, false, "Unknown TargetServer"

@@ -6,6 +6,7 @@ import (
 	"context"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
+	"time"
 )
 
 // SendListAllAvailableTestInstructionsAndTestInstructionContainers - Get available TestInstructions and TestInstructionContainers
@@ -49,18 +50,15 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllAvailableTestIn
 	}
 
 	// Do gRPC-call
-	//ctx := context.Background()
-	/*
-		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-		defer func() {
-			//TODO Fixa så att denna inte görs som allt går bra
-			sharedCode.Logger.WithFields(logrus.Fields{
-				"ID": "797c00e1-510d-4cbe-a48b-dc63828ecd7e",
-			}).Error("Running Defer Cancel function")
-			cancel()
-		}()
-
-	*/
+	//ctx = context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer func() {
+		//TODO Fixa så att denna inte görs som allt går bra
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"ID": "797c00e1-510d-4cbe-a48b-dc63828ecd7e",
+		}).Error("Running Defer Cancel function")
+		cancel()
+	}()
 
 	// Only add access token when run on GCP
 	if sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer == sharedCode.GCP {

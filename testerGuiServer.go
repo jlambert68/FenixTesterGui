@@ -5,6 +5,7 @@ import (
 	"FenixTesterGui/grpc_in"
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	"FenixTesterGui/gui"
+	"FenixTesterGui/messageStreamEngine"
 	"FenixTesterGui/restAPI"
 	"fmt"
 	uuidGenerator "github.com/google/uuid"
@@ -94,7 +95,7 @@ func fenixGuiBuilderServerMain() {
 	go fenixTesterGuiObject.subPackageObjects.grpcIn.InitGrpcServer()
 
 	// Start up MessageStreamEngine
-	// xxx messageStreamEngine.InitiateAndStartMessageStreamChannelReader()
+	messageStreamEngine.InitiateAndStartMessageStreamChannelReader()
 
 	// Start UI Server
 	fenixTesterGuiObject.subPackageObjects.uiServer.StartUIServer()

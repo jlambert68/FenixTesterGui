@@ -7,6 +7,7 @@ import (
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
+	"time"
 )
 
 // ********************************************************************************************************************
@@ -55,16 +56,14 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendInitiateTestCaseExecution(in
 
 	// Do gRPC-call
 	//ctx := context.Background()
-	/*
-		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-		defer func() {
-			//TODO Fixa så att denna inte görs som allt går bra
-			sharedCode.Logger.WithFields(logrus.Fields{
-				"ID": "94091a94-d245-4d13-b3c5-e7d26b13f6c9",
-			}).Error("Running Defer Cancel function")
-			cancel()
-		}()
-	*/
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer func() {
+		//TODO Fixa så att denna inte görs som allt går bra
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"ID": "94091a94-d245-4d13-b3c5-e7d26b13f6c9",
+		}).Error("Running Defer Cancel function")
+		cancel()
+	}()
 
 	// Only add access token when run on GCP
 	if sharedCode.ExecutionLocationForFenixGuiExecutionServer == sharedCode.GCP {

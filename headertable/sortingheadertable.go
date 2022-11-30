@@ -35,10 +35,11 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 		func() (int, int) { return len(tableOpts.Bindings), len(tableOpts.ColAttrs) },
 
 		// Default value
-		func() fyne.CanvasObject { return widget.NewLabel("wide content") },
+		func() fyne.CanvasObject { return NewFlashingTableCell("wide content") }, //{ return widget.NewLabel("wide content") },
 
 		// Cell values
 		func(cellID widget.TableCellID, cnvObj fyne.CanvasObject) {
+
 			b := tableOpts.Bindings[cellID.Row]
 			itemKey := tableOpts.ColAttrs[cellID.Col].Name
 			d, err := b.GetItem(itemKey)
@@ -49,7 +50,7 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 			if err != nil {
 				log.Fatalf("Data table Update Cell callback, Get: %s", err)
 			}
-			l := cnvObj.(*widget.Label)
+			l := cnvObj.(*flashingTableCellStruct).Label //l := cnvObj.(*widget.Label)
 			l.SetText(str)
 		},
 	)

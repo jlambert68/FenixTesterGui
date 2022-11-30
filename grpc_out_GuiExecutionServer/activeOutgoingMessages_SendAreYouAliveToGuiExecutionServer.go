@@ -25,26 +25,25 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendAreYouAliveToGuiExecutionSer
 	ctx, err = grpcOut.setConnectionToFenixGuiExecutionMessageServer_new(ctx)
 	//grpcOut.setConnectionToFenixGuiTestCaseBuilderServer()
 	if err != nil {
-		if returnMessageAckNack == false {
-			// When error
-			returnMessage = &fenixExecutionServerGuiGrpcApi.AckNackResponse{
-				AckNack:    false,
-				Comments:   err.Error(),
-				ErrorCodes: nil,
-				ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
-					GetHighestFenixGuiExecutionServerProtoFileVersion()),
-			}
-
-			return returnMessage
+		// When error
+		returnMessage = &fenixExecutionServerGuiGrpcApi.AckNackResponse{
+			AckNack:    false,
+			Comments:   err.Error(),
+			ErrorCodes: nil,
+			ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
+				GetHighestFenixGuiExecutionServerProtoFileVersion()),
 		}
+
+		return returnMessage
 	}
 
 	// Set up connection to Server
-	returnMessage = grpcOut.SetConnectionToFenixGuiExecutionServer()
+	//returnMessage = grpcOut.SetConnectionToFenixGuiExecutionServer()
+	//grpcOut.setConnectionToFenixGuiExecutionMessageServer_new(ctx)
 	// If there was no connection to backend then return that message
-	if returnMessage != nil {
-		return returnMessage
-	}
+	//if returnMessage != nil {
+	//	return returnMessage
+	//}
 
 	// Create the request message
 	emptyParameter := &fenixExecutionServerGuiGrpcApi.EmptyParameter{

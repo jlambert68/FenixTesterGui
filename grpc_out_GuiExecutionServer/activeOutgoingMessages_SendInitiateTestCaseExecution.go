@@ -36,20 +36,18 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendInitiateTestCaseExecution(in
 	ctx, err = grpcOut.setConnectionToFenixGuiExecutionMessageServer_new(ctx)
 	//grpcOut.setConnectionToFenixGuiTestCaseBuilderServer()
 	if err != nil {
-		if err != nil {
-			// When error
-			initiateSingleTestCaseExecutionResponseMessage = &fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionResponseMessage{
-				TestCasesInExecutionQueue: nil,
-				AckNackResponse: &fenixExecutionServerGuiGrpcApi.AckNackResponse{
-					AckNack:    false,
-					Comments:   err.Error(),
-					ErrorCodes: nil,
-					ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
-						GetHighestFenixGuiExecutionServerProtoFileVersion()),
-				},
-			}
-			return initiateSingleTestCaseExecutionResponseMessage
+		// When error
+		initiateSingleTestCaseExecutionResponseMessage = &fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionResponseMessage{
+			TestCasesInExecutionQueue: nil,
+			AckNackResponse: &fenixExecutionServerGuiGrpcApi.AckNackResponse{
+				AckNack:    false,
+				Comments:   err.Error(),
+				ErrorCodes: nil,
+				ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
+					GetHighestFenixGuiExecutionServerProtoFileVersion()),
+			},
 		}
+		return initiateSingleTestCaseExecutionResponseMessage
 	}
 
 	// Set up connection to Server

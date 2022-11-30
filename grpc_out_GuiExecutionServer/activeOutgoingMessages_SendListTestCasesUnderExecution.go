@@ -26,20 +26,18 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendListTestCasesUnderExecution(
 	ctx, err = grpcOut.setConnectionToFenixGuiExecutionMessageServer_new(ctx)
 	//grpcOut.setConnectionToFenixGuiTestCaseBuilderServer()
 	if err != nil {
-		if err != nil {
-			// When error
-			listTestCasesUnderExecutionResponse = &fenixExecutionServerGuiGrpcApi.ListTestCasesUnderExecutionResponse{
-				TestCasesUnderExecution: nil,
-				AckNackResponse: &fenixExecutionServerGuiGrpcApi.AckNackResponse{
-					AckNack:    false,
-					Comments:   err.Error(),
-					ErrorCodes: nil,
-					ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
-						GetHighestFenixGuiExecutionServerProtoFileVersion()),
-				},
-			}
-			return listTestCasesUnderExecutionResponse
+		// When error
+		listTestCasesUnderExecutionResponse = &fenixExecutionServerGuiGrpcApi.ListTestCasesUnderExecutionResponse{
+			TestCasesUnderExecution: nil,
+			AckNackResponse: &fenixExecutionServerGuiGrpcApi.AckNackResponse{
+				AckNack:    false,
+				Comments:   err.Error(),
+				ErrorCodes: nil,
+				ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
+					GetHighestFenixGuiExecutionServerProtoFileVersion()),
+			},
 		}
+		return listTestCasesUnderExecutionResponse
 	}
 
 	// Do gRPC-call

@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
+	"fyne.io/fyne/v2/widget"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"strconv"
 )
@@ -188,6 +189,25 @@ func MoveTestCaseInstructionExecutionFromUnderExecutionToFinishedExecution(testC
 
 	// Update TestCaseExecutionFinishedExecution-table
 	ExecutionsUIObject.FinishedExecutionTable.Data.Refresh()
+
+	// Flash the newly added row in the table
+	tableSizeHight, tableWidth := ExecutionsUIObject.FinishedExecutionTable.Data.Length()
+
+	if tableSizeHight > 0 {
+		for columnCounter := 0; columnCounter < tableWidth; columnCounter++ {
+			CellId := widget.TableCellID{
+				Row: tableSizeHight - 1,
+				Col: columnCounter,
+			}
+			var flashingTableCellsReference *headertable.FlashingTableCellStruct
+			flashingTableCellsReference = ExecutionsUIObject.FinishedExecutionTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
+
+			// Only call Flash-function when there is a reference, the reason for not having a reference is that Fynes table-engine only process visible table cells
+			if flashingTableCellsReference != nil {
+				headertable.FlashAddedRow(flashingTableCellsReference)
+			}
+		}
+	}
 
 	// Remove the old Execution from UnderExecutions
 	err = RemoveTestCaseExecutionFromUnderExecutionTable(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference)

@@ -234,7 +234,7 @@ func RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAda
 			testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestCaseExecutionVersion == tempTestCaseExecutionVersionFromDataItemValue {
 
 			// Flash the row, to be deleted, in the table
-			tableSizeHight, tableWidth := ExecutionsUIObject.UnderExecutionTable.Data.Length()
+			tableSizeHight, tableWidth := ExecutionsUIObject.OnQueueTable.Data.Length()
 
 			if tableSizeHight > 0 {
 				for columnCounter := 0; columnCounter < tableWidth; columnCounter++ {
@@ -243,7 +243,7 @@ func RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAda
 						Col: columnCounter,
 					}
 					var flashingTableCellsReference *headertable.FlashingTableCellStruct
-					flashingTableCellsReference = ExecutionsUIObject.UnderExecutionTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
+					flashingTableCellsReference = ExecutionsUIObject.OnQueueTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
 
 					// Only call Flash-function when there is a reference, the reason for not having a reference is that Fynes table-engine only process visible table cells
 					if flashingTableCellsReference != nil {
@@ -252,7 +252,7 @@ func RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAda
 				}
 			}
 
-			time.Sleep(time.Millisecond * 500)
+			time.Sleep(time.Millisecond * 1000)
 
 			// Remove the element at index 'binderSlicePosition' from slice.
 			executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings = remove(executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings, binderSlicePosition)
@@ -324,6 +324,25 @@ func AddTestCaseExecutionToOnQueueTable(testCaseExecutionBasicInformation *fenix
 
 	// Update TestCaseExecutionOnQueue-table
 	ExecutionsUIObject.OnQueueTable.Data.Refresh()
+
+	// Flash the newly added row in the table
+	tableSizeHight, tableWidth := ExecutionsUIObject.OnQueueTable.Data.Length()
+
+	if tableSizeHight > 0 {
+		for columnCounter := 0; columnCounter < tableWidth; columnCounter++ {
+			CellId := widget.TableCellID{
+				Row: tableSizeHight - 1,
+				Col: columnCounter,
+			}
+			var flashingTableCellsReference *headertable.FlashingTableCellStruct
+			flashingTableCellsReference = ExecutionsUIObject.OnQueueTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
+
+			// Only call Flash-function when there is a reference, the reason for not having a reference is that Fynes table-engine only process visible table cells
+			if flashingTableCellsReference != nil {
+				headertable.FlashAddedRow(flashingTableCellsReference)
+			}
+		}
+	}
 
 	return err
 

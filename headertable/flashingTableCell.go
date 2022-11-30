@@ -46,7 +46,7 @@ func FlashAddedRow(flashingTableCell *FlashingTableCellStruct) {
 				G: 0xFF,
 				B: 0x00,
 				A: 0xAA,
-			}, time.Millisecond*100, func(animationColorValue color.Color) {
+			}, time.Millisecond*200, func(animationColorValue color.Color) {
 				flashingTableCell.backgroundColorRectangle.FillColor = animationColorValue
 				canvas.Refresh(flashingTableCell.backgroundColorRectangle)
 			})
@@ -69,7 +69,7 @@ func FlashRowToBeRemoved(flashingTableCell *FlashingTableCellStruct) {
 				G: 0x00,
 				B: 0x00,
 				A: 0xAA,
-			}, time.Millisecond*100, func(animationColorValue color.Color) {
+			}, time.Millisecond*200, func(animationColorValue color.Color) {
 				flashingTableCell.backgroundColorRectangle.FillColor = animationColorValue
 				canvas.Refresh(flashingTableCell.backgroundColorRectangle)
 			})

@@ -28,6 +28,10 @@ type SortingHeaderTable struct {
 }
 
 func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
+
+	// Initiate Map that holds references to individual cells
+	tableOpts.FlashingTableCellsReferenceMap = make(map[widget.TableCellID]*FlashingTableCellStruct)
+
 	sortLabels := make([]*sortingLabel, len(tableOpts.ColAttrs))
 
 	dataTable := widget.NewTable(
@@ -50,8 +54,11 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 			if err != nil {
 				log.Fatalf("Data table Update Cell callback, Get: %s", err)
 			}
-			l := cnvObj.(*flashingTableCellStruct).Label //l := cnvObj.(*widget.Label)
+			l := cnvObj.(*FlashingTableCellStruct).Label //l := cnvObj.(*widget.Label)
 			l.SetText(str)
+
+			// Add reference to 'flashingTableCell'
+			tableOpts.FlashingTableCellsReferenceMap[cellID] = cnvObj.(*FlashingTableCellStruct)
 		},
 	)
 	headerTable := widget.NewTable(
@@ -139,7 +146,7 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 			},
 		)
 	*/
-	headerLabel := widget.NewLabel(tableOpts.HeaderLable)
+	headerLabel := widget.NewLabel(tableOpts.HeaderLabel)
 	headerLabel.TextStyle = fyne.TextStyle{Bold: true}
 
 	t := &SortingHeaderTable{

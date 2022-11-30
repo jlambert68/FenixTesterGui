@@ -18,11 +18,12 @@ type ColAttr struct {
 }
 
 type TableOpts struct {
-	Bindings         []binding.DataMap
-	ColAttrs         []ColAttr
-	OnDataCellSelect func(cellID widget.TableCellID)
-	RefWidth         string
-	HeaderLable      string
+	Bindings                       []binding.DataMap
+	ColAttrs                       []ColAttr
+	OnDataCellSelect               func(cellID widget.TableCellID)
+	RefWidth                       string
+	HeaderLabel                    string
+	FlashingTableCellsReferenceMap map[widget.TableCellID]*FlashingTableCellStruct
 }
 
 type Header struct {

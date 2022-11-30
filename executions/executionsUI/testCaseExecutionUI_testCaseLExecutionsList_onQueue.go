@@ -12,6 +12,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"strconv"
+	"time"
 )
 
 var data = [][]string{[]string{"top left", "top right"},
@@ -231,6 +232,27 @@ func RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAda
 		// Check if this is the 'row' to delete
 		if testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestCaseExecutionUuid == tempTestCaseExecutionUuidDataItemValue &&
 			testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestCaseExecutionVersion == tempTestCaseExecutionVersionFromDataItemValue {
+
+			// Flash the row, to be deleted, in the table
+			tableSizeHight, tableWidth := ExecutionsUIObject.UnderExecutionTable.Data.Length()
+
+			if tableSizeHight > 0 {
+				for columnCounter := 0; columnCounter < tableWidth; columnCounter++ {
+					CellId := widget.TableCellID{
+						Row: binderSlicePosition,
+						Col: columnCounter,
+					}
+					var flashingTableCellsReference *headertable.FlashingTableCellStruct
+					flashingTableCellsReference = ExecutionsUIObject.UnderExecutionTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
+
+					// Only call Flash-function when there is a reference, the reason for not having a reference is that Fynes table-engine only process visible table cells
+					if flashingTableCellsReference != nil {
+						headertable.FlashRowToBeRemoved(flashingTableCellsReference)
+					}
+				}
+			}
+
+			time.Sleep(time.Millisecond * 500)
 
 			// Remove the element at index 'binderSlicePosition' from slice.
 			executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings = remove(executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings, binderSlicePosition)

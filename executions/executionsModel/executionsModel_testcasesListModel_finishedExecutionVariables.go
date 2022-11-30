@@ -55,7 +55,7 @@ type TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct struct {
 // Defines the structure, and column order, for TestCaseExecutions-FinishedExecution-Table
 var TestCaseExecutionsFinishedExecutionTableOptions = headertable.TableOpts{
 	RefWidth:    "reference width",
-	HeaderLable: "TestExecutions that are finished",
+	HeaderLabel: "TestExecutions that are finished",
 	ColAttrs: []headertable.ColAttr{
 		{
 			Name:         "DomainUuid",

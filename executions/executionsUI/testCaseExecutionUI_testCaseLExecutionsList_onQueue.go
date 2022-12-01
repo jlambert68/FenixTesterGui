@@ -163,7 +163,9 @@ func CreateTableForTestCaseExecutionsOnQueue() *fyne.Container {
 
 		scrollableTableContainer := container.NewMax(scrollableTable)
 	*/
-	// ht.Header.ScrollToLeading()
+	//ht.Header.ScrollToTrailing()
+	ht.Header.Refresh()
+	//ht.Header.ScrollToLeading()
 
 	return mySortTable
 

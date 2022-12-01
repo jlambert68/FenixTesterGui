@@ -317,6 +317,23 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	//tabs.Append(container.NewTabItemWithIcon("Home", theme.HomeIcon(), widget.NewLabel("Home tab")))
 
+	tabs.OnSelected = func(tabItem *container.TabItem) {
+		// TODO UGLY Update of page
+		executionsUI.ExecutionsUIObject.OnQueueTable.Header.ScrollToLeading()
+		executionsUI.ExecutionsUIObject.OnQueueTable.Header.Refresh()
+		executionsUI.ExecutionsUIObject.UnderExecutionTable.Header.ScrollToLeading()
+		executionsUI.ExecutionsUIObject.UnderExecutionTable.Header.Refresh()
+		executionsUI.ExecutionsUIObject.FinishedExecutionTable.Header.ScrollToLeading()
+		executionsUI.ExecutionsUIObject.FinishedExecutionTable.Header.Refresh()
+
+		executionsUI.ExecutionsUIObject.OnQueueTable.Data.ScrollToLeading()
+		executionsUI.ExecutionsUIObject.OnQueueTable.Data.Refresh()
+		executionsUI.ExecutionsUIObject.UnderExecutionTable.Data.ScrollToLeading()
+		executionsUI.ExecutionsUIObject.UnderExecutionTable.Data.Refresh()
+		executionsUI.ExecutionsUIObject.FinishedExecutionTable.Data.ScrollToLeading()
+		executionsUI.ExecutionsUIObject.FinishedExecutionTable.Data.Refresh()
+	}
+
 	tabs.SetTabLocation(container.TabLocationLeading)
 
 	sizeSlider.OnChanged = func(f float64) {

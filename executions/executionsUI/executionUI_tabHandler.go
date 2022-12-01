@@ -1,7 +1,6 @@
 package executionsUI
 
 import (
-	"FenixTesterGui/headertable"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -19,48 +18,10 @@ func (executionsUIObject *ExecutionsUIModelStruct) GenerateBaseUITabForExecution
 		widget.NewToolbarAction(theme.ContentRedoIcon(), func() {
 			fmt.Println("Reload Current Execution(s)")
 
-			// Flash the newly added row in the table
-			tableSizeHight, tableWidth := ExecutionsUIObject.UnderExecutionTable.Data.Length()
-
-			if tableSizeHight > 0 {
-				for columnCounter := 0; columnCounter < tableWidth; columnCounter++ {
-					CellId := widget.TableCellID{
-						Row: tableSizeHight - 1,
-						Col: columnCounter,
-					}
-					var flashingTableCellsReference *headertable.FlashingTableCellStruct
-					flashingTableCellsReference = ExecutionsUIObject.UnderExecutionTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
-
-					// Only call Flash-function when there is a reference, the reason for not having a reference is that Fynes table-engine only process visible table cells
-					if flashingTableCellsReference != nil {
-						headertable.FlashRowToBeRemoved(flashingTableCellsReference)
-					}
-				}
-			}
-
 		}),
 
 		widget.NewToolbarAction(theme.ContentCopyIcon(), func() {
 			fmt.Println("Show Executions in a read only undocked page")
-
-			// Flash the newly added row in the table
-			tableSizeHight, tableWidth := ExecutionsUIObject.UnderExecutionTable.Data.Length()
-
-			if tableSizeHight > 0 {
-				for columnCounter := 0; columnCounter < tableWidth; columnCounter++ {
-					CellId := widget.TableCellID{
-						Row: tableSizeHight - 1,
-						Col: columnCounter,
-					}
-					var flashingTableCellsReference *headertable.FlashingTableCellStruct
-					flashingTableCellsReference = ExecutionsUIObject.UnderExecutionTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
-
-					// Only call Flash-function when there is a reference, the reason for not having a reference is that Fynes table-engine only process visible table cells
-					if flashingTableCellsReference != nil {
-						headertable.FlashAddedRow(flashingTableCellsReference)
-					}
-				}
-			}
 
 		}),
 	)
@@ -82,8 +43,9 @@ func (executionsUIObject *ExecutionsUIModelStruct) GenerateBaseUITabForExecution
 		Items:     nil,
 		OnChanged: nil,
 		OnSelected: func(tabItem *container.TabItem) {
+			//tabItem.Content.Refresh()
+			executionsUIObject.OnQueueTable.Header.ScrollToTrailing()
 			tabItem.Content.Refresh()
-			executionsUIObject.UnderExecutionTable.Header.ScrollToTrailing()
 		},
 		OnUnselected: nil,
 	}
@@ -101,6 +63,12 @@ func (executionsUIObject *ExecutionsUIModelStruct) GenerateBaseUITabForExecution
 		Icon:    theme.HomeIcon(),
 		Content: widget.NewLabel("Tab for 'TestSuite Executions'"),
 	})
+
+	executionsUIObject.ExecutionsTabs.OnSelected = func(tabItem *container.TabItem) {
+		fmt.Println(tabItem)
+		//executionsUIObject.OnQueueTable.Header.ScrollToTrailing()
+		executionsUIObject.OnQueueTable.Header.ScrollToLeading()
+	}
 
 	// Set the Tabs to be positioned in upper part of the object
 	executionsUIObject.ExecutionsTabs.SetTabLocation(container.TabLocationTop)

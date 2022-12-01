@@ -22,14 +22,27 @@ type OnQueueTableChannelCommandType uint8
 
 // Enumeration for the channel command
 const (
-	OnQueueTableAddRemoveChannelAddCommand OnQueueTableChannelCommandType = iota
-	OnQueueTableAddRemoveChannelRemoveCommand
+	OnQueueTableAddRemoveChannelAddCommand_AddAndFlash OnQueueTableChannelCommandType = iota
+	OnQueueTableAddRemoveChannelRemoveCommand_Flash
+	OnQueueTableAddRemoveChannelRemoveCommand_Remove
 )
 
 // OnQueueTableAddRemoveChannelStruct - The channel message structure
 type OnQueueTableAddRemoveChannelStruct struct {
 	ChannelCommand                       OnQueueTableChannelCommandType
 	OnQueueTableAddRemoveResponseChannel *OnQueueTableAddRemoveResponseChannelType
+	AddCommandData                       AddCommandDataStruct
+	RemoveCommandData                    RemoveCommandDataStruct
+}
+
+// AddCommandDataStruct -The data used when a row should be added to the OnQueue-table
+type AddCommandDataStruct struct {
+	TestCaseExecutionBasicInformation *fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage
+}
+
+// RemoveCommandDataStruct -The data used when a row should be deleted from the OnQueue-table
+type RemoveCommandDataStruct struct {
+	TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *TestCaseExecutionsOnQueueAdaptedForUiTableStruct
 }
 
 // OnQueueTableAddRemoveResponseChannel - Used to signal that Row in OnQueueTable-table is Added or Removed

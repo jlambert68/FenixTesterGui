@@ -153,6 +153,8 @@ func RemoveTestCaseExecutionFromUnderExecutionTable(testCaseExecutionsUnderExecu
 
 }
 
+// MoveTestCaseInstructionExecutionFromOnQueueToUnderExecution
+// Move TestCaseInstructionExecution from OnQueue-table to UnderExecution-table
 func MoveTestCaseInstructionExecutionFromOnQueueToUnderExecution(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTableStruct, testCaseExecutionDetails *fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage) (err error) {
 
 	var existInMap bool
@@ -247,7 +249,16 @@ func MoveTestCaseInstructionExecutionFromOnQueueToUnderExecution(testCaseExecuti
 	}
 
 	// Remove the old Execution from OnQueue
-	err = RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference)
+	// Create Remove-message to be put on channel
+	var onQueueTableAddRemoveChannelMessage executionsModel.OnQueueTableAddRemoveChannelStruct
+	onQueueTableAddRemoveChannelMessage = executionsModel.OnQueueTableAddRemoveChannelStruct{
+		ChannelCommand: executionsModel.OnQueueTableAddRemoveChannelRemoveCommand_Remove,
+		RemoveCommandData: executionsModel.RemoveCommandDataStruct{
+			TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference: testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference},
+	}
+
+	// Put on channel
+	executionsModel.OnQueueTableAddRemoveChannel <- onQueueTableAddRemoveChannelMessage
 
 	return err
 }
@@ -309,3 +320,5 @@ func AddTestCaseExecutionUnderExecutionTable(testCaseExecutionBasicInformation *
 	return err
 
 }
+
+//

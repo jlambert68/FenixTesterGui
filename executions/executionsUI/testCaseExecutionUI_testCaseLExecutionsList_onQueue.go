@@ -1,7 +1,6 @@
 package executionsUI
 
 import (
-	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/executionsModel"
 	"FenixTesterGui/headertable"
 	"errors"
@@ -12,7 +11,6 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
-	"github.com/sirupsen/logrus"
 	"strconv"
 	"time"
 )
@@ -171,7 +169,7 @@ func CreateTableForTestCaseExecutionsOnQueue() *fyne.Container {
 
 }
 
-func RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTableStruct) (err error) {
+func RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTableStruct, onQueueTableChannelCommand executionsModel.OnQueueTableChannelCommandType) (err error) {
 
 	// Key to map: Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
 	var testCaseExecutionMapKey executionsModel.TestCaseExecutionMapKeyType
@@ -237,38 +235,72 @@ func RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAda
 		if testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestCaseExecutionUuid == tempTestCaseExecutionUuidDataItemValue &&
 			testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestCaseExecutionVersion == tempTestCaseExecutionVersionFromDataItemValue {
 
-			// Flash the row, to be deleted, in the table
-			tableSizeHight, tableWidth := ExecutionsUIObject.OnQueueTable.Data.Length()
+			switch onQueueTableChannelCommand {
 
-			if tableSizeHight > 0 {
-				for columnCounter := 0; columnCounter < tableWidth; columnCounter++ {
-					CellId := widget.TableCellID{
-						Row: binderSlicePosition,
-						Col: columnCounter,
-					}
-					var flashingTableCellsReference *headertable.FlashingTableCellStruct
-					flashingTableCellsReference = ExecutionsUIObject.OnQueueTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
+			case executionsModel.OnQueueTableAddRemoveChannelRemoveCommand_Flash:
 
-					// Only call Flash-function when there is a reference, the reason for not having a reference is that Fynes table-engine only process visible table cells
-					if flashingTableCellsReference != nil {
-						headertable.FlashRowToBeRemoved(flashingTableCellsReference)
+				// Flash the row, to be deleted, in the table
+				tableSizeHight, tableWidth := ExecutionsUIObject.OnQueueTable.Data.Length()
+
+				if tableSizeHight > 0 {
+					for columnCounter := 0; columnCounter < tableWidth; columnCounter++ {
+						CellId := widget.TableCellID{
+							Row: binderSlicePosition,
+							Col: columnCounter,
+						}
+						var flashingTableCellsReference *headertable.FlashingTableCellStruct
+						flashingTableCellsReference = ExecutionsUIObject.OnQueueTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
+
+						// Only call Flash-function when there is a reference, the reason for not having a reference is that Fynes table-engine only process visible table cells
+						if flashingTableCellsReference != nil {
+							headertable.FlashRowToBeRemoved(flashingTableCellsReference)
+						}
 					}
 				}
+
+				// Trigger Delete in parallell
+				go func() {
+					// Wait for color animation to be finished
+					time.Sleep(time.Millisecond * 1000)
+
+					// Create Remove-message to be put on channel
+					var onQueueTableAddRemoveChannelMessage executionsModel.OnQueueTableAddRemoveChannelStruct
+					onQueueTableAddRemoveChannelMessage = executionsModel.OnQueueTableAddRemoveChannelStruct{
+						ChannelCommand: executionsModel.OnQueueTableAddRemoveChannelRemoveCommand_Remove,
+						RemoveCommandData: executionsModel.RemoveCommandDataStruct{
+							TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference: testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference},
+					}
+
+					// Put on channel
+					executionsModel.OnQueueTableAddRemoveChannel <- onQueueTableAddRemoveChannelMessage
+
+				}()
+
+			case executionsModel.OnQueueTableAddRemoveChannelRemoveCommand_Remove:
+
+				// Remove the element at index 'binderSlicePosition' from slice.
+				executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings = remove(executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings, binderSlicePosition)
+
+				// Delete data from original data adapted for Table
+				delete(executionsModel.TestCaseExecutionsOnQueueMapAdaptedForUiTable, testCaseExecutionMapKey)
+
+				// Resize the table based on its content
+				ResizeTableColumns(ExecutionsUIObject.OnQueueTable)
+
+				ExecutionsUIObject.OnQueueTable.Data.Refresh()
+
+			default:
+				// 'TestCaseExecutionVersion' doesn't exist within data
+				errorId := "df7d5103-f9b8-4f19-82ee-281733c290f6"
+				err = errors.New(fmt.Sprintf("unknown 'onQueueTableChannelCommand', '%s', in 'RemoveTestCaseExecutionFromOnQueueTable()': '%s' [ErrorID: %s]", onQueueTableChannelCommand, errorId))
+
+				fmt.Println(err) // TODO Send on Error Channel
+
+				return err
+
 			}
 
-			time.Sleep(time.Millisecond * 1000)
-
-			// Remove the element at index 'binderSlicePosition' from slice.
-			executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings = remove(executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings, binderSlicePosition)
-
-			// Delete data from original data adapted for Table
-			delete(executionsModel.TestCaseExecutionsOnQueueMapAdaptedForUiTable, testCaseExecutionMapKey)
-
-			// Resize the table based on its content
-			ResizeTableColumns(ExecutionsUIObject.OnQueueTable)
-
-			ExecutionsUIObject.OnQueueTable.Data.Refresh()
-
+			// End loop
 			break
 		}
 
@@ -358,68 +390,35 @@ func AddTestCaseExecutionToOnQueueTable(testCaseExecutionBasicInformation *fenix
 
 }
 
-const headerColumnExtraWidth float32 = 75
+//
+func OnQueueTableAddRemoveChannelReader() {
 
-func ResizeTableColumns(t *headertable.SortingHeaderTable) {
+	var incomingOnQueueTableChannelCommand executionsModel.OnQueueTableAddRemoveChannelStruct
+	var err error
 
-	// Set Column widths
-	bindings := t.TableOpts.Bindings
-	numberOfRows, _ := t.Data.Length()
-	var columnWidthToBeUsed float32
-	var totalTableWidth float32
+	for {
+		// Wait for incoming command over channel
+		incomingOnQueueTableChannelCommand = <-executionsModel.OnQueueTableAddRemoveChannel
 
-	// Loop columns
-	for i, colAttr := range t.TableOpts.ColAttrs {
+		switch incomingOnQueueTableChannelCommand.ChannelCommand {
 
-		// Loop Rows to get MaxTestDataWidth
-		var currentColumnsMaxWidth float32
-		var tempColumnWidth float32
-		for rowCounter := 0; rowCounter < numberOfRows; rowCounter++ {
-			b1 := bindings[rowCounter]
-			d1, err := b1.GetItem(colAttr.Name)
-			if err != nil {
-				sharedCode.Logger.WithFields(logrus.Fields{
-					"id":      "584ebb7e-9e35-4c60-b1a7-0713f973d838",
-					"colAttr": colAttr,
-					"b1":      b1,
-				}).Fatalln("Couldn't get TestCaseExecution data due to no match")
-			}
+		case executionsModel.OnQueueTableAddRemoveChannelAddCommand_AddAndFlash:
+			AddTestCaseExecutionToOnQueueTable(incomingOnQueueTableChannelCommand.AddCommandData.TestCaseExecutionBasicInformation)
 
-			cellData, err := d1.(binding.String).Get()
-			if err != nil {
-				sharedCode.Logger.WithFields(logrus.Fields{
-					"id": "14e392a6-390e-4321-96c1-1da2bcbd33e1",
-					"d1": d1,
-				}).Fatalln("Couldn't get TestCaseExecution data due to no match")
-			}
+		case executionsModel.OnQueueTableAddRemoveChannelRemoveCommand_Flash:
+			RemoveTestCaseExecutionFromOnQueueTable(incomingOnQueueTableChannelCommand.RemoveCommandData.TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference, executionsModel.OnQueueTableAddRemoveChannelRemoveCommand_Flash)
 
-			// Check if width for row data is greater than previous max width for column
-			tempColumnWidth = widget.NewLabel(cellData).MinSize().Width
-			if tempColumnWidth > currentColumnsMaxWidth {
-				currentColumnsMaxWidth = tempColumnWidth
-			}
+		case executionsModel.OnQueueTableAddRemoveChannelRemoveCommand_Remove:
+			RemoveTestCaseExecutionFromOnQueueTable(incomingOnQueueTableChannelCommand.RemoveCommandData.TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference, executionsModel.OnQueueTableAddRemoveChannelRemoveCommand_Remove)
+
+		// No other command is supported
+		default:
+
+			errorId := "e6a0ffda-34cf-448e-bc96-6045d0825bc1"
+			err = errors.New(fmt.Sprintf("unknown  'incomingOnQueueTableChannelCommand', '%s'. [ErrorID: %s]", incomingOnQueueTableChannelCommand, errorId))
+
+			fmt.Println(err) //TODO Send on Error channel
+
 		}
-
-		// Get HeaderWidth
-		headerWidth := widget.NewLabel(colAttr.Header).MinSize().Width + headerColumnExtraWidth
-
-		// Decide to used HeaderWidth or DataWidth
-		if headerWidth > currentColumnsMaxWidth {
-			columnWidthToBeUsed = headerWidth
-		} else {
-			columnWidthToBeUsed = currentColumnsMaxWidth
-		}
-
-		// Add to total Table Width
-		totalTableWidth = totalTableWidth + columnWidthToBeUsed
-
-		// Set Width for Header and data column
-		t.Header.SetColumnWidth(i, float32(colAttr.WidthPercent)/100.0*columnWidthToBeUsed)
-		t.Data.SetColumnWidth(i, float32(colAttr.WidthPercent)/100.0*columnWidthToBeUsed)
-
 	}
-
-	//t.Resize(fyne.NewSize(totalTableWidth, 200))
-	t.Header.Resize(fyne.NewSize(totalTableWidth, t.Header.MinSize().Height))
-	t.Data.Resize(fyne.NewSize(totalTableWidth, t.Data.MinSize().Height*float32(len(t.TableOpts.Bindings))))
 }

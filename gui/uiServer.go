@@ -237,7 +237,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	testCaseSubscriptionHandler.TestCaseExecutionStatusSubscriptionHandlerObject.InitiateTestCaseExecutionStatusSubscriptionHandler()
 
 	// Initiate the channels used when Adding or Removing items to/from OnQueue-table, UnderExecution-table or FinishedExecutions-table
-	executionsModel.InitiateChannelsUsedByListModel()
+	executionsModel.InitiateAndStartChannelsUsedByListModel()
 
 	// Load TestCaseExecutionsOnExecutionQueue
 	var domainsList []string

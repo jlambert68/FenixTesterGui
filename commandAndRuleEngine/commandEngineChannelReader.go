@@ -2,7 +2,7 @@ package commandAndRuleEngine
 
 import (
 	sharedCode "FenixTesterGui/common_code"
-	"FenixTesterGui/executions/executionsUI"
+	"FenixTesterGui/executions/executionsModel"
 	"FenixTesterGui/grpc_out_GuiExecutionServer"
 	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
@@ -145,8 +145,18 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 
 	}
 
-	// Add TestCaseExecution to Executions-table for TestCaseExecutionOnQueue
-	_ = executionsUI.AddTestCaseExecutionToOnQueueTable(initiateSingleTestCaseExecutionResponseMessage.TestCasesInExecutionQueue)
+	// Add TestCaseExecution to Executions-table for TestCaseExecutionOnQueue by send message to channel used to update OnQueue-table
+	// Create Remove-message to be put on channel
+	var onQueueTableAddRemoveChannelMessage executionsModel.OnQueueTableAddRemoveChannelStruct
+	onQueueTableAddRemoveChannelMessage = executionsModel.OnQueueTableAddRemoveChannelStruct{
+		ChannelCommand: executionsModel.OnQueueTableAddRemoveChannelAddCommand_AddAndFlash,
+		AddCommandData: executionsModel.AddCommandDataStruct{
+			TestCaseExecutionBasicInformation: initiateSingleTestCaseExecutionResponseMessage.TestCasesInExecutionQueue,
+		},
+	}
+
+	// Put message on channel
+	executionsModel.OnQueueTableAddRemoveChannel <- onQueueTableAddRemoveChannelMessage
 
 	fmt.Sprintf("Initiated TestCaseExecution for TestCase: '%s', testCaseUuidToBeExecuted")
 

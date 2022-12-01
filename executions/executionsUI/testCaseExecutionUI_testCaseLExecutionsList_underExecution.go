@@ -139,6 +139,9 @@ func RemoveTestCaseExecutionFromUnderExecutionTable(testCaseExecutionsUnderExecu
 			// Delete data from original data adapted for Table
 			delete(executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable, testCaseExecutionMapKey)
 
+			// Resize the table based on its content
+			ResizeTableColumns(ExecutionsUIObject.UnderExecutionTable)
+
 			ExecutionsUIObject.UnderExecutionTable.Data.Refresh()
 
 			break
@@ -217,6 +220,9 @@ func MoveTestCaseInstructionExecutionFromOnQueueToUnderExecution(testCaseExecuti
 	executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings = append(
 		executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings,
 		binding.BindStruct(testCaseExecutionUnderExecutionAdaptedForUiTable))
+
+	// Resize the table based on its content
+	ResizeTableColumns(ExecutionsUIObject.UnderExecutionTable)
 
 	// Update TestCaseExecutionUnderExecution-table
 	ExecutionsUIObject.UnderExecutionTable.Data.Refresh()

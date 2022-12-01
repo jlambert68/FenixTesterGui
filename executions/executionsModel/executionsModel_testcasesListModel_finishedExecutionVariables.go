@@ -7,6 +7,37 @@ import (
 	"time"
 )
 
+// MaximumNumberOfItemsForFinishedExecutionsTableAddRemoveChannel - Maximum number of items that can be put on Channel before they
+// needed to read out of channel
+const MaximumNumberOfItemsForFinishedExecutionsTableAddRemoveChannel = 100
+
+// FinishedExecutionsTableAddRemoveChannel - Used to secure that Add and Remove don't conflict
+var FinishedExecutionsTableAddRemoveChannel FinishedExecutionsTableAddRemoveChannelType
+
+// FinishedExecutionsTableAddRemoveChannelType - Type for 'FinishedExecutionsTableAddRemoveChannel'
+type FinishedExecutionsTableAddRemoveChannelType chan FinishedExecutionsTableAddRemoveChannelStruct
+
+// FinishedExecutionsTableChannelCommandType - Type for the channelCommand enumeration
+type FinishedExecutionsTableChannelCommandType uint8
+
+// Enumeration for the channel command
+const (
+	FinishedExecutionsTableAddRemoveChannelAddCommand FinishedExecutionsTableChannelCommandType = iota
+	FinishedExecutionsTableAddRemoveChannelRemoveCommand
+)
+
+// FinishedExecutionsTableAddRemoveChannelStruct - The channel message structure
+type FinishedExecutionsTableAddRemoveChannelStruct struct {
+	ChannelCommand                                  FinishedExecutionsTableChannelCommandType
+	FinishedExecutionsTableAddRemoveResponseChannel *FinishedExecutionsTableAddRemoveResponseChannelType
+}
+
+// FinishedExecutionsTableAddRemoveResponseChannel - Used to signal that Row in FinishedExecutionsTable-table is Added or Removed
+var FinishedExecutionsTableAddRemoveResponseChannel FinishedExecutionsTableAddRemoveResponseChannelType
+
+// FinishedExecutionsTableAddRemoveResponseChannelType - Type for 'FinishedExecutionsTableAddRemoveResponseChannel'
+type FinishedExecutionsTableAddRemoveResponseChannelType chan bool
+
 // Object, direct from database, holding TestCaseExecutions that is ongoing and belongs to all or some Domains
 var allTestCaseExecutionsFinishedExecution allTestCaseExecutionsOngoingFinishedExecutionStruct
 

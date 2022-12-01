@@ -7,6 +7,37 @@ import (
 	"time"
 )
 
+// MaximumNumberOfItemsForUnderExecutionTableAddRemoveChannel - Maximum number of items that can be put on Channel before they
+// needed to read out of channel
+const MaximumNumberOfItemsForUnderExecutionTableAddRemoveChannel = 100
+
+// UnderExecutionTableAddRemoveChannel - Used to secure that Add and Remove don't conflict
+var UnderExecutionTableAddRemoveChannel UnderExecutionTableAddRemoveChannelType
+
+// UnderExecutionTableAddRemoveChannelType - Type for 'UnderExecutionTableAddRemoveChannel'
+type UnderExecutionTableAddRemoveChannelType chan UnderExecutionTableAddRemoveChannelStruct
+
+// UnderExecutionTableChannelCommandType - Type for the channelCommand enumeration
+type UnderExecutionTableChannelCommandType uint8
+
+// Enumeration for the channel command
+const (
+	UnderExecutionTableAddRemoveChannelAddCommand UnderExecutionTableChannelCommandType = iota
+	UnderExecutionTableAddRemoveChannelRemoveCommand
+)
+
+// UnderExecutionTableAddRemoveChannelStruct - The channel message structure
+type UnderExecutionTableAddRemoveChannelStruct struct {
+	ChannelCommand                              UnderExecutionTableChannelCommandType
+	UnderExecutionTableAddRemoveResponseChannel *UnderExecutionTableAddRemoveResponseChannelType
+}
+
+// UnderExecutionTableAddRemoveResponseChannel - Used to signal that Row in UnderExecutionTable-table is Added or Removed
+var UnderExecutionTableAddRemoveResponseChannel UnderExecutionTableAddRemoveResponseChannelType
+
+// UnderExecutionTableAddRemoveResponseChannelType - Type for 'UnderExecutionTableAddRemoveResponseChannel'
+type UnderExecutionTableAddRemoveResponseChannelType chan bool
+
 // Object, direct from database, holding TestCaseExecutions that is ongoing and belongs to all or some Domains
 var allTestCaseExecutionsUnderExecution allTestCaseExecutionsOngoingUnderExecutionStruct
 

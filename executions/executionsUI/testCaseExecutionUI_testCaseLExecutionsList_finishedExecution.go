@@ -108,6 +108,9 @@ func RemoveTestCaseExecutionFromFinishedTable(testCaseExecutionsFinishedDataRowA
 			// Delete data from original data adapted for Table
 			delete(executionsModel.TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable, testCaseExecutionMapKey)
 
+			// Resize the table based on its content
+			ResizeTableColumns(ExecutionsUIObject.FinishedExecutionTable)
+
 			ExecutionsUIObject.FinishedExecutionTable.Data.Refresh()
 
 			break
@@ -186,6 +189,9 @@ func MoveTestCaseInstructionExecutionFromUnderExecutionToFinishedExecution(testC
 	executionsModel.TestCaseExecutionsFinishedExecutionTableOptions.Bindings = append(
 		executionsModel.TestCaseExecutionsFinishedExecutionTableOptions.Bindings,
 		binding.BindStruct(testCaseExecutionFinishedExecutionAdaptedForUiTable))
+
+	// Resize the table based on its content
+	ResizeTableColumns(ExecutionsUIObject.FinishedExecutionTable)
 
 	// Update TestCaseExecutionFinishedExecution-table
 	ExecutionsUIObject.FinishedExecutionTable.Data.Refresh()

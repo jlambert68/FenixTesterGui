@@ -92,60 +92,7 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 			l.Refresh()
 		},
 	)
-	/*
-		myMagicTable := widget.NewTable(
-			// Dimensions (rows, cols)
-			func() (int, int) { return 1 + len(tableOpts.Bindings), len(tableOpts.ColAttrs) },
 
-			// Default value
-			func() fyne.CanvasObject { return widget.NewLabel("magic content") },
-			func() fyne.CanvasObject { return NewSortingLabel("the content") },
-
-			func(cellID widget.TableCellID, cnvObj fyne.CanvasObject) {
-				if cellID.Row == 0 {
-					// Header
-
-					l := cnvObj.(*sortingLabel)
-					sortLabels[cellID.Col] = l
-					col := cellID.Col
-					opts := tableOpts.ColAttrs[col]
-					l.Sorter = stringSort(tableOpts, col)
-					l.OnAfterSort = func() {
-						dataTable.Refresh()
-						// Set all but this column to unsorted
-						for i, sl := range sortLabels {
-							if i != cellID.Col {
-								sl.SetState(SortUnsorted)
-							}
-						}
-					}
-					l.Col = col
-					l.Label.SetText(opts.Header)
-					l.Label.TextStyle = opts.TextStyle
-					l.Label.Alignment = opts.Alignment
-					l.Label.Wrapping = opts.Wrapping
-					l.Refresh()
-
-				} else {
-					// Data
-
-					b := tableOpts.Bindings[cellID.Row-1]
-					itemKey := tableOpts.ColAttrs[cellID.Col].Name
-					d, err := b.GetItem(itemKey)
-					if err != nil {
-						log.Fatalf("Data table Update Cell callback, GetItem(%s): %s", itemKey, err)
-					}
-					str, err := d.(binding.String).Get()
-					if err != nil {
-						log.Fatalf("Data table Update Cell callback, Get: %s", err)
-					}
-					l := cnvObj.(*widget.Label)
-					l.SetText(str)
-				}
-
-			},
-		)
-	*/
 	headerLabel := widget.NewLabel(tableOpts.HeaderLabel)
 	headerLabel.TextStyle = fyne.TextStyle{Bold: true}
 
@@ -155,7 +102,6 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 		Header:      headerTable,
 		Data:        dataTable,
 		HeaderLabel: headerLabel,
-		//MagicTable: myMagicTable,
 	}
 	t.ExtendBaseWidget(t)
 

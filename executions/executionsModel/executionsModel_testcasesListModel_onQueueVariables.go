@@ -7,6 +7,37 @@ import (
 	"time"
 )
 
+// MaximumNumberOfItemsForOnQueueTableAddRemoveChannel - Maximum number of items that can be put on Channel before they
+// needed to read out of channel
+const MaximumNumberOfItemsForOnQueueTableAddRemoveChannel = 100
+
+// OnQueueTableAddRemoveChannel - Used to secure that Add and Remove don't conflict
+var OnQueueTableAddRemoveChannel OnQueueTableAddRemoveChannelType
+
+// OnQueueTableAddRemoveChannelType - Type for 'OnQueueTableAddRemoveChannel'
+type OnQueueTableAddRemoveChannelType chan OnQueueTableAddRemoveChannelStruct
+
+// OnQueueTableChannelCommandType - Type for the channelCommand enumeration
+type OnQueueTableChannelCommandType uint8
+
+// Enumeration for the channel command
+const (
+	OnQueueTableAddRemoveChannelAddCommand OnQueueTableChannelCommandType = iota
+	OnQueueTableAddRemoveChannelRemoveCommand
+)
+
+// OnQueueTableAddRemoveChannelStruct - The channel message structure
+type OnQueueTableAddRemoveChannelStruct struct {
+	ChannelCommand                       OnQueueTableChannelCommandType
+	OnQueueTableAddRemoveResponseChannel *OnQueueTableAddRemoveResponseChannelType
+}
+
+// OnQueueTableAddRemoveResponseChannel - Used to signal that Row in OnQueueTable-table is Added or Removed
+var OnQueueTableAddRemoveResponseChannel OnQueueTableAddRemoveResponseChannelType
+
+// OnQueueTableAddRemoveResponseChannelType - Type for 'OnQueueTableAddRemoveResponseChannel'
+type OnQueueTableAddRemoveResponseChannelType chan bool
+
 // Object, direct from database,  holding TestCaseExecutions that exists on the TestCaseExecutionQueue and belongs to all or some Domains
 var allTestCaseExecutionsOnQueue allTestCaseExecutionsOnQueueStruct
 

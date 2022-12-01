@@ -1,6 +1,7 @@
 package executionsUI
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/executionsModel"
 	"FenixTesterGui/headertable"
 	"errors"
@@ -11,6 +12,7 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
+	"github.com/sirupsen/logrus"
 	"strconv"
 	"time"
 )
@@ -260,6 +262,9 @@ func RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAda
 			// Delete data from original data adapted for Table
 			delete(executionsModel.TestCaseExecutionsOnQueueMapAdaptedForUiTable, testCaseExecutionMapKey)
 
+			// Resize the table based on its content
+			ResizeTableColumns(ExecutionsUIObject.OnQueueTable)
+
 			ExecutionsUIObject.OnQueueTable.Data.Refresh()
 
 			break
@@ -322,6 +327,9 @@ func AddTestCaseExecutionToOnQueueTable(testCaseExecutionBasicInformation *fenix
 		executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings,
 		binding.BindStruct(tempTestCaseExecutionsOnQueueAdaptedForUiTable))
 
+	// Resize the table based on its content
+	ResizeTableColumns(ExecutionsUIObject.OnQueueTable)
+
 	// Update TestCaseExecutionOnQueue-table
 	ExecutionsUIObject.OnQueueTable.Data.Refresh()
 
@@ -346,4 +354,70 @@ func AddTestCaseExecutionToOnQueueTable(testCaseExecutionBasicInformation *fenix
 
 	return err
 
+}
+
+const headerColumnExtraWidth float32 = 75
+
+func ResizeTableColumns(t *headertable.SortingHeaderTable) {
+
+	// Set Column widths
+	bindings := t.TableOpts.Bindings
+	numberOfRows, _ := t.Data.Length()
+	var columnWidthToBeUsed float32
+	var totalTableWidth float32
+
+	// Loop columns
+	for i, colAttr := range t.TableOpts.ColAttrs {
+
+		// Loop Rows to get MaxTestDataWidth
+		var currentColumnsMaxWidth float32
+		var tempColumnWidth float32
+		for rowCounter := 0; rowCounter < numberOfRows; rowCounter++ {
+			b1 := bindings[rowCounter]
+			d1, err := b1.GetItem(colAttr.Name)
+			if err != nil {
+				sharedCode.Logger.WithFields(logrus.Fields{
+					"id":      "584ebb7e-9e35-4c60-b1a7-0713f973d838",
+					"colAttr": colAttr,
+					"b1":      b1,
+				}).Fatalln("Couldn't get TestCaseExecution data due to no match")
+			}
+
+			cellData, err := d1.(binding.String).Get()
+			if err != nil {
+				sharedCode.Logger.WithFields(logrus.Fields{
+					"id": "14e392a6-390e-4321-96c1-1da2bcbd33e1",
+					"d1": d1,
+				}).Fatalln("Couldn't get TestCaseExecution data due to no match")
+			}
+
+			// Check if width for row data is greater than previous max width for column
+			tempColumnWidth = widget.NewLabel(cellData).MinSize().Width
+			if tempColumnWidth > currentColumnsMaxWidth {
+				currentColumnsMaxWidth = tempColumnWidth
+			}
+		}
+
+		// Get HeaderWidth
+		headerWidth := widget.NewLabel(colAttr.Header).MinSize().Width + headerColumnExtraWidth
+
+		// Decide to used HeaderWidth or DataWidth
+		if headerWidth > currentColumnsMaxWidth {
+			columnWidthToBeUsed = headerWidth
+		} else {
+			columnWidthToBeUsed = currentColumnsMaxWidth
+		}
+
+		// Add to total Table Width
+		totalTableWidth = totalTableWidth + columnWidthToBeUsed
+
+		// Set Width for Header and data column
+		t.Header.SetColumnWidth(i, float32(colAttr.WidthPercent)/100.0*columnWidthToBeUsed)
+		t.Data.SetColumnWidth(i, float32(colAttr.WidthPercent)/100.0*columnWidthToBeUsed)
+
+	}
+
+	//t.Resize(fyne.NewSize(totalTableWidth, 200))
+	t.Header.Resize(fyne.NewSize(totalTableWidth, t.Header.MinSize().Height))
+	t.Data.Resize(fyne.NewSize(totalTableWidth, t.Data.MinSize().Height*float32(len(t.TableOpts.Bindings))))
 }

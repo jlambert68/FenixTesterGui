@@ -25,6 +25,6 @@ func (executionsUIObject *ExecutionsUIModelStruct) CreateExecutionsListTabPage()
 func StartTableAddAndRemoveChannelReaders() {
 
 	// Start Channel-reader used for Adding and Deleting Execution items in OnQueue-table
-	StartOnQueueTableAddRemoveChannelReader()
+	go StartOnQueueTableAddRemoveChannelReader()
 
 }

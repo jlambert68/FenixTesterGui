@@ -252,7 +252,7 @@ func MoveTestCaseInstructionExecutionFromOnQueueToUnderExecution(testCaseExecuti
 	// Create Remove-message to be put on channel
 	var onQueueTableAddRemoveChannelMessage executionsModel.OnQueueTableAddRemoveChannelStruct
 	onQueueTableAddRemoveChannelMessage = executionsModel.OnQueueTableAddRemoveChannelStruct{
-		ChannelCommand: executionsModel.OnQueueTableAddRemoveChannelRemoveCommand_Remove,
+		ChannelCommand: executionsModel.OnQueueTableAddRemoveChannelRemoveCommand_Flash,
 		RemoveCommandData: executionsModel.RemoveCommandDataStruct{
 			TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference: testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference},
 	}

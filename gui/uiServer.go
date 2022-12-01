@@ -239,6 +239,9 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Initiate the channels used when Adding or Removing items to/from OnQueue-table, UnderExecution-table or FinishedExecutions-table
 	executionsModel.InitiateAndStartChannelsUsedByListModel()
 
+	// Start Channel readers for testCases OnQueue, UnderExecutions or Finished Executions
+	executionsUI.StartTableAddAndRemoveChannelReaders()
+
 	// Load TestCaseExecutionsOnExecutionQueue
 	var domainsList []string
 	domainsList = nil

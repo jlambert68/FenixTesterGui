@@ -391,7 +391,7 @@ func AddTestCaseExecutionToOnQueueTable(testCaseExecutionBasicInformation *fenix
 }
 
 //
-func OnQueueTableAddRemoveChannelReader() {
+func StartOnQueueTableAddRemoveChannelReader() {
 
 	var incomingOnQueueTableChannelCommand executionsModel.OnQueueTableAddRemoveChannelStruct
 	var err error

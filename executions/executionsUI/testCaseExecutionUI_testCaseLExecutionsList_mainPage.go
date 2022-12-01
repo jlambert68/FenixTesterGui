@@ -19,3 +19,12 @@ func (executionsUIObject *ExecutionsUIModelStruct) CreateExecutionsListTabPage()
 
 	return executionsListTabPage
 }
+
+// StartTableAddAndRemoveChannelReaders
+// Start Channel readers for testCases OnQueue, UnderExecutions or Finished Executions
+func StartTableAddAndRemoveChannelReaders() {
+
+	// Start Channel-reader used for Adding and Deleting Execution items in OnQueue-table
+	StartOnQueueTableAddRemoveChannelReader()
+
+}

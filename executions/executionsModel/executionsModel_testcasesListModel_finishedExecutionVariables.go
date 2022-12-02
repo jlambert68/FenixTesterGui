@@ -22,21 +22,28 @@ type FinishedExecutionsTableChannelCommandType uint8
 
 // Enumeration for the channel command
 const (
-	FinishedExecutionsTableAddRemoveChannelAddCommand FinishedExecutionsTableChannelCommandType = iota
-	FinishedExecutionsTableAddRemoveChannelRemoveCommand
+	FinishedExecutionsTableAddRemoveChannelAddCommand_MoveFromUnderExecutionToFinishedExecutions FinishedExecutionsTableChannelCommandType = iota
+	FinishedExecutionsTableAddRemoveChannelRemoveCommand_Flash
+	FinishedExecutionsTableAddRemoveChannelRemoveCommand_Remove
 )
 
 // FinishedExecutionsTableAddRemoveChannelStruct - The channel message structure
 type FinishedExecutionsTableAddRemoveChannelStruct struct {
-	ChannelCommand                                  FinishedExecutionsTableChannelCommandType
-	FinishedExecutionsTableAddRemoveResponseChannel *FinishedExecutionsTableAddRemoveResponseChannelType
+	ChannelCommand    FinishedExecutionsTableChannelCommandType
+	AddCommandData    FinishedExecutionsAddCommandDataStruct
+	RemoveCommandData FinishedExecutionsRemoveCommandDataStruct
 }
 
-// FinishedExecutionsTableAddRemoveResponseChannel - Used to signal that Row in FinishedExecutionsTable-table is Added or Removed
-var FinishedExecutionsTableAddRemoveResponseChannel FinishedExecutionsTableAddRemoveResponseChannelType
+// FinishedExecutionsAddCommandDataStruct -The data used when a row should be added to the FinishedExecutions-table
+type FinishedExecutionsAddCommandDataStruct struct {
+	TestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
+	TestCaseExecutionDetails                                          *fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage
+}
 
-// FinishedExecutionsTableAddRemoveResponseChannelType - Type for 'FinishedExecutionsTableAddRemoveResponseChannel'
-type FinishedExecutionsTableAddRemoveResponseChannelType chan bool
+// FinishedExecutionsRemoveCommandDataStruct -The data used when a row should be deleted from the FinishedExecutions-table
+type FinishedExecutionsRemoveCommandDataStruct struct {
+	TestCaseExecutionsFinishedDataRowAdaptedForUiTableReference *TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct
+}
 
 // Object, direct from database, holding TestCaseExecutions that is ongoing and belongs to all or some Domains
 var allTestCaseExecutionsFinishedExecution allTestCaseExecutionsOngoingFinishedExecutionStruct

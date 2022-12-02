@@ -11,6 +11,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"strconv"
+	"time"
 )
 
 // CreateTableForTestCaseExecutionsWithFinishedExecution
@@ -36,7 +37,9 @@ func CreateTableForTestCaseExecutionsWithFinishedExecution() *fyne.Container {
 
 }
 
-func RemoveTestCaseExecutionFromFinishedTable(testCaseExecutionsFinishedDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct) (err error) {
+func RemoveTestCaseExecutionFromFinishedTable(
+	testCaseExecutionsFinishedDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct,
+	finishedExecutionsTableChannelCommand executionsModel.FinishedExecutionsTableChannelCommandType) (err error) {
 
 	// Key to map: Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
 	var testCaseExecutionMapKey executionsModel.TestCaseExecutionMapKeyType
@@ -102,17 +105,74 @@ func RemoveTestCaseExecutionFromFinishedTable(testCaseExecutionsFinishedDataRowA
 		if testCaseExecutionsFinishedDataRowAdaptedForUiTableReference.TestCaseExecutionUuid == tempTestCaseExecutionUuidDataItemValue &&
 			testCaseExecutionsFinishedDataRowAdaptedForUiTableReference.TestCaseExecutionVersion == tempTestCaseExecutionVersionFromDataItemValue {
 
-			// Remove the element at index 'binderSlicePosition' from slice.
-			executionsModel.TestCaseExecutionsFinishedExecutionTableOptions.Bindings = remove(executionsModel.TestCaseExecutionsFinishedExecutionTableOptions.Bindings, binderSlicePosition)
+			// Depending on channel command, act differently
+			switch finishedExecutionsTableChannelCommand {
 
-			// Delete data from original data adapted for Table
-			delete(executionsModel.TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable, testCaseExecutionMapKey)
+			case executionsModel.FinishedExecutionsTableAddRemoveChannelRemoveCommand_Flash:
 
-			// Resize the table based on its content
-			ResizeTableColumns(ExecutionsUIObject.FinishedExecutionTable)
+				// Flash the row, to be deleted, in the table
+				tableSizeHight, tableWidth := ExecutionsUIObject.FinishedExecutionTable.Data.Length()
 
-			ExecutionsUIObject.FinishedExecutionTable.Data.Refresh()
+				if tableSizeHight > 0 {
+					for columnCounter := 0; columnCounter < tableWidth; columnCounter++ {
+						CellId := widget.TableCellID{
+							Row: binderSlicePosition,
+							Col: columnCounter,
+						}
+						var flashingTableCellsReference *headertable.FlashingTableCellStruct
+						flashingTableCellsReference = ExecutionsUIObject.FinishedExecutionTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
 
+						// Only call Flash-function when there is a reference, the reason for not having a reference is that Fynes table-engine only process visible table cells
+						if flashingTableCellsReference != nil {
+							headertable.FlashRowToBeRemoved(flashingTableCellsReference)
+						}
+					}
+				}
+
+				// Trigger Delete in parallell
+				go func() {
+					// Wait for color animation to be finished
+					time.Sleep(time.Millisecond * 1000)
+
+					// Create Remove-message to be put on channel
+					var finishedExecutionsTableAddRemoveChannelMessage executionsModel.FinishedExecutionsTableAddRemoveChannelStruct
+					finishedExecutionsTableAddRemoveChannelMessage = executionsModel.FinishedExecutionsTableAddRemoveChannelStruct{
+						ChannelCommand: executionsModel.FinishedExecutionsTableAddRemoveChannelRemoveCommand_Remove,
+						RemoveCommandData: executionsModel.FinishedExecutionsRemoveCommandDataStruct{
+							TestCaseExecutionsFinishedDataRowAdaptedForUiTableReference: testCaseExecutionsFinishedDataRowAdaptedForUiTableReference,
+						},
+					}
+
+					// Put on channel
+					executionsModel.FinishedExecutionsTableAddRemoveChannel <- finishedExecutionsTableAddRemoveChannelMessage
+
+				}()
+
+			case executionsModel.FinishedExecutionsTableAddRemoveChannelRemoveCommand_Remove:
+
+				// Remove the element at index 'binderSlicePosition' from slice.
+				executionsModel.TestCaseExecutionsFinishedExecutionTableOptions.Bindings = remove(executionsModel.TestCaseExecutionsFinishedExecutionTableOptions.Bindings, binderSlicePosition)
+
+				// Delete data from original data adapted for Table
+				delete(executionsModel.TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable, testCaseExecutionMapKey)
+
+				// Resize the table based on its content
+				ResizeTableColumns(ExecutionsUIObject.FinishedExecutionTable)
+
+				ExecutionsUIObject.FinishedExecutionTable.Data.Refresh()
+
+			default:
+				// 'TestCaseExecutionVersion' doesn't exist within data
+				errorId := "45811f04-c4bc-42ca-9739-78470b4a5ccf"
+				err = errors.New(fmt.Sprintf("unknown 'finishedExecutionsTableChannelCommand', '%s', in 'RemoveTestCaseExecutionFromFinishedTable()': '%s' [ErrorID: %s]", finishedExecutionsTableChannelCommand, errorId))
+
+				fmt.Println(err) // TODO Send on Error Channel
+
+				return err
+
+			}
+
+			// End loop
 			break
 		}
 
@@ -122,7 +182,9 @@ func RemoveTestCaseExecutionFromFinishedTable(testCaseExecutionsFinishedDataRowA
 
 }
 
-func MoveTestCaseInstructionExecutionFromUnderExecutionToFinishedExecution(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct, testCaseExecutionDetails *fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage) (err error) {
+// MoveTestCaseExecutionFromUnderExecutionToFinishedExecution
+// Move TestCaseExecution from UnderExecution-table to FinishedExecutions-table
+func MoveTestCaseExecutionFromUnderExecutionToFinishedExecution(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct, testCaseExecutionDetails *fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage) (err error) {
 
 	var existInMap bool
 
@@ -216,7 +278,57 @@ func MoveTestCaseInstructionExecutionFromUnderExecutionToFinishedExecution(testC
 	}
 
 	// Remove the old Execution from UnderExecutions
-	err = RemoveTestCaseExecutionFromUnderExecutionTable(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference)
+	// Create Remove-message to be put on channel
+	var underExecutionTableAddRemoveChannelMessage executionsModel.UnderExecutionTableAddRemoveChannelStruct
+	underExecutionTableAddRemoveChannelMessage = executionsModel.UnderExecutionTableAddRemoveChannelStruct{
+		ChannelCommand: executionsModel.UnderExecutionTableAddRemoveChannelRemoveCommand_Flash,
+		RemoveCommandData: executionsModel.UnderExecutionRemoveCommandDataStruct{
+			TestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference: testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference,
+		},
+	}
+
+	// Put on channel
+	executionsModel.UnderExecutionTableAddRemoveChannel <- underExecutionTableAddRemoveChannelMessage
 
 	return err
+}
+
+// StartFinishedExecutionsTableAddRemoveChannelReader
+// Start the channel reader and process messages from the channel
+func StartFinishedExecutionsTableAddRemoveChannelReader() {
+
+	var incomingFinishedExecutionsTableChannelCommand executionsModel.FinishedExecutionsTableAddRemoveChannelStruct
+	var err error
+
+	for {
+		// Wait for incoming command over channel
+		incomingFinishedExecutionsTableChannelCommand = <-executionsModel.FinishedExecutionsTableAddRemoveChannel
+
+		switch incomingFinishedExecutionsTableChannelCommand.ChannelCommand {
+
+		case executionsModel.FinishedExecutionsTableAddRemoveChannelAddCommand_MoveFromUnderExecutionToFinishedExecutions:
+			MoveTestCaseExecutionFromUnderExecutionToFinishedExecution(
+				incomingFinishedExecutionsTableChannelCommand.AddCommandData.TestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference,
+				incomingFinishedExecutionsTableChannelCommand.AddCommandData.TestCaseExecutionDetails)
+
+		case executionsModel.FinishedExecutionsTableAddRemoveChannelRemoveCommand_Flash:
+			RemoveTestCaseExecutionFromFinishedTable(
+				incomingFinishedExecutionsTableChannelCommand.RemoveCommandData.TestCaseExecutionsFinishedDataRowAdaptedForUiTableReference,
+				executionsModel.FinishedExecutionsTableAddRemoveChannelRemoveCommand_Flash)
+
+		case executionsModel.FinishedExecutionsTableAddRemoveChannelRemoveCommand_Remove:
+			RemoveTestCaseExecutionFromFinishedTable(
+				incomingFinishedExecutionsTableChannelCommand.RemoveCommandData.TestCaseExecutionsFinishedDataRowAdaptedForUiTableReference,
+				executionsModel.FinishedExecutionsTableAddRemoveChannelRemoveCommand_Remove)
+
+		// No other command is supported
+		default:
+
+			errorId := "e6a0ffda-34cf-448e-bc96-6045d0825bc1"
+			err = errors.New(fmt.Sprintf("unknown  'incomingFinishedExecutionsTableChannelCommand', '%s'. [ErrorID: %s]", incomingFinishedExecutionsTableChannelCommand, errorId))
+
+			fmt.Println(err) //TODO Send on Error channel
+
+		}
+	}
 }

@@ -27,4 +27,10 @@ func StartTableAddAndRemoveChannelReaders() {
 	// Start Channel-reader used for Adding and Deleting Execution items in OnQueue-table
 	go StartOnQueueTableAddRemoveChannelReader()
 
+	// Start Channel-reader used for Adding and Deleting Execution items in UnderExecution-table
+	go StartUnderExecutionTableAddRemoveChannelReader()
+
+	// Start Channel-reader used for Adding and Deleting Execution items in FinishedExecutions-table
+	go StartFinishedExecutionsTableAddRemoveChannelReader()
+
 }

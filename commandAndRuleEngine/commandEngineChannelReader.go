@@ -150,7 +150,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 	var onQueueTableAddRemoveChannelMessage executionsModel.OnQueueTableAddRemoveChannelStruct
 	onQueueTableAddRemoveChannelMessage = executionsModel.OnQueueTableAddRemoveChannelStruct{
 		ChannelCommand: executionsModel.OnQueueTableAddRemoveChannelAddCommand_AddAndFlash,
-		AddCommandData: executionsModel.AddCommandDataStruct{
+		AddCommandData: executionsModel.OnQueueAddCommandDataStruct{
 			TestCaseExecutionBasicInformation: initiateSingleTestCaseExecutionResponseMessage.TestCasesInExecutionQueue,
 		},
 	}

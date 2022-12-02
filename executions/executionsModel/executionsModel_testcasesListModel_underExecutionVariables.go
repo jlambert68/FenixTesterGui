@@ -22,21 +22,28 @@ type UnderExecutionTableChannelCommandType uint8
 
 // Enumeration for the channel command
 const (
-	UnderExecutionTableAddRemoveChannelAddCommand UnderExecutionTableChannelCommandType = iota
-	UnderExecutionTableAddRemoveChannelRemoveCommand
+	UnderExecutionTableAddRemoveChannelAddCommand_MoveFromOnQueueToUnderExecution UnderExecutionTableChannelCommandType = iota
+	UnderExecutionTableAddRemoveChannelRemoveCommand_Flash
+	UnderExecutionTableAddRemoveChannelRemoveCommand_Remove
 )
 
 // UnderExecutionTableAddRemoveChannelStruct - The channel message structure
 type UnderExecutionTableAddRemoveChannelStruct struct {
-	ChannelCommand                              UnderExecutionTableChannelCommandType
-	UnderExecutionTableAddRemoveResponseChannel *UnderExecutionTableAddRemoveResponseChannelType
+	ChannelCommand    UnderExecutionTableChannelCommandType
+	AddCommandData    UnderExecutionAddCommandDataStruct
+	RemoveCommandData UnderExecutionRemoveCommandDataStruct
 }
 
-// UnderExecutionTableAddRemoveResponseChannel - Used to signal that Row in UnderExecutionTable-table is Added or Removed
-var UnderExecutionTableAddRemoveResponseChannel UnderExecutionTableAddRemoveResponseChannelType
+// UnderExecutionAddCommandDataStruct -The data used when a row should be added to the UnderExecution-table
+type UnderExecutionAddCommandDataStruct struct {
+	TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *TestCaseExecutionsOnQueueAdaptedForUiTableStruct
+	TestCaseExecutionDetails                                   *fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage
+}
 
-// UnderExecutionTableAddRemoveResponseChannelType - Type for 'UnderExecutionTableAddRemoveResponseChannel'
-type UnderExecutionTableAddRemoveResponseChannelType chan bool
+// UnderExecutionRemoveCommandDataStruct -The data used when a row should be deleted from the UnderExecution-table
+type UnderExecutionRemoveCommandDataStruct struct {
+	TestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
+}
 
 // Object, direct from database, holding TestCaseExecutions that is ongoing and belongs to all or some Domains
 var allTestCaseExecutionsUnderExecution allTestCaseExecutionsOngoingUnderExecutionStruct

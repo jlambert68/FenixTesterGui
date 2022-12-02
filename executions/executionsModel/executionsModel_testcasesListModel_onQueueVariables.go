@@ -29,27 +29,20 @@ const (
 
 // OnQueueTableAddRemoveChannelStruct - The channel message structure
 type OnQueueTableAddRemoveChannelStruct struct {
-	ChannelCommand                       OnQueueTableChannelCommandType
-	OnQueueTableAddRemoveResponseChannel *OnQueueTableAddRemoveResponseChannelType
-	AddCommandData                       AddCommandDataStruct
-	RemoveCommandData                    RemoveCommandDataStruct
+	ChannelCommand    OnQueueTableChannelCommandType
+	AddCommandData    OnQueueAddCommandDataStruct
+	RemoveCommandData OnQueueRemoveCommandDataStruct
 }
 
-// AddCommandDataStruct -The data used when a row should be added to the OnQueue-table
-type AddCommandDataStruct struct {
+// OnQueueAddCommandDataStruct -The data used when a row should be added to the OnQueue-table
+type OnQueueAddCommandDataStruct struct {
 	TestCaseExecutionBasicInformation *fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage
 }
 
-// RemoveCommandDataStruct -The data used when a row should be deleted from the OnQueue-table
-type RemoveCommandDataStruct struct {
+// OnQueueRemoveCommandDataStruct -The data used when a row should be deleted from the OnQueue-table
+type OnQueueRemoveCommandDataStruct struct {
 	TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *TestCaseExecutionsOnQueueAdaptedForUiTableStruct
 }
-
-// OnQueueTableAddRemoveResponseChannel - Used to signal that Row in OnQueueTable-table is Added or Removed
-var OnQueueTableAddRemoveResponseChannel OnQueueTableAddRemoveResponseChannelType
-
-// OnQueueTableAddRemoveResponseChannelType - Type for 'OnQueueTableAddRemoveResponseChannel'
-type OnQueueTableAddRemoveResponseChannelType chan bool
 
 // Object, direct from database,  holding TestCaseExecutions that exists on the TestCaseExecutionQueue and belongs to all or some Domains
 var allTestCaseExecutionsOnQueue allTestCaseExecutionsOnQueueStruct

@@ -130,17 +130,18 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) processTestExecution
 				}
 
 				// Move TestCaseInstructionExecution from OnQueue-table to UnderExecution-table
-				err = executionsUI.MoveTestCaseInstructionExecutionFromOnQueueToUnderExecution(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference, testCaseExecutionStatusMessage.TestCaseExecutionDetails)
-				if err != nil {
-					// There were some error som continue to next item in slice
-					continue
+				// Create finishedExecutionsTableAddRemoveChannelMessage-message to be put on channel
+				var underExecutionTableAddRemoveChannelMessage executionsModel.UnderExecutionTableAddRemoveChannelStruct
+				underExecutionTableAddRemoveChannelMessage = executionsModel.UnderExecutionTableAddRemoveChannelStruct{
+					ChannelCommand: executionsModel.UnderExecutionTableAddRemoveChannelAddCommand_MoveFromOnQueueToUnderExecution,
+					AddCommandData: executionsModel.UnderExecutionAddCommandDataStruct{
+						TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference: testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference,
+						TestCaseExecutionDetails:                                   testCaseExecutionStatusMessage.TestCaseExecutionDetails,
+					},
 				}
 
-				//err = executionsUI.RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference)
-				//if err != nil {
-				// There were some error som continue to next item in slice
-				//	continue
-				//}
+				// Put on channel
+				executionsModel.UnderExecutionTableAddRemoveChannel <- underExecutionTableAddRemoveChannelMessage
 
 			case fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_CONTROLLED_INTERRUPTION,
 				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_CONTROLLED_INTERRUPTION_CAN_BE_RERUN,
@@ -158,7 +159,20 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) processTestExecution
 				}
 
 				// Move TestCaseInstructionExecution from UnderExecution-table to FinishedExecution-table
-				err = executionsUI.MoveTestCaseInstructionExecutionFromUnderExecutionToFinishedExecution(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference, testCaseExecutionStatusMessage.TestCaseExecutionDetails)
+				// Create underExecutionTableAddRemoveChannel-message to be put on channel
+				var finishedExecutionsTableAddRemoveChannelMessage executionsModel.FinishedExecutionsTableAddRemoveChannelStruct
+				finishedExecutionsTableAddRemoveChannelMessage = executionsModel.FinishedExecutionsTableAddRemoveChannelStruct{
+					ChannelCommand: executionsModel.FinishedExecutionsTableAddRemoveChannelAddCommand_MoveFromUnderExecutionToFinishedExecutions,
+					AddCommandData: executionsModel.FinishedExecutionsAddCommandDataStruct{
+						TestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference: testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference,
+						TestCaseExecutionDetails: testCaseExecutionStatusMessage.TestCaseExecutionDetails,
+					},
+				}
+
+				// Put on channel
+				executionsModel.FinishedExecutionsTableAddRemoveChannel <- finishedExecutionsTableAddRemoveChannelMessage
+
+				err = executionsUI.MoveTestCaseExecutionFromUnderExecutionToFinishedExecution(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference, testCaseExecutionStatusMessage.TestCaseExecutionDetails)
 				if err != nil {
 					// There were some error som continue to next item in slice
 					continue

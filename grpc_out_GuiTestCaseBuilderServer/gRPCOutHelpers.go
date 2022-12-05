@@ -54,7 +54,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) setConnectionToFenixGuiTes
 		// Set up connection to Fenix Execution Worker
 		// When run on GCP, use credentials
 		var newGrpcClientConnection *grpc.ClientConn
-		if sharedCode.ExecutionLocationForFenixGuiExecutionServer == sharedCode.GCP {
+		if sharedCode.ExecutionLocationForFenixGuiTestCaseBuilderServer == sharedCode.GCP {
 			// Run on GCP
 			ctx, newGrpcClientConnection = dialFromGrpcurl(ctx, FenixGuiTestCaseBuilderServerAddressToDial)
 			remoteFenixGuiTestCaseBuilderServerConnection = newGrpcClientConnection

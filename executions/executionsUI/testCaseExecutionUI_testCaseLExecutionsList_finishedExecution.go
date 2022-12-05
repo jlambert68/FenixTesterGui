@@ -247,10 +247,10 @@ func MoveTestCaseExecutionFromUnderExecutionToFinishedExecution(testCaseExecutio
 	// Append to map for TestCaseExecutionsFinishedExecution-data used by UI-table
 	executionsModel.TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable[testCaseExecutionMapKey] = testCaseExecutionFinishedExecutionAdaptedForUiTable
 
-	// Add a binding for TestExecutionFinishedExecutionRow data
+	// Add a new binding for TestExecutionFinishedExecutionRow data in the first position of slice
 	executionsModel.TestCaseExecutionsFinishedExecutionTableOptions.Bindings = append(
-		executionsModel.TestCaseExecutionsFinishedExecutionTableOptions.Bindings,
-		binding.BindStruct(testCaseExecutionFinishedExecutionAdaptedForUiTable))
+		[]binding.DataMap{binding.BindStruct(testCaseExecutionFinishedExecutionAdaptedForUiTable)},
+		executionsModel.TestCaseExecutionsFinishedExecutionTableOptions.Bindings...)
 
 	// Resize the table based on its content
 	ResizeTableColumns(ExecutionsUIObject.FinishedExecutionTable)
@@ -264,7 +264,7 @@ func MoveTestCaseExecutionFromUnderExecutionToFinishedExecution(testCaseExecutio
 	if tableSizeHight > 0 {
 		for columnCounter := 0; columnCounter < tableWidth; columnCounter++ {
 			CellId := widget.TableCellID{
-				Row: tableSizeHight - 1,
+				Row: 0,
 				Col: columnCounter,
 			}
 			var flashingTableCellsReference *headertable.FlashingTableCellStruct

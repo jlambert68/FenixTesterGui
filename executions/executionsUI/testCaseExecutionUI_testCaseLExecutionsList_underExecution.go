@@ -258,10 +258,10 @@ func MoveTestCaseExecutionFromOnQueueToUnderExecution(
 	// Append to map for TestCaseExecutionsUnderExecution-data used by UI-table
 	executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[testCaseExecutionMapKey] = testCaseExecutionUnderExecutionAdaptedForUiTable
 
-	// Add a binding for TestExecutionUnderExecutionRow data
+	// Add a new binding for TestExecutionUnderExecutionRow data in the first position of slice
 	executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings = append(
-		executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings,
-		binding.BindStruct(testCaseExecutionUnderExecutionAdaptedForUiTable))
+		[]binding.DataMap{binding.BindStruct(testCaseExecutionUnderExecutionAdaptedForUiTable)},
+		executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings...)
 
 	// Resize the table based on its content
 	ResizeTableColumns(ExecutionsUIObject.UnderExecutionTable)
@@ -275,7 +275,7 @@ func MoveTestCaseExecutionFromOnQueueToUnderExecution(
 	if tableSizeHight > 0 {
 		for columnCounter := 0; columnCounter < tableWidth; columnCounter++ {
 			CellId := widget.TableCellID{
-				Row: tableSizeHight - 1,
+				Row: 0,
 				Col: columnCounter,
 			}
 			var flashingTableCellsReference *headertable.FlashingTableCellStruct

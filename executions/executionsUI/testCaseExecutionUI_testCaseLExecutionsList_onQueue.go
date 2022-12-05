@@ -236,10 +236,10 @@ func AddTestCaseExecutionToOnQueueTable(testCaseExecutionBasicInformation *fenix
 	// Append to map for TestCaseExecutionsOnQueue-data used by UI-table
 	executionsModel.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey] = tempTestCaseExecutionsOnQueueAdaptedForUiTable
 
-	// Add a binding for TestExecutionOnQueueRow data
+	// Add a new binding for TestExecutionOnQueueRow data in the first position of slice
 	executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings = append(
-		executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings,
-		binding.BindStruct(tempTestCaseExecutionsOnQueueAdaptedForUiTable))
+		[]binding.DataMap{binding.BindStruct(tempTestCaseExecutionsOnQueueAdaptedForUiTable)},
+		executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings...)
 
 	// Resize the table based on its content
 	ResizeTableColumns(ExecutionsUIObject.OnQueueTable)
@@ -253,7 +253,7 @@ func AddTestCaseExecutionToOnQueueTable(testCaseExecutionBasicInformation *fenix
 	if tableSizeHight > 0 {
 		for columnCounter := 0; columnCounter < tableWidth; columnCounter++ {
 			CellId := widget.TableCellID{
-				Row: tableSizeHight - 1,
+				Row: 0,
 				Col: columnCounter,
 			}
 			var flashingTableCellsReference *headertable.FlashingTableCellStruct
@@ -284,13 +284,13 @@ func StartOnQueueTableAddRemoveChannelReader() {
 		switch incomingOnQueueTableChannelCommand.ChannelCommand {
 
 		case executionsModel.OnQueueTableAddRemoveChannelAddCommand_AddAndFlash:
-			AddTestCaseExecutionToOnQueueTable(incomingOnQueueTableChannelCommand.AddCommandData.TestCaseExecutionBasicInformation)
+			_ = AddTestCaseExecutionToOnQueueTable(incomingOnQueueTableChannelCommand.AddCommandData.TestCaseExecutionBasicInformation)
 
 		case executionsModel.OnQueueTableAddRemoveChannelRemoveCommand_Flash:
-			RemoveTestCaseExecutionFromOnQueueTable(incomingOnQueueTableChannelCommand.RemoveCommandData.TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference, executionsModel.OnQueueTableAddRemoveChannelRemoveCommand_Flash)
+			_ = RemoveTestCaseExecutionFromOnQueueTable(incomingOnQueueTableChannelCommand.RemoveCommandData.TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference, executionsModel.OnQueueTableAddRemoveChannelRemoveCommand_Flash)
 
 		case executionsModel.OnQueueTableAddRemoveChannelRemoveCommand_Remove:
-			RemoveTestCaseExecutionFromOnQueueTable(incomingOnQueueTableChannelCommand.RemoveCommandData.TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference, executionsModel.OnQueueTableAddRemoveChannelRemoveCommand_Remove)
+			_ = RemoveTestCaseExecutionFromOnQueueTable(incomingOnQueueTableChannelCommand.RemoveCommandData.TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference, executionsModel.OnQueueTableAddRemoveChannelRemoveCommand_Remove)
 
 		// No other command is supported
 		default:

@@ -157,6 +157,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	//fyneApp.Settings().SetTheme(&myTheme{})
 	fyneMasterWindow := uiServer.fyneApp.NewWindow("Fenix TestCase Builder")
 	fyneMasterWindow.SetMaster()
+	fyneMasterWindow.CenterOnScreen()
 
 	/*
 		var w fyne.Window

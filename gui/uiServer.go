@@ -3,8 +3,8 @@ package gui
 import (
 	"FenixTesterGui/commandAndRuleEngine"
 	sharedCode "FenixTesterGui/common_code"
-	"FenixTesterGui/executions/executionsModel"
-	"FenixTesterGui/executions/executionsUI"
+	"FenixTesterGui/executions/executionsModelForSubscriptions"
+	"FenixTesterGui/executions/executionsUIForSubscriptions"
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	"FenixTesterGui/resources"
 	"FenixTesterGui/testCase/testCaseModel"
@@ -238,23 +238,23 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	testCaseSubscriptionHandler.TestCaseExecutionStatusSubscriptionHandlerObject.InitiateTestCaseExecutionStatusSubscriptionHandler()
 
 	// Initiate the channels used when Adding or Removing items to/from OnQueue-table, UnderExecution-table or FinishedExecutions-table
-	executionsModel.InitiateAndStartChannelsUsedByListModel()
+	executionsModelForSubscriptions.InitiateAndStartChannelsUsedByListModel()
 
 	// Start Channel readers for testCases OnQueue, UnderExecutions or Finished Executions
-	executionsUI.StartTableAddAndRemoveChannelReaders()
+	executionsUIForSubscriptions.StartTableAddAndRemoveChannelReaders()
 
 	// Load TestCaseExecutionsOnExecutionQueue
 	var domainsList []string
 	domainsList = nil
-	_ = executionsModel.ExecutionsModelObject.LoadAndCreateModelForTestCasesOnExecutionQueue(domainsList)
+	_ = executionsModelForSubscriptions.ExecutionsModelObject.LoadAndCreateModelForTestCasesOnExecutionQueue(domainsList)
 
 	// Load TestCaseExecutionsUnderExecution
 	domainsList = nil
-	_ = executionsModel.ExecutionsModelObject.LoadAndCreateModelForTestCaseUnderExecutions(domainsList)
+	_ = executionsModelForSubscriptions.ExecutionsModelObject.LoadAndCreateModelForTestCaseUnderExecutions(domainsList)
 
 	// Load TestCaseExecutionsWithFinishedExecutions
 	domainsList = nil
-	_ = executionsModel.ExecutionsModelObject.LoadAndCreateModelForTestCaseWithFinishedExecutions(domainsList)
+	_ = executionsModelForSubscriptions.ExecutionsModelObject.LoadAndCreateModelForTestCaseWithFinishedExecutions(domainsList)
 
 	// Initiate and create the tree structure for available building blocks, of TestInstructions and TestInstructionContainers
 	uiServer.makeTreeUI()
@@ -311,7 +311,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	configContainerGrid := container.New(layout.NewAdaptiveGridLayout(2), sizeContainer, widget.NewLabel("Test"))
 
 	// Generate 'left' Execution Tab, that holds listings for Executions and individual detailed Exececutions
-	executionsUITab := executionsUI.ExecutionsUIObject.GenerateBaseUITabForExecutions() //MySortTable() //CreateTableObject()
+	executionsUITab := executionsUIForSubscriptions.ExecutionsUIObject.GenerateBaseUITabForExecutions() //MySortTable() //CreateTableObject()
 
 	tabs := container.NewAppTabs(
 		container.NewTabItem("TestCases", applicationUI),
@@ -323,19 +323,19 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	tabs.OnSelected = func(tabItem *container.TabItem) {
 		// TODO UGLY Update of page
-		executionsUI.ExecutionsUIObject.OnQueueTable.Header.ScrollToLeading()
-		executionsUI.ExecutionsUIObject.OnQueueTable.Header.Refresh()
-		executionsUI.ExecutionsUIObject.UnderExecutionTable.Header.ScrollToLeading()
-		executionsUI.ExecutionsUIObject.UnderExecutionTable.Header.Refresh()
-		executionsUI.ExecutionsUIObject.FinishedExecutionTable.Header.ScrollToLeading()
-		executionsUI.ExecutionsUIObject.FinishedExecutionTable.Header.Refresh()
+		executionsUIForSubscriptions.ExecutionsUIObject.OnQueueTable.Header.ScrollToLeading()
+		executionsUIForSubscriptions.ExecutionsUIObject.OnQueueTable.Header.Refresh()
+		executionsUIForSubscriptions.ExecutionsUIObject.UnderExecutionTable.Header.ScrollToLeading()
+		executionsUIForSubscriptions.ExecutionsUIObject.UnderExecutionTable.Header.Refresh()
+		executionsUIForSubscriptions.ExecutionsUIObject.FinishedExecutionTable.Header.ScrollToLeading()
+		executionsUIForSubscriptions.ExecutionsUIObject.FinishedExecutionTable.Header.Refresh()
 
-		executionsUI.ExecutionsUIObject.OnQueueTable.Data.ScrollToLeading()
-		executionsUI.ExecutionsUIObject.OnQueueTable.Data.Refresh()
-		executionsUI.ExecutionsUIObject.UnderExecutionTable.Data.ScrollToLeading()
-		executionsUI.ExecutionsUIObject.UnderExecutionTable.Data.Refresh()
-		executionsUI.ExecutionsUIObject.FinishedExecutionTable.Data.ScrollToLeading()
-		executionsUI.ExecutionsUIObject.FinishedExecutionTable.Data.Refresh()
+		executionsUIForSubscriptions.ExecutionsUIObject.OnQueueTable.Data.ScrollToLeading()
+		executionsUIForSubscriptions.ExecutionsUIObject.OnQueueTable.Data.Refresh()
+		executionsUIForSubscriptions.ExecutionsUIObject.UnderExecutionTable.Data.ScrollToLeading()
+		executionsUIForSubscriptions.ExecutionsUIObject.UnderExecutionTable.Data.Refresh()
+		executionsUIForSubscriptions.ExecutionsUIObject.FinishedExecutionTable.Data.ScrollToLeading()
+		executionsUIForSubscriptions.ExecutionsUIObject.FinishedExecutionTable.Data.Refresh()
 	}
 
 	tabs.SetTabLocation(container.TabLocationLeading)

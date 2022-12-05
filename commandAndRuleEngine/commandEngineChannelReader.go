@@ -2,7 +2,7 @@ package commandAndRuleEngine
 
 import (
 	sharedCode "FenixTesterGui/common_code"
-	"FenixTesterGui/executions/executionsModel"
+	"FenixTesterGui/executions/executionsModelForSubscriptions"
 	"FenixTesterGui/grpc_out_GuiExecutionServer"
 	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
@@ -147,16 +147,16 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 
 	// Add TestCaseExecution to Executions-table for TestCaseExecutionOnQueue by send message to channel used to update OnQueue-table
 	// Create Remove-message to be put on channel
-	var onQueueTableAddRemoveChannelMessage executionsModel.OnQueueTableAddRemoveChannelStruct
-	onQueueTableAddRemoveChannelMessage = executionsModel.OnQueueTableAddRemoveChannelStruct{
-		ChannelCommand: executionsModel.OnQueueTableAddRemoveChannelAddCommand_AddAndFlash,
-		AddCommandData: executionsModel.OnQueueAddCommandDataStruct{
+	var onQueueTableAddRemoveChannelMessage executionsModelForSubscriptions.OnQueueTableAddRemoveChannelStruct
+	onQueueTableAddRemoveChannelMessage = executionsModelForSubscriptions.OnQueueTableAddRemoveChannelStruct{
+		ChannelCommand: executionsModelForSubscriptions.OnQueueTableAddRemoveChannelAddCommand_AddAndFlash,
+		AddCommandData: executionsModelForSubscriptions.OnQueueAddCommandDataStruct{
 			TestCaseExecutionBasicInformation: initiateSingleTestCaseExecutionResponseMessage.TestCasesInExecutionQueue,
 		},
 	}
 
 	// Put message on channel
-	executionsModel.OnQueueTableAddRemoveChannel <- onQueueTableAddRemoveChannelMessage
+	executionsModelForSubscriptions.OnQueueTableAddRemoveChannel <- onQueueTableAddRemoveChannelMessage
 
 	fmt.Sprintf("Initiated TestCaseExecution for TestCase: '%s', testCaseUuidToBeExecuted")
 

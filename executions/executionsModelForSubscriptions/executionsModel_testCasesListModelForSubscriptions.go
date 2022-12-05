@@ -1,4 +1,4 @@
-package executionsModel
+package executionsModelForSubscriptions
 
 // Initiate the channels used when Adding or Removing items to/from OnQueue-table, UnderExecution-table or FinishedExecutions-table
 func InitiateAndStartChannelsUsedByListModel() {

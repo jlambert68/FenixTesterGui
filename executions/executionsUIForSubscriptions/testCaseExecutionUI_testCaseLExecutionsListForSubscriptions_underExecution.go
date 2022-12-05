@@ -1,7 +1,7 @@
-package executionsUI
+package executionsUIForSubscriptions
 
 import (
-	"FenixTesterGui/executions/executionsModel"
+	"FenixTesterGui/executions/executionsModelForSubscriptions"
 	"FenixTesterGui/headertable"
 	"errors"
 	"fmt"
@@ -19,23 +19,23 @@ func CreateTableForTestCaseExecutionsUnderExecution() *fyne.Container {
 
 	// Create a binding for each TestExecutionUnderExecutionRow data
 	/*
-		for testDataRowCounter := 0; testDataRowCounter < len(executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable); testDataRowCounter++ {
+		for testDataRowCounter := 0; testDataRowCounter < len(executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable); testDataRowCounter++ {
 			tableForTestCaseExecutionsUnderExecutionBindings = append(
 				tableForTestCaseExecutionsUnderExecutionBindings,
-				binding.BindStruct(&executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[testDataRowCounter]))
+				binding.BindStruct(&executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[testDataRowCounter]))
 		}
 	*/
 
-	for _, tempTestCaseExecutionsUnderExecutionDataAdaptedForUiTableReference := range executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable {
+	for _, tempTestCaseExecutionsUnderExecutionDataAdaptedForUiTableReference := range executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable {
 		tableForTestCaseExecutionsUnderExecutionBindings = append(
 			tableForTestCaseExecutionsUnderExecutionBindings,
 			binding.BindStruct(tempTestCaseExecutionsUnderExecutionDataAdaptedForUiTableReference))
 
 	}
 
-	executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings = tableForTestCaseExecutionsUnderExecutionBindings
+	executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionTableOptions.Bindings = tableForTestCaseExecutionsUnderExecutionBindings
 
-	ht := headertable.NewSortingHeaderTable(&executionsModel.TestCaseExecutionsUnderExecutionTableOptions)
+	ht := headertable.NewSortingHeaderTable(&executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionTableOptions)
 	ExecutionsUIObject.UnderExecutionTable = ht
 
 	mySortTable := container.NewMax(ht)
@@ -47,13 +47,13 @@ func CreateTableForTestCaseExecutionsUnderExecution() *fyne.Container {
 // RemoveTestCaseExecutionFromUnderExecutionTable
 // Remove from both table-slice and from Map that Table-slice got its data from
 func RemoveTestCaseExecutionFromUnderExecutionTable(
-	testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct,
-	underExecutionTableChannelCommand executionsModel.UnderExecutionTableChannelCommandType) (err error) {
+	testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct,
+	underExecutionTableChannelCommand executionsModelForSubscriptions.UnderExecutionTableChannelCommandType) (err error) {
 
 	// Key to map: Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
-	var testCaseExecutionMapKey executionsModel.TestCaseExecutionMapKeyType
+	var testCaseExecutionMapKey executionsModelForSubscriptions.TestCaseExecutionMapKeyType
 
-	testCaseExecutionMapKey = executionsModel.TestCaseExecutionMapKeyType(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseExecutionUuid +
+	testCaseExecutionMapKey = executionsModelForSubscriptions.TestCaseExecutionMapKeyType(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseExecutionUuid +
 		testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseExecutionVersion)
 
 	var tempTestCaseExecutionUuidDataItem binding.DataItem
@@ -62,10 +62,10 @@ func RemoveTestCaseExecutionFromUnderExecutionTable(
 	var tempTestCaseExecutionVersionFromDataItemValue string
 
 	// Loop all binding data and find the one to be removed
-	for binderSlicePosition, tempTestCaseExecutionsUnderExecutionDataRowBinding := range executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings {
+	for binderSlicePosition, tempTestCaseExecutionsUnderExecutionDataRowBinding := range executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionTableOptions.Bindings {
 		fmt.Println(tempTestCaseExecutionsUnderExecutionDataRowBinding)
 
-		dataMapBinding := executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings[binderSlicePosition]
+		dataMapBinding := executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionTableOptions.Bindings[binderSlicePosition]
 
 		// Extract first part if MapKey from 'Binded data'
 		tempTestCaseExecutionUuidDataItem, err = dataMapBinding.GetItem("TestCaseExecutionUuid")
@@ -117,7 +117,7 @@ func RemoveTestCaseExecutionFromUnderExecutionTable(
 			// Depending on channel command, act differently
 			switch underExecutionTableChannelCommand {
 
-			case executionsModel.UnderExecutionTableAddRemoveChannelRemoveCommand_Flash:
+			case executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelRemoveCommand_Flash:
 
 				// Flash the row, to be deleted, in the table
 				tableSizeHight, tableWidth := ExecutionsUIObject.UnderExecutionTable.Data.Length()
@@ -144,26 +144,26 @@ func RemoveTestCaseExecutionFromUnderExecutionTable(
 					time.Sleep(time.Millisecond * 1000)
 
 					// Create Remove-message to be put on channel
-					var underExecutionTableAddRemoveChannelMessage executionsModel.UnderExecutionTableAddRemoveChannelStruct
-					underExecutionTableAddRemoveChannelMessage = executionsModel.UnderExecutionTableAddRemoveChannelStruct{
-						ChannelCommand: executionsModel.UnderExecutionTableAddRemoveChannelRemoveCommand_Remove,
-						RemoveCommandData: executionsModel.UnderExecutionRemoveCommandDataStruct{
+					var underExecutionTableAddRemoveChannelMessage executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelStruct
+					underExecutionTableAddRemoveChannelMessage = executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelStruct{
+						ChannelCommand: executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelRemoveCommand_Remove,
+						RemoveCommandData: executionsModelForSubscriptions.UnderExecutionRemoveCommandDataStruct{
 							TestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference: testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference,
 						},
 					}
 
 					// Put on channel
-					executionsModel.UnderExecutionTableAddRemoveChannel <- underExecutionTableAddRemoveChannelMessage
+					executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannel <- underExecutionTableAddRemoveChannelMessage
 
 				}()
 
-			case executionsModel.UnderExecutionTableAddRemoveChannelRemoveCommand_Remove:
+			case executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelRemoveCommand_Remove:
 
 				// Remove the element at index 'binderSlicePosition' from slice.
-				executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings = remove(executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings, binderSlicePosition)
+				executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionTableOptions.Bindings = remove(executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionTableOptions.Bindings, binderSlicePosition)
 
 				// Delete data from original data adapted for Table
-				delete(executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable, testCaseExecutionMapKey)
+				delete(executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable, testCaseExecutionMapKey)
 
 				// Resize the table based on its content
 				ResizeTableColumns(ExecutionsUIObject.UnderExecutionTable)
@@ -194,20 +194,20 @@ func RemoveTestCaseExecutionFromUnderExecutionTable(
 // MoveTestCaseExecutionFromOnQueueToUnderExecution
 // Move TestCaseExecution from OnQueue-table to UnderExecution-table
 func MoveTestCaseExecutionFromOnQueueToUnderExecution(
-	testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTableStruct,
+	testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *executionsModelForSubscriptions.TestCaseExecutionsOnQueueAdaptedForUiTableStruct,
 	testCaseExecutionDetails *fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage) (err error) {
 
 	var existInMap bool
 
 	// Key to map: Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
-	var testCaseExecutionMapKey executionsModel.TestCaseExecutionMapKeyType
+	var testCaseExecutionMapKey executionsModelForSubscriptions.TestCaseExecutionMapKeyType
 
-	testCaseExecutionMapKey = executionsModel.TestCaseExecutionMapKeyType(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestCaseExecutionUuid +
+	testCaseExecutionMapKey = executionsModelForSubscriptions.TestCaseExecutionMapKeyType(testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestCaseExecutionUuid +
 		testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestCaseExecutionVersion)
 
 	// Extract OnQueueData to be moved to UnderExecution
-	var tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTableStruct
-	tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference, existInMap = executionsModel.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey]
+	var tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *executionsModelForSubscriptions.TestCaseExecutionsOnQueueAdaptedForUiTableStruct
+	tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference, existInMap = executionsModelForSubscriptions.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey]
 
 	if existInMap == false {
 
@@ -220,8 +220,8 @@ func MoveTestCaseExecutionFromOnQueueToUnderExecution(
 	}
 
 	//Create the new object to be added to UnderExecution-table
-	var testCaseExecutionUnderExecutionAdaptedForUiTable *executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
-	testCaseExecutionUnderExecutionAdaptedForUiTable = &executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct{
+	var testCaseExecutionUnderExecutionAdaptedForUiTable *executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
+	testCaseExecutionUnderExecutionAdaptedForUiTable = &executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct{
 		DomainUuid:                          tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.DomainUuid,
 		DomainName:                          tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.DomainName,
 		TestSuiteUuid:                       tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestSuiteUuid,
@@ -244,7 +244,7 @@ func MoveTestCaseExecutionFromOnQueueToUnderExecution(
 	}
 
 	// if 'testCaseExecutionMapKey' already exist in TestCaseExecutionsUnderExecutionMapAdaptedForUiTable''
-	_, existInMap = executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[testCaseExecutionMapKey]
+	_, existInMap = executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[testCaseExecutionMapKey]
 	if existInMap == true {
 
 		errorId := "3177ff88-46f5-4572-b722-ac541c761a64"
@@ -256,12 +256,12 @@ func MoveTestCaseExecutionFromOnQueueToUnderExecution(
 	}
 
 	// Append to map for TestCaseExecutionsUnderExecution-data used by UI-table
-	executionsModel.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[testCaseExecutionMapKey] = testCaseExecutionUnderExecutionAdaptedForUiTable
+	executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[testCaseExecutionMapKey] = testCaseExecutionUnderExecutionAdaptedForUiTable
 
 	// Add a new binding for TestExecutionUnderExecutionRow data in the first position of slice
-	executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings = append(
+	executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionTableOptions.Bindings = append(
 		[]binding.DataMap{binding.BindStruct(testCaseExecutionUnderExecutionAdaptedForUiTable)},
-		executionsModel.TestCaseExecutionsUnderExecutionTableOptions.Bindings...)
+		executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionTableOptions.Bindings...)
 
 	// Resize the table based on its content
 	ResizeTableColumns(ExecutionsUIObject.UnderExecutionTable)
@@ -290,15 +290,15 @@ func MoveTestCaseExecutionFromOnQueueToUnderExecution(
 
 	// Remove the old Execution from OnQueue
 	// Create Remove-message to be put on channel
-	var onQueueTableAddRemoveChannelMessage executionsModel.OnQueueTableAddRemoveChannelStruct
-	onQueueTableAddRemoveChannelMessage = executionsModel.OnQueueTableAddRemoveChannelStruct{
-		ChannelCommand: executionsModel.OnQueueTableAddRemoveChannelRemoveCommand_Flash,
-		RemoveCommandData: executionsModel.OnQueueRemoveCommandDataStruct{
+	var onQueueTableAddRemoveChannelMessage executionsModelForSubscriptions.OnQueueTableAddRemoveChannelStruct
+	onQueueTableAddRemoveChannelMessage = executionsModelForSubscriptions.OnQueueTableAddRemoveChannelStruct{
+		ChannelCommand: executionsModelForSubscriptions.OnQueueTableAddRemoveChannelRemoveCommand_Flash,
+		RemoveCommandData: executionsModelForSubscriptions.OnQueueRemoveCommandDataStruct{
 			TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference: testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference},
 	}
 
 	// Put on channel
-	executionsModel.OnQueueTableAddRemoveChannel <- onQueueTableAddRemoveChannelMessage
+	executionsModelForSubscriptions.OnQueueTableAddRemoveChannel <- onQueueTableAddRemoveChannelMessage
 
 	return err
 }
@@ -309,8 +309,8 @@ func AddTestCaseExecutionUnderExecutionTable(testCaseExecutionBasicInformation *
 		return err
 	}
 	// Convert 'raw' TestCaseExecutionsOnQueue-data into format to be used in UI
-	var tempTestCaseExecutionsOnQueueAdaptedForUiTable *executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTableStruct
-	tempTestCaseExecutionsOnQueueAdaptedForUiTable = &executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTableStruct{
+	var tempTestCaseExecutionsOnQueueAdaptedForUiTable *executionsModelForSubscriptions.TestCaseExecutionsOnQueueAdaptedForUiTableStruct
+	tempTestCaseExecutionsOnQueueAdaptedForUiTable = &executionsModelForSubscriptions.TestCaseExecutionsOnQueueAdaptedForUiTableStruct{
 		DomainUuid:                          testCaseExecutionBasicInformation.DomainUuid,
 		DomainName:                          testCaseExecutionBasicInformation.DomainName,
 		TestSuiteUuid:                       testCaseExecutionBasicInformation.TestSuiteUuid,
@@ -329,13 +329,13 @@ func AddTestCaseExecutionUnderExecutionTable(testCaseExecutionBasicInformation *
 
 	// Verify that key is not already used in map
 	// Key to map: Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
-	var testCaseExecutionMapKey executionsModel.TestCaseExecutionMapKeyType
+	var testCaseExecutionMapKey executionsModelForSubscriptions.TestCaseExecutionMapKeyType
 
-	testCaseExecutionMapKey = executionsModel.TestCaseExecutionMapKeyType(tempTestCaseExecutionsOnQueueAdaptedForUiTable.TestCaseExecutionUuid +
+	testCaseExecutionMapKey = executionsModelForSubscriptions.TestCaseExecutionMapKeyType(tempTestCaseExecutionsOnQueueAdaptedForUiTable.TestCaseExecutionUuid +
 		tempTestCaseExecutionsOnQueueAdaptedForUiTable.TestCaseExecutionVersion)
 
 	var existInMap bool
-	_, existInMap = executionsModel.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey]
+	_, existInMap = executionsModelForSubscriptions.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey]
 	if existInMap == true {
 
 		errorId := "c51f60c4-2f27-495d-8e5e-0be0900dad03"
@@ -347,11 +347,11 @@ func AddTestCaseExecutionUnderExecutionTable(testCaseExecutionBasicInformation *
 	}
 
 	// Append to map for TestCaseExecutionsUnderExecution-data used by UI-table
-	executionsModel.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey] = tempTestCaseExecutionsOnQueueAdaptedForUiTable
+	executionsModelForSubscriptions.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey] = tempTestCaseExecutionsOnQueueAdaptedForUiTable
 
 	// Add a binding for TestExecutionOnQueueRow data
-	executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings = append(
-		executionsModel.TestCaseExecutionsOnQueueTableOptions.Bindings,
+	executionsModelForSubscriptions.TestCaseExecutionsOnQueueTableOptions.Bindings = append(
+		executionsModelForSubscriptions.TestCaseExecutionsOnQueueTableOptions.Bindings,
 		binding.BindStruct(tempTestCaseExecutionsOnQueueAdaptedForUiTable))
 
 	// Update TestCaseExecutionOnQueue-table
@@ -365,29 +365,29 @@ func AddTestCaseExecutionUnderExecutionTable(testCaseExecutionBasicInformation *
 // Start the channel reader and process messages from the channel
 func StartUnderExecutionTableAddRemoveChannelReader() {
 
-	var incomingUnderExecutionTableChannelCommand executionsModel.UnderExecutionTableAddRemoveChannelStruct
+	var incomingUnderExecutionTableChannelCommand executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelStruct
 	var err error
 
 	for {
 		// Wait for incoming command over channel
-		incomingUnderExecutionTableChannelCommand = <-executionsModel.UnderExecutionTableAddRemoveChannel
+		incomingUnderExecutionTableChannelCommand = <-executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannel
 
 		switch incomingUnderExecutionTableChannelCommand.ChannelCommand {
 
-		case executionsModel.UnderExecutionTableAddRemoveChannelAddCommand_MoveFromOnQueueToUnderExecution:
+		case executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelAddCommand_MoveFromOnQueueToUnderExecution:
 			MoveTestCaseExecutionFromOnQueueToUnderExecution(
 				incomingUnderExecutionTableChannelCommand.AddCommandData.TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference,
 				incomingUnderExecutionTableChannelCommand.AddCommandData.TestCaseExecutionDetails)
 
-		case executionsModel.UnderExecutionTableAddRemoveChannelRemoveCommand_Flash:
+		case executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelRemoveCommand_Flash:
 			RemoveTestCaseExecutionFromUnderExecutionTable(
 				incomingUnderExecutionTableChannelCommand.RemoveCommandData.TestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference,
-				executionsModel.UnderExecutionTableAddRemoveChannelRemoveCommand_Flash)
+				executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelRemoveCommand_Flash)
 
-		case executionsModel.UnderExecutionTableAddRemoveChannelRemoveCommand_Remove:
+		case executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelRemoveCommand_Remove:
 			RemoveTestCaseExecutionFromUnderExecutionTable(
 				incomingUnderExecutionTableChannelCommand.RemoveCommandData.TestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference,
-				executionsModel.UnderExecutionTableAddRemoveChannelRemoveCommand_Remove)
+				executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelRemoveCommand_Remove)
 
 		// No other command is supported
 		default:

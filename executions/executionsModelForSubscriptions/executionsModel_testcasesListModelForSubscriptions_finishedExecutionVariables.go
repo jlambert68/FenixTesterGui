@@ -1,4 +1,4 @@
-package executionsModel
+package executionsModelForSubscriptions
 
 import (
 	"FenixTesterGui/headertable"
@@ -7,64 +7,64 @@ import (
 	"time"
 )
 
-// MaximumNumberOfItemsForUnderExecutionTableAddRemoveChannel - Maximum number of items that can be put on Channel before they
+// MaximumNumberOfItemsForFinishedExecutionsTableAddRemoveChannel - Maximum number of items that can be put on Channel before they
 // needed to read out of channel
-const MaximumNumberOfItemsForUnderExecutionTableAddRemoveChannel = 100
+const MaximumNumberOfItemsForFinishedExecutionsTableAddRemoveChannel = 100
 
-// UnderExecutionTableAddRemoveChannel - Used to secure that Add and Remove don't conflict
-var UnderExecutionTableAddRemoveChannel UnderExecutionTableAddRemoveChannelType
+// FinishedExecutionsTableAddRemoveChannel - Used to secure that Add and Remove don't conflict
+var FinishedExecutionsTableAddRemoveChannel FinishedExecutionsTableAddRemoveChannelType
 
-// UnderExecutionTableAddRemoveChannelType - Type for 'UnderExecutionTableAddRemoveChannel'
-type UnderExecutionTableAddRemoveChannelType chan UnderExecutionTableAddRemoveChannelStruct
+// FinishedExecutionsTableAddRemoveChannelType - Type for 'FinishedExecutionsTableAddRemoveChannel'
+type FinishedExecutionsTableAddRemoveChannelType chan FinishedExecutionsTableAddRemoveChannelStruct
 
-// UnderExecutionTableChannelCommandType - Type for the channelCommand enumeration
-type UnderExecutionTableChannelCommandType uint8
+// FinishedExecutionsTableChannelCommandType - Type for the channelCommand enumeration
+type FinishedExecutionsTableChannelCommandType uint8
 
 // Enumeration for the channel command
 const (
-	UnderExecutionTableAddRemoveChannelAddCommand_MoveFromOnQueueToUnderExecution UnderExecutionTableChannelCommandType = iota
-	UnderExecutionTableAddRemoveChannelRemoveCommand_Flash
-	UnderExecutionTableAddRemoveChannelRemoveCommand_Remove
+	FinishedExecutionsTableAddRemoveChannelAddCommand_MoveFromUnderExecutionToFinishedExecutions FinishedExecutionsTableChannelCommandType = iota
+	FinishedExecutionsTableAddRemoveChannelRemoveCommand_Flash
+	FinishedExecutionsTableAddRemoveChannelRemoveCommand_Remove
 )
 
-// UnderExecutionTableAddRemoveChannelStruct - The channel message structure
-type UnderExecutionTableAddRemoveChannelStruct struct {
-	ChannelCommand    UnderExecutionTableChannelCommandType
-	AddCommandData    UnderExecutionAddCommandDataStruct
-	RemoveCommandData UnderExecutionRemoveCommandDataStruct
+// FinishedExecutionsTableAddRemoveChannelStruct - The channel message structure
+type FinishedExecutionsTableAddRemoveChannelStruct struct {
+	ChannelCommand    FinishedExecutionsTableChannelCommandType
+	AddCommandData    FinishedExecutionsAddCommandDataStruct
+	RemoveCommandData FinishedExecutionsRemoveCommandDataStruct
 }
 
-// UnderExecutionAddCommandDataStruct -The data used when a row should be added to the UnderExecution-table
-type UnderExecutionAddCommandDataStruct struct {
-	TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *TestCaseExecutionsOnQueueAdaptedForUiTableStruct
-	TestCaseExecutionDetails                                   *fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage
-}
-
-// UnderExecutionRemoveCommandDataStruct -The data used when a row should be deleted from the UnderExecution-table
-type UnderExecutionRemoveCommandDataStruct struct {
+// FinishedExecutionsAddCommandDataStruct -The data used when a row should be added to the FinishedExecutions-table
+type FinishedExecutionsAddCommandDataStruct struct {
 	TestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
+	TestCaseExecutionDetails                                          *fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage
+}
+
+// FinishedExecutionsRemoveCommandDataStruct -The data used when a row should be deleted from the FinishedExecutions-table
+type FinishedExecutionsRemoveCommandDataStruct struct {
+	TestCaseExecutionsFinishedDataRowAdaptedForUiTableReference *TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct
 }
 
 // Object, direct from database, holding TestCaseExecutions that is ongoing and belongs to all or some Domains
-var allTestCaseExecutionsUnderExecution allTestCaseExecutionsOngoingUnderExecutionStruct
+var allTestCaseExecutionsFinishedExecution allTestCaseExecutionsOngoingFinishedExecutionStruct
 
-type allTestCaseExecutionsOngoingUnderExecutionStruct struct {
+type allTestCaseExecutionsOngoingFinishedExecutionStruct struct {
 	databaseReadTimeStamp                   time.Time
 	testCaseExecutionsBelongsToTheseDomains []string // When empty then there are no restrictions
-	testCaseExecutionsUnderExecution        []*fenixExecutionServerGuiGrpcApi.TestCaseUnderExecutionMessage
+	testCaseExecutionsFinishedExecution     []*fenixExecutionServerGuiGrpcApi.TestCaseWithFinishedExecutionMessage
 }
 
-// AllTestCaseExecutionsUnderExecutionModel
+// AllTestCaseExecutionsFinishedExecutionModel
 // Object model for TestCaseExecutions that is ongoing and belongs to all or some Domains
-var AllTestCaseExecutionsUnderExecutionModel map[TestCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseUnderExecutionMessage
+var AllTestCaseExecutionsFinishedExecutionModel map[TestCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseWithFinishedExecutionMessage
 
-// TestCaseExecutionsUnderExecutionMapAdaptedForUiTable
-// Object holding the testdata to be shown in UI regarding which TestCaseExecutions that is UnderExecution
-var TestCaseExecutionsUnderExecutionMapAdaptedForUiTable map[TestCaseExecutionMapKeyType]*TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
+// TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable
+// Object holding the testdata to be shown in UI regarding which TestCaseExecutions that is FinishedExecution
+var TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable map[TestCaseExecutionMapKeyType]*TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct
 
-// TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
+// TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct
 // Type for holding one row of data
-type TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct struct {
+type TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct struct {
 	//TestCaseExecutionBasicInformation
 	DomainUuid                          string // The Domain, UUID, where the TestCase 'has its home'
 	DomainName                          string // The Domain, Name, where the TestCase 'has its home'
@@ -89,11 +89,11 @@ type TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct struct {
 	ExecutionStatusUpdateTimeStamp string // The timestamp when the status was last updated
 }
 
-// TestCaseExecutionsUnderExecutionTableOptions
-// Defines the structure, and column order, for TestCaseExecutions-UnderExecution-Table
-var TestCaseExecutionsUnderExecutionTableOptions = headertable.TableOpts{
+// TestCaseExecutionsFinishedExecutionTableOptions
+// Defines the structure, and column order, for TestCaseExecutions-FinishedExecution-Table
+var TestCaseExecutionsFinishedExecutionTableOptions = headertable.TableOpts{
 	RefWidth:    "reference width",
-	HeaderLabel: "TestExecutions under Execution",
+	HeaderLabel: "TestExecutions that are finished",
 	ColAttrs: []headertable.ColAttr{
 		{
 			Name:         "DomainUuid",

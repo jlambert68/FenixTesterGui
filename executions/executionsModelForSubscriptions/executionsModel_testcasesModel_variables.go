@@ -1,4 +1,4 @@
-package executionsModel
+package executionsModelForSubscriptions
 
 // ExecutionsModelObjectStruct - struct to object that hold all parts to of TestCaseExecution-model together
 type ExecutionsModelObjectStruct struct {

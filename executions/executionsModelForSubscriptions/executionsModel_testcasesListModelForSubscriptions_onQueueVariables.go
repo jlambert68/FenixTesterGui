@@ -1,4 +1,4 @@
-package executionsModel
+package executionsModelForSubscriptions
 
 import (
 	"FenixTesterGui/headertable"

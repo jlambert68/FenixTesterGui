@@ -1,10 +1,10 @@
-package executionsUI
+package executionsUIForSubscriptions
 
 import (
 	"fyne.io/fyne/v2"
 )
 
-func (executionsUIObject *ExecutionsUIModelStruct) CreateExecutionsListTabPage() (executionsListTabPage *fyne.Container) {
+func (executionsUIObject *ExecutionsUIModelStruct) CreateExecutionsListTabPageForSubsacriptions() (executionsListTabPage *fyne.Container) {
 
 	onQueueTableObject := CreateTableForTestCaseExecutionsOnQueue()
 	underExecutionTableObject := CreateTableForTestCaseExecutionsUnderExecution()

@@ -1,4 +1,4 @@
-package executionsUI
+package executionsUIForSubscriptions
 
 import (
 	sharedCode "FenixTesterGui/common_code"

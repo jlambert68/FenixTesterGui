@@ -2,8 +2,8 @@ package messageStreamEngine
 
 import (
 	sharedCode "FenixTesterGui/common_code"
-	"FenixTesterGui/executions/executionsModel"
-	"FenixTesterGui/executions/executionsUI"
+	"FenixTesterGui/executions/executionsModelForSubscriptions"
+	"FenixTesterGui/executions/executionsUIForSubscriptions"
 	"errors"
 	"fmt"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
@@ -123,25 +123,25 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) processTestExecution
 				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_EXECUTING:
 
 				// Remove TestCaseInstructionExecution to OnQueue-table
-				var testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTableStruct
-				testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference = &executionsModel.TestCaseExecutionsOnQueueAdaptedForUiTableStruct{
+				var testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *executionsModelForSubscriptions.TestCaseExecutionsOnQueueAdaptedForUiTableStruct
+				testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference = &executionsModelForSubscriptions.TestCaseExecutionsOnQueueAdaptedForUiTableStruct{
 					TestCaseExecutionUuid:    testCaseExecutionStatusMessage.TestCaseExecutionUuid,
 					TestCaseExecutionVersion: testCaseExecutionVersionAsString,
 				}
 
 				// Move TestCaseInstructionExecution from OnQueue-table to UnderExecution-table
 				// Create finishedExecutionsTableAddRemoveChannelMessage-message to be put on channel
-				var underExecutionTableAddRemoveChannelMessage executionsModel.UnderExecutionTableAddRemoveChannelStruct
-				underExecutionTableAddRemoveChannelMessage = executionsModel.UnderExecutionTableAddRemoveChannelStruct{
-					ChannelCommand: executionsModel.UnderExecutionTableAddRemoveChannelAddCommand_MoveFromOnQueueToUnderExecution,
-					AddCommandData: executionsModel.UnderExecutionAddCommandDataStruct{
+				var underExecutionTableAddRemoveChannelMessage executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelStruct
+				underExecutionTableAddRemoveChannelMessage = executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelStruct{
+					ChannelCommand: executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelAddCommand_MoveFromOnQueueToUnderExecution,
+					AddCommandData: executionsModelForSubscriptions.UnderExecutionAddCommandDataStruct{
 						TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference: testCaseExecutionsOnQueueDataRowAdaptedForUiTableReference,
 						TestCaseExecutionDetails:                                   testCaseExecutionStatusMessage.TestCaseExecutionDetails,
 					},
 				}
 
 				// Put on channel
-				executionsModel.UnderExecutionTableAddRemoveChannel <- underExecutionTableAddRemoveChannelMessage
+				executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannel <- underExecutionTableAddRemoveChannelMessage
 
 			case fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_CONTROLLED_INTERRUPTION,
 				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_CONTROLLED_INTERRUPTION_CAN_BE_RERUN,
@@ -152,33 +152,33 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) processTestExecution
 				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_UNEXPECTED_INTERRUPTION,
 				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_UNEXPECTED_INTERRUPTION_CAN_BE_RERUN:
 				// Remove TestCaseInstructionExecution to UnderExecution-table
-				var testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
-				testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference = &executionsModel.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct{
+				var testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
+				testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference = &executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct{
 					TestCaseExecutionUuid:    testCaseExecutionStatusMessage.TestCaseExecutionUuid,
 					TestCaseExecutionVersion: testCaseExecutionVersionAsString,
 				}
 
 				// Move TestCaseInstructionExecution from UnderExecution-table to FinishedExecution-table
 				// Create underExecutionTableAddRemoveChannel-message to be put on channel
-				var finishedExecutionsTableAddRemoveChannelMessage executionsModel.FinishedExecutionsTableAddRemoveChannelStruct
-				finishedExecutionsTableAddRemoveChannelMessage = executionsModel.FinishedExecutionsTableAddRemoveChannelStruct{
-					ChannelCommand: executionsModel.FinishedExecutionsTableAddRemoveChannelAddCommand_MoveFromUnderExecutionToFinishedExecutions,
-					AddCommandData: executionsModel.FinishedExecutionsAddCommandDataStruct{
+				var finishedExecutionsTableAddRemoveChannelMessage executionsModelForSubscriptions.FinishedExecutionsTableAddRemoveChannelStruct
+				finishedExecutionsTableAddRemoveChannelMessage = executionsModelForSubscriptions.FinishedExecutionsTableAddRemoveChannelStruct{
+					ChannelCommand: executionsModelForSubscriptions.FinishedExecutionsTableAddRemoveChannelAddCommand_MoveFromUnderExecutionToFinishedExecutions,
+					AddCommandData: executionsModelForSubscriptions.FinishedExecutionsAddCommandDataStruct{
 						TestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference: testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference,
 						TestCaseExecutionDetails: testCaseExecutionStatusMessage.TestCaseExecutionDetails,
 					},
 				}
 
 				// Put on channel
-				executionsModel.FinishedExecutionsTableAddRemoveChannel <- finishedExecutionsTableAddRemoveChannelMessage
+				executionsModelForSubscriptions.FinishedExecutionsTableAddRemoveChannel <- finishedExecutionsTableAddRemoveChannelMessage
 
-				err = executionsUI.MoveTestCaseExecutionFromUnderExecutionToFinishedExecution(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference, testCaseExecutionStatusMessage.TestCaseExecutionDetails)
+				err = executionsUIForSubscriptions.MoveTestCaseExecutionFromUnderExecutionToFinishedExecution(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference, testCaseExecutionStatusMessage.TestCaseExecutionDetails)
 				if err != nil {
 					// There were some error som continue to next item in slice
 					continue
 				}
 
-				//err = executionsUI.RemoveTestCaseExecutionFromUnderExecutionTable(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference)
+				//err = executionsUIForSubscriptions.RemoveTestCaseExecutionFromUnderExecutionTable(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference)
 				//if err != nil {
 				// There were some error som continue to next item in slice
 				//	continue

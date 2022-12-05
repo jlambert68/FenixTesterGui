@@ -1,4 +1,4 @@
-package executionsUI
+package executionsUIForSubscriptions
 
 import (
 	"fyne.io/fyne/v2"

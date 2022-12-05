@@ -1,4 +1,4 @@
-package executionsUI
+package executionsUIForSubscriptions
 
 import (
 	"fmt"
@@ -28,7 +28,7 @@ func (executionsUIObject *ExecutionsUIModelStruct) GenerateBaseUITabForExecution
 
 	// Generate TestCaseExecutions page
 	var testCaseExecutionsTabPage *fyne.Container
-	testCaseExecutionsTabPage = executionsUIObject.CreateExecutionsListTabPage()
+	testCaseExecutionsTabPage = executionsUIObject.CreateExecutionsListTabPageForSubsacriptions()
 
 	/*
 		// Create The Tab-object, where each TestCase will have its own Tab

@@ -42,7 +42,7 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 
 	// Save loaded data
 	allTestCaseExecutionsOnQueue = allTestCaseExecutionsOnQueueStruct{
-		databaseReadTimeStamp:                   time.Now(),
+		databaseReadTimeStamp:                   time.Now().UTC(),
 		testCaseExecutionsBelongsToTheseDomains: domainsToInclude,
 		testCaseExecutionsOnQueue:               listTestCasesInExecutionQueueResponse.TestCasesInExecutionQueue,
 	}

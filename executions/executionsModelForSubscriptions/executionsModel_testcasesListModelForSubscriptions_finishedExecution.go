@@ -42,7 +42,7 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 
 	// Save loaded data
 	allTestCaseExecutionsFinishedExecution = allTestCaseExecutionsOngoingFinishedExecutionStruct{
-		databaseReadTimeStamp:                   time.Now(),
+		databaseReadTimeStamp:                   time.Now().UTC(),
 		testCaseExecutionsBelongsToTheseDomains: domainsToInclude,
 		testCaseExecutionsFinishedExecution:     listTestCasesWithFinishedExecutionsResponse.TestCaseWithFinishedExecution,
 	}

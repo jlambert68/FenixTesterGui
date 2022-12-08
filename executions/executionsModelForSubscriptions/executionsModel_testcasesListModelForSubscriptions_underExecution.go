@@ -42,7 +42,7 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 
 	// Save loaded data
 	allTestCaseExecutionsUnderExecution = allTestCaseExecutionsOngoingUnderExecutionStruct{
-		databaseReadTimeStamp:                   time.Now(),
+		databaseReadTimeStamp:                   time.Now().UTC(),
 		testCaseExecutionsBelongsToTheseDomains: domainsToInclude,
 		testCaseExecutionsUnderExecution:        listTestCasesUnderExecutionResponse.TestCasesUnderExecution,
 	}

@@ -200,6 +200,8 @@ func MoveTestCaseExecutionFromUnderExecutionToFinishedExecution(testCaseExecutio
 
 	if existInMap == false {
 
+		Lägg till att man kolla i Queued executions table
+
 		errorId := "7433e805-5687-483c-9e5d-4dd5d5f5d0b7"
 		err = errors.New(fmt.Sprintf("'testCaseExecutionMapKey', '%s' doesn't exist in TestCaseExecutionsOnQueueMapAdaptedForUiTable [ErrorID: %s]", testCaseExecutionMapKey, errorId))
 

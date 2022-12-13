@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-//Channel reader which is used for reading out Status messages that is sent from GuiExecutionServer
+// Channel reader which is used for reading out Status messages that is sent from GuiExecutionServer
 func (messageStreamEngineObject *MessageStreamEngineStruct) startCommandChannelReader() {
 
 	var incomingChannelCommandAndMessage ChannelCommandStruct
@@ -26,7 +26,7 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) startCommandChannelR
 		currentChannelSize = int32(len(executionStatusCommandChannel))
 		if currentChannelSize > messageChannelMaxSize-10 {
 			sharedCode.Logger.WithFields(logrus.Fields{
-				"ID":                    "b4164d7a-a485-411d-ad18-feb50ed98566",
+				"ID":                    "e44b6639-fcd5-44fb-b839-266f4bc845e4",
 				"currentChannelSize":    currentChannelSize,
 				"messageChannelMaxSize": messageChannelMaxSize,
 			}).Error("Number of messages on 'executionStatusCommandChannel' is close to its maximum")
@@ -150,7 +150,10 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) processTestExecution
 				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_FINISHED_NOT_OK,
 				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_FINISHED_NOT_OK_CAN_BE_RERUN,
 				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_UNEXPECTED_INTERRUPTION,
-				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_UNEXPECTED_INTERRUPTION_CAN_BE_RERUN:
+				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_UNEXPECTED_INTERRUPTION_CAN_BE_RERUN,
+				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_TIMEOUT_INTERRUPTION,
+				fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_TIMEOUT_INTERRUPTION_CAN_BE_RERUN:
+
 				// Remove TestCaseInstructionExecution to UnderExecution-table
 				var testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
 				testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference = &executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct{

@@ -214,25 +214,48 @@ func AddTestCaseExecutionToOnQueueTable(testCaseExecutionBasicInformation *fenix
 		ExecutionPriority:                   fenixExecutionServerGuiGrpcApi.ExecutionPriorityEnum_name[int32(testCaseExecutionBasicInformation.ExecutionPriority)],
 	}
 
-	// Verify that key is not already used in map
+	// Verify that key is not already used in map.
 	// Key to map: Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
 	var testCaseExecutionMapKey executionsModelForSubscriptions.TestCaseExecutionMapKeyType
 
 	testCaseExecutionMapKey = executionsModelForSubscriptions.TestCaseExecutionMapKeyType(tempTestCaseExecutionsOnQueueAdaptedForUiTable.TestCaseExecutionUuid +
 		tempTestCaseExecutionsOnQueueAdaptedForUiTable.TestCaseExecutionVersion)
 
-	var existInMap bool
-	_, existInMap = executionsModelForSubscriptions.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey]
-	if existInMap == true {
+	// Define which TestCaseExecutions-table to look in and if the specific TestCaseExecution should exist in the tables
+	var subscriptionsForTestCaseExecutionDetailsMap executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapDetailsType
+	subscriptionsForTestCaseExecutionDetailsMap =
+		map[executionsModelForSubscriptions.SubscriptionTableType]executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapDetailsStruct{
+			executionsModelForSubscriptions.SubscriptionTableForTestCaseExecutionOnQueueTable:            executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapDetailsStruct{ShouldExistInTable: false},
+			executionsModelForSubscriptions.SubscriptionTableForTestCaseExecutionUnderExecutionTable:     executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapDetailsStruct{ShouldExistInTable: false},
+			executionsModelForSubscriptions.SubscriptionTableForTestCaseExecutionFinishedExecutionsTable: executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapDetailsStruct{ShouldExistInTable: false},
+		}
 
-		errorId := "c51f60c4-2f27-495d-8e5e-0be0900dad03"
-		err = errors.New(fmt.Sprintf("'testCaseExecutionMapKey', '%s' already exist in TestCaseExecutionsOnQueueMapAdaptedForUiTable [ErrorID: %s]", testCaseExecutionMapKey, errorId))
+	// Create the map with key = 'TestCaseExecutionMapKey' to be sent to function
+	var subscriptionsForTestCaseExecutionMap executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapOverallType
+	subscriptionsForTestCaseExecutionMap =
+		map[executionsModelForSubscriptions.TestCaseExecutionMapKeyType]executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapDetailsType{
+			testCaseExecutionMapKey: subscriptionsForTestCaseExecutionDetailsMap,
+		}
 
-		fmt.Println(err) // TODO Send on Error Channel
-
-		return err
+	// Verify if 'testCaseExecutionMapKey' is in use in any of OnQueue, UnderExecution or FinishedExecutions, depending on values sent in to functions
+	err = verifyThatTestCaseExecutionIsNotInUse(subscriptionsForTestCaseExecutionMap)
+	if err != nil {
+		return nil
 	}
+	/*
+		var existInMap bool
+		_, existInMap = executionsModelForSubscriptions.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey]
+		if existInMap == true {
 
+			errorId := "c51f60c4-2f27-495d-8e5e-0be0900dad03"
+			err = errors.New(fmt.Sprintf("'testCaseExecutionMapKey', '%s' already exist in TestCaseExecutionsOnQueueMapAdaptedForUiTable [ErrorID: %s]", testCaseExecutionMapKey, errorId))
+
+			fmt.Println(err) // TODO Send on Error Channel
+
+			return err
+		}
+
+	*/
 	// Append to map for TestCaseExecutionsOnQueue-data used by UI-table
 	executionsModelForSubscriptions.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey] = tempTestCaseExecutionsOnQueueAdaptedForUiTable
 

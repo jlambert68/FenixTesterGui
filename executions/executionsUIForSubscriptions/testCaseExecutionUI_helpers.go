@@ -2,7 +2,10 @@ package executionsUIForSubscriptions
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/executions/executionsModelForSubscriptions"
 	"FenixTesterGui/headertable"
+	"errors"
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/widget"
@@ -78,4 +81,134 @@ func ResizeTableColumns(t *headertable.SortingHeaderTable) {
 	//t.Resize(fyne.NewSize(totalTableWidth, 200))
 	t.Header.Resize(fyne.NewSize(totalTableWidth, t.Header.MinSize().Height))
 	t.Data.Resize(fyne.NewSize(totalTableWidth, t.Data.MinSize().Height*float32(len(t.TableOpts.Bindings))))
+}
+
+// Check that TestCaseExecution doesn't already exist in any of OnQueue, UnderExecution or FinishedExecutions
+
+func verifyThatTestCaseExecutionIsNotInUse(subscriptionsForTestCaseExecutionMap executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapOverallType) (err error) {
+
+	// Variables needed
+	var existInMap bool
+	var errorId string
+	var newErrorMessage string
+	var fullErrorMessage string
+	var testCaseExecutionMapKey executionsModelForSubscriptions.TestCaseExecutionMapKeyType
+	var subscriptionsForTestCaseExecutionDetailsMap executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapDetailsType
+	var shouldExistInTable bool
+	var xorValidation bool
+
+	// Verify that there was exact one testCaseExecutionMapKey
+	var numberOfKeys int
+	numberOfKeys = len(subscriptionsForTestCaseExecutionMap)
+	if numberOfKeys != 1 {
+
+		errorId = "f5b6464a-f98a-404e-99dc-a7f0eb1d9c6a"
+		err = errors.New(fmt.Sprintf("expected  exact One 'testCaseExecutionMapKey', but got '%s' in  subscriptionsForTestCaseExecutionMap: '%s' [ErrorID: %s]. ", numberOfKeys, subscriptionsForTestCaseExecutionMap, errorId))
+
+		fmt.Println(err) // TODO Send on Error Channel
+
+		return err
+	}
+
+	// Loop over the "only element in map
+	for testCaseExecutionMapKey, subscriptionsForTestCaseExecutionDetailsMap = range subscriptionsForTestCaseExecutionMap {
+
+		// Loop over the Executions table to get if 'testCaseExecutionMapKey' should be in the table or not
+		var subscriptionTableType executionsModelForSubscriptions.SubscriptionTableType
+		var testCaseExecutionsDetails executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapDetailsStruct
+		for subscriptionTableType, testCaseExecutionsDetails = range subscriptionsForTestCaseExecutionDetailsMap {
+
+			shouldExistInTable = testCaseExecutionsDetails.ShouldExistInTable
+
+			switch subscriptionTableType {
+
+			/*
+				XOR =  (ShouldExistInTable AND NOT(existInMap)) OR (NOT(ShouldExistInTable) AND existInMap)
+				ShouldExistInTable	existInMap	Error
+				0					0			0
+				0					1			1
+				1					0			1
+				1					1			0
+			*/
+
+			case executionsModelForSubscriptions.SubscriptionTableForTestCaseExecutionOnQueueTable:
+
+				// Check if TestCaseExecution already exists in 'OnQueue'
+				_, existInMap = executionsModelForSubscriptions.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey]
+
+				xorValidation = shouldExistInTable && !existInMap || !shouldExistInTable && existInMap
+				if xorValidation == true {
+
+					errorId = "11865739-f07f-4042-83ac-6b4c4537e94f"
+					newErrorMessage = fmt.Sprintf("the rule for validating if 'testCaseExecutionMapKey', '%s' "+
+						"should or should not exisit in TestCaseExecutionsOnQueueMapAdaptedForUiTable failed. "+
+						"shouldExistInTable='%S' and existInMap='%s' [ErrorID: %s]. ",
+						testCaseExecutionMapKey, shouldExistInTable, existInMap, errorId)
+
+					fullErrorMessage = fullErrorMessage + newErrorMessage
+
+					err = errors.New("error found")
+
+				}
+
+			case executionsModelForSubscriptions.SubscriptionTableForTestCaseExecutionUnderExecutionTable:
+
+				// Check if TestCaseExecution exists in 'UnderExecution'
+				_, existInMap = executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[testCaseExecutionMapKey]
+
+				xorValidation = shouldExistInTable && !existInMap || !shouldExistInTable && existInMap
+				if xorValidation == true {
+
+					errorId = "f7ee589b-8075-44d8-94a3-2a3556358d00"
+					newErrorMessage = fmt.Sprintf("the rule for validating if 'testCaseExecutionMapKey', '%s' "+
+						"should or should not exisit in TestCaseExecutionsUnderExecutionMapAdaptedForUiTable failed. "+
+						"shouldExistInTable='%S' and existInMap='%s' [ErrorID: %s]. ",
+						testCaseExecutionMapKey, shouldExistInTable, existInMap, errorId)
+
+					fullErrorMessage = fullErrorMessage + newErrorMessage
+
+					err = errors.New("error found")
+
+				}
+
+			case executionsModelForSubscriptions.SubscriptionTableForTestCaseExecutionFinishedExecutionsTable:
+
+				// Check if TestCaseExecution already exists in 'FinishedExecutions'
+				_, existInMap = executionsModelForSubscriptions.TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable[testCaseExecutionMapKey]
+
+				xorValidation = shouldExistInTable && !existInMap || !shouldExistInTable && existInMap
+				if xorValidation == true {
+
+					errorId = "f7ee589b-8075-44d8-94a3-2a3556358d00"
+					newErrorMessage = fmt.Sprintf("the rule for validating if 'testCaseExecutionMapKey', '%s' "+
+						"should or should not exisit in TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable failed. "+
+						"shouldExistInTable='%S' and existInMap='%s' [ErrorID: %s]. ",
+						testCaseExecutionMapKey, shouldExistInTable, existInMap, errorId)
+
+					fullErrorMessage = fullErrorMessage + newErrorMessage
+
+					err = errors.New("error found")
+
+				}
+
+			default:
+				errorId = "53a5da5f-0f5e-4017-ae8d-09752f4f7925"
+				err = errors.New(fmt.Sprintf("unhanlded subscriptionTableType '%s'  in subscriptionsForTestCaseExecutionDetailsMap '%s' [ErrorID: %s]. ", subscriptionTableType, subscriptionsForTestCaseExecutionDetailsMap, errorId))
+
+				fmt.Println(err) // TODO Send on Error Channel
+			}
+		}
+
+		break
+	}
+
+	// There were at least on match in any of OnQueue, UnderExecution or FinishedExecutions. So create new full error message
+	if err != nil {
+
+		err = errors.New(fullErrorMessage)
+		// fmt.Println(err) // TODO Send on Error Channel
+	}
+
+	return err
+
 }

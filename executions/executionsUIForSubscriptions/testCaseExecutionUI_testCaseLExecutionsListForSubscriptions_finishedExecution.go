@@ -199,9 +199,25 @@ func MoveTestCaseExecutionFromUnderExecutionToFinishedExecution(testCaseExecutio
 	tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference, existInMap = executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[testCaseExecutionMapKey]
 
 	if existInMap == false {
+		/*
+			TODO Handle when TestCaseExecution only exist on OnQueue-table and new moved to UnderExecution
+			// Verify i TestCaseExecution still is in OnQueue-table
+			var tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *executionsModelForSubscriptions.TestCaseExecutionsOnQueueAdaptedForUiTableStruct
+			tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference, existInMap = executionsModelForSubscriptions.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey]
+			if existInMap == false {
 
-		Lägg till att man kolla i Queued executions table
+				errorId := "2c0d7c10-f0e6-4fde-9e91-d9c031d8bc67"
+				err = errors.New(fmt.Sprintf("'testCaseExecutionMapKey', '%s' doesn't exist in 'TestCaseExecutionsOnQueueMapAdaptedForUiTable' or in 'TestCaseExecutionsUnderExecutionMapAdaptedForUiTable' [ErrorID: %s]", testCaseExecutionMapKey, errorId))
 
+				fmt.Println(err) // TODO Send on Error Channel
+
+				return err
+			} else {
+
+			}
+
+
+		*/
 		errorId := "7433e805-5687-483c-9e5d-4dd5d5f5d0b7"
 		err = errors.New(fmt.Sprintf("'testCaseExecutionMapKey', '%s' doesn't exist in TestCaseExecutionsOnQueueMapAdaptedForUiTable [ErrorID: %s]", testCaseExecutionMapKey, errorId))
 
@@ -309,17 +325,17 @@ func StartFinishedExecutionsTableAddRemoveChannelReader() {
 		switch incomingFinishedExecutionsTableChannelCommand.ChannelCommand {
 
 		case executionsModelForSubscriptions.FinishedExecutionsTableAddRemoveChannelAddCommand_MoveFromUnderExecutionToFinishedExecutions:
-			MoveTestCaseExecutionFromUnderExecutionToFinishedExecution(
+			_ = MoveTestCaseExecutionFromUnderExecutionToFinishedExecution(
 				incomingFinishedExecutionsTableChannelCommand.AddCommandData.TestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference,
 				incomingFinishedExecutionsTableChannelCommand.AddCommandData.TestCaseExecutionDetails)
 
 		case executionsModelForSubscriptions.FinishedExecutionsTableAddRemoveChannelRemoveCommand_Flash:
-			RemoveTestCaseExecutionFromFinishedTable(
+			_ = RemoveTestCaseExecutionFromFinishedTable(
 				incomingFinishedExecutionsTableChannelCommand.RemoveCommandData.TestCaseExecutionsFinishedDataRowAdaptedForUiTableReference,
 				executionsModelForSubscriptions.FinishedExecutionsTableAddRemoveChannelRemoveCommand_Flash)
 
 		case executionsModelForSubscriptions.FinishedExecutionsTableAddRemoveChannelRemoveCommand_Remove:
-			RemoveTestCaseExecutionFromFinishedTable(
+			_ = RemoveTestCaseExecutionFromFinishedTable(
 				incomingFinishedExecutionsTableChannelCommand.RemoveCommandData.TestCaseExecutionsFinishedDataRowAdaptedForUiTableReference,
 				executionsModelForSubscriptions.FinishedExecutionsTableAddRemoveChannelRemoveCommand_Remove)
 

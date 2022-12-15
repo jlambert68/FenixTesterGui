@@ -375,17 +375,17 @@ func StartUnderExecutionTableAddRemoveChannelReader() {
 		switch incomingUnderExecutionTableChannelCommand.ChannelCommand {
 
 		case executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelAddCommand_MoveFromOnQueueToUnderExecution:
-			MoveTestCaseExecutionFromOnQueueToUnderExecution(
+			_ = MoveTestCaseExecutionFromOnQueueToUnderExecution(
 				incomingUnderExecutionTableChannelCommand.AddCommandData.TestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference,
 				incomingUnderExecutionTableChannelCommand.AddCommandData.TestCaseExecutionDetails)
 
 		case executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelRemoveCommand_Flash:
-			RemoveTestCaseExecutionFromUnderExecutionTable(
+			_ = RemoveTestCaseExecutionFromUnderExecutionTable(
 				incomingUnderExecutionTableChannelCommand.RemoveCommandData.TestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference,
 				executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelRemoveCommand_Flash)
 
 		case executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelRemoveCommand_Remove:
-			RemoveTestCaseExecutionFromUnderExecutionTable(
+			_ = RemoveTestCaseExecutionFromUnderExecutionTable(
 				incomingUnderExecutionTableChannelCommand.RemoveCommandData.TestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference,
 				executionsModelForSubscriptions.UnderExecutionTableAddRemoveChannelRemoveCommand_Remove)
 

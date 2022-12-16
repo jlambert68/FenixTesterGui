@@ -194,30 +194,38 @@ func MoveTestCaseExecutionFromUnderExecutionToFinishedExecution(testCaseExecutio
 	testCaseExecutionMapKey = executionsModelForSubscriptions.TestCaseExecutionMapKeyType(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseExecutionUuid +
 		testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestCaseExecutionVersion)
 
+	// Secure that there is one TestCaseExecution in OnQueue and nowhere else
+	// Define which TestCaseExecutions-table to look in and if the specific TestCaseExecution should exist in the tables
+	var subscriptionsForTestCaseExecutionDetailsMap executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapDetailsType
+	subscriptionsForTestCaseExecutionDetailsMap =
+		map[executionsModelForSubscriptions.SubscriptionTableType]executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapDetailsStruct{
+			executionsModelForSubscriptions.SubscriptionTableForTestCaseExecutionOnQueueTable:            executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapDetailsStruct{ShouldExistInTable: false},
+			executionsModelForSubscriptions.SubscriptionTableForTestCaseExecutionUnderExecutionTable:     executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapDetailsStruct{ShouldExistInTable: true},
+			executionsModelForSubscriptions.SubscriptionTableForTestCaseExecutionFinishedExecutionsTable: executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapDetailsStruct{ShouldExistInTable: false},
+		}
+
+	// Create the map with key = 'TestCaseExecutionMapKey' to be sent to function
+	var subscriptionsForTestCaseExecutionMap executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapOverallType
+	subscriptionsForTestCaseExecutionMap =
+		map[executionsModelForSubscriptions.TestCaseExecutionMapKeyType]executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapDetailsType{
+			testCaseExecutionMapKey: subscriptionsForTestCaseExecutionDetailsMap,
+		}
+
+	// Verify if 'testCaseExecutionMapKey' is in use in any of OnQueue, UnderExecution or FinishedExecutions, depending on values sent in to functions
+	err = verifyThatTestCaseExecutionIsNotInUse(subscriptionsForTestCaseExecutionMap)
+	if err != nil {
+		// Rule was not met due based on input parameters.
+		// Probably due to several due to same TestCaseExecution-status has been sent multiple times from ExecutionEngine
+		fmt.Println(err) // TODO Send on error channel
+		return nil
+	}
+
 	// Extract UnderExecutionData to be moved to UnderExecution
 	var tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
 	tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference, existInMap = executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[testCaseExecutionMapKey]
 
 	if existInMap == false {
-		/*
-			TODO Handle when TestCaseExecution only exist on OnQueue-table and new moved to UnderExecution
-			// Verify i TestCaseExecution still is in OnQueue-table
-			var tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference *executionsModelForSubscriptions.TestCaseExecutionsOnQueueAdaptedForUiTableStruct
-			tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference, existInMap = executionsModelForSubscriptions.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey]
-			if existInMap == false {
 
-				errorId := "2c0d7c10-f0e6-4fde-9e91-d9c031d8bc67"
-				err = errors.New(fmt.Sprintf("'testCaseExecutionMapKey', '%s' doesn't exist in 'TestCaseExecutionsOnQueueMapAdaptedForUiTable' or in 'TestCaseExecutionsUnderExecutionMapAdaptedForUiTable' [ErrorID: %s]", testCaseExecutionMapKey, errorId))
-
-				fmt.Println(err) // TODO Send on Error Channel
-
-				return err
-			} else {
-
-			}
-
-
-		*/
 		errorId := "7433e805-5687-483c-9e5d-4dd5d5f5d0b7"
 		err = errors.New(fmt.Sprintf("'testCaseExecutionMapKey', '%s' doesn't exist in TestCaseExecutionsOnQueueMapAdaptedForUiTable [ErrorID: %s]", testCaseExecutionMapKey, errorId))
 
@@ -253,6 +261,7 @@ func MoveTestCaseExecutionFromUnderExecutionToFinishedExecution(testCaseExecutio
 	// if 'testCaseExecutionMapKey' already exist in TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable''
 	_, existInMap = executionsModelForSubscriptions.TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable[testCaseExecutionMapKey]
 	if existInMap == true {
+		// Might happen when ExecutionEngine sends the same TestCaseExecution-status several time
 
 		errorId := "2101afd8-4b1d-4f16-ae14-8458f42d7b81"
 		err = errors.New(fmt.Sprintf("'testCaseExecutionMapKey', '%s' already exist in TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable [ErrorID: %s]", testCaseExecutionMapKey, errorId))

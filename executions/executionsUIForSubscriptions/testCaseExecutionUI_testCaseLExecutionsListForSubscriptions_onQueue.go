@@ -240,22 +240,10 @@ func AddTestCaseExecutionToOnQueueTable(testCaseExecutionBasicInformation *fenix
 	// Verify if 'testCaseExecutionMapKey' is in use in any of OnQueue, UnderExecution or FinishedExecutions, depending on values sent in to functions
 	err = verifyThatTestCaseExecutionIsNotInUse(subscriptionsForTestCaseExecutionMap)
 	if err != nil {
+		// Rule was not met due based on input parameters
 		return nil
 	}
-	/*
-		var existInMap bool
-		_, existInMap = executionsModelForSubscriptions.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey]
-		if existInMap == true {
 
-			errorId := "c51f60c4-2f27-495d-8e5e-0be0900dad03"
-			err = errors.New(fmt.Sprintf("'testCaseExecutionMapKey', '%s' already exist in TestCaseExecutionsOnQueueMapAdaptedForUiTable [ErrorID: %s]", testCaseExecutionMapKey, errorId))
-
-			fmt.Println(err) // TODO Send on Error Channel
-
-			return err
-		}
-
-	*/
 	// Append to map for TestCaseExecutionsOnQueue-data used by UI-table
 	executionsModelForSubscriptions.TestCaseExecutionsOnQueueMapAdaptedForUiTable[testCaseExecutionMapKey] = tempTestCaseExecutionsOnQueueAdaptedForUiTable
 
@@ -271,9 +259,9 @@ func AddTestCaseExecutionToOnQueueTable(testCaseExecutionBasicInformation *fenix
 	ExecutionsUIObject.OnQueueTable.Data.Refresh()
 
 	// Flash the newly added row in the table
-	tableSizeHight, tableWidth := ExecutionsUIObject.OnQueueTable.Data.Length()
+	tableSizeHeight, tableWidth := ExecutionsUIObject.OnQueueTable.Data.Length()
 
-	if tableSizeHight > 0 {
+	if tableSizeHeight > 0 {
 		for columnCounter := 0; columnCounter < tableWidth; columnCounter++ {
 			CellId := widget.TableCellID{
 				Row: 0,

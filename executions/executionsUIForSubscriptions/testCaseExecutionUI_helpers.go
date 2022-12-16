@@ -142,7 +142,7 @@ func verifyThatTestCaseExecutionIsNotInUse(subscriptionsForTestCaseExecutionMap 
 					errorId = "11865739-f07f-4042-83ac-6b4c4537e94f"
 					newErrorMessage = fmt.Sprintf("the rule for validating if 'testCaseExecutionMapKey', '%s' "+
 						"should or should not exisit in TestCaseExecutionsOnQueueMapAdaptedForUiTable failed. "+
-						"shouldExistInTable='%S' and existInMap='%s' [ErrorID: %s]. ",
+						"shouldExistInTable='%t' and existInMap='%t' [ErrorID: %s]. ",
 						testCaseExecutionMapKey, shouldExistInTable, existInMap, errorId)
 
 					fullErrorMessage = fullErrorMessage + newErrorMessage
@@ -162,7 +162,7 @@ func verifyThatTestCaseExecutionIsNotInUse(subscriptionsForTestCaseExecutionMap 
 					errorId = "f7ee589b-8075-44d8-94a3-2a3556358d00"
 					newErrorMessage = fmt.Sprintf("the rule for validating if 'testCaseExecutionMapKey', '%s' "+
 						"should or should not exisit in TestCaseExecutionsUnderExecutionMapAdaptedForUiTable failed. "+
-						"shouldExistInTable='%S' and existInMap='%s' [ErrorID: %s]. ",
+						"shouldExistInTable='%t' and existInMap='%t' [ErrorID: %s]. ",
 						testCaseExecutionMapKey, shouldExistInTable, existInMap, errorId)
 
 					fullErrorMessage = fullErrorMessage + newErrorMessage
@@ -182,7 +182,7 @@ func verifyThatTestCaseExecutionIsNotInUse(subscriptionsForTestCaseExecutionMap 
 					errorId = "f7ee589b-8075-44d8-94a3-2a3556358d00"
 					newErrorMessage = fmt.Sprintf("the rule for validating if 'testCaseExecutionMapKey', '%s' "+
 						"should or should not exisit in TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable failed. "+
-						"shouldExistInTable='%S' and existInMap='%s' [ErrorID: %s]. ",
+						"shouldExistInTable='%t' and existInMap='%t' [ErrorID: %s]. ",
 						testCaseExecutionMapKey, shouldExistInTable, existInMap, errorId)
 
 					fullErrorMessage = fullErrorMessage + newErrorMessage

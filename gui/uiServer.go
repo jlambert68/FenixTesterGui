@@ -4,6 +4,7 @@ import (
 	"FenixTesterGui/commandAndRuleEngine"
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/executionsModelForSubscriptions"
+	"FenixTesterGui/executions/executionsUIForExecutions"
 	"FenixTesterGui/executions/executionsUIForSubscriptions"
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	"FenixTesterGui/resources"
@@ -310,11 +311,15 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	configContainerGrid := container.New(layout.NewAdaptiveGridLayout(2), sizeContainer, widget.NewLabel("Test"))
 
-	// Generate 'left' Execution Tab, that holds listings for Executions and individual detailed Exececutions
-	executionsUITab := executionsUIForSubscriptions.ExecutionsUIObject.GenerateBaseUITabForExecutions() //MySortTable() //CreateTableObject()
+	// Generate 'left' Execution Tab for Subscriptions, that holds listings for Executions and individual detailed Executions
+	subscriptionExecutionsUITab := executionsUIForSubscriptions.ExecutionsUIObject.GenerateBaseUITabForExecutions() //MySortTable() //CreateTableObject()
+
+	// Generate 'left' Execution Tab, that holds listings for Executions and individual detailed Executions
+	executionsUITab := executionsUIForExecutions.ExecutionsUIObject.GenerateBaseUITabForExecutions() //MySortTable() //CreateTableObject()
 
 	tabs := container.NewAppTabs(
 		container.NewTabItem("TestCases", applicationUI),
+		container.NewTabItem("Executions (Subscriptions)", subscriptionExecutionsUITab),
 		container.NewTabItem("Executions", executionsUITab),
 		container.NewTabItem("Config", configContainerGrid),
 	)
@@ -428,9 +433,9 @@ func (m *CustomButton) MouseIn(e *desktop.MouseEvent) {
 }
 
 /*
-func (m *CustomButton) MouseMoved(e *desktop.MouseEvent) {
-	fmt.Println("Mouse Moved")
-}
+	func (m *CustomButton) MouseMoved(e *desktop.MouseEvent) {
+		fmt.Println("Mouse Moved")
+	}
 */
 func (m *CustomButton) MouseOut() {
 	fmt.Println("Mouse Out")

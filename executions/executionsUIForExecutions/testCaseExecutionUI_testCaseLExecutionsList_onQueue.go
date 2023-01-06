@@ -1,7 +1,7 @@
 package executionsUIForExecutions
 
 import (
-	"FenixTesterGui/executions/executionsModelForSubscriptions"
+	"FenixTesterGui/executions/executionsModelForTestCaseExecutions"
 	"FenixTesterGui/headertable"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -12,15 +12,15 @@ func CreateTableForTestCaseExecutionsOnQueue() *fyne.Container {
 	var tableForTestCaseExecutionsOnQueueBindings []binding.DataMap
 
 	// Create a binding for each TestExecutionOnQueueRow data
-	for _, tempTestCaseExecutionsOnQueueDataAdaptedForUiTableReference := range executionsModelForSubscriptions.TestCaseExecutionsOnQueueMapAdaptedForUiTable {
+	for _, tempTestCaseExecutionsOnQueueDataAdaptedForUiTableReference := range executionsModelForExecutions.TestCaseExecutionsOnQueueMapAdaptedForUiTable {
 		tableForTestCaseExecutionsOnQueueBindings = append(
 			tableForTestCaseExecutionsOnQueueBindings,
 			binding.BindStruct(tempTestCaseExecutionsOnQueueDataAdaptedForUiTableReference))
 	}
 
-	executionsModelForSubscriptions.TestCaseExecutionsOnQueueTableOptions.Bindings = tableForTestCaseExecutionsOnQueueBindings
+	executionsModelForExecutions.TestCaseExecutionsOnQueueTableOptions.Bindings = tableForTestCaseExecutionsOnQueueBindings
 
-	ht := headertable.NewSortingHeaderTable(&executionsModelForSubscriptions.TestCaseExecutionsOnQueueTableOptions)
+	ht := headertable.NewSortingHeaderTable(&executionsModelForExecutions.TestCaseExecutionsOnQueueTableOptions)
 	ExecutionsUIObject.OnQueueTable = ht
 
 	mySortTable := container.NewMax(ht)

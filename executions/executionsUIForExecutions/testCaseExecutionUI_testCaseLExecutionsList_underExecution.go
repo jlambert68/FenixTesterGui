@@ -1,7 +1,7 @@
 package executionsUIForExecutions
 
 import (
-	"FenixTesterGui/executions/executionsModelForSubscriptions"
+	"FenixTesterGui/executions/executionsModelForTestCaseExecutions"
 	"FenixTesterGui/headertable"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -13,23 +13,23 @@ func CreateTableForTestCaseExecutionsUnderExecution() *fyne.Container {
 
 	// Create a binding for each TestExecutionUnderExecutionRow data
 	/*
-		for testDataRowCounter := 0; testDataRowCounter < len(executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable); testDataRowCounter++ {
+		for testDataRowCounter := 0; testDataRowCounter < len(executionsModelForExecutions.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable); testDataRowCounter++ {
 			tableForTestCaseExecutionsUnderExecutionBindings = append(
 				tableForTestCaseExecutionsUnderExecutionBindings,
-				binding.BindStruct(&executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[testDataRowCounter]))
+				binding.BindStruct(&executionsModelForExecutions.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable[testDataRowCounter]))
 		}
 	*/
 
-	for _, tempTestCaseExecutionsUnderExecutionDataAdaptedForUiTableReference := range executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable {
+	for _, tempTestCaseExecutionsUnderExecutionDataAdaptedForUiTableReference := range executionsModelForExecutions.TestCaseExecutionsUnderExecutionMapAdaptedForUiTable {
 		tableForTestCaseExecutionsUnderExecutionBindings = append(
 			tableForTestCaseExecutionsUnderExecutionBindings,
 			binding.BindStruct(tempTestCaseExecutionsUnderExecutionDataAdaptedForUiTableReference))
 
 	}
 
-	executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionTableOptions.Bindings = tableForTestCaseExecutionsUnderExecutionBindings
+	executionsModelForExecutions.TestCaseExecutionsUnderExecutionTableOptions.Bindings = tableForTestCaseExecutionsUnderExecutionBindings
 
-	ht := headertable.NewSortingHeaderTable(&executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionTableOptions)
+	ht := headertable.NewSortingHeaderTable(&executionsModelForExecutions.TestCaseExecutionsUnderExecutionTableOptions)
 	ExecutionsUIObject.UnderExecutionTable = ht
 
 	mySortTable := container.NewMax(ht)

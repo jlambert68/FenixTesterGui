@@ -1,4 +1,4 @@
-package executionsModelForSubscriptions
+package executionsModelForExecutions
 
 import (
 	sharedCode "FenixTesterGui/common_code"
@@ -9,21 +9,6 @@ import (
 	"strconv"
 	"time"
 )
-
-// Initiate model and UI-model for Subscriptions for FinishedExecutions
-func InitiateSubscriptionModelForTestCaseWithFinishedExecutions() {
-
-	// Create Model from 'loaded' testCases under Execution
-
-	// Initiate map for model
-	AllTestCaseExecutionsFinishedExecutionModel =
-		make(map[TestCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseWithFinishedExecutionMessage)
-
-	// Initiate map-model for UI-table-data
-	TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable =
-		make(map[TestCaseExecutionMapKeyType]*TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct)
-
-}
 
 // LoadAndCreateModelForTestCaseFinishedExecutions - Load TestCaseExecutions that have been finished Execution and transform them into model used
 func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForTestCaseWithFinishedExecutions(domainsToInclude []string) (err error) {

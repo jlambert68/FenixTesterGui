@@ -1,4 +1,4 @@
-package executionsModelForSubscriptions
+package executionsModelForExecutions
 
 import (
 	sharedCode "FenixTesterGui/common_code"
@@ -9,22 +9,6 @@ import (
 	"strconv"
 	"time"
 )
-
-// InitiateSubscriptionModelForTestCaseUnderExecution
-// Initiate model and UI-model for Subscriptions for TestCase that waits on ExecutionQueue
-func InitiateSubscriptionModelForTestCaseOnExecutionQueue() {
-
-	// Create Model from 'loaded' testCases under Execution
-
-	// Initiate map for model
-	AllTestCaseExecutionsOnQueueModel =
-		make(map[TestCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage)
-
-	// Initiate map-model for UI-table-data
-	TestCaseExecutionsUnderExecutionMapAdaptedForUiTable =
-		make(map[TestCaseExecutionMapKeyType]*TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct)
-
-}
 
 // LoadAndCreateModelForTestCasesOnExecutionQueue - Load TestCaseExecutions that waits on ExecutionQueue and transform them into model used
 func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForTestCasesOnExecutionQueue(domainsToInclude []string) (err error) {

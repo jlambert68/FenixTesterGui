@@ -4,6 +4,7 @@ import (
 	"FenixTesterGui/commandAndRuleEngine"
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/executionsModelForSubscriptions"
+	executionsModelForExecutions "FenixTesterGui/executions/executionsModelForTestCaseExecutions"
 	"FenixTesterGui/executions/executionsUIForExecutions"
 	"FenixTesterGui/executions/executionsUIForSubscriptions"
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
@@ -244,18 +245,27 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Start Channel readers for testCases OnQueue, UnderExecutions or Finished Executions
 	executionsUIForSubscriptions.StartTableAddAndRemoveChannelReaders()
 
+	// Initiate Models for Subscription regarding TestCaseExecutionsOnExecutionQueue
+	executionsModelForSubscriptions.InitiateSubscriptionModelForTestCaseOnExecutionQueue()
+
 	// Load TestCaseExecutionsOnExecutionQueue
 	var domainsList []string
 	domainsList = nil
-	_ = executionsModelForSubscriptions.ExecutionsModelObject.LoadAndCreateModelForTestCasesOnExecutionQueue(domainsList)
+	_ = executionsModelForExecutions.ExecutionsModelObject.LoadAndCreateModelForTestCasesOnExecutionQueue(domainsList)
+
+	// Initiate Models for Subscription regarding UnderExecution
+	executionsModelForSubscriptions.InitiateSubscriptionModelForTestCaseUnderExecution()
 
 	// Load TestCaseExecutionsUnderExecution
 	domainsList = nil
-	_ = executionsModelForSubscriptions.ExecutionsModelObject.LoadAndCreateModelForTestCaseUnderExecutions(domainsList)
+	_ = executionsModelForExecutions.ExecutionsModelObject.LoadAndCreateModelForTestCaseUnderExecutions(domainsList)
+
+	// Initiate Models for Subscription regarding FinishedExecutions
+	executionsModelForSubscriptions.InitiateSubscriptionModelForTestCaseWithFinishedExecutions()
 
 	// Load TestCaseExecutionsWithFinishedExecutions
 	domainsList = nil
-	_ = executionsModelForSubscriptions.ExecutionsModelObject.LoadAndCreateModelForTestCaseWithFinishedExecutions(domainsList)
+	_ = executionsModelForExecutions.ExecutionsModelObject.LoadAndCreateModelForTestCaseWithFinishedExecutions(domainsList)
 
 	// Initiate and create the tree structure for available building blocks, of TestInstructions and TestInstructionContainers
 	uiServer.makeTreeUI()

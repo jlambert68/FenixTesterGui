@@ -29,10 +29,10 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) startCommandChannelR
 				"ID":                    "e44b6639-fcd5-44fb-b839-266f4bc845e4",
 				"currentChannelSize":    currentChannelSize,
 				"messageChannelMaxSize": messageChannelMaxSize,
-			}).Error("Number of messages on 'executionStatusCommandChannel' is close to its maximum")
+			}).Warning("Number of messages on 'executionStatusCommandChannel' is close to its maximum")
 		}
 
-		// Act correctly depending of what message that was received
+		// Act correctly depending on what message that was received
 		switch incomingChannelCommandAndMessage.ChannelCommand {
 
 		case ChannelCommandExecutionsStatusesHaveBeUpdated:

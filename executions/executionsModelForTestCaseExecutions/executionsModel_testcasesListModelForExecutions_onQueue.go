@@ -79,6 +79,8 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 		// Convert 'raw' TestCaseExecutionsOnQueue-data into format to be used in UI
 		var tempTestCaseExecutionsOnQueueAdaptedForUiTable TestCaseExecutionsOnQueueAdaptedForUiTableStruct
 		tempTestCaseExecutionsOnQueueAdaptedForUiTable = TestCaseExecutionsOnQueueAdaptedForUiTableStruct{
+			ShowDetailedTestCaseExecution: "false",
+
 			DomainUuid:                          tempTestCaseExecutionsOnQueue.DomainUuid,
 			DomainName:                          tempTestCaseExecutionsOnQueue.DomainName,
 			TestSuiteUuid:                       tempTestCaseExecutionsOnQueue.TestSuiteUuid,

@@ -198,6 +198,7 @@ func AddTestCaseExecutionToOnQueueTable(testCaseExecutionBasicInformation *fenix
 	// Convert 'raw' TestCaseExecutionsOnQueue-data into format to be used in UI
 	var tempTestCaseExecutionsOnQueueAdaptedForUiTable *executionsModelForSubscriptions.TestCaseExecutionsOnQueueAdaptedForUiTableStruct
 	tempTestCaseExecutionsOnQueueAdaptedForUiTable = &executionsModelForSubscriptions.TestCaseExecutionsOnQueueAdaptedForUiTableStruct{
+		ShowDetailedTestCaseExecution:       "true",
 		DomainUuid:                          testCaseExecutionBasicInformation.DomainUuid,
 		DomainName:                          testCaseExecutionBasicInformation.DomainName,
 		TestSuiteUuid:                       testCaseExecutionBasicInformation.TestSuiteUuid,

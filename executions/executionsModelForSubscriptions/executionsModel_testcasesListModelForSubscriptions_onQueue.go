@@ -21,8 +21,8 @@ func InitiateSubscriptionModelForTestCaseOnExecutionQueue() {
 		make(map[TestCaseExecutionMapKeyType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage)
 
 	// Initiate map-model for UI-table-data
-	TestCaseExecutionsUnderExecutionMapAdaptedForUiTable =
-		make(map[TestCaseExecutionMapKeyType]*TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct)
+	TestCaseExecutionsOnQueueMapAdaptedForUiTable =
+		make(map[TestCaseExecutionMapKeyType]*TestCaseExecutionsOnQueueAdaptedForUiTableStruct)
 
 }
 

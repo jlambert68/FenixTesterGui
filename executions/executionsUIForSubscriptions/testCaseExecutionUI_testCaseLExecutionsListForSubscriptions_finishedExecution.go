@@ -237,6 +237,7 @@ func MoveTestCaseExecutionFromUnderExecutionToFinishedExecution(testCaseExecutio
 	//Create the new object to be added to FinishedExecution-table
 	var testCaseExecutionFinishedExecutionAdaptedForUiTable *executionsModelForSubscriptions.TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct
 	testCaseExecutionFinishedExecutionAdaptedForUiTable = &executionsModelForSubscriptions.TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct{
+		ShowDetailedTestCaseExecution:       tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.ShowDetailedTestCaseExecution,
 		DomainUuid:                          tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.DomainUuid,
 		DomainName:                          tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.DomainName,
 		TestSuiteUuid:                       tempTestCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference.TestSuiteUuid,

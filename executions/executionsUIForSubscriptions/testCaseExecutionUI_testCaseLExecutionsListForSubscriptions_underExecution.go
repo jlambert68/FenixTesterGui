@@ -247,6 +247,7 @@ func MoveTestCaseExecutionFromOnQueueToUnderExecution(
 	// Create the new object to be added to UnderExecution-table
 	var testCaseExecutionUnderExecutionAdaptedForUiTable *executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
 	testCaseExecutionUnderExecutionAdaptedForUiTable = &executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct{
+		ShowDetailedTestCaseExecution:       tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.ShowDetailedTestCaseExecution,
 		DomainUuid:                          tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.DomainUuid,
 		DomainName:                          tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.DomainName,
 		TestSuiteUuid:                       tempTestCaseExecutionsOnQueueDataRowAdaptedForUiTableReference.TestSuiteUuid,

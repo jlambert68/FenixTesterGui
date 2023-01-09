@@ -65,6 +65,8 @@ var TestCaseExecutionsUnderExecutionMapAdaptedForUiTable map[TestCaseExecutionMa
 // TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct
 // Type for holding one row of data
 type TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct struct {
+	ShowDetailedTestCaseExecution string
+
 	//TestCaseExecutionBasicInformation
 	DomainUuid                          string // The Domain, UUID, where the TestCase 'has its home'
 	DomainName                          string // The Domain, Name, where the TestCase 'has its home'
@@ -95,6 +97,13 @@ var TestCaseExecutionsUnderExecutionTableOptions = headertable.TableOpts{
 	RefWidth:    "reference width",
 	HeaderLabel: "TestExecutions under Execution",
 	ColAttrs: []headertable.ColAttr{
+		{
+			Name:         "ShowDetailedTestCaseExecution",
+			Header:       "ShowDetailedTestCaseExecution",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
 		{
 			Name:         "DomainUuid",
 			Header:       "DomainUuid",

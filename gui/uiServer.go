@@ -3,6 +3,7 @@ package gui
 import (
 	"FenixTesterGui/commandAndRuleEngine"
 	sharedCode "FenixTesterGui/common_code"
+	detailedTestCaseExecutionsUI "FenixTesterGui/executions/detailedExecutionsUI"
 	"FenixTesterGui/executions/executionsModelForSubscriptions"
 	executionsModelForExecutions "FenixTesterGui/executions/executionsModelForTestCaseExecutions"
 	"FenixTesterGui/executions/executionsUIForExecutions"
@@ -327,10 +328,14 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Generate 'left' Execution Tab, that holds listings for Executions and individual detailed Executions
 	executionsUITab := executionsUIForExecutions.ExecutionsUIObject.GenerateBaseUITabForExecutions() //MySortTable() //CreateTableObject()
 
+	// Generate a test tab for Detailed TestCaseExecutions
+	detailedTestCaseExecutionTab := detailedTestCaseExecutionsUI.DetailedTestCaseExecutionsUIObject.GenerateBaseUITabForDetailedTestCaseExecutions()
+
 	tabs := container.NewAppTabs(
 		container.NewTabItem("TestCases", applicationUI),
 		container.NewTabItem("Executions (Subscriptions)", subscriptionExecutionsUITab),
 		container.NewTabItem("Executions", executionsUITab),
+		container.NewTabItem("Detailed TestCaseExecutions", detailedTestCaseExecutionTab),
 		container.NewTabItem("Config", configContainerGrid),
 	)
 

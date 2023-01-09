@@ -50,12 +50,42 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 			if err != nil {
 				log.Fatalf("Data table Update Cell callback, GetItem(%s): %s", itemKey, err)
 			}
+
 			str, err := d.(binding.String).Get()
 			if err != nil {
 				log.Fatalf("Data table Update Cell callback, Get: %s", err)
 			}
 			l := cnvObj.(*FlashingTableCellStruct).Label //l := cnvObj.(*widget.Label)
+
+			tempCellValue := l.Text
+
 			l.SetText(str)
+
+			// Change background for Header-row and hide Show Detailed TestCaseExecution
+			if cellID.Row == 0 {
+				backgroundRectangle := cnvObj.(*FlashingTableCellStruct).backgroundColorRectangle
+				backgroundRectangle.FillColor = headerBackgroundRectangleBaseColor
+
+				showDetailedTestCaseExecution := cnvObj.(*FlashingTableCellStruct).showDetailedTestCaseExecution
+				showDetailedTestCaseExecution.Hide()
+
+			}
+
+			if cellID.Row > 0 && cellID.Col == 0 && tempCellValue == "wide content" {
+				tempCellValue = "false"
+				d.(binding.String).Set(tempCellValue)
+				l.SetText(tempCellValue)
+				cnvObj.(*FlashingTableCellStruct).showDetailedTestCaseExecution.Hide()
+				l.Hide()
+
+				str = tempCellValue
+			}
+
+			// Change "Show Detailed TestCaseExecution"-column value from true/false into correct icon
+			if cellID.Row > 0 && cellID.Col == 0 && str != tempCellValue { // TODO change '0' into variable instead
+
+				d.(binding.String).Set(tempCellValue)
+			}
 
 			// Add reference to 'flashingTableCell'
 			tableOpts.FlashingTableCellsReferenceMap[cellID] = cnvObj.(*FlashingTableCellStruct)

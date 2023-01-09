@@ -1,6 +1,8 @@
 package headertable
 
 import (
+	"FenixTesterGui/resources"
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
@@ -22,10 +24,36 @@ type FlashingTableCellStruct struct {
 	widget.BaseWidget
 	Label                                *widget.Label
 	backgroundColorRectangle             *canvas.Rectangle
+	showDetailedTestCaseExecution        *canvas.Image
 	rowNumber                            int
 	TestCaseExecutionMapKey              TestCaseExecutionMapKeyType
 	FlashCellWhenRemoveFromTableFunction FlashCellWhenRemoveFromTableFunctionType
 	FlashCellWhenAddToTableFunction      FlashCellWhenAddToTableFunctionType
+}
+
+func (t *FlashingTableCellStruct) Tapped(_ *fyne.PointEvent) {
+	fmt.Println("I was clicked!!! ", t.Label)
+
+}
+
+func (t *FlashingTableCellStruct) TappedSecondary(_ *fyne.PointEvent) {
+	fmt.Println("I was Right clicked!!!")
+
+}
+
+func (flashingTableCell *FlashingTableCellStruct) DoubleTapped(_ *fyne.PointEvent) {
+
+	// Switch True/ false for ShowDetailedTestCaseExecution
+	if flashingTableCell.showDetailedTestCaseExecution.Hidden == true {
+		flashingTableCell.Label.Text = "true"
+		flashingTableCell.showDetailedTestCaseExecution.Show()
+	} else {
+		flashingTableCell.Label.Text = "false"
+		flashingTableCell.showDetailedTestCaseExecution.Hide()
+	}
+
+	flashingTableCell.showDetailedTestCaseExecution.Refresh()
+
 }
 
 var backgroundRectangleBaseColor = color.RGBA{
@@ -33,6 +61,13 @@ var backgroundRectangleBaseColor = color.RGBA{
 	G: 0x33,
 	B: 0x33,
 	A: 0x33,
+}
+
+var headerBackgroundRectangleBaseColor = color.RGBA{
+	R: 0x33,
+	G: 0x33,
+	B: 0x33,
+	A: 0x88,
 }
 
 func FlashAddedRow(flashingTableCell *FlashingTableCellStruct) {
@@ -88,7 +123,12 @@ func NewFlashingTableCell(text string) *FlashingTableCellStruct {
 		backgroundColorRectangle: canvas.NewRectangle(backgroundRectangleBaseColor),
 		//FlashCellWhenRemoveFromTableFunction: widget.NewButton("", func() {}),
 		//FlashCellWhenAddToTableFunction:  SortUnsorted,
+		showDetailedTestCaseExecution: canvas.NewImageFromResource(resources.ResourceIcons8CheckMarkButton48Png),
 	}
+
+	// Hide the image and set it to fill its parent
+	newFlashingTableCell.showDetailedTestCaseExecution.FillMode = canvas.ImageFillOriginal
+	newFlashingTableCell.showDetailedTestCaseExecution.Hide()
 
 	newFlashingTableCell.ExtendBaseWidget(newFlashingTableCell)
 	return newFlashingTableCell
@@ -96,9 +136,11 @@ func NewFlashingTableCell(text string) *FlashingTableCellStruct {
 }
 
 func (newflashingTableCell *FlashingTableCellStruct) CreateRenderer() fyne.WidgetRenderer {
+
+	// Use standard cell
 	return &flashingTableCellRenderer{
 		flashingTableCell: newflashingTableCell,
-		container:         container.NewMax(newflashingTableCell.Label, newflashingTableCell.backgroundColorRectangle),
+		container:         container.NewMax(newflashingTableCell.Label, newflashingTableCell.showDetailedTestCaseExecution, newflashingTableCell.backgroundColorRectangle), //newflashingTableCell.showDetailedTestCaseExecution,
 	}
 }
 

@@ -2,6 +2,7 @@ package headertable
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"fmt"
 	"fyne.io/fyne/v2/container"
 	"github.com/sirupsen/logrus"
 	"log"
@@ -85,6 +86,40 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 			if cellID.Row > 0 && cellID.Col == 0 && str != tempCellValue { // TODO change '0' into variable instead
 
 				d.(binding.String).Set(tempCellValue)
+			}
+
+			if cellID.Row == 1 && cellID.Col == 0 {
+				fmt.Println("Update value")
+			}
+
+			// Update row number for "FlashingTableCell"
+			cnvObj.(*FlashingTableCellStruct).rowNumber = cellID.Row
+
+			// If  there are no 'TestCaseExecutionMapKey' then update it
+			if cnvObj.(*FlashingTableCellStruct).TestCaseExecutionMapKey == "" {
+				testcaseExecutionUuidReference, err := b.GetItem("TestCaseExecutionUuid")
+				if err != nil {
+					log.Fatalf("Data table Update Cell callback, GetItem(%s): %s", itemKey, err)
+				}
+				testcaseExecutionVersionReference, err := b.GetItem("TestCaseExecutionVersion")
+				if err != nil {
+					log.Fatalf("Data table Update Cell callback, GetItem(%s): %s", itemKey, err)
+				}
+
+				testcaseExecutionUuidValue, err := testcaseExecutionUuidReference.(binding.String).Get()
+				if err != nil {
+					log.Fatalf("Data table Update Cell callback, Get: %s", err)
+				}
+				testcaseExecutionVersionValue, err := testcaseExecutionVersionReference.(binding.String).Get()
+				if err != nil {
+					log.Fatalf("Data table Update Cell callback, Get: %s", err)
+				}
+
+				var tempTestCaseExecutionMapKey string
+				tempTestCaseExecutionMapKey = testcaseExecutionUuidValue + testcaseExecutionVersionValue
+
+				cnvObj.(*FlashingTableCellStruct).TestCaseExecutionMapKey = TestCaseExecutionMapKeyType(tempTestCaseExecutionMapKey)
+
 			}
 
 			// Add reference to 'flashingTableCell'

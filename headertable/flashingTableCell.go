@@ -53,6 +53,7 @@ func (flashingTableCell *FlashingTableCellStruct) DoubleTapped(_ *fyne.PointEven
 	}
 
 	flashingTableCell.showDetailedTestCaseExecution.Refresh()
+	fmt.Println("I was Double clicked!!!")
 
 }
 
@@ -127,7 +128,7 @@ func NewFlashingTableCell(text string) *FlashingTableCellStruct {
 	}
 
 	// Hide the image and set it to fill its parent
-	newFlashingTableCell.showDetailedTestCaseExecution.FillMode = canvas.ImageFillOriginal
+	newFlashingTableCell.showDetailedTestCaseExecution.FillMode = canvas.ImageFillContain
 	newFlashingTableCell.showDetailedTestCaseExecution.Hide()
 
 	newFlashingTableCell.ExtendBaseWidget(newFlashingTableCell)

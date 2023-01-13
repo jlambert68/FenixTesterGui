@@ -8,7 +8,7 @@ import (
 // DetailedTestCaseExecutionsUIModelStruct - Structure holding all object and references need to create UI for TestCaseExecutions
 type DetailedTestCaseExecutionsUIModelStruct struct {
 	ExecutionsToolUIBar    *widget.Toolbar    // Toolbar used copy, cut, paste Building Blocks
-	TestCaseExecutionsTabs *container.AppTabs // The Tab-structure where each TestCaseExecution has its own Tab
+	TestCaseExecutionsTabs *container.DocTabs // The Tab-structure where each TestCaseExecution has its own Tab
 	//ExecutionsModelReference *executionsModelForSubscriptions.ExecutionsModelObjectStruct // A reference to the model for all TestExecutions
 
 }

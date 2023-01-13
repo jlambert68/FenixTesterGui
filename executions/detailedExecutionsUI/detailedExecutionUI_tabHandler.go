@@ -32,18 +32,19 @@ func (detailedTestCaseExecutionsUIObject *DetailedTestCaseExecutionsUIModelStruc
 	testCaseExecutionsTabPage = detailedTestCaseExecutionsUIObject.CreateDetailedTestCaseExecutionsTabPage()
 
 	// Create The Tab-object, where each TestCase will have its own Tab
-	detailedTestCaseExecutionsUIObject.TestCaseExecutionsTabs = &container.AppTabs{
-		Items:     nil,
-		OnChanged: nil,
-		OnSelected: func(tabItem *container.TabItem) {
-
-		},
-		OnUnselected: nil,
+	detailedTestCaseExecutionsUIObject.TestCaseExecutionsTabs = &container.DocTabs{
+		BaseWidget:     widget.BaseWidget{},
+		Items:          nil,
+		CreateTab:      nil,
+		CloseIntercept: nil,
+		OnClosed:       nil,
+		OnSelected:     nil,
+		OnUnselected:   nil,
 	}
 
-	// Append TestCaseExecutions-List-page
+	// Append TestCaseExecutions-Summary-page
 	detailedTestCaseExecutionsUIObject.TestCaseExecutionsTabs.Append(&container.TabItem{
-		Text:    "Detailed TestCase Executions",
+		Text:    "Detailed TestCase Executions Summary",
 		Icon:    theme.HomeIcon(),
 		Content: testCaseExecutionsTabPage,
 	})

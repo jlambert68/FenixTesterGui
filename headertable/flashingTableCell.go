@@ -1,6 +1,7 @@
 package headertable
 
 import (
+	executionsModelForExecutions "FenixTesterGui/executions/detailedExecutionsModel"
 	"FenixTesterGui/resources"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -45,8 +46,16 @@ func (flashingTableCell *FlashingTableCellStruct) DoubleTapped(_ *fyne.PointEven
 
 	// Switch True/ false for ShowDetailedTestCaseExecution
 	if flashingTableCell.showDetailedTestCaseExecution.Hidden == true {
-		flashingTableCell.Label.Text = "true"
-		flashingTableCell.showDetailedTestCaseExecution.Show()
+
+		// Send message Executions Details handler to retrieve full TestCaseExecutions details
+		err := executionsModelForExecutions.RetrieveSingleTestCaseExecution(string(flashingTableCell.TestCaseExecutionMapKey))
+
+		// Only Switch if there was no error when doing the gRPC-call to GuiExecutionServer
+		if err != nil {
+			flashingTableCell.Label.Text = "true"
+			flashingTableCell.showDetailedTestCaseExecution.Show()
+		}
+
 	} else {
 		flashingTableCell.Label.Text = "false"
 		flashingTableCell.showDetailedTestCaseExecution.Hide()

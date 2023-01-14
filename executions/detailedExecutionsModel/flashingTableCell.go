@@ -1,7 +1,6 @@
-package headertable
+package detailedExecutionsModel
 
 import (
-	detailedExecutionsModel "FenixTesterGui/executions/detailedExecutionsModel"
 	"FenixTesterGui/resources"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -17,9 +16,6 @@ var _ fyne.Widget = (*FlashingTableCellStruct)(nil)
 type FlashCellWhenRemoveFromTableFunctionType func(ascending bool)
 
 type FlashCellWhenAddToTableFunctionType func(ascending bool)
-
-// Type used to define that this is TestCaseExecutionKey for model-maps
-type TestCaseExecutionMapKeyType string // Should consist of 'TestCaseExecutionUuid' + 'TestCaseExecutionVersion'
 
 type FlashingTableCellStruct struct {
 	widget.BaseWidget
@@ -48,7 +44,7 @@ func (flashingTableCell *FlashingTableCellStruct) DoubleTapped(_ *fyne.PointEven
 	if flashingTableCell.showDetailedTestCaseExecution.Hidden == true {
 
 		// Send message Executions Details handler to retrieve full TestCaseExecutions details
-		err := detailedExecutionsModel.RetrieveSingleTestCaseExecution(string(flashingTableCell.TestCaseExecutionMapKey))
+		err := RetrieveSingleTestCaseExecution(string(flashingTableCell.TestCaseExecutionMapKey))
 
 		// Only Switch if there was no error when doing the gRPC-call to GuiExecutionServer
 		if err != nil {

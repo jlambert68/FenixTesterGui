@@ -2,31 +2,13 @@ package detailedExecutionsModel
 
 import (
 	sharedCode "FenixTesterGui/common_code"
-	"FenixTesterGui/executions/executionsModelForSubscriptions"
 	"FenixTesterGui/grpc_out_GuiExecutionServer"
 	"errors"
 	"fmt"
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/data/binding"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"strconv"
 )
-
-// Initiate the channels used when Adding or Removing items to/from OnQueue-table, UnderExecution-table or FinishedExecutions-table
-func InitiateAndStartChannelsUsedByListModel() {
-
-	// Initiate Channel used for Adding and Deleting Execution items in OnQueue-table
-	//OnQueueTableAddRemoveChannel = make(chan OnQueueTableAddRemoveChannelStruct, MaximumNumberOfItemsForOnQueueTableAddRemoveChannel)
-
-	// Initiate Channel used for Adding and Deleting Execution items in UnderExecution-table
-	//UnderExecutionTableAddRemoveChannel = make(chan UnderExecutionTableAddRemoveChannelStruct, MaximumNumberOfItemsForUnderExecutionTableAddRemoveChannel)
-
-	// Initiate Channel used for Adding and Deleting Execution items in FinishedExecutions-table
-	//FinishedExecutionsTableAddRemoveChannel = make(chan FinishedExecutionsTableAddRemoveChannelStruct, MaximumNumberOfItemsForFinishedExecutionsTableAddRemoveChannel)
-
-}
 
 // RetrieveSingleTestCaseExecution
 // Retrieves a TestCaseExecution and all of its data belonging to the execution
@@ -75,78 +57,25 @@ func RetrieveSingleTestCaseExecution(testCaseExecutionKey string) (err error) {
 	if getSingleTestCaseExecutionResponse.AckNackResponse.AckNack == false {
 		return errors.New(getSingleTestCaseExecutionResponse.AckNackResponse.Comments)
 	} else {
-		// Add TestCaseExecution-details to repository
-		var testCaseExecutionResponse *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage
-		testCaseExecutionResponse = getSingleTestCaseExecutionResponse.TestCaseExecutionResponse
 
-		// The definition used in SummaryTable to represent one TestCaseExecution and its current execution status
-		type TestCaseExecutionsStatusForSummaryTableStruct struct {
-			TestCaseUIName      string
-			TestCaseStatusValue uint32
+		// Add TestCaseExecution-details to repository via channelEngine
+		var channelCommandDetailedExecutions ChannelCommandDetailedExecutionsStruct
+		channelCommandDetailedExecutions = ChannelCommandDetailedExecutionsStruct{
+			ChannelCommandDetailedExecutionsStatus:                            ChannelCommandFullDetailedExecutionsStatusUpdate,
+			FullTestCaseExecutionResponseMessage:                              getSingleTestCaseExecutionResponse.TestCaseExecutionResponse,
+			TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage: nil,
 		}
 
-		// The definition used in SummaryTable to represent one TestInstructionExecution and its current execution status
-		type TestInstructionExecutionsStatusForSummaryTableStruct struct {
-			TestInstructionExecutionUIName string
-			TestInstructionStatusValue     uint32
-		}
+		// Send command ion channel
+		DetailedExecutionStatusCommandChannel <- channelCommandDetailedExecutions
 
-		// One TestCaseExecution and all of its data.
-		type TestCaseExecutionsDetailsStruct struct {
-			// The response message when a full TestCaseExecution is retrieved
-			TestCaseExecutionDatabaseResponseMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage
+		fmt.Println(getSingleTestCaseExecutionResponse)
 
-			// The streamed status messages
-			TestCaseExecutionsStatusUpdates        []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusMessage
-			TestInstructionExecutionsStatusUpdates []*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusMessage
-
-			// A map holding all TestInstructions with their execution status. Each slice is sorted by 'UniqueDatabaseRowCounter' ASC order
-			// The slice data is used to show execution status and the last item in the slice is the one that has the current status
-			// map[TestInstructionExecutionKey]*[]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
-			// TestInstructionExecutionKey = TestInstructionExecutionUuid + TestInstructionExecutionVersion
-			TestInstructionExecutionsStatusMap map[string]*[]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
-
-			// Holding the information to be show in the SummaryTable for one TestCaseExecution
-			TestCaseExecutionsStatusForSummaryTable TestCaseExecutionsStatusForSummaryTableStruct
-
-			// The slice of all TestInstructionExecution, for one TestCaseExecution, and their current status. The order is the same as it is presented on screen
-			TestInstructionExecutionsStatusForSummaryTable []TestInstructionExecutionsStatusForSummaryTableStruct
-		}
-
-		// TestCaseExecutionsDetailsMap
-		// map[TestCaseExecutionMapKey]*TestCaseExecutionsDetailsStruct, TestCaseExecutionMapKey = TestCaseExecutionUuid + TestCaseExecutionVersionNumber
-		var TestCaseExecutionsDetailsMap map[string]*TestCaseExecutionsDetailsStruct // m
-		TestCaseExecutionsDetailsMap = make(map[string]*TestCaseExecutionsDetailsStruct)
-
-		// Check if TestCaseExecution already exist
-		var existInMap bool
-		var testCaseExecutionsDetails *TestCaseExecutionsDetailsStruct
-		var testInstructionExecutionsStatusMap map[string]*[]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
-		testInstructionExecutionsStatusMap = make(map[string]*[]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage)
-
-		testCaseExecutionsDetails, existInMap = TestCaseExecutionsDetailsMap[testCaseExecutionKey]
-		// If TestExecutionExecution doesn't exist in map then create a new instance
-		if existInMap == false {
-			testCaseExecutionsDetails = &TestCaseExecutionsDetailsStruct{
-				TestCaseExecutionDatabaseResponseMessage:       testCaseExecutionResponse,
-				TestCaseExecutionsStatusUpdates:                nil,
-				TestInstructionExecutionsStatusUpdates:         nil,
-				TestInstructionExecutionsStatusMap:             testInstructionExecutionsStatusMap,
-				TestCaseExecutionsStatusForSummaryTable:        TestCaseExecutionsStatusForSummaryTableStruct{},
-				TestInstructionExecutionsStatusForSummaryTable: nil,
-			}
-
-			// Add the TestCaseExecution to the Map
-			TestCaseExecutionsDetailsMap[testCaseExecutionKey] = testCaseExecutionsDetails
-		}
-
+		return nil
 	}
-
-	fmt.Println(getSingleTestCaseExecutionResponse)
-
-	return nil
 }
 
+/*
 func CreateTableForDetailedTestCaseExecutionsList() *fyne.Container {
 	var tableForTestCaseExecutionsOnQueueBindings []binding.DataMap
 
@@ -164,15 +93,7 @@ func CreateTableForDetailedTestCaseExecutionsList() *fyne.Container {
 
 	mySortTable := container.NewMax(ht)
 
-	/*
-		first := container.NewHBox(widget.NewLabel("Första"), mySortTable, widget.NewLabel("Sista"))
 
-		second := container.NewHBox(first)
-
-		scrollableTable := container.NewScroll(second)
-
-		scrollableTableContainer := container.NewMax(scrollableTable)
-	*/
 	//ht.Header.ScrollToTrailing()
 	ht.Header.Refresh()
 	//ht.Header.ScrollToLeading()
@@ -180,3 +101,5 @@ func CreateTableForDetailedTestCaseExecutionsList() *fyne.Container {
 	return mySortTable
 
 }
+
+*/

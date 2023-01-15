@@ -3,6 +3,7 @@ package gui
 import (
 	"FenixTesterGui/commandAndRuleEngine"
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/executions/detailedExecutionsModel"
 	detailedTestCaseExecutionsUI "FenixTesterGui/executions/detailedExecutionsUI"
 	"FenixTesterGui/executions/executionsModelForSubscriptions"
 	executionsModelForExecutions "FenixTesterGui/executions/executionsModelForTestCaseExecutions"
@@ -111,6 +112,9 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 
 	// Start Receiver channel for Commands
 	uiServer.commandAndRuleEngine.InitiateCommandChannelReader()
+
+	// Start Channel used for updating status on TestCaseExecutions
+	detailedExecutionsModel.InitiateCommandChannelReaderForDetailedStatusUpdates()
 
 	// Create Channel used for triggering TestCase Graphics update
 	sharedCode.CommandChannelGraphicsUpdate = make(chan sharedCode.ChannelCommandGraphicsUpdatedStruct)

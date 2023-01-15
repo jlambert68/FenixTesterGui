@@ -1,4 +1,4 @@
-package detailedExecutionsModel
+package detailedTestCaseExecutionUI_summaryTableDefinition
 
 import (
 	"fyne.io/fyne/v2"

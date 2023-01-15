@@ -29,12 +29,22 @@ func (detailedTestCaseExecutionsUIObject *DetailedTestCaseExecutionsUIModelStruc
 		}
 	*/
 
-	detailedTestCaseExecutionsTabPage = container.New(layout.NewVBoxLayout(), layout.NewSpacer(), detailedTestCaseExecutionsUIObject.generateExecutionColorPalette())
+	detailedTestCaseExecutionsTabPage = container.New(
+		layout.NewVBoxLayout(), detailedTestCaseExecutionsUIObject.generateTestCasesSummaryTable(),
+		layout.NewSpacer(),
+		detailedTestCaseExecutionsUIObject.generateExecutionColorPalette())
 
 	return detailedTestCaseExecutionsTabPage
 
 }
 
+func (detailedTestCaseExecutionsUIObject *DetailedTestCaseExecutionsUIModelStruct) generateTestCasesSummaryTable() (
+	testCasesSummaryTable *fyne.Container) {
+
+	return testCasesSummaryTable
+}
+
+// Generates the description for which color symbolize what execution status
 func (detailedTestCaseExecutionsUIObject *DetailedTestCaseExecutionsUIModelStruct) generateExecutionColorPalette() (
 	executionColorPaletteContainerObject *fyne.Container) {
 

@@ -1,4 +1,4 @@
-package detailedExecutionsModel
+package detailedTestCaseExecutionUI_summaryTableDefinition
 
 import (
 	"log"
@@ -15,14 +15,14 @@ var _ fyne.Widget = &TestCaseExecutionsSummaryTable{}
 type TestCaseExecutionsSummaryTable struct {
 	widget.BaseWidget
 	TableOpts *TestCaseExecutionsSummaryTableOpts
-	Header    *widget.Table
-	Data      *widget.Table
+	//Header    *widget.Table
+	Data *widget.Table
 }
 
 func NewTestCaseExecutionsSummaryTable(tableOpts *TestCaseExecutionsSummaryTableOpts) *TestCaseExecutionsSummaryTable {
 	t := &TestCaseExecutionsSummaryTable{
 		TableOpts: tableOpts,
-		Header: widget.NewTable(
+		/*Header: widget.NewTable(
 			// Dimensions (rows, cols)
 			func() (int, int) { return 1, len(tableOpts.ColAttrs) },
 			// Default value
@@ -37,7 +37,7 @@ func NewTestCaseExecutionsSummaryTable(tableOpts *TestCaseExecutionsSummaryTable
 				l.Wrapping = opts.Wrapping
 				l.Refresh()
 			},
-		),
+		),*/
 		Data: widget.NewTable(
 			// Dimensions (rows, cols)
 			func() (int, int) { return len(tableOpts.Bindings), len(tableOpts.ColAttrs) },
@@ -68,7 +68,7 @@ func NewTestCaseExecutionsSummaryTable(tableOpts *TestCaseExecutionsSummaryTable
 	refWidth := widget.NewLabel(t.TableOpts.RefWidth).MinSize().Width
 	for i, colAttr := range t.TableOpts.ColAttrs {
 		t.Data.SetColumnWidth(i, float32(colAttr.WidthPercent)/100.0*refWidth)
-		t.Header.SetColumnWidth(i, float32(colAttr.WidthPercent)/100.0*refWidth)
+		//t.Header.SetColumnWidth(i, float32(colAttr.WidthPercent)/100.0*refWidth)
 	}
 
 	return t
@@ -86,14 +86,14 @@ type headerTableRenderer struct {
 func (h *TestCaseExecutionsSummaryTable) CreateRenderer() fyne.WidgetRenderer {
 	return headerTableRenderer{
 		headerTable: h,
-		container:   container.NewBorder(h.Header, nil, nil, nil, h.Data),
+		container:   container.NewBorder(h.Data, nil, nil, nil),
 	}
 }
 
 func (r headerTableRenderer) MinSize() fyne.Size {
 	return fyne.NewSize(
-		float32(math.Max(float64(r.headerTable.Data.MinSize().Width), float64(r.headerTable.Header.MinSize().Width))),
-		r.headerTable.Data.MinSize().Height+r.headerTable.Header.MinSize().Height)
+		float32(math.Max(float64(r.headerTable.Data.MinSize().Width), float64(r.headerTable.Data.MinSize().Width))),
+		r.headerTable.Data.MinSize().Height+r.headerTable.Data.MinSize().Height)
 }
 
 func (r headerTableRenderer) Layout(s fyne.Size) {

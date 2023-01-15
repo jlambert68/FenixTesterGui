@@ -1,6 +1,8 @@
 package detailedExecutionsModel
 
 import (
+	"FenixTesterGui/executions/detailedTestCaseExecutionUI_summaryTableDefinition"
+	"fyne.io/fyne/v2"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"time"
 )
@@ -12,11 +14,171 @@ type DetailedExecutionsModelObjectStruct struct {
 // detailedExecutionsModelObject -  Object that hold all parts to of TestCaseExecution-model together
 var detailedExecutionsModelObject DetailedExecutionsModelObjectStruct
 
-// Type used to hold one Domain with UUID and Name
-type domainsStruct struct {
-	domainUuid string
-	domainName string
+// BLOCK START
+// The block below is used to define the TestExecutionSummaryTable
+
+// TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct
+// Type for holding one row of data
+type TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct___ struct {
+	TestCaseUIName      string
+	TestCaseStatusValue uint32
 }
+
+// TestCaseExecutionsFinishedExecutionTableOptions
+// Defines the structure, and column order, for TestCaseExecutions-FinishedExecution-Table
+var TestCaseExecutionsFinishedExecutionTableOptions = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsSummaryTableOpts{
+	Bindings: nil,
+	ColAttrs: []detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsColAttr{
+		{
+			Name:         "ShowDetailedTestCaseExecution",
+			Header:       "ShowDetailedTestCaseExecution",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+		{
+			Name:         "DomainUuid",
+			Header:       "DomainUuid",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+		{
+			Name:         "DomainName",
+			Header:       "DomainName",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+		{
+			Name:         "TestCaseUuid",
+			Header:       "TestCaseUuid",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+		{
+			Name:         "TestCaseName",
+			Header:       "TestCaseName",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+		{
+			Name:         "TestCaseVersion",
+			Header:       "TestCaseVersion",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+		{
+			Name:         "TestCaseExecutionUuid",
+			Header:       "TestCaseExecutionUuid",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+		{
+			Name:         "TestCaseExecutionVersion",
+			Header:       "TestCaseExecutionVersion",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+		{
+			Name:         "PlacedOnTestExecutionQueueTimeStamp",
+			Header:       "PlacedOnTestExecutionQueueTimeStamp",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+		{
+			Name:         "ExecutionPriority",
+			Header:       "ExecutionPriority",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+		{
+			Name:         "ExecutionStartTimeStamp",
+			Header:       "ExecutionStartTimeStamp",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+		{
+			Name:         "ExecutionStopTimeStamp",
+			Header:       "ExecutionStopTimeStamp",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+
+		{
+			Name:         "TestCaseExecutionStatus",
+			Header:       "TestCaseExecutionStatus",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+
+		{
+			Name:         "ExecutionHasFinished",
+			Header:       "ExecutionHasFinished",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+		{
+			Name:         "ExecutionStatusUpdateTimeStamp",
+			Header:       "ExecutionStatusUpdateTimeStamp",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+		{
+			Name:         "TestSuiteUuid",
+			Header:       "TestSuiteUuid",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+		{
+			Name:         "TestSuiteName",
+			Header:       "TestSuiteName",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+		{
+			Name:         "TestSuiteVersion",
+			Header:       "TestSuiteVersion",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+		{
+			Name:         "TestSuiteExecutionUuid",
+			Header:       "TestSuiteExecutionUuid",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+		{
+			Name:         "TestSuiteExecutionVersion",
+			Header:       "TestSuiteExecutionVersion",
+			Alignment:    fyne.TextAlignCenter,
+			TextStyle:    fyne.TextStyle{Bold: true},
+			WidthPercent: 100,
+		},
+	},
+	OnDataCellSelect:               nil,
+	RefWidth:                       "reference width",
+	HeaderLabel:                    "TestExecutions that are finished",
+	FlashingTableCellsReferenceMap: nil,
+}
+
+// BLOCK END
 
 // TestCaseExecutionMapKeyType
 // Type used to define that this is TestCaseExecutionKey for model-maps

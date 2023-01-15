@@ -1,6 +1,7 @@
-package detailedExecutionsModel
+package detailedTestCaseExecutionUI_summaryTableDefinition
 
 import (
+	"FenixTesterGui/executions/detailedExecutionsModel"
 	"FenixTesterGui/resources"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -23,7 +24,7 @@ type FlashingTableCellStruct struct {
 	backgroundColorRectangle             *canvas.Rectangle
 	showDetailedTestCaseExecution        *canvas.Image
 	rowNumber                            int
-	TestCaseExecutionMapKey              TestCaseExecutionMapKeyType
+	TestCaseExecutionMapKey              detailedExecutionsModel.TestCaseExecutionMapKeyType
 	FlashCellWhenRemoveFromTableFunction FlashCellWhenRemoveFromTableFunctionType
 	FlashCellWhenAddToTableFunction      FlashCellWhenAddToTableFunctionType
 }
@@ -44,7 +45,7 @@ func (flashingTableCell *FlashingTableCellStruct) DoubleTapped(_ *fyne.PointEven
 	if flashingTableCell.showDetailedTestCaseExecution.Hidden == true {
 
 		// Send message Executions Details handler to retrieve full TestCaseExecutions details
-		err := RetrieveSingleTestCaseExecution(string(flashingTableCell.TestCaseExecutionMapKey))
+		err := detailedExecutionsModel.RetrieveSingleTestCaseExecution(string(flashingTableCell.TestCaseExecutionMapKey))
 
 		// Only Switch if there was no error when doing the gRPC-call to GuiExecutionServer
 		if err != nil {

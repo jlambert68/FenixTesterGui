@@ -5,7 +5,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) InitiateCommandChannelReaderForDetailedStatusUpdates() {
+func InitiateCommandChannelReaderForDetailedStatusUpdates() {
 
 	// Initiate channel for Detailed Executions Status updates
 	DetailedExecutionStatusCommandChannel = make(chan ChannelCommandDetailedExecutionsStruct, messageChannelMaxSizeDetailedExecutionStatus)

@@ -6,7 +6,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-type TestCaseExecutionsColAttr struct {
+type DetailedTestCaseExecutionsSummaryColumnsAttributes struct {
 	Alignment          fyne.TextAlign
 	Header             string
 	Name               string
@@ -17,9 +17,9 @@ type TestCaseExecutionsColAttr struct {
 	MaxColumnDataWidth float32
 }
 
-type TestCaseExecutionsSummaryTableOpts struct {
+type DetailedTestCaseExecutionsSummaryTableOpts struct {
 	Bindings                       []binding.DataMap
-	ColAttrs                       []TestCaseExecutionsColAttr
+	ColAttrs                       []DetailedTestCaseExecutionsSummaryColumnsAttributes
 	OnDataCellSelect               func(cellID widget.TableCellID)
 	RefWidth                       string
 	HeaderLabel                    string

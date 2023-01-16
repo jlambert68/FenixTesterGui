@@ -29,7 +29,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 			TestCaseExecutionsStatusUpdates:                nil,
 			TestInstructionExecutionsStatusUpdates:         nil,
 			TestInstructionExecutionsStatusMap:             testInstructionExecutionsStatusMap,
-			TestCaseExecutionsStatusForSummaryTable:        TestCaseExecutionsStatusForSummaryTableStruct{},
+			TestCaseExecutionsStatusForSummaryTable:        &TestCaseExecutionsStatusForSummaryTableStruct{},
 			TestInstructionExecutionsStatusForSummaryTable: nil,
 		}
 
@@ -63,7 +63,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 		}
 	}
 	// Add the TestStatus for Summary page
-	testCaseExecutionsDetails.TestCaseExecutionsStatusForSummaryTable = testCaseExecutionsStatusForSummaryTableData
+	testCaseExecutionsDetails.TestCaseExecutionsStatusForSummaryTable = &testCaseExecutionsStatusForSummaryTableData
 
 	// TestInstructionsStatus
 	// Add the TestInstructions Statuses for summary page to the Map by converting into the simpler summary page structure
@@ -95,7 +95,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 		// Append the TestInstructionsStatus for Summary page
 		testCaseExecutionsDetails.TestInstructionExecutionsStatusForSummaryTable = append(
 			testCaseExecutionsDetails.TestInstructionExecutionsStatusForSummaryTable,
-			testInstructionExecutionsStatusForSummaryTableData)
+			&testInstructionExecutionsStatusForSummaryTableData)
 	}
 
 }

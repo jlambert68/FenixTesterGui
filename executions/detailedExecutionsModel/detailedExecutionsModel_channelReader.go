@@ -47,6 +47,9 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) startC
 		case ChannelCommandStatusUpdateOfDetailedExecutionsStatus:
 			detailedExecutionsModelObject.triggerProcessStatusUpdateOfDetailedExecutionsStatus(incomingChannelCommandAndMessage)
 
+		case ChannelCommandRemoveDetailedTestCaseExecution:
+			detailedExecutionsModelObject.triggerProcessRemoveDetailedTestCaseExecution(incomingChannelCommandAndMessage.TestCaseExecutionKey)
+
 		// No other command is supported
 		default:
 			sharedCode.Logger.WithFields(logrus.Fields{
@@ -64,6 +67,12 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) trigge
 
 	detailedExecutionsModelObject.processFullDetailedTestCaseExecutionsStatusUpdate(
 		incomingChannelCommandAndMessage.FullTestCaseExecutionResponseMessage)
+
+	// Recreate the Detailed Executions Summary Table
+	TestCasesSummaryTable = CreateSummaryTableForDetailedTestCaseExecutionsList()
+
+	TestCasesSummaryTable.Refresh()
+
 }
 
 // Updates specific status information based on subscriptions updates from GuiExecutionServer
@@ -72,4 +81,17 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) trigge
 
 	detailedExecutionsModelObject.processStatusUpdateOfDetailedExecutionsStatus(
 		incomingChannelCommandAndMessage.TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage)
+}
+
+// Remove the DetailedTestCaseExecution
+func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) triggerProcessRemoveDetailedTestCaseExecution(
+	testCaseExecutionKey string) {
+
+	detailedExecutionsModelObject.processRemoveDetailedTestCaseExecution(testCaseExecutionKey)
+
+	// Recreate the Detailed Executions Summary Table
+	TestCasesSummaryTable = CreateSummaryTableForDetailedTestCaseExecutionsList()
+
+	TestCasesSummaryTable.Refresh()
+
 }

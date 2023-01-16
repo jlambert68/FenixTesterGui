@@ -10,17 +10,19 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-var _ fyne.Widget = &TestCaseExecutionsSummaryTable{}
+var _ fyne.Widget = &TestCaseExecutionsSummaryTableStruct{}
 
-type TestCaseExecutionsSummaryTable struct {
+type TestCaseExecutionsSummaryTableStruct struct {
 	widget.BaseWidget
-	TableOpts *TestCaseExecutionsSummaryTableOpts
+	TableOpts *DetailedTestCaseExecutionsSummaryTableOpts
 	//Header    *widget.Table
 	Data *widget.Table
 }
 
-func NewTestCaseExecutionsSummaryTable(tableOpts *TestCaseExecutionsSummaryTableOpts) *TestCaseExecutionsSummaryTable {
-	t := &TestCaseExecutionsSummaryTable{
+var TestCaseExecutionsSummaryTable *TestCaseExecutionsSummaryTableStruct
+
+func NewTestCaseExecutionsSummaryTable(tableOpts *DetailedTestCaseExecutionsSummaryTableOpts) *TestCaseExecutionsSummaryTableStruct {
+	t := &TestCaseExecutionsSummaryTableStruct{
 		TableOpts: tableOpts,
 		/*Header: widget.NewTable(
 			// Dimensions (rows, cols)
@@ -76,37 +78,42 @@ func NewTestCaseExecutionsSummaryTable(tableOpts *TestCaseExecutionsSummaryTable
 
 //*******************************************************************************
 
-var _ fyne.WidgetRenderer = headerTableRenderer{}
+var _ fyne.WidgetRenderer = testCaseExecutionSummaryTableRenderer{}
 
-type headerTableRenderer struct {
-	headerTable *TestCaseExecutionsSummaryTable
-	container   *fyne.Container
+type testCaseExecutionSummaryTableRenderer struct {
+	testCaseExecutionSummaryTable *TestCaseExecutionsSummaryTableStruct
+	container                     *fyne.Container
 }
 
-func (h *TestCaseExecutionsSummaryTable) CreateRenderer() fyne.WidgetRenderer {
-	return headerTableRenderer{
-		headerTable: h,
-		container:   container.NewBorder(h.Data, nil, nil, nil),
+func (h *TestCaseExecutionsSummaryTableStruct) CreateRenderer() fyne.WidgetRenderer {
+	return testCaseExecutionSummaryTableRenderer{
+		testCaseExecutionSummaryTable: h,
+		container:                     container.NewMax(h.Data), // container.NewBorder(h.Data, nil, nil, nil),
 	}
 }
 
-func (r headerTableRenderer) MinSize() fyne.Size {
+func (r testCaseExecutionSummaryTableRenderer) MinSize() fyne.Size {
+
 	return fyne.NewSize(
-		float32(math.Max(float64(r.headerTable.Data.MinSize().Width), float64(r.headerTable.Data.MinSize().Width))),
-		r.headerTable.Data.MinSize().Height+r.headerTable.Data.MinSize().Height)
+		float32(math.Max(float64(r.testCaseExecutionSummaryTable.Data.MinSize().Width),
+			float64(r.testCaseExecutionSummaryTable.Data.MinSize().Width))),
+		float32(math.Min(
+			float64(r.testCaseExecutionSummaryTable.Data.MinSize().Height*float32(10)), // Minimum is 10 rows
+			float64(r.testCaseExecutionSummaryTable.Data.MinSize().Height*float32(len(r.testCaseExecutionSummaryTable.TableOpts.Bindings))))))
+	//r.testCaseExecutionSummaryTable.Data.MinSize().Height+r.testCaseExecutionSummaryTable.Data.MinSize().Height)
 }
 
-func (r headerTableRenderer) Layout(s fyne.Size) {
+func (r testCaseExecutionSummaryTableRenderer) Layout(s fyne.Size) {
 	r.container.Resize(s)
 }
 
-func (r headerTableRenderer) Destroy() {
+func (r testCaseExecutionSummaryTableRenderer) Destroy() {
 }
 
-func (r headerTableRenderer) Refresh() {
+func (r testCaseExecutionSummaryTableRenderer) Refresh() {
 	r.container.Refresh()
 }
 
-func (r headerTableRenderer) Objects() []fyne.CanvasObject {
+func (r testCaseExecutionSummaryTableRenderer) Objects() []fyne.CanvasObject {
 	return []fyne.CanvasObject{r.container}
 }

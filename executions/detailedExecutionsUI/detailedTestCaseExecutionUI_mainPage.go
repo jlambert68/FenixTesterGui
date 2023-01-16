@@ -1,6 +1,7 @@
 package detailedTestCaseExecutionsUI
 
 import (
+	"FenixTesterGui/executions/detailedExecutionsModel"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
@@ -29,8 +30,11 @@ func (detailedTestCaseExecutionsUIObject *DetailedTestCaseExecutionsUIModelStruc
 		}
 	*/
 
+	detailedTestCaseExecutionsUIObject.generateTestCasesSummaryTable()
+
 	detailedTestCaseExecutionsTabPage = container.New(
-		layout.NewVBoxLayout(), detailedTestCaseExecutionsUIObject.generateTestCasesSummaryTable(),
+		layout.NewVBoxLayout(),
+		detailedExecutionsModel.TestCasesSummaryTable,
 		layout.NewSpacer(),
 		detailedTestCaseExecutionsUIObject.generateExecutionColorPalette())
 
@@ -38,10 +42,10 @@ func (detailedTestCaseExecutionsUIObject *DetailedTestCaseExecutionsUIModelStruc
 
 }
 
-func (detailedTestCaseExecutionsUIObject *DetailedTestCaseExecutionsUIModelStruct) generateTestCasesSummaryTable() (
-	testCasesSummaryTable *fyne.Container) {
+func (detailedTestCaseExecutionsUIObject *DetailedTestCaseExecutionsUIModelStruct) generateTestCasesSummaryTable() {
 
-	return testCasesSummaryTable
+	detailedExecutionsModel.TestCasesSummaryTable = detailedExecutionsModel.CreateSummaryTableForDetailedTestCaseExecutionsList()
+
 }
 
 // Generates the description for which color symbolize what execution status

@@ -140,6 +140,8 @@ type TestCaseExecutionsStatusForSummaryTableStruct struct {
 	TestCaseUIName                 string
 	TestCaseStatusValue            uint32
 	ExecutionStatusUpdateTimeStamp time.Time
+	TestCaseExecutionUuid          string
+	TestCaseExecutionVersion       string
 }
 
 // TestInstructionExecutionsStatusForSummaryTableStruct

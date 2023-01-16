@@ -12,53 +12,31 @@ import (
 	"time"
 )
 
-var _ fyne.Widget = (*FlashingTableCellStruct)(nil)
+var _ fyne.Widget = (*TestCaseExecutionSummaryTableCellStruct)(nil)
 
-type FlashCellWhenRemoveFromTableFunctionType func(ascending bool)
-
-type FlashCellWhenAddToTableFunctionType func(ascending bool)
-
-type FlashingTableCellStruct struct {
+type TestCaseExecutionSummaryTableCellStruct struct {
 	widget.BaseWidget
-	Label                                *widget.Label
-	backgroundColorRectangle             *canvas.Rectangle
-	showDetailedTestCaseExecution        *canvas.Image
-	rowNumber                            int
-	TestCaseExecutionMapKey              detailedExecutionsModel.TestCaseExecutionMapKeyType
-	FlashCellWhenRemoveFromTableFunction FlashCellWhenRemoveFromTableFunctionType
-	FlashCellWhenAddToTableFunction      FlashCellWhenAddToTableFunctionType
+	Label                             *widget.Label
+	backgroundColorRectangle          *canvas.Rectangle
+	showDetailedTestCaseExecution     *canvas.Image
+	subrscriptionForTestCaseExecution *canvas.Image
+	rowNumber                         int
+	TestCaseExecutionMapKey           string
+	testCaseExecutionsDetails         *detailedExecutionsModel.TestCaseExecutionsDetailsStruct
 }
 
-func (t *FlashingTableCellStruct) Tapped(_ *fyne.PointEvent) {
+func (t *TestCaseExecutionSummaryTableCellStruct) Tapped(_ *fyne.PointEvent) {
 	fmt.Println("I was clicked!!! ", t.Label)
 
 }
 
-func (t *FlashingTableCellStruct) TappedSecondary(_ *fyne.PointEvent) {
+func (t *TestCaseExecutionSummaryTableCellStruct) TappedSecondary(_ *fyne.PointEvent) {
 	fmt.Println("I was Right clicked!!!")
 
 }
 
-func (flashingTableCell *FlashingTableCellStruct) DoubleTapped(_ *fyne.PointEvent) {
+func (testcaseExecutionSummaryTableCell *TestCaseExecutionSummaryTableCellStruct) DoubleTapped(_ *fyne.PointEvent) {
 
-	// Switch True/ false for ShowDetailedTestCaseExecution
-	if flashingTableCell.showDetailedTestCaseExecution.Hidden == true {
-
-		// Send message Executions Details handler to retrieve full TestCaseExecutions details
-		err := detailedExecutionsModel.RetrieveSingleTestCaseExecution(string(flashingTableCell.TestCaseExecutionMapKey))
-
-		// Only Switch if there was no error when doing the gRPC-call to GuiExecutionServer
-		if err != nil {
-			flashingTableCell.Label.Text = "true"
-			flashingTableCell.showDetailedTestCaseExecution.Show()
-		}
-
-	} else {
-		flashingTableCell.Label.Text = "false"
-		flashingTableCell.showDetailedTestCaseExecution.Hide()
-	}
-
-	flashingTableCell.showDetailedTestCaseExecution.Refresh()
 	fmt.Println("I was Double clicked!!!")
 
 }
@@ -77,9 +55,9 @@ var headerBackgroundRectangleBaseColor = color.RGBA{
 	A: 0x88,
 }
 
-func FlashAddedRow(flashingTableCell *FlashingTableCellStruct) {
+func FlashAddedRow(testcaseExecutionSummaryTableCell *TestCaseExecutionSummaryTableCellStruct) {
 
-	go func(flashingTableCell *FlashingTableCellStruct) {
+	go func(testcaseExecutionSummaryTableCell *TestCaseExecutionSummaryTableCellStruct) {
 
 		// Define how the Color-flash should look like
 		rectangleColorAnimation := canvas.NewColorRGBAAnimation(backgroundRectangleBaseColor,
@@ -89,20 +67,20 @@ func FlashAddedRow(flashingTableCell *FlashingTableCellStruct) {
 				B: 0x00,
 				A: 0xAA,
 			}, time.Millisecond*200, func(animationColorValue color.Color) {
-				flashingTableCell.backgroundColorRectangle.FillColor = animationColorValue
-				canvas.Refresh(flashingTableCell.backgroundColorRectangle)
+				testcaseExecutionSummaryTableCell.backgroundColorRectangle.FillColor = animationColorValue
+				canvas.Refresh(testcaseExecutionSummaryTableCell.backgroundColorRectangle)
 			})
 
 		// Initiate Color-flash
 		rectangleColorAnimation.AutoReverse = true
 		rectangleColorAnimation.Start()
 
-	}(flashingTableCell)
+	}(testcaseExecutionSummaryTableCell)
 
 }
 
-func FlashRowToBeRemoved(flashingTableCell *FlashingTableCellStruct) {
-	go func(flashingTableCell *FlashingTableCellStruct) {
+func FlashRowToBeRemoved(testcaseExecutionSummaryTableCell *TestCaseExecutionSummaryTableCellStruct) {
+	go func(testcaseExecutionSummaryTableCell *TestCaseExecutionSummaryTableCellStruct) {
 
 		// Define how the Color-flash should look like
 		rectangleColorAnimation := canvas.NewColorRGBAAnimation(backgroundRectangleBaseColor,
@@ -112,66 +90,81 @@ func FlashRowToBeRemoved(flashingTableCell *FlashingTableCellStruct) {
 				B: 0x00,
 				A: 0xAA,
 			}, time.Millisecond*200, func(animationColorValue color.Color) {
-				flashingTableCell.backgroundColorRectangle.FillColor = animationColorValue
-				canvas.Refresh(flashingTableCell.backgroundColorRectangle)
+				testcaseExecutionSummaryTableCell.backgroundColorRectangle.FillColor = animationColorValue
+				canvas.Refresh(testcaseExecutionSummaryTableCell.backgroundColorRectangle)
 			})
 
 		// Initiate Color-flash
 		rectangleColorAnimation.AutoReverse = true
 		rectangleColorAnimation.Start()
 
-	}(flashingTableCell)
+	}(testcaseExecutionSummaryTableCell)
 
 }
 
-func NewFlashingTableCell(text string) *FlashingTableCellStruct {
-	newFlashingTableCell := &FlashingTableCellStruct{
-		Label:                    widget.NewLabel(text),
-		backgroundColorRectangle: canvas.NewRectangle(backgroundRectangleBaseColor),
-		//FlashCellWhenRemoveFromTableFunction: widget.NewButton("", func() {}),
-		//FlashCellWhenAddToTableFunction:  SortUnsorted,
-		showDetailedTestCaseExecution: canvas.NewImageFromResource(resources.ResourceIcons8CheckMarkButton48Png),
+func NewTestcaseExecutionSummaryTableCell(text string) *TestCaseExecutionSummaryTableCellStruct {
+	newtestcaseExecutionSummaryTableCell := &TestCaseExecutionSummaryTableCellStruct{
+		Label:                             widget.NewLabel(text),
+		backgroundColorRectangle:          canvas.NewRectangle(backgroundRectangleBaseColor),
+		showDetailedTestCaseExecution:     canvas.NewImageFromResource(resources.ResourceIcons8CheckMarkButton48Png),
+		subrscriptionForTestCaseExecution: canvas.NewImageFromResource(resources.ResourceIcons8CheckMarkButton48Png),
 	}
 
-	// Hide the image and set it to fill its parent
-	newFlashingTableCell.showDetailedTestCaseExecution.FillMode = canvas.ImageFillContain
-	newFlashingTableCell.showDetailedTestCaseExecution.Hide()
+	// Hide the showDetailedTestCaseExecution-image and set it to fill its parent
+	newtestcaseExecutionSummaryTableCell.showDetailedTestCaseExecution.FillMode = canvas.ImageFillContain
+	newtestcaseExecutionSummaryTableCell.showDetailedTestCaseExecution.Hide()
 
-	newFlashingTableCell.ExtendBaseWidget(newFlashingTableCell)
-	return newFlashingTableCell
+	// Hide the subrscriptionForTestCaseExecution-image and set it to fill its parent
+	newtestcaseExecutionSummaryTableCell.subrscriptionForTestCaseExecution.FillMode = canvas.ImageFillContain
+	newtestcaseExecutionSummaryTableCell.subrscriptionForTestCaseExecution.Hide()
+
+	newtestcaseExecutionSummaryTableCell.ExtendBaseWidget(newtestcaseExecutionSummaryTableCell)
+	return newtestcaseExecutionSummaryTableCell
 
 }
 
-func (newflashingTableCell *FlashingTableCellStruct) CreateRenderer() fyne.WidgetRenderer {
+func (newtestcaseExecutionSummaryTableCell *TestCaseExecutionSummaryTableCellStruct) CreateRenderer() fyne.WidgetRenderer {
+
+	// Generate slice of TestInstructionExecutions
+	var testInstructionExecutionNames []fyne.CanvasObject
+	for _, testInstructionName := range newtestcaseExecutionSummaryTableCell.testCaseExecutionsDetails.TestInstructionExecutionsStatusForSummaryTable {
+		testInstructionExecutionNames = append(testInstructionExecutionNames,
+			container.NewMax(widget.NewLabel(testInstructionName.TestInstructionExecutionUIName)))
+	}
 
 	// Use standard cell
-	return &flashingTableCellRenderer{
-		flashingTableCell: newflashingTableCell,
-		container:         container.NewMax(newflashingTableCell.Label, newflashingTableCell.showDetailedTestCaseExecution, newflashingTableCell.backgroundColorRectangle), //newflashingTableCell.showDetailedTestCaseExecution,
+	return &testcaseExecutionSummaryTableCellRenderer{
+		testcaseExecutionSummaryTableCell: newtestcaseExecutionSummaryTableCell,
+		container: container.NewMax(
+			container.NewVBox(
+				newtestcaseExecutionSummaryTableCell.Label,
+				container.NewHBox(testInstructionExecutionNames...),
+			),
+			newtestcaseExecutionSummaryTableCell.backgroundColorRectangle), //newtestcaseExecutionSummaryTableCell.showDetailedTestCaseExecution,
 	}
 }
 
-var _ fyne.WidgetRenderer = (*flashingTableCellRenderer)(nil)
+var _ fyne.WidgetRenderer = (*testcaseExecutionSummaryTableCellRenderer)(nil)
 
-type flashingTableCellRenderer struct {
-	flashingTableCell *FlashingTableCellStruct
-	container         *fyne.Container
+type testcaseExecutionSummaryTableCellRenderer struct {
+	testcaseExecutionSummaryTableCell *TestCaseExecutionSummaryTableCellStruct
+	container                         *fyne.Container
 }
 
-func (r *flashingTableCellRenderer) MinSize() fyne.Size {
+func (r *testcaseExecutionSummaryTableCellRenderer) MinSize() fyne.Size {
 	return r.container.MinSize()
 }
 
-func (r *flashingTableCellRenderer) Layout(size fyne.Size) {
+func (r *testcaseExecutionSummaryTableCellRenderer) Layout(size fyne.Size) {
 	r.container.Resize(size)
 }
 
-func (r *flashingTableCellRenderer) Refresh() {
+func (r *testcaseExecutionSummaryTableCellRenderer) Refresh() {
 	r.container.Refresh()
 }
 
-func (r *flashingTableCellRenderer) Objects() []fyne.CanvasObject {
+func (r *testcaseExecutionSummaryTableCellRenderer) Objects() []fyne.CanvasObject {
 	return []fyne.CanvasObject{r.container}
 }
 
-func (r *flashingTableCellRenderer) Destroy() {}
+func (r *testcaseExecutionSummaryTableCellRenderer) Destroy() {}

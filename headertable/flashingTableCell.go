@@ -51,14 +51,21 @@ func (flashingTableCell *FlashingTableCellStruct) DoubleTapped(_ *fyne.PointEven
 		err := detailedExecutionsModel.RetrieveSingleTestCaseExecution(string(flashingTableCell.TestCaseExecutionMapKey))
 
 		// Only Switch if there was no error when doing the gRPC-call to GuiExecutionServer
-		if err != nil {
+		if err == nil {
 			flashingTableCell.Label.Text = "true"
 			flashingTableCell.showDetailedTestCaseExecution.Show()
 		}
 
 	} else {
-		flashingTableCell.Label.Text = "false"
-		flashingTableCell.showDetailedTestCaseExecution.Hide()
+
+		// Send message Executions Details handler to retrieve full TestCaseExecutions details
+		err := detailedExecutionsModel.RemoveTestCaseExecutionFromSummaryTable(string(flashingTableCell.TestCaseExecutionMapKey))
+
+		// Only Switch if there was no error when removing from Summary Table
+		if err == nil {
+			flashingTableCell.Label.Text = "false"
+			flashingTableCell.showDetailedTestCaseExecution.Hide()
+		}
 	}
 
 	flashingTableCell.showDetailedTestCaseExecution.Refresh()

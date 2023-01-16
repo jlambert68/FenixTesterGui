@@ -50,7 +50,17 @@ func (detailedTestCaseExecutionsUIObject *DetailedTestCaseExecutionsUIModelStruc
 	})
 
 	detailedTestCaseExecutionsUIObject.TestCaseExecutionsTabs.OnSelected = func(tabItem *container.TabItem) {
+		fmt.Println("OnSelected")
 		fmt.Println(tabItem)
+		testCaseExecutionsTabPage.Refresh()
+
+	}
+
+	detailedTestCaseExecutionsUIObject.TestCaseExecutionsTabs.CloseIntercept = func(tabItem *container.TabItem) {
+		if tabItem.Text == "Detailed TestCase Executions Summary" {
+			return
+			tabItem.Content.Refresh()
+		}
 
 	}
 

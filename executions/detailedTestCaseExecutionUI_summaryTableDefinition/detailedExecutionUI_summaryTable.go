@@ -1,6 +1,7 @@
 package detailedTestCaseExecutionUI_summaryTableDefinition
 
 import (
+	"FenixTesterGui/executions/detailedExecutionsModel"
 	"log"
 	"math"
 
@@ -45,7 +46,7 @@ func NewTestCaseExecutionsSummaryTable(tableOpts *DetailedTestCaseExecutionsSumm
 			func() (int, int) { return len(tableOpts.Bindings), len(tableOpts.ColAttrs) },
 
 			// Default value
-			func() fyne.CanvasObject { return widget.NewLabel("wide content") },
+			func() fyne.CanvasObject { return NewTestcaseExecutionSummaryTableCell("wide content") },
 
 			// Cell values
 			func(cellID widget.TableCellID, cnvObj fyne.CanvasObject) {
@@ -59,8 +60,49 @@ func NewTestCaseExecutionsSummaryTable(tableOpts *DetailedTestCaseExecutionsSumm
 				if err != nil {
 					log.Fatalf("Data table Update Cell callback, Get: %s", err)
 				}
-				l := cnvObj.(*widget.Label)
+				l := cnvObj.(*TestCaseExecutionSummaryTableCellStruct).Label
 				l.SetText(str)
+
+				// Update row number for "FlashingTableCell"
+				cnvObj.(*TestCaseExecutionSummaryTableCellStruct).rowNumber = cellID.Row
+
+				// If  there are no 'TestCaseExecutionMapKey' then update it
+				if cnvObj.(*TestCaseExecutionSummaryTableCellStruct).TestCaseExecutionMapKey == "" {
+					testcaseExecutionUuidReference, err := b.GetItem("TestCaseExecutionUuid")
+					if err != nil {
+						log.Fatalf("Data table Update Cell callback, GetItem(%s): %s", itemKey, err)
+					}
+					testcaseExecutionVersionReference, err := b.GetItem("TestCaseExecutionVersion")
+					if err != nil {
+						log.Fatalf("Data table Update Cell callback, GetItem(%s): %s", itemKey, err)
+					}
+
+					testcaseExecutionUuidValue, err := testcaseExecutionUuidReference.(binding.String).Get()
+					if err != nil {
+						log.Fatalf("Data table Update Cell callback, Get: %s", err)
+					}
+					testcaseExecutionVersionValue, err := testcaseExecutionVersionReference.(binding.String).Get()
+					if err != nil {
+						log.Fatalf("Data table Update Cell callback, Get: %s", err)
+					}
+
+					var tempTestCaseExecutionMapKey string
+					tempTestCaseExecutionMapKey = testcaseExecutionUuidValue + testcaseExecutionVersionValue
+
+					cnvObj.(*TestCaseExecutionSummaryTableCellStruct).TestCaseExecutionMapKey = string(tempTestCaseExecutionMapKey)
+
+					// Add reference to 'testCaseExecutionsDetails'
+					var testCaseExecutionsDetails *detailedExecutionsModel.TestCaseExecutionsDetailsStruct
+					var existInMap bool
+					testCaseExecutionsDetails, existInMap = detailedExecutionsModel.TestCaseExecutionsDetailsMap[tempTestCaseExecutionMapKey]
+
+					// If TestExecutionExecution doesn't exist in map then create a new instance
+					if existInMap == false {
+						log.Fatalf("Shouldn't be like this")
+					}
+					cnvObj.(*TestCaseExecutionSummaryTableCellStruct).testCaseExecutionsDetails = testCaseExecutionsDetails
+
+				}
 			},
 		),
 	}

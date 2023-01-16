@@ -23,7 +23,7 @@ type DetailedTestCaseExecutionsSummaryTableOpts struct {
 	OnDataCellSelect               func(cellID widget.TableCellID)
 	RefWidth                       string
 	HeaderLabel                    string
-	FlashingTableCellsReferenceMap map[widget.TableCellID]*FlashingTableCellStruct
+	FlashingTableCellsReferenceMap map[widget.TableCellID]*TestCaseExecutionSummaryTableCellStruct
 }
 
 type Header struct {

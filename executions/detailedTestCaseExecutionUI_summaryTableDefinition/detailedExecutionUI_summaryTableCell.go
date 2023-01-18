@@ -1,7 +1,6 @@
 package detailedTestCaseExecutionUI_summaryTableDefinition
 
 import (
-	"FenixTesterGui/executions/detailedExecutionsModel"
 	"FenixTesterGui/resources"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -14,15 +13,41 @@ import (
 
 var _ fyne.Widget = (*TestCaseExecutionSummaryTableCellStruct)(nil)
 
+// TestCaseExecutionsStatusForSummaryTableStruct
+// The definition used in SummaryTable to represent one TestCaseExecution and its current execution status
+type TestCaseExecutionsStatusForSummaryTableStruct struct {
+	TestCaseUIName                                 string
+	TestCaseStatusValue                            uint32
+	ExecutionStatusUpdateTimeStamp                 time.Time
+	TestCaseExecutionUuid                          string
+	TestCaseExecutionVersion                       string
+	TestInstructionExecutionsStatusForSummaryTable *[]*TestInstructionExecutionsStatusForSummaryTableStruct
+}
+
+// TestInstructionExecutionsStatusForSummaryTableStruct
+// The definition used in SummaryTable to represent one TestInstructionExecution and its current execution status
+type TestInstructionExecutionsStatusForSummaryTableStruct struct {
+	TestInstructionExecutionUIName string
+	TestInstructionStatusValue     uint32
+	ExecutionStatusUpdateTimeStamp time.Time
+}
+
 type TestCaseExecutionSummaryTableCellStruct struct {
 	widget.BaseWidget
-	Label                             *widget.Label
-	backgroundColorRectangle          *canvas.Rectangle
-	showDetailedTestCaseExecution     *canvas.Image
-	subrscriptionForTestCaseExecution *canvas.Image
-	rowNumber                         int
-	TestCaseExecutionMapKey           string
-	testCaseExecutionsDetails         *detailedExecutionsModel.TestCaseExecutionsDetailsStruct
+	Label                                   *widget.Label
+	testInstructionExecutionNames           []fyne.CanvasObject
+	backgroundColorRectangle                *canvas.Rectangle
+	showDetailedTestCaseExecution           *canvas.Image
+	subscriptionForTestCaseExecution        *canvas.Image
+	rowNumber                               int
+	TestCaseExecutionMapKey                 string
+	TestCaseExecutionMapKeyLabel            *widget.Label
+	MyLabels                                []fyne.CanvasObject
+	MyLabelsTextValues                      []string
+	testCaseExecutionsDetails               *TestCaseExecutionsDetailsStruct
+	testCaseExecutionsStatusForSummaryTable *TestCaseExecutionsStatusForSummaryTableStruct
+	//testInstructionExecutionsStatusForSummaryTable *[]*TestInstructionExecutionsStatusForSummaryTable
+
 }
 
 func (t *TestCaseExecutionSummaryTableCellStruct) Tapped(_ *fyne.PointEvent) {
@@ -104,19 +129,24 @@ func FlashRowToBeRemoved(testcaseExecutionSummaryTableCell *TestCaseExecutionSum
 
 func NewTestcaseExecutionSummaryTableCell(text string) *TestCaseExecutionSummaryTableCellStruct {
 	newtestcaseExecutionSummaryTableCell := &TestCaseExecutionSummaryTableCellStruct{
-		Label:                             widget.NewLabel(text),
-		backgroundColorRectangle:          canvas.NewRectangle(backgroundRectangleBaseColor),
-		showDetailedTestCaseExecution:     canvas.NewImageFromResource(resources.ResourceIcons8CheckMarkButton48Png),
-		subrscriptionForTestCaseExecution: canvas.NewImageFromResource(resources.ResourceIcons8CheckMarkButton48Png),
+		Label:                            widget.NewLabel(text),
+		backgroundColorRectangle:         canvas.NewRectangle(backgroundRectangleBaseColor),
+		showDetailedTestCaseExecution:    canvas.NewImageFromResource(resources.ResourceIcons8CheckMarkButton48Png),
+		subscriptionForTestCaseExecution: canvas.NewImageFromResource(resources.ResourceIcons8CheckMarkButton48Png),
+		TestCaseExecutionMapKeyLabel:     widget.NewLabel("text"),
+		MyLabels:                         []fyne.CanvasObject{},
 	}
+	newtestcaseExecutionSummaryTableCell.MyLabels = make([]fyne.CanvasObject, 10)
+	newtestcaseExecutionSummaryTableCell.MyLabels[0] = widget.NewLabel("SKapad när..1..")
+	newtestcaseExecutionSummaryTableCell.MyLabels[1] = widget.NewLabel("SKapad när..2..")
 
 	// Hide the showDetailedTestCaseExecution-image and set it to fill its parent
 	newtestcaseExecutionSummaryTableCell.showDetailedTestCaseExecution.FillMode = canvas.ImageFillContain
 	newtestcaseExecutionSummaryTableCell.showDetailedTestCaseExecution.Hide()
 
-	// Hide the subrscriptionForTestCaseExecution-image and set it to fill its parent
-	newtestcaseExecutionSummaryTableCell.subrscriptionForTestCaseExecution.FillMode = canvas.ImageFillContain
-	newtestcaseExecutionSummaryTableCell.subrscriptionForTestCaseExecution.Hide()
+	// Hide the subscriptionForTestCaseExecution-image and set it to fill its parent
+	newtestcaseExecutionSummaryTableCell.subscriptionForTestCaseExecution.FillMode = canvas.ImageFillContain
+	newtestcaseExecutionSummaryTableCell.subscriptionForTestCaseExecution.Hide()
 
 	newtestcaseExecutionSummaryTableCell.ExtendBaseWidget(newtestcaseExecutionSummaryTableCell)
 	return newtestcaseExecutionSummaryTableCell
@@ -126,20 +156,41 @@ func NewTestcaseExecutionSummaryTableCell(text string) *TestCaseExecutionSummary
 func (newtestcaseExecutionSummaryTableCell *TestCaseExecutionSummaryTableCellStruct) CreateRenderer() fyne.WidgetRenderer {
 
 	// Generate slice of TestInstructionExecutions
-	var testInstructionExecutionNames []fyne.CanvasObject
-	for _, testInstructionName := range newtestcaseExecutionSummaryTableCell.testCaseExecutionsDetails.TestInstructionExecutionsStatusForSummaryTable {
-		testInstructionExecutionNames = append(testInstructionExecutionNames,
-			container.NewMax(widget.NewLabel(testInstructionName.TestInstructionExecutionUIName)))
+	/*
+		var testInstructionExecutionNames []fyne.CanvasObject
+
+		if newtestcaseExecutionSummaryTableCell.testCaseExecutionsDetails != nil {
+			var testInstructionExecutionsStatusForSummaryTableSReference *[]*TestInstructionExecutionsStatusForSummaryTableStruct
+			testInstructionExecutionsStatusForSummaryTableSReference = newtestcaseExecutionSummaryTableCell.testCaseExecutionsDetails.TestCaseExecutionsStatusForSummaryTable.TestInstructionExecutionsStatusForSummaryTable
+
+			var testInstructionExecutionsStatusForSummaryTable []*TestInstructionExecutionsStatusForSummaryTableStruct
+			testInstructionExecutionsStatusForSummaryTable = *testInstructionExecutionsStatusForSummaryTableSReference
+
+			for _, testInstructionNameRef := range testInstructionExecutionsStatusForSummaryTable {
+				testInstructionExecutionNames = append(testInstructionExecutionNames,
+					container.NewMax(widget.NewLabel(testInstructionNameRef.TestInstructionExecutionUIName)))
+			}
+		}
+
+	*/
+
+	myNewVBox := container.NewVBox()
+	myNewVBox.Add(newtestcaseExecutionSummaryTableCell.Label)
+	myNewVBox.Add(newtestcaseExecutionSummaryTableCell.TestCaseExecutionMapKeyLabel)
+	if len(newtestcaseExecutionSummaryTableCell.MyLabelsTextValues) > 0 {
+		for i, _ := range newtestcaseExecutionSummaryTableCell.MyLabelsTextValues {
+			//newtestcaseExecutionSummaryTableCell.MyLabels[i] = widget.NewLabel(textValue)
+			myNewVBox.Add(newtestcaseExecutionSummaryTableCell.MyLabels[i])
+		}
+
 	}
+	myNewVBox.Add(newtestcaseExecutionSummaryTableCell.MyLabels[0])
 
 	// Use standard cell
 	return &testcaseExecutionSummaryTableCellRenderer{
 		testcaseExecutionSummaryTableCell: newtestcaseExecutionSummaryTableCell,
 		container: container.NewMax(
-			container.NewVBox(
-				newtestcaseExecutionSummaryTableCell.Label,
-				container.NewHBox(testInstructionExecutionNames...),
-			),
+			myNewVBox,
 			newtestcaseExecutionSummaryTableCell.backgroundColorRectangle), //newtestcaseExecutionSummaryTableCell.showDetailedTestCaseExecution,
 	}
 }

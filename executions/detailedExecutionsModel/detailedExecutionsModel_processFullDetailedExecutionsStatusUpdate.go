@@ -1,6 +1,7 @@
 package detailedExecutionsModel
 
 import (
+	"FenixTesterGui/executions/detailedTestCaseExecutionUI_summaryTableDefinition"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"strconv"
 )
@@ -15,8 +16,8 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 
 	// Check if TestCaseExecution already exist
 	var existInMap bool
-	var testCaseExecutionsDetails *TestCaseExecutionsDetailsStruct
-	testCaseExecutionsDetails, existInMap = TestCaseExecutionsDetailsMap[testCaseExecutionMapKey]
+	var testCaseExecutionsDetails *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct
+	testCaseExecutionsDetails, existInMap = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[testCaseExecutionMapKey]
 
 	// If TestExecutionExecution doesn't exist in map then create a new instance
 	if existInMap == false {
@@ -24,37 +25,39 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 		var testInstructionExecutionsStatusMap map[string]*[]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
 		testInstructionExecutionsStatusMap = make(map[string]*[]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage)
 
-		testCaseExecutionsDetails = &TestCaseExecutionsDetailsStruct{
+		testCaseExecutionsDetails = &detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct{
 			TestCaseExecutionDatabaseResponseMessage:       testCaseExecutionResponse,
 			TestCaseExecutionsStatusUpdates:                nil,
 			TestInstructionExecutionsStatusUpdates:         nil,
 			TestInstructionExecutionsStatusMap:             testInstructionExecutionsStatusMap,
-			TestCaseExecutionsStatusForSummaryTable:        &TestCaseExecutionsStatusForSummaryTableStruct{},
+			TestCaseExecutionsStatusForSummaryTable:        &detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsStatusForSummaryTableStruct{},
 			TestInstructionExecutionsStatusForSummaryTable: nil,
 		}
 
 		// Add the TestCaseExecution to the Map
-		TestCaseExecutionsDetailsMap[testCaseExecutionMapKey] = testCaseExecutionsDetails
+		detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[testCaseExecutionMapKey] = testCaseExecutionsDetails
 	}
 
 	// TestCaseStatus
 	// Add the TestCase Status for summary page to the Map by converting into the simpler summary page structure
-	var testCaseExecutionsStatusForSummaryTableData TestCaseExecutionsStatusForSummaryTableStruct
+	var testCaseExecutionsStatusForSummaryTableData detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsStatusForSummaryTableStruct
 	for testCaseExecutionDetailsCounter, testCaseExecutionDetailsMessage := range testCaseExecutionResponse.TestCaseExecutionDetails {
 
 		// When it's the first instance of status then use that as the base
 		if testCaseExecutionDetailsCounter == 0 {
-			testCaseExecutionsStatusForSummaryTableData = TestCaseExecutionsStatusForSummaryTableStruct{
+			testCaseExecutionsStatusForSummaryTableData = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsStatusForSummaryTableStruct{
 				TestCaseUIName:                 testCaseExecutionResponse.TestCaseExecutionBasicInformation.TestCaseName,
 				TestCaseStatusValue:            uint32(testCaseExecutionDetailsMessage.TestCaseExecutionStatus),
 				ExecutionStatusUpdateTimeStamp: testCaseExecutionDetailsMessage.ExecutionStatusUpdateTimeStamp.AsTime(),
+				TestCaseExecutionUuid:          testCaseExecutionResponse.TestCaseExecutionBasicInformation.TestCaseExecutionUuid,
+				TestCaseExecutionVersion:       strconv.Itoa(int(testCaseExecutionResponse.TestCaseExecutionBasicInformation.TestCaseExecutionVersion)),
 			}
 		} else {
 			// Check if the new timestamp > existing timestamp, if so then use new instance
 			if testCaseExecutionDetailsMessage.ExecutionStatusUpdateTimeStamp.AsTime().After(
 				testCaseExecutionsStatusForSummaryTableData.ExecutionStatusUpdateTimeStamp) {
 
-				testCaseExecutionsStatusForSummaryTableData = TestCaseExecutionsStatusForSummaryTableStruct{
+				testCaseExecutionsStatusForSummaryTableData = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsStatusForSummaryTableStruct{
 					TestCaseUIName:                 testCaseExecutionResponse.TestCaseExecutionBasicInformation.TestCaseName,
 					TestCaseStatusValue:            uint32(testCaseExecutionDetailsMessage.TestCaseExecutionStatus),
 					ExecutionStatusUpdateTimeStamp: testCaseExecutionDetailsMessage.ExecutionStatusUpdateTimeStamp.AsTime(),
@@ -70,13 +73,13 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 	// TestInstructionsStatus
 	// Add the TestInstructions Statuses for summary page to the Map by converting into the simpler summary page structure
 	for _, testInstructionExecutionDetailsMessage := range testCaseExecutionResponse.TestInstructionExecutions {
-		var testInstructionExecutionsStatusForSummaryTableData TestInstructionExecutionsStatusForSummaryTableStruct
+		var testInstructionExecutionsStatusForSummaryTableData detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsStatusForSummaryTableStruct
 		// Loop all status messages
 		for testInstructionExecutionInformationCounter, testInstructionExecutionInformation := range testInstructionExecutionDetailsMessage.TestInstructionExecutionsInformation {
 
 			// When it's the first instance of status then use that as the base
 			if testInstructionExecutionInformationCounter == 0 {
-				testInstructionExecutionsStatusForSummaryTableData = TestInstructionExecutionsStatusForSummaryTableStruct{
+				testInstructionExecutionsStatusForSummaryTableData = detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsStatusForSummaryTableStruct{
 					TestInstructionExecutionUIName: testInstructionExecutionDetailsMessage.TestInstructionExecutionBasicInformation.TestInstructionName,
 					TestInstructionStatusValue:     uint32(testInstructionExecutionInformation.TestInstructionExecutionStatus),
 					ExecutionStatusUpdateTimeStamp: testInstructionExecutionInformation.ExecutionStatusUpdateTimeStamp.AsTime(),
@@ -86,7 +89,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 				if testInstructionExecutionInformation.ExecutionStatusUpdateTimeStamp.AsTime().After(
 					testInstructionExecutionsStatusForSummaryTableData.ExecutionStatusUpdateTimeStamp) {
 
-					testInstructionExecutionsStatusForSummaryTableData = TestInstructionExecutionsStatusForSummaryTableStruct{
+					testInstructionExecutionsStatusForSummaryTableData = detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsStatusForSummaryTableStruct{
 						TestInstructionExecutionUIName: testInstructionExecutionDetailsMessage.TestInstructionExecutionBasicInformation.TestInstructionName,
 						TestInstructionStatusValue:     uint32(testInstructionExecutionInformation.TestInstructionExecutionStatus),
 						ExecutionStatusUpdateTimeStamp: testInstructionExecutionInformation.ExecutionStatusUpdateTimeStamp.AsTime(),
@@ -99,5 +102,13 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 			testCaseExecutionsDetails.TestInstructionExecutionsStatusForSummaryTable,
 			&testInstructionExecutionsStatusForSummaryTableData)
 	}
+
+	// Add reference for TestInstructionsStatus for Summary page to TestCaseStatus for Summary page
+	testCaseExecutionsDetails.TestCaseExecutionsStatusForSummaryTable.TestInstructionExecutionsStatusForSummaryTable =
+		&testCaseExecutionsDetails.TestInstructionExecutionsStatusForSummaryTable
+
+	// Add reference for 'TestCaseExecutionsDetailsMap' to SummaryTableOpts
+	//DetailedTestCaseExecutionsSummaryTableOptions.TestCaseExecutionsDetailsMapReference =
+	//	&detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap
 
 }

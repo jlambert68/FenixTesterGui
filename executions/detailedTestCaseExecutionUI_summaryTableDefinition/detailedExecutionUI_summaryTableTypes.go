@@ -18,12 +18,13 @@ type DetailedTestCaseExecutionsSummaryColumnsAttributes struct {
 }
 
 type DetailedTestCaseExecutionsSummaryTableOpts struct {
-	Bindings                       []binding.DataMap
-	ColAttrs                       []DetailedTestCaseExecutionsSummaryColumnsAttributes
-	OnDataCellSelect               func(cellID widget.TableCellID)
-	RefWidth                       string
-	HeaderLabel                    string
-	FlashingTableCellsReferenceMap map[widget.TableCellID]*TestCaseExecutionSummaryTableCellStruct
+	Bindings                              []binding.DataMap
+	ColAttrs                              []DetailedTestCaseExecutionsSummaryColumnsAttributes
+	OnDataCellSelect                      func(cellID widget.TableCellID)
+	RefWidth                              string
+	HeaderLabel                           string
+	TestCaseExecutionsDetailsMapReference map[widget.TableCellID]*TestCaseExecutionSummaryTableCellStruct
+	//FlashingTableCellsReferenceMap        *map[widget.TableCellID]*TestCaseExecutionSummaryTableCellStruct
 }
 
 type Header struct {

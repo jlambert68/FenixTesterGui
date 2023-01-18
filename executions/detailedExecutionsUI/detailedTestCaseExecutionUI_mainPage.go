@@ -231,6 +231,41 @@ func (detailedTestCaseExecutionsUIObject *DetailedTestCaseExecutionsUIModelStruc
 	})
 	FinishedOkContainer := container.New(layout.NewMaxLayout(), FinishedOkTextbox, &FinishedOkText)
 
+	// Execution status 'FINISHED_OK_CAN_BE_RERUN = 5'
+	//FinishedOkLabel := widget.NewLabel("Finished OK")
+	FinishedOkReRunText := canvas.Text{
+		Alignment: fyne.TextAlignCenter,
+		Color: color.RGBA{
+			R: 0x00,
+			G: 0x00,
+			B: 0x00,
+			A: 0xFF,
+		},
+		Text:     " Finished OK ",
+		TextSize: 15,
+		TextStyle: fyne.TextStyle{
+			Bold:      false,
+			Italic:    false,
+			Monospace: false,
+			Symbol:    false,
+			TabWidth:  0,
+		},
+	}
+	FinishedOkReRunTextbox := canvas.NewRectangle(color.RGBA{
+		R: 0x00,
+		G: 0xff,
+		B: 0x00,
+		A: 0xFF,
+	})
+	FinishedOkReRunTextbox.StrokeColor = color.RGBA{
+		R: 0x00,
+		G: 0xFF,
+		B: 0x00,
+		A: 0xFF,
+	}
+	FinishedOkReRunTextbox.StrokeWidth = 4
+	FinishedOkReRunContainer := container.New(layout.NewMaxLayout(), FinishedOkReRunTextbox, &FinishedOkReRunText)
+
 	// Execution status 'FINISHED_NOT_OK = 6'
 	//finishedNotOkLabel := widget.NewLabel("Finished Not OK")
 	finishedNotOkText := canvas.Text{
@@ -432,6 +467,7 @@ func (detailedTestCaseExecutionsUIObject *DetailedTestCaseExecutionsUIModelStruc
 		controlledInterruptionContainer,
 		controlledInterruptionRerunContainer,
 		FinishedOkContainer,
+		FinishedOkReRunContainer,
 		finishedNotOkContainer,
 		finishedNotOkRerunContainer,
 		unexpectedInterruptionContainer,

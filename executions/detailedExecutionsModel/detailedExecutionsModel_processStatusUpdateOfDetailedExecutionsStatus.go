@@ -61,14 +61,14 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 
 	   // First get the latest data from DB-content
 	   for _, testInstructionExecutionDetailsMessage := range testCaseExecutionResponse.TestInstructionExecutions {
-	   var testInstructionExecutionsStatusForSummaryTableData TestInstructionExecutionsStatusForSummaryTableStruct
+	   var testInstructionExecutionsStatusForSummaryTableData TestInstructionExecutionsStatusForSummaryTable
 	   // Loop all status messages
 	   for testInstructionExecutionInformationCounter, testInstructionExecutionInformation := range testInstructionExecutionDetailsMessage.
 	   TestInstructionExecutionsInformation {
 
 	   // When it's the first instance of status then use that as the base
 	   if testInstructionExecutionInformationCounter == 0 {
-	   testInstructionExecutionsStatusForSummaryTableData = TestInstructionExecutionsStatusForSummaryTableStruct{
+	   testInstructionExecutionsStatusForSummaryTableData = TestInstructionExecutionsStatusForSummaryTable{
 	   TestInstructionExecutionUIName: testInstructionExecutionDetailsMessage.TestInstructionExecutionBasicInformation.TestInstructionName,
 	   TestInstructionStatusValue:     uint32(testInstructionExecutionInformation.TestInstructionExecutionStatus),
 	   ExecutionStatusUpdateTimeStamp: testInstructionExecutionInformation.ExecutionStatusUpdateTimeStamp.AsTime(),
@@ -78,7 +78,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 	   if testInstructionExecutionInformation.ExecutionStatusUpdateTimeStamp.AsTime().After(
 	   testInstructionExecutionsStatusForSummaryTableData.ExecutionStatusUpdateTimeStamp) {
 
-	   testInstructionExecutionsStatusForSummaryTableData = TestInstructionExecutionsStatusForSummaryTableStruct{
+	   testInstructionExecutionsStatusForSummaryTableData = TestInstructionExecutionsStatusForSummaryTable{
 	   TestInstructionExecutionUIName: testInstructionExecutionDetailsMessage.TestInstructionExecutionBasicInformation.TestInstructionName,
 	   TestInstructionStatusValue: uint32(testInstructionExecutionInformation.TestInstructionExecutionStatus),
 	   ExecutionStatusUpdateTimeStamp: testInstructionExecutionInformation.ExecutionStatusUpdateTimeStamp.AsTime(),

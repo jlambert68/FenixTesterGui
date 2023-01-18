@@ -3,8 +3,8 @@ package detailedExecutionsModel
 import (
 	"FenixTesterGui/executions/detailedTestCaseExecutionUI_summaryTableDefinition"
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/widget"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
-	"time"
 )
 
 // DetailedExecutionsModelObjectStruct - struct to object that hold all parts to of TestCaseExecution-model together
@@ -44,10 +44,11 @@ var DetailedTestCaseExecutionsSummaryTableOptions = detailedTestCaseExecutionUI_
 			WidthPercent: 100,
 		},*/
 	},
-	OnDataCellSelect:               nil,
-	RefWidth:                       "reference width",
-	HeaderLabel:                    "Detailed TestCaseExecutions Summary Table",
-	FlashingTableCellsReferenceMap: nil,
+	OnDataCellSelect:                      nil,
+	RefWidth:                              "reference width",
+	HeaderLabel:                           "Detailed TestCaseExecutions Summary Table",
+	TestCaseExecutionsDetailsMapReference: make(map[widget.TableCellID]*detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionSummaryTableCellStruct),
+	//FlashingTableCellsReferenceMap: nil,
 }
 
 // BLOCK END
@@ -129,54 +130,6 @@ type ChannelCommandDetailedExecutionsStruct struct {
 
 // BLOCK END
 
-// BLOCK START
-// The block below is used for storing all detailed data belonging to a TestCaseExecution and structures needed for reflecting status updates to the UI
-
+// TestCasesSummaryTable
+// The variable holding the UI-summary-object
 var TestCasesSummaryTable *fyne.Container
-
-// TestCaseExecutionsStatusForSummaryTableStruct
-// The definition used in SummaryTable to represent one TestCaseExecution and its current execution status
-type TestCaseExecutionsStatusForSummaryTableStruct struct {
-	TestCaseUIName                 string
-	TestCaseStatusValue            uint32
-	ExecutionStatusUpdateTimeStamp time.Time
-	TestCaseExecutionUuid          string
-	TestCaseExecutionVersion       string
-}
-
-// TestInstructionExecutionsStatusForSummaryTableStruct
-// The definition used in SummaryTable to represent one TestInstructionExecution and its current execution status
-type TestInstructionExecutionsStatusForSummaryTableStruct struct {
-	TestInstructionExecutionUIName string
-	TestInstructionStatusValue     uint32
-	ExecutionStatusUpdateTimeStamp time.Time
-}
-
-// TestCaseExecutionsDetailsStruct
-// One TestCaseExecution and all of its data.
-type TestCaseExecutionsDetailsStruct struct {
-	// The response message when a full TestCaseExecution is retrieved
-	TestCaseExecutionDatabaseResponseMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage
-
-	// The streamed status messages
-	TestCaseExecutionsStatusUpdates        []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusMessage
-	TestInstructionExecutionsStatusUpdates []*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusMessage
-
-	// A map holding all TestInstructions with their execution status. Each slice is sorted by 'UniqueDatabaseRowCounter' ASC order
-	// The slice data is used to show execution status and the last item in the slice is the one that has the current status
-	// map[TestInstructionExecutionKey]*[]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
-	// TestInstructionExecutionKey = TestInstructionExecutionUuid + TestInstructionExecutionVersion
-	TestInstructionExecutionsStatusMap map[string]*[]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
-
-	// Holding the information to be show in the SummaryTable for one TestCaseExecution
-	TestCaseExecutionsStatusForSummaryTable *TestCaseExecutionsStatusForSummaryTableStruct
-
-	// The slice of all TestInstructionExecution, for one TestCaseExecution, and their current status. The order is the same as it is presented on screen
-	TestInstructionExecutionsStatusForSummaryTable []*TestInstructionExecutionsStatusForSummaryTableStruct
-}
-
-// TestCaseExecutionsDetailsMap
-// map[TestCaseExecutionMapKey]*TestCaseExecutionsDetailsStruct, TestCaseExecutionMapKey = TestCaseExecutionUuid + TestCaseExecutionVersionNumber
-var TestCaseExecutionsDetailsMap map[string]*TestCaseExecutionsDetailsStruct // m
-
-// BLOCK END

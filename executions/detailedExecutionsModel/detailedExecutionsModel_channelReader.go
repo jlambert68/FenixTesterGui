@@ -2,6 +2,7 @@ package detailedExecutionsModel
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/executions/detailedTestCaseExecutionUI_summaryTableDefinition"
 	"github.com/sirupsen/logrus"
 )
 
@@ -11,7 +12,8 @@ func InitiateCommandChannelReaderForDetailedStatusUpdates() {
 	DetailedExecutionStatusCommandChannel = make(chan ChannelCommandDetailedExecutionsStruct, messageChannelMaxSizeDetailedExecutionStatus)
 
 	// Initiate the map that stores all Detailed TestCaseExecutions-data
-	TestCaseExecutionsDetailsMap = make(map[string]*TestCaseExecutionsDetailsStruct)
+	detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap =
+		make(map[string]*detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct)
 
 	// Start channel reader
 	go detailedExecutionsModelObject.startCommandChannelReaderForDetailedStatusUpdates()

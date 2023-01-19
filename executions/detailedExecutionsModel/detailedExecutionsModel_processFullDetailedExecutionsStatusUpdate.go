@@ -7,7 +7,8 @@ import (
 )
 
 // Updates all Executions status with information received after direct gRPC-call to GUiExecutionServer
-func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) processFullDetailedTestCaseExecutionsStatusUpdate(testCaseExecutionResponse *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage) {
+func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) processFullDetailedTestCaseExecutionsStatusUpdate(
+	testCaseExecutionResponse *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage) {
 
 	// Create the TestCaseExecutionMapJey
 	var testCaseExecutionMapKey string

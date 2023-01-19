@@ -110,6 +110,7 @@ const (
 	ChannelCommandFullDetailedExecutionsStatusUpdate ChannelCommandTypeForDetailedExecutionStatus = iota
 	ChannelCommandStatusUpdateOfDetailedExecutionsStatus
 	ChannelCommandRemoveDetailedTestCaseExecution
+	ChannelCommandRetrieveFullDetailedTestCaseExecution
 )
 
 // ChannelCommandDetailedExecutionsStruct

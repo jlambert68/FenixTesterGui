@@ -11,6 +11,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"image/color"
+	"time"
 )
 
 /*
@@ -418,18 +419,34 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSu
 		// Extract TestCaseName
 		var testCaseName string
 		testCaseName = tempDetailedTestCaseExecution.TestCaseExecutionDatabaseResponseMessage.TestCaseExecutionBasicInformation.TestCaseName
-
+		var testCaseStatusUpdate time.Time
 		// Extract the status for the TestCase
 		var testCaseStatus fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum
 		var detailedTestCaseExecutions []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage
+
 		detailedTestCaseExecutions = tempDetailedTestCaseExecution.TestCaseExecutionDatabaseResponseMessage.TestCaseExecutionDetails
 
 		// Get last row for TestCaseExecutions
 		var lastRow int
 		lastRow = len(tempDetailedTestCaseExecution.TestCaseExecutionDatabaseResponseMessage.TestCaseExecutionDetails) - 1
 
-		// Extract the status
+		// Extract the status and time stamp
 		testCaseStatus = detailedTestCaseExecutions[lastRow].TestCaseExecutionStatus
+		testCaseStatusUpdate = detailedTestCaseExecutions[lastRow].ExecutionStatusUpdateTimeStamp.AsTime()
+
+		// Check if there is a status updates with later timestamp
+		for _, tempTestCaseExecutionsStatusMessage := range tempDetailedTestCaseExecution.TestCaseExecutionsStatusUpdates {
+
+			// If Updates Status-message has later timestamp, then use that one
+			if tempTestCaseExecutionsStatusMessage.TestCaseExecutionDetails.ExecutionStatusUpdateTimeStamp.AsTime().
+				After(testCaseStatusUpdate) {
+
+				// Use new Status and TimeStamp
+				testCaseStatus = tempTestCaseExecutionsStatusMessage.TestCaseExecutionDetails.TestCaseExecutionStatus
+				testCaseStatusUpdate = tempTestCaseExecutionsStatusMessage.TestCaseExecutionDetails.
+					ExecutionStatusUpdateTimeStamp.AsTime()
+			}
+		}
 
 		// Create the TestCaseExecution-container
 		var testCaseNameContainer *fyne.Container
@@ -467,6 +484,7 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSu
 
 			// Extract the status for the TestCase
 			var testInstructionStatus fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusEnum
+			var testInstructionStatusUpdate time.Time
 			var testInstructionExecutionsInformationMessages []*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
 			testInstructionExecutionsInformationMessages = tempTestInstructionExecution.TestInstructionExecutionsInformation
 
@@ -477,8 +495,24 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSu
 			// Extract TestInstructionStatus when there are something to extract
 			if lastTestInstructionRow >= 0 {
 
-				// Extract the status
+				// Extract the status and time stamp
 				testInstructionStatus = testInstructionExecutionsInformationMessages[lastTestInstructionRow].TestInstructionExecutionStatus
+				testInstructionStatusUpdate = testInstructionExecutionsInformationMessages[lastTestInstructionRow].ExecutionStatusUpdateTimeStamp.AsTime()
+
+				// Check if there is a status updates with later timestamp
+				for _, tempTestInstructionExecutionsStatusUpdateMessage := range tempDetailedTestCaseExecution.TestInstructionExecutionsStatusUpdates {
+
+					// If Updates Status-message has later timestamp, then use that one
+					if tempTestInstructionExecutionsStatusUpdateMessage.TestInstructionExecutionsStatusInformation.
+						ExecutionStatusUpdateTimeStamp.AsTime().After(testInstructionStatusUpdate) {
+
+						// Use new Status and TimeStamp
+						testInstructionStatus = tempTestInstructionExecutionsStatusUpdateMessage.
+							TestInstructionExecutionsStatusInformation.TestInstructionExecutionStatus
+						testInstructionStatusUpdate = tempTestInstructionExecutionsStatusUpdateMessage.
+							TestInstructionExecutionsStatusInformation.ExecutionStatusUpdateTimeStamp.AsTime()
+					}
+				}
 
 				// Create the TestInstructionExecution-container
 				var testInstructionNameContainer *fyne.Container

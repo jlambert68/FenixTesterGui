@@ -129,7 +129,10 @@ func RemoveTestCaseExecutionFromUnderExecutionTable(
 							Col: columnCounter,
 						}
 						var flashingTableCellsReference *headertable.FlashingTableCellStruct
-						flashingTableCellsReference = ExecutionsUIObject.UnderExecutionTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
+						// flashingTableCellsReference = ExecutionsUIObject.UnderExecutionTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
+						flashingTableCellsReference, _ = headertable.LoadFromFlashingTableCellsReferenceMap(
+							ExecutionsUIObject.UnderExecutionTable.TableOpts,
+							CellId)
 
 						// Only call Flash-function when there is a reference, the reason for not having a reference is that Fynes table-engine only process visible table cells
 						if flashingTableCellsReference != nil {
@@ -306,7 +309,10 @@ func MoveTestCaseExecutionFromOnQueueToUnderExecution(
 				Col: columnCounter,
 			}
 			var flashingTableCellsReference *headertable.FlashingTableCellStruct
-			flashingTableCellsReference = ExecutionsUIObject.UnderExecutionTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
+			// flashingTableCellsReference = ExecutionsUIObject.UnderExecutionTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
+			flashingTableCellsReference, _ = headertable.LoadFromFlashingTableCellsReferenceMap(
+				ExecutionsUIObject.UnderExecutionTable.TableOpts,
+				CellId)
 
 			// Only call Flash-function when there is a reference, the reason for not having a reference is that Fynes table-engine only process visible table cells
 			if flashingTableCellsReference != nil {

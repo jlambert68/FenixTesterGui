@@ -8,6 +8,7 @@ import (
 	"log"
 	"math"
 	"sort"
+	"sync"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/data/binding"
@@ -32,6 +33,9 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 
 	// Initiate Map that holds references to individual cells
 	tableOpts.FlashingTableCellsReferenceMap = make(map[widget.TableCellID]*FlashingTableCellStruct)
+
+	// Initiate Mutex
+	tableOpts.FlashingTableCellsReferenceMapMutex = &sync.RWMutex{}
 
 	sortLabels := make([]*sortingLabel, len(tableOpts.ColAttrs))
 
@@ -123,7 +127,11 @@ func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable {
 			}
 
 			// Add reference to 'flashingTableCell'
-			tableOpts.FlashingTableCellsReferenceMap[cellID] = cnvObj.(*FlashingTableCellStruct)
+			// tableOpts.FlashingTableCellsReferenceMap[cellID] = cnvObj.(*FlashingTableCellStruct)
+			SaveToFlashingTableCellsReferenceMap(
+				tableOpts,
+				cellID,
+				cnvObj.(*FlashingTableCellStruct))
 		},
 	)
 	headerTable := widget.NewTable(

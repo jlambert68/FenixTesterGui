@@ -129,7 +129,10 @@ func RemoveTestCaseExecutionFromOnQueueTable(testCaseExecutionsOnQueueDataRowAda
 							Col: columnCounter,
 						}
 						var flashingTableCellsReference *headertable.FlashingTableCellStruct
-						flashingTableCellsReference = ExecutionsUIObject.OnQueueTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
+						//flashingTableCellsReference = ExecutionsUIObject.OnQueueTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
+						flashingTableCellsReference, _ = headertable.LoadFromFlashingTableCellsReferenceMap(
+							ExecutionsUIObject.OnQueueTable.TableOpts,
+							CellId)
 
 						// Only call Flash-function when there is a reference, the reason for not having a reference is that Fynes table-engine only process visible table cells
 						if flashingTableCellsReference != nil {
@@ -269,7 +272,10 @@ func AddTestCaseExecutionToOnQueueTable(testCaseExecutionBasicInformation *fenix
 				Col: columnCounter,
 			}
 			var flashingTableCellsReference *headertable.FlashingTableCellStruct
-			flashingTableCellsReference = ExecutionsUIObject.OnQueueTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
+			//flashingTableCellsReference = ExecutionsUIObject.OnQueueTable.TableOpts.FlashingTableCellsReferenceMap[CellId]
+			flashingTableCellsReference, _ = headertable.LoadFromFlashingTableCellsReferenceMap(
+				ExecutionsUIObject.OnQueueTable.TableOpts,
+				CellId)
 
 			// Only call Flash-function when there is a reference, the reason for not having a reference is that Fynes table-engine only process visible table cells
 			if flashingTableCellsReference != nil {

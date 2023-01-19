@@ -280,19 +280,31 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 	},
 }
 
+var testCaseRowBackgroundColorOddRow = color.RGBA{
+	R: 0x11,
+	G: 0x11,
+	B: 0x11,
+	A: 0x33}
+
+var testCaseRowBackgroundColorEvenRow = color.RGBA{
+	R: 0x22,
+	G: 0x22,
+	B: 0x22,
+	A: 0x33}
+
 func createExecutionSummary(
 	testInstructionName string,
 	testInstructionExecutionStatus int32) (
-	testInstructionExecutionsSummary *fyne.Container,
+	tempItemExecutionSummary *fyne.Container,
 	err error) {
 
 	var testInstructionNameToUse string
 	testInstructionNameToUse = " " + testInstructionName + ""
 
-	var tempexecutionStatusColors ExecutionStatusColorMapStruct
+	var tempExecutionStatusColors ExecutionStatusColorMapStruct
 	var existInMap bool
 
-	tempexecutionStatusColors, existInMap = ExecutionStatusColorMap[testInstructionExecutionStatus]
+	tempExecutionStatusColors, existInMap = ExecutionStatusColorMap[testInstructionExecutionStatus]
 
 	if existInMap == false {
 		ErrorID := "22200080-6e9d-4654-aa1e-ddf89918e98b"
@@ -307,7 +319,7 @@ func createExecutionSummary(
 	var testInstructionText *canvas.Text
 	testInstructionText = &canvas.Text{
 		Alignment: fyne.TextAlignCenter,
-		Color:     tempexecutionStatusColors.TextColor,
+		Color:     tempExecutionStatusColors.TextColor,
 		Text:      testInstructionNameToUse,
 		TextSize:  15,
 		TextStyle: fyne.TextStyle{
@@ -320,18 +332,19 @@ func createExecutionSummary(
 	}
 
 	// Create background with correct color
-	var testInstructionBackground *canvas.Rectangle
-	testInstructionBackground = canvas.NewRectangle(tempexecutionStatusColors.BackgroundColor)
+	var tempExecutionBackground *canvas.Rectangle
+	tempExecutionBackground = canvas.NewRectangle(tempExecutionStatusColors.BackgroundColor)
 
 	// Check if Stroke should be added
-	if tempexecutionStatusColors.UseStroke == true {
-		testInstructionBackground.StrokeColor = tempexecutionStatusColors.StrokeColor
-		testInstructionBackground.StrokeWidth = 4
+	if tempExecutionStatusColors.UseStroke == true {
+		tempExecutionBackground.StrokeColor = tempExecutionStatusColors.StrokeColor
+		tempExecutionBackground.StrokeWidth = 4
 	}
 
-	testInstructionExecutionsSummary = container.New(layout.NewMaxLayout(), testInstructionBackground, testInstructionText)
+	tempItemExecutionSummary = container.New(layout.NewMaxLayout(), tempExecutionBackground, testInstructionText)
 
-	return testInstructionExecutionsSummary, err
+	//return container.New(layout.NewMaxLayout(), widget.NewLabel("Dummy Text")), err
+	return tempItemExecutionSummary, err
 }
 
 var backgroundRectangleBaseColorForOddRows = color.RGBA{
@@ -360,7 +373,7 @@ type summaryTableForDetailedTestCaseExecutionsStruct struct {
 
 var summaryTableForDetailedTestCaseExecutions []*summaryTableForDetailedTestCaseExecutionsStruct
 
-func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSummaryTable *fyne.Container) {
+func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSummaryReturnTable *fyne.Container) {
 
 	var err error
 
@@ -368,13 +381,14 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSu
 	var summaryHeaderLabel *widget.Label
 	summaryHeaderLabel = &widget.Label{
 		BaseWidget: widget.BaseWidget{},
-		Text:       "TestCaseExecutions Summary Table",
+		Text:       "TestCaseExecutions Summary Table: ",
 		Alignment:  0,
 		Wrapping:   0,
 		TextStyle:  fyne.TextStyle{Bold: true},
 	}
 
 	// Define the Summary Table
+	var testcaseExecutionsSummaryTable *fyne.Container
 	testcaseExecutionsSummaryTable = &fyne.Container{
 		Hidden:  false,
 		Layout:  layout.NewVBoxLayout(),
@@ -384,9 +398,14 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSu
 	// Add the Header to the Summary TableContainer
 	testcaseExecutionsSummaryTable.Add(summaryHeaderLabel)
 
+	// testCaseCounter
+	var testCaseCounter int
+
 	// Loop all TestCaseExecutions
 	for _, tempDetailedTestCaseExecutionReference := range detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap {
 		tempDetailedTestCaseExecution := *tempDetailedTestCaseExecutionReference
+
+		testCaseCounter = testCaseCounter + 1
 
 		// Create the Item for one Row in the Summary table
 		var testCaseRow *fyne.Container
@@ -419,12 +438,20 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSu
 			return nil
 		}
 
+		// Encapsulate TestCaseStatus-field into HBOX-container
+		var testCaseNameContainerToBeAdded *fyne.Container
+		testCaseNameContainerToBeAdded = &fyne.Container{
+			Hidden:  false,
+			Layout:  layout.NewHBoxLayout(),
+			Objects: []fyne.CanvasObject{testCaseNameContainer},
+		}
+
 		// Add TestCaseName-container to Summary-row
-		testCaseRow.Add(testCaseNameContainer)
+		testCaseRow.Add(testCaseNameContainerToBeAdded)
 
 		// Create the Item for all TestInstruction for one TestCase
 		var testInstructionsForTestCase *fyne.Container
-		testCaseRow = &fyne.Container{
+		testInstructionsForTestCase = &fyne.Container{
 			Hidden:  false,
 			Layout:  layout.NewHBoxLayout(),
 			Objects: nil,
@@ -447,27 +474,57 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSu
 			var lastTestInstructionRow int
 			lastTestInstructionRow = len(testInstructionExecutionsInformationMessages) - 1
 
-			// Extract the status
-			testInstructionStatus = testInstructionExecutionsInformationMessages[lastTestInstructionRow].TestInstructionExecutionStatus
+			// Extract TestInstructionStatus when there are something to extract
+			if lastTestInstructionRow >= 0 {
 
-			// Create the TestInstructionExecution-container
-			var testInstructionNameContainer *fyne.Container
-			testInstructionNameContainer, err = createExecutionSummary(testInstructionName, int32(testInstructionStatus))
-			if err != nil {
-				return nil
+				// Extract the status
+				testInstructionStatus = testInstructionExecutionsInformationMessages[lastTestInstructionRow].TestInstructionExecutionStatus
+
+				// Create the TestInstructionExecution-container
+				var testInstructionNameContainer *fyne.Container
+				testInstructionNameContainer, err = createExecutionSummary(testInstructionName, int32(testInstructionStatus))
+				if err != nil {
+					return nil
+				}
+
+				// Add TestInstructionName-container to containers for all TestInstructions for current Summary-row
+				testInstructionsForTestCase.Add(testInstructionNameContainer)
+
 			}
-
-			// Add TestInstructionName-container to containers for all TestInstructions for current Summary-row
-			testInstructionsForTestCase.Add(testInstructionNameContainer)
 		}
 
 		// Add the TestInstruction-container to the TestCase-container for the Row
 		testCaseRow.Add(testInstructionsForTestCase)
 
+		// Create background for TestCaseRow, with correct color
+		var testCaseRowBackground *canvas.Rectangle
+
+		// Check if even or odd row number
+		if testCaseCounter%2 == 0 {
+			// Even number
+			testCaseRowBackground = canvas.NewRectangle(testCaseRowBackgroundColorEvenRow)
+		} else {
+			// Odd number
+			testCaseRowBackground = canvas.NewRectangle(testCaseRowBackgroundColorOddRow)
+		}
+
+		// Encapsulate Row together with background color rectangle
+		var testCaseRowContainer *fyne.Container
+		testCaseRowContainer = container.New(layout.NewMaxLayout(), testCaseRowBackground, testCaseRow)
+
 		// Add the Row to Summary-container
-		testcaseExecutionsSummaryTable.Add(testCaseRow)
+		testcaseExecutionsSummaryTable.Add(testCaseRowContainer)
 
 	}
 
-	return testcaseExecutionsSummaryTable
+	// testcaseExecutionsSummaryTable.Refresh()
+
+	// Define the Summary Return Table
+	testcaseExecutionsSummaryReturnTable = &fyne.Container{
+		Hidden:  false,
+		Layout:  layout.NewHBoxLayout(),
+		Objects: []fyne.CanvasObject{testcaseExecutionsSummaryTable},
+	}
+
+	return testcaseExecutionsSummaryReturnTable
 }

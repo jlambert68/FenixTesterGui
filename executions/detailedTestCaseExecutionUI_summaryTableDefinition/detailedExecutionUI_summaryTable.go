@@ -56,8 +56,6 @@ func NewTestCaseExecutionsSummaryTable(tableOpts *DetailedTestCaseExecutionsSumm
 				mylables = append(mylables, "Third")
 				cnvObj.(*TestCaseExecutionSummaryTableCellStruct).MyLabelsTextValues = mylables
 
-				cnvObj.(*TestCaseExecutionSummaryTableCellStruct).MyLabels[0](*widget.Label)
-
 				if cellID.Row == 0 {
 					backgroundRectangle := cnvObj.(*TestCaseExecutionSummaryTableCellStruct).backgroundColorRectangle
 					backgroundRectangle.FillColor = headerBackgroundRectangleBaseColor

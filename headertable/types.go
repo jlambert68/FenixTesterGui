@@ -4,6 +4,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/widget"
+	"sync"
 )
 
 type ColAttr struct {
@@ -18,14 +19,51 @@ type ColAttr struct {
 }
 
 type TableOpts struct {
-	Bindings                       []binding.DataMap
-	ColAttrs                       []ColAttr
-	OnDataCellSelect               func(cellID widget.TableCellID)
-	RefWidth                       string
-	HeaderLabel                    string
-	FlashingTableCellsReferenceMap map[widget.TableCellID]*FlashingTableCellStruct
+	Bindings                            []binding.DataMap
+	ColAttrs                            []ColAttr
+	OnDataCellSelect                    func(cellID widget.TableCellID)
+	RefWidth                            string
+	HeaderLabel                         string
+	FlashingTableCellsReferenceMap      map[widget.TableCellID]*FlashingTableCellStruct
+	FlashingTableCellsReferenceMapMutex *sync.RWMutex
 }
 
 type Header struct {
 	widget.Table
+}
+
+// Load FlashingTableCellsReference from the FlashingTableCellsReferenceMap
+func LoadFromFlashingTableCellsReferenceMap(
+	tableOptsReference *TableOpts,
+	flashingTableCellsReferenceMapKey widget.TableCellID) (
+	flashingTableCellReference *FlashingTableCellStruct,
+	existInMap bool) {
+
+	// Lock Map for Reading
+	tableOptsReference.FlashingTableCellsReferenceMapMutex.RLock()
+
+	// Read Map
+	flashingTableCellReference, existInMap = tableOptsReference.FlashingTableCellsReferenceMap[flashingTableCellsReferenceMapKey]
+
+	//UnLock Map
+	tableOptsReference.FlashingTableCellsReferenceMapMutex.RUnlock()
+
+	return flashingTableCellReference, existInMap
+}
+
+// Save FlashingTableCellsReference to the FlashingTableCellsReferenceMap
+func SaveToFlashingTableCellsReferenceMap(
+	tableOptsReference *TableOpts,
+	flashingTableCellsReferenceMapKey widget.TableCellID,
+	flashingTableCellReference *FlashingTableCellStruct) {
+
+	// Lock Map for Writing
+	tableOptsReference.FlashingTableCellsReferenceMapMutex.Lock()
+
+	// Save to Map
+	tableOptsReference.FlashingTableCellsReferenceMap[flashingTableCellsReferenceMapKey] = flashingTableCellReference
+
+	//UnLock Map
+	tableOptsReference.FlashingTableCellsReferenceMapMutex.Unlock()
+
 }

@@ -14,10 +14,14 @@ import (
 // This base doesn't contain any specific TestCase-parts, and they will be added in other function
 func (detailedTestCaseExecutionsUIObject *DetailedTestCaseExecutionsUIModelStruct) GenerateBaseUITabForDetailedTestCaseExecutions() (executionsCanvasObjectUI fyne.CanvasObject) {
 
+	var testCaseExecutionsTabPage *fyne.Container
 	// Create toolbar for Executions Area
 	detailedTestCaseExecutionsUIObject.ExecutionsToolUIBar = widget.NewToolbar(
 		widget.NewToolbarAction(theme.ContentRedoIcon(), func() {
 			fmt.Println("Reload Current Execution(s)")
+			testCaseExecutionsTabPage = detailedTestCaseExecutionsUIObject.CreateDetailedTestCaseExecutionsTabPage()
+			testCaseExecutionsTabPage.Refresh()
+			detailedTestCaseExecutionsUIObject.TestCaseExecutionsTabs.Refresh()
 
 		}),
 
@@ -28,7 +32,7 @@ func (detailedTestCaseExecutionsUIObject *DetailedTestCaseExecutionsUIModelStruc
 	)
 
 	// Generate TestCaseExecutions page
-	var testCaseExecutionsTabPage *fyne.Container
+	//var testCaseExecutionsTabPage *fyne.Container
 	testCaseExecutionsTabPage = detailedTestCaseExecutionsUIObject.CreateDetailedTestCaseExecutionsTabPage()
 
 	// Create The Tab-object, where each TestCase will have its own Tab
@@ -58,8 +62,9 @@ func (detailedTestCaseExecutionsUIObject *DetailedTestCaseExecutionsUIModelStruc
 
 	detailedTestCaseExecutionsUIObject.TestCaseExecutionsTabs.CloseIntercept = func(tabItem *container.TabItem) {
 		if tabItem.Text == "Detailed TestCase Executions Summary" {
-			return
-			tabItem.Content.Refresh()
+
+			tabItem.Content = detailedTestCaseExecutionsUIObject.CreateDetailedTestCaseExecutionsTabPage()
+			// tabItem.Content.Refresh()
 		}
 
 	}

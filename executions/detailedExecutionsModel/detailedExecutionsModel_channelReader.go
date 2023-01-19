@@ -71,7 +71,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) trigge
 		incomingChannelCommandAndMessage.FullTestCaseExecutionResponseMessage)
 
 	// Recreate the Detailed Executions Summary Table
-	TestCasesSummaryTable = CreateSummaryTableForDetailedTestCaseExecutionsList()
+	*TestCasesSummaryTable = *CreateSummaryTableForDetailedTestCaseExecutionsList()
 
 	TestCasesSummaryTable.Refresh()
 
@@ -83,6 +83,12 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) trigge
 
 	detailedExecutionsModelObject.processStatusUpdateOfDetailedExecutionsStatus(
 		incomingChannelCommandAndMessage.TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage)
+
+	// Recreate the Detailed Executions Summary Table
+	*TestCasesSummaryTable = *CreateSummaryTableForDetailedTestCaseExecutionsList()
+
+	TestCasesSummaryTable.Refresh()
+
 }
 
 // Remove the DetailedTestCaseExecution
@@ -92,7 +98,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) trigge
 	detailedExecutionsModelObject.processRemoveDetailedTestCaseExecution(testCaseExecutionKey)
 
 	// Recreate the Detailed Executions Summary Table
-	TestCasesSummaryTable = CreateSummaryTableForDetailedTestCaseExecutionsList()
+	*TestCasesSummaryTable = *CreateSummaryTableForDetailedTestCaseExecutionsList()
 
 	TestCasesSummaryTable.Refresh()
 

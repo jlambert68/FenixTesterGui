@@ -7,10 +7,12 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"image/color"
+	"log"
 	"time"
 )
 
@@ -83,9 +85,9 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 			B: 0x00,
 			A: 0xFF},
 		BackgroundColor: color.RGBA{
-			R: 0xff,
-			G: 0xff,
-			B: 0x00,
+			R: 0xb6,
+			G: 0xd7,
+			B: 0xa8,
 			A: 0xFF},
 		UseStroke: false,
 	},
@@ -377,6 +379,17 @@ var summaryTableForDetailedTestCaseExecutions []*summaryTableForDetailedTestCase
 func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSummaryReturnTable *fyne.Container) {
 
 	var err error
+	/*
+		tempButton := &widget.Button{
+			DisableableWidget: widget.DisableableWidget{},
+			Text:              "Remove from Detailed View",
+			Icon:              nil,
+			Importance:        0,
+			Alignment:         0,
+			IconPlacement:     0,
+			OnTapped:          nil,
+		}
+	*/
 
 	// Create the Header for the Summary table
 	var summaryHeaderLabel *widget.Label
@@ -430,9 +443,15 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSu
 		var lastRow int
 		lastRow = len(tempDetailedTestCaseExecution.TestCaseExecutionDatabaseResponseMessage.TestCaseExecutionDetails) - 1
 
-		// Extract the status and time stamp
-		testCaseStatus = detailedTestCaseExecutions[lastRow].TestCaseExecutionStatus
-		testCaseStatusUpdate = detailedTestCaseExecutions[lastRow].ExecutionStatusUpdateTimeStamp.AsTime()
+		// Extract the status and time stamp when there is one, otherwise use Initiate because TestCaseExecution is on ExecutionQueue
+		if lastRow >= 0 {
+			testCaseStatus = detailedTestCaseExecutions[lastRow].TestCaseExecutionStatus
+			testCaseStatusUpdate = detailedTestCaseExecutions[lastRow].ExecutionStatusUpdateTimeStamp.AsTime()
+		} else {
+			testCaseStatus = fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_INITIATED
+			testCaseStatusUpdate = tempDetailedTestCaseExecution.TestCaseExecutionDatabaseResponseMessage.
+				TestCaseExecutionBasicInformation.PlacedOnTestExecutionQueueTimeStamp.AsTime()
+		}
 
 		// Check if there is a status updates with later timestamp
 		for _, tempTestCaseExecutionsStatusMessage := range tempDetailedTestCaseExecution.TestCaseExecutionsStatusUpdates {
@@ -542,9 +561,36 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSu
 			testCaseRowBackground = canvas.NewRectangle(testCaseRowBackgroundColorOddRow)
 		}
 
-		// Encapsulate Row together with background color rectangle
+		// Add buttons before block with "TestCaseStatus and TestInstructionsStatus"
+		var rowWithButtonsContainer *fyne.Container
+		rowWithButtonsContainer = &fyne.Container{
+			Hidden:  false,
+			Layout:  layout.NewHBoxLayout(),
+			Objects: nil,
+		}
+		// Create and add button for removing Detailed View for TestCase (row and detailed tab)
+		var removeFromDetailedViewButton *widget.Button // *spaceButton
+		//buttonText := "Remove from Detailed View"
+
+		removeFromDetailedViewButton = &widget.Button{
+			DisableableWidget: widget.DisableableWidget{},
+			Text:              "                        ",
+			Icon:              nil,
+			Importance:        0,
+			Alignment:         0,
+			IconPlacement:     0,
+			OnTapped:          func() { log.Println("tapped") },
+		}
+
+		//removeFromDetailedViewButton = newSpaceButton()
+		rowWithButtonsContainer.Add(removeFromDetailedViewButton)
+
+		// Add "TestCaseStatus and TestInstructionsStatus" to 'rowWithButtonsContainer'
+		rowWithButtonsContainer.Add(testCaseRow)
+
+		// Encapsulate Full Row together with background color rectangle
 		var testCaseRowContainer *fyne.Container
-		testCaseRowContainer = container.New(layout.NewMaxLayout(), testCaseRowBackground, testCaseRow)
+		testCaseRowContainer = container.New(layout.NewMaxLayout(), testCaseRowBackground, rowWithButtonsContainer)
 
 		// Add the Row to Summary-container
 		testcaseExecutionsSummaryTable.Add(testCaseRowContainer)
@@ -561,4 +607,36 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSu
 	}
 
 	return testcaseExecutionsSummaryReturnTable
+}
+
+type spaceButton struct {
+	widget.Button
+}
+
+func newSpaceButton() *spaceButton {
+	mySpaceButton := &spaceButton{}
+	mySpaceButton.ExtendBaseWidget(mySpaceButton)
+	mySpaceButton.SetText("                               ")
+
+	return mySpaceButton
+}
+
+// MouseIn is called when a desktop pointer enters the widget
+func (b *spaceButton) MouseIn(x *desktop.MouseEvent) {
+	fmt.Println("MouseIn")
+	b.SetText("Remove from Detailed View")
+	b.Refresh()
+
+}
+
+// MouseMoved is called when a desktop pointer hovers over the widget
+func (b *spaceButton) MouseMoved(a *desktop.MouseEvent) {
+
+}
+
+// MouseOut is called when a desktop pointer exits the widget
+func (b *spaceButton) MouseOut() {
+	fmt.Println("MouseOut")
+	b.SetText("")
+	b.Refresh()
 }

@@ -111,6 +111,7 @@ const (
 	ChannelCommandStatusUpdateOfDetailedExecutionsStatus
 	ChannelCommandRemoveDetailedTestCaseExecution
 	ChannelCommandRetrieveFullDetailedTestCaseExecution
+	ChannelCommandDecideIfStatusUpdatesBelongsToDetailedTestCaseExecutionsMap
 )
 
 // ChannelCommandDetailedExecutionsStruct

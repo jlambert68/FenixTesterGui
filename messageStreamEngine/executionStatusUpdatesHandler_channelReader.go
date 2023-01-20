@@ -2,6 +2,7 @@ package messageStreamEngine
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/executions/detailedExecutionsModel"
 	"FenixTesterGui/executions/executionsModelForSubscriptions"
 	"FenixTesterGui/executions/executionsUIForSubscriptions"
 	"errors"
@@ -38,6 +39,20 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) startCommandChannelR
 		case ChannelCommandExecutionsStatusesHaveBeUpdated:
 			// TestCaseExecutionStatus or TestInstructionExecutionStatus has been updated
 			fmt.Println(incomingChannelCommandAndMessage)
+
+			// Forward incoming status message to channelEngine for DetailedTestCaseExecutions-handler
+			var channelCommandDetailedExecutions detailedExecutionsModel.ChannelCommandDetailedExecutionsStruct
+			channelCommandDetailedExecutions = detailedExecutionsModel.ChannelCommandDetailedExecutionsStruct{
+				ChannelCommandDetailedExecutionsStatus:                            detailedExecutionsModel.ChannelCommandDecideIfStatusUpdatesBelongsToDetailedTestCaseExecutionsMap,
+				TestCaseExecutionKey:                                              "",
+				FullTestCaseExecutionResponseMessage:                              nil,
+				TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage: incomingChannelCommandAndMessage.ExecutionsStatusMessage,
+			}
+
+			// Send command on channel
+			detailedExecutionsModel.DetailedExecutionStatusCommandChannel <- channelCommandDetailedExecutions
+
+			// Process message for Subscription tables
 			messageStreamEngineObject.processTestExecutionStatusChange(incomingChannelCommandAndMessage.ExecutionsStatusMessage)
 
 		case ChannelCommandTriggerRequestForTestInstructionExecutionToProcess:

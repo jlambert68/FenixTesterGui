@@ -2,6 +2,7 @@ package commandAndRuleEngine
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/executions/detailedExecutionsModel"
 	"FenixTesterGui/executions/executionsModelForSubscriptions"
 	"FenixTesterGui/grpc_out_GuiExecutionServer"
 	"FenixTesterGui/testCase/testCaseModel"
@@ -15,9 +16,9 @@ import (
 	"fyne.io/fyne/v2/widget"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
-
 	"image/color"
 	"log"
+	"strconv"
 	"sync"
 )
 
@@ -157,6 +158,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 
 	// Put message on channel
 	executionsModelForSubscriptions.OnQueueTableAddRemoveChannel <- onQueueTableAddRemoveChannelMessage
+
+	// TestExecutionMapKey
+	var tempTestExecutionMapKey string
+	tempTestExecutionMapKey = initiateSingleTestCaseExecutionResponseMessage.TestCasesInExecutionQueue.TestCaseExecutionUuid +
+		strconv.Itoa(int(initiateSingleTestCaseExecutionResponseMessage.TestCasesInExecutionQueue.TestCaseExecutionVersion))
+	// Send message Executions Details handler to retrieve full TestCaseExecutions details
+	_ = detailedExecutionsModel.RetrieveSingleTestCaseExecution(tempTestExecutionMapKey)
 
 	fmt.Sprintf("Initiated TestCaseExecution for TestCase: '%s', testCaseUuidToBeExecuted")
 

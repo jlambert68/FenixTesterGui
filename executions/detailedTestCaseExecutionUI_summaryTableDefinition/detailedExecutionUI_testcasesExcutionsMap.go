@@ -8,6 +8,9 @@ import fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixE
 // TestCaseExecutionsDetailsStruct
 // One TestCaseExecution and all of its data.
 type TestCaseExecutionsDetailsStruct struct {
+	// A full TestCaseExecutionStatus will always be performed when first status update message is received
+	FullTestCaseExecutionUpdateWhenFirstStatusReceived bool
+
 	// The response message when a full TestCaseExecution is retrieved
 	TestCaseExecutionDatabaseResponseMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage
 

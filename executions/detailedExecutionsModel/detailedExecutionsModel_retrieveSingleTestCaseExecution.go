@@ -8,14 +8,11 @@ import (
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"strconv"
-	"time"
 )
 
 // RetrieveSingleTestCaseExecution
 // Retrieves a TestCaseExecution and all of its data belonging to the execution
 func RetrieveSingleTestCaseExecution(testCaseExecutionKey string) (err error) {
-
-	time.Sleep(time.Second * 2)
 
 	// Extract individual parts of the 'TestCaseExecutionKeyMessage'
 	var testCaseExecutionUuid string

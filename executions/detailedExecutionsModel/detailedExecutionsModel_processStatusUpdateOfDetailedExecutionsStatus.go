@@ -44,10 +44,12 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 			strconv.Itoa(int(tempTestInstructionExecutionStatusMessage.TestCaseExecutionVersion))
 
 		// Check if TestCaseExecution exist within the 'TestCaseExecutionsDetailsMap'
-		_, existInMap = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionMapKey]
+		var tempTestCaseExecutionsDetailsMap *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct
+		tempTestCaseExecutionsDetailsMap, existInMap = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionMapKey]
 
 		// If not then add it to the Map over TestCaseExecution to retrieve from the Database
 		if existInMap == false {
+
 			_, existInMap = testCaseExecutionKeysMap[tempTestCaseExecutionMapKey]
 
 			// Has the tempTestCaseExecutionMapKey already been saved
@@ -55,13 +57,27 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 				testCaseExecutionKeysMap[tempTestCaseExecutionMapKey] = tempTestCaseExecutionMapKey
 
 			}
+		} else {
+			// Has a first full TestCaseExecutionStatus been retrieved
+			if tempTestCaseExecutionsDetailsMap.FullTestCaseExecutionUpdateWhenFirstStatusReceived == false {
+				tempTestCaseExecutionsDetailsMap.FullTestCaseExecutionUpdateWhenFirstStatusReceived = true
+
+				_, existInMap = testCaseExecutionKeysMap[tempTestCaseExecutionMapKey]
+
+				// Has the tempTestCaseExecutionMapKey already been saved
+				if existInMap == false {
+					testCaseExecutionKeysMap[tempTestCaseExecutionMapKey] = tempTestCaseExecutionMapKey
+
+				}
+			}
 		}
 	}
 
 	// If there are ony TestCaseExecution that is not already within the TestCaseExecutionsMap then get them first before process the updates
+	// This is also done when this is the first Status-message that is received
 	if len(testCaseExecutionKeysMap) > 0 {
 
-		// Loop all TestCaseExecutionKeys and snd commands to retrieve the TestCaseExecutions
+		// Loop all TestCaseExecutionKeys and send commands to retrieve the TestCaseExecutions
 		for _, testCaseExecutionKey := range testCaseExecutionKeysMap {
 
 			// Create command to retrieve missing TestCaseExecutions, via channelEngine

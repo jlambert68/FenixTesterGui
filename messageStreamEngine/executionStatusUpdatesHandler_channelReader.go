@@ -43,7 +43,7 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) startCommandChannelR
 			// Forward incoming status message to channelEngine for DetailedTestCaseExecutions-handler
 			var channelCommandDetailedExecutions detailedExecutionsModel.ChannelCommandDetailedExecutionsStruct
 			channelCommandDetailedExecutions = detailedExecutionsModel.ChannelCommandDetailedExecutionsStruct{
-				ChannelCommandDetailedExecutionsStatus:                            detailedExecutionsModel.ChannelCommandDecideIfStatusUpdatesBelongsToDetailedTestCaseExecutionsMap,
+				ChannelCommandDetailedExecutionsStatus:                            detailedExecutionsModel.ChannelCommandStatusUpdateOfDetailedExecutionsStatus,
 				TestCaseExecutionKey:                                              "",
 				FullTestCaseExecutionResponseMessage:                              nil,
 				TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage: incomingChannelCommandAndMessage.ExecutionsStatusMessage,

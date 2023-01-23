@@ -14,6 +14,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 
 	// Process TestCaseStatus-messages to check that all TestCases exist in 'detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap'
 	var testCaseExecutionKeysMap map[string]string // map[tempTestCaseExecutionMapKey]tempTestCaseExecutionMapKey
+	testCaseExecutionKeysMap = make(map[string]string)
 	var existInMap bool
 	for _, tempTestCaseExecutionStatusMessage := range testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage.TestCaseExecutionsStatus {
 
@@ -59,8 +60,19 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 			}
 		} else {
 			// Has a first full TestCaseExecutionStatus been retrieved
-			if tempTestCaseExecutionsDetailsMap.FullTestCaseExecutionUpdateWhenFirstStatusReceived == false {
-				tempTestCaseExecutionsDetailsMap.FullTestCaseExecutionUpdateWhenFirstStatusReceived = true
+			// Or this is the first TestInstructionExecutionUpdate for TestCaseExecution
+			if tempTestCaseExecutionsDetailsMap.FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived == false ||
+				tempTestCaseExecutionsDetailsMap.FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived == false &&
+					len(testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage.TestInstructionExecutionsStatus) > 0 {
+
+				// Set flag that keeps track if first full TestCaseExecution is retrieved for first TestExecution-message
+				tempTestCaseExecutionsDetailsMap.FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived = true
+
+				// Set flag that keeps track if first full TestCaseExecution is retrieved for first TestInstructionsExecution-message
+				if tempTestCaseExecutionsDetailsMap.FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived == false &&
+					len(testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage.TestInstructionExecutionsStatus) > 0 {
+					tempTestCaseExecutionsDetailsMap.FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived = true
+				}
 
 				_, existInMap = testCaseExecutionKeysMap[tempTestCaseExecutionMapKey]
 
@@ -165,6 +177,13 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 			tempTestCaseExecutionsDetailsReference.TestInstructionExecutionsStatusUpdates, tempTestInstructionExecutionStatusMessage)
 
 	}
+
+	// Loop all TestCaseStatus-rows and update slice used for SummaryTable
+
+	// Loop all TestInstructionExecutionsStatus-row and update slice used for SummaryTable
+	for tempTestCaseExecutionMapKey, tempTestInstructionExecutionStatusMessage := range testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage.TestInstructionExecutionsStatus {
+
+
 
 	/*
 

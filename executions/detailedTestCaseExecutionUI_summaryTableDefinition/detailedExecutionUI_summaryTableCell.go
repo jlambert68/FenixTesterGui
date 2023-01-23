@@ -7,6 +7,7 @@ import (
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"image/color"
 	"time"
 )
@@ -24,12 +25,27 @@ type TestCaseExecutionsStatusForSummaryTableStruct struct {
 	TestInstructionExecutionsStatusForSummaryTable *[]*TestInstructionExecutionsStatusForSummaryTableStruct
 }
 
+type TestTestInstructionExecutionsBaseInformationStruct struct {
+	// BaseInformation for TestInstruction
+	TestInstructionExecutionBasicInformation *fenixExecutionServerGuiGrpcApi.TestInstructionExecutionBasicInformationMessage
+
+	// map[ExecutionStatusUpdateTimeStamp]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
+	AllTestInstructionsExecutionsStatusUpdatesInformationMap map[string]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
+
+	CurrentTestInstructionExecutionsStatusForSummaryTable *TestInstructionExecutionsStatusForSummaryTableStruct
+	// AllTestInstructionExecutionsStatusForSummaryTable *[]*TestInstructionExecutionsStatusForSummaryTableStruct
+}
+
 // TestInstructionExecutionsStatusForSummaryTableStruct
 // The definition used in SummaryTable to represent one TestInstructionExecution and its current execution status
 type TestInstructionExecutionsStatusForSummaryTableStruct struct {
-	TestInstructionExecutionUIName string
-	TestInstructionStatusValue     uint32
-	ExecutionStatusUpdateTimeStamp time.Time
+	TestInstructionExecutionUIName  string
+	TestInstructionName             string
+	TestInstructionExecutionUuid    string
+	TestInstructionExecutionVersion uint32
+	TestInstructionStatusValue      uint32
+	ExecutionStatusUpdateTimeStamp  time.Time
+	SortOrder                       string
 }
 
 type TestCaseExecutionSummaryTableCellStruct struct {

@@ -84,6 +84,11 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) trigge
 func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) triggerProcessStatusUpdateOfDetailedExecutionsStatus(
 	incomingChannelCommandAndMessage ChannelCommandDetailedExecutionsStruct) {
 
+	sharedCode.Logger.WithFields(logrus.Fields{
+		"Id": "5b27fadb-a9cd-46d5-8547-9c802352e2cd",
+		"incomingChannelCommandAndMessage.TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage": incomingChannelCommandAndMessage.TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage,
+	}).Error("Incoming Status Message")
+
 	detailedExecutionsModelObject.processStatusUpdateOfDetailedExecutionsStatus(
 		incomingChannelCommandAndMessage.TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage)
 

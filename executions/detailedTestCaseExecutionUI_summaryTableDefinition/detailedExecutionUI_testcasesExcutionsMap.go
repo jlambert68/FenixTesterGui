@@ -9,7 +9,10 @@ import fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixE
 // One TestCaseExecution and all of its data.
 type TestCaseExecutionsDetailsStruct struct {
 	// A full TestCaseExecutionStatus will always be performed when first status update message is received
-	FullTestCaseExecutionUpdateWhenFirstStatusReceived bool
+	FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived bool
+
+	// A full TestCaseExecutionStatus will always be performed when first TestInstruction-status update message is received
+	FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived bool
 
 	// The response message when a full TestCaseExecution is retrieved
 	TestCaseExecutionDatabaseResponseMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage
@@ -20,9 +23,9 @@ type TestCaseExecutionsDetailsStruct struct {
 
 	// A map holding all TestInstructions with their execution status. Each slice is sorted by 'UniqueDatabaseRowCounter' ASC order
 	// The slice data is used to show execution status and the last item in the slice is the one that has the current status
-	// map[TestInstructionExecutionKey]*[]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
+	// map[TestInstructionExecutionKey]*[]*TestTestInstructionExecutionsBaseInformationStruct
 	// TestInstructionExecutionKey = TestInstructionExecutionUuid + TestInstructionExecutionVersion
-	TestInstructionExecutionsStatusMap map[string]*[]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
+	TestInstructionExecutionsStatusMap map[string]*TestTestInstructionExecutionsBaseInformationStruct
 
 	// Holding the information to be show in the SummaryTable for one TestCaseExecution
 	TestCaseExecutionsStatusForSummaryTable *TestCaseExecutionsStatusForSummaryTableStruct

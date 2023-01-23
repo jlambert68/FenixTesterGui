@@ -23,20 +23,23 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 	// If TestExecutionExecution doesn't exist in map then create a new instance
 	if existInMap == false {
 
-		var testInstructionExecutionsStatusMap map[string]*[]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
-		testInstructionExecutionsStatusMap = make(map[string]*[]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage)
+		var TestTestInstructionExecutionsBaseInformationMap map[string]*[]*detailedTestCaseExecutionUI_summaryTableDefinition.TestTestInstructionExecutionsBaseInformationStruct
+		TestTestInstructionExecutionsBaseInformationMap = make(map[string]*[]*detailedTestCaseExecutionUI_summaryTableDefinition.TestTestInstructionExecutionsBaseInformationStruct)
 
 		testCaseExecutionsDetails = &detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct{
 			TestCaseExecutionDatabaseResponseMessage:       testCaseExecutionResponse,
 			TestCaseExecutionsStatusUpdates:                nil,
 			TestInstructionExecutionsStatusUpdates:         nil,
-			TestInstructionExecutionsStatusMap:             testInstructionExecutionsStatusMap,
+			TestInstructionExecutionsStatusMap:             TestTestInstructionExecutionsBaseInformationMap,
 			TestCaseExecutionsStatusForSummaryTable:        &detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsStatusForSummaryTableStruct{},
 			TestInstructionExecutionsStatusForSummaryTable: nil,
 		}
 
 		// Add the TestCaseExecution to the Map
 		detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[testCaseExecutionMapKey] = testCaseExecutionsDetails
+	} else {
+		// Replace TestCaseExecutionResponse from Database
+		testCaseExecutionsDetails.TestCaseExecutionDatabaseResponseMessage = testCaseExecutionResponse
 	}
 
 	// TestCaseStatus
@@ -72,19 +75,75 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 	testCaseExecutionsDetails.TestCaseExecutionsStatusForSummaryTable = &testCaseExecutionsStatusForSummaryTableData
 
 	// TestInstructionsStatus
-	// Add the TestInstructions Statuses for summary page to the Map by converting into the simpler summary page structure
+	// Add the TestInstructions Statuses for summary page to the Map by converting into structure
 	for _, testInstructionExecutionDetailsMessage := range testCaseExecutionResponse.TestInstructionExecutions {
-		var testInstructionExecutionsStatusForSummaryTableData detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsStatusForSummaryTableStruct
-		// Loop all status messages
-		for testInstructionExecutionInformationCounter, testInstructionExecutionInformation := range testInstructionExecutionDetailsMessage.TestInstructionExecutionsInformation {
 
-			// When it's the first instance of status then use that as the base
-			if testInstructionExecutionInformationCounter == 0 {
-				testInstructionExecutionsStatusForSummaryTableData = detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsStatusForSummaryTableStruct{
-					TestInstructionExecutionUIName: testInstructionExecutionDetailsMessage.TestInstructionExecutionBasicInformation.TestInstructionName,
-					TestInstructionStatusValue:     uint32(testInstructionExecutionInformation.TestInstructionExecutionStatus),
-					ExecutionStatusUpdateTimeStamp: testInstructionExecutionInformation.ExecutionStatusUpdateTimeStamp.AsTime(),
-				}
+		var tempTestInstructionExecutionsStatusMapKey string
+		tempTestInstructionExecutionsStatusMapKey = testInstructionExecutionDetailsMessage.TestInstructionExecutionBasicInformation.TestInstructionExecutionUuid +
+			strconv.Itoa(int(testInstructionExecutionDetailsMessage.TestInstructionExecutionBasicInformation.TestInstructionExecutionVersion))
+
+		// Check if TestInstructionExecution already exists within Map
+		var tempTestTestInstructionExecutionsBaseInformation *detailedTestCaseExecutionUI_summaryTableDefinition.TestTestInstructionExecutionsBaseInformationStruct
+		tempTestTestInstructionExecutionsBaseInformation, existInMap = testCaseExecutionsDetails.TestInstructionExecutionsStatusMap[tempTestInstructionExecutionsStatusMapKey]
+
+		if existInMap == false {
+			// TestInstructionExecution doesn't exist, so create the TestInstructionExecution-object
+
+			var tempAllTestInstructionsExecutionsStatusUpdatesInformationMap map[string]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
+			tempAllTestInstructionsExecutionsStatusUpdatesInformationMap = make(map[string]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage)
+
+			tempTestTestInstructionExecutionsBaseInformation = &detailedTestCaseExecutionUI_summaryTableDefinition.TestTestInstructionExecutionsBaseInformationStruct{
+				TestInstructionExecutionBasicInformation:                 testInstructionExecutionDetailsMessage.TestInstructionExecutionBasicInformation,
+				AllTestInstructionsExecutionsStatusUpdatesInformationMap: tempAllTestInstructionsExecutionsStatusUpdatesInformationMap,
+				CurrentTestInstructionExecutionsStatusForSummaryTable:    nil,
+			}
+
+			// Save TestInstructionExecution-object back into map
+			testCaseExecutionsDetails.TestInstructionExecutionsStatusMap[tempTestInstructionExecutionsStatusMapKey] = tempTestTestInstructionExecutionsBaseInformation
+
+		}
+
+		// Check if TestInstructionStatus exist in 'AllTestInstructionsExecutionsStatusUpdatesInformationMap'
+		// Loop all TestInstructionStatus-messages
+		for _, tempTestInstructionExecutionsInformation := range testInstructionExecutionDetailsMessage.TestInstructionExecutionsInformation {
+			var  tempExecutionStatusUpdateTimeStampMapKey string
+			tempExecutionStatusUpdateTimeStampMapKey = tempTestInstructionExecutionsInformation.ExecutionStatusUpdateTimeStamp.AsTime().String()
+
+			// Verify if this UpdateTimeStamp exist within 'AllTestInstructionsExecutionsStatusUpdatesInformationMap'
+			_, existInMap = tempTestTestInstructionExecutionsBaseInformation.AllTestInstructionsExecutionsStatusUpdatesInformationMap[tempExecutionStatusUpdateTimeStampMapKey]
+
+			// If it doesn't exist then add it to the 'AllTestInstructionsExecutionsStatusUpdatesInformationMap'
+			if existInMap == false {
+				tempTestTestInstructionExecutionsBaseInformation.AllTestInstructionsExecutionsStatusUpdatesInformationMap[tempExecutionStatusUpdateTimeStampMapKey] = tempTestInstructionExecutionsInformation
+
+			}
+		}
+
+		// Loop all UpdateTimestamps and pick the last one and add to 'TestCaseExecutionsStatusForSummaryTable'
+		for
+
+
+
+		var tempTestInstructionExecutionsInformationMessages []*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
+		tempTestInstructionExecutionsInformationMessages = append(tempTestInstructionExecutionsInformationMessages, testInstructionExecutionDetailsMessage.TestInstructionExecutionsInformation...)
+
+		// Initiate Map with TestInstructionStatusMessages with UpdateTimeStamp as Map-key
+		if testInstructionExecutionDetailsMessage.
+		var  tempAllTestInstructionsExecutionsStatusUpdatesInformationMap map[string]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
+		tempAllTestInstructionsExecutionsStatusUpdatesInformationMap map[string]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
+
+		tempTestTestInstructionExecutionsBaseInformation = &detailedTestCaseExecutionUI_summaryTableDefinition.TestTestInstructionExecutionsBaseInformationStruct{
+			TestInstructionExecutionBasicInformation:              testInstructionExecutionDetailsMessage.TestInstructionExecutionBasicInformation,
+			AllTestInstructiosExecutionsStatusUpdatesInformation:  tempTestInstructionExecutionsInformationMessages,
+			CurrentTestInstructionExecutionsStatusForSummaryTable: nil,
+		}
+
+		// Loop
+
+	}
+
+
+
 			} else {
 				// Check if the new timestamp > existing timestamp, if so then use new instance
 				if testInstructionExecutionInformation.ExecutionStatusUpdateTimeStamp.AsTime().After(

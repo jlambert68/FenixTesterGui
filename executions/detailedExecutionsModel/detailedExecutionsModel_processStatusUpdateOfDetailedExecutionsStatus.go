@@ -216,5 +216,3 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 	// Update the SummaryTable for TestInstructionExecutions
 	detailedExecutionsModelObject.updateTestInstructionExecutionsSummaryTable()
 }
-
-}

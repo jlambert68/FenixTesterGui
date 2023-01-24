@@ -494,59 +494,30 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSu
 		}
 
 		// Loop alla TestInstructionExecutions in TestCaseExecution
-		for _, tempTestInstructionExecutionReference := range tempDetailedTestCaseExecution.TestCaseExecutionDatabaseResponseMessage.TestInstructionExecutions {
+		for _, tempTestInstructionExecutionReference := range tempDetailedTestCaseExecution.TestInstructionExecutionsStatusForSummaryTable {
 			tempTestInstructionExecution := *tempTestInstructionExecutionReference
 
 			// Extract TestCaseName
 			var testInstructionName string
-			testInstructionName = tempTestInstructionExecution.TestInstructionExecutionBasicInformation.TestInstructionName
+			testInstructionName = tempTestInstructionExecution.TestInstructionExecutionUIName
 
-			// Extract the status for the TestCase
-			var testInstructionStatus fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusEnum
-			var testInstructionStatusUpdate time.Time
-			var testInstructionExecutionsInformationMessages []*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
-			testInstructionExecutionsInformationMessages = tempTestInstructionExecution.TestInstructionExecutionsInformation
+			// Extract the status for the TestInstructionExecution
+			var testInstructionStatus uint32
+			testInstructionStatus = tempTestInstructionExecution.TestInstructionStatusValue
 
-			// Get last row for TestInstructionExecutions
-			var lastTestInstructionRow int
-			lastTestInstructionRow = len(testInstructionExecutionsInformationMessages) - 1
-
-			// Extract TestInstructionStatus when there are something to extract
-			if lastTestInstructionRow >= 0 {
-
-				// Extract the status and time stamp
-				testInstructionStatus = testInstructionExecutionsInformationMessages[lastTestInstructionRow].TestInstructionExecutionStatus
-				testInstructionStatusUpdate = testInstructionExecutionsInformationMessages[lastTestInstructionRow].ExecutionStatusUpdateTimeStamp.AsTime()
-
-				// Check if there is a status updates with later timestamp
-				for _, tempTestInstructionExecutionsStatusUpdateMessage := range tempDetailedTestCaseExecution.TestInstructionExecutionsStatusUpdates {
-
-					// If Updates Status-message has later timestamp, then use that one
-					if tempTestInstructionExecutionsStatusUpdateMessage.TestInstructionExecutionsStatusInformation.
-						ExecutionStatusUpdateTimeStamp.AsTime().After(testInstructionStatusUpdate) {
-
-						// Use new Status and TimeStamp
-						testInstructionStatus = tempTestInstructionExecutionsStatusUpdateMessage.
-							TestInstructionExecutionsStatusInformation.TestInstructionExecutionStatus
-						testInstructionStatusUpdate = tempTestInstructionExecutionsStatusUpdateMessage.
-							TestInstructionExecutionsStatusInformation.ExecutionStatusUpdateTimeStamp.AsTime()
-					}
-				}
-
-				// Create the TestInstructionExecution-container
-				var testInstructionNameContainer *fyne.Container
-				testInstructionNameContainer, err = createExecutionSummary(testInstructionName, int32(testInstructionStatus))
-				if err != nil {
-					return nil
-				}
-
-				// Add TestInstructionName-container to containers for all TestInstructions for current Summary-row
-				testInstructionsForTestCase.Add(testInstructionNameContainer)
-
+			// Create the TestInstructionExecution-container
+			var testInstructionNameContainer *fyne.Container
+			testInstructionNameContainer, err = createExecutionSummary(testInstructionName, int32(testInstructionStatus))
+			if err != nil {
+				return nil
 			}
+
+			// Add TestInstructionName-container to containers for all TestInstructions for current Summary-row
+			testInstructionsForTestCase.Add(testInstructionNameContainer)
+
 		}
 
-		// Add the TestInstruction-container to the TestCase-container for the Row
+		// Add TestInstructions to TestCase
 		testCaseRow.Add(testInstructionsForTestCase)
 
 		// Create background for TestCaseRow, with correct color

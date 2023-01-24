@@ -176,107 +176,45 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 		tempTestCaseExecutionsDetailsReference.TestInstructionExecutionsStatusUpdates = append(
 			tempTestCaseExecutionsDetailsReference.TestInstructionExecutionsStatusUpdates, tempTestInstructionExecutionStatusMessage)
 
+		//*****
+
+		var tempTestInstructionExecutionsStatusMapKey string
+		tempTestInstructionExecutionsStatusMapKey = tempTestInstructionExecutionStatusMessage.TestInstructionExecutionUuid +
+			strconv.Itoa(int(tempTestInstructionExecutionStatusMessage.TestInstructionExecutionVersion))
+
+		// Check if TestInstructionExecution already exists within Map
+		var tempTestTestInstructionExecutionsBaseInformation *detailedTestCaseExecutionUI_summaryTableDefinition.TestTestInstructionExecutionsBaseInformationStruct
+		tempTestTestInstructionExecutionsBaseInformation, existInMap = tempTestCaseExecutionsDetailsReference.TestInstructionExecutionsStatusMap[tempTestInstructionExecutionsStatusMapKey]
+
+		if existInMap == false {
+			// TestInstructionExecution doesn't exist, then some is really wrong
+
+			ErrorID := "d29c18aa-086d-4c45-bc06-724564ccc893"
+			err := errors.New(fmt.Sprintf("We shouldn't end up here. [ErrorID:'%s']", ErrorID))
+
+			fmt.Println(err) // TODO Send on Error-channel
+
+			return
+
+		}
+
+		// Check if TestInstructionStatus exist in 'AllTestInstructionsExecutionsStatusUpdatesInformationMap'
+		var tempExecutionStatusUpdateTimeStampMapKey string
+		tempExecutionStatusUpdateTimeStampMapKey = tempTestInstructionExecutionStatusMessage.TestInstructionExecutionsStatusInformation.ExecutionStatusUpdateTimeStamp.AsTime().String()
+
+		// Verify if this UpdateTimeStamp exist within 'AllTestInstructionsExecutionsStatusUpdatesInformationMap'
+		_, existInMap = tempTestTestInstructionExecutionsBaseInformation.AllTestInstructionsExecutionsStatusUpdatesInformationMap[tempExecutionStatusUpdateTimeStampMapKey]
+
+		// If it doesn't exist then add it to the 'AllTestInstructionsExecutionsStatusUpdatesInformationMap'
+		if existInMap == false {
+			tempTestTestInstructionExecutionsBaseInformation.AllTestInstructionsExecutionsStatusUpdatesInformationMap[tempExecutionStatusUpdateTimeStampMapKey] = tempTestInstructionExecutionStatusMessage.GetTestInstructionExecutionsStatusInformation()
+
+		}
 	}
+	//****
 
-	// Loop all TestCaseStatus-rows and update slice used for SummaryTable
-
-	// Loop all TestInstructionExecutionsStatus-row and update slice used for SummaryTable
-	for tempTestCaseExecutionMapKey, tempTestInstructionExecutionStatusMessage := range testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage.TestInstructionExecutionsStatus {
-
-
-
-	/*
-
-	   // TestCaseStatus
-	   // Add to existing structure for the TestCase-Status on summary page
-	   var testCaseExecutionsStatusForSummaryTableData TestCaseExecutionsStatusForSummaryTableStruct
-
-	   // First get the latest data from DB-content
-	   for testCaseExecutionDetailsCounter, testCaseExecutionDetailsMessage := range testCaseExecutionResponse.TestCaseExecutionDetails {
-
-	   // When it's the first instance of status then use that as the base
-	   if testCaseExecutionDetailsCounter == 0 {
-	   testCaseExecutionsStatusForSummaryTableData = TestCaseExecutionsStatusForSummaryTableStruct{
-	   TestCaseUIName:                 testCaseExecutionResponse.TestCaseExecutionBasicInformation.TestCaseName,
-	   TestCaseStatusValue:            uint32(testCaseExecutionDetailsMessage.TestCaseExecutionStatus),
-	   ExecutionStatusUpdateTimeStamp: testCaseExecutionDetailsMessage.ExecutionStatusUpdateTimeStamp.AsTime(),
-	   }
-	   } else {
-	   // Check if the new timestamp > existing timestamp, if so then use new instance
-	   if testCaseExecutionDetailsMessage.ExecutionStatusUpdateTimeStamp.AsTime().After(
-	   testCaseExecutionsStatusForSummaryTableData.ExecutionStatusUpdateTimeStamp) {
-
-	   testCaseExecutionsStatusForSummaryTableData = TestCaseExecutionsStatusForSummaryTableStruct{
-	   TestCaseUIName:                 testCaseExecutionResponse.TestCaseExecutionBasicInformation.TestCaseName,
-	   TestCaseStatusValue:            uint32(testCaseExecutionDetailsMessage.TestCaseExecutionStatus),
-	   ExecutionStatusUpdateTimeStamp: testCaseExecutionDetailsMessage.ExecutionStatusUpdateTimeStamp.AsTime(),
-	   }
-	   }
-	   }
-	   }
-
-	   // Second get the latest data from status updates
-	   for _, testCaseExecutionDetailsMessage := range testCaseExecutionsDetails.TestCaseExecutionsStatusUpdates {
-
-	   // Check if the new timestamp > existing timestamp, if so then use new instance
-	   if testCaseExecutionDetailsMessage.TestCaseExecutionDetails.ExecutionStatusUpdateTimeStamp.AsTime().After(
-	   testCaseExecutionsStatusForSummaryTableData.ExecutionStatusUpdateTimeStamp) {
-
-	   testCaseExecutionsStatusForSummaryTableData = TestCaseExecutionsStatusForSummaryTableStruct{
-	   TestCaseUIName:                 testCaseExecutionResponse.TestCaseExecutionBasicInformation.
-	   TestCaseName,
-	   TestCaseStatusValue:            uint32(testCaseExecutionDetailsMessage.TestCaseExecutionDetails.
-	   TestCaseExecutionStatus),
-	   ExecutionStatusUpdateTimeStamp: testCaseExecutionDetailsMessage.TestCaseExecutionDetails.
-	   ExecutionStatusUpdateTimeStamp.AsTime(),
-	   }
-	   }
-	   }
-
-	   // Add the TestStatus for Summary page
-	   testCaseExecutionsDetails.TestCaseExecutionsStatusForSummaryTable = testCaseExecutionsStatusForSummaryTableData
-
-	   // TestInstructionsStatus
-
-	   // First get the latest data from DB-content
-	   for _, testInstructionExecutionDetailsMessage := range testCaseExecutionResponse.TestInstructionExecutions {
-	   var testInstructionExecutionsStatusForSummaryTableData TestInstructionExecutionsStatusForSummaryTable
-	   // Loop all status messages
-	   for testInstructionExecutionInformationCounter, testInstructionExecutionInformation := range testInstructionExecutionDetailsMessage.
-	   TestInstructionExecutionsInformation {
-
-	   // When it's the first instance of status then use that as the base
-	   if testInstructionExecutionInformationCounter == 0 {
-	   testInstructionExecutionsStatusForSummaryTableData = TestInstructionExecutionsStatusForSummaryTable{
-	   TestInstructionExecutionUIName: testInstructionExecutionDetailsMessage.TestInstructionExecutionBasicInformation.TestInstructionName,
-	   TestInstructionStatusValue:     uint32(testInstructionExecutionInformation.TestInstructionExecutionStatus),
-	   ExecutionStatusUpdateTimeStamp: testInstructionExecutionInformation.ExecutionStatusUpdateTimeStamp.AsTime(),
-	   }
-	   } else {
-	   // Check if the new timestamp > existing timestamp, if so then use new instance
-	   if testInstructionExecutionInformation.ExecutionStatusUpdateTimeStamp.AsTime().After(
-	   testInstructionExecutionsStatusForSummaryTableData.ExecutionStatusUpdateTimeStamp) {
-
-	   testInstructionExecutionsStatusForSummaryTableData = TestInstructionExecutionsStatusForSummaryTable{
-	   TestInstructionExecutionUIName: testInstructionExecutionDetailsMessage.TestInstructionExecutionBasicInformation.TestInstructionName,
-	   TestInstructionStatusValue: uint32(testInstructionExecutionInformation.TestInstructionExecutionStatus),
-	   ExecutionStatusUpdateTimeStamp: testInstructionExecutionInformation.ExecutionStatusUpdateTimeStamp.AsTime(),
-	   }
-	   }
-	   }
-	   }
-
-	   // Append the TestInstructionsStatus for Summary page
-	   testCaseExecutionsDetails.TestInstructionExecutionsStatusForSummaryTable = append(
-	   testCaseExecutionsDetails.TestInstructionExecutionsStatusForSummaryTable,
-	   testInstructionExecutionsStatusForSummaryTableData)
-	   }
-
-	   hmm hur matchar man dessa två slice:ar?
-
-	   }
-
-	   }
-	*/
+	// Update the SummaryTable for TestInstructionExecutions
+	detailedExecutionsModelObject.updateTestInstructionExecutionsSummaryTable()
+}
 
 }

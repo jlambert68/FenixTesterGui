@@ -1,9 +1,12 @@
 package detailedExecutionsModel
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/detailedTestCaseExecutionUI_summaryTableDefinition"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
+	"sort"
 	"strconv"
+	"time"
 )
 
 // Updates all Executions status with information received after direct gRPC-call to GUiExecutionServer
@@ -23,8 +26,8 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 	// If TestExecutionExecution doesn't exist in map then create a new instance
 	if existInMap == false {
 
-		var TestTestInstructionExecutionsBaseInformationMap map[string]*[]*detailedTestCaseExecutionUI_summaryTableDefinition.TestTestInstructionExecutionsBaseInformationStruct
-		TestTestInstructionExecutionsBaseInformationMap = make(map[string]*[]*detailedTestCaseExecutionUI_summaryTableDefinition.TestTestInstructionExecutionsBaseInformationStruct)
+		var TestTestInstructionExecutionsBaseInformationMap map[string]*detailedTestCaseExecutionUI_summaryTableDefinition.TestTestInstructionExecutionsBaseInformationStruct
+		TestTestInstructionExecutionsBaseInformationMap = make(map[string]*detailedTestCaseExecutionUI_summaryTableDefinition.TestTestInstructionExecutionsBaseInformationStruct)
 
 		testCaseExecutionsDetails = &detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct{
 			TestCaseExecutionDatabaseResponseMessage:       testCaseExecutionResponse,
@@ -88,7 +91,6 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 
 		if existInMap == false {
 			// TestInstructionExecution doesn't exist, so create the TestInstructionExecution-object
-
 			var tempAllTestInstructionsExecutionsStatusUpdatesInformationMap map[string]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
 			tempAllTestInstructionsExecutionsStatusUpdatesInformationMap = make(map[string]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage)
 
@@ -106,7 +108,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 		// Check if TestInstructionStatus exist in 'AllTestInstructionsExecutionsStatusUpdatesInformationMap'
 		// Loop all TestInstructionStatus-messages
 		for _, tempTestInstructionExecutionsInformation := range testInstructionExecutionDetailsMessage.TestInstructionExecutionsInformation {
-			var  tempExecutionStatusUpdateTimeStampMapKey string
+			var tempExecutionStatusUpdateTimeStampMapKey string
 			tempExecutionStatusUpdateTimeStampMapKey = tempTestInstructionExecutionsInformation.ExecutionStatusUpdateTimeStamp.AsTime().String()
 
 			// Verify if this UpdateTimeStamp exist within 'AllTestInstructionsExecutionsStatusUpdatesInformationMap'
@@ -118,57 +120,82 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 
 			}
 		}
-
-		// Loop all UpdateTimestamps and pick the last one and add to 'TestCaseExecutionsStatusForSummaryTable'
-		for
-
-
-
-		var tempTestInstructionExecutionsInformationMessages []*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
-		tempTestInstructionExecutionsInformationMessages = append(tempTestInstructionExecutionsInformationMessages, testInstructionExecutionDetailsMessage.TestInstructionExecutionsInformation...)
-
-		// Initiate Map with TestInstructionStatusMessages with UpdateTimeStamp as Map-key
-		if testInstructionExecutionDetailsMessage.
-		var  tempAllTestInstructionsExecutionsStatusUpdatesInformationMap map[string]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
-		tempAllTestInstructionsExecutionsStatusUpdatesInformationMap map[string]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
-
-		tempTestTestInstructionExecutionsBaseInformation = &detailedTestCaseExecutionUI_summaryTableDefinition.TestTestInstructionExecutionsBaseInformationStruct{
-			TestInstructionExecutionBasicInformation:              testInstructionExecutionDetailsMessage.TestInstructionExecutionBasicInformation,
-			AllTestInstructiosExecutionsStatusUpdatesInformation:  tempTestInstructionExecutionsInformationMessages,
-			CurrentTestInstructionExecutionsStatusForSummaryTable: nil,
-		}
-
-		// Loop
-
 	}
 
+	// Update the SummaryTable for TestInstructionExecutions
+	detailedExecutionsModelObject.updateTestInstructionExecutionsSummaryTable()
+}
 
+// Update the SummaryTable for TestInstructionExecutions
+func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) updateTestInstructionExecutionsSummaryTable() {
+	// Create new TestInstructionExecutionsSummaryTable-variable
+	var tempTestInstructionExecutionsStatusForSummaryTable []*detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsStatusForSummaryTableStruct
 
-			} else {
-				// Check if the new timestamp > existing timestamp, if so then use new instance
-				if testInstructionExecutionInformation.ExecutionStatusUpdateTimeStamp.AsTime().After(
-					testInstructionExecutionsStatusForSummaryTableData.ExecutionStatusUpdateTimeStamp) {
+	// Loop all TestCases
+	for _, tempTestCaseExecutionsDetail := range detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap {
 
-					testInstructionExecutionsStatusForSummaryTableData = detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsStatusForSummaryTableStruct{
-						TestInstructionExecutionUIName: testInstructionExecutionDetailsMessage.TestInstructionExecutionBasicInformation.TestInstructionName,
-						TestInstructionStatusValue:     uint32(testInstructionExecutionInformation.TestInstructionExecutionStatus),
-						ExecutionStatusUpdateTimeStamp: testInstructionExecutionInformation.ExecutionStatusUpdateTimeStamp.AsTime(),
+		// Loop all TestInstructionExecutions
+		for _, tempTestInstructionExecution := range tempTestCaseExecutionsDetail.TestInstructionExecutionsStatusMap {
+
+			var latestTimeStamp time.Time
+			var latestTestInstructionUpdateTimeStampMapKey string
+			var firstTimeStampCheck bool
+			// Loop all UpdateTimestamps and pick the last one and add to 'TestCaseExecutionsStatusForSummaryTable'
+			for tempTestInstructionUpdateTimeStampMapKey, tempTestInstructionsExecutionsStatusUpdatesInformation := range tempTestInstructionExecution.AllTestInstructionsExecutionsStatusUpdatesInformationMap {
+
+				// When first then use that timestamp as baseline
+				if firstTimeStampCheck == false {
+					firstTimeStampCheck = true
+					latestTimeStamp = tempTestInstructionsExecutionsStatusUpdatesInformation.ExecutionStatusUpdateTimeStamp.AsTime()
+
+				} else {
+					// Check if this Timestamp is later than current timestamp, if so use that as latest TimeStamp
+					if tempTestInstructionsExecutionsStatusUpdatesInformation.ExecutionStatusUpdateTimeStamp.AsTime().
+						After(latestTimeStamp) {
+						latestTimeStamp = tempTestInstructionsExecutionsStatusUpdatesInformation.ExecutionStatusUpdateTimeStamp.AsTime()
+						latestTestInstructionUpdateTimeStampMapKey = tempTestInstructionUpdateTimeStampMapKey
 					}
+				}
+
+				// Store StatusUpdate in SummaryTable
+				if latestTestInstructionUpdateTimeStampMapKey != "" {
+
+					// Create a Sort Order for The TestInstructionsExecution based on
+					// 1) SortOrder; 2) TestInstructionExecutionUIName
+					var sortOrderAsString string
+					sortOrderAsString = strconv.Itoa(int(tempTestInstructionExecution.TestInstructionExecutionBasicInformation.TestInstructionExecutionOrder)) +
+						tempTestInstructionExecution.TestInstructionExecutionBasicInformation.TestInstructionName
+
+					// Create TestInstruction-UI-name for SummaryTable: TestInstructionName + part of UUID + VersionNumber
+					var testInstructionExecutionUIName string
+					testInstructionExecutionUIName = tempTestInstructionExecution.TestInstructionExecutionBasicInformation.TestInstructionName +
+						"<" + sharedCode.GenerateShortUuidFromFullUuid(tempTestInstructionExecution.TestInstructionExecutionBasicInformation.TestInstructionExecutionUuid) +
+						"..." + strconv.Itoa(int(tempTestInstructionExecution.TestInstructionExecutionBasicInformation.TestInstructionExecutionVersion)) +
+						">"
+
+					var tempTestInstructionExecutionForStatusForSummaryTable *detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsStatusForSummaryTableStruct
+					tempTestInstructionExecutionForStatusForSummaryTable = &detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsStatusForSummaryTableStruct{
+						TestInstructionExecutionUIName:  testInstructionExecutionUIName,
+						TestInstructionName:             tempTestInstructionExecution.TestInstructionExecutionBasicInformation.TestInstructionName,
+						TestInstructionExecutionUuid:    tempTestInstructionExecution.TestInstructionExecutionBasicInformation.TestInstructionExecutionUuid,
+						TestInstructionExecutionVersion: tempTestInstructionExecution.TestInstructionExecutionBasicInformation.TestInstructionExecutionVersion,
+						TestInstructionStatusValue:      uint32(tempTestInstructionExecution.AllTestInstructionsExecutionsStatusUpdatesInformationMap[latestTestInstructionUpdateTimeStampMapKey].TestInstructionExecutionStatus),
+						ExecutionStatusUpdateTimeStamp:  tempTestInstructionExecution.AllTestInstructionsExecutionsStatusUpdatesInformationMap[latestTestInstructionUpdateTimeStampMapKey].ExecutionStatusUpdateTimeStamp.AsTime(),
+						SortOrder:                       sortOrderAsString,
+					}
+					tempTestInstructionExecutionsStatusForSummaryTable = append(tempTestInstructionExecutionsStatusForSummaryTable,
+						tempTestInstructionExecutionForStatusForSummaryTable)
 				}
 			}
 		}
-		// Append the TestInstructionsStatus for Summary page
-		testCaseExecutionsDetails.TestInstructionExecutionsStatusForSummaryTable = append(
-			testCaseExecutionsDetails.TestInstructionExecutionsStatusForSummaryTable,
-			&testInstructionExecutionsStatusForSummaryTableData)
+
+		// Sort New version of TestInstructionExecution-SummaryTable
+		sort.Slice(tempTestInstructionExecutionsStatusForSummaryTable, func(i, j int) bool {
+			return tempTestInstructionExecutionsStatusForSummaryTable[i].SortOrder < tempTestInstructionExecutionsStatusForSummaryTable[j].SortOrder
+		})
+
+		// Add New version of TestInstructionExecution-SummaryTable to TestCase
+		tempTestCaseExecutionsDetail.TestInstructionExecutionsStatusForSummaryTable = tempTestInstructionExecutionsStatusForSummaryTable
+
 	}
-
-	// Add reference for TestInstructionsStatus for Summary page to TestCaseStatus for Summary page
-	testCaseExecutionsDetails.TestCaseExecutionsStatusForSummaryTable.TestInstructionExecutionsStatusForSummaryTable =
-		&testCaseExecutionsDetails.TestInstructionExecutionsStatusForSummaryTable
-
-	// Add reference for 'TestCaseExecutionsDetailsMap' to SummaryTableOpts
-	//DetailedTestCaseExecutionsSummaryTableOptions.TestCaseExecutionsDetailsMapReference =
-	//	&detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap
-
 }

@@ -10,10 +10,8 @@ import (
 	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
-	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"image/color"
 	"log"
-	"time"
 )
 
 /*
@@ -402,24 +400,20 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSu
 	}
 
 	// Define the Summary Table
-	var testcaseExecutionsSummaryTable *fyne.Container
-	testcaseExecutionsSummaryTable = &fyne.Container{
+	var testcaseExecutionsSummaryTableContainer *fyne.Container
+	testcaseExecutionsSummaryTableContainer = &fyne.Container{
 		Hidden:  false,
 		Layout:  layout.NewVBoxLayout(),
 		Objects: nil,
 	}
 
 	// Add the Header to the Summary TableContainer
-	testcaseExecutionsSummaryTable.Add(summaryHeaderLabel)
+	testcaseExecutionsSummaryTableContainer.Add(summaryHeaderLabel)
 
-	// testCaseCounter
-	var testCaseCounter int
+	// Loop all TestCaseExecutions for SummaryTable
+	for testCaseCounter, tempTestCaseExecutionStatusForSummaryTableReference := range detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsStatusForSummaryTable {
 
-	// Loop all TestCaseExecutions
-	for _, tempDetailedTestCaseExecutionReference := range detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap {
-		tempDetailedTestCaseExecution := *tempDetailedTestCaseExecutionReference
-
-		testCaseCounter = testCaseCounter + 1
+		tempTestCaseExecutionStatusForSummaryTable := *tempTestCaseExecutionStatusForSummaryTableReference
 
 		// Create the Item for one Row in the Summary table
 		var testCaseRow *fyne.Container
@@ -429,43 +423,13 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSu
 			Objects: nil,
 		}
 
-		// Extract TestCaseName
+		// Extract TestCaseName to be used in UI
 		var testCaseName string
-		testCaseName = tempDetailedTestCaseExecution.TestCaseExecutionDatabaseResponseMessage.TestCaseExecutionBasicInformation.TestCaseName
-		var testCaseStatusUpdate time.Time
+		testCaseName = tempTestCaseExecutionStatusForSummaryTable.TestCaseUIName
+
 		// Extract the status for the TestCase
-		var testCaseStatus fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum
-		var detailedTestCaseExecutions []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage
-
-		detailedTestCaseExecutions = tempDetailedTestCaseExecution.TestCaseExecutionDatabaseResponseMessage.TestCaseExecutionDetails
-
-		// Get last row for TestCaseExecutions
-		var lastRow int
-		lastRow = len(tempDetailedTestCaseExecution.TestCaseExecutionDatabaseResponseMessage.TestCaseExecutionDetails) - 1
-
-		// Extract the status and time stamp when there is one, otherwise use Initiate because TestCaseExecution is on ExecutionQueue
-		if lastRow >= 0 {
-			testCaseStatus = detailedTestCaseExecutions[lastRow].TestCaseExecutionStatus
-			testCaseStatusUpdate = detailedTestCaseExecutions[lastRow].ExecutionStatusUpdateTimeStamp.AsTime()
-		} else {
-			testCaseStatus = fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_INITIATED
-			testCaseStatusUpdate = tempDetailedTestCaseExecution.TestCaseExecutionDatabaseResponseMessage.
-				TestCaseExecutionBasicInformation.PlacedOnTestExecutionQueueTimeStamp.AsTime()
-		}
-
-		// Check if there is a status updates with later timestamp
-		for _, tempTestCaseExecutionsStatusMessage := range tempDetailedTestCaseExecution.TestCaseExecutionsStatusUpdates {
-
-			// If Updates Status-message has later timestamp, then use that one
-			if tempTestCaseExecutionsStatusMessage.TestCaseExecutionDetails.ExecutionStatusUpdateTimeStamp.AsTime().
-				After(testCaseStatusUpdate) {
-
-				// Use new Status and TimeStamp
-				testCaseStatus = tempTestCaseExecutionsStatusMessage.TestCaseExecutionDetails.TestCaseExecutionStatus
-				testCaseStatusUpdate = tempTestCaseExecutionsStatusMessage.TestCaseExecutionDetails.
-					ExecutionStatusUpdateTimeStamp.AsTime()
-			}
-		}
+		var testCaseStatus uint32
+		testCaseStatus = tempTestCaseExecutionStatusForSummaryTable.TestCaseStatusValue
 
 		// Create the TestCaseExecution-container
 		var testCaseNameContainer *fyne.Container
@@ -494,7 +458,9 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSu
 		}
 
 		// Loop alla TestInstructionExecutions in TestCaseExecution
-		for _, tempTestInstructionExecutionReference := range tempDetailedTestCaseExecution.TestInstructionExecutionsStatusForSummaryTable {
+		var tempTestInstructionExecutionsStatusForSummaryTable []*detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsStatusForSummaryTableStruct
+		tempTestInstructionExecutionsStatusForSummaryTable = *tempTestCaseExecutionStatusForSummaryTable.TestInstructionExecutionsStatusForSummaryTableReference
+		for _, tempTestInstructionExecutionReference := range tempTestInstructionExecutionsStatusForSummaryTable {
 			tempTestInstructionExecution := *tempTestInstructionExecutionReference
 
 			// Extract TestCaseName
@@ -514,7 +480,6 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSu
 
 			// Add TestInstructionName-container to containers for all TestInstructions for current Summary-row
 			testInstructionsForTestCase.Add(testInstructionNameContainer)
-
 		}
 
 		// Add TestInstructions to TestCase
@@ -564,17 +529,17 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSu
 		testCaseRowContainer = container.New(layout.NewMaxLayout(), testCaseRowBackground, rowWithButtonsContainer)
 
 		// Add the Row to Summary-container
-		testcaseExecutionsSummaryTable.Add(testCaseRowContainer)
+		testcaseExecutionsSummaryTableContainer.Add(testCaseRowContainer)
 
 	}
 
-	// testcaseExecutionsSummaryTable.Refresh()
+	// testcaseExecutionsSummaryTableContainer.Refresh()
 
 	// Define the Summary Return Table
 	testcaseExecutionsSummaryReturnTable = &fyne.Container{
 		Hidden:  false,
 		Layout:  layout.NewHBoxLayout(),
-		Objects: []fyne.CanvasObject{testcaseExecutionsSummaryTable},
+		Objects: []fyne.CanvasObject{testcaseExecutionsSummaryTableContainer},
 	}
 
 	return testcaseExecutionsSummaryReturnTable

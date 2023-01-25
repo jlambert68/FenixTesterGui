@@ -14,26 +14,32 @@ import (
 
 var _ fyne.Widget = (*TestCaseExecutionSummaryTableCellStruct)(nil)
 
+type TestCaseExecutionsBaseInformationStruct struct {
+	// BaseInformation for TestCase
+	TestCaseExecutionBasicInformation *fenixExecutionServerGuiGrpcApi.TestCaseExecutionBasicInformationMessage
+
+	// map[ExecutionStatusUpdateTimeStamp]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage
+	AllTestCaseExecutionsStatusUpdatesInformationMap map[string]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage
+}
+
 // TestCaseExecutionsStatusForSummaryTableStruct
 // The definition used in SummaryTable to represent one TestCaseExecution and its current execution status
 type TestCaseExecutionsStatusForSummaryTableStruct struct {
-	TestCaseUIName                                 string
-	TestCaseStatusValue                            uint32
-	ExecutionStatusUpdateTimeStamp                 time.Time
-	TestCaseExecutionUuid                          string
-	TestCaseExecutionVersion                       string
-	TestInstructionExecutionsStatusForSummaryTable *[]*TestInstructionExecutionsStatusForSummaryTableStruct
+	TestCaseUIName                                          string
+	TestCaseStatusValue                                     uint32
+	ExecutionStatusUpdateTimeStamp                          time.Time
+	TestCaseExecutionUuid                                   string
+	TestCaseExecutionVersion                                uint32
+	SortOrder                                               string
+	TestInstructionExecutionsStatusForSummaryTableReference *[]*TestInstructionExecutionsStatusForSummaryTableStruct
 }
 
-type TestTestInstructionExecutionsBaseInformationStruct struct {
+type TestInstructionExecutionsBaseInformationStruct struct {
 	// BaseInformation for TestInstruction
 	TestInstructionExecutionBasicInformation *fenixExecutionServerGuiGrpcApi.TestInstructionExecutionBasicInformationMessage
 
 	// map[ExecutionStatusUpdateTimeStamp]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
 	AllTestInstructionsExecutionsStatusUpdatesInformationMap map[string]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
-
-	CurrentTestInstructionExecutionsStatusForSummaryTable *TestInstructionExecutionsStatusForSummaryTableStruct
-	// AllTestInstructionExecutionsStatusForSummaryTable *[]*TestInstructionExecutionsStatusForSummaryTableStruct
 }
 
 // TestInstructionExecutionsStatusForSummaryTableStruct

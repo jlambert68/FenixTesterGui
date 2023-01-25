@@ -108,30 +108,32 @@ func NewTestCaseExecutionsSummaryTable(tableOpts *DetailedTestCaseExecutionsSumm
 					}
 					cnvObj.(*TestCaseExecutionSummaryTableCellStruct).testCaseExecutionsDetails = testCaseExecutionsDetails
 					/*
-						testInstructionExecutionsStatusForSummaryTableReference, err := b.GetItem("TestInstructionExecutionsStatusForSummaryTable")
-						if err != nil {
-							log.Fatalf("Data table Update Cell callback, GetItem(%s): %s", "TestInstructionExecutionsStatusForSummaryTable", err)
-						}
-						testInstructionExecutionsStatusForSummaryTableValue, err := testInstructionExecutionsStatusForSummaryTableReference.(binding.String).Get()
-						if err != nil {
-							log.Fatalf("Data table Update Cell callback, Get: %s", err)
-						}
-						testInstructionExecutionsStatusForSummaryTableValue
+							testInstructionExecutionsStatusForSummaryTableReference, err := b.GetItem("TestInstructionExecutionsStatusForSummaryTable")
+							if err != nil {
+								log.Fatalf("Data table Update Cell callback, GetItem(%s): %s", "TestInstructionExecutionsStatusForSummaryTable", err)
+							}
+							testInstructionExecutionsStatusForSummaryTableValue, err := testInstructionExecutionsStatusForSummaryTableReference.(binding.String).Get()
+							if err != nil {
+								log.Fatalf("Data table Update Cell callback, Get: %s", err)
+							}
+							testInstructionExecutionsStatusForSummaryTableValue
 
-						cnvObj.(*TestCaseExecutionSummaryTableCellStruct).testCaseExecutionsStatusForSummaryTable = testInstructionExecutionsStatusForSummaryTableValue
+							cnvObj.(*TestCaseExecutionSummaryTableCellStruct).testCaseExecutionsStatusForSummaryTable = testInstructionExecutionsStatusForSummaryTableValue
+
+						var testInstructionExecutionNames []fyne.CanvasObject
+						var testInstructionExecutionsStatusForSummaryTableSReference *[]*TestInstructionExecutionsStatusForSummaryTableStruct
+						testInstructionExecutionsStatusForSummaryTableSReference = testCaseExecutionsDetails.TestCaseExecutionsStatusForSummaryTable.TestInstructionExecutionsStatusForSummaryTable
+
+						var testInstructionExecutionsStatusForSummaryTable []*TestInstructionExecutionsStatusForSummaryTableStruct
+						testInstructionExecutionsStatusForSummaryTable = *testInstructionExecutionsStatusForSummaryTableSReference
+
+						for _, testInstructionNameRef := range testInstructionExecutionsStatusForSummaryTable {
+							testInstructionExecutionNames = append(testInstructionExecutionNames,
+								container.NewMax(widget.NewLabel(testInstructionNameRef.TestInstructionExecutionUIName)))
+						}
+						cnvObj.(*TestCaseExecutionSummaryTableCellStruct).testInstructionExecutionNames = testInstructionExecutionNames
+
 					*/
-					var testInstructionExecutionNames []fyne.CanvasObject
-					var testInstructionExecutionsStatusForSummaryTableSReference *[]*TestInstructionExecutionsStatusForSummaryTableStruct
-					testInstructionExecutionsStatusForSummaryTableSReference = testCaseExecutionsDetails.TestCaseExecutionsStatusForSummaryTable.TestInstructionExecutionsStatusForSummaryTable
-
-					var testInstructionExecutionsStatusForSummaryTable []*TestInstructionExecutionsStatusForSummaryTableStruct
-					testInstructionExecutionsStatusForSummaryTable = *testInstructionExecutionsStatusForSummaryTableSReference
-
-					for _, testInstructionNameRef := range testInstructionExecutionsStatusForSummaryTable {
-						testInstructionExecutionNames = append(testInstructionExecutionNames,
-							container.NewMax(widget.NewLabel(testInstructionNameRef.TestInstructionExecutionUIName)))
-					}
-					cnvObj.(*TestCaseExecutionSummaryTableCellStruct).testInstructionExecutionNames = testInstructionExecutionNames
 
 				}
 

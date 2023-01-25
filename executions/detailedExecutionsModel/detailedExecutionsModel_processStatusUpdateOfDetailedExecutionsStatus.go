@@ -148,6 +148,22 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 		tempTestCaseExecutionsDetailsReference.TestCaseExecutionsStatusUpdates = append(
 			tempTestCaseExecutionsDetailsReference.TestCaseExecutionsStatusUpdates, tempTestCaseExecutionStatusMessage)
 
+		// Extract UpdateStatusTimeStamap to be used as MapKey
+		var tempExecutionStatusUpdateTimeStampMapKey string
+		tempExecutionStatusUpdateTimeStampMapKey = tempTestCaseExecutionStatusMessage.
+			TestCaseExecutionDetails.ExecutionStatusUpdateTimeStamp.AsTime().String()
+
+		// Verify if this UpdateTimeStamp exist within 'AllTestCaseExecutionsStatusUpdatesInformationMap'
+		_, existInMap = tempTestCaseExecutionsDetailsReference.TestCaseExecutionsBaseInformation.
+			AllTestCaseExecutionsStatusUpdatesInformationMap[tempExecutionStatusUpdateTimeStampMapKey]
+
+		// If it doesn't exist then add it to the 'AllTestInstructionsExecutionsStatusUpdatesInformationMap'
+		if existInMap == false {
+			tempTestCaseExecutionsDetailsReference.TestCaseExecutionsBaseInformation.
+				AllTestCaseExecutionsStatusUpdatesInformationMap[tempExecutionStatusUpdateTimeStampMapKey] =
+				tempTestCaseExecutionStatusMessage.TestCaseExecutionDetails
+		}
+
 	}
 
 	// Loop all TestInstructionStatus-messages and update TestCaseExecutionStatus for each TestCase
@@ -183,7 +199,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 			strconv.Itoa(int(tempTestInstructionExecutionStatusMessage.TestInstructionExecutionVersion))
 
 		// Check if TestInstructionExecution already exists within Map
-		var tempTestTestInstructionExecutionsBaseInformation *detailedTestCaseExecutionUI_summaryTableDefinition.TestTestInstructionExecutionsBaseInformationStruct
+		var tempTestTestInstructionExecutionsBaseInformation *detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsBaseInformationStruct
 		tempTestTestInstructionExecutionsBaseInformation, existInMap = tempTestCaseExecutionsDetailsReference.TestInstructionExecutionsStatusMap[tempTestInstructionExecutionsStatusMapKey]
 
 		if existInMap == false {
@@ -215,4 +231,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 
 	// Update the SummaryTable for TestInstructionExecutions
 	detailedExecutionsModelObject.updateTestInstructionExecutionsSummaryTable()
+
+	// Update the SummaryTable for TestCaseExecutions
+	detailedExecutionsModelObject.updateTestCaseExecutionsSummaryTable()
 }

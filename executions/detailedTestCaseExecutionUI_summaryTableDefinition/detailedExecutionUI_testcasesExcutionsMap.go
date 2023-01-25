@@ -21,14 +21,13 @@ type TestCaseExecutionsDetailsStruct struct {
 	TestCaseExecutionsStatusUpdates        []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusMessage
 	TestInstructionExecutionsStatusUpdates []*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusMessage
 
-	// A map holding all TestInstructions with their execution status. Each slice is sorted by 'UniqueDatabaseRowCounter' ASC order
-	// The slice data is used to show execution status and the last item in the slice is the one that has the current status
-	// map[TestInstructionExecutionKey]*[]*TestTestInstructionExecutionsBaseInformationStruct
-	// TestInstructionExecutionKey = TestInstructionExecutionUuid + TestInstructionExecutionVersion
-	TestInstructionExecutionsStatusMap map[string]*TestTestInstructionExecutionsBaseInformationStruct
+	// Holding all relevant executions information for the TestCaseExecution itself
+	TestCaseExecutionsBaseInformation *TestCaseExecutionsBaseInformationStruct
 
-	// Holding the information to be show in the SummaryTable for one TestCaseExecution
-	TestCaseExecutionsStatusForSummaryTable *TestCaseExecutionsStatusForSummaryTableStruct
+	// A map holding all TestInstructions with their execution statuses.
+	// map[TestInstructionExecutionKey]*TestInstructionExecutionsBaseInformationStruct
+	// TestInstructionExecutionKey = TestInstructionExecutionUuid + TestInstructionExecutionVersion
+	TestInstructionExecutionsStatusMap map[string]*TestInstructionExecutionsBaseInformationStruct
 
 	// The slice of all TestInstructionExecution, for one TestCaseExecution, and their current status. The order is the same as it is presented on screen
 	TestInstructionExecutionsStatusForSummaryTable []*TestInstructionExecutionsStatusForSummaryTableStruct
@@ -37,5 +36,8 @@ type TestCaseExecutionsDetailsStruct struct {
 // TestCaseExecutionsDetailsMap
 // map[TestCaseExecutionMapKey]*TestCaseExecutionsDetailsStruct, TestCaseExecutionMapKey = TestCaseExecutionUuid + TestCaseExecutionVersionNumber
 var TestCaseExecutionsDetailsMap map[string]*TestCaseExecutionsDetailsStruct // m
+
+// Holding the information to be show in the SummaryTable for all TestCaseExecutions
+var TestCaseExecutionsStatusForSummaryTable []*TestCaseExecutionsStatusForSummaryTableStruct
 
 // BLOCK END

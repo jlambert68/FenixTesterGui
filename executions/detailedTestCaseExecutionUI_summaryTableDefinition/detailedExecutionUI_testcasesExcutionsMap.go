@@ -1,6 +1,9 @@
 package detailedTestCaseExecutionUI_summaryTableDefinition
 
-import fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
+import (
+	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
+	"time"
+)
 
 // BLOCK START
 // The block below is used for storing all detailed data belonging to a TestCaseExecution and structures needed for reflecting status updates to the UI
@@ -10,6 +13,9 @@ import fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixE
 type TestCaseExecutionsDetailsStruct struct {
 	// A full TestCaseExecutionStatus will always be performed when first status update message is received
 	FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived bool
+
+	// Keeps track of previous Timestamp for incoming status message to secure that no messages are lost
+	PreviousBroadcastTimeStamp time.Time
 
 	// A full TestCaseExecutionStatus will always be performed when first TestInstruction-status update message is received
 	FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived bool

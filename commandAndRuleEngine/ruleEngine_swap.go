@@ -177,9 +177,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 
 			// Extract parent Mature TestInstructionContainer
 			if matureElement.OriginalElementUuid != matureElement.ParentElementUuid {
-				tempParentTestInstructionContainerUuid = matureElement.ParentElementUuid
+				tempParentTestInstructionContainerMatureUuid = matureElement.ParentElementUuid
 			} else {
-				tempParentTestInstructionContainerUuid = ""
+				tempParentTestInstructionContainerMatureUuid = ""
 			}
 
 			// Create a new Mature TestInstruction to be added
@@ -213,7 +213,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 					TestInstructionMatureUuid:                matureElementToSwapIn.FirstElementUuid,
 					ParentTestInstructionContainerUuid:       tempParentTestInstructionContainerUuid,
 					ParentTestInstructionContainerMatureUuid: tempParentTestInstructionContainerMatureUuid,
-					ChosenDropZoneUuid:                       immatureElementToSwapIn.ChosenDropZoneColor,
+					ChosenDropZoneUuid:                       immatureElementToSwapIn.ChosenDropZoneUuid,
 					ChosenDropZoneName:                       matureElementToSwapIn.ChosenDropZoneName,
 					TestInstructionType:                      matureElement.TestCaseModelElementType,
 				},

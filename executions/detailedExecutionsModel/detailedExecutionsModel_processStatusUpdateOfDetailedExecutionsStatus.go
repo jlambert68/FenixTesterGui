@@ -16,46 +16,68 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 	var testCaseExecutionKeysMap map[string]string // map[tempTestCaseExecutionMapKey]tempTestCaseExecutionMapKey
 	testCaseExecutionKeysMap = make(map[string]string)
 	var existInMap bool
+	var existInTestCaseExecutionsDetailsMap bool
+	var existsInTestCaseExecutionKeysMap bool
+
 	for _, tempTestCaseExecutionStatusMessage := range testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage.TestCaseExecutionsStatus {
 
 		// Create TestCaseExecutionKey
-		var tempTestCaseExecutionMapKey string
-		tempTestCaseExecutionMapKey = tempTestCaseExecutionStatusMessage.TestCaseExecutionUuid +
+		var tempTestCaseExecutionToBeFullyRetrievedMapKey string
+		tempTestCaseExecutionToBeFullyRetrievedMapKey = tempTestCaseExecutionStatusMessage.TestCaseExecutionUuid +
 			strconv.Itoa(int(tempTestCaseExecutionStatusMessage.TestCaseExecutionVersion))
 
 		// Check if TestCaseExecution exist within the 'TestCaseExecutionsDetailsMap'
-		_, existInMap = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionMapKey]
+		_, existInTestCaseExecutionsDetailsMap = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
 
 		// If not then add it to the Map over TestCaseExecution to retrieve from the Database
-		if existInMap == false {
-			_, existInMap = testCaseExecutionKeysMap[tempTestCaseExecutionMapKey]
-			// Has the tempTestCaseExecutionMapKey already been saved
-			if existInMap == false {
-				testCaseExecutionKeysMap[tempTestCaseExecutionMapKey] = tempTestCaseExecutionMapKey
+		if existInTestCaseExecutionsDetailsMap == false {
+			_, existsInTestCaseExecutionKeysMap = testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
+			// Has the tempTestCaseExecutionToBeFullyRetrievedMapKey already been saved
+			if existsInTestCaseExecutionKeysMap == false {
+				testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
 			}
 		}
+
+		// If there is a mismatch between locally store Previous Timestamp Status-message and incoming Previous Timestamp Status-message then get full TestCaseExecution
+		if existsInTestCaseExecutionKeysMap == false && existInTestCaseExecutionsDetailsMap == true {
+
+			var tempestCaseExecutionsDetails *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct
+			tempestCaseExecutionsDetails, existInTestCaseExecutionsDetailsMap = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
+
+			// Is there a mismatch between locally store Previous Timestamp Status-message and incoming Previous Timestamp Status-message
+			// When BroadcastTimeStamp == PreviousBroadcastTimeStamp in incoming status message then that message is the first for that TestCaseExecution, for this ExecutionServerInstance
+			if tempTestCaseExecutionStatusMessage.BroadcastTimeStamp != tempTestCaseExecutionStatusMessage.PreviousBroadcastTimeStamp &&
+				tempTestCaseExecutionStatusMessage.PreviousBroadcastTimeStamp.AsTime() != tempestCaseExecutionsDetails.PreviousBroadcastTimeStamp {
+
+				// We have a mismatch, so retrieve full TestCaseExecution
+				testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
+			} else {
+
+			}
+		}
+
 	}
 
 	// Process TestInstructionStatus-messages to check that all TestCases exist in 'detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap'
 	for _, tempTestInstructionExecutionStatusMessage := range testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage.TestInstructionExecutionsStatus {
 
 		// Create TestCaseExecutionKey
-		var tempTestCaseExecutionMapKey string
-		tempTestCaseExecutionMapKey = tempTestInstructionExecutionStatusMessage.TestCaseExecutionUuid +
+		var tempTestCaseExecutionToBeFullyRetrievedMapKey string
+		tempTestCaseExecutionToBeFullyRetrievedMapKey = tempTestInstructionExecutionStatusMessage.TestCaseExecutionUuid +
 			strconv.Itoa(int(tempTestInstructionExecutionStatusMessage.TestCaseExecutionVersion))
 
 		// Check if TestCaseExecution exist within the 'TestCaseExecutionsDetailsMap'
 		var tempTestCaseExecutionsDetailsMap *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct
-		tempTestCaseExecutionsDetailsMap, existInMap = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionMapKey]
+		tempTestCaseExecutionsDetailsMap, existInTestCaseExecutionsDetailsMap = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
 
 		// If not then add it to the Map over TestCaseExecution to retrieve from the Database
-		if existInMap == false {
+		if existInTestCaseExecutionsDetailsMap == false {
 
-			_, existInMap = testCaseExecutionKeysMap[tempTestCaseExecutionMapKey]
+			_, existsInTestCaseExecutionKeysMap = testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
 
-			// Has the tempTestCaseExecutionMapKey already been saved
-			if existInMap == false {
-				testCaseExecutionKeysMap[tempTestCaseExecutionMapKey] = tempTestCaseExecutionMapKey
+			// Has the tempTestCaseExecutionToBeFullyRetrievedMapKey already been saved
+			if existsInTestCaseExecutionKeysMap == false {
+				testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
 
 			}
 		} else {
@@ -74,13 +96,31 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 					tempTestCaseExecutionsDetailsMap.FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived = true
 				}
 
-				_, existInMap = testCaseExecutionKeysMap[tempTestCaseExecutionMapKey]
+				_, existsInTestCaseExecutionKeysMap = testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
 
-				// Has the tempTestCaseExecutionMapKey already been saved
-				if existInMap == false {
-					testCaseExecutionKeysMap[tempTestCaseExecutionMapKey] = tempTestCaseExecutionMapKey
+				// Has the tempTestCaseExecutionToBeFullyRetrievedMapKey already been saved
+				if existsInTestCaseExecutionKeysMap == false {
+					testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
 
 				}
+			}
+		}
+
+		// If there is a mismatch between locally store Previous Timestamp Status-message and incoming Previous Timestamp Status-message then get full TestCaseExecution
+		if existsInTestCaseExecutionKeysMap == false && existInTestCaseExecutionsDetailsMap == true {
+
+			var tempestCaseExecutionsDetails *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct
+			tempestCaseExecutionsDetails, existInTestCaseExecutionsDetailsMap = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
+
+			// Is there a mismatch between locally store Previous Timestamp Status-message and incoming Previous Timestamp Status-message
+			// When BroadcastTimeStamp == PreviousBroadcastTimeStamp in incoming status message then that message is the first for that TestCaseExecution, for this ExecutionServerInstance
+			if tempTestInstructionExecutionStatusMessage.BroadcastTimeStamp != tempTestInstructionExecutionStatusMessage.PreviousBroadcastTimeStamp &&
+				tempTestInstructionExecutionStatusMessage.PreviousBroadcastTimeStamp.AsTime() != tempestCaseExecutionsDetails.PreviousBroadcastTimeStamp {
+
+				// We have a mismatch, so retrieve full TestCaseExecution
+				testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
+			} else {
+
 			}
 		}
 	}
@@ -132,10 +172,10 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 
 		// Check if TestCaseExecution exist within the 'TestCaseExecutionsDetailsMap'
 		var tempTestCaseExecutionsDetailsReference *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct
-		tempTestCaseExecutionsDetailsReference, existInMap = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionMapKey]
+		tempTestCaseExecutionsDetailsReference, existInTestCaseExecutionsDetailsMap = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionMapKey]
 
 		// If not then something is really wrong
-		if existInMap == false {
+		if existInTestCaseExecutionsDetailsMap == false {
 			ErrorID := "b33739a9-e5c4-452c-891e-008b8c1a8a1d"
 			err := errors.New(fmt.Sprintf("We shouldn't end up here. [ErrorID:'%s']", ErrorID))
 
@@ -144,11 +184,14 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 			return
 		}
 
+		// Save new BroadcastTimestamp as PreviousBroadcastTimestamp
+		tempTestCaseExecutionsDetailsReference.PreviousBroadcastTimeStamp = tempTestCaseExecutionStatusMessage.BroadcastTimeStamp.AsTime()
+
 		// Append Incoming TestCaseExecutionStatus-message into stored Map-message
 		tempTestCaseExecutionsDetailsReference.TestCaseExecutionsStatusUpdates = append(
 			tempTestCaseExecutionsDetailsReference.TestCaseExecutionsStatusUpdates, tempTestCaseExecutionStatusMessage)
 
-		// Extract UpdateStatusTimeStamap to be used as MapKey
+		// Extract UpdateStatusTimeStamp to be used as MapKey
 		var tempExecutionStatusUpdateTimeStampMapKey string
 		tempExecutionStatusUpdateTimeStampMapKey = tempTestCaseExecutionStatusMessage.
 			TestCaseExecutionDetails.ExecutionStatusUpdateTimeStamp.AsTime().String()
@@ -187,6 +230,9 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 
 			return
 		}
+
+		// Save new BroadcastTimestamp as PreviousBroadcastTimestamp
+		tempTestCaseExecutionsDetailsReference.PreviousBroadcastTimeStamp = tempTestInstructionExecutionStatusMessage.BroadcastTimeStamp.AsTime()
 
 		// Append Incoming TestCaseExecutionStatus-message into stored Map-message
 		tempTestCaseExecutionsDetailsReference.TestInstructionExecutionsStatusUpdates = append(

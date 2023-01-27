@@ -6,6 +6,7 @@ import (
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"strconv"
+	"time"
 )
 
 // Updates all Executions status with information received after direct gRPC-call to GUiExecutionServer
@@ -46,12 +47,20 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 		}
 
 		testCaseExecutionsDetails = &detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct{
-			TestCaseExecutionDatabaseResponseMessage:       testCaseExecutionResponse,
-			TestCaseExecutionsStatusUpdates:                nil,
-			TestInstructionExecutionsStatusUpdates:         nil,
-			TestCaseExecutionsBaseInformation:              tempTestCaseExecutionsBaseInformation,
-			TestInstructionExecutionsStatusMap:             TestTestInstructionExecutionsBaseInformationMap,
-			TestInstructionExecutionsStatusForSummaryTable: nil,
+			WaitingForFullTestCaseExecutionUpdate: false,
+			TestCaseExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate: make(chan *fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusMessage,
+				detailedTestCaseExecutionUI_summaryTableDefinition.FullExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize),
+			TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate: make(chan *fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusMessage,
+				detailedTestCaseExecutionUI_summaryTableDefinition.FullExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize),
+			FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived:                false,
+			PreviousBroadcastTimeStamp:                                                 time.Time{},
+			FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived: false,
+			TestCaseExecutionDatabaseResponseMessage:                                   testCaseExecutionResponse,
+			TestCaseExecutionsStatusUpdates:                                            nil,
+			TestInstructionExecutionsStatusUpdates:                                     nil,
+			TestCaseExecutionsBaseInformation:                                          tempTestCaseExecutionsBaseInformation,
+			TestInstructionExecutionsStatusMap:                                         TestTestInstructionExecutionsBaseInformationMap,
+			TestInstructionExecutionsStatusForSummaryTable:                             nil,
 		}
 
 		// Add the TestCaseExecution to the Map
@@ -149,7 +158,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 				TestInstructionExecutionsStatus: nil,
 			}
 
-			// Resend the message so it can be procesed
+			// Resend the message so it can be processed
 			var channelCommandDetailedExecutions ChannelCommandDetailedExecutionsStruct
 			channelCommandDetailedExecutions = ChannelCommandDetailedExecutionsStruct{
 				ChannelCommandDetailedExecutionsStatus:                            ChannelCommandStatusUpdateOfDetailedExecutionsStatus,

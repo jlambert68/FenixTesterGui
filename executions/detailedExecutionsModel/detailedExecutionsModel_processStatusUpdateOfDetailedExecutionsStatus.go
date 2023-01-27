@@ -6,6 +6,7 @@ import (
 	"fmt"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"strconv"
+	"time"
 )
 
 // Updates specific status information based on subscriptions updates from GuiExecutionServer
@@ -27,27 +28,71 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 			strconv.Itoa(int(tempTestCaseExecutionStatusMessage.TestCaseExecutionVersion))
 
 		// Check if TestCaseExecution exist within the 'TestCaseExecutionsDetailsMap'
-		_, existInTestCaseExecutionsDetailsMap = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
+		var tempTestCaseExecutionsDetails *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct
+		tempTestCaseExecutionsDetails, existInTestCaseExecutionsDetailsMap = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
 
 		// If not then add it to the Map over TestCaseExecution to retrieve from the Database
 		if existInTestCaseExecutionsDetailsMap == false {
+
 			_, existsInTestCaseExecutionKeysMap = testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
 			// Has the tempTestCaseExecutionToBeFullyRetrievedMapKey already been saved
 			if existsInTestCaseExecutionKeysMap == false {
 				testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
+
+				// Initiate map TestInstructionExecutions
+				var TestTestInstructionExecutionsBaseInformationMap map[string]*detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsBaseInformationStruct
+				TestTestInstructionExecutionsBaseInformationMap = make(map[string]*detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsBaseInformationStruct)
+
+				// Initiate structure for Execution Summary page
+				var tempTestCaseExecutionsBaseInformation *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsBaseInformationStruct
+				tempTestCaseExecutionsBaseInformation = &detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsBaseInformationStruct{
+					TestCaseExecutionBasicInformation:                nil,
+					AllTestCaseExecutionsStatusUpdatesInformationMap: make(map[string]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage),
+				}
+
+				tempTestCaseExecutionsDetails = &detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct{
+					WaitingForFullTestCaseExecutionUpdate: true,
+					TestCaseExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate: make(chan *fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusMessage,
+						detailedTestCaseExecutionUI_summaryTableDefinition.FullExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize),
+					TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate: make(chan *fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusMessage,
+						detailedTestCaseExecutionUI_summaryTableDefinition.FullExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize),
+					FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived:                false,
+					PreviousBroadcastTimeStamp:                                                 time.Time{},
+					FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived: false,
+					TestCaseExecutionDatabaseResponseMessage:                                   nil,
+					TestCaseExecutionsStatusUpdates:                                            nil,
+					TestInstructionExecutionsStatusUpdates:                                     nil,
+					TestCaseExecutionsBaseInformation:                                          tempTestCaseExecutionsBaseInformation,
+					TestInstructionExecutionsStatusMap:                                         TestTestInstructionExecutionsBaseInformationMap,
+					TestInstructionExecutionsStatusForSummaryTable:                             nil,
+				}
+
+				// Add the TestCaseExecution to the Map
+				detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionsDetails
+
+				// Add TestCaseStatusMessage to Waiting-channel
+				tempTestCaseExecutionsDetails.TestCaseExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate <- tempTestCaseExecutionStatusMessage
 			}
+		} else {
+
+			// Add TestCaseStatusMessage to Waiting-channel when TestCaseExecution is withing for full TestCaseExecution-StatusUpdate
+			if tempTestCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdate == true {
+				tempTestCaseExecutionsDetails.TestCaseExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate <- tempTestCaseExecutionStatusMessage
+			}
+
 		}
 
 		// If there is a mismatch between locally store Previous Timestamp Status-message and incoming Previous Timestamp Status-message then get full TestCaseExecution
 		if existsInTestCaseExecutionKeysMap == false && existInTestCaseExecutionsDetailsMap == true {
 
 			var tempestCaseExecutionsDetails *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct
-			tempestCaseExecutionsDetails, existInTestCaseExecutionsDetailsMap = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
+			tempestCaseExecutionsDetails, _ = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
 
 			// Is there a mismatch between locally store Previous Timestamp Status-message and incoming Previous Timestamp Status-message
 			// When BroadcastTimeStamp == PreviousBroadcastTimeStamp in incoming status message then that message is the first for that TestCaseExecution, for this ExecutionServerInstance
 			if tempTestCaseExecutionStatusMessage.BroadcastTimeStamp != tempTestCaseExecutionStatusMessage.PreviousBroadcastTimeStamp &&
-				tempTestCaseExecutionStatusMessage.PreviousBroadcastTimeStamp.AsTime() != tempestCaseExecutionsDetails.PreviousBroadcastTimeStamp {
+				tempTestCaseExecutionStatusMessage.PreviousBroadcastTimeStamp.AsTime() != tempestCaseExecutionsDetails.PreviousBroadcastTimeStamp &&
+				tempestCaseExecutionsDetails.PreviousBroadcastTimeStamp.IsZero() != true {
 
 				// We have a mismatch, so retrieve full TestCaseExecution
 				testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
@@ -67,8 +112,8 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 			strconv.Itoa(int(tempTestInstructionExecutionStatusMessage.TestCaseExecutionVersion))
 
 		// Check if TestCaseExecution exist within the 'TestCaseExecutionsDetailsMap'
-		var tempTestCaseExecutionsDetailsMap *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct
-		tempTestCaseExecutionsDetailsMap, existInTestCaseExecutionsDetailsMap = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
+		var tempTestCaseExecutionsDetails *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct
+		tempTestCaseExecutionsDetails, existInTestCaseExecutionsDetailsMap = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
 
 		// If not then add it to the Map over TestCaseExecution to retrieve from the Database
 		if existInTestCaseExecutionsDetailsMap == false {
@@ -77,23 +122,24 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 
 			// Has the tempTestCaseExecutionToBeFullyRetrievedMapKey already been saved
 			if existsInTestCaseExecutionKeysMap == false {
+				// Force to do full TestCaseExecutionDetails-update
 				testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
 
 			}
 		} else {
 			// Has a first full TestCaseExecutionStatus been retrieved
 			// Or this is the first TestInstructionExecutionUpdate for TestCaseExecution
-			if tempTestCaseExecutionsDetailsMap.FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived == false ||
-				tempTestCaseExecutionsDetailsMap.FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived == false &&
+			if tempTestCaseExecutionsDetails.FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived == false ||
+				tempTestCaseExecutionsDetails.FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived == false &&
 					len(testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage.TestInstructionExecutionsStatus) > 0 {
 
 				// Set flag that keeps track if first full TestCaseExecution is retrieved for first TestExecution-message
-				tempTestCaseExecutionsDetailsMap.FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived = true
+				tempTestCaseExecutionsDetails.FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived = true
 
 				// Set flag that keeps track if first full TestCaseExecution is retrieved for first TestInstructionsExecution-message
-				if tempTestCaseExecutionsDetailsMap.FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived == false &&
+				if tempTestCaseExecutionsDetails.FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived == false &&
 					len(testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage.TestInstructionExecutionsStatus) > 0 {
-					tempTestCaseExecutionsDetailsMap.FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived = true
+					tempTestCaseExecutionsDetails.FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived = true
 				}
 
 				_, existsInTestCaseExecutionKeysMap = testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
@@ -102,24 +148,41 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 				if existsInTestCaseExecutionKeysMap == false {
 					testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
 
+					// Initiate map TestInstructionExecutions
+					var TestTestInstructionExecutionsBaseInformationMap map[string]*detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsBaseInformationStruct
+					TestTestInstructionExecutionsBaseInformationMap = make(map[string]*detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsBaseInformationStruct)
+
+					// Initiate structure for Execution Summary page
+					var tempTestCaseExecutionsBaseInformation *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsBaseInformationStruct
+					tempTestCaseExecutionsBaseInformation = &detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsBaseInformationStruct{
+						TestCaseExecutionBasicInformation:                nil,
+						AllTestCaseExecutionsStatusUpdatesInformationMap: make(map[string]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage),
+					}
+
+					tempTestCaseExecutionsDetails = &detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct{
+						WaitingForFullTestCaseExecutionUpdate: true,
+						TestCaseExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate: make(chan *fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusMessage,
+							detailedTestCaseExecutionUI_summaryTableDefinition.FullExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize),
+						TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate: make(chan *fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusMessage,
+							detailedTestCaseExecutionUI_summaryTableDefinition.FullExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize),
+						FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived:                false,
+						PreviousBroadcastTimeStamp:                                                 time.Time{},
+						FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived: false,
+						TestCaseExecutionDatabaseResponseMessage:                                   nil,
+						TestCaseExecutionsStatusUpdates:                                            nil,
+						TestInstructionExecutionsStatusUpdates:                                     nil,
+						TestCaseExecutionsBaseInformation:                                          tempTestCaseExecutionsBaseInformation,
+						TestInstructionExecutionsStatusMap:                                         TestTestInstructionExecutionsBaseInformationMap,
+						TestInstructionExecutionsStatusForSummaryTable:                             nil,
+					}
+
+					// Add the TestCaseExecution to the Map
+					detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionsDetails
+
 				}
-			}
-		}
 
-		// If there is a mismatch between locally store Previous Timestamp Status-message and incoming Previous Timestamp Status-message then get full TestCaseExecution
-		if existsInTestCaseExecutionKeysMap == false && existInTestCaseExecutionsDetailsMap == true {
-
-			var tempestCaseExecutionsDetails *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct
-			tempestCaseExecutionsDetails, existInTestCaseExecutionsDetailsMap = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
-
-			// Is there a mismatch between locally store Previous Timestamp Status-message and incoming Previous Timestamp Status-message
-			// When BroadcastTimeStamp == PreviousBroadcastTimeStamp in incoming status message then that message is the first for that TestCaseExecution, for this ExecutionServerInstance
-			if tempTestInstructionExecutionStatusMessage.BroadcastTimeStamp != tempTestInstructionExecutionStatusMessage.PreviousBroadcastTimeStamp &&
-				tempTestInstructionExecutionStatusMessage.PreviousBroadcastTimeStamp.AsTime() != tempestCaseExecutionsDetails.PreviousBroadcastTimeStamp {
-
-				// We have a mismatch, so retrieve full TestCaseExecution
-				testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
-			} else {
+				// Add TestInstructionStatusMessage to Waiting-channel
+				tempTestCaseExecutionsDetails.TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate <- tempTestInstructionExecutionStatusMessage
 
 			}
 		}
@@ -231,6 +294,11 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 			return
 		}
 
+		// Only Process TestInstructionExecutionStatus-message if there is no waiting for a Full TestCaseExecution-status-update
+		if tempTestCaseExecutionsDetailsReference.WaitingForFullTestCaseExecutionUpdate == true {
+			continue
+		}
+
 		// Save new BroadcastTimestamp as PreviousBroadcastTimestamp
 		tempTestCaseExecutionsDetailsReference.PreviousBroadcastTimeStamp = tempTestInstructionExecutionStatusMessage.BroadcastTimeStamp.AsTime()
 
@@ -246,7 +314,8 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 
 		// Check if TestInstructionExecution already exists within Map
 		var tempTestTestInstructionExecutionsBaseInformation *detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsBaseInformationStruct
-		tempTestTestInstructionExecutionsBaseInformation, existInMap = tempTestCaseExecutionsDetailsReference.TestInstructionExecutionsStatusMap[tempTestInstructionExecutionsStatusMapKey]
+		tempTestTestInstructionExecutionsBaseInformation, existInMap = tempTestCaseExecutionsDetailsReference.
+			TestInstructionExecutionsStatusMap[tempTestInstructionExecutionsStatusMapKey]
 
 		if existInMap == false {
 			// TestInstructionExecution doesn't exist, then some is really wrong
@@ -261,16 +330,59 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 		}
 
 		// Check if TestInstructionStatus exist in 'AllTestInstructionsExecutionsStatusUpdatesInformationMap'
-		var tempExecutionStatusUpdateTimeStampMapKey string
-		tempExecutionStatusUpdateTimeStampMapKey = tempTestInstructionExecutionStatusMessage.TestInstructionExecutionsStatusInformation.ExecutionStatusUpdateTimeStamp.AsTime().String()
+		var tempExecutionStatusUpdateTimeStampMapKey time.Time
+		var tempExecutionStatusUpdateTimeStampMapKeyAsString string
+
+		// Create ExecutionStatusUpdateTimeStampMapKey
+		tempExecutionStatusUpdateTimeStampMapKey = tempTestInstructionExecutionStatusMessage.
+			TestInstructionExecutionsStatusInformation.ExecutionStatusUpdateTimeStamp.AsTime()
+
+		tempExecutionStatusUpdateTimeStampMapKeyAsString = tempExecutionStatusUpdateTimeStampMapKey.String()
 
 		// Verify if this UpdateTimeStamp exist within 'AllTestInstructionsExecutionsStatusUpdatesInformationMap'
-		_, existInMap = tempTestTestInstructionExecutionsBaseInformation.AllTestInstructionsExecutionsStatusUpdatesInformationMap[tempExecutionStatusUpdateTimeStampMapKey]
+		_, existInMap = tempTestTestInstructionExecutionsBaseInformation.AllTestInstructionsExecutionsStatusUpdatesInformationMap[tempExecutionStatusUpdateTimeStampMapKeyAsString]
 
 		// If it doesn't exist then add it to the 'AllTestInstructionsExecutionsStatusUpdatesInformationMap'
-		if existInMap == false {
-			tempTestTestInstructionExecutionsBaseInformation.AllTestInstructionsExecutionsStatusUpdatesInformationMap[tempExecutionStatusUpdateTimeStampMapKey] = tempTestInstructionExecutionStatusMessage.GetTestInstructionExecutionsStatusInformation()
 
+		if existInMap == false {
+
+			// Do check against the latest know UpdateTimeStamp regarding if new TimeStamp is later than existing latest one
+			if tempTestTestInstructionExecutionsBaseInformation.LatestStatusUpdateTimeStamp.IsZero() ||
+				tempExecutionStatusUpdateTimeStampMapKey.After(tempTestTestInstructionExecutionsBaseInformation.LatestStatusUpdateTimeStamp) {
+
+				tempTestTestInstructionExecutionsBaseInformation.LatestStatusUpdateTimeStamp = tempExecutionStatusUpdateTimeStampMapKey
+			}
+
+			// Add ExecutionStatusUpdateTimeStamp to Status-Map
+			tempTestTestInstructionExecutionsBaseInformation.AllTestInstructionsExecutionsStatusUpdatesInformationMap[tempExecutionStatusUpdateTimeStampMapKeyAsString] = tempTestInstructionExecutionStatusMessage.GetTestInstructionExecutionsStatusInformation()
+
+			// Check that no status update-messages are missing
+			// If there is a mismatch between locally store Previous Timestamp Status-message and
+			// incoming Previous Timestamp Status-message then get full TestCaseExecutio
+			var tempestCaseExecutionsDetails *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct
+
+			tempestCaseExecutionsDetails, existInTestCaseExecutionsDetailsMap = detailedTestCaseExecutionUI_summaryTableDefinition.
+				TestCaseExecutionsDetailsMap[tempTestCaseExecutionMapKey]
+
+			// Is there a mismatch between locally store Previous Timestamp Status-message and incoming Previous Timestamp Status-message
+			// When BroadcastTimeStamp == PreviousBroadcastTimeStamp in incoming status message then that message is the first for that TestCaseExecution, for this ExecutionServerInstance
+			if tempTestInstructionExecutionStatusMessage.BroadcastTimeStamp != tempTestInstructionExecutionStatusMessage.PreviousBroadcastTimeStamp &&
+				tempTestInstructionExecutionStatusMessage.PreviousBroadcastTimeStamp.AsTime() != tempestCaseExecutionsDetails.PreviousBroadcastTimeStamp &&
+				tempestCaseExecutionsDetails.PreviousBroadcastTimeStamp.IsZero() != true {
+
+				// Create command to retrieve missing TestCaseExecutions, via channelEngine
+				var channelCommandDetailedExecutions ChannelCommandDetailedExecutionsStruct
+				channelCommandDetailedExecutions = ChannelCommandDetailedExecutionsStruct{
+					ChannelCommandDetailedExecutionsStatus:                            ChannelCommandRetrieveFullDetailedTestCaseExecution,
+					TestCaseExecutionKey:                                              tempTestCaseExecutionMapKey,
+					FullTestCaseExecutionResponseMessage:                              nil,
+					TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage: nil,
+				}
+
+				// Send command ion channel
+				DetailedExecutionStatusCommandChannel <- channelCommandDetailedExecutions
+
+			}
 		}
 	}
 	//****

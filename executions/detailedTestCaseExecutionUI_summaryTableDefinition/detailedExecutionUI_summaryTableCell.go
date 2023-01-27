@@ -40,6 +40,8 @@ type TestInstructionExecutionsBaseInformationStruct struct {
 
 	// map[ExecutionStatusUpdateTimeStamp]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
 	AllTestInstructionsExecutionsStatusUpdatesInformationMap map[string]*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
+
+	LatestStatusUpdateTimeStamp time.Time
 }
 
 // TestInstructionExecutionsStatusForSummaryTableStruct

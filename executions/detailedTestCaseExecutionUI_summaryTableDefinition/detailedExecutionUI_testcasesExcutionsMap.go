@@ -8,9 +8,23 @@ import (
 // BLOCK START
 // The block below is used for storing all detailed data belonging to a TestCaseExecution and structures needed for reflecting status updates to the UI
 
+// FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize
+// Tha max size for the channel for StatusUpdate-messages
+const FullExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize int32 = 100
+
 // TestCaseExecutionsDetailsStruct
 // One TestCaseExecution and all of its data.
 type TestCaseExecutionsDetailsStruct struct {
+
+	// Waiting for of full TestCaseExecutionStatus update is retrieved
+	WaitingForFullTestCaseExecutionUpdate bool
+
+	// TestCaseExecution StatusMessages that are Waiting For a Full TestCaseExecutionUpdate are temporary stores in this channel
+	TestCaseExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate chan *fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusMessage
+
+	// TestInstructionExecution StatusMessages that are Waiting For a Full TestCaseExecutionUpdate are temporary stores in this channel
+	TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate chan *fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusMessage
+
 	// A full TestCaseExecutionStatus will always be performed when first status update message is received
 	FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived bool
 
@@ -43,6 +57,7 @@ type TestCaseExecutionsDetailsStruct struct {
 // map[TestCaseExecutionMapKey]*TestCaseExecutionsDetailsStruct, TestCaseExecutionMapKey = TestCaseExecutionUuid + TestCaseExecutionVersionNumber
 var TestCaseExecutionsDetailsMap map[string]*TestCaseExecutionsDetailsStruct // m
 
+// TestCaseExecutionsStatusForSummaryTable
 // Holding the information to be show in the SummaryTable for all TestCaseExecutions
 var TestCaseExecutionsStatusForSummaryTable []*TestCaseExecutionsStatusForSummaryTableStruct
 

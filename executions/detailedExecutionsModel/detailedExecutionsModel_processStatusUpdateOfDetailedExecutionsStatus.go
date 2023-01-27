@@ -247,6 +247,11 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 			return
 		}
 
+		// Only Process TestInstructionExecutionStatus-message if there is no waiting for a Full TestCaseExecution-status-update
+		if tempTestCaseExecutionsDetailsReference.WaitingForFullTestCaseExecutionUpdate == true {
+			continue
+		}
+
 		// Save new BroadcastTimestamp as PreviousBroadcastTimestamp
 		tempTestCaseExecutionsDetailsReference.PreviousBroadcastTimeStamp = tempTestCaseExecutionStatusMessage.BroadcastTimeStamp.AsTime()
 
@@ -268,8 +273,31 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 			tempTestCaseExecutionsDetailsReference.TestCaseExecutionsBaseInformation.
 				AllTestCaseExecutionsStatusUpdatesInformationMap[tempExecutionStatusUpdateTimeStampMapKey] =
 				tempTestCaseExecutionStatusMessage.TestCaseExecutionDetails
-		}
 
+			// Is there a mismatch between locally store Previous Timestamp Status-message and incoming Previous Timestamp Status-message
+			// When BroadcastTimeStamp == PreviousBroadcastTimeStamp in incoming status message then that message is the first for that TestCaseExecution, for this ExecutionServerInstance
+			if tempTestCaseExecutionStatusMessage.BroadcastTimeStamp != tempTestCaseExecutionStatusMessage.PreviousBroadcastTimeStamp &&
+				tempTestCaseExecutionStatusMessage.PreviousBroadcastTimeStamp.AsTime() != tempTestCaseExecutionsDetailsReference.PreviousBroadcastTimeStamp &&
+				tempTestCaseExecutionsDetailsReference.PreviousBroadcastTimeStamp.IsZero() != true {
+
+				// Create command to retrieve missing TestCaseExecutions, via channelEngine
+				var channelCommandDetailedExecutions ChannelCommandDetailedExecutionsStruct
+				channelCommandDetailedExecutions = ChannelCommandDetailedExecutionsStruct{
+					ChannelCommandDetailedExecutionsStatus:                            ChannelCommandRetrieveFullDetailedTestCaseExecution,
+					TestCaseExecutionKey:                                              tempTestCaseExecutionMapKey,
+					FullTestCaseExecutionResponseMessage:                              nil,
+					TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage: nil,
+				}
+
+				// Send command ion channel
+				DetailedExecutionStatusCommandChannel <- channelCommandDetailedExecutions
+
+			} else {
+
+				// Save new BroadcastTimestamp as PreviousBroadcastTimestamp
+				tempTestCaseExecutionsDetailsReference.PreviousBroadcastTimeStamp = tempTestCaseExecutionStatusMessage.BroadcastTimeStamp.AsTime()
+			}
+		}
 	}
 
 	// Loop all TestInstructionStatus-messages and update TestCaseExecutionStatus for each TestCase
@@ -299,15 +327,11 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 			continue
 		}
 
-		// Save new BroadcastTimestamp as PreviousBroadcastTimestamp
-		tempTestCaseExecutionsDetailsReference.PreviousBroadcastTimeStamp = tempTestInstructionExecutionStatusMessage.BroadcastTimeStamp.AsTime()
-
 		// Append Incoming TestCaseExecutionStatus-message into stored Map-message
 		tempTestCaseExecutionsDetailsReference.TestInstructionExecutionsStatusUpdates = append(
 			tempTestCaseExecutionsDetailsReference.TestInstructionExecutionsStatusUpdates, tempTestInstructionExecutionStatusMessage)
 
-		//*****
-
+		// Extract TestInstructionExecutionsStatusMapKey
 		var tempTestInstructionExecutionsStatusMapKey string
 		tempTestInstructionExecutionsStatusMapKey = tempTestInstructionExecutionStatusMessage.TestInstructionExecutionUuid +
 			strconv.Itoa(int(tempTestInstructionExecutionStatusMessage.TestInstructionExecutionVersion))
@@ -381,6 +405,10 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 
 				// Send command ion channel
 				DetailedExecutionStatusCommandChannel <- channelCommandDetailedExecutions
+
+			} else {
+				// Save new BroadcastTimestamp as PreviousBroadcastTimestamp
+				tempTestCaseExecutionsDetailsReference.PreviousBroadcastTimeStamp = tempTestInstructionExecutionStatusMessage.BroadcastTimeStamp.AsTime()
 
 			}
 		}

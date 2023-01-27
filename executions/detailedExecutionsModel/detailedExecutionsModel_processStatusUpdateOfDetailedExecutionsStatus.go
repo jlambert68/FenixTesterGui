@@ -1,10 +1,12 @@
 package detailedExecutionsModel
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/detailedTestCaseExecutionUI_summaryTableDefinition"
 	"errors"
 	"fmt"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
+	"github.com/sirupsen/logrus"
 	"strconv"
 	"time"
 )
@@ -12,6 +14,15 @@ import (
 // Updates specific status information based on subscriptions updates from GuiExecutionServer
 func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) processStatusUpdateOfDetailedExecutionsStatus(
 	testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage) {
+
+	sharedCode.Logger.WithFields(logrus.Fields{
+		"id": "f92a832b-4020-432e-a7bc-8eb630b24bbf",
+		"testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage": testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage,
+	}).Debug("Incoming 'processStatusUpdateOfDetailedExecutionsStatus'")
+
+	defer sharedCode.Logger.WithFields(logrus.Fields{
+		"id": "fd279ee5-0c5b-4e72-8a62-da353b63f95f",
+	}).Debug("Outgoing 'processStatusUpdateOfDetailedExecutionsStatus'")
 
 	// Process TestCaseStatus-messages to check that all TestCases exist in 'detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap'
 	var testCaseExecutionKeysMap map[string]string // map[tempTestCaseExecutionMapKey]tempTestCaseExecutionMapKey

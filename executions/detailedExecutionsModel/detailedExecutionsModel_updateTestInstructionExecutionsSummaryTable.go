@@ -3,6 +3,7 @@ package detailedExecutionsModel
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/detailedTestCaseExecutionUI_summaryTableDefinition"
+	"github.com/sirupsen/logrus"
 	"sort"
 	"strconv"
 	"time"
@@ -10,6 +11,14 @@ import (
 
 // Update the SummaryTable for TestInstructionExecutions
 func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) updateTestInstructionExecutionsSummaryTable() {
+
+	sharedCode.Logger.WithFields(logrus.Fields{
+		"id": "279ac1b9-1c69-441a-816e-d95c5a5926c0",
+	}).Debug("Incoming 'updateTestInstructionExecutionsSummaryTable'")
+
+	defer sharedCode.Logger.WithFields(logrus.Fields{
+		"id": "a94931cd-117f-44ce-8e1b-792f2f3fa38c",
+	}).Debug("Outgoing 'updateTestInstructionExecutionsSummaryTable'")
 
 	// Loop all TestCases
 	for _, tempTestCaseExecutionsDetail := range detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap {

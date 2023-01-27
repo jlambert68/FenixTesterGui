@@ -14,6 +14,15 @@ import (
 // Retrieves a TestCaseExecution and all of its data belonging to the execution
 func RetrieveSingleTestCaseExecution(testCaseExecutionKey string) (err error) {
 
+	sharedCode.Logger.WithFields(logrus.Fields{
+		"id":                   "4be0dcc6-794c-4b35-8adb-9b04f88ac712",
+		"testCaseExecutionKey": testCaseExecutionKey,
+	}).Debug("Incoming 'RetrieveSingleTestCaseExecution'")
+
+	defer sharedCode.Logger.WithFields(logrus.Fields{
+		"id": "426abcf5-f18b-400f-818d-a4ae8fa73009",
+	}).Debug("Outgoing 'RetrieveSingleTestCaseExecution'")
+
 	// Extract individual parts of the 'TestCaseExecutionKeyMessage'
 	var testCaseExecutionUuid string
 	var testCaseExecutionVersion int

@@ -47,20 +47,21 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 		}
 
 		testCaseExecutionsDetails = &detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct{
-			WaitingForFullTestCaseExecutionUpdate: false,
+			WaitingForFullTestCaseExecutionUpdate:                                                    false,
+			WaitingForFullTestCaseExecutionUpdateAfterFirstTestInstructionExecutionStatusWasReceived: true,
 			TestCaseExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate: make(chan *fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusMessage,
 				detailedTestCaseExecutionUI_summaryTableDefinition.FullExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize),
 			TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate: make(chan *fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusMessage,
 				detailedTestCaseExecutionUI_summaryTableDefinition.FullExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize),
-			FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived:                false,
-			PreviousBroadcastTimeStamp:                                                 time.Time{},
-			FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived: false,
-			TestCaseExecutionDatabaseResponseMessage:                                   testCaseExecutionResponse,
-			TestCaseExecutionsStatusUpdates:                                            nil,
-			TestInstructionExecutionsStatusUpdates:                                     nil,
-			TestCaseExecutionsBaseInformation:                                          tempTestCaseExecutionsBaseInformation,
-			TestInstructionExecutionsStatusMap:                                         TestTestInstructionExecutionsBaseInformationMap,
-			TestInstructionExecutionsStatusForSummaryTable:                             nil,
+			FirstExecutionStatusReceived:                   false,
+			PreviousBroadcastTimeStamp:                     time.Time{},
+			FirstTestInstructionExecutionStatusReceived:    false,
+			TestCaseExecutionDatabaseResponseMessage:       testCaseExecutionResponse,
+			TestCaseExecutionsStatusUpdates:                nil,
+			TestInstructionExecutionsStatusUpdates:         nil,
+			TestCaseExecutionsBaseInformation:              tempTestCaseExecutionsBaseInformation,
+			TestInstructionExecutionsStatusMap:             TestTestInstructionExecutionsBaseInformationMap,
+			TestInstructionExecutionsStatusForSummaryTable: nil,
 		}
 
 		// Add the TestCaseExecution to the Map
@@ -69,6 +70,17 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 	} else {
 		// Replace TestCaseExecutionResponse from Database
 		testCaseExecutionsDetails.TestCaseExecutionDatabaseResponseMessage = testCaseExecutionResponse
+
+		// Turn of waiting for FullStatusUpdate
+		if testCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdate == true {
+			testCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdate = false
+		}
+
+		// Turn of that we are waiting for a FullStatusUpdate after first TestInstructionExecutionStatus was received
+		if testCaseExecutionsDetails.FirstTestInstructionExecutionStatusReceived == true &&
+			testCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdateAfterFirstTestInstructionExecutionStatusWasReceived == true {
+			testCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdateAfterFirstTestInstructionExecutionStatusWasReceived = false
+		}
 	}
 
 	// Check if TestCaseStatus exist in 'AllTestCaseExecutionsStatusUpdatesInformationMap'
@@ -139,7 +151,10 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 
 	numberOfWaitingMessages = len(testCaseExecutionsDetails.TestCaseExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate)
 
-	if numberOfWaitingMessages > 0 {
+	// Only process messages when there are any we are not waiting for a FullStatusUpdate
+	if numberOfWaitingMessages > 0 &&
+		testCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdate == false {
+
 		for messageCounter := 0; messageCounter < numberOfWaitingMessages; numberOfWaitingMessages++ {
 
 			// Extract one message from wait-channel
@@ -175,6 +190,12 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 	// Process TestInstructionStatusUpdate-messages that are waiting on wait-channel
 	numberOfWaitingMessages = len(testCaseExecutionsDetails.TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate)
 
+	// Only process messages when there are any we are not waiting for a FullStatusUpdate after first TestInstructionStatus was received
+	if numberOfWaitingMessages > 0 &&
+		testCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdate == false &&
+		testCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdateAfterFirstTestInstructionExecutionStatusWasReceived == false {
+
+	}
 	if numberOfWaitingMessages > 0 {
 		for messageCounter := 0; messageCounter < numberOfWaitingMessages; numberOfWaitingMessages++ {
 
@@ -207,9 +228,6 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 
 		}
 	}
-
-	// Update so 'nothing' needs to wait for a FullDetailedStatusUpdate needs to be performed
-	testCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdate = false
 
 	// Update the SummaryTable for TestInstructionExecutions
 	detailedExecutionsModelObject.updateTestInstructionExecutionsSummaryTable()

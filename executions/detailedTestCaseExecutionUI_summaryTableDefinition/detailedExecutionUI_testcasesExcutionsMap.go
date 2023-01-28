@@ -19,6 +19,9 @@ type TestCaseExecutionsDetailsStruct struct {
 	// Waiting for of full TestCaseExecutionStatus update is retrieved
 	WaitingForFullTestCaseExecutionUpdate bool
 
+	// Waiting for of full TestCaseExecutionStatus update is retrieved, after first TestInstructionStatus was received
+	WaitingForFullTestCaseExecutionUpdateAfterFirstTestInstructionExecutionStatusWasReceived bool
+
 	// TestCaseExecution StatusMessages that are Waiting For a Full TestCaseExecutionUpdate are temporary stores in this channel
 	TestCaseExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate chan *fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusMessage
 
@@ -26,13 +29,13 @@ type TestCaseExecutionsDetailsStruct struct {
 	TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate chan *fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusMessage
 
 	// A full TestCaseExecutionStatus will always be performed when first status update message is received
-	FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived bool
+	FirstExecutionStatusReceived bool
 
 	// Keeps track of previous Timestamp for incoming status message to secure that no messages are lost
 	PreviousBroadcastTimeStamp time.Time
 
 	// A full TestCaseExecutionStatus will always be performed when first TestInstruction-status update message is received
-	FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived bool
+	FirstTestInstructionExecutionStatusReceived bool
 
 	// The response message when a full TestCaseExecution is retrieved
 	TestCaseExecutionDatabaseResponseMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage

@@ -62,20 +62,21 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 				}
 
 				tempTestCaseExecutionsDetails = &detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct{
-					WaitingForFullTestCaseExecutionUpdate: true,
+					WaitingForFullTestCaseExecutionUpdate:                                                    true,
+					WaitingForFullTestCaseExecutionUpdateAfterFirstTestInstructionExecutionStatusWasReceived: false,
 					TestCaseExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate: make(chan *fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusMessage,
 						detailedTestCaseExecutionUI_summaryTableDefinition.FullExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize),
 					TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate: make(chan *fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusMessage,
 						detailedTestCaseExecutionUI_summaryTableDefinition.FullExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize),
-					FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived:                false,
-					PreviousBroadcastTimeStamp:                                                 time.Time{},
-					FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived: false,
-					TestCaseExecutionDatabaseResponseMessage:                                   nil,
-					TestCaseExecutionsStatusUpdates:                                            nil,
-					TestInstructionExecutionsStatusUpdates:                                     nil,
-					TestCaseExecutionsBaseInformation:                                          tempTestCaseExecutionsBaseInformation,
-					TestInstructionExecutionsStatusMap:                                         TestTestInstructionExecutionsBaseInformationMap,
-					TestInstructionExecutionsStatusForSummaryTable:                             nil,
+					FirstExecutionStatusReceived:                   true,
+					PreviousBroadcastTimeStamp:                     time.Time{},
+					FirstTestInstructionExecutionStatusReceived:    false,
+					TestCaseExecutionDatabaseResponseMessage:       nil,
+					TestCaseExecutionsStatusUpdates:                nil,
+					TestInstructionExecutionsStatusUpdates:         nil,
+					TestCaseExecutionsBaseInformation:              tempTestCaseExecutionsBaseInformation,
+					TestInstructionExecutionsStatusMap:             TestTestInstructionExecutionsBaseInformationMap,
+					TestInstructionExecutionsStatusForSummaryTable: nil,
 				}
 
 				// Add the TestCaseExecution to the Map
@@ -92,26 +93,6 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 			}
 
 		}
-
-		// If there is a mismatch between locally store Previous Timestamp Status-message and incoming Previous Timestamp Status-message then get full TestCaseExecution
-		if existsInTestCaseExecutionKeysMap == false && existInTestCaseExecutionsDetailsMap == true {
-
-			var tempestCaseExecutionsDetails *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct
-			tempestCaseExecutionsDetails, _ = detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
-
-			// Is there a mismatch between locally store Previous Timestamp Status-message and incoming Previous Timestamp Status-message
-			// When BroadcastTimeStamp == PreviousBroadcastTimeStamp in incoming status message then that message is the first for that TestCaseExecution, for this ExecutionServerInstance
-			if tempTestCaseExecutionStatusMessage.BroadcastTimeStamp != tempTestCaseExecutionStatusMessage.PreviousBroadcastTimeStamp &&
-				tempTestCaseExecutionStatusMessage.PreviousBroadcastTimeStamp.AsTime() != tempestCaseExecutionsDetails.PreviousBroadcastTimeStamp &&
-				tempestCaseExecutionsDetails.PreviousBroadcastTimeStamp.IsZero() != true {
-
-				// We have a mismatch, so retrieve full TestCaseExecution
-				testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
-			} else {
-
-			}
-		}
-
 	}
 
 	// Process TestInstructionStatus-messages to check that all TestCases exist in 'detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap'
@@ -136,23 +117,6 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 				// Force to do full TestCaseExecutionDetails-update
 				testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
 
-			}
-		} else {
-			// Has a first full TestCaseExecutionStatus been retrieved
-			// Or this is the first TestInstructionExecutionUpdate for TestCaseExecution
-			if tempTestCaseExecutionsDetails.FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived == false ||
-				tempTestCaseExecutionsDetails.FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived == false &&
-					len(testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage.TestInstructionExecutionsStatus) > 0 {
-
-				// Set flag that keeps track if first full TestCaseExecution is retrieved for first TestExecution-message
-				tempTestCaseExecutionsDetails.FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived = true
-
-				// Set flag that keeps track if first full TestCaseExecution is retrieved for first TestInstructionsExecution-message
-				if tempTestCaseExecutionsDetails.FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived == false &&
-					len(testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage.TestInstructionExecutionsStatus) > 0 {
-					tempTestCaseExecutionsDetails.FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived = true
-				}
-
 				_, existsInTestCaseExecutionKeysMap = testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
 
 				// Has the tempTestCaseExecutionToBeFullyRetrievedMapKey already been saved
@@ -171,20 +135,21 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 					}
 
 					tempTestCaseExecutionsDetails = &detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct{
-						WaitingForFullTestCaseExecutionUpdate: true,
+						WaitingForFullTestCaseExecutionUpdate:                                                    true,
+						WaitingForFullTestCaseExecutionUpdateAfterFirstTestInstructionExecutionStatusWasReceived: true,
 						TestCaseExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate: make(chan *fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusMessage,
 							detailedTestCaseExecutionUI_summaryTableDefinition.FullExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize),
 						TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate: make(chan *fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusMessage,
 							detailedTestCaseExecutionUI_summaryTableDefinition.FullExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize),
-						FullTestCaseExecutionUpdateWhenFirstExecutionStatusReceived:                false,
-						PreviousBroadcastTimeStamp:                                                 time.Time{},
-						FullTestCaseExecutionUpdateWhenFirstTestInstructionExecutionStatusReceived: false,
-						TestCaseExecutionDatabaseResponseMessage:                                   nil,
-						TestCaseExecutionsStatusUpdates:                                            nil,
-						TestInstructionExecutionsStatusUpdates:                                     nil,
-						TestCaseExecutionsBaseInformation:                                          tempTestCaseExecutionsBaseInformation,
-						TestInstructionExecutionsStatusMap:                                         TestTestInstructionExecutionsBaseInformationMap,
-						TestInstructionExecutionsStatusForSummaryTable:                             nil,
+						FirstExecutionStatusReceived:                   true,
+						PreviousBroadcastTimeStamp:                     time.Time{},
+						FirstTestInstructionExecutionStatusReceived:    true,
+						TestCaseExecutionDatabaseResponseMessage:       nil,
+						TestCaseExecutionsStatusUpdates:                nil,
+						TestInstructionExecutionsStatusUpdates:         nil,
+						TestCaseExecutionsBaseInformation:              tempTestCaseExecutionsBaseInformation,
+						TestInstructionExecutionsStatusMap:             TestTestInstructionExecutionsBaseInformationMap,
+						TestInstructionExecutionsStatusForSummaryTable: nil,
 					}
 
 					// Add the TestCaseExecution to the Map
@@ -195,6 +160,12 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 				// Add TestInstructionStatusMessage to Waiting-channel
 				tempTestCaseExecutionsDetails.TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate <- tempTestInstructionExecutionStatusMessage
 
+			} else {
+				// Add TestInstructionStatusMessage to Waiting-channel when TestCaseExecution is withing for full TestCaseExecution-StatusUpdate
+				if tempTestCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdate == true ||
+					tempTestCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdateAfterFirstTestInstructionExecutionStatusWasReceived == true {
+					tempTestCaseExecutionsDetails.TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate <- tempTestInstructionExecutionStatusMessage
+				}
 			}
 		}
 	}
@@ -219,19 +190,6 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 			DetailedExecutionStatusCommandChannel <- channelCommandDetailedExecutions
 		}
 
-		// Resend the original message that was processed
-		var channelCommandDetailedExecutions ChannelCommandDetailedExecutionsStruct
-		channelCommandDetailedExecutions = ChannelCommandDetailedExecutionsStruct{
-			ChannelCommandDetailedExecutionsStatus:                            ChannelCommandStatusUpdateOfDetailedExecutionsStatus,
-			TestCaseExecutionKey:                                              "",
-			FullTestCaseExecutionResponseMessage:                              nil,
-			TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage: testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage,
-		}
-		// Send command on channel
-		DetailedExecutionStatusCommandChannel <- channelCommandDetailedExecutions
-
-		// Exit
-		return
 	}
 
 	// All TestCaseExecutions exist within 'TestCaseExecutionsDetailsMap' so start process the status updates
@@ -334,7 +292,8 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 		}
 
 		// Only Process TestInstructionExecutionStatus-message if there is no waiting for a Full TestCaseExecution-status-update
-		if tempTestCaseExecutionsDetailsReference.WaitingForFullTestCaseExecutionUpdate == true {
+		if tempTestCaseExecutionsDetailsReference.WaitingForFullTestCaseExecutionUpdate == true ||
+			tempTestCaseExecutionsDetailsReference.WaitingForFullTestCaseExecutionUpdateAfterFirstTestInstructionExecutionStatusWasReceived == true {
 			continue
 		}
 

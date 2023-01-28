@@ -167,6 +167,24 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 					tempTestCaseExecutionsDetails.TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate <- tempTestInstructionExecutionStatusMessage
 				}
 			}
+		} else {
+			// TestCaseExecution Exist in map so now check if we should wait for FullStatusExecutionUpdate
+			if tempTestCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdate == true ||
+				tempTestCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdateAfterFirstTestInstructionExecutionStatusWasReceived == true {
+
+				// Put Status Message on WaitQueue
+				tempTestCaseExecutionsDetails.TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate <- tempTestInstructionExecutionStatusMessage
+
+				// Check if a FullTestCaseStatusUpdate already is to be done
+				_, existsInTestCaseExecutionKeysMap = testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
+
+				// Has the tempTestCaseExecutionToBeFullyRetrievedMapKey already been saved
+				if existsInTestCaseExecutionKeysMap == false {
+
+					// Add TestCaseExecutionKey for a FullTestCaseStatusUpdate
+					testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
+				}
+			}
 		}
 	}
 
@@ -220,9 +238,6 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 		if tempTestCaseExecutionsDetailsReference.WaitingForFullTestCaseExecutionUpdate == true {
 			continue
 		}
-
-		// Save new BroadcastTimestamp as PreviousBroadcastTimestamp
-		tempTestCaseExecutionsDetailsReference.PreviousBroadcastTimeStamp = tempTestCaseExecutionStatusMessage.BroadcastTimeStamp.AsTime()
 
 		// Append Incoming TestCaseExecutionStatus-message into stored Map-message
 		tempTestCaseExecutionsDetailsReference.TestCaseExecutionsStatusUpdates = append(
@@ -334,7 +349,8 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 		tempExecutionStatusUpdateTimeStampMapKeyAsString = tempExecutionStatusUpdateTimeStampMapKey.String()
 
 		// Verify if this UpdateTimeStamp exist within 'AllTestInstructionsExecutionsStatusUpdatesInformationMap'
-		_, existInMap = tempTestTestInstructionExecutionsBaseInformation.AllTestInstructionsExecutionsStatusUpdatesInformationMap[tempExecutionStatusUpdateTimeStampMapKeyAsString]
+		_, existInMap = tempTestTestInstructionExecutionsBaseInformation.
+			AllTestInstructionsExecutionsStatusUpdatesInformationMap[tempExecutionStatusUpdateTimeStampMapKeyAsString]
 
 		// If it doesn't exist then add it to the 'AllTestInstructionsExecutionsStatusUpdatesInformationMap'
 
@@ -348,11 +364,13 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 			}
 
 			// Add ExecutionStatusUpdateTimeStamp to Status-Map
-			tempTestTestInstructionExecutionsBaseInformation.AllTestInstructionsExecutionsStatusUpdatesInformationMap[tempExecutionStatusUpdateTimeStampMapKeyAsString] = tempTestInstructionExecutionStatusMessage.GetTestInstructionExecutionsStatusInformation()
+			tempTestTestInstructionExecutionsBaseInformation.
+				AllTestInstructionsExecutionsStatusUpdatesInformationMap[tempExecutionStatusUpdateTimeStampMapKeyAsString] =
+				tempTestInstructionExecutionStatusMessage.GetTestInstructionExecutionsStatusInformation()
 
 			// Check that no status update-messages are missing
 			// If there is a mismatch between locally store Previous Timestamp Status-message and
-			// incoming Previous Timestamp Status-message then get full TestCaseExecutio
+			// incoming Previous Timestamp Status-message then get full TestCaseExecution
 			var tempestCaseExecutionsDetails *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct
 
 			tempestCaseExecutionsDetails, existInTestCaseExecutionsDetailsMap = detailedTestCaseExecutionUI_summaryTableDefinition.

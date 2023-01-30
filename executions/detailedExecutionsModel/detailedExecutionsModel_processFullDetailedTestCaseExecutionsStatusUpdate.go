@@ -72,9 +72,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 		testCaseExecutionsDetails.TestCaseExecutionDatabaseResponseMessage = testCaseExecutionResponse
 
 		// Turn of waiting for FullStatusUpdate
-		if testCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdate == true {
-			testCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdate = false
-		}
+		testCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdate = false
 
 		// Turn of that we are waiting for a FullStatusUpdate after first TestInstructionExecutionStatus was received
 		if testCaseExecutionsDetails.FirstTestInstructionExecutionStatusReceived == true &&
@@ -155,7 +153,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 	if numberOfWaitingMessages > 0 &&
 		testCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdate == false {
 
-		for messageCounter := 0; messageCounter < numberOfWaitingMessages; numberOfWaitingMessages++ {
+		for messageCounter := 0; messageCounter < numberOfWaitingMessages; messageCounter++ {
 
 			// Extract one message from wait-channel
 			var tempTestCaseExecutionStatusMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusMessage
@@ -197,7 +195,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 
 	}
 	if numberOfWaitingMessages > 0 {
-		for messageCounter := 0; messageCounter < numberOfWaitingMessages; numberOfWaitingMessages++ {
+		for messageCounter := 0; messageCounter < numberOfWaitingMessages; messageCounter++ {
 
 			// Extract one message from wait-channel
 			var tempTestInstructionExecutionStatusMessage *fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusMessage

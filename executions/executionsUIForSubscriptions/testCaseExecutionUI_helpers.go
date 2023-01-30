@@ -179,7 +179,7 @@ func verifyThatTestCaseExecutionIsNotInUse(subscriptionsForTestCaseExecutionMap 
 				xorValidation = shouldExistInTable && !existInMap || !shouldExistInTable && existInMap
 				if xorValidation == true {
 
-					errorId = "f7ee589b-8075-44d8-94a3-2a3556358d00"
+					errorId = "aa576012-3aa0-4388-91a7-9d67b6258dd7"
 					newErrorMessage = fmt.Sprintf("the rule for validating if 'testCaseExecutionMapKey', '%s' "+
 						"should or should not exisit in TestCaseExecutionsFinishedExecutionMapAdaptedForUiTable failed. "+
 						"shouldExistInTable='%t' and existInMap='%t' [ErrorID: %s]. ",

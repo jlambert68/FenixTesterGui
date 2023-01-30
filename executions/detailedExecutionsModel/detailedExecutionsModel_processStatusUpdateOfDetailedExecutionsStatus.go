@@ -84,6 +84,9 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 
 				// Add TestCaseStatusMessage to Waiting-channel
 				tempTestCaseExecutionsDetails.TestCaseExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate <- tempTestCaseExecutionStatusMessage
+
+				// Set that the first TestExecutionStatusUpdate was received
+				tempTestCaseExecutionsDetails.FirstExecutionStatusReceived = true
 			}
 		} else {
 
@@ -91,6 +94,9 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 			if tempTestCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdate == true {
 				tempTestCaseExecutionsDetails.TestCaseExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate <- tempTestCaseExecutionStatusMessage
 			}
+
+			// Set that the first TestExecutionStatusUpdate was received
+			tempTestCaseExecutionsDetails.FirstExecutionStatusReceived = true
 
 		}
 	}
@@ -168,21 +174,58 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 				}
 			}
 		} else {
-			// TestCaseExecution Exist in map so now check if we should wait for FullStatusExecutionUpdate
-			if tempTestCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdate == true ||
-				tempTestCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdateAfterFirstTestInstructionExecutionStatusWasReceived == true {
 
-				// Put Status Message on WaitQueue
-				tempTestCaseExecutionsDetails.TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate <- tempTestInstructionExecutionStatusMessage
+			// Is this the first TestInstructionStatusUpdate-message
+			if tempTestCaseExecutionsDetails.FirstTestInstructionExecutionStatusReceived == false {
 
-				// Check if a FullTestCaseStatusUpdate already is to be done
-				_, existsInTestCaseExecutionKeysMap = testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
+				// Set that the first TestInstructionExecutionStatusUpdate was received
+				tempTestCaseExecutionsDetails.FirstExecutionStatusReceived = true
+				tempTestCaseExecutionsDetails.FirstTestInstructionExecutionStatusReceived = true
 
-				// Has the tempTestCaseExecutionToBeFullyRetrievedMapKey already been saved
-				if existsInTestCaseExecutionKeysMap == false {
+				// Set that we wait for first FullStatusUpdate after first TestInstructionExecutionStatusUpdate
+				tempTestCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdateAfterFirstTestInstructionExecutionStatusWasReceived = true
 
-					// Add TestCaseExecutionKey for a FullTestCaseStatusUpdate
-					testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
+				// TestCaseExecution Exist in map so now check if we should wait for FullStatusExecutionUpdate
+				if tempTestCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdate == true ||
+					tempTestCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdateAfterFirstTestInstructionExecutionStatusWasReceived == true {
+
+					// Set that the first TestInstructionExecutionStatusUpdate was received
+					tempTestCaseExecutionsDetails.FirstExecutionStatusReceived = true
+					tempTestCaseExecutionsDetails.FirstTestInstructionExecutionStatusReceived = true
+
+					// Put Status Message on WaitQueue
+					tempTestCaseExecutionsDetails.TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate <- tempTestInstructionExecutionStatusMessage
+
+					// Check if a FullTestCaseStatusUpdate already is to be done
+					_, existsInTestCaseExecutionKeysMap = testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
+
+					// Has the tempTestCaseExecutionToBeFullyRetrievedMapKey already been saved
+					if existsInTestCaseExecutionKeysMap == false {
+
+						// Add TestCaseExecutionKey for a FullTestCaseStatusUpdate
+						testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
+					}
+				} else {
+					tempTestCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdateAfterFirstTestInstructionExecutionStatusWasReceived = true
+					// Has the tempTestCaseExecutionToBeFullyRetrievedMapKey already been saved
+					if existsInTestCaseExecutionKeysMap == false {
+
+						// Add TestCaseExecutionKey for a FullTestCaseStatusUpdate
+						testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
+
+						tempTestCaseExecutionsDetails.TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate <- tempTestInstructionExecutionStatusMessage
+
+					}
+				}
+			} else {
+
+				// TestCaseExecution Exist in map so now check if we should wait for FullStatusExecutionUpdate
+				if tempTestCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdate == true ||
+					tempTestCaseExecutionsDetails.WaitingForFullTestCaseExecutionUpdateAfterFirstTestInstructionExecutionStatusWasReceived == true {
+
+					// Put Status Message on WaitQueue
+					tempTestCaseExecutionsDetails.TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate <- tempTestInstructionExecutionStatusMessage
+
 				}
 			}
 		}

@@ -16,6 +16,7 @@ import (
 	grpcMetadata "google.golang.org/grpc/metadata"
 	"html/template"
 	"net/http"
+	"sync"
 	"time"
 )
 
@@ -137,8 +138,20 @@ var DoneChannel chan bool
 
 func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForAuthorizedUser(ctx context.Context) (appendedCtx context.Context, returnAckNack bool, returnMessage string) {
 
+	sharedCode.Logger.WithFields(logrus.Fields{
+		"id": "df375b80-449b-4b6f-96ba-1600146f8860",
+	}).Debug("Incoming 'GenerateGCPAccessTokenForAuthorizedUser'")
+
+	defer sharedCode.Logger.WithFields(logrus.Fields{
+		"id": "623fffe0-ff28-42ef-b8ea-8b2875edc32f",
+	}).Debug("Outgoing 'GenerateGCPAccessTokenForAuthorizedUser'")
+
 	// Secure that User is initiated
 	gcp.initiateUserObject()
+
+	// Only aloud one parallel instance of the code below to be run
+	gcp.mutexWhenGeneratingGcpAccessTokenForAuthorizedAccounts.Lock()
+	defer gcp.mutexWhenGeneratingGcpAccessTokenForAuthorizedAccounts.Unlock()
 
 	// Only create the token if there is none, or it has expired (or 5 minutes before expiration
 	timeToCompareTo := time.Now().Add(-time.Minute * 5)
@@ -151,9 +164,9 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForAuthorizedUser(ctx context.
 
 	// Need to create a new ID-token
 
-	key := "Secret-session-keyxyz" // Replace with your SESSION_SECRET or similar
-	maxAge := 86400 * 30           // 30 days
-	isProd := false                // Set to true when serving over https
+	key := sharedCode.ApplicationRunTimeUuid //"Secret-session-keyxyz" // Replace with your SESSION_SECRET or similar
+	maxAge := 86400 * 30                     // 30 days
+	isProd := false                          // Set to true when serving over https
 
 	store := sessions.NewCookieStore([]byte(key))
 	store.MaxAge(maxAge)
@@ -165,7 +178,13 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForAuthorizedUser(ctx context.
 
 	goth.UseProviders(
 		//google.New("our-google-client-id", "our-google-client-secret", "http://localhost:3000/auth/google/callback", "email", "profile"),
-		google.New("944682210385-gpambi3aqcs7g6nf5abm7vdhi32crp8l.apps.googleusercontent.com", "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", "http://localhost:3000/auth/google/callback", "email", "profile"),
+
+		// Use 'Fenix End User Authentication'
+		google.New(
+			sharedCode.AuthClientId,
+			sharedCode.AuthClientSecret,
+			"http://localhost:3000/auth/google/callback",
+			"email", "profile"),
 	)
 	//"fenixguitestcasebuilderserver-nwxrrpoxea-lz.a.run.app",
 	router := pat.New()
@@ -224,7 +243,7 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForAuthorizedUser(ctx context.
 	// Wait for message in channel to stop local web server
 	gotIdTokenResult := <-DoneChannel
 
-	// Shutdown local web server
+	// Shutdown local web server before leaving
 	gcp.stopLocalWebServer(context.Background(), localWebServer)
 
 	// Depending on the outcome of getting a token return different results
@@ -247,10 +266,12 @@ func (gcp *GcpObjectStruct) startLocalWebServer(webServer *http.Server) {
 		time.Sleep(1 * time.Second)
 		err := webbrowser.Open("http://localhost:3000")
 
-		gcp.logger.WithFields(logrus.Fields{
-			"ID":  "17bc0305-4594-48e1-bb8d-c642579e5e56",
-			"err": err,
-		}).Error("Couldn't open the web browser")
+		if err != nil {
+			gcp.logger.WithFields(logrus.Fields{
+				"ID":  "17bc0305-4594-48e1-bb8d-c642579e5e56",
+				"err": err,
+			}).Fatalln("Couldn't open the web browser")
+		}
 
 	}()
 	err := webServer.ListenAndServe()
@@ -307,8 +328,9 @@ func (gcp *GcpObjectStruct) initiateUserObject() {
 
 	// Only do initiation if it's not done before
 
-	if gcp.gcpAccessTokenForAuthorizedAccounts.UserID == "" {
+	if gcp.mutexWhenGeneratingGcpAccessTokenForAuthorizedAccounts == nil {
 		gcp.gcpAccessTokenForAuthorizedAccounts = goth.User{}
+		gcp.mutexWhenGeneratingGcpAccessTokenForAuthorizedAccounts = &sync.Mutex{}
 	}
 
 	return

@@ -27,6 +27,8 @@ var (
 	GCPAuthentication                            bool
 	UseServiceAccountForGuiExecutionServer       bool
 	UseServiceAccountForGuiTestCaseBuilderServer bool
+	AuthClientId                                 string
+	AuthClientSecret                             string
 
 	// GUI-ExecutionServer
 	ExecutionLocationForFenixGuiExecutionServer ExecutionLocationTypeType

@@ -43,7 +43,7 @@ func fenixGuiBuilderServerMain() {
 	sharedCode.ApplicationRunTimeUuid = uuidGenerator.New().String()
 	fmt.Println("sharedCode.ApplicationRunTimeUuid: " + sharedCode.ApplicationRunTimeUuid)
 
-	// Set up BackendObjec 	t
+	// Set up BackendObject
 	fenixTesterGuiObject = &fenixGuiBuilderProxyServerObjectStruct{
 		subPackageObjects: &referencesStruct{
 			grpcIn: &grpc_in.GRPCInStruct{},

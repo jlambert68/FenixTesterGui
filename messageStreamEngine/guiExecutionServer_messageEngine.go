@@ -42,6 +42,9 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) initiateGuiExecution
 		cancel()
 	}()
 
+	// Initiate gcp-logger
+	gcp.GcpObject.SetLogger(sharedCode.Logger)
+
 	// Only add access token when run on GCP
 	if sharedCode.ExecutionLocationForFenixGuiExecutionServer == sharedCode.GCP && sharedCode.GCPAuthentication == true {
 

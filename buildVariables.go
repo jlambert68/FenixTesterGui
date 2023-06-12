@@ -1,13 +1,15 @@
 package main
 
 // Variables that can be populated while building the application
-// Used when building a Tray Application
+// Used when building a executable to be run by itself
 
 var (
 	//GCP
 	BuildVariableGCPAuthentication                            string
 	BuildVariableUseServiceAccountForGuiExecutionServer       string
 	BuildVariableUseServiceAccountForGuiTestCaseBuilderServer string
+	BuildVariableAuthClientId                                 string
+	BuildVariableAuthClientSecret                             string
 
 	// GUI-ExecutionServer
 	BuildVariableExecutionLocationForFenixGuiExecutionServer string
@@ -31,6 +33,8 @@ var buildVariablesMap = map[string]*string{
 	"BuildVariableGCPAuthentication":                            &BuildVariableGCPAuthentication,
 	"BuildVariableUseServiceAccountForGuiExecutionServer":       &BuildVariableUseServiceAccountForGuiExecutionServer,
 	"BuildVariableUseServiceAccountForGuiTestCaseBuilderServer": &BuildVariableUseServiceAccountForGuiTestCaseBuilderServer,
+	"BuildVariableAuthClientId":                                 &BuildVariableAuthClientId,
+	"BuildVariableAuthClientSecret":                             &BuildVariableAuthClientSecret,
 
 	// GUI-ExecutionServer
 	"BuildVariableExecutionLocationForFenixGuiExecutionServer": &BuildVariableExecutionLocationForFenixGuiExecutionServer,

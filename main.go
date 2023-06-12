@@ -1,7 +1,7 @@
 package main
 
 import (
-	"FenixTesterGui/common_code"
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/grpc_out_GuiExecutionServer"
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	_ "embed"
@@ -18,6 +18,7 @@ import (
 
 // Embedded resources into the binary
 // The icon used
+//
 //go:embed resources/fenix_icon_32x32_icon.ico
 var embededfenixIcon []byte
 
@@ -226,6 +227,12 @@ func init() {
 		os.Exit(0)
 	}
 	sharedCode.UseServiceAccountForGuiTestCaseBuilderServer = tempBool
+
+	// Extract OAuth 2.0 Client ID
+	sharedCode.AuthClientId = mustGetenv("AuthClientId")
+
+	// Extract OAuth 2.0 Client Secret
+	sharedCode.AuthClientSecret = mustGetenv("AuthClientSecret")
 
 }
 

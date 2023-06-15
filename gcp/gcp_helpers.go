@@ -177,8 +177,6 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForAuthorizedUser(ctx context.
 	gothic.Store = store
 
 	goth.UseProviders(
-		//google.New("our-google-client-id", "our-google-client-secret", "http://localhost:3000/auth/google/callback", "email", "profile"),
-
 		// Use 'Fenix End User Authentication'
 		google.New(
 			sharedCode.AuthClientId,
@@ -186,7 +184,7 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForAuthorizedUser(ctx context.
 			"http://localhost:3000/auth/google/callback",
 			"email", "profile"),
 	)
-	//"fenixguitestcasebuilderserver-nwxrrpoxea-lz.a.run.app",
+
 	router := pat.New()
 
 	router.Get("/auth/{provider}/callback", func(res http.ResponseWriter, req *http.Request) {

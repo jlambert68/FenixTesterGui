@@ -107,8 +107,8 @@ type ChannelCommandTypeForDetailedExecutionStatus uint8
 
 // The channel commands
 const (
-	ChannelCommandFullDetailedExecutionsStatusUpdate ChannelCommandTypeForDetailedExecutionStatus = iota
-	ChannelCommandStatusUpdateOfDetailedExecutionsStatus
+	ChannelCommandFullDetailedExecutionsStatusUpdate     ChannelCommandTypeForDetailedExecutionStatus = iota
+	ChannelCommandStatusUpdateOfDetailedExecutionsStatus                                              // Can have External call from (executionStatusUpdatesHandler_channelReader.go) 'Channel reader which is used for reading out Status messages that is sent from GuiExecutionServer'
 	ChannelCommandRemoveDetailedTestCaseExecution
 	ChannelCommandRetrieveFullDetailedTestCaseExecution
 	ChannelCommandDecideIfStatusUpdatesBelongsToDetailedTestCaseExecutionsMap

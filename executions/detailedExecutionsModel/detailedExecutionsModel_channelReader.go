@@ -44,15 +44,20 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) startC
 		switch incomingChannelCommandAndMessage.ChannelCommandDetailedExecutionsStatus {
 
 		case ChannelCommandFullDetailedExecutionsStatusUpdate:
+			// Triggered from 'RetrieveSingleTestCaseExecution(testCaseExecutionKey string)'
 			detailedExecutionsModelObject.triggerProcessFullDetailedExecutionsStatusUpdate(incomingChannelCommandAndMessage)
 
 		case ChannelCommandStatusUpdateOfDetailedExecutionsStatus:
+			// Triggered from 'processFullDetailedTestCaseExecutionsStatusUpdate' -Updates all Executions status with information received after direct gRPC-call to GUiExecutionServer
+			// Can have External call from (executionStatusUpdatesHandler_channelReader.go) 'Channel reader which is used for reading out Status messages that is sent from GuiExecutionServer'
 			detailedExecutionsModelObject.triggerProcessStatusUpdateOfDetailedExecutionsStatus(incomingChannelCommandAndMessage)
 
 		case ChannelCommandRemoveDetailedTestCaseExecution:
+			// Triggered from 'RemoveTestCaseExecutionFromSummaryTable' - Removes a TestCaseExecution from both summary page and the Details page for the TestCaseExecution
 			detailedExecutionsModelObject.triggerProcessRemoveDetailedTestCaseExecution(incomingChannelCommandAndMessage.TestCaseExecutionKey)
 
 		case ChannelCommandRetrieveFullDetailedTestCaseExecution:
+			// Triggered from 'processStatusUpdateOfDetailedExecutionsStatus' - Updates specific status information based on subscriptions updates from GuiExecutionServer
 			detailedExecutionsModelObject.triggerProcessRetrieveFullDetailedTestCaseExecution(incomingChannelCommandAndMessage.TestCaseExecutionKey)
 
 		// No other command is supported
@@ -69,6 +74,11 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) startC
 // Updates all Executions status with information received after direct gRPC-call to GUiExecutionServer
 func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) triggerProcessFullDetailedExecutionsStatusUpdate(
 	incomingChannelCommandAndMessage ChannelCommandDetailedExecutionsStruct) {
+
+	sharedCode.Logger.WithFields(logrus.Fields{
+		"Id": "5d167ac1-e44d-4300-833a-23651f92656a",
+		"incomingChannelCommandAndMessage.TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage": incomingChannelCommandAndMessage.TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage,
+	}).Debug("Incoming ProcessFullDetailedExecutionsStatusUpdate - 'ChannelCommandFullDetailedExecutionsStatusUpdate'")
 
 	detailedExecutionsModelObject.processFullDetailedTestCaseExecutionsStatusUpdate(
 		incomingChannelCommandAndMessage.FullTestCaseExecutionResponseMessage)
@@ -87,7 +97,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) trigge
 	sharedCode.Logger.WithFields(logrus.Fields{
 		"Id": "5b27fadb-a9cd-46d5-8547-9c802352e2cd",
 		"incomingChannelCommandAndMessage.TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage": incomingChannelCommandAndMessage.TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage,
-	}).Error("Incoming Status Message")
+	}).Debug("Incoming ProcessStatusUpdateOfDetailedExecutionsStatus - 'ChannelCommandStatusUpdateOfDetailedExecutionsStatus'")
 
 	detailedExecutionsModelObject.processStatusUpdateOfDetailedExecutionsStatus(
 		incomingChannelCommandAndMessage.TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage)
@@ -102,6 +112,11 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) trigge
 // Remove the DetailedTestCaseExecution
 func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) triggerProcessRemoveDetailedTestCaseExecution(
 	testCaseExecutionKey string) {
+
+	sharedCode.Logger.WithFields(logrus.Fields{
+		"Id":                   "db78f927-07eb-419e-97d5-f4d5aed0d6ee",
+		"testCaseExecutionKey": testCaseExecutionKey,
+	}).Debug("Incoming RemoveDetailedTestCaseExecution - 'ChannelCommandRemoveDetailedTestCaseExecution'")
 
 	err := detailedExecutionsModelObject.processRemoveDetailedTestCaseExecution(testCaseExecutionKey)
 
@@ -119,6 +134,11 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) trigge
 // Retrieve a full Detailed TestCaseExecution from GuiExecutionServer
 func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) triggerProcessRetrieveFullDetailedTestCaseExecution(
 	testCaseExecutionKey string) {
+
+	sharedCode.Logger.WithFields(logrus.Fields{
+		"Id":                   "00d37e9d-cac5-4989-a5b8-97bcfbeb7275",
+		"testCaseExecutionKey": testCaseExecutionKey,
+	}).Debug("Incoming RetrieveFullDetailedTestCaseExecution - 'ChannelCommandRetrieveFullDetailedTestCaseExecution'")
 
 	err := detailedExecutionsModelObject.processRetrieveFullDetailedTestCaseExecution(testCaseExecutionKey)
 

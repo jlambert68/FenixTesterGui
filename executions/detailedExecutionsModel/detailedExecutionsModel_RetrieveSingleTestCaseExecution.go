@@ -12,6 +12,7 @@ import (
 
 // RetrieveSingleTestCaseExecution
 // Retrieves a TestCaseExecution and all of its data belonging to the execution
+// External call from (commandAndRuleEngine/commandEngineChannelReader.go) via command 'sharedCode.ChannelCommandExecuteTestCase:'
 func RetrieveSingleTestCaseExecution(testCaseExecutionKey string) (err error) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{

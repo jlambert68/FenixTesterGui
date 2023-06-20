@@ -163,6 +163,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 	var tempTestExecutionMapKey string
 	tempTestExecutionMapKey = initiateSingleTestCaseExecutionResponseMessage.TestCasesInExecutionQueue.TestCaseExecutionUuid +
 		strconv.Itoa(int(initiateSingleTestCaseExecutionResponseMessage.TestCasesInExecutionQueue.TestCaseExecutionVersion))
+
 	// Send message Executions Details handler to retrieve full TestCaseExecutions details
 	_ = detailedExecutionsModel.RetrieveSingleTestCaseExecution(tempTestExecutionMapKey)
 

@@ -123,45 +123,45 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 				// Force to do full TestCaseExecutionDetails-update
 				testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
 
-				_, existsInTestCaseExecutionKeysMap = testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
+				//_, existsInTestCaseExecutionKeysMap = testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey]
 
 				// Has the tempTestCaseExecutionToBeFullyRetrievedMapKey already been saved
-				if existsInTestCaseExecutionKeysMap == false {
-					testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
+				//if existsInTestCaseExecutionKeysMap == false {
+				//	testCaseExecutionKeysMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionToBeFullyRetrievedMapKey
 
-					// Initiate map TestInstructionExecutions
-					var TestTestInstructionExecutionsBaseInformationMap map[string]*detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsBaseInformationStruct
-					TestTestInstructionExecutionsBaseInformationMap = make(map[string]*detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsBaseInformationStruct)
+				// Initiate map TestInstructionExecutions
+				var TestTestInstructionExecutionsBaseInformationMap map[string]*detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsBaseInformationStruct
+				TestTestInstructionExecutionsBaseInformationMap = make(map[string]*detailedTestCaseExecutionUI_summaryTableDefinition.TestInstructionExecutionsBaseInformationStruct)
 
-					// Initiate structure for Execution Summary page
-					var tempTestCaseExecutionsBaseInformation *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsBaseInformationStruct
-					tempTestCaseExecutionsBaseInformation = &detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsBaseInformationStruct{
-						TestCaseExecutionBasicInformation:                nil,
-						AllTestCaseExecutionsStatusUpdatesInformationMap: make(map[string]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage),
-					}
-
-					tempTestCaseExecutionsDetails = &detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct{
-						WaitingForFullTestCaseExecutionUpdate:                                                    true,
-						WaitingForFullTestCaseExecutionUpdateAfterFirstTestInstructionExecutionStatusWasReceived: true,
-						TestCaseExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate: make(chan *fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusMessage,
-							detailedTestCaseExecutionUI_summaryTableDefinition.FullExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize),
-						TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate: make(chan *fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusMessage,
-							detailedTestCaseExecutionUI_summaryTableDefinition.FullExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize),
-						FirstExecutionStatusReceived:                   true,
-						PreviousBroadcastTimeStamp:                     time.Time{},
-						FirstTestInstructionExecutionStatusReceived:    true,
-						TestCaseExecutionDatabaseResponseMessage:       nil,
-						TestCaseExecutionsStatusUpdates:                nil,
-						TestInstructionExecutionsStatusUpdates:         nil,
-						TestCaseExecutionsBaseInformation:              tempTestCaseExecutionsBaseInformation,
-						TestInstructionExecutionsStatusMap:             TestTestInstructionExecutionsBaseInformationMap,
-						TestInstructionExecutionsStatusForSummaryTable: nil,
-					}
-
-					// Add the TestCaseExecution to the Map
-					detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionsDetails
-
+				// Initiate structure for Execution Summary page
+				var tempTestCaseExecutionsBaseInformation *detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsBaseInformationStruct
+				tempTestCaseExecutionsBaseInformation = &detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsBaseInformationStruct{
+					TestCaseExecutionBasicInformation:                nil,
+					AllTestCaseExecutionsStatusUpdatesInformationMap: make(map[string]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage),
 				}
+
+				tempTestCaseExecutionsDetails = &detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsStruct{
+					WaitingForFullTestCaseExecutionUpdate:                                                    true,
+					WaitingForFullTestCaseExecutionUpdateAfterFirstTestInstructionExecutionStatusWasReceived: true,
+					TestCaseExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate: make(chan *fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusMessage,
+						detailedTestCaseExecutionUI_summaryTableDefinition.FullExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize),
+					TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate: make(chan *fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusMessage,
+						detailedTestCaseExecutionUI_summaryTableDefinition.FullExecutionUpdateWhenFirstExecutionStatusReceivedMaxSize),
+					FirstExecutionStatusReceived:                   true,
+					PreviousBroadcastTimeStamp:                     time.Time{},
+					FirstTestInstructionExecutionStatusReceived:    true,
+					TestCaseExecutionDatabaseResponseMessage:       nil,
+					TestCaseExecutionsStatusUpdates:                nil,
+					TestInstructionExecutionsStatusUpdates:         nil,
+					TestCaseExecutionsBaseInformation:              tempTestCaseExecutionsBaseInformation,
+					TestInstructionExecutionsStatusMap:             TestTestInstructionExecutionsBaseInformationMap,
+					TestInstructionExecutionsStatusForSummaryTable: nil,
+				}
+
+				// Add the TestCaseExecution to the Map
+				detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap[tempTestCaseExecutionToBeFullyRetrievedMapKey] = tempTestCaseExecutionsDetails
+
+				//}
 
 				// Add TestInstructionStatusMessage to Waiting-channel
 				tempTestCaseExecutionsDetails.TestInstructionExecutionStatusMessagesWaitingForFullTestCaseExecutionUpdate <- tempTestInstructionExecutionStatusMessage

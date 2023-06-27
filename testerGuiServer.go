@@ -56,7 +56,13 @@ func fenixGuiBuilderServerMain() {
 
 	// Init logger
 	// When application is run as tray application then use text file as log
-	var filePathName = "logs/mylog005.log"
+	var filePathName string
+	if sharedCode.ExecutionLocationForThisApplication == sharedCode.GCP {
+		filePathName = ""
+	} else {
+		filePathName = "logs/mylog007.log"
+	}
+
 	var err error
 
 	if fenixTesterGuiObject.runAsTrayApplication == true {

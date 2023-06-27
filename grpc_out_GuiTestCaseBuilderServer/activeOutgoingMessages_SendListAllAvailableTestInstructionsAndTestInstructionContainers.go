@@ -12,6 +12,14 @@ import (
 // SendListAllAvailableTestInstructionsAndTestInstructionContainers - Get available TestInstructions and TestInstructionContainers
 func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllAvailableTestInstructionsAndTestInstructionContainers(userId string) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
+	sharedCode.Logger.WithFields(logrus.Fields{
+		"ID": "b2289982-1853-419c-8265-5393f3baa6ad",
+	}).Debug("Incoming - 'SendListAllAvailableTestInstructionsAndTestInstructionContainers'")
+
+	defer sharedCode.Logger.WithFields(logrus.Fields{
+		"ID": "b2289982-1853-419c-8265-5393f3baa6ad",
+	}).Debug("Outgoing - 'SendListAllAvailableTestInstructionsAndTestInstructionContainers'")
+
 	var ctx context.Context
 	var returnMessageAckNack bool
 	var returnMessageString string

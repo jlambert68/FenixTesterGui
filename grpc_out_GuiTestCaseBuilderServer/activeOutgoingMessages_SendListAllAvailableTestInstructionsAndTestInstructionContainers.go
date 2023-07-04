@@ -59,12 +59,8 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllAvailableTestIn
 
 	// Do gRPC-call
 	//ctx = context.Background()
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer func() {
-		//TODO Fixa så att denna inte görs som allt går bra
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID": "797c00e1-510d-4cbe-a48b-dc63828ecd7e",
-		}).Error("Running Defer Cancel function")
 		cancel()
 	}()
 

@@ -110,6 +110,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectF
 
 // GenerateNewTestCaseTabObject
 // Generate a new TestCase UI-model
+var TemptestCasesUiCanvasObject *TestCasesUiModelStruct
+
 func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObject(testCaseToBeAddedUuid string) (err error) {
 
 	var tabName string
@@ -187,7 +189,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	testCaseGraphicalAreas.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject = testInstructionAttributesAccordion
 
 	// Save TestCase-UI-model in UI-modelMap
-	// Check if TestCase allready exists in TestCase-UI-model
+	// Check if TestCase already exists in TestCase-UI-model
 	_, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseToBeAddedUuid]
 
 	if existsInMap == true {
@@ -222,6 +224,41 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	// Add tab to existing Tab-object
 	testCasesUiCanvasObject.TestCasesTabs.Append(newTestCaseTabObject)
 
+	testCasesUiCanvasObject.TestCasesTabs.OnSelected = func(tabItem *container.TabItem) {
+		fmt.Println("OnSelected")
+		fmt.Println(tabItem)
+
+		if TemptestCasesUiCanvasObject != nil {
+			var existInMap bool
+			var tabItemRefString string
+
+			tabItemRefString = fmt.Sprintf("%p", tabItem)
+			_, existInMap = TemptestCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap[tabItemRefString]
+
+			if existInMap == true {
+				var testCaseUuid string
+				testCaseUuid = TemptestCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap[tabItemRefString]
+
+				// Send command 'ChannelCommandChangeActiveTestCase' on command-channle
+				commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
+					ChannelCommand:  sharedCode.ChannelCommandChangeActiveTestCase,
+					FirstParameter:  "",
+					SecondParameter: "",
+					ActiveTestCase:  testCaseUuid,
+					ElementType:     sharedCode.BuildingBlock(sharedCode.Undefined),
+				}
+
+				// Send command message over channel to Command and Rule Engine
+				sharedCode.CommandChannel <- commandEngineChannelMessage
+
+			}
+
+		}
+
+		//testCaseExecutionsTabPage.Refresh()
+
+	}
+
 	// Set focus on newly created Tab
 	testCasesUiCanvasObject.TestCasesTabs.Select(newTestCaseTabObject)
 
@@ -245,6 +282,20 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	// Open 'Accordions' for Textual and Graphical TestCase Representation for TestCase
 	testCaseGraphicalAreas.currentTestCaseTextualStructure.currentTestCaseGraphicalAccordionObject.OpenAll()
 	testCaseGraphicalAreas.currentTestCaseGraphicalStructure.currentTestCaseGraphicalAccordionObject.OpenAll()
+
+	// Save link between newTestCaseTabObject and TestCaseUuid in Map
+	if testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap == nil {
+		// Initiate if nil
+		testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap = make(map[string]string)
+		TemptestCasesUiCanvasObject = &TestCasesUiModelStruct{}
+		TemptestCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap = make(map[string]string)
+	}
+
+	var newTestCaseTabObjectRefString string
+	newTestCaseTabObjectRefString = fmt.Sprintf("%p", newTestCaseTabObject)
+
+	testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap[newTestCaseTabObjectRefString] = testCaseToBeAddedUuid
+	TemptestCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap = testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap
 
 	// Save TestCase UI-components-Map
 	testCasesUiCanvasObject.TestCasesUiModelMap[testCaseToBeAddedUuid] = &testCaseGraphicalAreas

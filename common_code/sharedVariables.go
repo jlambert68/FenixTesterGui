@@ -16,6 +16,7 @@ const (
 	ChannelCommandRemoveElement
 	ChannelCommandSaveTestCase
 	ChannelCommandExecuteTestCase
+	ChannelCommandChangeActiveTestCase
 )
 
 type ChannelCommandStruct struct {
@@ -32,12 +33,22 @@ var CommandChannelGraphicsUpdate CommandChannelGraphicsUpdateType
 type CommandChannelGraphicsUpdateType chan ChannelCommandGraphicsUpdatedStruct
 
 type ChannelCommandGraphicsUpdatedStruct struct {
-	CreateNewTestCaseUI     bool
-	ActiveTestCase          string
-	TextualTestCaseSimple   string
-	TextualTestCaseComplex  string
-	TextualTestCaseExtended string
+	ChannelCommandGraphicsUpdate ChannelCommandGraphicsUpdatedType
+	CreateNewTestCaseUI          bool
+	ActiveTestCase               string
+	TextualTestCaseSimple        string
+	TextualTestCaseComplex       string
+	TextualTestCaseExtended      string
+	TestInstructionUuid          string
 }
+
+type ChannelCommandGraphicsUpdatedType uint8
+
+const (
+	ChannelCommandGraphicsUpdatedNewTestCase ChannelCommandGraphicsUpdatedType = iota
+	ChannelCommandGraphicsUpdatedUpdateTestCaseGraphics
+	ChannelCommandGraphicsUpdatedSelectTestInstruction
+)
 
 // BuildingBlock - Used for defining which type of element that user dragged from available building blocks tree
 type BuildingBlock int

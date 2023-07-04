@@ -61,7 +61,7 @@ type TestCaseExecutionsDetailsStruct struct {
 var TestCaseExecutionsDetailsMap map[string]*TestCaseExecutionsDetailsStruct // m
 
 // TestCaseExecutionsStatusForSummaryTable
-// Holding the information to be show in the SummaryTable for all TestCaseExecutions
+// Holding the information to be shown in the SummaryTable for all TestCaseExecutions
 var TestCaseExecutionsStatusForSummaryTable []*TestCaseExecutionsStatusForSummaryTableStruct
 
 // BLOCK END

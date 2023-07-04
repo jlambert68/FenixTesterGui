@@ -30,6 +30,8 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 		return err
 	}
 
+	//Loop all TestInstructions and Update
+
 	// Create timestamp to be used
 	timeStampForTestCaseUpdate := timestamppb.Now()
 
@@ -131,7 +133,7 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 	// Send using gRPC
 	returnMessage := testCaseModel.GrpcOutReference.SendSaveFullTestCase(&gRPCFullTestCaseMessageToSend)
 
-	if returnMessage.AckNack == false {
+	if returnMessage == nil || returnMessage.AckNack == false {
 
 		errorId := "cb68859b-5c99-48a5-8f8b-9af472a9a45a"
 		err = errors.New(fmt.Sprintf(returnMessage.Comments+"[ErrorID: %s]", testCaseUuid, errorId))
@@ -337,6 +339,12 @@ func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCa
 
 	// Extract testInstructionElementMatureUuidUuid
 	attributesList := *testCase.AttributesList
+
+	// If Nothing in attributes list then just exit
+	if len(attributesList) == 0 {
+		return err
+	}
+
 	testInstructionElementMatureUuidUuid := attributesList[0].TestInstructionElementMatureUuidUuid
 
 	// Check if any attribute is changed

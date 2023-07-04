@@ -52,10 +52,6 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListAllAvailableBonds(user
 	//ctx := context.Background()
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer func() {
-		//TODO Fixa så att denna inte görs som allt går bra
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID": "793227a3-fe75-4e69-9634-e16096038bd1",
-		}).Error("Running Defer Cancel function")
 		cancel()
 	}()
 

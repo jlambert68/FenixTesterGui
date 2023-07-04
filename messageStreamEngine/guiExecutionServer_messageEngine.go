@@ -36,9 +36,6 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) initiateGuiExecution
 	//ctx := context.Background()
 	ctx, cancel := context.WithCancel(context.Background()) //, 30*time.Second)
 	defer func() {
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID": "19f720f0-bfe1-4b32-b605-02b094746169",
-		}).Debug("Running Defer Cancel function")
 		cancel()
 	}()
 

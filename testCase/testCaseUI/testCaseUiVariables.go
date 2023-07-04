@@ -37,6 +37,8 @@ type TestCasesUiModelStruct struct {
 	GraphicsUpdateChannelReference *sharedCode.CommandChannelGraphicsUpdateType
 
 	CurrentSelectedTestCaseUIElement *ClickableRectangle
+
+	TestCaseUITabRefToTestCaseUuidMap map[string]string // Map that holds TestCaseUI-tab-pointer-reference as key and TestCaseUuid as vale
 }
 
 // This object hold references to the object that is used when user drags a new TestInstruction or

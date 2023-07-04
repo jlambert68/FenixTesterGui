@@ -3,6 +3,7 @@ package detailedExecutionsModel
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/detailedTestCaseExecutionUI_summaryTableDefinition"
+	"fmt"
 	"github.com/sirupsen/logrus"
 	"sort"
 	"strconv"
@@ -58,6 +59,11 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) update
 
 			// Create TestCase-UI-name for SummaryTable: TestCaseName + part of UUID + VersionNumber
 			var testCaseExecutionUIName string
+
+			//TODO REMOVE only used when debugging
+			if tempTestCaseExecutionsDetail.TestCaseExecutionsBaseInformation.TestCaseExecutionBasicInformation == nil {
+				fmt.Println("Is Nil")
+			}
 			testCaseExecutionUIName = tempTestCaseExecutionsDetail.TestCaseExecutionsBaseInformation.
 				TestCaseExecutionBasicInformation.TestCaseName + " [" +
 				sharedCode.GenerateShortUuidFromFullUuid(tempTestCaseExecutionsDetail.

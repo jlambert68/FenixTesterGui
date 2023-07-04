@@ -48,6 +48,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) startCommandChanne
 		case sharedCode.ChannelCommandExecuteTestCase:
 			commandAndRuleEngine.channelCommandExecuteTestCase(incomingChannelCommand)
 
+		case sharedCode.ChannelCommandChangeActiveTestCase:
+			commandAndRuleEngine.channelCommandChangeActiveTestCase(incomingChannelCommand)
+
 		// No other command is supported
 		default:
 			//TODO Send Error over ERROR-channel
@@ -77,11 +80,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandCrea
 
 	// Send 'update TestCase graphics' command over channel
 	outgoingChannelCommandGraphicsUpdatedData := sharedCode.ChannelCommandGraphicsUpdatedStruct{
-		CreateNewTestCaseUI:     true,
-		ActiveTestCase:          testCaseUuid,
-		TextualTestCaseSimple:   textualTestCaseSimple,
-		TextualTestCaseComplex:  textualTestCaseComplex,
-		TextualTestCaseExtended: textualTestCaseExtended,
+		ChannelCommandGraphicsUpdate: sharedCode.ChannelCommandGraphicsUpdatedNewTestCase,
+		CreateNewTestCaseUI:          true,
+		ActiveTestCase:               testCaseUuid,
+		TextualTestCaseSimple:        textualTestCaseSimple,
+		TextualTestCaseComplex:       textualTestCaseComplex,
+		TextualTestCaseExtended:      textualTestCaseExtended,
 	}
 
 	*commandAndRuleEngine.GraphicsUpdateChannelReference <- outgoingChannelCommandGraphicsUpdatedData
@@ -111,7 +115,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSave
 
 }
 
-// Execute command 'Sace TestCase' received from Channel reader
+// Execute command 'Save TestCase' received from Channel reader
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExecuteTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct) {
 
 	// TestCaseUuid to execute
@@ -194,15 +198,37 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandRemo
 
 	// Send 'update TestCase graphics' command over channel
 	outgoingChannelCommandGraphicsUpdatedData := sharedCode.ChannelCommandGraphicsUpdatedStruct{
-		CreateNewTestCaseUI:     false,
-		ActiveTestCase:          currentTestCaseUuid,
-		TextualTestCaseSimple:   textualTestCaseSimple,
-		TextualTestCaseComplex:  textualTestCaseComplex,
-		TextualTestCaseExtended: textualTestCaseExtended,
+		ChannelCommandGraphicsUpdate: sharedCode.ChannelCommandGraphicsUpdatedUpdateTestCaseGraphics,
+		CreateNewTestCaseUI:          false,
+		ActiveTestCase:               currentTestCaseUuid,
+		TextualTestCaseSimple:        textualTestCaseSimple,
+		TextualTestCaseComplex:       textualTestCaseComplex,
+		TextualTestCaseExtended:      textualTestCaseExtended,
 	}
 
 	*commandAndRuleEngine.GraphicsUpdateChannelReference <- outgoingChannelCommandGraphicsUpdatedData
 
+}
+
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChangeActiveTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct) {
+
+	var existInMap bool
+
+	currentTestCaseUuid := incomingChannelCommand.ActiveTestCase
+
+	// Verify that TestCase exists
+	_, existInMap = commandAndRuleEngine.Testcases.TestCases[currentTestCaseUuid]
+	if existInMap == false {
+		errorId := "a7645bee-7739-4ea3-a0f5-60d5339fb2e4"
+		err := errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", currentTestCaseUuid, errorId))
+		// TODO Send on Error-channel
+		fmt.Println(err)
+
+		return
+	}
+
+	// Set active TestCase
+	commandAndRuleEngine.Testcases.CurrentActiveTestCaseUuid = currentTestCaseUuid
 }
 
 func printDropZone(index int) {
@@ -399,14 +425,30 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSwap
 
 	// Send 'update TestCase graphics' command over channel
 	outgoingChannelCommandGraphicsUpdatedData := sharedCode.ChannelCommandGraphicsUpdatedStruct{
-		CreateNewTestCaseUI:     false,
-		ActiveTestCase:          currentTestCaseUuid,
-		TextualTestCaseSimple:   textualTestCaseSimple,
-		TextualTestCaseComplex:  textualTestCaseComplex,
-		TextualTestCaseExtended: textualTestCaseExtended,
+		ChannelCommandGraphicsUpdate: sharedCode.ChannelCommandGraphicsUpdatedUpdateTestCaseGraphics,
+		CreateNewTestCaseUI:          false,
+		ActiveTestCase:               currentTestCaseUuid,
+		TextualTestCaseSimple:        textualTestCaseSimple,
+		TextualTestCaseComplex:       textualTestCaseComplex,
+		TextualTestCaseExtended:      textualTestCaseExtended,
 	}
 
 	*commandAndRuleEngine.GraphicsUpdateChannelReference <- outgoingChannelCommandGraphicsUpdatedData
+
+	/*
+		// Send 'Select TestInstruction in graphics' command over channel
+		outgoingChannelCommandGraphicsUpdatedDataForTestInstruction := sharedCode.ChannelCommandGraphicsUpdatedStruct{
+			ChannelCommandGraphicsUpdate: sharedCode.ChannelCommandGraphicsUpdatedSelectTestInstruction,
+			CreateNewTestCaseUI:          false,
+			ActiveTestCase:               currentTestCaseUuid,
+			TextualTestCaseSimple:        textualTestCaseSimple,
+			TextualTestCaseComplex:       textualTestCaseComplex,
+			TextualTestCaseExtended:      textualTestCaseExtended,
+			TestInstructionUuid:
+		}
+
+		*commandAndRuleEngine.GraphicsUpdateChannelReference <- outgoingChannelCommandGraphicsUpdatedDataForTestInstruction
+	*/
 
 }
 

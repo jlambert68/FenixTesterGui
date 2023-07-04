@@ -40,7 +40,7 @@ var containerRef *fyne.Container
 var labelStandardHeight float32
 var commandChannelReference *sharedCode.CommandChannelType
 
-//****************************************************
+// ****************************************************
 type DraggableLabel struct {
 	widget.Label
 	SourceUuid        string
@@ -203,8 +203,8 @@ func (t *DraggableLabel) Dragged(ev *fyne.DragEvent) {
 
 	// Move 'Drag N Drop'-object container, so it is to the right of the mouse-pointer
 	diffPos := fyne.Position{
-		X: 10,
-		Y: -20,
+		X: 5,
+		Y: -10,
 	}
 	newPos := ev.AbsolutePosition.Add(diffPos).Add(fyne.NewSize(rectangleRef.Size().Width/2, rectangleRef.Size().Height/2))
 	containerRef.Move(newPos)

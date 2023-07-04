@@ -40,10 +40,6 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendSaveAllPinnedTestInstr
 	//ctx := context.Background()
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer func() {
-		//TODO Fixa så att denna inte görs som allt går bra
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID": "2d688330-025f-492a-b318-bb9374bf76ec",
-		}).Error("Running Defer Cancel function")
 		cancel()
 	}()
 

@@ -213,7 +213,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 				TestInstructionExecutionsStatus: tempTestInstructionExecutionStatusMessages,
 			}
 
-			// Resend the message so it can be procesed
+			// Resend the message so it can be processed
 			var channelCommandDetailedExecutions ChannelCommandDetailedExecutionsStruct
 			channelCommandDetailedExecutions = ChannelCommandDetailedExecutionsStruct{
 				ChannelCommandDetailedExecutionsStatus:                            ChannelCommandStatusUpdateOfDetailedExecutionsStatus,

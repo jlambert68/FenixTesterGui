@@ -12,7 +12,9 @@ import (
 )
 
 // Generate the TestCaseAttributes Area for the TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttributesAreaForTestCase(testCaseUuid string, testInstructionElementMatureUuid string) (testCaseAttributesArea fyne.CanvasObject, testInstructionAttributesAccordion *widget.Accordion, err error) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttributesAreaForTestCase(
+	testCaseUuid string,
+	testInstructionElementMatureUuid string) (testCaseAttributesArea fyne.CanvasObject, testInstructionAttributesAccordion *widget.Accordion, err error) {
 
 	// Extract the current TestCase UI model
 	testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
@@ -40,7 +42,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 			}
 		}
 	}
-	// Generate Data to be used for  Attributes
+	// Generate Data to be used for Attributes
 	attributesList, err := testCasesUiCanvasObject.generateAttributeStringListData(testCaseUuid, testInstructionElementMatureUuid)
 	if err != nil {
 		return nil, nil, err
@@ -180,7 +182,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 }
 
 // Generate structure for 'binding.StringList' regarding Attribute values
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringListData(testCaseUuid string, testInstructionElementMatureUuid string) (attributesListRef testCaseModel.AttributeStructSliceReference, err error) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringListData(
+	testCaseUuid string,
+	testInstructionElementMatureUuid string) (attributesListRef testCaseModel.AttributeStructSliceReference, err error) {
 
 	// Extract TestCase-model
 	currentTestCaseModel, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]

@@ -19,6 +19,7 @@ const (
 	ChannelCommandSaveTestCase
 	ChannelCommandExecuteTestCase
 	ChannelCommandChangeActiveTestCase
+	ChannelCommandOpenTestCase
 )
 
 type ChannelCommandStruct struct {
@@ -50,6 +51,7 @@ const (
 	ChannelCommandGraphicsUpdatedNewTestCase ChannelCommandGraphicsUpdatedType = iota
 	ChannelCommandGraphicsUpdatedUpdateTestCaseGraphics
 	ChannelCommandGraphicsUpdatedSelectTestInstruction
+	ChannelCommandGraphicsUpdatedSelectTestCaseTabBasedOnTestCaseUuid
 )
 
 // BuildingBlock - Used for defining which type of element that user dragged from available building blocks tree

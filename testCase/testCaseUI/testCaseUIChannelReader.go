@@ -27,6 +27,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) startGUICommandChannelRea
 		case sharedCode.ChannelCommandGraphicsUpdatedSelectTestInstruction:
 			testCasesUiCanvasObject.selectTestInstructionInTestCaseGraphics(incomingChannelCommandGraphicsUpdatedData)
 
+		case sharedCode.ChannelCommandGraphicsUpdatedSelectTestCaseTabBasedOnTestCaseUuid:
+			testCasesUiCanvasObject.selectTestCaseTabBasedOnTestCaseUuid(incomingChannelCommandGraphicsUpdatedData)
+
 		default:
 			errorId := "388e2a87-1d0e-4db3-8dcf-18a69ac1faa4"
 			err := errors.New(fmt.Sprintf("unknow 'incomingChannelCommandGraphicsUpdatedData', [ErrorID: %s]", errorId))

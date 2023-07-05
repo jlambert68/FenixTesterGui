@@ -35,6 +35,20 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectF
 			*testCasesUiCanvasObject.CommandChannelReference <- commandEngineChannelMessage
 		}),
 
+		// Open TestCase
+		widget.NewToolbarAction(theme.FolderOpenIcon(), func() {
+			commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
+				ChannelCommand:  sharedCode.ChannelCommandOpenTestCase,
+				FirstParameter:  "",
+				SecondParameter: "",
+				ActiveTestCase:  "",
+				ElementType:     sharedCode.BuildingBlock(sharedCode.Undefined),
+			}
+
+			// Send command message over channel to Command and Rule Engine
+			*testCasesUiCanvasObject.CommandChannelReference <- commandEngineChannelMessage
+		}),
+
 		// Save TestCase
 		widget.NewToolbarAction(theme.DocumentSaveIcon(), func() {
 			commandEngineChannelMessage := sharedCode.ChannelCommandStruct{

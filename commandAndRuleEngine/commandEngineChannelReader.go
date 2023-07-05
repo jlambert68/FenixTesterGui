@@ -51,6 +51,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) startCommandChanne
 		case sharedCode.ChannelCommandChangeActiveTestCase:
 			commandAndRuleEngine.channelCommandChangeActiveTestCase(incomingChannelCommand)
 
+		case sharedCode.ChannelCommandOpenTestCase:
+			commandAndRuleEngine.channelCommandOpenTestCase(incomingChannelCommand)
+
 		// No other command is supported
 		default:
 			//TODO Send Error over ERROR-channel
@@ -210,6 +213,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandRemo
 
 }
 
+// Change the active TestCase and TestCase-tab
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChangeActiveTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct) {
 
 	var existInMap bool
@@ -229,6 +233,89 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChan
 
 	// Set active TestCase
 	commandAndRuleEngine.Testcases.CurrentActiveTestCaseUuid = currentTestCaseUuid
+
+	// Change to Tab containing TestCaseUuid
+	commandAndRuleEngine.GraphicsUpdateChannelReference
+
+}
+
+// PopUp used function 'channelCommandOpenTestCase', below. Generates the ability for user enter Uuid
+func runPopUp(w fyne.Window, uuidChannel chan<- string) (modal *widget.PopUp) {
+
+	var hBoxButtonContainer *fyne.Container
+	var vBoxContainer *fyne.Container
+	var uuidEntryBox *widget.Entry
+	var okButton *widget.Button
+	var closeButton *widget.Button
+
+	uuidEntryBox = widget.NewEntry()
+	okButton = widget.NewButton("Ok", func() {
+		modal.Hide()
+		uuidChannel <- uuidEntryBox.Text
+	})
+	closeButton = widget.NewButton("Close", func() {
+		modal.Hide()
+		uuidChannel <- ""
+	})
+
+	hBoxButtonContainer = container.New(
+		layout.NewHBoxLayout(),
+		layout.NewSpacer(),
+		okButton,
+		closeButton)
+
+	vBoxContainer = container.New(
+		layout.NewVBoxLayout(),
+		widget.NewLabel("Enter TestCaseUuid to open"),
+		uuidEntryBox,
+		hBoxButtonContainer)
+
+	modal = widget.NewModalPopUp(
+		vBoxContainer,
+		w.Canvas(),
+	)
+	modal.Show()
+	return modal
+}
+
+// Opens a saved TestCase from Database
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandOpenTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct) {
+
+	var existInMap bool
+
+	// Create return channel for UUID-value
+	var returnChannelFromOpenTestCaseUuidPopUp chan string
+	returnChannelFromOpenTestCaseUuidPopUp = make(chan string)
+
+	//var modal *widget.PopUp
+	_ = runPopUp(*commandAndRuleEngine.MasterFenixWindow, returnChannelFromOpenTestCaseUuidPopUp)
+
+	// Way for UUID value from Open TestCase PopUp
+	var uuidToOpen string
+	uuidToOpen = <-returnChannelFromOpenTestCaseUuidPopUp
+
+	// Verify if TestCase exists
+	_, existInMap = commandAndRuleEngine.Testcases.TestCases[uuidToOpen]
+	if existInMap == true {
+
+		// Change to Tab containing TestCaseUuid
+		commandAndRuleEngine.GraphicsUpdateChannelReference
+
+		// Send command 'ChannelCommandChangeActiveTestCase' on command-channel
+		commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
+			ChannelCommand:  sharedCode.ChannelCommandChangeActiveTestCase,
+			FirstParameter:  "",
+			SecondParameter: "",
+			ActiveTestCase:  uuidToOpen,
+			ElementType:     sharedCode.BuildingBlock(sharedCode.Undefined),
+		}
+
+		// Send command message over channel to Command and Rule Engine
+		sharedCode.CommandChannel <- commandEngineChannelMessage
+
+		return
+	}
+
 }
 
 func printDropZone(index int) {

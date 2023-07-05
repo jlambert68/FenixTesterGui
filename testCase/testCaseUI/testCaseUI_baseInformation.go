@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/widget"
 )
 
 // Generate the BaseInformation Area for the TestCase
@@ -20,7 +19,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateBaseInformationAr
 		return nil, err
 	}
 
-	testCaseBaseInformationArea = widget.NewLabel("'testCaseBaseInformationArea'")
+	//testCaseBaseInformationArea = widget.NewLabel("'testCaseBaseInformationArea'")
+	testCaseBaseInformationArea, err = testCasesUiCanvasObject.generateTestCaseNameArea(testCaseUuid)
 
 	return testCaseBaseInformationArea, err
 }

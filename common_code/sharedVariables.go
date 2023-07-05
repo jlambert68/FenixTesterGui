@@ -1,6 +1,8 @@
 package sharedCode
 
-import "github.com/sirupsen/logrus"
+import (
+	"github.com/sirupsen/logrus"
+)
 
 // CommandChannel Channel used for triggering command to CommandEngine
 

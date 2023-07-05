@@ -13,6 +13,7 @@ import (
 )
 
 const testCaseNodeRectangleSize = 40
+const testCaseTabNameVisibleLenght = 50
 
 // TestCaseUiStruct
 // This structure holds all UI-objects for all the TestCases
@@ -78,3 +79,6 @@ type testCaseGraphicalStructureStruct struct {
 	currentTestCaseGraphicalAccordionObject                 *widget.Accordion
 	currentTestCaseTestInstructionAttributesAccordionObject *widget.Accordion
 }
+
+// Variable used to reach the 'TestCasesUiModelStruct' when TestCase-tab is changed. otherwise no way of reaching information about TestCaseUuid
+var TempTestCasesUiCanvasObject *TestCasesUiModelStruct

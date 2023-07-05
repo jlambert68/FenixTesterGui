@@ -110,7 +110,6 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectF
 
 // GenerateNewTestCaseTabObject
 // Generate a new TestCase UI-model
-var TemptestCasesUiCanvasObject *TestCasesUiModelStruct
 
 func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObject(testCaseToBeAddedUuid string) (err error) {
 
@@ -228,16 +227,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 		fmt.Println("OnSelected")
 		fmt.Println(tabItem)
 
-		if TemptestCasesUiCanvasObject != nil {
+		if TempTestCasesUiCanvasObject != nil {
 			var existInMap bool
 			var tabItemRefString string
 
 			tabItemRefString = fmt.Sprintf("%p", tabItem)
-			_, existInMap = TemptestCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap[tabItemRefString]
+			_, existInMap = TempTestCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap[tabItemRefString]
 
 			if existInMap == true {
 				var testCaseUuid string
-				testCaseUuid = TemptestCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap[tabItemRefString]
+				testCaseUuid = TempTestCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap[tabItemRefString]
 
 				// Send command 'ChannelCommandChangeActiveTestCase' on command-channle
 				commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
@@ -287,15 +286,15 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	if testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap == nil {
 		// Initiate if nil
 		testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap = make(map[string]string)
-		TemptestCasesUiCanvasObject = &TestCasesUiModelStruct{}
-		TemptestCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap = make(map[string]string)
+		TempTestCasesUiCanvasObject = &TestCasesUiModelStruct{}
+		TempTestCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap = make(map[string]string)
 	}
 
 	var newTestCaseTabObjectRefString string
 	newTestCaseTabObjectRefString = fmt.Sprintf("%p", newTestCaseTabObject)
 
 	testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap[newTestCaseTabObjectRefString] = testCaseToBeAddedUuid
-	TemptestCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap = testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap
+	TempTestCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap = testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap
 
 	// Save TestCase UI-components-Map
 	testCasesUiCanvasObject.TestCasesUiModelMap[testCaseToBeAddedUuid] = &testCaseGraphicalAreas

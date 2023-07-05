@@ -58,6 +58,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		commandAndRuleEngine.Testcases.TestCases = make(map[string]testCaseModel.TestCaseModelStruct)
 	}
 
+	// TODO Add dropdown for user to chose among available Domains in available building blocks
 	// Add BasicTestCaseInformation
 	localTestCaseMessageStruct := testCaseModel.LocalTestCaseMessageStruct{
 		BasicTestCaseInformationMessageNoneEditableInformation: fenixGuiTestCaseBuilderServerGrpcApi.BasicTestCaseInformationMessage_NonEditableBasicInformationMessage{

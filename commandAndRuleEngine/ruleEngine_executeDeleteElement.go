@@ -26,7 +26,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	*/
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	var currentTestCase testCaseModel.TestCaseModelStruct
+	var existsInMap bool
+
+	currentTestCase, existsInMap = commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err

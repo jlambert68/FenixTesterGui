@@ -18,7 +18,7 @@ func TestNewTestCaseModelCommand(t *testing.T) {
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
 	// Initiate structure for all TestCases
-	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
+	allTestCases := make(map[string]*testCaseModel.TestCaseModelStruct)
 	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
 
 	// Initiate CommandAndRule-engine
@@ -55,7 +55,10 @@ func TestNewTestCaseModelCommand(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	var testCase testCaseModel.TestCaseModelStruct
+	var testCaseRef *testCaseModel.TestCaseModelStruct
+	testCaseRef = commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	testCase = *testCaseRef
 
 	// Validate the result of the NewTestCaseModel-command, 'B0'
 	// 1) Validate B0 (1)

@@ -51,10 +51,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseNameArea(
 		var trimmedValue string
 		trimmedValue = strings.Trim(newValue, " ")
 
-		testCase_Model.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseName = trimmedValue
-
 		// Save TestCase back in Map
-		//testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = testCase_Model
+		// Get the latest version of TestCase
+		tempTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+
+		tempTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseName = trimmedValue
+		testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = tempTestCase
 
 		// Generate short version of UUID to put in TestCase Tab-Name
 		var shortUUid string
@@ -62,9 +64,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseNameArea(
 
 		shortUUid = testCasesUiCanvasObject.TestCasesModelReference.GenerateShortUuidFromFullUuid(testCaseUuid)
 
-		// Shorten Tab-name if name is longer then 'testCaseTabNameVisibleLenght'
-		if len(trimmedValue) > testCaseTabNameVisibleLenght {
-			tabName = trimmedValue[0:testCaseTabNameVisibleLenght] + " [" + shortUUid + "]"
+		// Shorten Tab-name if name is longer then 'testCaseTabNameVisibleLength'
+		if len(trimmedValue) > testCaseTabNameVisibleLength {
+			tabName = trimmedValue[0:testCaseTabNameVisibleLength] + " [" + shortUUid + "]"
 		} else {
 			tabName = trimmedValue + " [" + shortUUid + "]"
 		}

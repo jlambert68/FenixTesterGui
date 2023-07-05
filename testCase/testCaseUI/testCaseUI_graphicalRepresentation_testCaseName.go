@@ -29,9 +29,6 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseNameArea(
 
 	}
 
-	// Extract the current TestCase UI model
-	//testCaseUIModel, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
-
 	// Create Form-layout container to be used for Name
 	var testCaseNameContainer *fyne.Container
 	var testCaseNameFormContainer *fyne.Container
@@ -42,7 +39,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseNameArea(
 	testCaseNameFormContainer.Add(widget.NewLabel("TestCaseName"))
 
 	// Add the Entry-widget for TestCaseName
-	newTestCaseNameEntry := widget.NewEntry() // testCasesUiCanvasObject.NewAttributeEntry(attributeItem.attributeUuid)
+	newTestCaseNameEntry := widget.NewEntry()
 	newTestCaseNameEntry.SetText(testCase_Model.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseName)
 
 	// Change Name in model and Tab-name when UI-component-Name-value is changed

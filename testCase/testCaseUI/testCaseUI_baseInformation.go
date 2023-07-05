@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
 )
 
 // Generate the BaseInformation Area for the TestCase
@@ -19,8 +21,28 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateBaseInformationAr
 		return nil, err
 	}
 
-	//testCaseBaseInformationArea = widget.NewLabel("'testCaseBaseInformationArea'")
-	testCaseBaseInformationArea, err = testCasesUiCanvasObject.generateTestCaseNameArea(testCaseUuid)
+	var tempBaseInformationAreaContainer *fyne.Container
+	tempBaseInformationAreaContainer = container.New(layout.NewVBoxLayout())
 
-	return testCaseBaseInformationArea, err
+	// Generate TestCaseName-UI-object
+	var tempTestCaseNameArea fyne.CanvasObject
+	tempTestCaseNameArea, err = testCasesUiCanvasObject.generateTestCaseNameArea(testCaseUuid)
+	if err != nil {
+		return nil, err
+	}
+
+	// Add the 'TestCaseName-UI-object' to the 'BaseInformationArea'
+	tempBaseInformationAreaContainer.Add(tempTestCaseNameArea)
+
+	// Generate TestCaseDescription-UI-object
+	var tempTestCaseDescriptionArea fyne.CanvasObject
+	tempTestCaseDescriptionArea, err = testCasesUiCanvasObject.generateTestCaseDescriptionArea(testCaseUuid)
+	if err != nil {
+		return tempBaseInformationAreaContainer, err
+	}
+
+	// Add the 'TestCaseDescription-UI-object' to the 'BaseInformationArea'
+	tempBaseInformationAreaContainer.Add(tempTestCaseDescriptionArea)
+
+	return tempBaseInformationAreaContainer, err
 }

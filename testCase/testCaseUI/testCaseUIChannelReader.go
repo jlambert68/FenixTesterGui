@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 )
 
 // Channel reader which is used for reading out command to update GUI
@@ -92,5 +93,39 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) selectTestInstructionInTe
 	// Select Latest dropped element
 	var newPointEvent fyne.PointEvent
 	testCasesUiCanvasObject.CurrentSelectedTestCaseUIElement.Tapped(&newPointEvent)
+
+}
+
+// Select tab that have TestCase
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) selectTestCaseTabBasedOnTestCaseUuid(incomingChannelCommandGraphicsUpdatedData sharedCode.ChannelCommandGraphicsUpdatedStruct) {
+
+	var foundTestCase bool
+	var tabReference *container.TabItem
+
+	// Loop Map with TestCase-tabs to find relation between TabItem and UUID
+	for _, tempTestCaseUITabRefToTestCaseUuidMapStructObject := range testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap {
+
+		// Is this the TestCaseUuid we are looking for
+		if tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUuid == incomingChannelCommandGraphicsUpdatedData.ActiveTestCase {
+			foundTestCase = true
+			tabReference = tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUiTabRef
+			break
+		}
+	}
+
+	// When TestCase was found then switch tab
+	if foundTestCase == true {
+		testCasesUiCanvasObject.TestCasesTabs.Select(tabReference)
+		//testCasesUiCanvasObject.TestCasesTabs.Refresh()
+
+		return
+
+	} else {
+		// No TestCase was found
+		//TODO Send error over error-channel
+		fmt.Println("No Tab was found, but was expected for TestCase '%s'", incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
+
+		return
+	}
 
 }

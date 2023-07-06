@@ -231,12 +231,6 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChan
 		return
 	}
 
-	// Set active TestCase
-	commandAndRuleEngine.Testcases.CurrentActiveTestCaseUuid = currentTestCaseUuid
-
-	// Change to Tab containing TestCaseUuid
-	commandAndRuleEngine.GraphicsUpdateChannelReference
-
 }
 
 // PopUp used function 'channelCommandOpenTestCase', below. Generates the ability for user enter Uuid
@@ -298,20 +292,36 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandOpen
 	_, existInMap = commandAndRuleEngine.Testcases.TestCases[uuidToOpen]
 	if existInMap == true {
 
-		// Change to Tab containing TestCaseUuid
-		commandAndRuleEngine.GraphicsUpdateChannelReference
+		/*
+			// Change to Tab containing TestCaseUuid
+			// Send command 'ChannelCommandChangeActiveTestCase' on command-channel
+			commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
+				ChannelCommand:  sharedCode.ChannelCommandChangeActiveTestCase,
+				FirstParameter:  "",
+				SecondParameter: "",
+				ActiveTestCase:  uuidToOpen,
+				ElementType:     sharedCode.BuildingBlock(sharedCode.Undefined),
+			}
 
-		// Send command 'ChannelCommandChangeActiveTestCase' on command-channel
-		commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
-			ChannelCommand:  sharedCode.ChannelCommandChangeActiveTestCase,
-			FirstParameter:  "",
-			SecondParameter: "",
-			ActiveTestCase:  uuidToOpen,
-			ElementType:     sharedCode.BuildingBlock(sharedCode.Undefined),
+			// Send command message over channel to Command and Rule Engine
+			sharedCode.CommandChannel <- commandEngineChannelMessage
+		*/
+		// Set active TestCase
+		commandAndRuleEngine.Testcases.CurrentActiveTestCaseUuid = uuidToOpen
+
+		// Change to Tab containing TestCaseUuid
+		// Send 'Switch to TestCase-tab' command over channel
+		outgoingChannelCommandGraphicsUpdatedData := sharedCode.ChannelCommandGraphicsUpdatedStruct{
+			ChannelCommandGraphicsUpdate: sharedCode.ChannelCommandGraphicsUpdatedSelectTestCaseTabBasedOnTestCaseUuid,
+			CreateNewTestCaseUI:          false,
+			ActiveTestCase:               uuidToOpen,
+			TextualTestCaseSimple:        "",
+			TextualTestCaseComplex:       "",
+			TextualTestCaseExtended:      "",
+			TestInstructionUuid:          "",
 		}
 
-		// Send command message over channel to Command and Rule Engine
-		sharedCode.CommandChannel <- commandEngineChannelMessage
+		*commandAndRuleEngine.GraphicsUpdateChannelReference <- outgoingChannelCommandGraphicsUpdatedData
 
 		return
 	}

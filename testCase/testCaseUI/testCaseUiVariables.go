@@ -39,7 +39,12 @@ type TestCasesUiModelStruct struct {
 
 	CurrentSelectedTestCaseUIElement *ClickableRectangle
 
-	TestCaseUITabRefToTestCaseUuidMap map[string]string // Map that holds TestCaseUI-tab-pointer-reference as key and TestCaseUuid as vale
+	TestCaseUITabRefToTestCaseUuidMap map[string]TestCaseUITabRefToTestCaseUuidMapstruct // <map[TestCaseUI-tab-pointer-reference]TestCaseUuid> Map that holds TestCaseUI-tab-pointer-reference as key and TestCaseUuid as value
+}
+
+type TestCaseUITabRefToTestCaseUuidMapstruct struct {
+	TestCaseUuid     string
+	TestCaseUiTabRef *container.TabItem
 }
 
 // This object hold references to the object that is used when user drags a new TestInstruction or

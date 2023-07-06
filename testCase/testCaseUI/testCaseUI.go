@@ -250,7 +250,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 
 			if existInMap == true {
 				var testCaseUuid string
-				testCaseUuid = TempTestCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap[tabItemRefString]
+				testCaseUuid = TempTestCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap[tabItemRefString].TestCaseUuid
 
 				// Send command 'ChannelCommandChangeActiveTestCase' on command-channle
 				commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
@@ -299,15 +299,19 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	// Save link between newTestCaseTabObject and TestCaseUuid in Map
 	if testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap == nil {
 		// Initiate if nil
-		testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap = make(map[string]string)
+		testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap = make(map[string]TestCaseUITabRefToTestCaseUuidMapstruct)
 		TempTestCasesUiCanvasObject = &TestCasesUiModelStruct{}
-		TempTestCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap = make(map[string]string)
+		TempTestCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap = make(map[string]TestCaseUITabRefToTestCaseUuidMapstruct)
 	}
 
 	var newTestCaseTabObjectRefString string
 	newTestCaseTabObjectRefString = fmt.Sprintf("%p", newTestCaseTabObject)
 
-	testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap[newTestCaseTabObjectRefString] = testCaseToBeAddedUuid
+	testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap[newTestCaseTabObjectRefString] = TestCaseUITabRefToTestCaseUuidMapstruct{
+		TestCaseUuid:     testCaseToBeAddedUuid,
+		TestCaseUiTabRef: newTestCaseTabObject,
+	}
+
 	TempTestCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap = testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap
 
 	// Save TestCase UI-components-Map

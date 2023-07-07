@@ -25,7 +25,60 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 
 	}
 
-	konvertera till testCaseModel, troligen via version av NewTestCase eller liknande
+	// Create object that will hold complete TestCase in memory
+	var tempTestCaseModel TestCaseModelStruct
+	tempTestCaseModel = TestCaseModelStruct{
+		LastLoadedTestCaseModelGRPCMessage:         *detailedTestCaseResponse.DetailedTestCase.TestCaseBasicInformation.TestCaseModel, // fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage{},
+		FirstElementUuid:                           detailedTestCaseResponse.DetailedTestCase.TestCaseBasicInformation.TestCaseModel.FirstMatureElementUuid,
+		TestCaseModelMap:                           nil, // Created below
+		TextualTestCaseRepresentationSimpleStack:   nil,
+		TextualTestCaseRepresentationComplexStack:  nil,
+		TextualTestCaseRepresentationExtendedStack: nil,
+		CommandStack:                               nil,
+		LastSavedCommandStack:                      lastSavedCommandStack{},
+		CopyBuffer:                                 ImmatureElementStruct{},
+		CutBuffer:                                  MatureElementStruct{},
+		CutCommandInitiated:                        false,
+		LocalTestCaseMessage: LocalTestCaseMessageStruct{
+			BasicTestCaseInformationMessageNoneEditableInformation: *detailedTestCaseResponse.DetailedTestCase.TestCaseBasicInformation.BasicTestCaseInformation.NonEditableInformation,
+			BasicTestCaseInformationMessageEditableInformation:     *detailedTestCaseResponse.DetailedTestCase.TestCaseBasicInformation.BasicTestCaseInformation.EditableInformation,
+			CreatedAndUpdatedInformation:                           *detailedTestCaseResponse.DetailedTestCase.TestCaseBasicInformation.CreatedAndUpdatedInformation,
+		},
+		testCaseModelAdaptedForUiTree:     nil,
+		CurrentSelectedTestCaseElement:    currentSelectedTestCaseElementStruct{},
+		MatureTestInstructionMap:          nil, // Created below
+		MatureTestInstructionContainerMap: nil, // Created below
+		AttributesList:                    nil,
+		ThisIsANewTestCase:                false,
+		TestCaseHash:                      detailedTestCaseResponse.DetailedTestCase.MessageHash,
+	}
+
+	// Generate 'TestCaseModelMap'
+	tempTestCaseModel.TestCaseModelMap = make(map[string]MatureTestCaseModelElementStruct)
+	for _, tempMatureTestCaseModelElementMessage := range detailedTestCaseResponse.DetailedTestCase.TestCaseBasicInformation.TestCaseModel.TestCaseModelElements {
+
+		var tempMatureTestCaseModelElement MatureTestCaseModelElementStruct
+		tempMatureTestCaseModelElement = MatureTestCaseModelElementStruct{
+			MatureTestCaseModelElementMessage: fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage{
+				OriginalElementUuid:      tempMatureTestCaseModelElementMessage.OriginalElementUuid,
+				OriginalElementName:      tempMatureTestCaseModelElementMessage.OriginalElementName,
+				MatureElementUuid:        tempMatureTestCaseModelElementMessage.MatureElementUuid,
+				PreviousElementUuid:      tempMatureTestCaseModelElementMessage.PreviousElementUuid,
+				NextElementUuid:          tempMatureTestCaseModelElementMessage.NextElementUuid,
+				FirstChildElementUuid:    tempMatureTestCaseModelElementMessage.FirstChildElementUuid,
+				ParentElementUuid:        tempMatureTestCaseModelElementMessage.ParentElementUuid,
+				TestCaseModelElementType: tempMatureTestCaseModelElementMessage.TestCaseModelElementType,
+			},
+			MatureTestCaseModelElementMetaData: MatureTestCaseModelElementMetaDataStruct{
+				ChosenDropZoneUuid:        "",
+				ChosenDropZoneColorString: "",
+			},
+		}
+		tempTestCaseModel.TestCaseModelMap[tempMatureTestCaseModelElementMessage.MatureElementUuid] = tempMatureTestCaseModelElement
+
+	}
+
+	//
 
 	return err
 

@@ -326,6 +326,22 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandOpen
 		return
 	}
 
+	// Trigger Load the TestCase from Database
+	err := commandAndRuleEngine.Testcases.LoadFullTestCaseFromDatabase(uuidToOpen, commandAndRuleEngine.Testcases.CurrentUser)
+
+	if err != nil {
+
+		errorId := "b9b31517-04f3-48e8-a05b-82ebcbba4307"
+		err = errors.New(fmt.Sprintf("couldn't execute command 'LoadFullTestCaseFromDatabase', {error: %s} [ErrorID: %s]", err, errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return
+
+	}
+
+	fmt.Println("TestCase was Load from Cloud-DB")
+
 }
 
 func printDropZone(index int) {

@@ -40,9 +40,12 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 		CutBuffer:                                  MatureElementStruct{},
 		CutCommandInitiated:                        false,
 		LocalTestCaseMessage: LocalTestCaseMessageStruct{
-			BasicTestCaseInformationMessageNoneEditableInformation: *detailedTestCaseResponse.DetailedTestCase.TestCaseBasicInformation.BasicTestCaseInformation.NonEditableInformation,
-			BasicTestCaseInformationMessageEditableInformation:     *detailedTestCaseResponse.DetailedTestCase.TestCaseBasicInformation.BasicTestCaseInformation.EditableInformation,
-			CreatedAndUpdatedInformation:                           *detailedTestCaseResponse.DetailedTestCase.TestCaseBasicInformation.CreatedAndUpdatedInformation,
+			BasicTestCaseInformationMessageNoneEditableInformation: *detailedTestCaseResponse.DetailedTestCase.
+				TestCaseBasicInformation.BasicTestCaseInformation.GetNonEditableInformation(),
+			BasicTestCaseInformationMessageEditableInformation: *detailedTestCaseResponse.DetailedTestCase.
+				TestCaseBasicInformation.BasicTestCaseInformation.GetEditableInformation(),
+			CreatedAndUpdatedInformation: *detailedTestCaseResponse.DetailedTestCase.
+				TestCaseBasicInformation.GetCreatedAndUpdatedInformation(),
 		},
 		testCaseModelAdaptedForUiTree:     nil,
 		CurrentSelectedTestCaseElement:    currentSelectedTestCaseElementStruct{},
@@ -55,7 +58,8 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 
 	// Generate 'TestCaseModelMap'
 	tempTestCaseModel.TestCaseModelMap = make(map[string]MatureTestCaseModelElementStruct)
-	for _, tempMatureTestCaseModelElementMessage := range detailedTestCaseResponse.DetailedTestCase.TestCaseBasicInformation.TestCaseModel.TestCaseModelElements {
+	for _, tempMatureTestCaseModelElementMessage := range detailedTestCaseResponse.DetailedTestCase.
+		TestCaseBasicInformation.TestCaseModel.TestCaseModelElements {
 
 		var tempMatureTestCaseModelElement MatureTestCaseModelElementStruct
 		tempMatureTestCaseModelElement = MatureTestCaseModelElementStruct{
@@ -78,7 +82,77 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 
 	}
 
-	//
+	// Generate 'MatureTestInstructionMap'
+	tempTestCaseModel.MatureTestInstructionMap = make(map[string]MatureTestInstructionStruct)
+	for _, tempMatureTestInstructionMessage := range detailedTestCaseResponse.DetailedTestCase.MatureTestInstructions.
+		MatureTestInstructions {
+
+		// Add TestInstruction
+		var tempMatureTestInstruction MatureTestInstructionStruct
+		tempMatureTestInstruction = MatureTestInstructionStruct{
+			BasicTestInstructionInformation_NonEditableInformation: tempMatureTestInstructionMessage.
+				BasicTestInstructionInformation.NonEditableInformation,
+			BasicTestInstructionInformation_EditableInformation: tempMatureTestInstructionMessage.
+				BasicTestInstructionInformation.EditableInformation,
+			BasicTestInstructionInformation_InvisibleBasicInformation: tempMatureTestInstructionMessage.
+				BasicTestInstructionInformation.InvisibleBasicInformation,
+			MatureBasicTestInstructionInformation: tempMatureTestInstructionMessage.
+				MatureTestInstructionInformation.MatureBasicTestInstructionInformation,
+			CreatedAndUpdatedInformation: tempMatureTestInstructionMessage.
+				MatureTestInstructionInformation.CreatedAndUpdatedInformation,
+			TestInstructionAttributesList: make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
+				MatureTestInstructionInformationMessage_TestInstructionAttributeMessage),
+		}
+
+		// Add Attributes for TestInstruction
+		for _, tempTestInstructionAttributeMessage := range tempMatureTestInstructionMessage.
+			MatureTestInstructionInformation.TestInstructionAttributesList {
+			var tempTestInstructionAttributes fenixGuiTestCaseBuilderServerGrpcApi.
+				MatureTestInstructionInformationMessage_TestInstructionAttributeMessage
+			tempTestInstructionAttributes = fenixGuiTestCaseBuilderServerGrpcApi.
+				MatureTestInstructionInformationMessage_TestInstructionAttributeMessage{
+				BaseAttributeInformation: tempTestInstructionAttributeMessage.BaseAttributeInformation,
+				AttributeInformation:     tempTestInstructionAttributeMessage.AttributeInformation,
+			}
+
+			tempMatureTestInstruction.TestInstructionAttributesList[tempTestInstructionAttributeMessage.
+				BaseAttributeInformation.TestInstructionAttributeUuid] = &tempTestInstructionAttributes
+		}
+
+		tempTestCaseModel.MatureTestInstructionMap[tempMatureTestInstructionMessage.MatureTestInstructionInformation.
+			MatureBasicTestInstructionInformation.TestInstructionMatureUuid] = tempMatureTestInstruction
+
+	}
+
+	// Generate 'MatureTestInstructionContainerMap'
+	tempTestCaseModel.MatureTestInstructionContainerMap = make(map[string]MatureTestInstructionContainerStruct)
+	for _, tempMatureTestInstructionContainerMessage := range detailedTestCaseResponse.DetailedTestCase.
+		MatureTestInstructionContainers.MatureTestInstructionContainers {
+
+		// Add TestInstructionContainer
+		var tempMatureTestInstructionContainer MatureTestInstructionContainerStruct
+		tempMatureTestInstructionContainer = MatureTestInstructionContainerStruct{
+			NonEditableInformation: tempMatureTestInstructionContainerMessage.
+				BasicTestInstructionContainerInformation.NonEditableInformation,
+			EditableInformation: tempMatureTestInstructionContainerMessage.
+				BasicTestInstructionContainerInformation.EditableInformation,
+			InvisibleBasicInformation: tempMatureTestInstructionContainerMessage.
+				BasicTestInstructionContainerInformation.InvisibleBasicInformation,
+			EditableTestInstructionContainerAttributes: tempMatureTestInstructionContainerMessage.
+				BasicTestInstructionContainerInformation.EditableTestInstructionContainerAttributes,
+			MatureTestInstructionContainerInformation: tempMatureTestInstructionContainerMessage.
+				MatureTestInstructionContainerInformation.MatureTestInstructionContainerInformation,
+			CreatedAndUpdatedInformation: tempMatureTestInstructionContainerMessage.
+				MatureTestInstructionContainerInformation.CreatedAndUpdatedInformation,
+		}
+
+		tempTestCaseModel.MatureTestInstructionContainerMap[tempMatureTestInstructionContainerMessage.
+			MatureTestInstructionContainerInformation.MatureTestInstructionContainerInformation.
+			TestInstructionContainerMatureUuid] = tempMatureTestInstructionContainer
+	}
+
+	// Add TestCase to map with all TestCases
+	testCaseModel.TestCases[tempTestCaseModel.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.TestCaseUuid] = tempTestCaseModel
 
 	return err
 

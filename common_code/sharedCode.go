@@ -27,7 +27,7 @@ func ConvertRGBAHexStringIntoRGBAColor(rgbaHexString string) (rgbaValue color.RG
 	// Checka that ther String is of correct length, '#FFEEBB33'
 	if len(rgbaHexString) != 9 {
 		errorId := "93789d03-f728-40da-a6bd-78f8a96628a5"
-		err = errors.New(fmt.Sprintf("color string with hexvalues, '%s', has not the correct lenght, '#AABBCCDDEE' in testcase with sourceUuid '%s' [ErrorID: %s]", rgbaHexString, errorId))
+		err = errors.New(fmt.Sprintf("color string with hexvalue, '%s', has not the correct lenght, '#AABBCCDD' in testcase with sourceUuid '%s' [ErrorID: %s]", rgbaHexString, "<unknown>", errorId))
 
 		fmt.Println(err.Error()) //TODO Send to Error-channel
 

@@ -152,6 +152,9 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 	}
 
 	// Add TestCase to map with all TestCases
+	if testCaseModel.TestCases == nil {
+		testCaseModel.TestCases = make(map[string]TestCaseModelStruct)
+	}
 	testCaseModel.TestCases[tempTestCaseModel.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.TestCaseUuid] = tempTestCaseModel
 
 	return err

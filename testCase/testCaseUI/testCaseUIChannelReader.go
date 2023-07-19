@@ -123,7 +123,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) selectTestCaseTabBasedOnT
 	} else {
 		// No TestCase was found
 		//TODO Send error over error-channel
-		fmt.Println("No Tab was found, but was expected for TestCase '%s'", incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
+		fmt.Println("No Tab was found, but was expected for TestCase:", incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
 
 		return
 	}

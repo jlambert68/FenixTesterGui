@@ -215,9 +215,13 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 		nodeColor = nodeColor_Swappeble_Bonds
 		isBond = true
 
-		// TI, TIC
-	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION,
-		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER:
+		// TI
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION:
+		nodeColor = currentTestCase.MatureTestInstructionMap[currentElementsUuid].MatureBasicTestInstructionInformation.ChosenDropZoneColor //currentElement.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString //nodeColor_TI_TIC
+		isBond = false
+
+		// TIC
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER:
 		nodeColor = currentElement.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString //nodeColor_TI_TIC
 		isBond = false
 

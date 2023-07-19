@@ -342,6 +342,24 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandOpen
 
 	fmt.Println("TestCase was Load from Cloud-DB")
 
+	// Update UI with TestCase Textual Representation
+	textualTestCaseSimple, textualTestCaseComplex, textualTestCaseExtended, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(uuidToOpen)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// Send 'update TestCase graphics' command over channel
+	outgoingChannelCommandGraphicsUpdatedData := sharedCode.ChannelCommandGraphicsUpdatedStruct{
+		ChannelCommandGraphicsUpdate: sharedCode.ChannelCommandGraphicsUpdatedNewTestCase,
+		CreateNewTestCaseUI:          true,
+		ActiveTestCase:               uuidToOpen,
+		TextualTestCaseSimple:        textualTestCaseSimple,
+		TextualTestCaseComplex:       textualTestCaseComplex,
+		TextualTestCaseExtended:      textualTestCaseExtended,
+	}
+
+	*commandAndRuleEngine.GraphicsUpdateChannelReference <- outgoingChannelCommandGraphicsUpdatedData
+
 }
 
 func printDropZone(index int) {

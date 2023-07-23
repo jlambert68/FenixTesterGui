@@ -36,47 +36,19 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 	timeStampForTestCaseUpdate := timestamppb.Now()
 
 	// Convert map-messages into gRPC-version, mostly arrays
-	// TestCase-model
-	gRPCMatureTestCaseModelElementMessage, hashedMatureTestCaseModelElements, err := testCaseModel.generateTestCaseModelElementsForGrpc(testCaseUuid)
+	var (
+		gRPCMatureTestCaseModelElementMessage []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
+		gRPCMatureTestInstructions            []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage_MatureTestInstructionMessage
+		gRPCMatureTestInstructionContainers   []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage_MatureTestInstructionContainerMessage
+		finalHash                             string
+	)
+	gRPCMatureTestCaseModelElementMessage,
+		gRPCMatureTestInstructions,
+		gRPCMatureTestInstructionContainers,
+		finalHash, err = testCaseModel.generateTestCaseForGrpc(testCaseUuid)
 	if err != nil {
 		return err
 	}
-	// TestInstructions
-	gRPCMatureTestInstructions, hashedgRPCMatureTestInstructions, err := testCaseModel.generateMatureTestInstructionsForGrpc(testCaseUuid)
-	if err != nil {
-		return err
-	}
-	// TestInstructionContainers
-	gRPCMatureTestInstructionContainers, hashedgRPCMatureTestInstructionContainers, err := testCaseModel.generateMatureTestInstructionContainersForGrpc(testCaseUuid)
-	if err != nil {
-		return err
-	}
-
-	var valuesToReHash []string
-
-	tempNonEditableInformation := fmt.Sprint(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation)
-	hashNonEditableInformation := sharedCode.HashSingleValue(tempNonEditableInformation)
-	valuesToReHash = append(valuesToReHash, hashNonEditableInformation)
-
-	tempEditableInformation := fmt.Sprint(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation)
-	hashEditableInformation := sharedCode.HashSingleValue(tempEditableInformation)
-	valuesToReHash = append(valuesToReHash, hashEditableInformation)
-
-	tempTestCaseModelAsString := fmt.Sprint(currentTestCase.TextualTestCaseRepresentationExtendedStack)
-	hashTestCaseModelAsString := sharedCode.HashSingleValue(tempTestCaseModelAsString)
-	valuesToReHash = append(valuesToReHash, hashTestCaseModelAsString)
-
-	tempFirstMatureElementUuid := fmt.Sprint(currentTestCase.FirstElementUuid)
-	hashFirstMatureElementUuid := sharedCode.HashSingleValue(tempFirstMatureElementUuid)
-	valuesToReHash = append(valuesToReHash, hashFirstMatureElementUuid)
-
-	valuesToReHash = append(valuesToReHash, hashedMatureTestCaseModelElements)
-
-	valuesToReHash = append(valuesToReHash, hashedgRPCMatureTestInstructions)
-
-	valuesToReHash = append(valuesToReHash, hashedgRPCMatureTestInstructionContainers)
-
-	finalHash := sharedCode.HashValues(valuesToReHash, false)
 
 	// Check if changes are done to TestCase, but is only done if the TestCase is not saved before
 	if currentTestCase.ThisIsANewTestCase == true ||
@@ -321,6 +293,82 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseModelElementsForGrpc
 	hashedSlice = sharedCode.HashValues(hashSlice, false)
 
 	return gRPCMatureTestCaseModelElements, hashedSlice, err
+}
+
+// Pack different parts of the TestCase into gRPC-version into one message together with Hash of TestCase
+func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpc(testCaseUuid string) (
+	gRPCMatureTestCaseModelElementMessage []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage,
+	gRPCMatureTestInstructions []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage_MatureTestInstructionMessage,
+	gRPCMatureTestInstructionContainers []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage_MatureTestInstructionContainerMessage,
+	finalHash string,
+	err error) {
+
+	// Get current TestCase
+	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+	if existsInMap == false {
+
+		errorId := "4c075798-ec6c-4486-8053-997ef0d0d8eb"
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return nil, nil, nil, "", err
+	}
+
+	// Convert map-messages into gRPC-version, mostly arrays
+	// TestCase-model
+	var hashedMatureTestCaseModelElements string
+	gRPCMatureTestCaseModelElementMessage, hashedMatureTestCaseModelElements, err = testCaseModel.generateTestCaseModelElementsForGrpc(testCaseUuid)
+	if err != nil {
+		return nil, nil, nil, "", err
+	}
+
+	// TestInstructions
+	var hashedgRPCMatureTestInstructions string
+	gRPCMatureTestInstructions, hashedgRPCMatureTestInstructions, err = testCaseModel.generateMatureTestInstructionsForGrpc(testCaseUuid)
+	if err != nil {
+		return nil, nil, nil, "", err
+	}
+
+	// TestInstructionContainers
+	var hashedgRPCMatureTestInstructionContainers string
+	gRPCMatureTestInstructionContainers, hashedgRPCMatureTestInstructionContainers, err = testCaseModel.generateMatureTestInstructionContainersForGrpc(testCaseUuid)
+	if err != nil {
+		return nil, nil, nil, "", err
+	}
+
+	var valuesToReHash []string
+
+	tempNonEditableInformation := fmt.Sprint(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation)
+	hashNonEditableInformation := sharedCode.HashSingleValue(tempNonEditableInformation)
+	valuesToReHash = append(valuesToReHash, hashNonEditableInformation)
+
+	tempEditableInformation := fmt.Sprint(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation)
+	hashEditableInformation := sharedCode.HashSingleValue(tempEditableInformation)
+	valuesToReHash = append(valuesToReHash, hashEditableInformation)
+
+	tempTestCaseModelAsString := fmt.Sprint(currentTestCase.TextualTestCaseRepresentationExtendedStack)
+	hashTestCaseModelAsString := sharedCode.HashSingleValue(tempTestCaseModelAsString)
+	valuesToReHash = append(valuesToReHash, hashTestCaseModelAsString)
+
+	tempFirstMatureElementUuid := fmt.Sprint(currentTestCase.FirstElementUuid)
+	hashFirstMatureElementUuid := sharedCode.HashSingleValue(tempFirstMatureElementUuid)
+	valuesToReHash = append(valuesToReHash, hashFirstMatureElementUuid)
+
+	valuesToReHash = append(valuesToReHash, hashedMatureTestCaseModelElements)
+
+	valuesToReHash = append(valuesToReHash, hashedgRPCMatureTestInstructions)
+
+	valuesToReHash = append(valuesToReHash, hashedgRPCMatureTestInstructionContainers)
+
+	finalHash = sharedCode.HashValues(valuesToReHash, false)
+
+	return gRPCMatureTestCaseModelElementMessage,
+		gRPCMatureTestInstructions,
+		gRPCMatureTestInstructionContainers,
+		finalHash,
+		err
+
 }
 
 // SaveChangedTestCaseAttributeInTestCase - Save changed Attributes into the TestCase-model under correct TestInstruction

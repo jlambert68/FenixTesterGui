@@ -325,8 +325,8 @@ github.com/jackmordaunt/icns/v2 v2.2.1/go.mod h1:6aYIB9eSzyfHHMKqDf17Xrs1zetQPRe
 github.com/jarcoal/httpmock v0.0.0-20180424175123-9c70cfe4a1da/go.mod h1:ks+b9deReOc7jgqp+e7LuFiCBH6Rm5hL32cLcEAArb4=
 github.com/jfreymuth/oggvorbis v1.0.1/go.mod h1:NqS+K+UXKje0FUYUPosyQ+XTVvjmVjps1aEZH1sumIk=
 github.com/jfreymuth/vorbis v1.0.0/go.mod h1:8zy3lUAm9K/rJJk223RKy6vjCZTWC61NA2QD06bfOE0=
-github.com/jlambert68/FenixGrpcApi v0.0.0-20230719192514-78812c16ad05 h1:WBEh5X/lfXg0AghTMRiSA83W8QWWWhpRjGFc86HexN4=
-github.com/jlambert68/FenixGrpcApi v0.0.0-20230719192514-78812c16ad05/go.mod h1:W1LBy0KtSSvZ6zaIG1LZ5P5kTK6yzvubjmHUduD773w=
+github.com/jlambert68/FenixGrpcApi v0.0.0-20230723063857-8d0e59cd1bd4 h1:91GJEeWfH5PM7qkFrBVGUB1FtGtQ0g43/q47ZJkzhR4=
+github.com/jlambert68/FenixGrpcApi v0.0.0-20230723063857-8d0e59cd1bd4/go.mod h1:W1LBy0KtSSvZ6zaIG1LZ5P5kTK6yzvubjmHUduD773w=
 github.com/josephspurrier/goversioninfo v1.4.0/go.mod h1:JWzv5rKQr+MmW+LvM412ToT/IkYDZjaclF2pKDss8IY=
 github.com/json-iterator/go v1.1.11/go.mod h1:KdQUCv79m/52Kvf8AW2vK1V8akMuk1QjK/uOdHXbAo4=
 github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024/go.mod h1:6v2b51hI/fHJwM22ozAgKL4VKDeJcHhJFhtBdhmNjmU=

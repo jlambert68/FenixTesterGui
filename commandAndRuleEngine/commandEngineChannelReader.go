@@ -231,6 +231,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChan
 		return
 	}
 
+	testCaseHashIsTheSame, err2 := commandAndRuleEngine.Testcases.VerifyTestCaseHashTowardsDatabase(currentTestCaseUuid)
+	fmt.Println("Is TestCase-Hash the same as Database-hash", testCaseHashIsTheSame, err2)
+
 }
 
 // PopUp used function 'channelCommandOpenTestCase', below. Generates the ability for user enter Uuid

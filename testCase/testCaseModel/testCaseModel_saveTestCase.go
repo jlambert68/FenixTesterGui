@@ -45,7 +45,7 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 	gRPCMatureTestCaseModelElementMessage,
 		gRPCMatureTestInstructions,
 		gRPCMatureTestInstructionContainers,
-		finalHash, err = testCaseModel.generateTestCaseForGrpc(testCaseUuid)
+		finalHash, err = testCaseModel.generateTestCaseForGrpcAndHash(testCaseUuid)
 	if err != nil {
 		return err
 	}
@@ -226,8 +226,8 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionContain
 		hashSlice = append(hashSlice, tempJson)
 		tempJson = protojson.Format(tempMatureTestInstructionContainer.MatureTestInstructionContainerInformation)
 		hashSlice = append(hashSlice, tempJson)
-		tempJson = protojson.Format(tempMatureTestInstructionContainer.CreatedAndUpdatedInformation)
-		hashSlice = append(hashSlice, tempJson)
+		//tempJson = protojson.Format(tempMatureTestInstructionContainer.CreatedAndUpdatedInformation)
+		//hashSlice = append(hashSlice, tempJson)
 
 		// Create one 'MatureTestInstructionContainerMessage'
 		MatureTestInstructionContainerMessage := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage_MatureTestInstructionContainerMessage{
@@ -244,17 +244,17 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionContain
 		}
 
 		//TODO change the row below to have the orignal date, but it need to be like this otherwise there is an error when sending over gRPC
-		MatureTestInstructionContainerMessage.BasicTestInstructionContainerInformation.NonEditableInformation.UpdatedTimeStamp = &timestamppb.Timestamp{
-			Seconds: 0,
-			Nanos:   0,
-		}
+		//MatureTestInstructionContainerMessage.BasicTestInstructionContainerInformation.NonEditableInformation.UpdatedTimeStamp = &timestamppb.Timestamp{
+		//	Seconds: 0,
+		//	Nanos:   0,
+		//}
 
 		// Add 'MatureTestInstructionContainerMessage' to slice
 		gRPCMatureTestInstructionContainers = append(gRPCMatureTestInstructionContainers, &MatureTestInstructionContainerMessage)
 	}
 
 	// Generate Hash of all sub-message-hashes
-	hashedSlice = sharedCode.HashValues(hashSlice, false)
+	hashedSlice = sharedCode.HashValues(hashSlice, true)
 
 	return gRPCMatureTestInstructionContainers, hashedSlice, err
 
@@ -296,7 +296,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseModelElementsForGrpc
 }
 
 // Pack different parts of the TestCase into gRPC-version into one message together with Hash of TestCase
-func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpc(testCaseUuid string) (
+func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testCaseUuid string) (
 	gRPCMatureTestCaseModelElementMessage []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage,
 	gRPCMatureTestInstructions []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage_MatureTestInstructionMessage,
 	gRPCMatureTestInstructionContainers []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage_MatureTestInstructionContainerMessage,

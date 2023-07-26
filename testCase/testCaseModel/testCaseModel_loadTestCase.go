@@ -151,6 +151,9 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 			TestInstructionContainerMatureUuid] = tempMatureTestInstructionContainer
 	}
 
+	// Update The Hash for the TestCase
+	tempTestCaseModel.TestCaseHashWhenTestCaseWasSavedOrLoaded = detailedTestCaseResponse.DetailedTestCase.MessageHash
+
 	// Add TestCase to map with all TestCases
 	if testCaseModel.TestCases == nil {
 		testCaseModel.TestCases = make(map[string]TestCaseModelStruct)

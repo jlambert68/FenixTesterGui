@@ -64,9 +64,10 @@ type TestCaseModelStruct struct {
 	MatureTestInstructionMap                   map[string]MatureTestInstructionStruct
 	MatureTestInstructionContainerMap          map[string]MatureTestInstructionContainerStruct
 
-	AttributesList     *AttributeStructSliceReference
-	ThisIsANewTestCase bool
-	TestCaseHash       string
+	AttributesList                           *AttributeStructSliceReference
+	ThisIsANewTestCase                       bool
+	TestCaseHash                             string
+	TestCaseHashWhenTestCaseWasSavedOrLoaded string
 }
 
 type AttributeStructSliceReference []*AttributeStruct

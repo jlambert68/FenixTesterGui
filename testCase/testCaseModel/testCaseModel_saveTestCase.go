@@ -117,6 +117,11 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 
 	// Update that the TestCase is not New anymore
 	currentTestCase.ThisIsANewTestCase = false
+
+	// Update The Hash for the TestCase
+	currentTestCase.TestCaseHashWhenTestCaseWasSavedOrLoaded = gRPCFullTestCaseMessageToSend.MessageHash
+
+	// Save the TestCase back in Map
 	testCaseModel.TestCases[testCaseUuid] = currentTestCase
 
 	return err

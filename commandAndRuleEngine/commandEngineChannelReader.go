@@ -217,11 +217,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandRemo
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChangeActiveTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct) {
 
 	var existInMap bool
+	var tempTestCase testCaseModel.TestCaseModelStruct.
 
 	currentTestCaseUuid := incomingChannelCommand.ActiveTestCase
 
 	// Verify that TestCase exists
-	_, existInMap = commandAndRuleEngine.Testcases.TestCases[currentTestCaseUuid]
+	tempTestCase, existInMap = commandAndRuleEngine.Testcases.TestCases[currentTestCaseUuid]
 	if existInMap == false {
 		errorId := "a7645bee-7739-4ea3-a0f5-60d5339fb2e4"
 		err := errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", currentTestCaseUuid, errorId))
@@ -231,8 +232,17 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChan
 		return
 	}
 
-	testCaseHashIsTheSame, err2 := commandAndRuleEngine.Testcases.VerifyTestCaseHashTowardsDatabase(currentTestCaseUuid)
-	fmt.Println("Is TestCase-Hash the same as Database-hash", testCaseHashIsTheSame, err2)
+	// If this is an already saved TestCase then check if there are changes in Database
+	if tempTestCase.ThisIsANewTestCase == false {
+		testCaseHashIsTheSame, err2 := commandAndRuleEngine.Testcases.VerifyTestCaseHashTowardsDatabase(currentTestCaseUuid)
+		fmt.Println("Is TestCase-Hash the same as Database-hash", testCaseHashIsTheSame, err2)
+	}
+
+	// Check if current TestCase-hash has changed since TestCase was Saved or Loaded
+	TestCaseHashHasChangedSincesSavedOrLoaded, err3 := commandAndRuleEngine.Testcases.VerifyTestCaseHashSinceLoadedOrSaved(currentTestCaseUuid)
+	fmt.Println("IS TestCase-Hash the changed since TestCase was Saved or Loaded", TestCaseHashHasChangedSincesSavedOrLoaded, err3)
+
+
 
 }
 

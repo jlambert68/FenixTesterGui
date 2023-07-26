@@ -66,3 +66,39 @@ func (testCaseModel *TestCasesModelsStruct) VerifyTestCaseHashTowardsDatabase(te
 
 	return hashIsTheSame, err
 }
+
+// VerifyTestCaseHashSinceLoadedOrSaved - Verify if the Hash for the TestCase is the same as the one when TestCases was last Loaded or Saved
+func (testCaseModel *TestCasesModelsStruct) VerifyTestCaseHashSinceLoadedOrSaved(testCaseUuid string) (
+	hashIsTheSame bool, err error) {
+
+	var existsInMap bool
+	var tempTestCase TestCaseModelStruct
+
+	// Get current TestCase
+	tempTestCase, existsInMap = testCaseModel.TestCases[testCaseUuid]
+	if existsInMap == false {
+
+		errorId := "d9b6aa9e-0cc4-4424-8d74-c794b44bbcd6"
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return false, err
+	}
+
+	// Create TestCase-hash
+	var testcaseHash string
+	_, _, _, testcaseHash, err = testCaseModel.generateTestCaseForGrpcAndHash(testCaseUuid)
+	if err != nil {
+		return false, err
+	}
+
+	// Get latest hash for TestCase was Saved or Loaded
+	if testcaseHash == tempTestCase.TestCaseHashWhenTestCaseWasSavedOrLoaded {
+		hashIsTheSame = true
+	} else {
+		hashIsTheSame = false
+	}
+
+	return hashIsTheSame, err
+}

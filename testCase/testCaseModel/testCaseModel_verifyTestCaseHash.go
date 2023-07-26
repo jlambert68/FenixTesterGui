@@ -67,9 +67,9 @@ func (testCaseModel *TestCasesModelsStruct) VerifyTestCaseHashTowardsDatabase(te
 	return hashIsTheSame, err
 }
 
-// VerifyTestCaseHashSinceLoadedOrSaved - Verify if the Hash for the TestCase is the same as the one when TestCases was last Loaded or Saved
-func (testCaseModel *TestCasesModelsStruct) VerifyTestCaseHashSinceLoadedOrSaved(testCaseUuid string) (
-	hashIsTheSame bool, err error) {
+// TestCaseHashIsChangedSinceLoadedOrSaved - Verify if the Hash for the TestCase is the same as the one when TestCases was last Loaded or Saved
+func (testCaseModel *TestCasesModelsStruct) TestCaseHashIsChangedSinceLoadedOrSaved(testCaseUuid string) (
+	hashIsChanged bool, err error) {
 
 	var existsInMap bool
 	var tempTestCase TestCaseModelStruct
@@ -93,12 +93,12 @@ func (testCaseModel *TestCasesModelsStruct) VerifyTestCaseHashSinceLoadedOrSaved
 		return false, err
 	}
 
-	// Get latest hash for TestCase was Saved or Loaded
-	if testcaseHash == tempTestCase.TestCaseHashWhenTestCaseWasSavedOrLoaded {
-		hashIsTheSame = true
+	// Is Hash chaned or not
+	if testcaseHash != tempTestCase.TestCaseHashWhenTestCaseWasSavedOrLoaded {
+		hashIsChanged = true
 	} else {
-		hashIsTheSame = false
+		hashIsChanged = false
 	}
 
-	return hashIsTheSame, err
+	return hashIsChanged, err
 }

@@ -91,6 +91,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	}
 	newTestCaseModel.LocalTestCaseMessage = localTestCaseMessageStruct
 
+	// Set that this is a new TestCase
+	newTestCaseModel.ThisIsANewTestCase = true
+
 	// Add the TestCaseModel into map of all TestCaseModels
 	commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = newTestCaseModel
 

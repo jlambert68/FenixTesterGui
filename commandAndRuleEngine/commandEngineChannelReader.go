@@ -217,7 +217,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandRemo
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChangeActiveTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct) {
 
 	var existInMap bool
-	var tempTestCase testCaseModel.TestCaseModelStruct.
+	var tempTestCase testCaseModel.TestCaseModelStruct
 
 	currentTestCaseUuid := incomingChannelCommand.ActiveTestCase
 
@@ -235,14 +235,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChan
 	// If this is an already saved TestCase then check if there are changes in Database
 	if tempTestCase.ThisIsANewTestCase == false {
 		testCaseHashIsTheSame, err2 := commandAndRuleEngine.Testcases.VerifyTestCaseHashTowardsDatabase(currentTestCaseUuid)
-		fmt.Println("Is TestCase-Hash the same as Database-hash", testCaseHashIsTheSame, err2)
+		fmt.Println("Is TestCase-Hash the same as Database-hash", testCaseHashIsTheSame, err2, currentTestCaseUuid)
 	}
 
 	// Check if current TestCase-hash has changed since TestCase was Saved or Loaded
-	TestCaseHashHasChangedSincesSavedOrLoaded, err3 := commandAndRuleEngine.Testcases.VerifyTestCaseHashSinceLoadedOrSaved(currentTestCaseUuid)
-	fmt.Println("IS TestCase-Hash the changed since TestCase was Saved or Loaded", TestCaseHashHasChangedSincesSavedOrLoaded, err3)
-
-
+	TestCaseHashHasChangedSincesSavedOrLoaded, err3 := commandAndRuleEngine.Testcases.TestCaseHashIsChangedSinceLoadedOrSaved(currentTestCaseUuid)
+	fmt.Println("IS TestCase-Hash the changed since TestCase was Saved or Loaded", TestCaseHashHasChangedSincesSavedOrLoaded, err3, currentTestCaseUuid)
 
 }
 

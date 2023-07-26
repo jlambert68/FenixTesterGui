@@ -6,6 +6,7 @@ import (
 	"FenixTesterGui/executions/executionsModelForSubscriptions"
 	"FenixTesterGui/grpc_out_GuiExecutionServer"
 	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testCase/testCaseUI"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -233,14 +234,51 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChan
 	}
 
 	// If this is an already saved TestCase then check if there are changes in Database
+	var testCaseHashIsTheSame bool
+	var err2 error
 	if tempTestCase.ThisIsANewTestCase == false {
-		testCaseHashIsTheSame, err2 := commandAndRuleEngine.Testcases.VerifyTestCaseHashTowardsDatabase(currentTestCaseUuid)
+		testCaseHashIsTheSame, err2 = commandAndRuleEngine.Testcases.VerifyTestCaseHashTowardsDatabase(currentTestCaseUuid)
 		fmt.Println("Is TestCase-Hash the same as Database-hash", testCaseHashIsTheSame, err2, currentTestCaseUuid)
 	}
 
 	// Check if current TestCase-hash has changed since TestCase was Saved or Loaded
 	TestCaseHashHasChangedSincesSavedOrLoaded, err3 := commandAndRuleEngine.Testcases.TestCaseHashIsChangedSinceLoadedOrSaved(currentTestCaseUuid)
 	fmt.Println("IS TestCase-Hash the changed since TestCase was Saved or Loaded", TestCaseHashHasChangedSincesSavedOrLoaded, err3, currentTestCaseUuid)
+
+	// Generate short version of UUID to put in TestCase Tab-Name
+	var shortUUid string
+	var tabName string
+	var testCaseName string
+	testCaseName = tempTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseName
+
+	shortUUid = commandAndRuleEngine.Testcases.GenerateShortUuidFromFullUuid(currentTestCaseUuid)
+
+	// Shorten Tab-name if name is longer then 'testCaseTabNameVisibleLength'
+	if len(testCaseName) > testCaseUI.TestCaseTabNameVisibleLength {
+		tabName = testCaseName[0:testCaseUI.TestCaseTabNameVisibleLength]
+	} else {
+		tabName = testCaseName
+	}
+
+	tabName = tabName + " [" + shortUUid + "]"
+
+	if tempTestCase.ThisIsANewTestCase == true {
+		// New TestCase
+		tabName = tabName + " (*)"
+	} else {
+		if testCaseHashIsTheSame == false {
+			// TestCase changed in Database
+			tabName = tabName + " (X)"
+		} else {
+			if TestCaseHashHasChangedSincesSavedOrLoaded == true {
+				// TestCase updated in UI
+				tabName = tabName + " (*)"
+			}
+		}
+	}
+
+	testCaseUI.TempTestCasesUiCanvasObject.TestCasesTabs.Selected().Text = tabName
+	testCaseUI.TempTestCasesUiCanvasObject.TestCasesTabs.Refresh()
 
 }
 

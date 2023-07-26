@@ -13,7 +13,7 @@ import (
 )
 
 const testCaseNodeRectangleSize = 40
-const testCaseTabNameVisibleLength = 50
+const TestCaseTabNameVisibleLength = 50
 
 // TestCaseUiStruct
 // This structure holds all UI-objects for all the TestCases

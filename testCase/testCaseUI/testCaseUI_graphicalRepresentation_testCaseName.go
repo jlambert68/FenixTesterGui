@@ -61,11 +61,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseNameArea(
 
 		shortUUid = testCasesUiCanvasObject.TestCasesModelReference.GenerateShortUuidFromFullUuid(testCaseUuid)
 
-		// Shorten Tab-name if name is longer then 'testCaseTabNameVisibleLength'
-		if len(trimmedValue) > testCaseTabNameVisibleLength {
-			tabName = trimmedValue[0:testCaseTabNameVisibleLength] + " [" + shortUUid + "]"
+		// Shorten Tab-name if name is longer then 'TestCaseTabNameVisibleLength'
+		if len(trimmedValue) > TestCaseTabNameVisibleLength {
+			tabName = trimmedValue[0:TestCaseTabNameVisibleLength] + " [" + shortUUid + "] (*)"
 		} else {
-			tabName = trimmedValue + " [" + shortUUid + "]"
+			tabName = trimmedValue + " [" + shortUUid + "] (*)"
 		}
 
 		testCasesUiCanvasObject.TestCasesTabs.Selected().Text = tabName

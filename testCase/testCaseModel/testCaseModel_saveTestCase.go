@@ -438,18 +438,18 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 
 	var valuesToReHash []string
 
+	// NonEditableInformation, start by clearing Version because it s not the same after save to Database
+	currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.TestCaseVersion = 0
 	tempNonEditableInformation := fmt.Sprint(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation)
 	hashNonEditableInformation := sharedCode.HashSingleValue(tempNonEditableInformation)
 	valuesToReHash = append(valuesToReHash, hashNonEditableInformation)
 
+	// EditableInformation
 	tempEditableInformation := fmt.Sprint(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation)
 	hashEditableInformation := sharedCode.HashSingleValue(tempEditableInformation)
 	valuesToReHash = append(valuesToReHash, hashEditableInformation)
 
-	//tempTestCaseModelAsString := fmt.Sprint(currentTestCase.TextualTestCaseRepresentationExtendedStack)
-	//hashTestCaseModelAsString := sharedCode.HashSingleValue(tempTestCaseModelAsString)
-	//valuesToReHash = append(valuesToReHash, hashTestCaseModelAsString)
-
+	// FirstMatureElementUuid
 	tempFirstMatureElementUuid := fmt.Sprint(currentTestCase.FirstElementUuid)
 	hashFirstMatureElementUuid := sharedCode.HashSingleValue(tempFirstMatureElementUuid)
 	valuesToReHash = append(valuesToReHash, hashFirstMatureElementUuid)

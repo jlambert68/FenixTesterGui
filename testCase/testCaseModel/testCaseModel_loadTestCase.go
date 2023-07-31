@@ -185,7 +185,7 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 
 	// Create temporary instance to be used for verifying of Hash
 	var tempTestCaseUuid string
-	tempTestCaseUuid = "temp_" + tempTestCaseUuid
+	tempTestCaseUuid = "temp_" + testCaseUuid
 
 	testCaseModel.TestCases[tempTestCaseUuid] = tempTestCaseModel
 
@@ -193,7 +193,10 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 	var generatedHash string
 	_, _, _, _, generatedHash, err = testCaseModel.generateTestCaseForGrpcAndHash(tempTestCaseUuid)
 	if err != nil {
+
+		// Remove temporary stored TestCase
 		delete(testCaseModel.TestCases, tempTestCaseUuid)
+
 		return err
 	}
 
@@ -202,14 +205,23 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 
 		errorId := "ab73a9b8-386c-4ee4-8c6b-594850acdebf"
 		err = errors.New(fmt.Sprintf("after loading testcase '%s', from database, the Hash that is recreated ('%s') is not the"+
-			" same as the one stored in database ('%') [ErrorID: %s]",
+			" same as the one stored in database ('%s') [ErrorID: %s]",
 			testCaseUuid, generatedHash, detailedTestCaseResponse.DetailedTestCase.MessageHash, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
+		// Remove temporary stored TestCase
+		delete(testCaseModel.TestCases, tempTestCaseUuid)
+
 		return err
 
 	}
+
+	// Add TestCase to map with TestCases
+	testCaseModel.TestCases[testCaseUuid] = tempTestCaseModel
+
+	// Remove temporary stored TestCase
+	delete(testCaseModel.TestCases, tempTestCaseUuid)
 
 	return err
 

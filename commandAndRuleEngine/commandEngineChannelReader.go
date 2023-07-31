@@ -114,7 +114,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSave
 
 	}
 
-	fmt.Sprintf("TestCase '%s' was saved in Cloud-DB", currentTestCaseUuid)
+	fmt.Println(fmt.Sprintf("TestCase '%s' was saved in Cloud-DB", currentTestCaseUuid))
 
 	// Extract the current TestCase UI model
 	testCase_Model, existsInMap := commandAndRuleEngine.Testcases.TestCases[currentTestCaseUuid]
@@ -347,6 +347,7 @@ func runPopUp(w fyne.Window, uuidChannel chan<- string) (modal *widget.PopUp) {
 	var closeButton *widget.Button
 
 	uuidEntryBox = widget.NewEntry()
+
 	okButton = widget.NewButton("Ok", func() {
 		modal.Hide()
 		uuidChannel <- uuidEntryBox.Text
@@ -372,7 +373,12 @@ func runPopUp(w fyne.Window, uuidChannel chan<- string) (modal *widget.PopUp) {
 		vBoxContainer,
 		w.Canvas(),
 	)
+
 	modal.Show()
+
+	// Set the focus on the entry box
+	w.Canvas().Focus(uuidEntryBox)
+
 	return modal
 }
 

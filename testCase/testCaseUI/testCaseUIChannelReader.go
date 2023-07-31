@@ -31,6 +31,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) startGUICommandChannelRea
 		case sharedCode.ChannelCommandGraphicsUpdatedSelectTestCaseTabBasedOnTestCaseUuid:
 			testCasesUiCanvasObject.selectTestCaseTabBasedOnTestCaseUuid(incomingChannelCommandGraphicsUpdatedData)
 
+		case sharedCode.ChannelCommandGraphicsUpdatedUpdateTestCaseTabName:
+			testCasesUiCanvasObject.updatedUpdateTestCaseTabName(incomingChannelCommandGraphicsUpdatedData)
+
 		default:
 			errorId := "388e2a87-1d0e-4db3-8dcf-18a69ac1faa4"
 			err := errors.New(fmt.Sprintf("unknow 'incomingChannelCommandGraphicsUpdatedData', [ErrorID: %s]", errorId))
@@ -127,5 +130,13 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) selectTestCaseTabBasedOnT
 
 		return
 	}
+
+}
+
+// Update that tab name for the TestCase
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) updatedUpdateTestCaseTabName(incomingChannelCommandGraphicsUpdatedData sharedCode.ChannelCommandGraphicsUpdatedStruct) {
+
+	testCasesUiCanvasObject.TestCasesTabs.Selected().Text = incomingChannelCommandGraphicsUpdatedData.TestCaseTabName
+	testCasesUiCanvasObject.TestCasesTabs.Refresh()
 
 }

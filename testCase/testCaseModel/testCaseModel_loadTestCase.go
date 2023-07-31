@@ -31,9 +31,9 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 		LastLoadedTestCaseModelGRPCMessage:         *detailedTestCaseResponse.DetailedTestCase.TestCaseBasicInformation.TestCaseModel, // fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage{},
 		FirstElementUuid:                           detailedTestCaseResponse.DetailedTestCase.TestCaseBasicInformation.TestCaseModel.FirstMatureElementUuid,
 		TestCaseModelMap:                           nil, // Created below
-		TextualTestCaseRepresentationSimpleStack:   nil,
-		TextualTestCaseRepresentationComplexStack:  nil,
-		TextualTestCaseRepresentationExtendedStack: nil,
+		TextualTestCaseRepresentationSimpleStack:   nil, // Created below
+		TextualTestCaseRepresentationComplexStack:  nil, // Created below
+		TextualTestCaseRepresentationExtendedStack: nil, // Created below
 		CommandStack:                               nil,
 		LastSavedCommandStack:                      lastSavedCommandStack{},
 		CopyBuffer:                                 ImmatureElementStruct{},
@@ -151,6 +151,30 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 			TestInstructionContainerMatureUuid] = tempMatureTestInstructionContainer
 	}
 
+	// Generate TextualTestCaseRepresentationSimpleStack
+	for _, tempTextualTestCaseRepresentationSimpleInstance := range detailedTestCaseResponse.DetailedTestCase.
+		TestCaseExtraInformation.TestCaseTextualRepresentationHistory.TextualTestCaseRepresentationSimpleHistory {
+
+		tempTestCaseModel.TextualTestCaseRepresentationSimpleStack =
+			append(tempTestCaseModel.TextualTestCaseRepresentationSimpleStack, tempTextualTestCaseRepresentationSimpleInstance)
+	}
+
+	//Generate TextualTestCaseRepresentationComplexStack
+	for _, tempTextualTestCaseRepresentationComplexInstance := range detailedTestCaseResponse.DetailedTestCase.
+		TestCaseExtraInformation.TestCaseTextualRepresentationHistory.TextualTestCaseRepresentationComplexHistory {
+
+		tempTestCaseModel.TextualTestCaseRepresentationComplexStack =
+			append(tempTestCaseModel.TextualTestCaseRepresentationComplexStack, tempTextualTestCaseRepresentationComplexInstance)
+	}
+
+	// Generate TextualTestCaseRepresentationExtendedStack
+	for _, tempTextualTestCaseRepresentationExtendedInstance := range detailedTestCaseResponse.DetailedTestCase.
+		TestCaseExtraInformation.TestCaseTextualRepresentationHistory.TextualTestCaseRepresentationExtendedStackHistory {
+
+		tempTestCaseModel.TextualTestCaseRepresentationExtendedStack =
+			append(tempTestCaseModel.TextualTestCaseRepresentationExtendedStack, tempTextualTestCaseRepresentationExtendedInstance)
+	}
+
 	// Update The Hash for the TestCase
 	tempTestCaseModel.TestCaseHashWhenTestCaseWasSavedOrLoaded = detailedTestCaseResponse.DetailedTestCase.MessageHash
 
@@ -158,7 +182,34 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 	if testCaseModel.TestCases == nil {
 		testCaseModel.TestCases = make(map[string]TestCaseModelStruct)
 	}
-	testCaseModel.TestCases[tempTestCaseModel.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.TestCaseUuid] = tempTestCaseModel
+
+	// Create temporary instance to be used for verifying of Hash
+	var tempTestCaseUuid string
+	tempTestCaseUuid = "temp_" + tempTestCaseUuid
+
+	testCaseModel.TestCases[tempTestCaseUuid] = tempTestCaseModel
+
+	// Verify that calculated Hash is the same as the Stored Hash from the Database
+	var generatedHash string
+	_, _, _, _, generatedHash, err = testCaseModel.generateTestCaseForGrpcAndHash(tempTestCaseUuid)
+	if err != nil {
+		delete(testCaseModel.TestCases, tempTestCaseUuid)
+		return err
+	}
+
+	// Check hash towards Hash from the Database
+	if generatedHash != detailedTestCaseResponse.DetailedTestCase.MessageHash {
+
+		errorId := "ab73a9b8-386c-4ee4-8c6b-594850acdebf"
+		err = errors.New(fmt.Sprintf("after loading testcase '%s', from database, the Hash that is recreated ('%s') is not the"+
+			" same as the one stored in database ('%') [ErrorID: %s]",
+			testCaseUuid, generatedHash, detailedTestCaseResponse.DetailedTestCase.MessageHash, errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return err
+
+	}
 
 	return err
 

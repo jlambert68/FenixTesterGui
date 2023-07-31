@@ -26,10 +26,69 @@ func (testCaseModel *TestCasesModelsStruct) VerifyTestCaseHashTowardsDatabase(te
 
 	// Create TestCase-hash
 	var testcaseHash string
-	_, _, _, testcaseHash, err = testCaseModel.generateTestCaseForGrpcAndHash(testCaseUuid)
+	_, _, _, _, testcaseHash, err = testCaseModel.generateTestCaseForGrpcAndHash(testCaseUuid)
 	if err != nil {
 		return false, err
 	}
+
+	// Get Hash from Database via gRPC
+	var testCaseHashRespons *fenixGuiTestCaseBuilderServerGrpcApi.TestCasesHashResponse
+	var testCaseUuidList []string
+	testCaseUuidList = []string{testCaseUuid}
+
+	// Some error when retrieving from Database
+	testCaseHashRespons = testCaseModel.GrpcOutReference.LoadHashesForTestCases(testCaseModel.CurrentUser, testCaseUuidList)
+	if testCaseHashRespons.AckNack.AckNack == false {
+		errorId := "eadc89a7-eb1d-4c96-b89d-5a2f98996a2a"
+		err = errors.New(fmt.Sprintf("Couldn't get Hash stored in Database for testcase '%s'. Message returned: '%s' [ErrorID: %s]", testCaseUuid, testCaseHashRespons.AckNack.Comments, errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return false, err
+	}
+
+	// More than one Hash was returned
+	if len(testCaseHashRespons.TestCasesHashes) > 1 {
+		errorId := "63aca654-1a61-43d1-ab1f-4d375633dab5"
+		err = errors.New(fmt.Sprintf("More then one Hash was returned from Database for testcase '%s' [ErrorID: %s]", testCaseUuid, errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return false, err
+	}
+
+	// Check if current Hash is the same as the one stored in Database
+	if testcaseHash == testCaseHashRespons.TestCasesHashes[0].GetTestCaseHash() {
+		hashIsTheSame = true
+	} else {
+		hashIsTheSame = false
+	}
+
+	return hashIsTheSame, err
+}
+
+// VerifyLatestLoadedOrSavedTestCaseHashTowardsDatabase - Verify if the latest Loaded or Saved Hash for the TestCase is the same as the one in the database
+func (testCaseModel *TestCasesModelsStruct) VerifyLatestLoadedOrSavedTestCaseHashTowardsDatabase(testCaseUuid string) (
+	hashIsTheSame bool, err error) {
+
+	var existsInMap bool
+	var tempTestCase TestCaseModelStruct
+
+	// Get current TestCase
+	tempTestCase, existsInMap = testCaseModel.TestCases[testCaseUuid]
+	if existsInMap == false {
+
+		errorId := "959d258d-2f83-46e5-8aba-8655b8fb27b2"
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return false, err
+	}
+
+	// Create TestCase-hash
+	var testcaseHash string
+	testcaseHash = tempTestCase.TestCaseHashWhenTestCaseWasSavedOrLoaded
 
 	// Get Hash from Database via gRPC
 	var testCaseHashRespons *fenixGuiTestCaseBuilderServerGrpcApi.TestCasesHashResponse
@@ -88,7 +147,7 @@ func (testCaseModel *TestCasesModelsStruct) TestCaseHashIsChangedSinceLoadedOrSa
 
 	// Create TestCase-hash
 	var testcaseHash string
-	_, _, _, testcaseHash, err = testCaseModel.generateTestCaseForGrpcAndHash(testCaseUuid)
+	_, _, _, _, testcaseHash, err = testCaseModel.generateTestCaseForGrpcAndHash(testCaseUuid)
 	if err != nil {
 		return false, err
 	}

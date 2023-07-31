@@ -15,7 +15,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/pat v1.0.1
 	github.com/gorilla/sessions v1.2.1
-	github.com/jlambert68/FenixGrpcApi v0.0.0-20230723063857-8d0e59cd1bd4
+	github.com/jlambert68/FenixGrpcApi v0.0.0-20230731121334-23937bae569f
 	github.com/markbates/goth v1.73.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.8.1

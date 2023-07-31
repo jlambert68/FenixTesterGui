@@ -40,11 +40,13 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 		gRPCMatureTestCaseModelElementMessage []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
 		gRPCMatureTestInstructions            []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage_MatureTestInstructionMessage
 		gRPCMatureTestInstructionContainers   []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage_MatureTestInstructionContainerMessage
+		gRPCTestCaseExtraInformation          *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExtraInformationMessage
 		finalHash                             string
 	)
 	gRPCMatureTestCaseModelElementMessage,
 		gRPCMatureTestInstructions,
 		gRPCMatureTestInstructionContainers,
+		gRPCTestCaseExtraInformation,
 		finalHash, err = testCaseModel.generateTestCaseForGrpcAndHash(testCaseUuid)
 	if err != nil {
 		return err
@@ -99,7 +101,8 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 		},
 		MatureTestInstructionContainers: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage{
 			MatureTestInstructionContainers: gRPCMatureTestInstructionContainers},
-		MessageHash: currentTestCase.TestCaseHash,
+		MessageHash:              currentTestCase.TestCaseHash,
+		TestCaseExtraInformation: gRPCTestCaseExtraInformation,
 	}
 
 	// Send using gRPC
@@ -300,11 +303,95 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseModelElementsForGrpc
 	return gRPCMatureTestCaseModelElements, hashedSlice, err
 }
 
+// Convert the TestCaseExtraInformationMessage into its gRPC-version
+// Containing: 1) Textual Representation of TestCase
+func (testCaseModel *TestCasesModelsStruct) generateTestCaseExtraInformationForGrpc(testCaseUuid string) (gRPCTestCaseExtraInformation *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExtraInformationMessage, hashedSlice string, err error) {
+
+	// Get current TestCase
+	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+	if existsInMap == false {
+
+		errorId := "e6fbdfdc-e0dc-4dd8-8ab1-b6be82b9e9fe"
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return nil, "", err
+	}
+
+	// Secure that the number of Textual Models are the same
+	var (
+		numberSimpleModels   int
+		numberComplexModels  int
+		numberExtendedModels int
+	)
+	numberSimpleModels = len(currentTestCase.TextualTestCaseRepresentationSimpleStack)
+	numberComplexModels = len(currentTestCase.TextualTestCaseRepresentationComplexStack)
+	numberExtendedModels = len(currentTestCase.TextualTestCaseRepresentationExtendedStack)
+
+	if numberSimpleModels != numberComplexModels && numberComplexModels != numberExtendedModels {
+
+		errorId := "eb939008-eb50-40c6-91c5-64e4d1f597a1"
+		err = errors.New(fmt.Sprintf("for testcase '%s', the number of Simple, Complex and Extended  models doesn't match. "+
+			"'numberSimpleModels': '%d', 'numberComplexModels': '%d', 'numberExtendedModels': '%d', [ErrorID: %s]",
+			testCaseUuid, numberSimpleModels, numberComplexModels, numberExtendedModels, errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return nil, "", err
+	}
+
+	var hashSlice []string
+
+	var tempTestCaseTextualRepresentationHistory fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExtraInformationMessage_TestCaseTextualRepresentationHistoryMessage
+	tempTestCaseTextualRepresentationHistory = fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExtraInformationMessage_TestCaseTextualRepresentationHistoryMessage{
+		TextualTestCaseRepresentationSimpleHistory:        nil,
+		TextualTestCaseRepresentationComplexHistory:       nil,
+		TextualTestCaseRepresentationExtendedStackHistory: nil,
+	}
+
+	// Loop map with all 'tempTestCaseTextualRepresentationHistory' in the TestCase and add to gPRC-version
+	for modelCounter := 0; modelCounter < numberSimpleModels; modelCounter++ {
+
+		// Simple
+		tempTestCaseTextualRepresentationHistory.TextualTestCaseRepresentationSimpleHistory =
+			append(tempTestCaseTextualRepresentationHistory.TextualTestCaseRepresentationSimpleHistory,
+				currentTestCase.TextualTestCaseRepresentationSimpleStack[modelCounter])
+
+		// Complex
+		tempTestCaseTextualRepresentationHistory.TextualTestCaseRepresentationComplexHistory =
+			append(tempTestCaseTextualRepresentationHistory.TextualTestCaseRepresentationComplexHistory,
+				currentTestCase.TextualTestCaseRepresentationComplexStack[modelCounter])
+
+		// Extended
+		tempTestCaseTextualRepresentationHistory.TextualTestCaseRepresentationExtendedStackHistory =
+			append(tempTestCaseTextualRepresentationHistory.TextualTestCaseRepresentationExtendedStackHistory,
+				currentTestCase.TextualTestCaseRepresentationExtendedStack[modelCounter])
+
+	}
+
+	// Generate Hash for  'tempTestCaseTextualRepresentationHistory'
+	tempJson := protojson.Format(&tempTestCaseTextualRepresentationHistory)
+	hashSlice = append(hashSlice, tempJson)
+
+	// Generate Hash of all sub-message-hashes
+	hashedSlice = sharedCode.HashValues(hashSlice, false)
+
+	// Create return message 'gRPCTestCaseExtraInformation'
+	gRPCTestCaseExtraInformation = &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExtraInformationMessage{
+		TestCaseTextualRepresentationHistory: &tempTestCaseTextualRepresentationHistory,
+	}
+
+	return gRPCTestCaseExtraInformation, hashedSlice, err
+
+}
+
 // Pack different parts of the TestCase into gRPC-version into one message together with Hash of TestCase
 func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testCaseUuid string) (
 	gRPCMatureTestCaseModelElementMessage []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage,
 	gRPCMatureTestInstructions []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage_MatureTestInstructionMessage,
 	gRPCMatureTestInstructionContainers []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage_MatureTestInstructionContainerMessage,
+	gRPCTestCaseExtraInformation *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExtraInformationMessage,
 	finalHash string,
 	err error) {
 
@@ -317,7 +404,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 
 		fmt.Println(err) // TODO Send on Error-channel
 
-		return nil, nil, nil, "", err
+		return nil, nil, nil, nil, "", err
 	}
 
 	// Convert map-messages into gRPC-version, mostly arrays
@@ -325,21 +412,28 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	var hashedMatureTestCaseModelElements string
 	gRPCMatureTestCaseModelElementMessage, hashedMatureTestCaseModelElements, err = testCaseModel.generateTestCaseModelElementsForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, "", err
+		return nil, nil, nil, nil, "", err
 	}
 
 	// TestInstructions
 	var hashedgRPCMatureTestInstructions string
 	gRPCMatureTestInstructions, hashedgRPCMatureTestInstructions, err = testCaseModel.generateMatureTestInstructionsForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, "", err
+		return nil, nil, nil, nil, "", err
 	}
 
 	// TestInstructionContainers
 	var hashedgRPCMatureTestInstructionContainers string
 	gRPCMatureTestInstructionContainers, hashedgRPCMatureTestInstructionContainers, err = testCaseModel.generateMatureTestInstructionContainersForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, "", err
+		return nil, nil, nil, nil, "", err
+	}
+
+	// TestCaseExtraInformation
+	var hashedgRPCTestCaseExtraInformation string
+	gRPCTestCaseExtraInformation, hashedgRPCTestCaseExtraInformation, err = testCaseModel.generateTestCaseExtraInformationForGrpc(testCaseUuid)
+	if err != nil {
+		return nil, nil, nil, nil, "", err
 	}
 
 	var valuesToReHash []string
@@ -352,9 +446,9 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	hashEditableInformation := sharedCode.HashSingleValue(tempEditableInformation)
 	valuesToReHash = append(valuesToReHash, hashEditableInformation)
 
-	tempTestCaseModelAsString := fmt.Sprint(currentTestCase.TextualTestCaseRepresentationExtendedStack)
-	hashTestCaseModelAsString := sharedCode.HashSingleValue(tempTestCaseModelAsString)
-	valuesToReHash = append(valuesToReHash, hashTestCaseModelAsString)
+	//tempTestCaseModelAsString := fmt.Sprint(currentTestCase.TextualTestCaseRepresentationExtendedStack)
+	//hashTestCaseModelAsString := sharedCode.HashSingleValue(tempTestCaseModelAsString)
+	//valuesToReHash = append(valuesToReHash, hashTestCaseModelAsString)
 
 	tempFirstMatureElementUuid := fmt.Sprint(currentTestCase.FirstElementUuid)
 	hashFirstMatureElementUuid := sharedCode.HashSingleValue(tempFirstMatureElementUuid)
@@ -366,11 +460,14 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 
 	valuesToReHash = append(valuesToReHash, hashedgRPCMatureTestInstructionContainers)
 
+	valuesToReHash = append(valuesToReHash, hashedgRPCTestCaseExtraInformation)
+
 	finalHash = sharedCode.HashValues(valuesToReHash, false)
 
 	return gRPCMatureTestCaseModelElementMessage,
 		gRPCMatureTestInstructions,
 		gRPCMatureTestInstructionContainers,
+		gRPCTestCaseExtraInformation,
 		finalHash,
 		err
 

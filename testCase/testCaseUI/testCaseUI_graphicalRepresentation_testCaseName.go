@@ -1,6 +1,7 @@
 package testCaseUI
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -62,8 +63,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseNameArea(
 		shortUUid = testCasesUiCanvasObject.TestCasesModelReference.GenerateShortUuidFromFullUuid(testCaseUuid)
 
 		// Shorten Tab-name if name is longer then 'TestCaseTabNameVisibleLength'
-		if len(trimmedValue) > TestCaseTabNameVisibleLength {
-			tabName = trimmedValue[0:TestCaseTabNameVisibleLength] + " [" + shortUUid + "] (*)"
+		if len(trimmedValue) > sharedCode.TestCaseTabNameVisibleLength {
+			tabName = trimmedValue[0:sharedCode.TestCaseTabNameVisibleLength] + " [" + shortUUid + "] (*)"
 		} else {
 			tabName = trimmedValue + " [" + shortUUid + "] (*)"
 		}

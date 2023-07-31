@@ -43,6 +43,7 @@ type ChannelCommandGraphicsUpdatedStruct struct {
 	TextualTestCaseComplex       string
 	TextualTestCaseExtended      string
 	TestInstructionUuid          string
+	TestCaseTabName              string
 }
 
 type ChannelCommandGraphicsUpdatedType uint8
@@ -52,6 +53,7 @@ const (
 	ChannelCommandGraphicsUpdatedUpdateTestCaseGraphics
 	ChannelCommandGraphicsUpdatedSelectTestInstruction
 	ChannelCommandGraphicsUpdatedSelectTestCaseTabBasedOnTestCaseUuid
+	ChannelCommandGraphicsUpdatedUpdateTestCaseTabName
 )
 
 // BuildingBlock - Used for defining which type of element that user dragged from available building blocks tree
@@ -73,3 +75,6 @@ var ApplicationRunTimeUuid string
 var CurrentUserId string
 
 const ZeroUuid = "00000000-0000-0000-0000-000000000000"
+
+// The number of characters to be shown in TestCase name on the Tab
+const TestCaseTabNameVisibleLength = 50

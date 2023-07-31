@@ -6,7 +6,6 @@ import (
 	"FenixTesterGui/executions/executionsModelForSubscriptions"
 	"FenixTesterGui/grpc_out_GuiExecutionServer"
 	"FenixTesterGui/testCase/testCaseModel"
-	"FenixTesterGui/testCase/testCaseUI"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -115,7 +114,50 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSave
 
 	}
 
-	fmt.Println("TestCase was saved in Cloud-DB")
+	fmt.Sprintf("TestCase '%s' was saved in Cloud-DB", currentTestCaseUuid)
+
+	// Extract the current TestCase UI model
+	testCase_Model, existsInMap := commandAndRuleEngine.Testcases.TestCases[currentTestCaseUuid]
+	if existsInMap == false {
+		errorId := "a08730c6-aa91-4b03-9144-eeeccc153d96"
+		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCases [ErrorID: %s]", currentTestCaseUuid, errorId))
+
+		//TODO Send ERRORS over error-channel
+		fmt.Println(err)
+
+		return
+
+	}
+
+	// Generate short version of UUID to put in TestCase Tab-Name
+	var shortUUid string
+	var tabName string
+	var testCaseName string
+	testCaseName = testCase_Model.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseName
+
+	shortUUid = commandAndRuleEngine.Testcases.GenerateShortUuidFromFullUuid(currentTestCaseUuid)
+
+	// Shorten Tab-name if name is longer then 'testCaseTabNameVisibleLength'
+	if len(testCaseName) > sharedCode.TestCaseTabNameVisibleLength {
+		tabName = testCaseName[0:sharedCode.TestCaseTabNameVisibleLength]
+	} else {
+		tabName = testCaseName
+	}
+
+	tabName = tabName + " [" + shortUUid + "]"
+
+	// Send 'update TestCase name for Tab' command over channel
+	outgoingChannelCommandGraphicsUpdatedData := sharedCode.ChannelCommandGraphicsUpdatedStruct{
+		ChannelCommandGraphicsUpdate: sharedCode.ChannelCommandGraphicsUpdatedUpdateTestCaseTabName,
+		CreateNewTestCaseUI:          false,
+		ActiveTestCase:               currentTestCaseUuid,
+		TextualTestCaseSimple:        "",
+		TextualTestCaseComplex:       "",
+		TextualTestCaseExtended:      "",
+		TestCaseTabName:              tabName,
+	}
+
+	*commandAndRuleEngine.GraphicsUpdateChannelReference <- outgoingChannelCommandGraphicsUpdatedData
 
 }
 
@@ -233,11 +275,14 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChan
 		return
 	}
 
+	// Set Active TestCase
+	commandAndRuleEngine.Testcases.CurrentActiveTestCaseUuid = currentTestCaseUuid
+
 	// If this is an already saved TestCase then check if there are changes in Database
 	var testCaseHashIsTheSame bool
 	var err2 error
 	if tempTestCase.ThisIsANewTestCase == false {
-		testCaseHashIsTheSame, err2 = commandAndRuleEngine.Testcases.VerifyTestCaseHashTowardsDatabase(currentTestCaseUuid)
+		testCaseHashIsTheSame, err2 = commandAndRuleEngine.Testcases.VerifyLatestLoadedOrSavedTestCaseHashTowardsDatabase(currentTestCaseUuid)
 		fmt.Println("Is TestCase-Hash the same as Database-hash", testCaseHashIsTheSame, err2, currentTestCaseUuid)
 	}
 
@@ -254,8 +299,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChan
 	shortUUid = commandAndRuleEngine.Testcases.GenerateShortUuidFromFullUuid(currentTestCaseUuid)
 
 	// Shorten Tab-name if name is longer then 'testCaseTabNameVisibleLength'
-	if len(testCaseName) > testCaseUI.TestCaseTabNameVisibleLength {
-		tabName = testCaseName[0:testCaseUI.TestCaseTabNameVisibleLength]
+	if len(testCaseName) > sharedCode.TestCaseTabNameVisibleLength {
+		tabName = testCaseName[0:sharedCode.TestCaseTabNameVisibleLength]
 	} else {
 		tabName = testCaseName
 	}
@@ -277,8 +322,18 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChan
 		}
 	}
 
-	testCaseUI.TempTestCasesUiCanvasObject.TestCasesTabs.Selected().Text = tabName
-	testCaseUI.TempTestCasesUiCanvasObject.TestCasesTabs.Refresh()
+	// Send 'update TestCase name for Tab' command over channel
+	outgoingChannelCommandGraphicsUpdatedData := sharedCode.ChannelCommandGraphicsUpdatedStruct{
+		ChannelCommandGraphicsUpdate: sharedCode.ChannelCommandGraphicsUpdatedUpdateTestCaseTabName,
+		CreateNewTestCaseUI:          false,
+		ActiveTestCase:               currentTestCaseUuid,
+		TextualTestCaseSimple:        "",
+		TextualTestCaseComplex:       "",
+		TextualTestCaseExtended:      "",
+		TestCaseTabName:              tabName,
+	}
+
+	*commandAndRuleEngine.GraphicsUpdateChannelReference <- outgoingChannelCommandGraphicsUpdatedData
 
 }
 

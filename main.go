@@ -5,6 +5,7 @@ import (
 	"FenixTesterGui/grpc_out_GuiExecutionServer"
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	_ "embed"
+	"net/http"
 	"strconv"
 
 	//"flag"
@@ -14,6 +15,8 @@ import (
 
 	"github.com/getlantern/systray"
 	"github.com/getlantern/systray/example/icon"
+
+	_ "net/http/pprof"
 )
 
 // Embedded resources into the binary
@@ -62,6 +65,10 @@ func main() {
 	if sharedCode.RunAsTrayApplication == true {
 		go systray.Run(onReady, onExit)
 	}
+
+	go func() {
+		log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
 
 	fenixGuiBuilderServerMain()
 }

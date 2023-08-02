@@ -43,7 +43,7 @@ func (testCaseModel *TestCasesModelsStruct) VerifyThatThereAreNoZombieElementsIn
 }
 
 // CreateTextualTestCase
-// Create Textual TestCase Representaions
+// Create Textual TestCase Representations
 func (testCaseModel *TestCasesModelsStruct) CreateTextualTestCase(testCaseUuid string) (textualTestCaseSimple string, textualTestCaseComplex string, textualTestCaseExtended string, err error) {
 
 	// Get current TestCase
@@ -313,7 +313,7 @@ func (testCaseModel *TestCasesModelsStruct) GenerateShortUuidFromFullUuid(fullUu
 	return shortUuid
 }
 
-//GetTestCaseNameUuid
+// GetTestCaseNameUuid
 // Retrieve TestCaseName from TestCase based on UUID
 func (testCaseModel *TestCasesModelsStruct) GetTestCaseNameUuid(testCaseUuid string) (testCaseName string, err error) {
 

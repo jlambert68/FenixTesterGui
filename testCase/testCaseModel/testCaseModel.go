@@ -136,7 +136,10 @@ func (testCaseModel *TestCasesModelsStruct) generateUINameForTestCaseElement(ele
 }
 
 // Generate the slice with the elements in the TestCase. Order is the same as in the Textual Representation of the TestCase
-func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid string, currentElementsUuid string, treeViewNodeChildrenIn []TestCaseModelAdaptedForUiTreeDataStruct) (treeViewNodeChildrenOut []TestCaseModelAdaptedForUiTreeDataStruct, err error) {
+func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelExtractor(
+	testCaseUuid string,
+	currentElementsUuid string, treeViewNodeChildrenIn []TestCaseModelAdaptedForUiTreeDataStruct) (
+	treeViewNodeChildrenOut []TestCaseModelAdaptedForUiTreeDataStruct, err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]

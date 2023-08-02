@@ -165,6 +165,7 @@ func (t *DraggableLabel) Dragged(ev *fyne.DragEvent) {
 		return
 
 	case sourceStateGrabs:
+
 		// switch state to 'sourceStateDragging'
 		switchStateForSource(sourceStateDragging)
 		stateMachineDragAndDrop.SourceUuid = t.SourceUuid
@@ -472,6 +473,7 @@ func switchStateForTarget(newState int) {
 }
 
 func expandDropAreas() {
+
 	for _, targetLabel := range stateMachineDragAndDrop.registeredDroppableTargetLabels {
 
 		rectangleWidth := float32(500)
@@ -530,6 +532,7 @@ func expandDropAreas() {
 			}
 		}()
 	*/
+
 }
 
 func shrinkDropAreas() {

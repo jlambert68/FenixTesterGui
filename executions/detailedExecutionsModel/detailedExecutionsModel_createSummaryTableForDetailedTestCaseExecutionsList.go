@@ -46,18 +46,18 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() *fyne.Container {
 */
 
 /*
-	#b6d7a8	INITIATED = 0; // All set up for execution, but has not been triggered to start execution
-	#ffff00	EXECUTING = 1; // TestInstruction is execution
-	#4a86e8	CONTROLLED_INTERRUPTION = 2; // Interrupted by in a controlled way
-	#4a86e8	CONTROLLED_INTERRUPTION_CAN_BE_RERUN = 3; // Interrupted by in a controlled way, but can be rerun
-	#00ff00	FINISHED_OK = 4; // Finish as expected to TestInstruction definition
-	#00ff00	FINISHED_OK_CAN_BE_RERUN = 5; // Finish as expected to TestInstruction definition, but can be rerun
-	#ff0000	FINISHED_NOT_OK = 6; // Finish with errors in validations
-	#ff0000	FINISHED_NOT_OK_CAN_BE_RERUN = 7; // Finish with errors in validations, but can be rerun
-	#9900ff	UNEXPECTED_INTERRUPTION = 8; // The TestInstruction stopped executed in an unexpected way
-	#9900ff	UNEXPECTED_INTERRUPTION_CAN_BE_RERUN = 9; // The TestInstruction stopped executed in an unexpected way, but can be rerun
-	#fbbc04	TIMEOUT_INTERRUPTION = 10; // The TestInstruction had a forced stop because of timeout due to {time.Now() > 'ExpectedExecutionEndTimeStamp'}
-	#fbbc04	TIMEOUT_INTERRUPTION_CAN_BE_RERUN = 11; // The TestInstruction had a forced stop because of timeout due to {time.Now() > 'ExpectedExecutionEndTimeStamp'}, but can be rerun
+	#b6d7a8	INITIATED = 1; // All set up for execution, but has not been triggered to start execution
+	#ffff00	EXECUTING = 2; // TestInstruction is execution
+	#4a86e8	CONTROLLED_INTERRUPTION = 3; // Interrupted by in a controlled way
+	#4a86e8	CONTROLLED_INTERRUPTION_CAN_BE_RERUN = 4; // Interrupted by in a controlled way, but can be rerun
+	#00ff00	FINISHED_OK = 5; // Finish as expected to TestInstruction definition
+	#00ff00	FINISHED_OK_CAN_BE_RERUN = 6; // Finish as expected to TestInstruction definition, but can be rerun
+	#ff0000	FINISHED_NOT_OK = 7; // Finish with errors in validations
+	#ff0000	FINISHED_NOT_OK_CAN_BE_RERUN = 8; // Finish with errors in validations, but can be rerun
+	#9900ff	UNEXPECTED_INTERRUPTION = 9; // The TestInstruction stopped executed in an unexpected way
+	#9900ff	UNEXPECTED_INTERRUPTION_CAN_BE_RERUN = 10; // The TestInstruction stopped executed in an unexpected way, but can be rerun
+	#fbbc04	TIMEOUT_INTERRUPTION = 11; // The TestInstruction had a forced stop because of timeout due to {time.Now() > 'ExpectedExecutionEndTimeStamp'}
+	#fbbc04	TIMEOUT_INTERRUPTION_CAN_BE_RERUN = 12; // The TestInstruction had a forced stop because of timeout due to {time.Now() > 'ExpectedExecutionEndTimeStamp'}, but can be rerun
 */
 
 // ExecutionStatusColorMapStruct
@@ -75,8 +75,8 @@ const backgroundStrokeWidth = 4
 // map[int32]ExecutionStatusColorMapStruct
 // Holds the definitions for which colors should be used in UI for executions
 var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
-	// 'INITIATED = 0'
-	0: ExecutionStatusColorMapStruct{
+	// 'INITIATED = 1'
+	1: ExecutionStatusColorMapStruct{
 		TextColor: color.RGBA{
 			R: 0x00,
 			G: 0x00,
@@ -90,8 +90,8 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 		UseStroke: false,
 	},
 
-	//  'EXECUTING = 1'
-	1: ExecutionStatusColorMapStruct{
+	//  'EXECUTING = 2'
+	2: ExecutionStatusColorMapStruct{
 		TextColor: color.RGBA{
 			R: 0x00,
 			G: 0x00,
@@ -105,22 +105,7 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 		UseStroke: false,
 	},
 
-	// 'CONTROLLED_INTERRUPTION = 2'
-	2: ExecutionStatusColorMapStruct{
-		TextColor: color.RGBA{
-			R: 0x00,
-			G: 0x00,
-			B: 0x00,
-			A: 0xFF},
-		BackgroundColor: color.RGBA{
-			R: 0x4a,
-			G: 0x86,
-			B: 0xe8,
-			A: 0xFF},
-		UseStroke: false,
-	},
-
-	// 'CONTROLLED_INTERRUPTION_CAN_BE_RERUN = 3'
+	// 'CONTROLLED_INTERRUPTION = 3'
 	3: ExecutionStatusColorMapStruct{
 		TextColor: color.RGBA{
 			R: 0x00,
@@ -132,6 +117,21 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 			G: 0x86,
 			B: 0xe8,
 			A: 0xFF},
+		UseStroke: false,
+	},
+
+	// 'CONTROLLED_INTERRUPTION_CAN_BE_RERUN = 4'
+	4: ExecutionStatusColorMapStruct{
+		TextColor: color.RGBA{
+			R: 0x00,
+			G: 0x00,
+			B: 0x00,
+			A: 0xFF},
+		BackgroundColor: color.RGBA{
+			R: 0x4a,
+			G: 0x86,
+			B: 0xe8,
+			A: 0xFF},
 		StrokeColor: color.RGBA{
 			R: 0x00,
 			G: 0xFF,
@@ -140,22 +140,7 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 		UseStroke: true,
 	},
 
-	// 'FINISHED_OK = 4'
-	4: ExecutionStatusColorMapStruct{
-		TextColor: color.RGBA{
-			R: 0x00,
-			G: 0x00,
-			B: 0x00,
-			A: 0xFF},
-		BackgroundColor: color.RGBA{
-			R: 0x00,
-			G: 0xff,
-			B: 0x00,
-			A: 0xFF},
-		UseStroke: false,
-	},
-
-	// 'FINISHED_OK_CAN_BE_RERUN = 5'
+	// 'FINISHED_OK = 5'
 	5: ExecutionStatusColorMapStruct{
 		TextColor: color.RGBA{
 			R: 0x00,
@@ -167,6 +152,21 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 			G: 0xff,
 			B: 0x00,
 			A: 0xFF},
+		UseStroke: false,
+	},
+
+	// 'FINISHED_OK_CAN_BE_RERUN = 6'
+	6: ExecutionStatusColorMapStruct{
+		TextColor: color.RGBA{
+			R: 0x00,
+			G: 0x00,
+			B: 0x00,
+			A: 0xFF},
+		BackgroundColor: color.RGBA{
+			R: 0x00,
+			G: 0xff,
+			B: 0x00,
+			A: 0xFF},
 		StrokeColor: color.RGBA{
 			R: 0x00,
 			G: 0xFF,
@@ -175,22 +175,7 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 		UseStroke: true,
 	},
 
-	// 'FINISHED_NOT_OK = 6'
-	6: ExecutionStatusColorMapStruct{
-		TextColor: color.RGBA{
-			R: 0x00,
-			G: 0x00,
-			B: 0x00,
-			A: 0xFF},
-		BackgroundColor: color.RGBA{
-			R: 0xff,
-			G: 0x00,
-			B: 0x00,
-			A: 0xFF},
-		UseStroke: false,
-	},
-
-	// 'FINISHED_NOT_OK_CAN_BE_RERUN = 7'
+	// 'FINISHED_NOT_OK = 7'
 	7: ExecutionStatusColorMapStruct{
 		TextColor: color.RGBA{
 			R: 0x00,
@@ -202,6 +187,21 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 			G: 0x00,
 			B: 0x00,
 			A: 0xFF},
+		UseStroke: false,
+	},
+
+	// 'FINISHED_NOT_OK_CAN_BE_RERUN = 8'
+	8: ExecutionStatusColorMapStruct{
+		TextColor: color.RGBA{
+			R: 0x00,
+			G: 0x00,
+			B: 0x00,
+			A: 0xFF},
+		BackgroundColor: color.RGBA{
+			R: 0xff,
+			G: 0x00,
+			B: 0x00,
+			A: 0xFF},
 		StrokeColor: color.RGBA{
 			R: 0x00,
 			G: 0xFF,
@@ -210,8 +210,8 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 		UseStroke: true,
 	},
 
-	// 'UNEXPECTED_INTERRUPTION = 8'
-	8: ExecutionStatusColorMapStruct{
+	// 'UNEXPECTED_INTERRUPTION = 9'
+	9: ExecutionStatusColorMapStruct{
 		TextColor: color.RGBA{
 			R: 0x00,
 			G: 0x00,
@@ -225,8 +225,8 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 		UseStroke: false,
 	},
 
-	// 'UNEXPECTED_INTERRUPTION_CAN_BE_RERUN = 9'
-	9: ExecutionStatusColorMapStruct{
+	// 'UNEXPECTED_INTERRUPTION_CAN_BE_RERUN = 10'
+	10: ExecutionStatusColorMapStruct{
 		TextColor: color.RGBA{
 			R: 0x00,
 			G: 0x00,
@@ -245,8 +245,8 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 		UseStroke: true,
 	},
 
-	// 'TIMEOUT_INTERRUPTION = 10'
-	10: ExecutionStatusColorMapStruct{
+	// 'TIMEOUT_INTERRUPTION = 11'
+	11: ExecutionStatusColorMapStruct{
 		TextColor: color.RGBA{
 			R: 0x00,
 			G: 0x00,
@@ -260,8 +260,8 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 		UseStroke: false,
 	},
 
-	// 'TIMEOUT_INTERRUPTION_CAN_BE_RERUN = 11'
-	11: ExecutionStatusColorMapStruct{
+	// 'TIMEOUT_INTERRUPTION_CAN_BE_RERUN = 12'
+	12: ExecutionStatusColorMapStruct{
 		TextColor: color.RGBA{
 			R: 0x00,
 			G: 0x00,

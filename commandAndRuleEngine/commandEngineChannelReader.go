@@ -177,8 +177,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 			ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
 				grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion()),
 		},
-		TestCaseUuid:    testCaseUuidToBeExecuted,
-		TestDataSetUuid: testCaseUuidToBeExecuted, //TODO change into a correct 'TestDataSetUuid' when that is supported
+		TestCaseUuid:               testCaseUuidToBeExecuted,
+		TestDataSetUuid:            testCaseUuidToBeExecuted, //TODO change into a correct 'TestDataSetUuid' when that is supported
+		ExecutionStatusReportLevel: fenixExecutionServerGuiGrpcApi.ExecutionStatusReportLevelEnum_REPORT_ALL_STATUS_CHANGES_ON_EXECUTIONS,
 	}
 
 	// Initiate TestCaseExecution

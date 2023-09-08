@@ -178,13 +178,14 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 				grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion()),
 		},
 		TestCaseUuid:               testCaseUuidToBeExecuted,
-		TestDataSetUuid:            testCaseUuidToBeExecuted, //TODO change into a correct 'TestDataSetUuid' when that is supported
-		ExecutionStatusReportLevel: fenixExecutionServerGuiGrpcApi.ExecutionStatusReportLevelEnum_REPORT_ALL_STATUS_CHANGES_ON_EXECUTIONS,
+		TestDataSetUuid:            testCaseUuidToBeExecuted,                                                                                            //TODO change into a correct 'TestDataSetUuid' when that is supported
+		ExecutionStatusReportLevel: fenixExecutionServerGuiGrpcApi.ExecutionStatusReportLevelEnum_REPORT_ONLY_ALL_STATUS_CHANGES_ON_TESTCASE_EXECUTIONS, //fenixExecutionServerGuiGrpcApi.ExecutionStatusReportLevelEnum_REPORT_ALL_STATUS_CHANGES_ON_EXECUTIONS,
 	}
 
 	// Initiate TestCaseExecution
 	var initiateSingleTestCaseExecutionResponseMessage *fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionResponseMessage
-	initiateSingleTestCaseExecutionResponseMessage = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.SendInitiateTestCaseExecution(initiateSingleTestCaseExecutionRequestMessage)
+	initiateSingleTestCaseExecutionResponseMessage = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.
+		SendInitiateTestCaseExecution(initiateSingleTestCaseExecutionRequestMessage)
 
 	if initiateSingleTestCaseExecutionResponseMessage.AckNackResponse.AckNack == false {
 

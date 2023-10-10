@@ -203,19 +203,20 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 		}
 
 		// Fenix picture
-		image := canvas.NewImageFromResource(resources.ResourceFenix61Png)
+		//image := canvas.NewImageFromResource(resources.ResourceFenix61Png)
+		image := canvas.NewImageFromResource(resources.ResourceFenixdalle3v1512Png)
+
 		image.FillMode = canvas.ImageFillOriginal
 
 		// Container holding Header, picture and Footer
-		spashContainer := container.New(layout.NewVBoxLayout(), &fenixHeaderText, image, &halFinneyText)
+		splashContainer := container.New(layout.NewVBoxLayout(), &fenixHeaderText, image, &halFinneyText)
 
-		splashWindow.SetContent(spashContainer)
+		splashWindow.SetContent(splashContainer)
 		splashWindow.CenterOnScreen()
 		splashWindow.Show()
 
 		go func() {
-
-			time.Sleep(time.Second * 8)
+			time.Sleep(time.Second * 10)
 			splashWindow.Close()
 
 		}()
@@ -397,6 +398,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	//w.Hide()
 
+	splashWindow.Show()
 	fyneMasterWindow.ShowAndRun()
 
 }

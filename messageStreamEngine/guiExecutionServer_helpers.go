@@ -29,7 +29,8 @@ func InitiateAndStartMessageStreamChannelReader() {
 
 	go messageStreamEngineObject.startCommandChannelReader()
 
-	go messageStreamEngineObject.initiateOpenMessageStreamToGuiExecutionServer()
+	// removed due to use pubsub for sending ExecutionStatus instead of reversed streaming
+	// go messageStreamEngineObject.initiateOpenMessageStreamToGuiExecutionServer()
 
 	return
 }

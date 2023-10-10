@@ -107,13 +107,30 @@ func fenixGuiBuilderServerMain() {
 	if ackNackResponse.AckNack == false {
 
 		errorId := "fb15f862-7754-4a55-aa16-4c0bda086c4f"
-		err := errors.New(fmt.Sprintf("couldn't do 'SendTesterGuiIsStartingUp' to GuiExecutionServe due to error: '%s', {error: %s} [ErrorID: %s]", ackNackResponse.Comments, errorId))
+		err := errors.New(fmt.Sprintf("couldn't do 'SendTesterGuiIsStartingUp' to GuiExecutionServer due to error: '%s', {error: %s} [ErrorID: %s]", ackNackResponse.Comments, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
 		//os.Exit(0)
 
 	}
+
+	defer func() {
+		// Inform GuiExecutionServer that TesterGui is closing down
+		var ackNackResponse *fenixExecutionServerGuiGrpcApi.AckNackResponse
+		ackNackResponse = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.SendTesterGuiIsClosingDown()
+
+		if ackNackResponse.AckNack == false {
+
+			errorId := "cb8be454-8b62-4a22-af36-2182d31260fa"
+			err := errors.New(fmt.Sprintf("couldn't do 'SendTesterGuiIsClosingDown' to GuiExecutionServer due to error: '%s', {error: %s} [ErrorID: %s]", ackNackResponse.Comments, errorId))
+
+			fmt.Println(err) // TODO Send on Error-channel
+
+			//os.Exit(0)
+
+		}
+	}()
 
 	// Start up MessageStreamEngine
 	messageStreamEngine.InitiateAndStartMessageStreamChannelReader()

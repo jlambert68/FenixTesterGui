@@ -43,8 +43,8 @@ var (
 	// This Application
 	ExecutionLocationForThisApplication ExecutionLocationTypeType
 	FYNE_SCALE                          string
-	RunAsTrayApplication                bool
-	ApplicationGrpcPort                 int
+	//RunAsTrayApplication                bool
+	ApplicationGrpcPort int
 
 	//TODO REMOVE FenixGuiTestCaseBuilderProxyServerAddress string
 	//TODO REMOVE FenixGuiTestCaseBuilderProxyServerPort    int

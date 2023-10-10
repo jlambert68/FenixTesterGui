@@ -3,12 +3,15 @@ package main
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/grpc_in"
+	"FenixTesterGui/grpc_out_GuiExecutionServer"
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	"FenixTesterGui/gui"
 	"FenixTesterGui/messageStreamEngine"
 	"FenixTesterGui/restAPI"
+	"errors"
 	"fmt"
 	uuidGenerator "github.com/google/uuid"
+	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"log"
 	"os"
@@ -95,6 +98,22 @@ func fenixGuiBuilderServerMain() {
 
 	// Start Backend gRPC-server
 	go fenixTesterGuiObject.subPackageObjects.grpcIn.InitGrpcServer()
+
+	// Inform GuiExecutionServer that TesterGui is starting up
+	// Initiate TestCaseExecution
+	var ackNackResponse *fenixExecutionServerGuiGrpcApi.AckNackResponse
+	ackNackResponse = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.SendTesterGuiIsStartingUp()
+
+	if ackNackResponse.AckNack == false {
+
+		errorId := "fb15f862-7754-4a55-aa16-4c0bda086c4f"
+		err := errors.New(fmt.Sprintf("couldn't do 'SendTesterGuiIsStartingUp' to GuiExecutionServe due to error: '%s', {error: %s} [ErrorID: %s]", ackNackResponse.Comments, errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		//os.Exit(0)
+
+	}
 
 	// Start up MessageStreamEngine
 	messageStreamEngine.InitiateAndStartMessageStreamChannelReader()

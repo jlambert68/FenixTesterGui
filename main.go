@@ -13,10 +13,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/getlantern/systray"
-	"github.com/getlantern/systray/example/icon"
+	//"github.com/getlantern/systray"
+	//"github.com/getlantern/systray/example/icon"
 
 	_ "net/http/pprof"
+	"os/user"
 )
 
 // Embedded resources into the binary
@@ -62,13 +63,21 @@ func main() {
 	//defer profile.Start(profile.ProfilePath(".")).Stop()
 
 	// Start up application as SysTray if environment variable says that
-	if sharedCode.RunAsTrayApplication == true {
-		go systray.Run(onReady, onExit)
-	}
+	//if sharedCode.RunAsTrayApplication == true {
+	//	go systray.Run(onReady, onExit)
+	//}
 
 	go func() {
 		log.Println(http.ListenAndServe("localhost:6060", nil))
 	}()
+
+	// Set current user
+	currentUser, err := user.Current()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	sharedCode.CurrentUserId = currentUser.Username
 
 	fenixGuiBuilderServerMain()
 }
@@ -115,21 +124,23 @@ func init() {
 		sharedCode.FYNE_SCALE = fyneScale
 	}
 
-	// Get Environment variable to tell if the application should run as a Tray Application or not
-	var runAsTrayApplication = mustGetenv("RunAsTrayApplication")
+	/*
+		// Get Environment variable to tell if the application should run as a Tray Application or not
+		var runAsTrayApplication = mustGetenv("RunAsTrayApplication")
 
-	switch runAsTrayApplication {
-	case "YES":
-		sharedCode.RunAsTrayApplication = true
+		switch runAsTrayApplication {
+		case "YES":
+			sharedCode.RunAsTrayApplication = true
 
-	case "NO":
-		sharedCode.RunAsTrayApplication = false
+		case "NO":
+			sharedCode.RunAsTrayApplication = false
 
-	default:
-		fmt.Println("Unknown value for 'RunAsTrayApplication': " + runAsTrayApplication + ". Expected one of the following: 'YES', 'NO'")
-		os.Exit(0)
+		default:
+			fmt.Println("Unknown value for 'RunAsTrayApplication': " + runAsTrayApplication + ". Expected one of the following: 'YES', 'NO'")
+			os.Exit(0)
 
-	}
+		}
+	*/
 
 	// Get local gRPC port for this application. gRPC is used for checking connection to backend services among other stuff
 	sharedCode.ApplicationGrpcPort, err = strconv.Atoi(mustGetenv("ApplicationGrpcPort"))
@@ -243,6 +254,7 @@ func init() {
 
 }
 
+/*
 // SysTray Application - StartUp
 func onReady() {
 
@@ -267,6 +279,8 @@ func onReady() {
 
 }
 
+
+*/
 // SysTray Application - On exit
 func onExit() {
 	// clean up here, and exit the program

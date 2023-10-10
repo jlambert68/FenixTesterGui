@@ -5,9 +5,7 @@ go 1.18
 require (
 	fyne.io/fyne/v2 v2.4.0
 	github.com/PaulWaldo/fyne-headertable v0.0.2
-	github.com/faiface/beep v1.1.0
 	github.com/getlantern/errors v1.0.3
-	github.com/getlantern/systray v1.2.2
 	github.com/go-gota/gota v0.12.0
 	github.com/golang/gddo v0.0.0-20210115222349-20d68f94ee1f
 	github.com/golang/protobuf v1.5.3
@@ -15,7 +13,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/pat v1.0.1
 	github.com/gorilla/sessions v1.2.1
-	github.com/jlambert68/FenixGrpcApi v0.0.0-20230906083834-006c13d185e6
+	github.com/jlambert68/FenixGrpcApi v0.0.0-20231009160229-adfeedb073c1
 	github.com/markbates/goth v1.78.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.8.4
@@ -38,9 +36,6 @@ require (
 	github.com/fyne-io/glfw-js v0.0.0-20220120001248-ee7290d23504 // indirect
 	github.com/fyne-io/image v0.0.0-20220602074514-4956b0afb3d2 // indirect
 	github.com/getlantern/context v0.0.0-20220418194847-3d5e7a086201 // indirect
-	github.com/getlantern/golog v0.0.0-20190830074920-4ef2e798c2d7 // indirect
-	github.com/getlantern/hex v0.0.0-20190417191902-c6586a6fe0b7 // indirect
-	github.com/getlantern/hidden v0.0.0-20190325191715-f02dbb02be55 // indirect
 	github.com/getlantern/ops v0.0.0-20220713155959-1315d978fff7 // indirect
 	github.com/go-gl/gl v0.0.0-20211210172815-726fda9656d6 // indirect
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20221017161538-93cebf72946b // indirect
@@ -56,11 +51,7 @@ require (
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
-	github.com/hajimehoshi/go-mp3 v0.3.0 // indirect
-	github.com/hajimehoshi/oto v0.7.1 // indirect
 	github.com/jsummers/gobmp v0.0.0-20151104160322-e2ba15ffa76e // indirect
-	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/srwiley/oksvg v0.0.0-20221011165216-be6e8873101c // indirect
 	github.com/srwiley/rasterx v0.0.0-20220730225603-2ab79fcdd4ef // indirect
@@ -71,7 +62,6 @@ require (
 	go.opentelemetry.io/otel/trace v1.9.0 // indirect
 	golang.org/x/crypto v0.13.0 // indirect
 	golang.org/x/exp v0.0.0-20220609121020-a51bd0440498 // indirect
-	golang.org/x/exp/shiny v0.0.0-20220613132600-b0d781184e0d // indirect
 	golang.org/x/image v0.11.0 // indirect
 	golang.org/x/mobile v0.0.0-20230531173138-3c911d8e3eda // indirect
 	golang.org/x/sys v0.12.0 // indirect

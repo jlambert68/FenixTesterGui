@@ -24,9 +24,6 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
-	"github.com/faiface/beep"
-	"github.com/faiface/beep/mp3"
-	"github.com/faiface/beep/speaker"
 	"github.com/sirupsen/logrus"
 	"image/color"
 	"log"
@@ -609,28 +606,28 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 			fmt.Println("Reload Available Components from GuiServer")
 
 			// Load Available Building Blocks and Pinned Building Blocks from Server
-			err := uiServer.availableBuildingBlocksModel.savePinnedBuildingBlocksFromServer()
+			_ = uiServer.availableBuildingBlocksModel.savePinnedBuildingBlocksFromServer()
+			/*
+				f, err := os.Open("resources/s_ui_error_stereo_04-35938.mp3")
+				if err != nil {
+					log.Println(err)
+				}
 
-			f, err := os.Open("resources/s_ui_error_stereo_04-35938.mp3")
-			if err != nil {
-				log.Println(err)
-			}
+				streamer, format, err := mp3.Decode(f)
+				if err != nil {
+					log.Println(err)
+				}
+				defer streamer.Close()
 
-			streamer, format, err := mp3.Decode(f)
-			if err != nil {
-				log.Println(err)
-			}
-			defer streamer.Close()
+				speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 
-			speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
+				done := make(chan bool)
+				speaker.Play(beep.Seq(streamer, beep.Callback(func() {
+					done <- true
+				})))
 
-			done := make(chan bool)
-			speaker.Play(beep.Seq(streamer, beep.Callback(func() {
-				done <- true
-			})))
-
-			<-done
-
+				<-done
+			*/
 		}),
 
 		// Icon for Adding Building Block to Pinned Building Blocks
@@ -640,7 +637,7 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 				fmt.Println("Add to Pinned")
 				err := uiServer.availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer(uiServer.availableBuildingBlocksModel.clickedNodeName)
 				if err == nil {
-					// Update the testCaseModel, which will refrsh UI
+					// Update the testCaseModel, which will refresh UI
 					uiServer.availableBuildingBlocksModel.makeTreeUIModel()
 				}
 			}

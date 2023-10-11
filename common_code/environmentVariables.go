@@ -46,6 +46,15 @@ var (
 	//RunAsTrayApplication                bool
 	ApplicationGrpcPort int
 
+	// GCP-project
+	GcpProject string
+
+	// PubSub-Topic-base for where to receive the 'TestExecutionsStatus'
+	TestExecutionStatusPubSubTopicBase string
+
+	// Local path to Service-Account file
+	LocalServiceAccountPath string
+
 	//TODO REMOVE FenixGuiTestCaseBuilderProxyServerAddress string
 	//TODO REMOVE FenixGuiTestCaseBuilderProxyServerPort    int
 )

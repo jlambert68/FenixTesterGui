@@ -29,6 +29,9 @@ func InitiateAndStartMessageStreamChannelReader() {
 
 	go messageStreamEngineObject.startCommandChannelReader()
 
+	// Initiate and start PubSub-handler for ExecutionStatus-messages
+	initiatePubSubFunctionality(sharedCode.GcpProject)
+
 	// removed due to use pubsub for sending ExecutionStatus instead of reversed streaming
 	// go messageStreamEngineObject.initiateOpenMessageStreamToGuiExecutionServer()
 

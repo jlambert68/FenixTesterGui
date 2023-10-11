@@ -212,4 +212,17 @@ func init() {
 	// Extract OAuth 2.0 Client Secret
 	sharedCode.AuthClientSecret = mustGetenv("AuthClientSecret")
 
+	// Extract the GCP-project
+	sharedCode.GcpProject = mustGetenv("GcpProject")
+
+	// Extract PubSub-Topic-base for where to send the 'TestExecutionsStatus'
+	sharedCode.TestExecutionStatusPubSubTopicBase = mustGetenv("TestExecutionStatusPubSubTopicBase")
+
+	// Extract local path to Service-Account file
+	sharedCode.LocalServiceAccountPath = mustGetenv("LocalServiceAccountPath")
+	// The only way have an OK space is to replace an existing character
+	if sharedCode.LocalServiceAccountPath == "#" {
+		sharedCode.LocalServiceAccountPath = ""
+	}
+
 }

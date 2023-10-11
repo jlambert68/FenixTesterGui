@@ -10,7 +10,6 @@ import (
 	"FenixTesterGui/executions/executionsUIForExecutions"
 	"FenixTesterGui/executions/executionsUIForSubscriptions"
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
-	"FenixTesterGui/resources"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testCase/testCaseUI"
 	"FenixTesterGui/testCaseSubscriptionHandler"
@@ -180,47 +179,9 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	*/
 	// Create Fenix Splash screen
 	var splashWindow fyne.Window
-	if drv, ok := fyne.CurrentApp().Driver().(desktop.Driver); ok {
-		splashWindow = drv.CreateSplashWindow()
-
-		// Fenix Header
-		fenixHeaderText := canvas.Text{
-			Alignment: fyne.TextAlignCenter,
-			Color:     nil,
-			Text:      "Fenix Inception - SaaS",
-			TextSize:  20,
-			TextStyle: fyne.TextStyle{Bold: true},
-		}
-
-		// Text Footer
-		//halFinney := widget.NewLabel("\"If you want to change the world, don't protest. Write code!\" - Hal Finney (1994)")
-		halFinneyText := canvas.Text{
-			Alignment: fyne.TextAlignCenter,
-			Color:     nil,
-			Text:      "\"If you want to change the world, don't protest. Write code!\" - Hal Finney (1994)",
-			TextSize:  20,
-			TextStyle: fyne.TextStyle{Italic: true},
-		}
-
-		// Fenix picture
-		//image := canvas.NewImageFromResource(resources.ResourceFenix61Png)
-		image := canvas.NewImageFromResource(resources.ResourceFenixdalle3v1512Png)
-
-		image.FillMode = canvas.ImageFillOriginal
-
-		// Container holding Header, picture and Footer
-		splashContainer := container.New(layout.NewVBoxLayout(), &fenixHeaderText, image, &halFinneyText)
-
-		splashWindow.SetContent(splashContainer)
-		splashWindow.CenterOnScreen()
-		splashWindow.Show()
-
-		go func() {
-			time.Sleep(time.Second * 10)
-			splashWindow.Close()
-
-		}()
-	}
+	var splashWindowProlongedVisibleChannel chan time.Duration
+	splashWindowProlongedVisibleChannel = make(chan time.Duration)
+	createSplashWindow(&splashWindow, &splashWindowProlongedVisibleChannel)
 
 	uiServer.commandAndRuleEngine.MasterFenixWindow = &fyneMasterWindow
 
@@ -399,6 +360,10 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	//w.Hide()
 
 	splashWindow.Show()
+	go func() {
+		time.Sleep(time.Millisecond * 500)
+		splashWindowProlongedVisibleChannel <- time.Second * 4
+	}()
 	fyneMasterWindow.ShowAndRun()
 
 }

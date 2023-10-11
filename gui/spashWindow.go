@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/layout"
+	"image/color"
 	"time"
 )
 
@@ -35,14 +36,13 @@ func createSplashWindow(splashWindow *fyne.Window, splashWindowProlongedVisibleC
 		// Fenix Header
 		fenixHeaderText := canvas.Text{
 			Alignment: fyne.TextAlignCenter,
-			Color:     nil,
-			Text:      "Fenix Inception - SaaS",
-			TextSize:  20,
+			Color:     color.RGBA{255, 103, 14, 255},
+			Text:      "Fenix Inception",
+			TextSize:  50,
 			TextStyle: fyne.TextStyle{Bold: true},
 		}
 
 		// Text Footer
-		//halFinney := widget.NewLabel("\"If you want to change the world, don't protest. Write code!\" - Hal Finney (1994)")
 		halFinneyText := canvas.Text{
 			Alignment: fyne.TextAlignCenter,
 			Color:     nil,

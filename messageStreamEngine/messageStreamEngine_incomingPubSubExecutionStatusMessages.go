@@ -132,13 +132,13 @@ func PullPubSubTestInstructionExecutionMessagessages() {
 				TestInstructionExecutionsStatus: nil,
 			},
 		}
-		
-		// Create 'TestCaseExecutionsStatus'
+
+		// Convert 'TestCaseExecutionsStatus'
 		var testCaseExecutionsStatusSlice []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusMessage
-		
+
 		// Loop PubSub-message for GetTestCaseExecutionsStatus-messages
 		for _, tempGetTestCaseExecutionsStatusPubSubMessage := range executionStatusMessagesPubSubMessage.GetExecutionsStatus().GetTestCaseExecutionsStatus() {
-		
+
 			var testCaseExecutionsStatus *fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusMessage
 			testCaseExecutionsStatus = &fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusMessage{
 				TestCaseExecutionUuid:    tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionUuid(),
@@ -155,24 +155,24 @@ func PullPubSubTestInstructionExecutionMessagessages() {
 					ExecutionStartTimeStamp: &timestamp.Timestamp{
 						Seconds: tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionDetails().
 							GetExecutionStartTimeStamp().GetSeconds(),
-						Nanos:   tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionDetails().
+						Nanos: tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionDetails().
 							GetExecutionStartTimeStamp().GetNanos(),
 					},
 					ExecutionStopTimeStamp: &timestamp.Timestamp{
 						Seconds: tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionDetails().
 							GetExecutionStopTimeStamp().GetSeconds(),
-						Nanos:   tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionDetails().
+						Nanos: tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionDetails().
 							GetExecutionStopTimeStamp().GetNanos(),
 					},
 					TestCaseExecutionStatus: fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum(
 						tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionDetails().
 							GetTestCaseExecutionStatus()),
-					ExecutionHasFinished:    tempGetTestCaseExecutionsStatusPubSubMessage.TestCaseExecutionDetails.
+					ExecutionHasFinished: tempGetTestCaseExecutionsStatusPubSubMessage.TestCaseExecutionDetails.
 						GetExecutionHasFinished(),
 					ExecutionStatusUpdateTimeStamp: &timestamp.Timestamp{
 						Seconds: tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionDetails().
 							GetExecutionStatusUpdateTimeStamp().GetSeconds(),
-						Nanos:   tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionDetails().
+						Nanos: tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionDetails().
 							GetExecutionStatusUpdateTimeStamp().GetNanos(),
 					},
 					UniqueDatabaseRowCounter: tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionDetails().
@@ -188,14 +188,75 @@ func PullPubSubTestInstructionExecutionMessagessages() {
 		// Add 'TestCaseExecutionsStatus' to proto-message
 		subscribeToMessagesStreamResponse.ExecutionsStatus.TestCaseExecutionsStatus = testCaseExecutionsStatusSlice
 
-	}
-		
-		
-		// Create 'TestInstructionExecutionsStatus'
-		
+		// Convert 'TestInstructionExecutionsStatus'
+		var testInstructionExecutionsStatusSlice []*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusMessage
 
+		// Loop PubSub-message for GetTestCaseExecutionsStatus-messages
+		for _, tempTestInstructionExecutionsStatus := range executionStatusMessagesPubSubMessage.GetExecutionsStatus().
+			GetTestInstructionExecutionsStatus() {
 
-		// Split incoming message from GuiExecutionServer into its individual messages and put on channel to MessagechannelEngine
+			var testInstructionExecutionStatus *fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusMessage
+			testInstructionExecutionStatus = &fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusMessage{
+				TestCaseExecutionUuid:           tempTestInstructionExecutionsStatus.GetTestCaseExecutionUuid(),
+				TestCaseExecutionVersion:        tempTestInstructionExecutionsStatus.GetTestCaseExecutionVersion(),
+				TestInstructionExecutionUuid:    tempTestInstructionExecutionsStatus.GetTestInstructionExecutionUuid(),
+				TestInstructionExecutionVersion: tempTestInstructionExecutionsStatus.GetTestInstructionExecutionVersion(),
+				TestInstructionExecutionStatus: fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusEnum(
+					tempTestInstructionExecutionsStatus.GetTestInstructionExecutionStatus()),
+				BroadcastTimeStamp: &timestamp.Timestamp{
+					Seconds: tempTestInstructionExecutionsStatus.GetBroadcastTimeStamp().GetSeconds(),
+					Nanos:   tempTestInstructionExecutionsStatus.GetBroadcastTimeStamp().GetNanos(),
+				},
+				PreviousBroadcastTimeStamp: &timestamp.Timestamp{
+					Seconds: tempTestInstructionExecutionsStatus.GetPreviousBroadcastTimeStamp().GetSeconds(),
+					Nanos:   tempTestInstructionExecutionsStatus.GetPreviousBroadcastTimeStamp().GetNanos(),
+				},
+				TestInstructionExecutionsStatusInformation: &fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage{
+					SentTimeStamp: &timestamp.Timestamp{
+						Seconds: tempTestInstructionExecutionsStatus.GetTestInstructionExecutionsStatusInformation().
+							GetSentTimeStamp().GetSeconds(),
+						Nanos: tempTestInstructionExecutionsStatus.GetTestInstructionExecutionsStatusInformation().
+							GetSentTimeStamp().GetNanos(),
+					},
+					ExpectedExecutionEndTimeStamp: &timestamp.Timestamp{
+						Seconds: tempTestInstructionExecutionsStatus.GetTestInstructionExecutionsStatusInformation().
+							GetExpectedExecutionEndTimeStamp().GetSeconds(),
+						Nanos: tempTestInstructionExecutionsStatus.GetTestInstructionExecutionsStatusInformation().
+							GetExpectedExecutionEndTimeStamp().GetNanos(),
+					},
+					TestInstructionExecutionStatus: fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusEnum(
+
+						tempTestInstructionExecutionsStatus.GetTestInstructionExecutionsStatusInformation().
+							GetTestInstructionExecutionStatus()),
+					TestInstructionExecutionEndTimeStamp: &timestamp.Timestamp{
+						Seconds: tempTestInstructionExecutionsStatus.GetTestInstructionExecutionsStatusInformation().
+							GetTestInstructionExecutionEndTimeStamp().GetSeconds(),
+						Nanos: tempTestInstructionExecutionsStatus.GetTestInstructionExecutionsStatusInformation().
+							GetTestInstructionExecutionEndTimeStamp().GetNanos(),
+					},
+					TestInstructionExecutionHasFinished: tempTestInstructionExecutionsStatus.GetTestInstructionExecutionsStatusInformation().
+						GetTestInstructionExecutionHasFinished(),
+					UniqueDatabaseRowCounter: tempTestInstructionExecutionsStatus.GetTestInstructionExecutionsStatusInformation().
+						GetUniqueDatabaseRowCounter(),
+					TestInstructionCanBeReExecuted: tempTestInstructionExecutionsStatus.GetTestInstructionExecutionsStatusInformation().
+						GetTestInstructionCanBeReExecuted(),
+					ExecutionStatusUpdateTimeStamp: &timestamp.Timestamp{
+						Seconds: tempTestInstructionExecutionsStatus.GetTestInstructionExecutionsStatusInformation().
+							GetExecutionStatusUpdateTimeStamp().GetSeconds(),
+						Nanos: tempTestInstructionExecutionsStatus.GetTestInstructionExecutionsStatusInformation().
+							GetExecutionStatusUpdateTimeStamp().GetNanos(),
+					},
+				},
+			}
+
+			// Append to slice of messages
+			testInstructionExecutionsStatusSlice = append(testInstructionExecutionsStatusSlice, testInstructionExecutionStatus)
+		}
+
+		// Add 'TestCaseExecutionsStatus' to proto-message
+		subscribeToMessagesStreamResponse.ExecutionsStatus.TestInstructionExecutionsStatus = testInstructionExecutionsStatusSlice
+
+		// Put message containing ExecutionStatus-updates on 'executionStatusCommandChannel' to be processed
 		if subscribeToMessagesStreamResponse.ExecutionsStatus != nil {
 			var channelCommandAndMessage ChannelCommandStruct
 			channelCommandAndMessage = ChannelCommandStruct{
@@ -205,121 +266,15 @@ func PullPubSubTestInstructionExecutionMessagessages() {
 
 			// Send message on channel
 			executionStatusCommandChannel <- channelCommandAndMessage
-		
-
-		// Convert into Message used by converter which is the message from reversed request service
-		var processTestInstructionExecutionReveredRequest *fenixExecutionWorkerGrpcApi.ProcessTestInstructionExecutionReveredRequest
-		processTestInstructionExecutionReveredRequest = &fenixExecutionWorkerGrpcApi.ProcessTestInstructionExecutionReveredRequest{
-			ProtoFileVersionUsedByClient: fenixExecutionWorkerGrpcApi.CurrentFenixExecutionWorkerProtoFileVersionEnum(
-				processTestInstructionExecutionPubSubRequest.GetProtoFileVersionUsedByClient()),
-			TestInstruction: &fenixExecutionWorkerGrpcApi.ProcessTestInstructionExecutionReveredRequest_TestInstructionExecutionMessage{
-				TestInstructionExecutionUuid: processTestInstructionExecutionPubSubRequest.TestInstruction.GetTestInstructionExecutionUuid(),
-				TestInstructionUuid:          processTestInstructionExecutionPubSubRequest.TestInstruction.GetTestInstructionUuid(),
-				TestInstructionName:          processTestInstructionExecutionPubSubRequest.TestInstruction.GetTestInstructionName(),
-				MajorVersionNumber:           processTestInstructionExecutionPubSubRequest.TestInstruction.GetMajorVersionNumber(),
-				MinorVersionNumber:           processTestInstructionExecutionPubSubRequest.TestInstruction.GetMinorVersionNumber(),
-				TestInstructionAttributes:    nil, // Converted below
-			},
-			TestData: &fenixExecutionWorkerGrpcApi.ProcessTestInstructionExecutionReveredRequest_TestDataMessage{
-				TestDataSetUuid:           processTestInstructionExecutionPubSubRequest.TestData.GetTestDataSetUuid(),
-				ManualOverrideForTestData: nil, // Converted below
-			},
 		}
 
-		// Convert 'TestInstruction:TestInstructionAttributes'
-		var tempTestInstructionAttributes []*fenixExecutionWorkerGrpcApi.
-			ProcessTestInstructionExecutionReveredRequest_TestInstructionAttributeMessage
-
-		// Loop 'TestInstructionAttributes' from PubSub-message
-		for _, pubSubTestInstructionAttribute := range processTestInstructionExecutionPubSubRequest.TestInstruction.TestInstructionAttributes {
-			var tempTestInstructionAttribute *fenixExecutionWorkerGrpcApi.
-				ProcessTestInstructionExecutionReveredRequest_TestInstructionAttributeMessage
-			tempTestInstructionAttribute = &fenixExecutionWorkerGrpcApi.
-				ProcessTestInstructionExecutionReveredRequest_TestInstructionAttributeMessage{
-				TestInstructionAttributeType: fenixExecutionWorkerGrpcApi.TestInstructionAttributeTypeEnum(
-					pubSubTestInstructionAttribute.GetTestInstructionAttributeType()),
-				TestInstructionAttributeUuid:     pubSubTestInstructionAttribute.GetTestInstructionAttributeUuid(),
-				TestInstructionAttributeName:     pubSubTestInstructionAttribute.GetTestInstructionAttributeName(),
-				AttributeValueAsString:           pubSubTestInstructionAttribute.GetAttributeValueAsString(),
-				AttributeValueUuid:               pubSubTestInstructionAttribute.GetTestInstructionAttributeUuid(),
-				TestInstructionAttributeTypeUuid: pubSubTestInstructionAttribute.GetTestInstructionAttributeTypeUuid(),
-				TestInstructionAttributeTypeName: pubSubTestInstructionAttribute.GetTestInstructionAttributeTypeName(),
-			}
-
-			// Append to slice of 'TestInstructionAttributes'
-			tempTestInstructionAttributes = append(tempTestInstructionAttributes, tempTestInstructionAttribute)
-		}
-
-		processTestInstructionExecutionReveredRequest.TestInstruction.TestInstructionAttributes = tempTestInstructionAttributes
-
-		// Convert 'TestData:ManualOverrideForTestData'
-		var tempManualOverrideForTestDataSlice []*fenixExecutionWorkerGrpcApi.
-			ProcessTestInstructionExecutionReveredRequest_TestDataMessage_ManualOverrideForTestDataMessage
-
-		// Loop 'TestInstructionAttributes' from PubSub-message
-		for _, pubSubManualOverrideForTestData := range processTestInstructionExecutionPubSubRequest.TestData.ManualOverrideForTestData {
-			var tempManualOverrideForTestDataMessage *fenixExecutionWorkerGrpcApi.
-				ProcessTestInstructionExecutionReveredRequest_TestDataMessage_ManualOverrideForTestDataMessage
-			tempManualOverrideForTestDataMessage = &fenixExecutionWorkerGrpcApi.
-				ProcessTestInstructionExecutionReveredRequest_TestDataMessage_ManualOverrideForTestDataMessage{
-				TestDataSetAttributeUuid:  pubSubManualOverrideForTestData.GetTestDataSetAttributeUuid(),
-				TestDataSetAttributeName:  pubSubManualOverrideForTestData.GetTestDataSetAttributeName(),
-				TestDataSetAttributeValue: pubSubManualOverrideForTestData.GetTestDataSetAttributeValue(),
-			}
-
-			// Append to slice of 'TestInstructionAttributes'
-			tempManualOverrideForTestDataSlice = append(tempManualOverrideForTestDataSlice, tempManualOverrideForTestDataMessage)
-		}
-
-		processTestInstructionExecutionReveredRequest.TestData.ManualOverrideForTestData = tempManualOverrideForTestDataSlice
-
-		// Call 'CA' backend to convert 'TestInstruction' into useful structure later to be used by FangEngine
-		var tempProcessTestInstructionExecutionResponse *fenixExecutionWorkerGrpcApi.ProcessTestInstructionExecutionResponse
-		var fangEngineRestApiMessageValues *restCallsToCAEngine.FangEngineRestApiMessageStruct
-		_, tempProcessTestInstructionExecutionResponse, fangEngineRestApiMessageValues =
-			messagesToExecutionWorkerServer.ConvertTestInstructionIntoFangEngineStructure(
-				processTestInstructionExecutionReveredRequest)
-
-		// Send 'ProcessTestInstructionExecutionPubSubRequest-response' back to worker over direct gRPC-call
-		couldSend, returnMessage := connectorEngine.TestInstructionExecutionEngine.
-			MessagesToExecutionWorkerObjectReference.
-			SendConnectorProcessTestInstructionExecutionResponse(tempProcessTestInstructionExecutionResponse)
-
-		if couldSend == false {
-			common_config.Logger.WithFields(logrus.Fields{
-				"ID":            "55820706-bd18-41a6-be0a-c7d3b649e0e2",
-				"returnMessage": returnMessage,
-			}).Error("Couldn't send response to Worker")
-
-		} else {
-
-			// Send TestInstruction to FangEngine using RestCall
-			var finalTestInstructionExecutionResultMessage *fenixExecutionWorkerGrpcApi.FinalTestInstructionExecutionResultMessage
-			finalTestInstructionExecutionResultMessage = messagesToExecutionWorkerServer.SendTestInstructionToFangEngineUsingRestCall(
-				fangEngineRestApiMessageValues, processTestInstructionExecutionReveredRequest)
-
-			// Send 'ProcessTestInstructionExecutionReversedResponse' back to worker over direct gRPC-call
-			couldSend, returnMessage := connectorEngine.TestInstructionExecutionEngine.MessagesToExecutionWorkerObjectReference.
-				SendReportCompleteTestInstructionExecutionResultToFenixWorkerServer(finalTestInstructionExecutionResultMessage)
-
-			if couldSend == false {
-				common_config.Logger.WithFields(logrus.Fields{
-					"ID": "1ce93ee2-5542-4437-9c05-d7f9d19313fa",
-					"finalTestInstructionExecutionResultMessage": finalTestInstructionExecutionResultMessage,
-					"returnMessage": returnMessage,
-				}).Error("Couldn't send response to Worker")
-
-			} else {
-
-				// Send 'Ack' back to PubSub-system that message has taken care of
-				pubSubMessage.Ack()
-			}
-		}
+		// Send 'Ack' back to PubSub-system that message has taken care of
+		pubSubMessage.Ack()
 
 	})
 	if err != nil {
-		common_config.Logger.WithFields(logrus.Fields{
-			"ID":  "2410eaa0-dce7-458b-ad9b-28d53680f995",
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"ID":  "12265393-e646-45d4-81b2-e6f69a47de05",
 			"err": err,
 		}).Fatalln("PubSub receiver for TestInstructionExecutions ended, which is not intended")
 	}

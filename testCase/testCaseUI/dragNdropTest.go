@@ -160,7 +160,7 @@ var rectangle2Ref *canvas.Rectangle
 var containerRef *fyne.Container
 var labelStandardHeight float32
 
-//****************************************************
+// ****************************************************
 type draggableLabel struct {
 	widget.Label
 	sourceUuid string

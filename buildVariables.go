@@ -10,6 +10,9 @@ var (
 	BuildVariableUseServiceAccountForGuiTestCaseBuilderServer string
 	BuildVariableAuthClientId                                 string
 	BuildVariableAuthClientSecret                             string
+	BuildVariableGcpProject                                   string
+	BuildVariableTestExecutionStatusPubSubTopicBase           string
+	BuildVariableLocalServiceAccountPath                      string
 
 	// GUI-ExecutionServer
 	BuildVariableExecutionLocationForFenixGuiExecutionServer string
@@ -35,6 +38,9 @@ var buildVariablesMap = map[string]*string{
 	"BuildVariableUseServiceAccountForGuiTestCaseBuilderServer": &BuildVariableUseServiceAccountForGuiTestCaseBuilderServer,
 	"BuildVariableAuthClientId":                                 &BuildVariableAuthClientId,
 	"BuildVariableAuthClientSecret":                             &BuildVariableAuthClientSecret,
+	"BuildVariableGcpProject":                                   &BuildVariableGcpProject,
+	"BuildVariableTestExecutionStatusPubSubTopicBase":           &BuildVariableTestExecutionStatusPubSubTopicBase,
+	"BuildVariableLocalServiceAccountPath":                      &BuildVariableLocalServiceAccountPath,
 
 	// GUI-ExecutionServer
 	"BuildVariableExecutionLocationForFenixGuiExecutionServer": &BuildVariableExecutionLocationForFenixGuiExecutionServer,

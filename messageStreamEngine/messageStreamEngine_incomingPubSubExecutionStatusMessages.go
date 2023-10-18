@@ -17,9 +17,9 @@ import (
 	"sync/atomic"
 )
 
-func PullPubSubTestInstructionExecutionMessagessages() {
+func PullPubSubTestInstructionExecutionMessages() {
 	projectID := sharedCode.GcpProject
-	subID := generatePubSubTopicForExecutionStatusUpdates(sharedCode.CurrentUserId)
+	subID := generatePubSubTopicSubscriptionNameForExecutionStatusUpdates(sharedCode.CurrentUserId)
 
 	var pubSubClient *pubsub.Client
 	var err error
@@ -37,7 +37,6 @@ func PullPubSubTestInstructionExecutionMessagessages() {
 	//}
 
 	if len(sharedCode.LocalServiceAccountPath) != 0 {
-		//ctx = context.Background()
 		pubSubClient, err = pubsub.NewClient(ctx, projectID)
 	} else {
 

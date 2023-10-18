@@ -207,6 +207,7 @@ func (t *DraggableLabel) Dragged(ev *fyne.DragEvent) {
 		X: 5,
 		Y: -10,
 	}
+	//newPos := ev.AbsolutePosition.Add(diffPos)
 	newPos := ev.AbsolutePosition.Add(diffPos).Add(fyne.NewSize(rectangleRef.Size().Width/2, rectangleRef.Size().Height/2))
 	containerRef.Move(newPos)
 

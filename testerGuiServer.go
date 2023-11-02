@@ -2,6 +2,7 @@ package main
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/gcp"
 	"FenixTesterGui/grpc_in"
 	"FenixTesterGui/grpc_out_GuiExecutionServer"
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
@@ -86,6 +87,9 @@ func fenixGuiBuilderServerMain() {
 	fenixTesterGuiObject.subPackageObjects.restAPI.SetLogger(fenixTesterGuiObject.logger)
 	fenixTesterGuiObject.subPackageObjects.uiServer.SetLogger(fenixTesterGuiObject.logger)
 
+	// Initiate gcp-logger
+	gcp.GcpObject.SetLogger(sharedCode.Logger)
+
 	// Set dial address to GuiServer
 	fenixTesterGuiObject.subPackageObjects.restAPI.SetDialAddressString(grpc_out_GuiTestCaseBuilderServer.FenixGuiTestCaseBuilderServerAddressToDial)
 	fenixTesterGuiObject.subPackageObjects.uiServer.SetDialAddressString(grpc_out_GuiTestCaseBuilderServer.FenixGuiTestCaseBuilderServerAddressToDial)
@@ -113,6 +117,8 @@ func fenixGuiBuilderServerMain() {
 
 		//os.Exit(0)
 
+	} else {
+
 	}
 
 	defer func() {
@@ -132,7 +138,7 @@ func fenixGuiBuilderServerMain() {
 		}
 	}()
 
-	// Start up MessageStreamEngine
+	// Start up MessageStreamEngine (PuBSub) to receive ExecutionStatus from GuiExecutionServer
 	messageStreamEngine.InitiateAndStartMessageStreamChannelReader()
 
 	// Start UI Server

@@ -4,7 +4,7 @@ import sharedCode "FenixTesterGui/common_code"
 
 func initiatePubSubFunctionality(tempGcpProject string) {
 	gcpProject = tempGcpProject
-	go PullPubSubTestInstructionExecutionMessages()
+	go PullPubSubTestInstructionExecutionMessagesGcpRestApi()
 }
 
 // Create the PubSub-topic from TesterGui-ApplicationUuid

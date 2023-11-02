@@ -182,7 +182,7 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForAuthorizedUser(ctx context.
 			sharedCode.AuthClientId,
 			sharedCode.AuthClientSecret,
 			"http://localhost:3000/auth/google/callback",
-			"email", "profile"),
+			"email", "profile", "https://www.googleapis.com/auth/pubsub"),
 	)
 
 	router := pat.New()
@@ -255,6 +255,12 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForAuthorizedUser(ctx context.
 		return nil, false, "Couldn't generate access token"
 	}
 
+}
+
+// GetGcpAccessTokenForAuthorizedAccountsPubSub
+// Get Access token to be used for contacting PubSub
+func (gcp *GcpObjectStruct) GetGcpAccessTokenForAuthorizedAccountsPubSub() string {
+	return gcp.gcpAccessTokenForAuthorizedAccounts.AccessToken
 }
 
 // Start and run Local Web Server

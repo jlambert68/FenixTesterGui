@@ -2,6 +2,7 @@ package grpc_out_GuiExecutionServer
 
 import (
 	"FenixTesterGui/common_code"
+	"FenixTesterGui/gcp"
 	"FenixTesterGui/grpcurl"
 	"context"
 	"crypto/tls"
@@ -55,10 +56,28 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecution
 		// When run on GCP, use credentials
 		var newGrpcClientConnection *grpc.ClientConn
 		if sharedCode.ExecutionLocationForFenixGuiExecutionServer == sharedCode.GCP {
-			// Run on GCP
-			ctx, newGrpcClientConnection = dialFromGrpcurl(ctx, FenixGuiExecutionServerAddressToDial)
-			remoteFenixGuiExecutionServerConnection = newGrpcClientConnection
-			//remoteFenixExecutionWorkerServerConnection, err = grpc.Dial(common_config.FenixExecutionWorkerAddressToDial, opts...)
+			// GuiExecutionServer is running in GCP
+
+			// Should ProxyServer be used for outgoing conenctions
+			if sharedCode.ShouldProxyServerBeUsed == true {
+				// Use Proxy
+				remoteFenixGuiExecutionServerConnection, err = gcp.GRPCDialer("")
+				if err != nil {
+					sharedCode.Logger.WithFields(logrus.Fields{
+						"ID":                 "4a07f2ca-6bcb-4ec3-b2e1-0755e023d6bb",
+						"error message":      err,
+						"dialAttemptCounter": dialAttemptCounter,
+					}).Error("Couldn't generate gRPC-connection to GuiExecutionServer via Proxy Server")
+					continue
+				}
+
+			} else {
+				// Don't use Proxy
+				ctx, newGrpcClientConnection = dialFromGrpcurl(ctx, FenixGuiExecutionServerAddressToDial)
+				remoteFenixGuiExecutionServerConnection = newGrpcClientConnection
+				//remoteFenixExecutionWorkerServerConnection, err = grpc.Dial(common_config.FenixExecutionWorkerAddressToDial, opts...)
+
+			}
 		} else {
 			// Run Local
 			remoteFenixGuiExecutionServerConnection, err = grpc.Dial(FenixGuiExecutionServerAddressToDial, grpc.WithInsecure())

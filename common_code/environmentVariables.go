@@ -55,8 +55,17 @@ var (
 	// Local path to Service-Account file
 	LocalServiceAccountPath string
 
+	// ShouldProxyServerBeUsed
+	// Should Proxy-server be used for outgoing requests
+	ShouldProxyServerBeUsed bool
+
+	// ProxyServerURL
+	// URL to Proxy-server for outgoing requests
+	ProxyServerURL string
+
 	//TODO REMOVE FenixGuiTestCaseBuilderProxyServerAddress string
 	//TODO REMOVE FenixGuiTestCaseBuilderProxyServerPort    int
+
 )
 
 const numberOfCharactersfromUuid = 8

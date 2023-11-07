@@ -225,4 +225,16 @@ func init() {
 		sharedCode.LocalServiceAccountPath = ""
 	}
 
+	// Extract if Proxy-server should be used for outgoing requests
+	tempBoolAsString = mustGetenv("ShouldProxyServerBeUsed")
+	tempBool, err = strconv.ParseBool(tempBoolAsString)
+	if err != nil {
+		fmt.Println("Couldn't convert environment variable 'ShouldProxyServerBeUsed' to a boolean, error: ", tempBoolAsString, err)
+		os.Exit(0)
+	}
+	sharedCode.ShouldProxyServerBeUsed = tempBool
+
+	// Extract URL to Proxy-server for outgoing requests
+	sharedCode.ProxyServerURL = mustGetenv("ProxyServerURL")
+
 }

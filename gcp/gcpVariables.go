@@ -12,6 +12,9 @@ type GcpObjectStruct struct {
 	gcpAccessTokenForServiceAccounts                       *oauth2.Token
 	gcpAccessTokenForAuthorizedAccounts                    goth.User
 	mutexWhenGeneratingGcpAccessTokenForAuthorizedAccounts *sync.Mutex
+
+	gcpAccessTokenForAuthorizedAccountsPubSub goth.User
+	refreshTokenResponse                      *RefreshTokenResponse
 }
 
 var GcpObject GcpObjectStruct
@@ -19,6 +22,7 @@ var GcpObject GcpObjectStruct
 const (
 	TargetServerGuiTestCaseBuilderServer TargetServerType = iota
 	TargetServerGuiExecutionServer
+	TargetServerGuiExecutionServerNew
 )
 
 type TargetServerType int

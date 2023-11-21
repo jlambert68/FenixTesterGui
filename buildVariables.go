@@ -29,6 +29,8 @@ var (
 	BuildVariableFYNE_SCALE                          string
 	BuildVariableRunAsTrayApplication                string
 	BuildVariableApplicationGrpcPort                 string
+	BuildVariableShouldProxyServerBeUsed             string
+	BuildVariableProxyServerURL                      string
 )
 
 var buildVariablesMap = map[string]*string{
@@ -57,4 +59,6 @@ var buildVariablesMap = map[string]*string{
 	"BuildVariableFYNE_SCALE":                          &BuildVariableFYNE_SCALE,
 	"BuildVariableRunAsTrayApplication":                &BuildVariableRunAsTrayApplication,
 	"BuildVariableApplicationGrpcPort":                 &BuildVariableApplicationGrpcPort,
+	"BuildVariableShouldProxyServerBeUsed":             &BuildVariableShouldProxyServerBeUsed,
+	"BuildVariableProxyServerURL":                      &BuildVariableProxyServerURL,
 }

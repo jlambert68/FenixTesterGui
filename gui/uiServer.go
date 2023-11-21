@@ -359,11 +359,14 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	//w.Hide()
 
+	splashWindow.RequestFocus()
 	splashWindow.Show()
 	go func() {
 		time.Sleep(time.Millisecond * 500)
-		splashWindowProlongedVisibleChannel <- time.Second * 4
+		splashWindow.RequestFocus()
+		splashWindowProlongedVisibleChannel <- time.Second * 6
 	}()
+	fyneMasterWindow.RequestFocus()
 	fyneMasterWindow.ShowAndRun()
 
 }

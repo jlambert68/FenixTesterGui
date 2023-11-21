@@ -32,6 +32,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 	var existInTestCaseExecutionsDetailsMap bool
 	var existsInTestCaseExecutionKeysMap bool
 
+	// Loop all TestCaseStatus-messages
 	for _, tempTestCaseExecutionStatusMessage := range testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage.TestCaseExecutionsStatus {
 
 		// Create TestCaseExecutionKey

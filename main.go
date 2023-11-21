@@ -3,10 +3,10 @@ package main
 import (
 	sharedCode "FenixTesterGui/common_code"
 	_ "embed"
-	"net/http"
+	"strings"
+
 	//"flag"
 	"fmt"
-	"log"
 	"os"
 
 	//"github.com/getlantern/systray"
@@ -26,14 +26,12 @@ func main() {
 	//time.Sleep(15 * time.Second)
 	//defer profile.Start(profile.ProfilePath(".")).Stop()
 
-	// Start up application as SysTray if environment variable says that
-	//if sharedCode.RunAsTrayApplication == true {
-	//	go systray.Run(onReady, onExit)
-	//}
-
-	go func() {
-		log.Println(http.ListenAndServe("localhost:6060", nil))
-	}()
+	// Used for profiling
+	/*
+		go func() {
+			log.Println(http.ListenAndServe("localhost:6060", nil))
+		}()
+	*/
 
 	// Set current user
 	currentUser, err := user.Current()
@@ -41,7 +39,7 @@ func main() {
 		fmt.Println("Error:", err)
 		return
 	}
-	sharedCode.CurrentUserId = currentUser.Username
+	sharedCode.CurrentUserId = strings.ReplaceAll(currentUser.Username, "\\", "")
 
 	fenixGuiBuilderServerMain()
 }

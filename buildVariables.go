@@ -31,6 +31,7 @@ var (
 	BuildVariableApplicationGrpcPort                 string
 	BuildVariableShouldProxyServerBeUsed             string
 	BuildVariableProxyServerURL                      string
+	BuildVariableUseNativeGcpPubSubClientLibrary     string
 )
 
 var buildVariablesMap = map[string]*string{
@@ -61,4 +62,5 @@ var buildVariablesMap = map[string]*string{
 	"BuildVariableApplicationGrpcPort":                 &BuildVariableApplicationGrpcPort,
 	"BuildVariableShouldProxyServerBeUsed":             &BuildVariableShouldProxyServerBeUsed,
 	"BuildVariableProxyServerURL":                      &BuildVariableProxyServerURL,
+	"BuildVariableUseNativeGcpPubSubClientLibrary":     &BuildVariableUseNativeGcpPubSubClientLibrary,
 }

@@ -63,6 +63,10 @@ var (
 	// URL to Proxy-server for outgoing requests
 	ProxyServerURL string
 
+	// UseNativeGcpPubSubClientLibrary
+	// Should PubSub use REST or native client library
+	UseNativeGcpPubSubClientLibrary bool
+
 	//TODO REMOVE FenixGuiTestCaseBuilderProxyServerAddress string
 	//TODO REMOVE FenixGuiTestCaseBuilderProxyServerPort    int
 

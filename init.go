@@ -237,4 +237,11 @@ func init() {
 	// Extract URL to Proxy-server for outgoing requests
 	sharedCode.ProxyServerURL = mustGetenv("ProxyServerURL")
 
+	// Extract if native pubsub client library should be used or not
+	sharedCode.UseNativeGcpPubSubClientLibrary, err = strconv.ParseBool(mustGetenv("UseNativeGcpPubSubClientLibrary"))
+	if err != nil {
+		fmt.Println("Couldn't convert environment variable 'UseNativeGcpPubSubClientLibrary:' to an boolean, error: ", err)
+		os.Exit(0)
+	}
+
 }

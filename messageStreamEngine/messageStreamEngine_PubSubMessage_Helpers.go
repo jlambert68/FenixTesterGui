@@ -4,7 +4,18 @@ import sharedCode "FenixTesterGui/common_code"
 
 func initiatePubSubFunctionality(tempGcpProject string) {
 	gcpProject = tempGcpProject
+
 	go PullPubSubTestInstructionExecutionMessagesGcpRestApi()
+
+	if sharedCode.UseNativeGcpPubSubClientLibrary == true {
+		// Use Native GCP PubSub Client Library
+		go PullPubSubTestInstructionExecutionMessagesGcpClientLib()
+
+	} else {
+		// Use REST to call GCP PubSub
+		go PullPubSubTestInstructionExecutionMessagesGcpRestApi()
+
+	}
 }
 
 // Create the PubSub-topic from TesterGui-ApplicationUuid

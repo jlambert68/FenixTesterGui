@@ -28,7 +28,7 @@ func PullPubSubTestInstructionExecutionMessagesGcpClientLib() {
 	}).Debug("Outgoing 'PullPubSubTestInstructionExecutionMessagesGcpClientLib'")
 
 	projectID := sharedCode.GcpProject
-	subID := generatePubSubTopicSubscriptionNameForExecutionStatusUpdates(sharedCode.CurrentUserId)
+	subID := generatePubSubTopicSubscriptionNameForExecutionStatusUpdates(sharedCode.CurrentUserIdLogedInOnComputer)
 
 	var pubSubClient *pubsub.Client
 	var err error

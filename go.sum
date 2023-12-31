@@ -286,8 +286,8 @@ github.com/ianlancetaylor/demangle v0.0.0-20200824232613-28f6c0f3b639/go.mod h1:
 github.com/inconshreveable/log15 v0.0.0-20170622235902-74a0988b5f80/go.mod h1:cOaXtrgN4ScfRrD9Bre7U1thNq5RtJ8ZoP4iXVGRj6o=
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=
 github.com/jarcoal/httpmock v0.0.0-20180424175123-9c70cfe4a1da/go.mod h1:ks+b9deReOc7jgqp+e7LuFiCBH6Rm5hL32cLcEAArb4=
-github.com/jlambert68/FenixGrpcApi v0.0.0-20231011131633-773faa972c32 h1:kyAwcE1KERLH7AZhNNvZC8NxAC1KAXi4crhWZ0NqKuo=
-github.com/jlambert68/FenixGrpcApi v0.0.0-20231011131633-773faa972c32/go.mod h1:W1LBy0KtSSvZ6zaIG1LZ5P5kTK6yzvubjmHUduD773w=
+github.com/jlambert68/FenixGrpcApi v0.0.0-20231231152935-237f70eb1e33 h1:9BLWQrYRSxk6rQDhnsbfoyJb/DQs079bpZzrA9J759g=
+github.com/jlambert68/FenixGrpcApi v0.0.0-20231231152935-237f70eb1e33/go.mod h1:5BO7Hq8qdgzK5W7KY14yXPYN/fNuXAMdDQTY7xHIeXc=
 github.com/json-iterator/go v1.1.11/go.mod h1:KdQUCv79m/52Kvf8AW2vK1V8akMuk1QjK/uOdHXbAo4=
 github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024/go.mod h1:6v2b51hI/fHJwM22ozAgKL4VKDeJcHhJFhtBdhmNjmU=
 github.com/jstemmer/go-junit-report v0.9.1/go.mod h1:Brl9GWCQeLvo8nXZwPNNblvFj/XSXhF0NWZEnDohbsk=

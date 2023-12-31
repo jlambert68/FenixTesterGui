@@ -30,7 +30,8 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendTesterGuiIsStartingUp() (
 	userAndApplicationRunTimeIdentificationMessage = &fenixExecutionServerGuiGrpcApi.
 		UserAndApplicationRunTimeIdentificationMessage{
 		ApplicationRunTimeUuid: sharedCode.ApplicationRunTimeUuid,
-		UserId:                 sharedCode.CurrentUserId,
+		UserIdOnComputer:       sharedCode.CurrentUserIdLogedInOnComputer,
+		GCPAuthenticatedUser:   sharedCode.CurrentUserAuthenticatedTowardsGCP,
 		ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
 			GetHighestFenixGuiExecutionServerProtoFileVersion()),
 	}

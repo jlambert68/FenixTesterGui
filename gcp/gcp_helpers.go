@@ -395,6 +395,10 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForAuthorizedUserPubSub(ctx co
 		// When there was no Refresh Token then inform user to close Browser and restart
 		if len(user.RefreshToken) > 0 {
 			// Got Refresh Token
+
+			// Store who is authenticated towards GCP
+			sharedCode.CurrentUserAuthenticatedTowardsGCP = user.Email
+
 			t, _ := template.ParseFiles("templates/success.html")
 			t.Execute(res, user)
 
@@ -484,7 +488,6 @@ func (gcp *GcpObjectStruct) GenerateGCPAccessTokenForAuthorizedUserPubSub(ctx co
 				url = "http://localhost:3000/closethisbrowser"
 				gcp.startLocalWebServerExpanded(localWebServer, url)
 
-				fmt.Println("Hej")
 				time.Sleep(10 * time.Second)
 
 				return nil, false, "Missing Refresh token"

@@ -1,6 +1,7 @@
 package commandAndRuleEngine
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
@@ -43,7 +44,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_NEW_TESTCASE)],
 		FirstParameter:           testCaseModel.NotApplicable,
 		SecondParameter:          testCaseModel.NotApplicable,
-		UserId:                   commandAndRuleEngine.Testcases.CurrentUser,
+		UserIdOnComputer:         sharedCode.CurrentUserIdLogedInOnComputer,
+		GCPAuthenticatedUser:     sharedCode.CurrentUserAuthenticatedTowardsGCP,
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
@@ -132,7 +134,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_REMOVE_ELEMENT)],
 		FirstParameter:           elementId,
 		SecondParameter:          testCaseModel.NotApplicable,
-		UserId:                   commandAndRuleEngine.Testcases.CurrentUser,
+		UserIdOnComputer:         sharedCode.CurrentUserIdLogedInOnComputer,
+		GCPAuthenticatedUser:     sharedCode.CurrentUserAuthenticatedTowardsGCP,
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
@@ -182,7 +185,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_NEW_ELEMENT)],
 		FirstParameter:           elementToSwapOutUuid,
 		SecondParameter:          immatureElementToSwapIn.FirstElementUuid,
-		UserId:                   commandAndRuleEngine.Testcases.CurrentUser,
+		UserIdOnComputer:         sharedCode.CurrentUserIdLogedInOnComputer,
+		GCPAuthenticatedUser:     sharedCode.CurrentUserAuthenticatedTowardsGCP,
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
@@ -233,7 +237,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_COPY_ELEMENT)],
 		FirstParameter:           elementIdToCopy,
 		SecondParameter:          testCaseModel.NotApplicable,
-		UserId:                   commandAndRuleEngine.Testcases.CurrentUser,
+		UserIdOnComputer:         sharedCode.CurrentUserIdLogedInOnComputer,
+		GCPAuthenticatedUser:     sharedCode.CurrentUserAuthenticatedTowardsGCP,
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
@@ -273,7 +278,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_COPY_BUFFER_ELEMENT)],
 		FirstParameter:           elementIdToBeReplacedByCopyBuffer,
 		SecondParameter:          testCaseModel.NotApplicable,
-		UserId:                   commandAndRuleEngine.Testcases.CurrentUser,
+		UserIdOnComputer:         sharedCode.CurrentUserIdLogedInOnComputer,
+		GCPAuthenticatedUser:     sharedCode.CurrentUserAuthenticatedTowardsGCP,
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
@@ -316,7 +322,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_CUT_ELEMENT)],
 		FirstParameter:           elementIdToCut,
 		SecondParameter:          testCaseModel.NotApplicable,
-		UserId:                   commandAndRuleEngine.Testcases.CurrentUser,
+		UserIdOnComputer:         sharedCode.CurrentUserIdLogedInOnComputer,
+		GCPAuthenticatedUser:     sharedCode.CurrentUserAuthenticatedTowardsGCP,
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
@@ -356,7 +363,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		TestCaseCommandName:      fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_name[int32(fenixGuiTestCaseBuilderServerGrpcApi.TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_CUT_BUFFER_ELEMENT)],
 		FirstParameter:           uuidToReplacedByCutBufferContent,
 		SecondParameter:          testCaseModel.NotApplicable,
-		UserId:                   commandAndRuleEngine.Testcases.CurrentUser,
+		UserIdOnComputer:         sharedCode.CurrentUserIdLogedInOnComputer,
+		GCPAuthenticatedUser:     sharedCode.CurrentUserAuthenticatedTowardsGCP,
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 

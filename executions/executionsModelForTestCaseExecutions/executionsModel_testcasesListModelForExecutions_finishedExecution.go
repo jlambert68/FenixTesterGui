@@ -18,7 +18,8 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 	listTestCasesWithFinishedExecutionsRequest = &fenixExecutionServerGuiGrpcApi.ListTestCasesWithFinishedExecutionsRequest{
 		UserAndApplicationRunTimeIdentification: &fenixExecutionServerGuiGrpcApi.UserAndApplicationRunTimeIdentificationMessage{
 			ApplicationRunTimeUuid: sharedCode.ApplicationRunTimeUuid,
-			UserId:                 sharedCode.CurrentUserId,
+			UserIdOnComputer:       sharedCode.CurrentUserIdLogedInOnComputer,
+			GCPAuthenticatedUser:   sharedCode.CurrentUserAuthenticatedTowardsGCP,
 			ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
 				grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion()),
 		},

@@ -71,8 +71,11 @@ var Logger *logrus.Logger
 // Unique 'Uuid' for this running instance. Created at start up. Used as identification
 var ApplicationRunTimeUuid string
 
-// The current user of the TesterGui
-var CurrentUserId string
+// The current user of the TesterGui, that is loged on on the computer
+var CurrentUserIdLogedInOnComputer string
+
+// The current user of the TesterGui, that is authenticated tpwards GCP
+var CurrentUserAuthenticatedTowardsGCP string
 
 const ZeroUuid = "00000000-0000-0000-0000-000000000000"
 

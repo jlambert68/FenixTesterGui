@@ -43,7 +43,8 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListAllAvailableBonds(user
 
 	// Create the request message
 	userIdentificationMessage := &fenixGuiTestCaseBuilderServerGrpcApi.UserIdentificationMessage{
-		UserId: userId,
+		UserIdOnComputer:     sharedCode.CurrentUserIdLogedInOnComputer,
+		GCPAuthenticatedUser: sharedCode.CurrentUserAuthenticatedTowardsGCP,
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
 			grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 	}

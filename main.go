@@ -39,7 +39,7 @@ func main() {
 		fmt.Println("Error:", err)
 		return
 	}
-	sharedCode.CurrentUserId = strings.ReplaceAll(currentUser.Username, "\\", "")
+	sharedCode.CurrentUserIdLogedInOnComputer = strings.ReplaceAll(currentUser.Username, "\\", "")
 
 	fenixGuiBuilderServerMain()
 }

@@ -44,7 +44,8 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) LoadDetailedTestCase(userI
 	// Create the request message
 	var getTestCaseRequestMessage *fenixGuiTestCaseBuilderServerGrpcApi.GetTestCaseRequestMessage
 	getTestCaseRequestMessage = &fenixGuiTestCaseBuilderServerGrpcApi.GetTestCaseRequestMessage{
-		UserId: userId,
+		UserIdOnComputer:     sharedCode.CurrentUserIdLogedInOnComputer,
+		GCPAuthenticatedUser: sharedCode.CurrentUserAuthenticatedTowardsGCP,
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
 			grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 		TestCaseUuid: testCaseUuidToLoad,

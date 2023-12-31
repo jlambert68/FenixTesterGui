@@ -22,7 +22,7 @@ func PullPubSubTestInstructionExecutionMessagesGcpRestApi() {
 
 	// Generate Subscription name to use
 	var subID string
-	subID = generatePubSubTopicSubscriptionNameForExecutionStatusUpdates(sharedCode.CurrentUserId)
+	subID = generatePubSubTopicSubscriptionNameForExecutionStatusUpdates(sharedCode.CurrentUserIdLogedInOnComputer)
 
 	// Create a loop to be able to have a continuous PubSub Subscription Engine
 	var numberOfMessagesInPullResponse int

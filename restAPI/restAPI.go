@@ -253,7 +253,8 @@ func (restAPI *RestApiStruct) RestSendSavePinnedInstructionsAndTestInstructionCo
 
 	// Create input message for gRPC-call
 	pinnedTestInstructionsAndTestContainersMessage := &fenixGuiTestCaseBuilderServerGrpcApi.SavePinnedTestInstructionsAndPreCreatedTestInstructionContainersMessage{
-		UserId: jsonData.UserId,
+		UserIdOnComputer:     jsonData.UserId,
+		GCPAuthenticatedUser: "GCPAuthenticatedUser not in json definition",
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
 			grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 		AvailablePinnedTestInstructions:                    jsonData.PinnedTestInstructionMessages,

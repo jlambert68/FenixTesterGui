@@ -46,7 +46,8 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) LoadHashesForTestCases(use
 	var testCasesHashRequest *fenixGuiTestCaseBuilderServerGrpcApi.TestCasesHashRequest
 	testCasesHashRequest = &fenixGuiTestCaseBuilderServerGrpcApi.TestCasesHashRequest{
 		UserIdentification: &fenixGuiTestCaseBuilderServerGrpcApi.UserIdentificationMessage{
-			UserId: userId,
+			UserIdOnComputer:     sharedCode.CurrentUserIdLogedInOnComputer,
+			GCPAuthenticatedUser: sharedCode.CurrentUserAuthenticatedTowardsGCP,
 			ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
 				grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 		},

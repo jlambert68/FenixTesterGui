@@ -1,6 +1,7 @@
 package gui
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
@@ -287,7 +288,8 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) savePinn
 	}
 
 	pinnedTestInstructionsAndTestContainersMessage = &fenixGuiTestCaseBuilderServerGrpcApi.SavePinnedTestInstructionsAndPreCreatedTestInstructionContainersMessage{
-		UserId: "s41797", //TODO change to use dynamic or defined from GUI user-id
+		UserIdOnComputer:     sharedCode.CurrentUserIdLogedInOnComputer,
+		GCPAuthenticatedUser: sharedCode.CurrentUserAuthenticatedTowardsGCP,
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
 			availableBuildingBlocksModel.grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 		AvailablePinnedTestInstructions:                    availablePinnedTestInstructions,

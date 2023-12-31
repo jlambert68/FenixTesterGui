@@ -56,7 +56,8 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) initiateGuiExecution
 	// Set up call parameter
 	userAndApplicationRunTimeIdentificationMessage := &fenixExecutionServerGuiGrpcApi.UserAndApplicationRunTimeIdentificationMessage{
 		ApplicationRunTimeUuid: sharedCode.ApplicationRunTimeUuid,
-		UserId:                 sharedCode.CurrentUserId,
+		UserIdOnComputer:       sharedCode.CurrentUserIdLogedInOnComputer,
+		GCPAuthenticatedUser:   sharedCode.CurrentUserAuthenticatedTowardsGCP,
 		ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
 			grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion()),
 	}

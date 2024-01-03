@@ -55,29 +55,27 @@ const (
 )
 
 /*
-type availableDomainStruct struct {
-	domainNameInUITree string
-	domainUuid         string
-	domainName         string
-}
+	type availableDomainStruct struct {
+		domainNameInUITree string
+		domainUuid         string
+		domainName         string
+	}
 
-type availableTestInstructionTypeStruct struct {
-	testInstructionTypeNameInUITree string
-	domainUuid                      string
-	domainName                      string
-	testInstructionTypeUuid         string
-	testInstructionTypeName         string
-}
+	type availableTestInstructionTypeStruct struct {
+		testInstructionTypeNameInUITree string
+		domainUuid                      string
+		domainName                      string
+		testInstructionTypeUuid         string
+		testInstructionTypeName         string
+	}
 
-type availableTestInstructionContainerTypeStruct struct {
-	testInstructionContainerTypeNameInUITree string
-	domainUuid                               string
-	domainName                               string
-	testInstructionContainerTypeUuid         string
-	testInstructionContainerTypeName         string
-}
-
-
+	type availableTestInstructionContainerTypeStruct struct {
+		testInstructionContainerTypeNameInUITree string
+		domainUuid                               string
+		domainName                               string
+		testInstructionContainerTypeUuid         string
+		testInstructionContainerTypeName         string
+	}
 */
 type availableTestInstructionStruct struct {
 	testInstructionNameInUITree string
@@ -140,6 +138,9 @@ type AvailableBuildingBlocksModelStruct struct {
 	currentTestCaseTextualStructureSimple   binding.String
 	currentTestCaseTextualStructureComplex  binding.String
 	currentTestCaseTextualStructureExtended binding.String
+
+	// Domains that can own a TestCase for this user
+	domainsThatCanOwnTheTestCase []*fenixGuiTestCaseBuilderServerGrpcApi.DomainsThatCanOwnTheTestCaseMessage
 }
 type GlobalUIServerStruct struct {
 	logger                             *logrus.Logger

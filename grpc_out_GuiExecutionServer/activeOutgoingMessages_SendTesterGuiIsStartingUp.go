@@ -94,7 +94,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendTesterGuiIsStartingUp() (
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":    "ae23568d-1fa2-4ff5-aab8-a74490dd18f5",
 			"error": err,
-		}).Error("Problem to do gRPC-call to FenixGuiExecutionServer for 'SendInitiateTestCaseExecution'")
+		}).Error("Problem to do gRPC-call to FenixGuiExecutionServer for 'SendTesterGuiIsStartingUp'")
 
 		ackNackResponse = &fenixExecutionServerGuiGrpcApi.AckNackResponse{
 			AckNack:    false,

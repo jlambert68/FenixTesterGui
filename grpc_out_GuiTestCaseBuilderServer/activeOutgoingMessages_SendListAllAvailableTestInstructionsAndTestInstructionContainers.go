@@ -10,7 +10,9 @@ import (
 )
 
 // SendListAllAvailableTestInstructionsAndTestInstructionContainers - Get available TestInstructions and TestInstructionContainers
-func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllAvailableTestInstructionsAndTestInstructionContainers(userId string) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
+func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllAvailableTestInstructionsAndTestInstructionContainers(
+	gCPAuthenticatedUser string) (
+	returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{
 		"ID": "b2289982-1853-419c-8265-5393f3baa6ad",
@@ -19,6 +21,27 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllAvailableTestIn
 	defer sharedCode.Logger.WithFields(logrus.Fields{
 		"ID": "b2289982-1853-419c-8265-5393f3baa6ad",
 	}).Debug("Outgoing - 'SendListAllAvailableTestInstructionsAndTestInstructionContainers'")
+
+	//
+	if len(gCPAuthenticatedUser) == 0 {
+		// gCPAuthenticatedUser must have a value
+		ackNackResponse := &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{
+			AckNack:    false,
+			Comments:   "gCPAuthenticatedUser is missing a value",
+			ErrorCodes: nil,
+			ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
+				grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
+		}
+
+		returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage{
+			DomainsThatCanOwnTheTestCase:      nil,
+			ImmatureTestInstructions:          nil,
+			ImmatureTestInstructionContainers: nil,
+			AckNackResponse:                   ackNackResponse,
+		}
+
+		return returnMessage
+	}
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -41,6 +64,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllAvailableTestIn
 		}
 
 		returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage{
+			DomainsThatCanOwnTheTestCase:      nil,
 			ImmatureTestInstructions:          nil,
 			ImmatureTestInstructionContainers: nil,
 			AckNackResponse:                   ackNackResponse,
@@ -84,6 +108,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllAvailableTestIn
 			}
 
 			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage{
+				DomainsThatCanOwnTheTestCase:      nil,
 				ImmatureTestInstructions:          nil,
 				ImmatureTestInstructionContainers: nil,
 				AckNackResponse:                   ackNackResponse,

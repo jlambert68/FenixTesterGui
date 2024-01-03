@@ -136,7 +136,8 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvai
 	var testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
 
 	//grpcOut := grpc_out_GuiTestCaseBuilderServer.GRPCOutStruct{}
-	testInstructionsAndTestContainersMessage = availableBuildingBlocksModel.grpcOut.SendListAllAvailableTestInstructionsAndTestInstructionContainers("s41797") //TODO change to use current logged in to computer user
+	testInstructionsAndTestContainersMessage = availableBuildingBlocksModel.grpcOut.
+		SendListAllAvailableTestInstructionsAndTestInstructionContainers(sharedCode.CurrentUserAuthenticatedTowardsGCP) //TODO change to use current logged in to computer user
 
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks(testInstructionsAndTestContainersMessage)
 

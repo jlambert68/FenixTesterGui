@@ -31,6 +31,9 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 	// Store the full available Building Blocks Structure
 	availableBuildingBlocksModel.storeFullGrpcStructureForAvailableBuildingBlocks(testInstructionsAndTestContainersMessage)
 
+	// Store list with Domains that can own a TestCase
+	availableBuildingBlocksModel.storeDomainsThatCanOwnTestCases(testInstructionsAndTestContainersMessage)
+
 }
 
 // Load Pinned Building Blocks, TestInstructions and TestInstructionContainers, from GUI-server into testCaseModel
@@ -366,7 +369,9 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 }
 
 // Store the full available Building Blocks Structure into the Available Building Blocks Model
-func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeFullGrpcStructureForAvailableBuildingBlocks(testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeFullGrpcStructureForAvailableBuildingBlocks(
+	testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.
+		AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	// Initiate TI-BuildingBlockType-map and TIC-BuildingBlockmap
 	availableBuildingBlocksModel.allImmatureTestInstructionsBuildingBlocks = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage)
@@ -387,6 +392,16 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeFul
 	for _, testInstructionContainerBuildingBlock := range testInstructionsAndTestContainersMessage.ImmatureTestInstructionContainers {
 		availableBuildingBlocksModel.allImmatureTestInstructionContainerBuildingBlocks[testInstructionContainerBuildingBlock.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerUuid] = testInstructionContainerBuildingBlock
 	}
+
+}
+
+// Store list with Domains that can own a TestCase
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeDomainsThatCanOwnTestCases(
+	testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.
+		AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
+
+	// Store the list with Domains that can own a TestCase
+	availableBuildingBlocksModel.domainsThatCanOwnTheTestCase = testInstructionsAndTestContainersMessage.DomainsThatCanOwnTheTestCase
 
 }
 

@@ -51,7 +51,7 @@ func retrievePubSubMessagesViaRestApi(subscriptionID string, oauth2Token string)
 	if err != nil {
 
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":  "5e557f2d-1340-4140-999a-74c144815adc",
+			"ID":  "e1298cba-f13c-4b4b-8fb8-cc60e1d5192f",
 			"err": err,
 		}).Error("Error making request:")
 

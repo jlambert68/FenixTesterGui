@@ -15,7 +15,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllAvailableTestIn
 	returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{
-		"ID": "b2289982-1853-419c-8265-5393f3baa6ad",
+		"ID": "57596a36-cdde-45b4-9633-e4ba88904cce",
 	}).Debug("Incoming - 'SendListAllAvailableTestInstructionsAndTestInstructionContainers'")
 
 	defer sharedCode.Logger.WithFields(logrus.Fields{
@@ -25,6 +25,12 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllAvailableTestIn
 	//
 	if len(gCPAuthenticatedUser) == 0 {
 		// gCPAuthenticatedUser must have a value
+
+		defer sharedCode.Logger.WithFields(logrus.Fields{
+			"ID":                   "3d9e4a27-6fa9-4cc3-b147-a49b385258d6",
+			"gCPAuthenticatedUser": gCPAuthenticatedUser,
+		}).Debug("gCPAuthenticatedUser is missing a value")
+
 		ackNackResponse := &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{
 			AckNack:    false,
 			Comments:   "gCPAuthenticatedUser is missing a value",

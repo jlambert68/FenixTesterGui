@@ -9,6 +9,7 @@ import (
 	"FenixTesterGui/gui"
 	"FenixTesterGui/messageStreamEngine"
 	"FenixTesterGui/restAPI"
+	"context"
 	"errors"
 	"fmt"
 	uuidGenerator "github.com/google/uuid"
@@ -17,6 +18,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 // Used for only process cleanup once
@@ -94,14 +96,48 @@ func fenixGuiBuilderServerMain() {
 	fenixTesterGuiObject.subPackageObjects.restAPI.SetDialAddressString(grpc_out_GuiTestCaseBuilderServer.FenixGuiTestCaseBuilderServerAddressToDial)
 	fenixTesterGuiObject.subPackageObjects.uiServer.SetDialAddressString(grpc_out_GuiTestCaseBuilderServer.FenixGuiTestCaseBuilderServerAddressToDial)
 
-	// Clean up when leaving. Is placed after logger because shutdown logs information
-	defer cleanup()
+	// Secure that Access token has been created and 'sharedCode.CurrentUserAuthenticatedTowardsGCP' got a value
+	var returnMessageAckNack bool
+	var returnMessageString string
+	var ctx context.Context
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer func() {
+		cancel()
+	}()
+	_, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessToken(ctx, gcp.TargetServerGuiTestCaseBuilderServer)
+	if returnMessageAckNack == false {
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"ID":                  "8e3bfe8a-e920-44fc-bdf4-f476bfd048b2",
+			"returnMessageString": returnMessageString,
+		}).Fatalln("Couldn't generate access token")
+	}
+	fmt.Println("va fannnnn")
 
 	// Start RestApi-server
 	//go fenixTesterGuiObject.subPackageObjects.restAPI.RestAPIServer()
 
+	// Clean up when leaving. Is placed after logger because shutdown logs information
+	defer cleanup()
+
 	// Start Backend gRPC-server
 	go fenixTesterGuiObject.subPackageObjects.grpcIn.InitGrpcServer()
+
+	defer func() {
+		// Inform GuiExecutionServer that TesterGui is closing down
+		var ackNackResponse *fenixExecutionServerGuiGrpcApi.AckNackResponse
+		ackNackResponse = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.SendTesterGuiIsClosingDown()
+
+		if ackNackResponse.AckNack == false {
+
+			errorId := "cb8be454-8b62-4a22-af36-2182d31260fa"
+			err := errors.New(fmt.Sprintf("couldn't do 'SendTesterGuiIsClosingDown' to GuiExecutionServer due to error: '%s', {error: %s} [ErrorID: %s]", ackNackResponse.Comments, errorId))
+
+			fmt.Println(err) // TODO Send on Error-channel
+
+			//os.Exit(0)
+
+		}
+	}()
 
 	// Inform GuiExecutionServer that TesterGui is starting up
 	// Initiate TestCaseExecution
@@ -120,23 +156,6 @@ func fenixGuiBuilderServerMain() {
 	} else {
 
 	}
-
-	defer func() {
-		// Inform GuiExecutionServer that TesterGui is closing down
-		var ackNackResponse *fenixExecutionServerGuiGrpcApi.AckNackResponse
-		ackNackResponse = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.SendTesterGuiIsClosingDown()
-
-		if ackNackResponse.AckNack == false {
-
-			errorId := "cb8be454-8b62-4a22-af36-2182d31260fa"
-			err := errors.New(fmt.Sprintf("couldn't do 'SendTesterGuiIsClosingDown' to GuiExecutionServer due to error: '%s', {error: %s} [ErrorID: %s]", ackNackResponse.Comments, errorId))
-
-			fmt.Println(err) // TODO Send on Error-channel
-
-			//os.Exit(0)
-
-		}
-	}()
 
 	// Start up MessageStreamEngine (PuBSub) to receive ExecutionStatus from GuiExecutionServer
 	messageStreamEngine.InitiateAndStartMessageStreamChannelReader()

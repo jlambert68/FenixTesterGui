@@ -24,7 +24,8 @@ import (
 	"time"
 )
 
-func (gcp *GcpObjectStruct) GenerateGCPAccessToken(ctx context.Context, targetServer TargetServerType) (appendedCtx context.Context, returnAckNack bool, returnMessage string) {
+func (gcp *GcpObjectStruct) GenerateGCPAccessToken(ctx context.Context, targetServer TargetServerType) (
+	appendedCtx context.Context, returnAckNack bool, returnMessage string) {
 
 	// Chose correct Authentication method
 	switch targetServer {

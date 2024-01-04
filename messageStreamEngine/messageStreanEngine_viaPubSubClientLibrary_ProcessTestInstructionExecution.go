@@ -27,8 +27,14 @@ func PullPubSubTestInstructionExecutionMessagesGcpClientLib() {
 		"id": "1a6fc28d-2523-44c7-9f02-8a7392c4966c",
 	}).Debug("Outgoing 'PullPubSubTestInstructionExecutionMessagesGcpClientLib'")
 
-	projectID := sharedCode.GcpProject
-	subID := generatePubSubTopicSubscriptionNameForExecutionStatusUpdates(sharedCode.CurrentUserAuthenticatedTowardsGCP)
+	// Get the GCP-project
+	var projectID string
+	projectID = sharedCode.GcpProject
+
+	// Extract PubSub-Id and remove characters that are not allowed
+	var subID string
+	subID = generatePubSubTopicSubscriptionNameForExecutionStatusUpdates(sharedCode.CurrentUserAuthenticatedTowardsGCP)
+	subID = strings.ReplaceAll(subID, "@", "")
 
 	var pubSubClient *pubsub.Client
 	var err error

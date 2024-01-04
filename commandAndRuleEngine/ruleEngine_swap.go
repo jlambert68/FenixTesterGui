@@ -168,7 +168,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 			createdTimeStamp := timestamppb.Now()
 
 			// Extract parent Original TestInstructionContainer, if it exists
-			if immatureElementToSwapIn.ImmatureElementMap[immatureElementToSwapIn.FirstElementUuid].OriginalElementUuid !=
+			if immatureElementToSwapIn.ImmatureElementMap[immatureElementToSwapIn.FirstElementUuid].OriginalElementUuid ==
 				immatureElementToSwapIn.ImmatureElementMap[immatureElementToSwapIn.FirstElementUuid].ParentElementUuid {
 				tempParentTestInstructionContainerUuid = immatureElementToSwapIn.ImmatureElementMap[immatureElementToSwapIn.FirstElementUuid].ParentElementUuid
 			} else {
@@ -187,26 +187,26 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 
 			newMatureTestInstruction = testCaseModel.MatureTestInstructionStruct{
 				BasicTestInstructionInformation_NonEditableInformation: &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage_NonEditableBasicInformationMessage{
-					DomainUuid:                  commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionInformation.NonEditableInformation.DomainUuid,
-					DomainName:                  commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionInformation.NonEditableInformation.DomainName,
-					TestInstructionOrignalUuid:  immatureElementToSwapIn.ImmatureElementMap[immatureElementToSwapIn.FirstElementUuid].OriginalElementUuid,
-					TestInstructionOriginalName: immatureElementToSwapIn.ImmatureElementMap[immatureElementToSwapIn.FirstElementUuid].OriginalElementName,
-					TestInstructionTypeUuid:     commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeUuid,
-					TestInstructionTypeName:     commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeName,
-					Deprecated:                  commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionInformation.NonEditableInformation.Deprecated,
-					MajorVersionNumber:          commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionInformation.NonEditableInformation.MajorVersionNumber,
-					MinorVersionNumber:          commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionInformation.NonEditableInformation.MinorVersionNumber,
-					UpdatedTimeStamp:            commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionInformation.NonEditableInformation.UpdatedTimeStamp,
-					TestInstructionColor:        commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionInformation.NonEditableInformation.TestInstructionColor,
-					TCRuleDeletion:              commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionInformation.NonEditableInformation.TCRuleDeletion,
-					TCRuleSwap:                  commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionInformation.NonEditableInformation.TCRuleSwap,
+					DomainUuid:                  commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.NonEditableInformation.DomainUuid,
+					DomainName:                  commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.NonEditableInformation.DomainName,
+					TestInstructionOrignalUuid:  immatureElementToSwapIn.ImmatureElementMap[matureElement.OriginalElementUuid].OriginalElementUuid,
+					TestInstructionOriginalName: immatureElementToSwapIn.ImmatureElementMap[matureElement.OriginalElementUuid].OriginalElementName,
+					TestInstructionTypeUuid:     commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeUuid,
+					TestInstructionTypeName:     commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeName,
+					Deprecated:                  commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.NonEditableInformation.Deprecated,
+					MajorVersionNumber:          commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.NonEditableInformation.MajorVersionNumber,
+					MinorVersionNumber:          commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.NonEditableInformation.MinorVersionNumber,
+					UpdatedTimeStamp:            commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.NonEditableInformation.UpdatedTimeStamp,
+					TestInstructionColor:        commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.NonEditableInformation.TestInstructionColor,
+					TCRuleDeletion:              commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.NonEditableInformation.TCRuleDeletion,
+					TCRuleSwap:                  commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.NonEditableInformation.TCRuleSwap,
 				},
 				BasicTestInstructionInformation_EditableInformation: &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage_EditableBasicInformationMessage{
-					TestInstructionDescription:   commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionInformation.EditableInformation.TestInstructionDescription,
-					TestInstructionMouseOverText: commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionInformation.EditableInformation.TestInstructionMouseOverText,
+					TestInstructionDescription:   commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.EditableInformation.TestInstructionDescription,
+					TestInstructionMouseOverText: commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.EditableInformation.TestInstructionMouseOverText,
 				},
 				BasicTestInstructionInformation_InvisibleBasicInformation: &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage_InvisibleBasicInformationMessage{
-					Enabled: commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionInformation.InvisibleBasicInformation.Enabled,
+					Enabled: commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.InvisibleBasicInformation.Enabled,
 				},
 				MatureBasicTestInstructionInformation: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_MatureBasicTestInstructionInformationMessage{
 					TestCaseUuid:                             testCaseUuid,
@@ -414,7 +414,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 
 				}
 				// Save Mature TestInstruction in TestCase
-				currentTestCase.MatureTestInstructionMap[matureElementToSwapIn.FirstElementUuid] = newMatureTestInstruction
+				currentTestCase.MatureTestInstructionMap[matureElement.MatureElementUuid] = newMatureTestInstruction
 			}
 		}
 	}
@@ -472,29 +472,29 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 
 			newMatureTestInstructionContainer = testCaseModel.MatureTestInstructionContainerStruct{
 				NonEditableInformation: &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionContainerInformationMessage_NonEditableBasicInformationMessage{
-					DomainUuid:                       commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.DomainUuid,
-					DomainName:                       commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.DomainName,
-					TestInstructionContainerUuid:     commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerUuid,
-					TestInstructionContainerName:     commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerName,
-					TestInstructionContainerTypeUuid: commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerTypeUuid,
-					TestInstructionContainerTypeName: commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerTypeName,
-					Deprecated:                       commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.Deprecated,
-					MajorVersionNumber:               commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.MajorVersionNumber,
-					MinorVersionNumber:               commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.MinorVersionNumber,
-					UpdatedTimeStamp:                 commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.UpdatedTimeStamp,
-					TestInstructionContainerColor:    commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerColor,
-					TCRuleDeletion:                   commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.TCRuleDeletion,
-					TCRuleSwap:                       commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.TCRuleSwap,
+					DomainUuid:                       commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[matureElement.OriginalElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.DomainUuid,
+					DomainName:                       commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[matureElement.OriginalElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.DomainName,
+					TestInstructionContainerUuid:     commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[matureElement.OriginalElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerUuid,
+					TestInstructionContainerName:     commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[matureElement.OriginalElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerName,
+					TestInstructionContainerTypeUuid: commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[matureElement.OriginalElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerTypeUuid,
+					TestInstructionContainerTypeName: commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[matureElement.OriginalElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerTypeName,
+					Deprecated:                       commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[matureElement.OriginalElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.Deprecated,
+					MajorVersionNumber:               commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[matureElement.OriginalElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.MajorVersionNumber,
+					MinorVersionNumber:               commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[matureElement.OriginalElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.MinorVersionNumber,
+					UpdatedTimeStamp:                 commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[matureElement.OriginalElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.UpdatedTimeStamp,
+					TestInstructionContainerColor:    commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[matureElement.OriginalElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerColor,
+					TCRuleDeletion:                   commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[matureElement.OriginalElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.TCRuleDeletion,
+					TCRuleSwap:                       commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[matureElement.OriginalElementUuid].BasicTestInstructionContainerInformation.NonEditableInformation.TCRuleSwap,
 				},
 				EditableInformation: &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionContainerInformationMessage_EditableBasicInformationMessage{
-					TestInstructionContainerDescription:   commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionContainerInformation.EditableInformation.TestInstructionContainerDescription,
-					TestInstructionContainerMouseOverText: commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionContainerInformation.EditableInformation.TestInstructionContainerMouseOverText,
+					TestInstructionContainerDescription:   commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[matureElement.OriginalElementUuid].BasicTestInstructionContainerInformation.EditableInformation.TestInstructionContainerDescription,
+					TestInstructionContainerMouseOverText: commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[matureElement.OriginalElementUuid].BasicTestInstructionContainerInformation.EditableInformation.TestInstructionContainerMouseOverText,
 				},
 				InvisibleBasicInformation: &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionContainerInformationMessage_InvisibleBasicInformationMessage{
-					Enabled: commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionContainerInformation.InvisibleBasicInformation.Enabled,
+					Enabled: commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[matureElement.OriginalElementUuid].BasicTestInstructionContainerInformation.InvisibleBasicInformation.Enabled,
 				},
 				EditableTestInstructionContainerAttributes: &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionContainerInformationMessage_EditableTestInstructionContainerAttributesMessage{
-					TestInstructionContainerExecutionType: commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[immatureElementToSwapIn.FirstElementUuid].BasicTestInstructionContainerInformation.EditableTestInstructionContainerAttributes.TestInstructionContainerExecutionType,
+					TestInstructionContainerExecutionType: commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap[matureElement.OriginalElementUuid].BasicTestInstructionContainerInformation.EditableTestInstructionContainerAttributes.TestInstructionContainerExecutionType,
 				},
 				MatureTestInstructionContainerInformation: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainerInformationMessage_MatureTestInstructionContainerInformationMessage{
 					TestCaseUuid:                       testCaseUuid,
@@ -516,7 +516,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 			// ************************************
 
 			// Save Mature TestInstructionContainer in TestCase
-			currentTestCase.MatureTestInstructionContainerMap[matureElementToSwapIn.FirstElementUuid] = newMatureTestInstructionContainer
+			currentTestCase.MatureTestInstructionContainerMap[matureElement.MatureElementUuid] = newMatureTestInstructionContainer
 		}
 	}
 

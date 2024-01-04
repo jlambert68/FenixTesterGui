@@ -2,17 +2,20 @@ package gui
 
 import (
 	"FenixTesterGui/testCase/testCaseModel"
+	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 )
 
 // Load Available Building Blocks, TestInstructions and TestInstructionContainers, from GUI-server into testCaseModel
-func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadModelWithAvailableBuildingBlocks(testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadModelWithAvailableBuildingBlocks(
+	testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
 
 	// Verify that AckNack Response is equal to AckNack = true
 	if testInstructionsAndTestContainersMessage.AckNackResponse.AckNack == false {
 		availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
 			"id": "1c1d6645-4679-4140-8363-c3ed4c105540",
+			"testInstructionsAndTestContainersMessage.AckNackResponse.Comments": testInstructionsAndTestContainersMessage.AckNackResponse.Comments,
 		}).Fatalln("Code should not come here if AckNack == false")
 	}
 
@@ -273,6 +276,9 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 			BuildingBlockType: TestInstructionContainer,
 		}
 		// Set UI Node name in nodes
+		if len(tempNode.uuid) == 0 {
+			fmt.Println("Debiug")
+		}
 		tempNode.nameInUITree, tempNode.pinnedNameInUITree = availableBuildingBlocksModel.generateUITreeName(tempNode, testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.DomainName)
 		tempTestInstructionContainer.testInstructionContainerNameInUITree = tempNode.nameInUITree
 

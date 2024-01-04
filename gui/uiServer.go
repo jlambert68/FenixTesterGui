@@ -71,7 +71,7 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 		},
 		testCasesModel: testCaseModel.TestCasesModelsStruct{
 			TestCases:        nil,
-			CurrentUser:      "s41797",
+			CurrentUser:      sharedCode.CurrentUserIdLogedInOnComputer,
 			GrpcOutReference: nil,
 		},
 		commandAndRuleEngine: commandAndRuleEngine.CommandAndRuleEngineObjectStruct{},

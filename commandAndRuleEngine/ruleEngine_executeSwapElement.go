@@ -64,6 +64,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifySwapRuleAndC
 }
 
 // TCRuleSwap101
+//
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC(X)			B0					n 		B0								B1-n-B1					TCRuleSwap101
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap101(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
@@ -120,7 +121,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 		// Add Color to first Top Element that was swapped in
 		if elementUuid == matureElementToSwapIn.FirstElementUuid {
-			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
 		}
 		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
@@ -138,6 +139,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 }
 
 // TCRuleSwap102
+//
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B10					n		TIC(B10)						TIC(B11f-n-B11l)		TCRuleSwap102
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap102(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
@@ -203,7 +205,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 		// Add Color to first Top Element that was swapped in
 		if elementUuid == matureElementToSwapIn.FirstElementUuid {
-			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
 		}
 		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
@@ -221,6 +223,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 }
 
 // TCRuleSwap103
+//
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B11f				n		TIC(B11f-X)						TIC(B11f-n-B12-X)		TCRuleSwap103
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap103(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
@@ -283,7 +286,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 		// Add Color to first Top Element that was swapped in
 		if elementUuid == matureElementToSwapIn.FirstElementUuid {
-			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
 		}
 		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
@@ -298,6 +301,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 }
 
 // TCRuleSwap104
+//
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B11l				n		TIC(X-B11l)						TIC(X-B12-n-B11l)		TCRuleSwap104
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap104(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
@@ -360,7 +364,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 		// Add Color to first Top Element that was swapped in
 		if elementUuid == matureElementToSwapIn.FirstElementUuid {
-			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
 		}
 		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
@@ -375,6 +379,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 }
 
 // TCRuleSwap105
+//
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B12					n		X-B12-X							X-B12-n-B12-X			TCRuleSwap105
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap105(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
@@ -437,7 +442,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 		// Add Color to first Top Element that was swapped in
 		if elementUuid == matureElementToSwapIn.FirstElementUuid {
-			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
 		}
 		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
@@ -452,6 +457,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 }
 
 // TCRuleSwap106
+//
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B10x*				n		TIC(B10*x*)						TIC(B11x-n-B11x)		TCRuleSwap106
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap106(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
@@ -519,7 +525,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 		// Add Color to first Top Element that was swapped in
 		if elementUuid == matureElementToSwapIn.FirstElementUuid {
-			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
 		}
 		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
@@ -537,6 +543,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 }
 
 // TCRuleSwap107
+//
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B10*x				n		TIC(B10*x)						TIC(B11x-n-B11)			TCRuleSwap107
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap107(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
@@ -604,7 +611,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 		// Add Color to first Top Element that was swapped in
 		if elementUuid == matureElementToSwapIn.FirstElementUuid {
-			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
 		}
 		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
@@ -622,6 +629,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 }
 
 // TCRuleSwap108
+//
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B10x*				n		TIC(B10x*)						TIC(B11-n-B11x)			TCRuleSwap108
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap108(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
@@ -688,7 +696,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 		// Add Color to first Top Element that was swapped in
 		if elementUuid == matureElementToSwapIn.FirstElementUuid {
-			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
 		}
 		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
@@ -714,9 +722,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) transformImmatureE
 	// Create the temp store for matureElementModel and initiate map
 	tempMatureElementModel := testCaseModel.MatureElementStruct{}
 	tempMatureElementModel.MatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage)
+	tempMatureElementModel.MatureElementChosenDropZoneColorMap = make(map[string]string)
 
 	// Initiate the matureElementModel map
 	matureElementModel.MatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage)
+	matureElementModel.MatureElementChosenDropZoneColorMap = make(map[string]string)
 
 	// Loop all ImmatureElements in Component and create a raw mature version of each immature element
 	for immatureElementUuid, immatureElement := range immatureElementToSwapIn.ImmatureElementMap {
@@ -789,7 +799,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) transformImmatureE
 	// Move UUID and Color for Element
 	matureElementModel.ChosenDropZoneUuid = immatureElementToSwapIn.ChosenDropZoneUuid
 	matureElementModel.ChosenDropZoneName = immatureElementToSwapIn.ChosenDropZoneName
-	matureElementModel.ChosenDropZoneColor = immatureElementToSwapIn.ChosenDropZoneColor
+	//	matureElementModel.ChosenDropZoneColor = immatureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
+	for immatureElementUuid, colorValue := range immatureElementToSwapIn.ImmatureElementChosenDropZoneColorMap {
+		matureElementModel.MatureElementChosenDropZoneColorMap[immatureElementUuid] = colorValue
+	}
 
 	return matureElementModel, err
 }

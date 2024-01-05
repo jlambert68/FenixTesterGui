@@ -215,7 +215,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 					ParentTestInstructionContainerMatureUuid: tempParentTestInstructionContainerMatureUuid,
 					ChosenDropZoneUuid:                       matureElementToSwapIn.ChosenDropZoneUuid,
 					ChosenDropZoneName:                       matureElementToSwapIn.ChosenDropZoneName,
-					ChosenDropZoneColor:                      matureElementToSwapIn.ChosenDropZoneColor,
+					ChosenDropZoneColor:                      matureElementToSwapIn.MatureElementChosenDropZoneColorMap[matureElement.OriginalElementUuid],
 					TestInstructionType:                      matureElement.TestCaseModelElementType,
 				},
 				CreatedAndUpdatedInformation: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_CreatedAndUpdatedInformationMessage{

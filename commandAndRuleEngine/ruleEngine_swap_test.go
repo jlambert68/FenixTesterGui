@@ -11,6 +11,7 @@ import (
 
 // Verify that a 'B0' can be swapped into 'B1-TIC(B10)-B1'
 // TCRuleSwap101
+//
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC(X)			B0					n 		B0								B1-n-B1					TCRuleSwap101
 func TestTCRuleSwap101(t *testing.T) {
@@ -48,11 +49,13 @@ func TestTCRuleSwap101(t *testing.T) {
 
 	// Create an Immature Element model for 'TIC(B10)'
 	immatureElementModel := testCaseModel.ImmatureElementStruct{
-		FirstElementUuid:   "",
-		ImmatureElementMap: nil,
+		FirstElementUuid:                      "",
+		ImmatureElementChosenDropZoneColorMap: nil,
+		ImmatureElementMap:                    nil,
 	}
 
 	immatureElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+	immatureElementModel.ImmatureElementChosenDropZoneColorMap = make(map[string]string)
 
 	// Create TIC
 	tic := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
@@ -211,6 +214,7 @@ func TestTCRuleSwap101(t *testing.T) {
 }
 
 // TCRuleSwap102
+//
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B10					n		TIC(B10)						TIC(B11f-n-B11l)		TCRuleSwap102
 func TestTCRuleSwap102(t *testing.T) {
@@ -289,6 +293,7 @@ func TestTCRuleSwap102(t *testing.T) {
 	}
 
 	immatureElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+	immatureElementModel.ImmatureElementChosenDropZoneColorMap = make(map[string]string)
 
 	// Create TIC
 	tic := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
@@ -478,6 +483,7 @@ func TestTCRuleSwap102(t *testing.T) {
 }
 
 // TCRuleSwap103
+//
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B11f				n		TIC(B11f-X)						TIC(B11f-n-B12-X)		TCRuleSwap103
 func TestTCRuleSwap103(t *testing.T) {
@@ -592,6 +598,7 @@ func TestTCRuleSwap103(t *testing.T) {
 	}
 
 	immatureElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+	immatureElementModel.ImmatureElementChosenDropZoneColorMap = make(map[string]string)
 
 	// Create TIC
 	tic := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
@@ -801,6 +808,7 @@ func TestTCRuleSwap103(t *testing.T) {
 }
 
 // TCRuleSwap104
+//
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B11l				n		TIC(X-B11l)						TIC(X-B12-n-B11l)		TCRuleSwap104
 func TestTCRuleSwap104(t *testing.T) {
@@ -915,6 +923,7 @@ func TestTCRuleSwap104(t *testing.T) {
 	}
 
 	immatureElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+	immatureElementModel.ImmatureElementChosenDropZoneColorMap = make(map[string]string)
 
 	// Create TIC
 	tic := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
@@ -1124,6 +1133,7 @@ func TestTCRuleSwap104(t *testing.T) {
 }
 
 // TCRuleSwap105
+//
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B12					n		X-B12-X							X-B12-n-B12-X			TCRuleSwap105
 func TestTCRuleSwap105(t *testing.T) {
@@ -1262,6 +1272,7 @@ func TestTCRuleSwap105(t *testing.T) {
 	}
 
 	immatureElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+	immatureElementModel.ImmatureElementChosenDropZoneColorMap = make(map[string]string)
 
 	// Create TI
 	ti := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
@@ -1467,6 +1478,7 @@ func TestTCRuleSwap105(t *testing.T) {
 }
 
 // TCRuleSwap106
+//
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B10x*				n		TIC(B10*x*)						TIC(B11x-n-B11x)		TCRuleSwap106
 func TestTCRuleSwap106(t *testing.T) {
@@ -1545,6 +1557,7 @@ func TestTCRuleSwap106(t *testing.T) {
 	}
 
 	immatureElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+	immatureElementModel.ImmatureElementChosenDropZoneColorMap = make(map[string]string)
 
 	// Create TIC
 	tic := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
@@ -1734,6 +1747,7 @@ func TestTCRuleSwap106(t *testing.T) {
 }
 
 // TCRuleSwap107
+//
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B10*x				n		TIC(B10*x)						TIC(B11x-n-B11)			TCRuleSwap107
 func TestTCRuleSwap107(t *testing.T) {
@@ -1812,6 +1826,7 @@ func TestTCRuleSwap107(t *testing.T) {
 	}
 
 	immatureElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+	immatureElementModel.ImmatureElementChosenDropZoneColorMap = make(map[string]string)
 
 	// Create TIC
 	tic := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{
@@ -2001,6 +2016,7 @@ func TestTCRuleSwap107(t *testing.T) {
 }
 
 // TCRuleSwap108
+//
 //	What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
 //	n=TIC or TIC(X)		B10x*				n		TIC(B10x*)						TIC(B11-n-B11x)			TCRuleSwap108
 func TestTCRuleSwap108(t *testing.T) {
@@ -2079,6 +2095,7 @@ func TestTCRuleSwap108(t *testing.T) {
 	}
 
 	immatureElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
+	immatureElementModel.ImmatureElementChosenDropZoneColorMap = make(map[string]string)
 
 	// Create TIC
 	tic := fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage{

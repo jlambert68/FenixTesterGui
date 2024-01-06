@@ -119,10 +119,21 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
 		elementToBeAdded.MatureTestCaseModelElementMessage = element
 
-		// Add Color to first Top Element that was swapped in
-		if elementUuid == matureElementToSwapIn.FirstElementUuid {
-			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
+		/*
+			// Add Color to first Top Element that was swapped in
+			if elementUuid == matureElementToSwapIn.FirstElementUuid {
+				elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+			}
+		*/
+		// Add color to element that is of Typ TI or TIx
+		if elementToBeAdded.MatureTestCaseModelElementMessage.
+			TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			elementToBeAdded.MatureTestCaseModelElementMessage.
+				TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE {
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
 		}
+
 		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
@@ -203,10 +214,20 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
 		elementToBeAdded.MatureTestCaseModelElementMessage = element
 
-		// Add Color to first Top Element that was swapped in
-		if elementUuid == matureElementToSwapIn.FirstElementUuid {
-			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
+		/*
+			// Add Color to first Top Element that was swapped in
+			if elementUuid == matureElementToSwapIn.FirstElementUuid {
+				elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+			}
+		*/
+		// Add color to element that is of Typ TI or TIx
+		if elementToBeAdded.MatureTestCaseModelElementMessage.
+			TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			elementToBeAdded.MatureTestCaseModelElementMessage.
+				TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE {
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
 		}
+
 		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
@@ -284,10 +305,20 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
 		elementToBeAdded.MatureTestCaseModelElementMessage = element
 
-		// Add Color to first Top Element that was swapped in
-		if elementUuid == matureElementToSwapIn.FirstElementUuid {
-			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
+		/*
+			// Add Color to first Top Element that was swapped in
+			if elementUuid == matureElementToSwapIn.FirstElementUuid {
+				elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+			}
+		*/
+		// Add color to element that is of Typ TI or TIx
+		if elementToBeAdded.MatureTestCaseModelElementMessage.
+			TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			elementToBeAdded.MatureTestCaseModelElementMessage.
+				TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE {
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
 		}
+
 		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
@@ -362,10 +393,20 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
 		elementToBeAdded.MatureTestCaseModelElementMessage = element
 
-		// Add Color to first Top Element that was swapped in
-		if elementUuid == matureElementToSwapIn.FirstElementUuid {
-			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
+		/*
+			// Add Color to first Top Element that was swapped in
+			if elementUuid == matureElementToSwapIn.FirstElementUuid {
+				elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+			}
+		*/
+		// Add color to element that is of Typ TI or TIx
+		if elementToBeAdded.MatureTestCaseModelElementMessage.
+			TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			elementToBeAdded.MatureTestCaseModelElementMessage.
+				TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE {
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
 		}
+
 		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
@@ -440,10 +481,20 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
 		elementToBeAdded.MatureTestCaseModelElementMessage = element
 
-		// Add Color to first Top Element that was swapped in
-		if elementUuid == matureElementToSwapIn.FirstElementUuid {
-			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
+		/*
+			// Add Color to first Top Element that was swapped in
+			if elementUuid == matureElementToSwapIn.FirstElementUuid {
+				elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+			}
+		*/
+		// Add color to element that is of Typ TI or TIx
+		if elementToBeAdded.MatureTestCaseModelElementMessage.
+			TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			elementToBeAdded.MatureTestCaseModelElementMessage.
+				TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE {
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
 		}
+
 		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
@@ -523,10 +574,20 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
 		elementToBeAdded.MatureTestCaseModelElementMessage = element
 
-		// Add Color to first Top Element that was swapped in
-		if elementUuid == matureElementToSwapIn.FirstElementUuid {
-			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
+		/*
+			// Add Color to first Top Element that was swapped in
+			if elementUuid == matureElementToSwapIn.FirstElementUuid {
+				elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+			}
+		*/
+		// Add color to element that is of Typ TI or TIx
+		if elementToBeAdded.MatureTestCaseModelElementMessage.
+			TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			elementToBeAdded.MatureTestCaseModelElementMessage.
+				TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE {
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
 		}
+
 		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
@@ -609,10 +670,20 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
 		elementToBeAdded.MatureTestCaseModelElementMessage = element
 
-		// Add Color to first Top Element that was swapped in
-		if elementUuid == matureElementToSwapIn.FirstElementUuid {
-			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
+		/*
+			// Add Color to first Top Element that was swapped in
+			if elementUuid == matureElementToSwapIn.FirstElementUuid {
+				elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+			}
+		*/
+		// Add color to element that is of Typ TI or TIx
+		if elementToBeAdded.MatureTestCaseModelElementMessage.
+			TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			elementToBeAdded.MatureTestCaseModelElementMessage.
+				TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE {
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
 		}
+
 		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
@@ -694,10 +765,20 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
 		elementToBeAdded.MatureTestCaseModelElementMessage = element
 
-		// Add Color to first Top Element that was swapped in
-		if elementUuid == matureElementToSwapIn.FirstElementUuid {
-			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
+		/*
+			// Add Color to first Top Element that was swapped in
+			if elementUuid == matureElementToSwapIn.FirstElementUuid {
+				elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
+			}
+		*/
+		// Add color to element that is of Typ TI or TIx
+		if elementToBeAdded.MatureTestCaseModelElementMessage.
+			TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			elementToBeAdded.MatureTestCaseModelElementMessage.
+				TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE {
+			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
 		}
+
 		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
@@ -715,18 +796,18 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 // Transforms a immature element model into a mature element model.
 // This means that new UUIDs are created for each element in the component
-func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) transformImmatureElementModelIntoMatureElementModel(immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementModel testCaseModel.MatureElementStruct, err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) transformImmatureElementModelIntoMatureElementModel(
+	immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (
+	matureElementModel testCaseModel.MatureElementStruct, err error) {
 
 	var matureIndicator = "_mature"
 
 	// Create the temp store for matureElementModel and initiate map
 	tempMatureElementModel := testCaseModel.MatureElementStruct{}
 	tempMatureElementModel.MatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage)
-	tempMatureElementModel.MatureElementChosenDropZoneColorMap = make(map[string]string)
 
 	// Initiate the matureElementModel map
 	matureElementModel.MatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage)
-	matureElementModel.MatureElementChosenDropZoneColorMap = make(map[string]string)
 
 	// Loop all ImmatureElements in Component and create a raw mature version of each immature element
 	for immatureElementUuid, immatureElement := range immatureElementToSwapIn.ImmatureElementMap {
@@ -768,6 +849,14 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) transformImmatureE
 		// Add the raw mature element to the map of mature elements model for the component
 		matureElementModel.MatureElementMap[rawMatureElement.MatureElementUuid] = rawMatureElement
 
+		// Add DropZone colors to Mature model when it is a TestInstruction
+		if rawMatureElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
+			rawMatureElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE {
+
+			matureElementModel.ChosenDropZoneColor = immatureElementToSwapIn.ChosenDropZoneColor
+
+		}
+
 		// If this element is the top element then this element's uuid as first element
 		// A top element must be a TI or TIC
 		if rawMatureElement.TestCaseModelElementType == fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION ||
@@ -799,10 +888,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) transformImmatureE
 	// Move UUID and Color for Element
 	matureElementModel.ChosenDropZoneUuid = immatureElementToSwapIn.ChosenDropZoneUuid
 	matureElementModel.ChosenDropZoneName = immatureElementToSwapIn.ChosenDropZoneName
-	//	matureElementModel.ChosenDropZoneColor = immatureElementToSwapIn.MatureElementChosenDropZoneColorMap[elementUuid]
-	for immatureElementUuid, colorValue := range immatureElementToSwapIn.ImmatureElementChosenDropZoneColorMap {
-		matureElementModel.MatureElementChosenDropZoneColorMap[immatureElementUuid] = colorValue
-	}
+	matureElementModel.ChosenDropZoneColor = immatureElementToSwapIn.ChosenDropZoneColor
 
 	return matureElementModel, err
 }

@@ -78,6 +78,11 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 	// Loop all TestInstructions and extract all data to be used in Available Building Block UI-tree
 	for _, testInstruction := range testInstructionsAndTestContainersMessage.ImmatureTestInstructions {
 
+		// only show TestInstruction that are enabled
+		if testInstruction.BasicTestInstructionInformation.GetInvisibleBasicInformation().Enabled == false {
+			continue
+		}
+
 		// *** Does Domain exist in map ***
 		testInstructionTypeTestInstructionsRelationsMap, existInMap = availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap[testInstruction.BasicTestInstructionInformation.NonEditableInformation.DomainUuid]
 
@@ -200,6 +205,11 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 
 	// Loop all TestInstructionContainers and extract all data to be used in Available Building Block UI-tree
 	for _, testInstructionContainer := range testInstructionsAndTestContainersMessage.ImmatureTestInstructionContainers {
+
+		// only use TestInstructionContainer that are enabled
+		if testInstructionContainer.BasicTestInstructionContainerInformation.GetInvisibleBasicInformation().Enabled == false {
+			continue
+		}
 
 		// *** Does Domain exist in map ***
 		testInstructionContainerTypeTestInstructionContainersRelationsMap, existInMap = availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap[testInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.DomainUuid]

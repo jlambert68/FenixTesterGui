@@ -233,9 +233,79 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvai
 
 		// Need to do this because otherwise I don't get all subObjects(DropZone-data). Seems to be some bug
 		var immatureTestInstructionContainer *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionContainerMessage
-		immatureTestInstructionContainer = testInstructionsAndTestContainersMessage.ImmatureTestInstructionContainers[immatureTestInstructionContainerCounter]
+		immatureTestInstructionContainer = testInstructionsAndTestContainersMessage.
+			ImmatureTestInstructionContainers[immatureTestInstructionContainerCounter]
 
-		testCaseModeReference.AvailableImmatureTestInstructionContainersMap[immatureTestInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerUuid] = immatureTestInstructionContainer
+		testCaseModeReference.
+			AvailableImmatureTestInstructionContainersMap[immatureTestInstructionContainer.
+			BasicTestInstructionContainerInformation.NonEditableInformation.TestInstructionContainerUuid] = immatureTestInstructionContainer
+
+		// Extract DropZone and add ti Map
+		for _, dropZoneMessage := range immatureTestInstructionContainer.ImmatureTestInstructionContainerInformation.AvailableDropZones {
+
+			// DropZoneUuid should not be empty
+			if dropZoneMessage.DropZoneUuid == "" {
+				errorId := "75306fe3-3871-485f-aea4-5ac66a34d3ac"
+				err := errors.New(fmt.Sprintf("dropZoneUuid is emtpy in TestInstructionContainer %s with "+
+					"name %s 'immatureTestInstruction.ImmatureTestInstructionInformation.AvailableDropZones' "+
+					"[ErrorID: %s]", immatureTestInstructionContainer.BasicTestInstructionContainerInformation.
+					NonEditableInformation.TestInstructionContainerUuid,
+					immatureTestInstructionContainer.BasicTestInstructionContainerInformation.NonEditableInformation.
+						TestInstructionContainerName,
+					errorId))
+
+				fmt.Println(err) //TODO Send error over error-channel
+			}
+
+			// Verify that DropZoneUuid doesn't already exit in Map
+			_, existInMap := testCaseModeReference.ImmatureDropZonesDataMap[dropZoneMessage.DropZoneUuid]
+			if existInMap == true {
+
+				errorId := "3612e315-76f1-44bf-89b2-3818cf2c8e88"
+				err := errors.New(fmt.Sprintf("dropZoneUuid %s already exist in ImmatureDropZonesDataMap "+
+					"[ErrorID: %s]",
+					dropZoneMessage.DropZoneUuid,
+					errorId))
+
+				fmt.Println(err) //TODO Send error over error-channel
+
+			} else {
+
+				var tempImmatureDropZoneData testCaseModel.ImmatureDropZoneDataMapStruct
+
+				tempImmatureDropZoneData = testCaseModel.ImmatureDropZoneDataMapStruct{
+					DropZoneUuid:        dropZoneMessage.DropZoneUuid,
+					DropZoneName:        dropZoneMessage.DropZoneName,
+					DropZoneDescription: dropZoneMessage.DropZoneDescription,
+					DropZoneMouseOver:   dropZoneMessage.DropZoneMouseOver,
+					DropZoneColor:       dropZoneMessage.DropZoneColor,
+					DropZonePreSetTestInstructionAttributesMap: make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
+						ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage),
+				}
+
+				for _, dropZoneAttribute := range dropZoneMessage.DropZonePreSetTestInstructionAttributes {
+
+					tempDropZonePreSetTestInstructionAttributeMessage := &fenixGuiTestCaseBuilderServerGrpcApi.
+						ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage{
+						TestInstructionAttributeType: dropZoneAttribute.TestInstructionAttributeType,
+						TestInstructionAttributeUuid: dropZoneAttribute.TestInstructionAttributeUuid,
+						TestInstructionAttributeName: dropZoneAttribute.TestInstructionAttributeName,
+						AttributeValueAsString:       dropZoneAttribute.AttributeValueAsString,
+						AttributeValueUuid:           dropZoneAttribute.AttributeValueUuid,
+						AttributeActionCommand: fenixGuiTestCaseBuilderServerGrpcApi.
+							ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage_AttributeActionCommandEnum(
+								dropZoneAttribute.AttributeActionCommand),
+					}
+
+					// Add DropZone Attribute to DropZone Attributes Map
+					tempImmatureDropZoneData.DropZonePreSetTestInstructionAttributesMap[dropZoneAttribute.TestInstructionAttributeUuid] = tempDropZonePreSetTestInstructionAttributeMessage
+
+				}
+
+				// Add all DropZone to DropZones-map
+				testCaseModeReference.ImmatureDropZonesDataMap[dropZoneMessage.DropZoneUuid] = tempImmatureDropZoneData
+			}
+		}
 	}
 
 	// fmt.Println(testInstructionsAndTestContainersMessage)

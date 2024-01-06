@@ -526,13 +526,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSwap
 			// Move the uuid and color for the only DropZone onto all TestInstructions color-choice for UI
 			immatureElementToSwapInTestCaseFormat.ChosenDropZoneUuid = availableDropZones[0].DropZoneUuid
 			immatureElementToSwapInTestCaseFormat.ChosenDropZoneName = availableDropZones[0].DropZoneName
-			//immatureElementToSwapInTestCaseFormat.ChosenDropZoneColor = availableDropZones[0].DropZoneColor
-
-			// Loop over the color-map and set all values to the color found in DropZoneColor field
-			for mapKey, _ := range immatureElementToSwapInTestCaseFormat.ImmatureElementChosenDropZoneColorMap {
-				immatureElementToSwapInTestCaseFormat.ImmatureElementChosenDropZoneColorMap[mapKey] = availableDropZones[0].DropZoneColor
-
-			}
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneColor = availableDropZones[0].DropZoneColor
 
 		case 2:
 
@@ -619,13 +613,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSwap
 			// Set the DropZoneUuid and TestInstructionColor from Chosen DropZone
 			immatureElementToSwapInTestCaseFormat.ChosenDropZoneUuid = dropZoneUuid
 			immatureElementToSwapInTestCaseFormat.ChosenDropZoneName = dropZoneName
-			//immatureElementToSwapInTestCaseFormat.ChosenDropZoneColor = dropZoneColorAsHexString
-
-			// Loop over the color-map and set all values to the color found in DropZoneColor field
-			for mapKey, _ := range immatureElementToSwapInTestCaseFormat.ImmatureElementChosenDropZoneColorMap {
-				immatureElementToSwapInTestCaseFormat.ImmatureElementChosenDropZoneColorMap[mapKey] = dropZoneColorAsHexString
-
-			}
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneColor = dropZoneColorAsHexString
 
 		}
 
@@ -654,6 +642,126 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSwap
 		tempMap := commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionContainersMap
 		immatureElementToSwapInOriginal := tempMap[elementUuidToBeSwappedIn].ImmatureSubTestCaseModel
 		immatureElementToSwapInTestCaseFormat = commandAndRuleEngine.convertGrpcElementModelIntoTestCaseElementModel(immatureElementToSwapInOriginal)
+
+		// Handle DropZones
+		availableDropZones := tempMap[elementUuidToBeSwappedIn].ImmatureTestInstructionContainerInformation.AvailableDropZones
+		numberOfDropZones := len(availableDropZones)
+
+		// If there are more than one DropZone then pop up window so user can choose
+		if numberOfDropZones > 1 {
+			numberOfDropZones = 2
+		}
+
+		// Create DropZone window
+		dropZoneContainer := container.NewVBox()
+		var dropZoneWindow dialog.Dialog
+		var dropZoneWaitGroup sync.WaitGroup
+		dropZoneWaitGroup.Add(1)
+		chosenDropZoneName := "NO_DROPZONE_WAS_CHOSEN"
+
+		switch numberOfDropZones {
+		case 0:
+
+			// Set the TestInstructionColor to transparent
+			//immatureElementToSwapInTestCaseFormat.ChosenDropZoneColor = "#00000000"
+			// All TestInstructions have their initial values already set in UI-field for color
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneUuid = "No DropZone exists"
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneName = "No DropZone exists"
+
+		case 1:
+			// Move the uuid and color for the only DropZone onto all TestInstructions color-choice for UI
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneUuid = availableDropZones[0].DropZoneUuid
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneName = availableDropZones[0].DropZoneName
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneColor = availableDropZones[0].DropZoneColor
+
+		case 2:
+
+			for _, dropZoneItem := range availableDropZones {
+
+				dropZoneButton := &widget.Button{
+					DisableableWidget: widget.DisableableWidget{},
+					Text:              dropZoneItem.DropZoneName,
+					Icon:              nil,
+					Importance:        0,
+					Alignment:         0,
+					IconPlacement:     0,
+					OnTapped:          nil,
+				}
+
+				// Create the Background colored rectangle
+				dropZoneColor, err := sharedCode.ConvertRGBAHexStringIntoRGBAColor(dropZoneItem.DropZoneColor)
+				if err != nil {
+					return
+				}
+				backgroundColorRectangle := canvas.NewRectangle(dropZoneColor)
+
+				// Create the DropZone Button
+				dropZoneButton.OnTapped = func() {
+					fmt.Println(dropZoneButton.Text)
+					chosenDropZoneName = dropZoneButton.Text
+					defer dropZoneWaitGroup.Done()
+				}
+
+				// Create text background rectangle for text to be more visible
+				textbackgroundColor := color.RGBA{
+					R: 0x33,
+					G: 0x33,
+					B: 0x33,
+					A: 0xFF,
+				}
+				textBackgroundColorRectangle := canvas.NewRectangle(textbackgroundColor)
+
+				// Create the DropZoneContainer
+				dropZoneButtonContainer := container.NewMax(textBackgroundColorRectangle, dropZoneButton)
+				dropZoneButtonContainer2 := container.NewHBox(layout.NewSpacer(), dropZoneButtonContainer, layout.NewSpacer())
+				dropZoneButtonContainer2b := container.NewVBox(layout.NewSpacer(), dropZoneButtonContainer2, layout.NewSpacer())
+				dropZoneButtonContainer3 := container.NewMax(backgroundColorRectangle, dropZoneButtonContainer2b)
+				dropZoneButtonContainer3.Refresh()
+				backgroundColorRectangle.SetMinSize(fyne.NewSize(0, dropZoneButton.Size().Height*1.3))
+				textBackgroundColorRectangle.SetMinSize(fyne.NewSize(0, dropZoneButton.Size().Height*0.7))
+				dropZoneButtonContainer3.Refresh()
+
+				// Add the DropZoneButton-container to the object to be put up for user to chose DropZone from
+				dropZoneContainer.Add(dropZoneButtonContainer3)
+
+			}
+
+			dropZoneContainer.Add(widget.NewSeparator())
+
+			// Open up the DropZone-choser to the user
+			dropZoneWindow = dialog.NewCustom("Choose DropZone", "Cancel", dropZoneContainer, *commandAndRuleEngine.MasterFenixWindow)
+			dropZoneWindow.Show()
+
+			// Wait for user to choose a DropZone
+			dropZoneWaitGroup.Wait()
+			dropZoneWindow.Hide()
+
+			// If no DropZone was chosen then just exit
+			if chosenDropZoneName == "NO_DROPZONE_WAS_CHOSEN" {
+				return
+			}
+
+			// Find correct DropZone
+			var dropZoneColorAsHexString string
+			var dropZoneUuid string
+			var dropZoneName string
+			for _, dropZoneItem := range availableDropZones {
+
+				if dropZoneItem.DropZoneName == chosenDropZoneName {
+					dropZoneColorAsHexString = dropZoneItem.DropZoneColor
+					dropZoneUuid = dropZoneItem.DropZoneUuid
+					dropZoneName = dropZoneItem.DropZoneName
+					break
+				}
+
+			}
+
+			// Set the DropZoneUuid and TestInstructionColor from Chosen DropZone
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneUuid = dropZoneUuid
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneName = dropZoneName
+			immatureElementToSwapInTestCaseFormat.ChosenDropZoneColor = dropZoneColorAsHexString
+
+		}
 
 	default:
 
@@ -717,24 +825,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) convertGrpcElement
 
 	// Initiate map used in TestCaseModel
 	immatureTestCaseElementModel.ImmatureElementMap = make(map[string]fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestCaseModelElementMessage)
-	immatureTestCaseElementModel.ImmatureElementChosenDropZoneColorMap = make(map[string]string)
 
 	// Loop over gRPC-element-model-structure
 	for _, gRpcElementModel := range immatureGrpcElementModelMessage.TestCaseModelElements {
 		immatureTestCaseElementModel.ImmatureElementMap[gRpcElementModel.ImmatureElementUuid] = *gRpcElementModel
 
-		// Add original color to color-map
-		switch gRpcElementModel.TestCaseModelElementType {
-		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION,
-			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE:
-			immatureTestCaseElementModel.ImmatureElementChosenDropZoneColorMap[gRpcElementModel.ImmatureElementUuid] =
-				commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[gRpcElementModel.ImmatureElementUuid].
-					BasicTestInstructionInformation.NonEditableInformation.TestInstructionColor
-
-		default:
-			immatureTestCaseElementModel.ImmatureElementChosenDropZoneColorMap[gRpcElementModel.ImmatureElementUuid] =
-				"Not a TestInstruction, use not color code"
-		}
 	}
 
 	// Set the first Element

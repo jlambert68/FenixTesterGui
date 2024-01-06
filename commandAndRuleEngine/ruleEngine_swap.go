@@ -120,7 +120,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElement
 }
 
 // Add All TestInstruction-data for the new TestInstruction into the TestCase-model
-func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstructionDataToTestCaseModel(testCaseUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct, matureElementToSwapIn *testCaseModel.MatureElementStruct) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstructionDataToTestCaseModel(
+	testCaseUuid string,
+	immatureElementToSwapIn *testCaseModel.ImmatureElementStruct,
+	matureElementToSwapIn *testCaseModel.MatureElementStruct) (
+	err error) {
 
 	// Extract TestCase to work with
 	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
@@ -215,7 +219,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 					ParentTestInstructionContainerMatureUuid: tempParentTestInstructionContainerMatureUuid,
 					ChosenDropZoneUuid:                       matureElementToSwapIn.ChosenDropZoneUuid,
 					ChosenDropZoneName:                       matureElementToSwapIn.ChosenDropZoneName,
-					ChosenDropZoneColor:                      matureElementToSwapIn.MatureElementChosenDropZoneColorMap[matureElement.OriginalElementUuid],
+					ChosenDropZoneColor:                      matureElementToSwapIn.ChosenDropZoneColor,
 					TestInstructionType:                      matureElement.TestCaseModelElementType,
 				},
 				CreatedAndUpdatedInformation: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_CreatedAndUpdatedInformationMessage{
@@ -259,8 +263,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 					AttributeInformation:     nil,
 				}
 
-				// Extract the correct DropZone
-				dropZoneData, dropZoneExistsInMap := commandAndRuleEngine.Testcases.ImmatureDropZonesDataMap[matureElementToSwapIn.ChosenDropZoneUuid]
+				// Extract the correct DropZone among TestInstructions
+				dropZoneData, dropZoneExistsInMap := commandAndRuleEngine.Testcases.
+					ImmatureDropZonesDataMap[matureElementToSwapIn.ChosenDropZoneUuid]
 				/* TODO This part should be remove
 				if dropZoneExistsInMap == false {
 
@@ -275,8 +280,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 
 				*/
 
-				// Extract attribute from DropZone-data if it exists, but only if there are any DropZones
-				var attributeDataFromDropZone *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage
+				// Extract attribute from DropZone-data Among TestInstructions if it exists, but only if there are any DropZones
+				var attributeDataFromDropZone *fenixGuiTestCaseBuilderServerGrpcApi.
+					ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage
 				var existsInMap bool
 				if dropZoneExistsInMap == true {
 					attributeDataFromDropZone, existsInMap = dropZoneData.DropZonePreSetTestInstructionAttributesMap[attributeUuid]

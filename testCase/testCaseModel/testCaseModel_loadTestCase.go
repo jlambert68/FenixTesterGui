@@ -48,7 +48,7 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 				TestCaseBasicInformation.GetCreatedAndUpdatedInformation(),
 		},
 		testCaseModelAdaptedForUiTree:     nil,
-		CurrentSelectedTestCaseElement:    currentSelectedTestCaseElementStruct{},
+		CurrentSelectedTestCaseElement:    CurrentSelectedTestCaseElementStruct{},
 		MatureTestInstructionMap:          nil, // Created below
 		MatureTestInstructionContainerMap: nil, // Created below
 		AttributesList:                    nil,

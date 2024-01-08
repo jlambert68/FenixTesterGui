@@ -146,6 +146,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
 	}
 
+	// Clear 'clicked element'
+	currentTestCaseModel.CurrentSelectedTestCaseElement = testCaseModel.CurrentSelectedTestCaseElementStruct{
+		CurrentSelectedTestCaseElementUuid: "",
+		CurrentSelectedTestCaseElementName: "",
+	}
+
 	// Add command to command stack
 	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
 

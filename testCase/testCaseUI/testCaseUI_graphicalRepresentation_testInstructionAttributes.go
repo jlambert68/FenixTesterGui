@@ -43,7 +43,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 		}
 	}
 	// Generate Data to be used for Attributes
-	attributesList, err := testCasesUiCanvasObject.generateAttributeStringListData(testCaseUuid, testInstructionElementMatureUuid)
+	var attributesList testCaseModel.AttributeStructSliceReference
+	attributesList, err = testCasesUiCanvasObject.generateAttributeStringListData(testCaseUuid, testInstructionElementMatureUuid)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -64,53 +65,27 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 	// Only add attributes if there are any, otherwise write simple text
 	if len(attributesList) > 0 {
 		var previousAttributeTypeName string
-		var firstTime bool = true
+		//var firstTime bool = true
 
-		// Loop attributes and create label en entry field for each attribut
-		for _, attributeItem := range attributesList {
-			if attributeItem.AttributeTypeName != previousAttributeTypeName {
-				if firstTime == true {
-					attributesContainer.Add(widget.NewLabel(attributeItem.AttributeTypeName))
-					firstTime = false
-				} else {
-					attributesContainer.Add(widget.NewLabel(attributeItem.AttributeTypeName))
-					attributesContainer.Add(attributesFormContainer)
-					attributesFormContainer = container.New(layout.NewFormLayout())
-				}
+		// Loop attributes and create label en entry field for each attribute
+		for attributeItemCounter, attributeItem := range attributesList {
+
+			// First attribute-data or a new AttributeType is presented
+			if attributeItemCounter == 0 || attributeItem.AttributeTypeName != previousAttributeTypeName {
+				attributesContainer.Add(widget.NewLabel(attributeItem.AttributeTypeName))
 			}
+
+			// Generate and add an 'attribute row' to be used in attributes
+			attributesFormContainer = container.New(layout.NewFormLayout())
+			generateAttributeRow(attributeItem, &attributesList, attributesFormContainer)
+			attributesContainer.Add(attributesFormContainer)
 
 			previousAttributeTypeName = attributeItem.AttributeTypeName
 
-			// Add the label for the Entry-widget
-			attributesFormContainer.Add(widget.NewLabel(attributeItem.AttributeName))
-
-			// Add the Entry-widget
-			newAttributeEntry := widget.NewEntry() // testCasesUiCanvasObject.NewAttributeEntry(attributeItem.attributeUuid)
-			attributeItem.EntryRef = newAttributeEntry
-			newAttributeEntry.SetText(attributeItem.AttributeValue)
-			newAttributeEntry.OnChanged = func(newValue string) {
-				// Find which attributes that we are dealing with
-				var tempAttributeItem *testCaseModel.AttributeStruct
-
-				for _, tempAttributeItem = range attributesList {
-					if tempAttributeItem.EntryRef == newAttributeEntry {
-						break
-					}
-				}
-				if newValue != tempAttributeItem.AttributeValue {
-					tempAttributeItem.AttributeIsChanged = true
-					tempAttributeItem.AttributeChangedValue = newValue
-				} else {
-					tempAttributeItem.AttributeIsChanged = false
-					tempAttributeItem.AttributeChangedValue = newValue
-				}
-
-			}
-			attributesFormContainer.Add(newAttributeEntry)
 		}
 
 		// Handle last batch of batch Attributes
-		attributesContainer.Add(attributesFormContainer)
+		//attributesContainer.Add(attributesFormContainer)
 
 	} else {
 		// No attributes so return simple label
@@ -181,6 +156,41 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 	return attributesContainer, testInstructionAttributesAccordion, err
 }
 
+// Generate and add an 'attribute row' to be used in attributes
+func generateAttributeRow(
+	attributeItem *testCaseModel.AttributeStruct,
+	attributesList *testCaseModel.AttributeStructSliceReference,
+	attributesFormContainer *fyne.Container) {
+
+	// Add the label for the Entry-widget
+	attributesFormContainer.Add(widget.NewLabel(attributeItem.AttributeName))
+
+	// Add the Entry-widget
+	newAttributeEntry := widget.NewEntry() // testCasesUiCanvasObject.NewAttributeEntry(attributeItem.attributeUuid)
+	attributeItem.EntryRef = newAttributeEntry
+	newAttributeEntry.SetText(attributeItem.AttributeValue)
+	newAttributeEntry.OnChanged = func(newValue string) {
+		// Find which attributes that we are dealing with
+		var tempAttributeItem *testCaseModel.AttributeStruct
+
+		for _, tempAttributeItem = range *attributesList {
+			if tempAttributeItem.EntryRef == newAttributeEntry {
+				break
+			}
+		}
+		if newValue != tempAttributeItem.AttributeValue {
+			tempAttributeItem.AttributeIsChanged = true
+			tempAttributeItem.AttributeChangedValue = newValue
+		} else {
+			tempAttributeItem.AttributeIsChanged = false
+			tempAttributeItem.AttributeChangedValue = newValue
+		}
+
+	}
+	attributesFormContainer.Add(newAttributeEntry)
+
+}
+
 // Generate structure for 'binding.StringList' regarding Attribute values
 func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringListData(
 	testCaseUuid string,
@@ -242,6 +252,17 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringLi
 
 	// Sort Attributes in Name-order, within each Type
 	sort.SliceStable(attributesList, func(i, j int) bool {
+
+		/*
+				var attributesListLower string
+			var attributesListHigher string
+
+			attributesListLower = attributesList[i].AttributeTypeName + attributesList[i].AttributeName
+			attributesListHigher = attributesList[j].AttributeTypeName + attributesList[j].AttributeName
+
+			return attributesListLower < attributesListHigher
+		*/
+
 		if attributesList[i].AttributeTypeName != attributesList[j].AttributeTypeName {
 			return attributesList[i].AttributeTypeName < attributesList[j].AttributeTypeName
 		}

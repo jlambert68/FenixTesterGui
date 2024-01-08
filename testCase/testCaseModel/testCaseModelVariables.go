@@ -60,7 +60,7 @@ type TestCaseModelStruct struct {
 	CutCommandInitiated                        bool
 	LocalTestCaseMessage                       LocalTestCaseMessageStruct
 	testCaseModelAdaptedForUiTree              map[string][]TestCaseModelAdaptedForUiTreeDataStruct // Model used for Creating the Tree-view for the TestCase-model
-	CurrentSelectedTestCaseElement             currentSelectedTestCaseElementStruct
+	CurrentSelectedTestCaseElement             CurrentSelectedTestCaseElementStruct
 	MatureTestInstructionMap                   map[string]MatureTestInstructionStruct
 	MatureTestInstructionContainerMap          map[string]MatureTestInstructionContainerStruct
 
@@ -130,7 +130,7 @@ type MatureTestInstructionContainerStruct struct {
 	CreatedAndUpdatedInformation              *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainerInformationMessage_CreatedAndUpdatedInformationMessage
 }
 
-type currentSelectedTestCaseElementStruct struct {
+type CurrentSelectedTestCaseElementStruct struct {
 	CurrentSelectedTestCaseElementUuid string
 	CurrentSelectedTestCaseElementName string
 }

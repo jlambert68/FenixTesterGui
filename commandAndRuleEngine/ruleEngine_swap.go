@@ -214,7 +214,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 				},
 				MatureBasicTestInstructionInformation: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_MatureBasicTestInstructionInformationMessage{
 					TestCaseUuid:                             testCaseUuid,
-					TestInstructionMatureUuid:                matureElementToSwapIn.FirstElementUuid,
+					TestInstructionMatureUuid:                matureElement.MatureElementUuid,
 					ParentTestInstructionContainerUuid:       tempParentTestInstructionContainerUuid,
 					ParentTestInstructionContainerMatureUuid: tempParentTestInstructionContainerMatureUuid,
 					ChosenDropZoneUuid:                       matureElementToSwapIn.ChosenDropZoneUuid,

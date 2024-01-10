@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -133,7 +134,12 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 }
 
 // Convert the MatureTestCaseTestInstructions to its gRPC-version
-func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionsForGrpc(testCaseUuid string) (gRPCMatureTestInstructions []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage_MatureTestInstructionMessage, hashedSlice string, err error) {
+func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionsForGrpc(
+	testCaseUuid string) (
+	gRPCMatureTestInstructions []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage_MatureTestInstructionMessage,
+	hashedSlice string,
+	valuesToBeHashedSlice []string,
+	err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
@@ -144,10 +150,8 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionsForGrp
 
 		fmt.Println(err) // TODO Send on Error-channel
 
-		return nil, "", err
+		return nil, "", nil, err
 	}
-
-	var hashSlice []string
 
 	// Loop map with all 'MatureTestInstructions' in the TestCase and create a slice
 	for _, matureTestInstruction := range currentTestCase.MatureTestInstructionMap {
@@ -157,13 +161,13 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionsForGrp
 
 		// Generate Hashes for  'matureTestInstruction'
 		tempJson := protojson.Format(tempMatureTestInstruction.BasicTestInstructionInformation_NonEditableInformation)
-		hashSlice = append(hashSlice, tempJson)
+		valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 		tempJson = protojson.Format(tempMatureTestInstruction.BasicTestInstructionInformation_EditableInformation)
-		hashSlice = append(hashSlice, tempJson)
+		valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 		tempJson = protojson.Format(tempMatureTestInstruction.BasicTestInstructionInformation_InvisibleBasicInformation)
-		hashSlice = append(hashSlice, tempJson)
+		valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 		tempJson = protojson.Format(tempMatureTestInstruction.MatureBasicTestInstructionInformation)
-		hashSlice = append(hashSlice, tempJson)
+		valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 
 		// Loop over all 'TestInstruction Attributes' in the TestInstruction and create slice
 		var testInstructionAttributesList []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage
@@ -173,7 +177,7 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionsForGrp
 
 			// Generate Hash for  'testInstructionAttribute'
 			tempJson := protojson.Format(testInstructionAttribute)
-			hashSlice = append(hashSlice, tempJson)
+			valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 
 		}
 
@@ -196,14 +200,19 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionsForGrp
 	}
 
 	// Generate Hash of all sub-message-hashes
-	hashedSlice = sharedCode.HashValues(hashSlice, false)
+	hashedSlice = sharedCode.HashValues(valuesToBeHashedSlice, false)
 
-	return gRPCMatureTestInstructions, hashedSlice, err
+	return gRPCMatureTestInstructions, hashedSlice, valuesToBeHashedSlice, err
 
 }
 
 // Convert the MatureTestCaseTestInstructionContainers to its gRPC-version
-func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionContainersForGrpc(testCaseUuid string) (gRPCMatureTestInstructionContainers []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage_MatureTestInstructionContainerMessage, hashedSlice string, err error) {
+func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionContainersForGrpc(
+	testCaseUuid string) (
+	gRPCMatureTestInstructionContainers []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage_MatureTestInstructionContainerMessage,
+	hashedSlice string,
+	valuesToBeHashedSlice []string,
+	err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
@@ -214,10 +223,8 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionContain
 
 		fmt.Println(err) // TODO Send on Error-channel
 
-		return nil, "", err
+		return nil, "", nil, err
 	}
-
-	var hashSlice []string
 
 	// Loop map with all 'MatureTestInstructionContainers' in the TestCase and create a slice
 	for _, matureTestInstructionContainer := range currentTestCase.MatureTestInstructionContainerMap {
@@ -226,17 +233,17 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionContain
 
 		// Generate Hashes for  'matureTestInstruction'
 		tempJson := protojson.Format(tempMatureTestInstructionContainer.NonEditableInformation)
-		hashSlice = append(hashSlice, tempJson)
+		valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 		tempJson = protojson.Format(tempMatureTestInstructionContainer.EditableInformation)
-		hashSlice = append(hashSlice, tempJson)
+		valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 		tempJson = protojson.Format(tempMatureTestInstructionContainer.InvisibleBasicInformation)
-		hashSlice = append(hashSlice, tempJson)
+		valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 		tempJson = protojson.Format(tempMatureTestInstructionContainer.EditableTestInstructionContainerAttributes)
-		hashSlice = append(hashSlice, tempJson)
+		valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 		tempJson = protojson.Format(tempMatureTestInstructionContainer.MatureTestInstructionContainerInformation)
-		hashSlice = append(hashSlice, tempJson)
+		valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 		//tempJson = protojson.Format(tempMatureTestInstructionContainer.CreatedAndUpdatedInformation)
-		//hashSlice = append(hashSlice, tempJson)
+		//valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 
 		// Create one 'MatureTestInstructionContainerMessage'
 		MatureTestInstructionContainerMessage := fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage_MatureTestInstructionContainerMessage{
@@ -263,14 +270,19 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionContain
 	}
 
 	// Generate Hash of all sub-message-hashes
-	hashedSlice = sharedCode.HashValues(hashSlice, true)
+	hashedSlice = sharedCode.HashValues(valuesToBeHashedSlice, false)
 
-	return gRPCMatureTestInstructionContainers, hashedSlice, err
+	return gRPCMatureTestInstructionContainers, hashedSlice, valuesToBeHashedSlice, err
 
 }
 
 // Convert the MatureTestCaseModelElementMessage-map into its gRPC-version
-func (testCaseModel *TestCasesModelsStruct) generateTestCaseModelElementsForGrpc(testCaseUuid string) (gRPCMatureTestCaseModelElements []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage, hashedSlice string, err error) {
+func (testCaseModel *TestCasesModelsStruct) generateTestCaseModelElementsForGrpc(
+	testCaseUuid string) (
+	gRPCMatureTestCaseModelElements []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage,
+	hashedSlice string,
+	valuesToBeHashedSlice []string,
+	err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
@@ -281,10 +293,8 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseModelElementsForGrpc
 
 		fmt.Println(err) // TODO Send on Error-channel
 
-		return nil, "", err
+		return nil, "", nil, err
 	}
-
-	var hashSlice []string
 
 	// Loop map with all 'MatureTestCaseModelElementMessage' in the TestCase and create a slice
 	for _, matureTestCaseModelElement := range currentTestCase.TestCaseModelMap {
@@ -294,19 +304,24 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseModelElementsForGrpc
 
 		// Generate Hash for  'matureTestCaseModelElement'
 		tempJson := protojson.Format(&matureTestCaseModelElement.MatureTestCaseModelElementMessage)
-		hashSlice = append(hashSlice, tempJson)
+		valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 
 	}
 
 	// Generate Hash of all sub-message-hashes
-	hashedSlice = sharedCode.HashValues(hashSlice, false)
+	hashedSlice = sharedCode.HashValues(valuesToBeHashedSlice, false)
 
-	return gRPCMatureTestCaseModelElements, hashedSlice, err
+	return gRPCMatureTestCaseModelElements, hashedSlice, valuesToBeHashedSlice, err
 }
 
 // Convert the TestCaseExtraInformationMessage into its gRPC-version
 // Containing: 1) Textual Representation of TestCase
-func (testCaseModel *TestCasesModelsStruct) generateTestCaseExtraInformationForGrpc(testCaseUuid string) (gRPCTestCaseExtraInformation *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExtraInformationMessage, hashedSlice string, err error) {
+func (testCaseModel *TestCasesModelsStruct) generateTestCaseExtraInformationForGrpc(
+	testCaseUuid string) (
+	gRPCTestCaseExtraInformation *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExtraInformationMessage,
+	hashedSlice string,
+	valuesToBeHashedSlice []string,
+	err error) {
 
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
@@ -317,7 +332,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseExtraInformationForG
 
 		fmt.Println(err) // TODO Send on Error-channel
 
-		return nil, "", err
+		return nil, "", nil, err
 	}
 
 	// Secure that the number of Textual Models are the same
@@ -339,10 +354,8 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseExtraInformationForG
 
 		fmt.Println(err) // TODO Send on Error-channel
 
-		return nil, "", err
+		return nil, "", nil, err
 	}
-
-	var hashSlice []string
 
 	var tempTestCaseTextualRepresentationHistory fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExtraInformationMessage_TestCaseTextualRepresentationHistoryMessage
 	tempTestCaseTextualRepresentationHistory = fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExtraInformationMessage_TestCaseTextualRepresentationHistoryMessage{
@@ -373,17 +386,17 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseExtraInformationForG
 
 	// Generate Hash for  'tempTestCaseTextualRepresentationHistory'
 	tempJson := protojson.Format(&tempTestCaseTextualRepresentationHistory)
-	hashSlice = append(hashSlice, tempJson)
+	valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 
 	// Generate Hash of all sub-message-hashes
-	hashedSlice = sharedCode.HashValues(hashSlice, false)
+	hashedSlice = sharedCode.HashValues(valuesToBeHashedSlice, false)
 
 	// Create return message 'gRPCTestCaseExtraInformation'
 	gRPCTestCaseExtraInformation = &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExtraInformationMessage{
 		TestCaseTextualRepresentationHistory: &tempTestCaseTextualRepresentationHistory,
 	}
 
-	return gRPCTestCaseExtraInformation, hashedSlice, err
+	return gRPCTestCaseExtraInformation, hashedSlice, valuesToBeHashedSlice, err
 
 }
 
@@ -408,34 +421,81 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 		return nil, nil, nil, nil, "", err
 	}
 
+	// Initiate 'subHashPartsSlice', used for holding all Hashes and content, to be logged. Used for debugging when
+	// there is a mismatch in Saved Hash and Loaded Hash for TestCase
+	type subHashPartsMapValueType struct {
+		nameOfContent        string
+		hash                 string
+		contentAsStringSlice []string
+	}
+	var subHashPartsSlice []subHashPartsMapValueType
+
 	// Convert map-messages into gRPC-version, mostly arrays
 	// TestCase-model
 	var hashedMatureTestCaseModelElements string
-	gRPCMatureTestCaseModelElementMessage, hashedMatureTestCaseModelElements, err = testCaseModel.generateTestCaseModelElementsForGrpc(testCaseUuid)
+	var valuesToBeHashedSlice []string
+	gRPCMatureTestCaseModelElementMessage, hashedMatureTestCaseModelElements, valuesToBeHashedSlice, err =
+		testCaseModel.generateTestCaseModelElementsForGrpc(testCaseUuid)
 	if err != nil {
 		return nil, nil, nil, nil, "", err
 	}
+
+	// Add hash and values to slice
+	var tempGrpcMatureTestCaseModelElementMessageHashData subHashPartsMapValueType
+	tempGrpcMatureTestCaseModelElementMessageHashData = subHashPartsMapValueType{
+		nameOfContent:        "gRPCMatureTestCaseModelElementMessage",
+		hash:                 hashedMatureTestCaseModelElements,
+		contentAsStringSlice: valuesToBeHashedSlice,
+	}
+	subHashPartsSlice = append(subHashPartsSlice, tempGrpcMatureTestCaseModelElementMessageHashData)
 
 	// TestInstructions
 	var hashedgRPCMatureTestInstructions string
-	gRPCMatureTestInstructions, hashedgRPCMatureTestInstructions, err = testCaseModel.generateMatureTestInstructionsForGrpc(testCaseUuid)
+	gRPCMatureTestInstructions, hashedgRPCMatureTestInstructions, valuesToBeHashedSlice, err =
+		testCaseModel.generateMatureTestInstructionsForGrpc(testCaseUuid)
 	if err != nil {
 		return nil, nil, nil, nil, "", err
 	}
+	// Add hash and values to slice
+	var tempGrpcMatureTestInstructions subHashPartsMapValueType
+	tempGrpcMatureTestInstructions = subHashPartsMapValueType{
+		nameOfContent:        "gRPCMatureTestInstructions",
+		hash:                 hashedgRPCMatureTestInstructions,
+		contentAsStringSlice: valuesToBeHashedSlice,
+	}
+	subHashPartsSlice = append(subHashPartsSlice, tempGrpcMatureTestInstructions)
 
 	// TestInstructionContainers
 	var hashedgRPCMatureTestInstructionContainers string
-	gRPCMatureTestInstructionContainers, hashedgRPCMatureTestInstructionContainers, err = testCaseModel.generateMatureTestInstructionContainersForGrpc(testCaseUuid)
+	gRPCMatureTestInstructionContainers, hashedgRPCMatureTestInstructionContainers, valuesToBeHashedSlice, err =
+		testCaseModel.generateMatureTestInstructionContainersForGrpc(testCaseUuid)
 	if err != nil {
 		return nil, nil, nil, nil, "", err
 	}
+	// Add hash and values to slice
+	var tempGrpcMatureTestInstructionContainers subHashPartsMapValueType
+	tempGrpcMatureTestInstructionContainers = subHashPartsMapValueType{
+		nameOfContent:        "gRPCMatureTestInstructionContainers",
+		hash:                 hashedgRPCMatureTestInstructionContainers,
+		contentAsStringSlice: valuesToBeHashedSlice,
+	}
+	subHashPartsSlice = append(subHashPartsSlice, tempGrpcMatureTestInstructionContainers)
 
 	// TestCaseExtraInformation
 	var hashedgRPCTestCaseExtraInformation string
-	gRPCTestCaseExtraInformation, hashedgRPCTestCaseExtraInformation, err = testCaseModel.generateTestCaseExtraInformationForGrpc(testCaseUuid)
+	gRPCTestCaseExtraInformation, hashedgRPCTestCaseExtraInformation, valuesToBeHashedSlice, err =
+		testCaseModel.generateTestCaseExtraInformationForGrpc(testCaseUuid)
 	if err != nil {
 		return nil, nil, nil, nil, "", err
 	}
+	// Add hash and values to slice
+	var tempGrpcTestCaseExtraInformation subHashPartsMapValueType
+	tempGrpcTestCaseExtraInformation = subHashPartsMapValueType{
+		nameOfContent:        "gRPCTestCaseExtraInformation",
+		hash:                 hashedgRPCTestCaseExtraInformation,
+		contentAsStringSlice: valuesToBeHashedSlice,
+	}
+	subHashPartsSlice = append(subHashPartsSlice, tempGrpcTestCaseExtraInformation)
 
 	var valuesToReHash []string
 
@@ -444,16 +504,40 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	tempNonEditableInformation := fmt.Sprint(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation)
 	hashNonEditableInformation := sharedCode.HashSingleValue(tempNonEditableInformation)
 	valuesToReHash = append(valuesToReHash, hashNonEditableInformation)
+	// Add hash and values to slice
+	var tempNonEditableInformationValue subHashPartsMapValueType
+	tempNonEditableInformationValue = subHashPartsMapValueType{
+		nameOfContent:        "tempNonEditableInformation",
+		hash:                 hashNonEditableInformation,
+		contentAsStringSlice: []string{tempNonEditableInformation},
+	}
+	subHashPartsSlice = append(subHashPartsSlice, tempNonEditableInformationValue)
 
 	// EditableInformation
 	tempEditableInformation := fmt.Sprint(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation)
 	hashEditableInformation := sharedCode.HashSingleValue(tempEditableInformation)
 	valuesToReHash = append(valuesToReHash, hashEditableInformation)
+	// Add hash and values to slice
+	var tempEditableInformationValue subHashPartsMapValueType
+	tempEditableInformationValue = subHashPartsMapValueType{
+		nameOfContent:        "tempEditableInformation",
+		hash:                 hashEditableInformation,
+		contentAsStringSlice: []string{tempEditableInformation},
+	}
+	subHashPartsSlice = append(subHashPartsSlice, tempEditableInformationValue)
 
 	// FirstMatureElementUuid
 	tempFirstMatureElementUuid := fmt.Sprint(currentTestCase.FirstElementUuid)
 	hashFirstMatureElementUuid := sharedCode.HashSingleValue(tempFirstMatureElementUuid)
 	valuesToReHash = append(valuesToReHash, hashFirstMatureElementUuid)
+	// Add hash and values to slice
+	var tempFirstMatureElementUuidValue subHashPartsMapValueType
+	tempFirstMatureElementUuidValue = subHashPartsMapValueType{
+		nameOfContent:        "tempFirstMatureElementUuid",
+		hash:                 hashFirstMatureElementUuid,
+		contentAsStringSlice: []string{tempFirstMatureElementUuid},
+	}
+	subHashPartsSlice = append(subHashPartsSlice, tempFirstMatureElementUuidValue)
 
 	valuesToReHash = append(valuesToReHash, hashedMatureTestCaseModelElements)
 
@@ -464,6 +548,21 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	valuesToReHash = append(valuesToReHash, hashedgRPCTestCaseExtraInformation)
 
 	finalHash = sharedCode.HashValues(valuesToReHash, false)
+	// Add hash and values to slice
+	var tempFinalHash subHashPartsMapValueType
+	tempFinalHash = subHashPartsMapValueType{
+		nameOfContent:        "finalHash",
+		hash:                 finalHash,
+		contentAsStringSlice: []string{finalHash},
+	}
+	subHashPartsSlice = append(subHashPartsSlice, tempFinalHash)
+
+	// Log subHashPartsSlice to be used for bug findings when TestCase model is out of sync
+	sharedCode.Logger.WithFields(logrus.Fields{
+		"ID":                "d0034233-202b-469c-93e3-48903991fe23",
+		"testCaseUuid":      testCaseUuid,
+		"subHashPartsSlice": subHashPartsSlice,
+	}).Debug("Used for bug findings when TestCase model gets of sync when saving TestCase and the Loading the same TestCase")
 
 	return gRPCMatureTestCaseModelElementMessage,
 		gRPCMatureTestInstructions,

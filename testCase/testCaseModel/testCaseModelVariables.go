@@ -31,9 +31,15 @@ type TestCasesModelsStruct struct {
 	AvailableImmatureTestInstructionContainersMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionContainerMessage
 	ImmatureTestInstructionAttributesMap          map[string]map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionAttributesMessage_TestInstructionAttributeMessage // map[TestInstructionUuid]map[TestInstructionAttributeUuid]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionAttributesMessage_TestInstructionAttributeMessage
 	ImmatureDropZonesDataMap                      map[string]ImmatureDropZoneDataMapStruct                                                                                             // map[DropZoneUuid]ImmatureDropZoneDataMapStruct
-
+	DomainsThatCanOwnTheTestCaseMap               map[string]*DomainThatCanOwnTheTestCaseStruct
 	//AvailableBuildingBlocksModel                  *gui.AvailableBuildingBlocksModelStruct
 
+}
+
+type DomainThatCanOwnTheTestCaseStruct struct {
+	DomainUuid           string
+	DomainName           string
+	DomainNameShownInGui string
 }
 
 type ImmatureDropZoneDataMapStruct struct {

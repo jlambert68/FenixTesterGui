@@ -139,7 +139,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvai
 	testInstructionsAndTestContainersMessage = availableBuildingBlocksModel.grpcOut.
 		SendListAllAvailableTestInstructionsAndTestInstructionContainers(sharedCode.CurrentUserAuthenticatedTowardsGCP) //TODO change to use current logged in to computer user
 
-	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks(testInstructionsAndTestContainersMessage)
+	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks(testInstructionsAndTestContainersMessage, testCaseModeReference)
 
 	// Load TestCase-model with available Immature TestInstruction and TestInstructionContainers TODO Put Immature TI and TIC, and BONDS, in separate object
 	testCaseModeReference.AvailableImmatureTestInstructionsMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage)
@@ -520,7 +520,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) verifyBe
 			availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
 				"id":  "9d3510ec-8b9e-4490-bae9-0e6cf9c0a1cb",
 				"err": err,
-			}).Error(nameInAvailableBuildingBlocksTree + " is missing among nodes i map 'availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'")
+			}).Error(nameInAvailableBuildingBlocksTree + " is missing among nodes i map 'AvailableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'")
 
 		}
 		return err
@@ -537,7 +537,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) verifyBe
 			availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
 				"id":  "e1d22ba0-072f-4be5-a2d9-4b73278c170c",
 				"err": err,
-			}).Error(nameInAvailableBuildingBlocksTree + " is already pinned, or exists in map 'availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes['")
+			}).Error(nameInAvailableBuildingBlocksTree + " is already pinned, or exists in map 'AvailableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes['")
 		}
 		return err
 	}
@@ -582,7 +582,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) verifyBe
 			availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
 				"id":  "be6e39f1-09dc-4532-9819-d516d8ca9661",
 				"err": err,
-			}).Error(pinnedNameInUITree + " is not pinned, or exists in map 'availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes['")
+			}).Error(pinnedNameInUITree + " is not pinned, or exists in map 'AvailableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes['")
 		}
 		return err
 	}
@@ -596,7 +596,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) verifyBe
 			availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
 				"id":  "3e8af427-d2a7-4d01-95b0-45817e33fbc4",
 				"err": err,
-			}).Error(pinnedNameInUITree + " is missing among nodes i map 'availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'")
+			}).Error(pinnedNameInUITree + " is missing among nodes i map 'AvailableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'")
 		}
 		return err
 	}

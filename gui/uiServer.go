@@ -61,7 +61,7 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 		tree:                               nil,
 		content:                            nil,
 		fenixGuiBuilderServerAddressToDial: "",
-		availableBuildingBlocksModel: AvailableBuildingBlocksModelStruct{
+		AvailableBuildingBlocksModel: AvailableBuildingBlocksModelStruct{
 			logger:                             nil,
 			fenixGuiBuilderServerAddressToDial: "",
 			fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
@@ -84,8 +84,8 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 		},
 	}
 	// Add gRPC-out Reference
-	uiServer.commandAndRuleEngine.GrpcOutReference = &uiServer.availableBuildingBlocksModel.grpcOut
-	uiServer.testCasesModel.GrpcOutReference = &uiServer.availableBuildingBlocksModel.grpcOut
+	uiServer.commandAndRuleEngine.GrpcOutReference = &uiServer.AvailableBuildingBlocksModel.grpcOut
+	uiServer.testCasesModel.GrpcOutReference = &uiServer.AvailableBuildingBlocksModel.grpcOut
 
 	// Add TestCasesReference to CommandEngine
 	uiServer.commandAndRuleEngine.Testcases = &uiServer.testCasesModel
@@ -151,10 +151,10 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// myUIServer.grpcOut.SetLogger(myUIServer.logger)
 
 	// Add/Forward variables to packages to be used later
-	uiServer.availableBuildingBlocksModel.SetLogger(uiServer.logger)
+	uiServer.AvailableBuildingBlocksModel.SetLogger(uiServer.logger)
 	uiServer.commandAndRuleEngine.SetLogger(uiServer.logger)
-	uiServer.availableBuildingBlocksModel.grpcOut.SetLogger(uiServer.logger)
-	uiServer.availableBuildingBlocksModel.grpcOut.SetDialAddressString(uiServer.fenixGuiBuilderServerAddressToDial)
+	uiServer.AvailableBuildingBlocksModel.grpcOut.SetLogger(uiServer.logger)
+	uiServer.AvailableBuildingBlocksModel.grpcOut.SetDialAddressString(uiServer.fenixGuiBuilderServerAddressToDial)
 
 	uiServer.fyneApp = app.NewWithID("se.fenix.testcasebuilder")
 	//fyneApp.Settings().SetTheme(&myTheme{})
@@ -186,10 +186,10 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	uiServer.commandAndRuleEngine.MasterFenixWindow = &fyneMasterWindow
 
 	// Get Available Building BLocks form GUI-server
-	uiServer.availableBuildingBlocksModel.loadAvailableBuildingBlocksFromServer(&uiServer.testCasesModel)
+	uiServer.AvailableBuildingBlocksModel.loadAvailableBuildingBlocksFromServer(&uiServer.testCasesModel)
 
 	// Get Available Building BLocks form GUI-server
-	uiServer.availableBuildingBlocksModel.loadPinnedBuildingBlocksFromServer()
+	uiServer.AvailableBuildingBlocksModel.loadPinnedBuildingBlocksFromServer()
 
 	// Load Available Bonds
 	uiServer.commandAndRuleEngine.LoadAvailableBondsFromServer()
@@ -198,7 +198,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	uiServer.testCasesModel.LoadModelWithImmatureTestInstructionAttributes()
 
 	// Create the Available Building Blocks adapted to Fyne tree-view
-	uiServer.availableBuildingBlocksModel.makeTreeUIModel()
+	uiServer.AvailableBuildingBlocksModel.makeTreeUIModel()
 
 	// Initiate all variables needed by the TestCaseExecution-SubscriptionHandler
 	testCaseSubscriptionHandler.TestCaseExecutionStatusSubscriptionHandlerObject.InitiateTestCaseExecutionStatusSubscriptionHandler()
@@ -561,11 +561,11 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 			fmt.Println("Reload Available Components from GuiServer")
 
 			// Load Available Building Blocks and Pinned Building Blocks from Server
-			uiServer.availableBuildingBlocksModel.loadAvailableBuildingBlocksFromServer((&uiServer.testCasesModel))
-			uiServer.availableBuildingBlocksModel.loadPinnedBuildingBlocksFromServer()
+			uiServer.AvailableBuildingBlocksModel.loadAvailableBuildingBlocksFromServer((&uiServer.testCasesModel))
+			uiServer.AvailableBuildingBlocksModel.loadPinnedBuildingBlocksFromServer()
 
 			// Recreate the TreeUIModel
-			uiServer.availableBuildingBlocksModel.makeTreeUIModel()
+			uiServer.AvailableBuildingBlocksModel.makeTreeUIModel()
 
 			// Recreate the UI-tree-component
 			uiServer.makeTreeUI()
@@ -576,7 +576,7 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 			fmt.Println("Reload Available Components from GuiServer")
 
 			// Load Available Building Blocks and Pinned Building Blocks from Server
-			_ = uiServer.availableBuildingBlocksModel.savePinnedBuildingBlocksFromServer()
+			_ = uiServer.AvailableBuildingBlocksModel.savePinnedBuildingBlocksFromServer()
 			/*
 				f, err := os.Open("resources/s_ui_error_stereo_04-35938.mp3")
 				if err != nil {
@@ -602,13 +602,13 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 
 		// Icon for Adding Building Block to Pinned Building Blocks
 		widget.NewToolbarAction(theme.ContentAddIcon(), func() {
-			err := uiServer.availableBuildingBlocksModel.verifyBeforePinTestInstructionOrTestInstructionContainer(uiServer.availableBuildingBlocksModel.clickedNodeName, true)
+			err := uiServer.AvailableBuildingBlocksModel.verifyBeforePinTestInstructionOrTestInstructionContainer(uiServer.AvailableBuildingBlocksModel.clickedNodeName, true)
 			if err == nil {
 				fmt.Println("Add to Pinned")
-				err := uiServer.availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer(uiServer.availableBuildingBlocksModel.clickedNodeName)
+				err := uiServer.AvailableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer(uiServer.AvailableBuildingBlocksModel.clickedNodeName)
 				if err == nil {
 					// Update the testCaseModel, which will refresh UI
-					uiServer.availableBuildingBlocksModel.makeTreeUIModel()
+					uiServer.AvailableBuildingBlocksModel.makeTreeUIModel()
 				}
 			}
 
@@ -616,13 +616,13 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 
 		// Icon for Removing Pinned Building Block
 		widget.NewToolbarAction(theme.ContentRemoveIcon(), func() {
-			err := uiServer.availableBuildingBlocksModel.verifyBeforeUnPinTestInstructionOrTestInstructionContainer(uiServer.availableBuildingBlocksModel.clickedNodeName, true)
+			err := uiServer.AvailableBuildingBlocksModel.verifyBeforeUnPinTestInstructionOrTestInstructionContainer(uiServer.AvailableBuildingBlocksModel.clickedNodeName, true)
 			if err == nil {
 				fmt.Println("Remove from Pinned")
-				err := uiServer.availableBuildingBlocksModel.unPinTestInstructionOrTestInstructionContainer(uiServer.availableBuildingBlocksModel.clickedNodeName)
+				err := uiServer.AvailableBuildingBlocksModel.unPinTestInstructionOrTestInstructionContainer(uiServer.AvailableBuildingBlocksModel.clickedNodeName)
 				if err == nil {
 					// Update the testCaseModel, which will refrsh UI
-					uiServer.availableBuildingBlocksModel.makeTreeUIModel()
+					uiServer.AvailableBuildingBlocksModel.makeTreeUIModel()
 					//uiServer.tree.Refresh()
 				}
 			}
@@ -709,21 +709,21 @@ func (uiServer *UIServerStruct) loadCompleteCurrentTestCaseUI() (completeCurrent
 func (uiServer *UIServerStruct) loadCurrentTestCaseModelAreaUI() (currentTestCaseModelAreaUI fyne.CanvasObject) {
 
 	// Set initial values for TestCase Textual Structure - Simple
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureSimple = binding.NewString()
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureSimple.Set("'currentTestCaseTextualStructureSimple'")
+	uiServer.AvailableBuildingBlocksModel.currentTestCaseTextualStructureSimple = binding.NewString()
+	uiServer.AvailableBuildingBlocksModel.currentTestCaseTextualStructureSimple.Set("'currentTestCaseTextualStructureSimple'")
 
 	// Set initial values for TestCase Textual Structure - Complex
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureComplex = binding.NewString()
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureComplex.Set("'currentTestCaseTextualStructureComplex'")
+	uiServer.AvailableBuildingBlocksModel.currentTestCaseTextualStructureComplex = binding.NewString()
+	uiServer.AvailableBuildingBlocksModel.currentTestCaseTextualStructureComplex.Set("'currentTestCaseTextualStructureComplex'")
 
 	// Set initial values for TestCase Textual Structure - Simple
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureExtended = binding.NewString()
-	uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureExtended.Set("'currentTestCaseTextualStructureExtended'")
+	uiServer.AvailableBuildingBlocksModel.currentTestCaseTextualStructureExtended = binding.NewString()
+	uiServer.AvailableBuildingBlocksModel.currentTestCaseTextualStructureExtended.Set("'currentTestCaseTextualStructureExtended'")
 
 	// Create the Labels to be used for showing the TestCase Textual Structures
-	testCaseTextualStructureSimpleWidget := widget.NewLabelWithData(uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureSimple)
-	testCaseTextualStructureComplexWidget := widget.NewLabelWithData(uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureComplex)
-	testCaseTextualStructureExtendedWidget := widget.NewLabelWithData(uiServer.availableBuildingBlocksModel.currentTestCaseTextualStructureExtended)
+	testCaseTextualStructureSimpleWidget := widget.NewLabelWithData(uiServer.AvailableBuildingBlocksModel.currentTestCaseTextualStructureSimple)
+	testCaseTextualStructureComplexWidget := widget.NewLabelWithData(uiServer.AvailableBuildingBlocksModel.currentTestCaseTextualStructureComplex)
+	testCaseTextualStructureExtendedWidget := widget.NewLabelWithData(uiServer.AvailableBuildingBlocksModel.currentTestCaseTextualStructureExtended)
 
 	// Create GUI Canvas object to be used
 	currentTestCaseModelAreaUI = container.NewVBox(testCaseTextualStructureSimpleWidget, testCaseTextualStructureComplexWidget, testCaseTextualStructureExtendedWidget)

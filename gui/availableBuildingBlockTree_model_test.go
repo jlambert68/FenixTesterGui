@@ -15,7 +15,7 @@ import (
 
 //const printValues = false
 
-//var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
+//var AvailableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
 // Checks that a non-existing Building Block can't be pinned
 func TestThatNonExistingBuildBlockCanBePinned(t *testing.T) {
@@ -53,7 +53,7 @@ func TestThatNonExistingBuildBlockCanBePinned(t *testing.T) {
 		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
 	}
 
-	// Initiate availableBuildingBlocksModel
+	// Initiate AvailableBuildingBlocksModel
 	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
 	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
@@ -122,7 +122,7 @@ func TestThatAlreadyPinnedBuildingBlockNotCanBePinned(t *testing.T) {
 		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
 	}
 
-	// Initiate availableBuildingBlocksModel
+	// Initiate AvailableBuildingBlocksModel
 	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
 	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
@@ -193,7 +193,7 @@ func TestToPinBuildingBlockCanBePinned(t *testing.T) {
 		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
 	}
 
-	// Initiate availableBuildingBlocksModel
+	// Initiate AvailableBuildingBlocksModel
 	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
 	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
@@ -265,7 +265,7 @@ func TestThatNonExistingBuildingBlockCanNotBeUnPinned(t *testing.T) {
 		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
 	}
 
-	// Initiate availableBuildingBlocksModel
+	// Initiate AvailableBuildingBlocksModel
 	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
 	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
@@ -335,10 +335,10 @@ func TestThatBuildingBlockToBeUnPinnedExistsAmongPinned(t *testing.T) {
 		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
 	}
 
-	// Initiate availableBuildingBlocksModel
-	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
+	// Initiate AvailableBuildingBlocksModel
+	var AvailableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
-	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
+	AvailableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
 		logger:                             myLogger,
 		fenixGuiBuilderServerAddressToDial: "",
 		fullDomainTestInstructionTypeTestInstructionRelationsMap:                   nil,
@@ -349,22 +349,22 @@ func TestThatBuildingBlockToBeUnPinnedExistsAmongPinned(t *testing.T) {
 	}
 
 	// Clear and initiate variables
-	availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes = make(map[string]uiTreeNodesNameToUuidStruct)
+	AvailableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes = make(map[string]uiTreeNodesNameToUuidStruct)
 
 	// Initiate map
-	availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid = make(map[string]uiTreeNodesNameToUuidStruct)
+	AvailableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid = make(map[string]uiTreeNodesNameToUuidStruct)
 
 	// Load Available Building Blocks, in this case TestInstructionContainers
-	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks(&testInstructionsAndTestContainersMessage)
+	AvailableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks(&testInstructionsAndTestContainersMessage)
 
 	// Load Pinned Building Blocks
-	availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks(&pinnedTestInstructionsAndTestContainersMessage)
+	AvailableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks(&pinnedTestInstructionsAndTestContainersMessage)
 
 	// Validate that an already pinned  Building Block can't be pinned again
-	pinnedBuildingBlockName := availableBuildingBlocksModel.getPinnedBuildingBlocksTreeNamesFromModel()[0]
-	pinnedBuildingBlockUuid := availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[pinnedBuildingBlockName].uuid
-	buildingBlockName := availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[pinnedBuildingBlockUuid].nameInUITree
-	err := availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer(buildingBlockName)
+	pinnedBuildingBlockName := AvailableBuildingBlocksModel.getPinnedBuildingBlocksTreeNamesFromModel()[0]
+	pinnedBuildingBlockUuid := AvailableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes[pinnedBuildingBlockName].uuid
+	buildingBlockName := AvailableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[pinnedBuildingBlockUuid].nameInUITree
+	err := AvailableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer(buildingBlockName)
 
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_PBB003_ExpectedResultInModel_002, fmt.Sprint(err))
 
@@ -406,7 +406,7 @@ func TestUnPinBuildingBlockThatIsPinned(t *testing.T) {
 		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
 	}
 
-	// Initiate availableBuildingBlocksModel
+	// Initiate AvailableBuildingBlocksModel
 	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
 	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{

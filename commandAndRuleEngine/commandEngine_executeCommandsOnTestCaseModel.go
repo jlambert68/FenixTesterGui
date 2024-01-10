@@ -65,8 +65,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	localTestCaseMessageStruct := testCaseModel.LocalTestCaseMessageStruct{
 		BasicTestCaseInformationMessageNoneEditableInformation: fenixGuiTestCaseBuilderServerGrpcApi.BasicTestCaseInformationMessage_NonEditableBasicInformationMessage{
 			TestCaseUuid:    testCaseUuid,
-			DomainUuid:      "78a97c41-a098-4122-88d2-01ed4b6c4844", //TODO Add dropdown for user to chose among available Domains in available building blocks
-			DomainName:      "Custody Arrangement",                  //TODO Add dropdown for user to chose among available Domains in available building blocks
+			DomainUuid:      "", //TODO Add dropdown for user to chose among available Domains in available building blocks
+			DomainName:      "", //TODO Add dropdown for user to chose among available Domains in available building blocks
 			TestCaseVersion: 1,
 		},
 		BasicTestCaseInformationMessageEditableInformation: fenixGuiTestCaseBuilderServerGrpcApi.BasicTestCaseInformationMessage_EditableBasicInformationMessage{

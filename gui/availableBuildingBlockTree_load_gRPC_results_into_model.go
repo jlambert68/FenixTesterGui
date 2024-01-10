@@ -9,7 +9,8 @@ import (
 
 // Load Available Building Blocks, TestInstructions and TestInstructionContainers, from GUI-server into testCaseModel
 func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadModelWithAvailableBuildingBlocks(
-	testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
+	testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage,
+	testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
 
 	// Verify that AckNack Response is equal to AckNack = true
 	if testInstructionsAndTestContainersMessage.AckNackResponse.AckNack == false {
@@ -35,7 +36,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 	availableBuildingBlocksModel.storeFullGrpcStructureForAvailableBuildingBlocks(testInstructionsAndTestContainersMessage)
 
 	// Store list with Domains that can own a TestCase
-	availableBuildingBlocksModel.storeDomainsThatCanOwnTestCases(testInstructionsAndTestContainersMessage)
+	availableBuildingBlocksModel.storeDomainsThatCanOwnTestCases(testInstructionsAndTestContainersMessage, testCaseModeReference)
 
 }
 
@@ -181,7 +182,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 			}
 
 			//testInstructionTypeTestInstructionsRelationsMap[testInstruction.TestInstructionTypeUuid] = testInstructionMap
-			//availableBuildingBlocksModel.availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap[testInstruction.DomainUuid] = testInstructionTypeTestInstructionsRelationsMap
+			//AvailableBuildingBlocksModel.AvailableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap[testInstruction.DomainUuid] = testInstructionTypeTestInstructionsRelationsMap
 
 		}
 	}
@@ -312,7 +313,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 			}
 
 			//testInstructionContainerTypeTestInstructionContainersRelationsMap[testInstructionContainer.TestInstructionContainerTypeUuid] = testInstructionContainerMap
-			//availableBuildingBlocksModel.availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap[testInstructionContainer.DomainUuid] = testInstructionContainerTypeTestInstructionContainersRelationsMap
+			//AvailableBuildingBlocksModel.AvailableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap[testInstructionContainer.DomainUuid] = testInstructionContainerTypeTestInstructionContainersRelationsMap
 
 		}
 	}
@@ -414,10 +415,32 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeFul
 // Store list with Domains that can own a TestCase
 func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeDomainsThatCanOwnTestCases(
 	testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.
-		AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage) {
+		AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage,
+	testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
 
 	// Store the list with Domains that can own a TestCase
-	availableBuildingBlocksModel.domainsThatCanOwnTheTestCase = testInstructionsAndTestContainersMessage.DomainsThatCanOwnTheTestCase
+	availableBuildingBlocksModel.DomainsThatCanOwnTheTestCase = testInstructionsAndTestContainersMessage.DomainsThatCanOwnTheTestCase
+
+	// Store the Domains in the TestCaseModel
+	testCaseModeReference.DomainsThatCanOwnTheTestCaseMap = make(map[string]*testCaseModel.DomainThatCanOwnTheTestCaseStruct)
+
+	var tempDomainNameShownInGui string
+
+	// Store the Available Owner Domains as a map structure in TestCase-struct
+	for _, tempDomainThatCanOwnTheTestCase := range testInstructionsAndTestContainersMessage.DomainsThatCanOwnTheTestCase {
+
+		// Create Key and Domain Name to show in DropDown in Gui
+		tempDomainNameShownInGui = testCaseModeReference.GenerateShortUuidFromFullUuid(tempDomainThatCanOwnTheTestCase.GetDomainUuid())
+		tempDomainNameShownInGui = tempDomainThatCanOwnTheTestCase.GetDomainName() + " [" + tempDomainNameShownInGui + "]"
+
+		var tempDomainsThatCanOwnTheTestCase *testCaseModel.DomainThatCanOwnTheTestCaseStruct
+		tempDomainsThatCanOwnTheTestCase = &testCaseModel.DomainThatCanOwnTheTestCaseStruct{
+			DomainUuid:           tempDomainThatCanOwnTheTestCase.GetDomainUuid(),
+			DomainName:           tempDomainThatCanOwnTheTestCase.GetDomainName(),
+			DomainNameShownInGui: tempDomainNameShownInGui,
+		}
+		testCaseModeReference.DomainsThatCanOwnTheTestCaseMap[tempDomainNameShownInGui] = tempDomainsThatCanOwnTheTestCase
+	}
 
 }
 

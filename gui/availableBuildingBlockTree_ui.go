@@ -41,10 +41,10 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 
 	tree = &widget.Tree{
 		ChildUIDs: func(uid string) []string {
-			return uiServer.availableBuildingBlocksModel.getAvailableBuildingBlocksModel()[uid]
+			return uiServer.AvailableBuildingBlocksModel.getAvailableBuildingBlocksModel()[uid]
 		},
 		IsBranch: func(uid string) bool {
-			children, ok := uiServer.availableBuildingBlocksModel.getAvailableBuildingBlocksModel()[uid]
+			children, ok := uiServer.AvailableBuildingBlocksModel.getAvailableBuildingBlocksModel()[uid]
 
 			return ok && len(children) > 0
 		},
@@ -70,7 +70,7 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 			*/
 			//obj.(*tappableLabel).SetText(uid) //obj.(*widget.Label).SetText(uid) // + time.Now().String())
 			obj.(*testUIDragNDropStatemachine.DraggableLabel).SetText(uid)
-			element, existInMap := uiServer.availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid[uid]
+			element, existInMap := uiServer.AvailableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid[uid]
 			if existInMap == true {
 				obj.(*testUIDragNDropStatemachine.DraggableLabel).IsDraggable = true
 				obj.(*testUIDragNDropStatemachine.DraggableLabel).BuildingBlockType = int(element.buildingBlockType)
@@ -84,8 +84,8 @@ func (uiServer *UIServerStruct) makeTreeUI() {
 		},
 
 		OnSelected: func(uid string) {
-			//fmt.Println(uid, uiServer.availableBuildingBlocksModel.getAvailableBuildingBlocksModel()[uid])
-			uiServer.availableBuildingBlocksModel.clickedNodeName = uid
+			//fmt.Println(uid, uiServer.AvailableBuildingBlocksModel.getAvailableBuildingBlocksModel()[uid])
+			uiServer.AvailableBuildingBlocksModel.clickedNodeName = uid
 
 			//if t, ok := list[uid]; ok {
 			//	fmt.Println(tree.Root)

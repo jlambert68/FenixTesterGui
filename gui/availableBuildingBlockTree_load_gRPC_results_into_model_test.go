@@ -15,7 +15,7 @@ import (
 
 const printValues = false
 
-//var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
+//var AvailableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
 // Checks that Available TestInstructions are put in Available Building Blocks-testCaseModel in a correct way
 func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testing.T) {
@@ -58,10 +58,10 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testin
 
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructions(&testInstructionsAndTestContainersMessage)
 
-	// fmt.Println(availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap)
+	// fmt.Println(AvailableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap)
 	/*
-		fmt.Println(availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
-		b, err := json.Marshal(&availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
+		fmt.Println(AvailableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
+		b, err := json.Marshal(&AvailableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
 
 		if err != nil {
 			fmt.Println(err)
@@ -71,14 +71,14 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testin
 
 	*/
 
-	// Validate 'availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
+	// Validate 'AvailableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_001, fmt.Sprint(availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes))
 	if printValues {
 		fmt.Println("TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_001")
 		fmt.Println(availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
 	}
 
-	// Validate 'availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap'
+	// Validate 'AvailableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap'
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_002, fmt.Sprint(availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap))
 	if printValues {
 		fmt.Println("TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_002")
@@ -107,7 +107,7 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(
 		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
 	}
 
-	// Initiate availableBuildingBlocksModel
+	// Initiate AvailableBuildingBlocksModel
 	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
 	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
@@ -126,10 +126,10 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(
 	// Load Available Building Blocks, in this case TestInstructionContainers
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(&testInstructionsAndTestContainersMessage)
 
-	//fmt.Println(availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap)
+	//fmt.Println(AvailableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap)
 	/*
-		fmt.Println(availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
-		b, err := json.Marshal(&availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
+		fmt.Println(AvailableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
+		b, err := json.Marshal(&AvailableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
 
 		if err != nil {
 			fmt.Println(err)
@@ -142,14 +142,14 @@ func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(
 	//fmt.Println(UnitTestTestData.TestInstructionsAndTestInstructionsRespons_ABB001_ExpectedResultInModel_003)
 	//fmt.Println(UnitTestTestData.TestInstructionsAndTestInstructionsRespons_ABB001_ExpectedResultInModel_004)
 
-	// Validate 'availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
+	// Validate 'AvailableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_003, fmt.Sprint(availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes))
 	if printValues {
 		fmt.Println("TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_003")
 		fmt.Println(availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
 	}
 
-	// Validate 'availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap'
+	// Validate 'AvailableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap'
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_004, fmt.Sprint(availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap))
 	if printValues {
 		fmt.Println("TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_004")
@@ -178,7 +178,7 @@ func TestLoadModelWithAvailableBuildingBlocks(t *testing.T) {
 		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
 	}
 
-	// Initiate availableBuildingBlocksModel
+	// Initiate AvailableBuildingBlocksModel
 	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
 	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
@@ -196,21 +196,21 @@ func TestLoadModelWithAvailableBuildingBlocks(t *testing.T) {
 	// Load Available Building Blocks, in this case TestInstructionContainers
 	availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks(&testInstructionsAndTestContainersMessage)
 
-	// Validate 'availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
+	// Validate 'AvailableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
 	assertResult = assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_005, fmt.Sprint(availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes))
 	if printValues && !assertResult {
 		fmt.Println("TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_005")
 		fmt.Println(availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes)
 	}
 
-	// Validate 'availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap'
+	// Validate 'AvailableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap'
 	assertResult = assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_006, fmt.Sprint(availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap))
 	if printValues && !assertResult {
 		fmt.Println("TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_006")
 		fmt.Println(availableBuildingBlocksModel.fullDomainTestInstructionTypeTestInstructionRelationsMap)
 	}
 
-	// Validate 'availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap'
+	// Validate 'AvailableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap'
 	assertResult = assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_007, fmt.Sprint(availableBuildingBlocksModel.fullDomainTestInstructionContainerTypeTestInstructionContainerRelationsMap))
 	if printValues && !assertResult {
 		fmt.Println("TestInstructionsAndTestInstructionsContainersRespons_ABB001_ExpectedResultInModel_007")
@@ -255,7 +255,7 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructions(t *testing.T
 		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
 	}
 
-	// Initiate availableBuildingBlocksModel
+	// Initiate AvailableBuildingBlocksModel
 	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
 	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
@@ -281,7 +281,7 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructions(t *testing.T
 	// Load Pinned Building Blocks
 	availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructions(&pinnedTestInstructionsAndTestContainersMessage)
 
-	// Validate 'availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
+	// Validate 'AvailableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_PBB001_ExpectedResultInModel_001, fmt.Sprint(availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes))
 
 }
@@ -322,7 +322,7 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(t *
 		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
 	}
 
-	// Initiate availableBuildingBlocksModel
+	// Initiate AvailableBuildingBlocksModel
 	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
 	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
@@ -348,7 +348,7 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(t *
 	// Load Pinned Building Blocks
 	availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(&pinnedTestInstructionsAndTestContainersMessage)
 
-	// Validate 'availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
+	// Validate 'AvailableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_PBB001_ExpectedResultInModel_002, fmt.Sprint(availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes))
 
 }
@@ -389,7 +389,7 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionAndTestInstruc
 		}).Fatalln("Exiting because of wrong Proto-file version in TestData")
 	}
 
-	// Initiate availableBuildingBlocksModel
+	// Initiate AvailableBuildingBlocksModel
 	var availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct
 
 	availableBuildingBlocksModel = &AvailableBuildingBlocksModelStruct{
@@ -409,7 +409,7 @@ func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionAndTestInstruc
 	// Load Pinned Building Blocks
 	availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks(&pinnedTestInstructionsAndTestContainersMessage)
 
-	// Validate 'availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
+	// Validate 'AvailableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes'
 	assert.Equal(t, UnitTestTestData.TestInstructionsAndTestInstructionsContainersRespons_PBB001_ExpectedResultInModel_003, fmt.Sprint(availableBuildingBlocksModel.pinnedBuildingBlocksForUITreeNodes))
 
 }

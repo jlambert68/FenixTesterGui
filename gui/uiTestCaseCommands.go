@@ -92,7 +92,7 @@ func (uiServer *UIServerStruct) createTestCaseCommandParametersUI() (testCaseCom
 		DisableableWidget: widget.DisableableWidget{},
 		Alignment:         0,
 		Selected:          "",
-		Options:           uiServer.availableBuildingBlocksModel.listAllAvailableBuidlingBlocks(),
+		Options:           uiServer.AvailableBuildingBlocksModel.listAllAvailableBuidlingBlocks(),
 		PlaceHolder:       "",
 		OnChanged: func(s string) {
 			fmt.Printf("I selected %s to live forever..", s)
@@ -102,7 +102,7 @@ func (uiServer *UIServerStruct) createTestCaseCommandParametersUI() (testCaseCom
 	}
 	/*
 		Select(
-			uiServer.availableBuildingBlocksModel.listAllAvailableBuidlingBlocks(),
+			uiServer.AvailableBuildingBlocksModel.listAllAvailableBuidlingBlocks(),
 			func(s string) {
 				fmt.Printf("I selected %s to live forever..", s)
 				//label1.Text = s
@@ -189,7 +189,7 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 		DisableableWidget: widget.DisableableWidget{},
 		Alignment:         0,
 		Selected:          "",
-		Options:           uiServer.availableBuildingBlocksModel.listAllAvailableBuidlingBlocks(),
+		Options:           uiServer.AvailableBuildingBlocksModel.listAllAvailableBuidlingBlocks(),
 		PlaceHolder:       "",
 		OnChanged: func(s string) {
 			fmt.Printf("I selected %s to live forever..", s)
@@ -199,7 +199,7 @@ func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIOb
 	}
 	/*
 		Select(
-			uiServer.availableBuildingBlocksModel.listAllAvailableBuidlingBlocks(),
+			uiServer.AvailableBuildingBlocksModel.listAllAvailableBuidlingBlocks(),
 			func(s string) {
 				fmt.Printf("I selected %s to live forever..", s)
 				//label1.Text = s
@@ -454,14 +454,14 @@ func (uiServer *UIServerStruct) swapFromNew(testCaseUuid string, elementUiNameTo
 	switch buildingBlockType {
 
 	case TestInstruction:
-		tempMap := uiServer.availableBuildingBlocksModel.allImmatureTestInstructionsBuildingBlocks
+		tempMap := uiServer.AvailableBuildingBlocksModel.allImmatureTestInstructionsBuildingBlocks
 		immatureElementToSwapInOriginal := tempMap[elementUuidTobeSwappedIn].ImmatureSubTestCaseModel
-		immatureElementToSwapInTestCaseFormat = uiServer.availableBuildingBlocksModel.convertGrpcElementModelIntoTestCaseElementModel(immatureElementToSwapInOriginal)
+		immatureElementToSwapInTestCaseFormat = uiServer.AvailableBuildingBlocksModel.convertGrpcElementModelIntoTestCaseElementModel(immatureElementToSwapInOriginal)
 
 	case TestInstructionContainer:
-		tempMap := uiServer.availableBuildingBlocksModel.allImmatureTestInstructionContainerBuildingBlocks
+		tempMap := uiServer.AvailableBuildingBlocksModel.allImmatureTestInstructionContainerBuildingBlocks
 		immatureElementToSwapInOriginal := tempMap[elementUuidTobeSwappedIn].ImmatureSubTestCaseModel
-		immatureElementToSwapInTestCaseFormat = uiServer.availableBuildingBlocksModel.convertGrpcElementModelIntoTestCaseElementModel(immatureElementToSwapInOriginal)
+		immatureElementToSwapInTestCaseFormat = uiServer.AvailableBuildingBlocksModel.convertGrpcElementModelIntoTestCaseElementModel(immatureElementToSwapInOriginal)
 
 	default:
 
@@ -610,7 +610,7 @@ func (uiServer *UIServerStruct) getUuidFromTreeName(uiTreeName string) (building
 	elementTypeFromName := uiTreeName[firstSquareBracketEnd+1:][secondSquareBracketStart+1 : secondSquareBracketEnd]
 
 	// Loop all available building blocks and find match
-	for _, buildingBlock := range uiServer.availableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid {
+	for _, buildingBlock := range uiServer.AvailableBuildingBlocksModel.allBuildingBlocksTreeNameToUuid {
 
 		switch elementTypeFromName {
 

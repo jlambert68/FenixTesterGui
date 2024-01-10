@@ -34,6 +34,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateBaseInformationAr
 	// Add the 'TestCaseName-UI-object' to the 'BaseInformationArea'
 	tempBaseInformationAreaContainer.Add(tempTestCaseNameArea)
 
+	// Generate TestCaseDomainOwner-UI-object
+	var tempTestCaseDomainOwnerArea fyne.CanvasObject
+	tempTestCaseDomainOwnerArea, err = testCasesUiCanvasObject.generateOwnerDomainForTestCaseArea(testCaseUuid)
+	if err != nil {
+		return nil, err
+	}
+
+	// Add the 'TestCaseDomainOwner-UI-object' to the 'BaseInformationArea'
+	tempBaseInformationAreaContainer.Add(tempTestCaseDomainOwnerArea)
+
 	// Generate TestCaseDescription-UI-object
 	var tempTestCaseDescriptionArea fyne.CanvasObject
 	tempTestCaseDescriptionArea, err = testCasesUiCanvasObject.generateTestCaseDescriptionArea(testCaseUuid)

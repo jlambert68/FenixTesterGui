@@ -140,7 +140,7 @@ type AvailableBuildingBlocksModelStruct struct {
 	currentTestCaseTextualStructureExtended binding.String
 
 	// Domains that can own a TestCase for this user
-	domainsThatCanOwnTheTestCase []*fenixGuiTestCaseBuilderServerGrpcApi.DomainsThatCanOwnTheTestCaseMessage
+	DomainsThatCanOwnTheTestCase []*fenixGuiTestCaseBuilderServerGrpcApi.DomainsThatCanOwnTheTestCaseMessage
 }
 type GlobalUIServerStruct struct {
 	logger                             *logrus.Logger
@@ -151,8 +151,8 @@ type GlobalUIServerStruct struct {
 	//grpcOut                            grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct
 
 	//availableBuildingBlocks            availableBuildingBlocksStruct
-	//availableBuildingBlocksModel       AvailableBuildingBlocksModelStruct
-	//availableBuildingBlocksModel AvailableBuildingBlocksModelStruct
+	//AvailableBuildingBlocksModel       AvailableBuildingBlocksModelStruct
+	//AvailableBuildingBlocksModel AvailableBuildingBlocksModelStruct
 }
 
 var localUIServer UIServerStruct
@@ -165,8 +165,8 @@ type UIServerStruct struct {
 	grpcOut                            grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct
 	fenixGuiBuilderServerAddressToDial string
 	//availableBuildingBlocks            availableBuildingBlocksStruct
-	//availableBuildingBlocksModel       AvailableBuildingBlocksModelStruct
-	availableBuildingBlocksModel AvailableBuildingBlocksModelStruct
+	//AvailableBuildingBlocksModel       AvailableBuildingBlocksModelStruct
+	AvailableBuildingBlocksModel AvailableBuildingBlocksModelStruct
 	testCasesModel               testCaseModel.TestCasesModelsStruct
 	commandAndRuleEngine         commandAndRuleEngine.CommandAndRuleEngineObjectStruct
 	//subSystemsCrossReferences    SubSystemsCrossReferencesStruct
@@ -189,7 +189,7 @@ type availableBuildingBlocksStruct struct {
 	logger                       *logrus.Logger
 
 	fenixGuiBuilderServerAddressToDial string
-	availableBuildingBlocksModel AvailableBuildingBlocksModelStruct
+	AvailableBuildingBlocksModel AvailableBuildingBlocksModelStruct
 }
 
 */

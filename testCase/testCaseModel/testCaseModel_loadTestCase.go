@@ -51,10 +51,17 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 		CurrentSelectedTestCaseElement:    CurrentSelectedTestCaseElementStruct{},
 		MatureTestInstructionMap:          nil, // Created below
 		MatureTestInstructionContainerMap: nil, // Created below
-		AttributesList:                    nil,
+		AttributesList:                    nil, // Initialized below
 		ThisIsANewTestCase:                false,
 		TestCaseHash:                      detailedTestCaseResponse.DetailedTestCase.MessageHash,
 	}
+
+	// Initialize AttributesList
+	var tempAttributeStructSliceReference []*AttributeStruct
+	tempAttributeStructSliceReference = make([]*AttributeStruct, 0)
+	var tempAttributesList *AttributeStructSliceReferenceType
+	tempAttributesList = (*AttributeStructSliceReferenceType)(&tempAttributeStructSliceReference)
+	tempTestCaseModel.AttributesList = tempAttributesList
 
 	// Generate 'TestCaseModelMap'
 	tempTestCaseModel.TestCaseModelMap = make(map[string]MatureTestCaseModelElementStruct)

@@ -43,7 +43,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 		}
 	}
 	// Generate Data to be used for Attributes
-	var attributesList testCaseModel.AttributeStructSliceReference
+	var attributesList testCaseModel.AttributeStructSliceReferenceType
 	attributesList, err = testCasesUiCanvasObject.generateAttributeStringListData(testCaseUuid, testInstructionElementMatureUuid)
 	if err != nil {
 		return nil, nil, err
@@ -159,7 +159,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 // Generate and add an 'attribute row' to be used in attributes
 func generateAttributeRow(
 	attributeItem *testCaseModel.AttributeStruct,
-	attributesList *testCaseModel.AttributeStructSliceReference,
+	attributesList *testCaseModel.AttributeStructSliceReferenceType,
 	attributesFormContainer *fyne.Container) {
 
 	// Add the label for the Entry-widget
@@ -194,7 +194,7 @@ func generateAttributeRow(
 // Generate structure for 'binding.StringList' regarding Attribute values
 func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringListData(
 	testCaseUuid string,
-	testInstructionElementMatureUuid string) (attributesListRef testCaseModel.AttributeStructSliceReference, err error) {
+	testInstructionElementMatureUuid string) (attributesListRef testCaseModel.AttributeStructSliceReferenceType, err error) {
 
 	// Extract TestCase-model
 	currentTestCaseModel, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
@@ -215,7 +215,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringLi
 	if testInstructionElementMatureUuid == "" {
 
 		// Clear variable
-		attributesList := testCaseModel.AttributeStructSliceReference{}
+		attributesList := testCaseModel.AttributeStructSliceReferenceType{}
 
 		// Save AttributesList-reference back to TestCase
 		currentTestCaseModel.AttributesList = &attributesList
@@ -225,7 +225,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringLi
 	}
 
 	// Clear content of AttributesReference
-	attributesList := testCaseModel.AttributeStructSliceReference{}
+	attributesList := testCaseModel.AttributeStructSliceReferenceType{}
 
 	// Extract the map for the TestInstructions Attributes
 	matureTestInstruction, existInMap := currentTestCaseModel.MatureTestInstructionMap[testInstructionElementMatureUuid]

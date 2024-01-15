@@ -70,13 +70,13 @@ type TestCaseModelStruct struct {
 	MatureTestInstructionMap                   map[string]MatureTestInstructionStruct
 	MatureTestInstructionContainerMap          map[string]MatureTestInstructionContainerStruct
 
-	AttributesList                           *AttributeStructSliceReference
+	AttributesList                           *AttributeStructSliceReferenceType
 	ThisIsANewTestCase                       bool
 	TestCaseHash                             string
 	TestCaseHashWhenTestCaseWasSavedOrLoaded string
 }
 
-type AttributeStructSliceReference []*AttributeStruct
+type AttributeStructSliceReferenceType []*AttributeStruct
 
 type AttributeStruct struct {
 	AttributeUuid                        string

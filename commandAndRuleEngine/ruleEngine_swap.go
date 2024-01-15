@@ -28,7 +28,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCan
 }
 
 // Swap an element, but first ensure that rules for swapping are used
-func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElement(testCaseUuid string, elementToSwapOutUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElement(
+	testCaseUuid string,
+	elementToSwapOutUuid string,
+	immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (
+	err error) {
 
 	// Get ElementType to be swapped in
 	topElementToBeSwappedIn, existInMap := immatureElementToSwapIn.ImmatureElementMap[immatureElementToSwapIn.FirstElementUuid]
@@ -57,7 +61,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElement
 		return err
 	}
 
-	// Execute deletion of element
+	// Execute swap of element
 	err = commandAndRuleEngine.executeSwapElementBasedOnRule(testCaseUuid, elementToSwapOutUuid, immatureElementToSwapIn, matchedComplexRule)
 
 	return err
@@ -111,9 +115,15 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElement
 
 	// Move TestInstruction data to TestCase
 	err = commandAndRuleEngine.addTestInstructionDataToTestCaseModel(testCaseUuid, immatureElementToSwapIn, &matureElementToSwapIn)
+	if err != nil {
+		return err
+	}
 
 	// Move TestInstructionContainer data to TestCase
 	err = commandAndRuleEngine.addTestInstructionContainerDataToTestCaseModel(testCaseUuid, immatureElementToSwapIn, &matureElementToSwapIn)
+	if err != nil {
+		return err
+	}
 
 	return err
 
@@ -283,7 +293,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 				// Extract attribute from DropZone-data Among TestInstructions if it exists, but only if there are any DropZones
 				var attributeDataFromDropZone *fenixGuiTestCaseBuilderServerGrpcApi.
 					ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage
-				var existsInMap bool
+				var newTestInstructionBaseAttributeInformation *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_BaseAttributeInformationMessage
 				if dropZoneExistsInMap == true {
 					attributeDataFromDropZone, existsInMap = dropZoneData.DropZonePreSetTestInstructionAttributesMap[attributeUuid]
 				}
@@ -293,7 +303,6 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 
 					// Use the value from the DropZone when adding the attribute to the Model
 					case fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage_USE_DROPZONE_VALUE_FOR_ATTRIBUTE:
-						var newTestInstructionBaseAttributeInformation *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_BaseAttributeInformationMessage
 						newTestInstructionBaseAttributeInformation = &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_BaseAttributeInformationMessage{
 							TestInstructionAttributeUuid:                  attribute.TestInstructionAttributeUuid,
 							TestInstructionAttributeName:                  attribute.TestInstructionAttributeName,
@@ -350,7 +359,6 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 
 				} else {
 					// Attribute doesn't exist in DropZone so just add the Attribute to the Model
-					var newTestInstructionBaseAttributeInformation *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_BaseAttributeInformationMessage
 					newTestInstructionBaseAttributeInformation = &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_BaseAttributeInformationMessage{
 						TestInstructionAttributeUuid:                  attribute.TestInstructionAttributeUuid,
 						TestInstructionAttributeName:                  attribute.TestInstructionAttributeName,

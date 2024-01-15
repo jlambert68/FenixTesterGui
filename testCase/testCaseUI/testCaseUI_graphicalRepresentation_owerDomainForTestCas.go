@@ -28,11 +28,25 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 
 	}
 
+	// If TestCase already has a chosen OwnerDomain then set that value
+	var tempCurrentOwnerDomain string
+	var tempCurrentOwnerDomainToBeChosenInDropDown string
+	var testCaseHasOwnerDomain bool
+
+	if len(testCase_Model.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid) > 0 {
+		testCaseHasOwnerDomain = true
+		tempCurrentOwnerDomain = testCase_Model.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid
+	}
+
 	// Load Domains that can own the TestCase into options-array
 	var options []string
-
 	for _, tempDomainsThatCanOwnTheTestCase := range testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseMap {
 		options = append(options, tempDomainsThatCanOwnTheTestCase.DomainNameShownInGui)
+
+		// When TestCase has OwnerDomain find the one
+		if testCaseHasOwnerDomain == true && tempDomainsThatCanOwnTheTestCase.DomainUuid == tempCurrentOwnerDomain {
+			tempCurrentOwnerDomainToBeChosenInDropDown = tempDomainsThatCanOwnTheTestCase.DomainNameShownInGui
+		}
 	}
 
 	// Create Form-layout container to be used for Name
@@ -51,15 +65,24 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 			// You can handle the selection here.
 			fmt.Println("Selected:", value)
 
+			// Save TestCase back in Map
+			// Get the latest version of TestCase
+			tempTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+
 			// Store Domain in LocalTestCase in TestCase-model
-			testCase_Model.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid =
+			tempTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid =
 				testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseMap[value].DomainUuid
-			testCase_Model.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainName =
+			tempTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainName =
 				testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseMap[value].DomainName
 
 			// Store back TestCase-model in Map
-			testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = testCase_Model
+			testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = tempTestCase
 		})
+
+	// Set the Visible value for DropDown, if there is any
+	if len(tempCurrentOwnerDomainToBeChosenInDropDown) > 0 {
+		newOwnerDomainDropDown.SetSelected(tempCurrentOwnerDomainToBeChosenInDropDown)
+	}
 
 	// Add the Entry-widget to the Forms-container
 	testCaseOwnerDomainNameFormContainer.Add(newOwnerDomainDropDown)

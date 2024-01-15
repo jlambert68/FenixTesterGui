@@ -587,6 +587,11 @@ func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCa
 		return err
 	}
 
+	// If there are no attributes in  'AttributesList' for TestCase (No unsaved changes exists) then exist
+	if testCase.AttributesList == nil || len(*testCase.AttributesList) == 0 {
+		return err
+	}
+
 	// Extract testInstructionElementMatureUuidUuid
 	attributesList := *testCase.AttributesList
 

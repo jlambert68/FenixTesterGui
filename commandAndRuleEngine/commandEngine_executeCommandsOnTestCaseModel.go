@@ -65,8 +65,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	localTestCaseMessageStruct := testCaseModel.LocalTestCaseMessageStruct{
 		BasicTestCaseInformationMessageNoneEditableInformation: fenixGuiTestCaseBuilderServerGrpcApi.BasicTestCaseInformationMessage_NonEditableBasicInformationMessage{
 			TestCaseUuid:    testCaseUuid,
-			DomainUuid:      "", //TODO Add dropdown for user to chose among available Domains in available building blocks
-			DomainName:      "", //TODO Add dropdown for user to chose among available Domains in available building blocks
+			DomainUuid:      "",
+			DomainName:      "",
 			TestCaseVersion: 1,
 		},
 		BasicTestCaseInformationMessageEditableInformation: fenixGuiTestCaseBuilderServerGrpcApi.BasicTestCaseInformationMessage_EditableBasicInformationMessage{
@@ -101,6 +101,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 
 	// Add command Textual representations to Textual Representation Stack
 	textualRepresentationSimple, textualRepresentationComplex, textualRepresentationExtended, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
+
+	// Initialize AttributesList
+	var tempAttributeStructSliceReference []*testCaseModel.AttributeStruct
+	tempAttributeStructSliceReference = make([]*testCaseModel.AttributeStruct, 0)
+	var tempAttributesList *testCaseModel.AttributeStructSliceReferenceType
+	tempAttributesList = (*testCaseModel.AttributeStructSliceReferenceType)(&tempAttributeStructSliceReference)
+	newTestCaseModel.AttributesList = tempAttributesList
 
 	if err == nil {
 		newTestCaseModel.TextualTestCaseRepresentationSimpleStack = append(newTestCaseModel.TextualTestCaseRepresentationSimpleStack, textualRepresentationSimple)

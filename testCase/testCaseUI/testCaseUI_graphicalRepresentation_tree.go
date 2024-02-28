@@ -1,6 +1,7 @@
 package testCaseUI
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testUIDragNDropStatemachine"
 	"errors"
@@ -81,7 +82,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE:
 
 			// Extract the node name
-			nodeName := child.NodeName
+			var shortedUuid string
+			shortedUuid = sharedCode.GenerateShortUuidFromFullUuid(child.Uuid)
+			nodeName := fmt.Sprintf("%s [%s]",
+				child.NodeName,
+				shortedUuid,
+			)
 
 			// Create the color for TestInstruction Type
 			rectangleColor, err := testCasesUiCanvasObject.convertRGBAHexStringIntoRGBAColor(child.NodeColor)

@@ -79,14 +79,31 @@ type TestCaseModelStruct struct {
 type AttributeStructSliceReferenceType []*AttributeStruct
 
 type AttributeStruct struct {
-	AttributeUuid                        string
-	AttributeName                        string
-	AttributeValue                       string
-	AttributeChangedValue                string
-	AttributeTypeName                    string
-	EntryRef                             *widget.Entry
-	AttributeIsChanged                   bool
-	TestInstructionElementMatureUuidUuid string
+	AttributeUuid                             string
+	AttributeName                             string
+	AttributeValue                            string
+	AttributeChangedValue                     string
+	AttributeTypeName                         string
+	AttributeType                             fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum
+	AttributeTextBoxProperty                  *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputTextBoxProperty
+	AttributeComboBoxProperty                 *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputComboBoxProperty
+	AttributeResponseVariableComboBoxProperty *AttributeResponseVariableComboBoxPropertyStruct
+	EntryRef                                  *widget.Entry
+	SelectRef                                 *widget.Select
+	AttributeIsChanged                        bool
+	TestInstructionElementMatureUuidUuid      string
+}
+
+type AttributeResponseVariableComboBoxPropertyStruct struct {
+	AttributeResponseVariableComboBoxProperty              *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeResponseVariableComboBoxProperty
+	MatureTestInstructionsWithCorrectResponseVariablesType *[]*MatureTestInstructionWithCorrectResponseVariablesTypeStruct
+}
+
+// Holding one Mature TestInstruction, Uuid and Name, that match a response variable type
+type MatureTestInstructionWithCorrectResponseVariablesTypeStruct struct {
+	MatureTestInstructionUuidWithCorrectResponseVariablesType string
+	MatureTestInstructionNameWithCorrectResponseVariablesType string
+	MatureTestInstructionComboBoxOptionsName                  string
 }
 
 type MatureTestInstructionStruct struct {

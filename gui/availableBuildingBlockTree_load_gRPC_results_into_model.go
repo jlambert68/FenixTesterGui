@@ -138,7 +138,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 		}
 
 		// *** Does TestInstruction exist in map ***
-		_, existInMap = testInstructionMap[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid]
+		_, existInMap = testInstructionMap[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOriginalUuid]
 
 		// Create the TestInstruction to be added to each leave node on UI-testCaseModel for UI-Tree regarding Available Building Blocks
 		tempTestInstruction := availableTestInstructionStruct{
@@ -147,14 +147,14 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 			domainName:                  testInstruction.BasicTestInstructionInformation.NonEditableInformation.DomainName,
 			testInstructionTypeUuid:     testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeUuid,
 			testInstructionTypeName:     testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeName,
-			testInstructionUuid:         testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid,
+			testInstructionUuid:         testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOriginalUuid,
 			testInstructionName:         testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOriginalName,
 		}
 
 		// Create simpler structure to be used vid UI-tree for Available Building Blocks
 		tempNode := AvailableBuildingBlocksForUITreeNodesStruct{
 			nameInUITree:      "",
-			uuid:              testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid,
+			uuid:              testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOriginalUuid,
 			name:              testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOriginalName,
 			BuildingBlockType: TestInstruction,
 		}
@@ -172,12 +172,12 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadMode
 
 		// If TestInstruction doesn't exist then add it with its full map-structure
 		if existInMap == false {
-			testInstructionMap[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid] = tempTestInstruction
+			testInstructionMap[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOriginalUuid] = tempTestInstruction
 
 			// Add the TestInstruction to a simpler structure to be used vid UI-tree for Available Building Blocks
-			_, existInMap = availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid]
+			_, existInMap = availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOriginalUuid]
 			if existInMap == false {
-				availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid] = tempNode
+				availableBuildingBlocksModel.AvailableBuildingBlocksForUITreeNodes[testInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOriginalUuid] = tempNode
 
 			}
 
@@ -402,7 +402,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeFul
 
 	// Loop all TestInstruction-Building Blocks and add to model
 	for _, testInstructionBuildingBlock := range testInstructionsAndTestContainersMessage.ImmatureTestInstructions {
-		availableBuildingBlocksModel.allImmatureTestInstructionsBuildingBlocks[testInstructionBuildingBlock.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid] = testInstructionBuildingBlock
+		availableBuildingBlocksModel.allImmatureTestInstructionsBuildingBlocks[testInstructionBuildingBlock.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOriginalUuid] = testInstructionBuildingBlock
 	}
 
 	// Loop all TestInstructionContainer-Building Blocks and add to model

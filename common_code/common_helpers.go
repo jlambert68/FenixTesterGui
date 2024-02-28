@@ -57,10 +57,3 @@ func HashSingleValue(valueToHash string) (hashValue string) {
 	return hashValue
 
 }
-
-func GenerateShortUuidFromFullUuid(fullUuid string) (shortUuid string) {
-
-	shortUuid = fullUuid[0 : numberOfCharactersfromUuid-1]
-
-	return shortUuid
-}

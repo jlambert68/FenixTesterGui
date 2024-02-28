@@ -203,7 +203,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 				BasicTestInstructionInformation_NonEditableInformation: &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestInstructionInformationMessage_NonEditableBasicInformationMessage{
 					DomainUuid:                  commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.NonEditableInformation.DomainUuid,
 					DomainName:                  commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.NonEditableInformation.DomainName,
-					TestInstructionOrignalUuid:  immatureElementToSwapIn.ImmatureElementMap[matureElement.OriginalElementUuid].OriginalElementUuid,
+					ExecutionDomainUuid:         commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.NonEditableInformation.ExecutionDomainUuid,
+					ExecutionDomainName:         commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.NonEditableInformation.ExecutionDomainName,
+					TestInstructionOriginalUuid: immatureElementToSwapIn.ImmatureElementMap[matureElement.OriginalElementUuid].OriginalElementUuid,
 					TestInstructionOriginalName: immatureElementToSwapIn.ImmatureElementMap[matureElement.OriginalElementUuid].OriginalElementName,
 					TestInstructionTypeUuid:     commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeUuid,
 					TestInstructionTypeName:     commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeName,
@@ -374,19 +376,79 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 						//TestInstructionAttributeType: attribute.TestInstructionAttributeUIType//fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_TEXTBOX),
 					}
 
+					// Define the TestInstructionAttributeInformation
+					var newTestInstructionAttributeInformation *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage
+					newTestInstructionAttributeInformation = &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage{
+						InputTextBoxProperty:             &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputTextBoxProperty{},
+						InputComboBoxProperty:            &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputComboBoxProperty{},
+						InputFileSelectorProperty:        &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputFileSelectorProperty{},
+						ResponseVariableComboBoxProperty: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeResponseVariableComboBoxProperty{},
+					}
+
 					// Set correct GUI-attribute type
 					switch attribute.TestInstructionAttributeUIType {
 					case "TEXTBOX":
-						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_TEXTBOX)
+						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.
+							TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.
+								TestInstructionAttributeTypeEnum_TEXTBOX)
+
+						var inputTextBoxProperty *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputTextBoxProperty
+
+						inputTextBoxProperty = &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputTextBoxProperty{
+							TestInstructionAttributeInputTextBoUuid:  attribute.TestInstructionAttributeUuid,
+							TestInstructionAttributeInputTextBoxName: attribute.TestInstructionAttributeName,
+							TextBoxEditable:                          attribute.TestInstructionAttributeEnable,
+							TextBoxInputMask:                         "", //TODO add TextBoxInputMask
+							TextBoxAttributeTypeUuid:                 attribute.TestInstructionAttributeTypeUuid,
+							TextBoxAttributeTypeName:                 attribute.TestInstructionAttributeTypeName,
+							TextBoxAttributeValue:                    attribute.TestInstructionAttributeValueAsString,
+						}
+
+						newTestInstructionAttributeInformation.InputTextBoxProperty = inputTextBoxProperty
+
+						// If it shouldn't be any value in the Textbox then adjust that
+						// TODO import TestDataProject to get correct UUID from there instead of using hardcoded value
+						if newTestInstructionAttributeInformation.InputTextBoxProperty.TextBoxAttributeValue == "#NO_VALUE#" {
+							newTestInstructionAttributeInformation.InputTextBoxProperty.TextBoxAttributeValue = ""
+						}
 
 					case "COMBOBOX":
-						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_COMBOBOX)
+						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.
+							TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.
+								TestInstructionAttributeTypeEnum_COMBOBOX)
 
 					case "FILE_SELECTOR":
-						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_FILE_SELECTOR)
+						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.
+							TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.
+								TestInstructionAttributeTypeEnum_FILE_SELECTOR)
 
 					case "FUNCTION_SELECTOR":
-						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_FUNCTION_SELECTOR)
+						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.
+							TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.
+								TestInstructionAttributeTypeEnum_FUNCTION_SELECTOR)
+
+					case "RESPONSE_VARIABLE_COMBOBOX":
+						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.
+							TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.
+								TestInstructionAttributeTypeEnum_RESPONSE_VARIABLE_COMBOBOX)
+						var responseVariableComboBoxProperty *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeResponseVariableComboBoxProperty
+
+						responseVariableComboBoxProperty = &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeResponseVariableComboBoxProperty{
+							TestInstructionAttributeResponseVariableComboBoxUuid: attribute.TestInstructionAttributeUuid,
+							TestInstructionAttributeResponseVariableComboBoxName: attribute.TestInstructionAttributeName,
+							ComboBoxAttributeTypeUuid:                            attribute.TestInstructionAttributeTypeUuid,
+							ComboBoxAttributeTypeName:                            attribute.TestInstructionAttributeTypeName,
+							AllowedResponseVariableType:                          []string{},
+							ChosenResponseVariableTypeUuid:                       "",
+							ChosenResponseVariableTypeName:                       "",
+							ComboBoxAttributeValueAsString:                       "",
+						}
+
+						newTestInstructionAttributeInformation.ResponseVariableComboBoxProperty = responseVariableComboBoxProperty
+
+						if newTestInstructionAttributeInformation.ResponseVariableComboBoxProperty.ComboBoxAttributeValueAsString == "#NO_VALUE#" {
+							newTestInstructionAttributeInformation.ResponseVariableComboBoxProperty.ComboBoxAttributeValueAsString = ""
+						}
 
 					default:
 						errorId := "117d964e-860f-4497-b367-02c041553615"
@@ -395,28 +457,6 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 						fmt.Println(err.Error()) //TODO Send to Error-channel
 						return err
 
-					}
-
-					// TODO handle other types then normal TEXTBOX
-					var newTestInstructionAttributeInformation *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage
-					newTestInstructionAttributeInformation = &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage{
-						InputTextBoxProperty: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputTextBoxProperty{
-							TestInstructionAttributeInputTextBoUuid:  attribute.TestInstructionAttributeUuid,
-							TestInstructionAttributeInputTextBoxName: attribute.TestInstructionAttributeName,
-							TextBoxEditable:                          attribute.TestInstructionAttributeEnable,
-							TextBoxInputMask:                         "", //TODO add TextBoxInputMask
-							TextBoxAttributeTypeUuid:                 attribute.TestInstructionAttributeTypeUuid,
-							TextBoxAttributeTypeName:                 attribute.TestInstructionAttributeTypeName,
-							TextBoxAttributeValue:                    attribute.TestInstructionAttributeValueAsString,
-						},
-						InputComboBoxProperty:     &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputComboBoxProperty{},
-						InputFileSelectorProperty: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputFileSelectorProperty{},
-					}
-
-					// If it shouldn't be any value in the Textbox then adjust that
-					// TODO import TestDataProject to get correct UUID from there instead of using hardcoded value
-					if newTestInstructionAttributeInformation.InputTextBoxProperty.TextBoxAttributeValue == "#NO_VALUE#" {
-						newTestInstructionAttributeInformation.InputTextBoxProperty.TextBoxAttributeValue = ""
 					}
 
 					// Create the attribute object with all data

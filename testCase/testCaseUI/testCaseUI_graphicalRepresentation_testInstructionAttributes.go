@@ -1,6 +1,7 @@
 package testCaseUI
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
@@ -8,13 +9,20 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	"log"
 	"sort"
 )
 
 // Generate the TestCaseAttributes Area for the TestCase
 func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttributesAreaForTestCase(
 	testCaseUuid string,
-	testInstructionElementMatureUuid string) (testCaseAttributesArea fyne.CanvasObject, testInstructionAttributesAccordion *widget.Accordion, err error) {
+	testInstructionElementMatureUuid string) (
+	testCaseAttributesArea fyne.CanvasObject,
+	testInstructionAttributesAccordion *widget.Accordion,
+	err error) {
+
+	var immatureTestInstructionUuid string
 
 	// Extract the current TestCase UI model
 	testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
@@ -67,6 +75,25 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 		var previousAttributeTypeName string
 		//var firstTime bool = true
 
+		// Get Immature TestInstruction Uuid
+		var matureTestInstruction testCaseModel.MatureTestInstructionStruct
+		matureTestInstruction, existsInMap = testCase_Model.MatureTestInstructionMap[testInstructionElementMatureUuid]
+		if existsInMap == false {
+			errorId := "93475afd-c095-4fd6-a277-36cf7d4e703a"
+			err = errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing "+
+				"Mature TestInstruction '%s' [ErrorID: %s]",
+				testCaseUuid,
+				testInstructionElementMatureUuid,
+				errorId))
+
+			//TODO Send ERRORS over error-channel
+			fmt.Println(err)
+
+			return nil, nil, err
+		}
+		immatureTestInstructionUuid = matureTestInstruction.BasicTestInstructionInformation_NonEditableInformation.
+			TestInstructionOriginalUuid
+
 		// Loop attributes and create label en entry field for each attribute
 		for attributeItemCounter, attributeItem := range attributesList {
 
@@ -77,7 +104,13 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 
 			// Generate and add an 'attribute row' to be used in attributes
 			attributesFormContainer = container.New(layout.NewFormLayout())
-			generateAttributeRow(attributeItem, &attributesList, attributesFormContainer)
+			testCasesUiCanvasObject.generateAttributeRow(
+				attributeItem,
+				&attributesList,
+				attributesFormContainer,
+				&testCase_Model,
+				testInstructionElementMatureUuid,
+				immatureTestInstructionUuid)
 			attributesContainer.Add(attributesFormContainer)
 
 			previousAttributeTypeName = attributeItem.AttributeTypeName
@@ -157,37 +190,211 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 }
 
 // Generate and add an 'attribute row' to be used in attributes
-func generateAttributeRow(
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 	attributeItem *testCaseModel.AttributeStruct,
 	attributesList *testCaseModel.AttributeStructSliceReferenceType,
-	attributesFormContainer *fyne.Container) {
+	attributesFormContainer *fyne.Container,
+	currentTestCase *testCaseModel.TestCaseModelStruct,
+	testInstructionElementMatureUuid string,
+	immatureTestInstructionUuid string) {
 
 	// Add the label for the Entry-widget
 	attributesFormContainer.Add(widget.NewLabel(attributeItem.AttributeName))
 
-	// Add the Entry-widget
-	newAttributeEntry := widget.NewEntry() // testCasesUiCanvasObject.NewAttributeEntry(attributeItem.attributeUuid)
-	attributeItem.EntryRef = newAttributeEntry
-	newAttributeEntry.SetText(attributeItem.AttributeValue)
-	newAttributeEntry.OnChanged = func(newValue string) {
-		// Find which attributes that we are dealing with
-		var tempAttributeItem *testCaseModel.AttributeStruct
+	// Depending on attribute chose correct UI-component
+	switch attributeItem.AttributeType {
 
-		for _, tempAttributeItem = range *attributesList {
-			if tempAttributeItem.EntryRef == newAttributeEntry {
-				break
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_TEXTBOX:
+		// Add the Entry-widget (TextBox)
+		newAttributeEntry := widget.NewEntry()
+		attributeItem.EntryRef = newAttributeEntry
+		newAttributeEntry.SetText(attributeItem.AttributeValue)
+		newAttributeEntry.OnChanged = func(newValue string) {
+			// Find which attributes that we are dealing with
+			var tempAttributeItem *testCaseModel.AttributeStruct
+
+			for _, tempAttributeItem = range *attributesList {
+				if tempAttributeItem.EntryRef == newAttributeEntry {
+					break
+				}
+			}
+			if newValue != tempAttributeItem.AttributeValue {
+				tempAttributeItem.AttributeIsChanged = true
+				tempAttributeItem.AttributeChangedValue = newValue
+			} else {
+				tempAttributeItem.AttributeIsChanged = false
+				tempAttributeItem.AttributeChangedValue = newValue
+			}
+
+		}
+		attributesFormContainer.Add(newAttributeEntry)
+
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_COMBOBOX:
+		// Add the Select-widget (ComboBox)
+		/*
+			// Get available values
+			var availableValues []string
+			for _, availableValue := attributeItem.AttributeComboBoxProperty.
+
+			newAttributeSelect := widget.NewSelect(nil, nil)
+			attributeItem.SelectRef = newAttributeSelect
+			newAttributeSelect.SetSelected(attributeItem.AttributeValue)
+			newAttributeSelect.OnChanged = func(newValue string) {
+				// Find which attributes that we are dealing with
+				var tempAttributeItem *testCaseModel.AttributeStruct
+
+				for _, tempAttributeItem = range *attributesList {
+					if tempAttributeItem.SelectRef == newAttributeSelect {
+						break
+					}
+				}
+				if newValue != tempAttributeItem.AttributeValue {
+					tempAttributeItem.AttributeIsChanged = true
+					tempAttributeItem.AttributeChangedValue = newValue
+				} else {
+					tempAttributeItem.AttributeIsChanged = false
+					tempAttributeItem.AttributeChangedValue = newValue
+				}
+
+			}
+			attributesFormContainer.Add(newAttributeEntry)
+		*/
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_RESPONSE_VARIABLE_COMBOBOX:
+		// Add the Select-widget (ComboBox)
+
+		// Get available values
+		var allowedResponseVariablesTypeUuid []string
+		var matureTestInstructionsWithCorrectResponseVariablesType []*testCaseModel.MatureTestInstructionWithCorrectResponseVariablesTypeStruct
+		var err error
+
+		// Get Immature TestInstruction
+		var immatureTestInstruction *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage
+		var existInMap bool
+		immatureTestInstruction, existInMap = testCasesUiCanvasObject.TestCasesModelReference.
+			AvailableImmatureTestInstructionsMap[immatureTestInstructionUuid]
+
+		if existInMap == false {
+			if err != nil {
+				errorId := "94e939c2-aba6-428e-84f0-b012aa19f9bf"
+				err = errors.New(fmt.Sprintf("Couldn't find Immature testInstruction '%s'. "+
+					"Error message: '%s' [ErrorID: %s]",
+					immatureTestInstructionUuid,
+					errorId))
+
+				//TODO Send ERRORS over error-channel
+				fmt.Println(err)
+
+				return
 			}
 		}
-		if newValue != tempAttributeItem.AttributeValue {
-			tempAttributeItem.AttributeIsChanged = true
-			tempAttributeItem.AttributeChangedValue = newValue
-		} else {
-			tempAttributeItem.AttributeIsChanged = false
-			tempAttributeItem.AttributeChangedValue = newValue
+
+		// Generate 'allowedResponseVariablesTypeUuid' TODO secure that no duplicates is found
+		for _, responseVariable := range immatureTestInstruction.GetResponseVariablesMapStructure().ResponseVariablesMap {
+			allowedResponseVariablesTypeUuid = append(allowedResponseVariablesTypeUuid, responseVariable.ResponseVariableTypeUuid)
 		}
 
+		// Call to traverse the elements model to find all TestInstructions that has a matching response variable as
+		// 'this' TestInstructions attribute need
+		err = testCasesUiCanvasObject.recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+			currentTestCase,
+			testInstructionElementMatureUuid,
+			&allowedResponseVariablesTypeUuid,
+			&matureTestInstructionsWithCorrectResponseVariablesType,
+			true,
+			"")
+
+		if err != nil {
+			errorId := "c538c237-78ee-4fe8-9ef5-03f8761e2f90"
+			err = errors.New(fmt.Sprintf("There was some problem when travesering the TestCase-model. "+
+				"Error message: '%s' [ErrorID: %s]",
+				err.Error(),
+				errorId))
+
+			//TODO Send ERRORS over error-channel
+			fmt.Println(err)
+
+			return
+		}
+
+		// Generate ComboBox options names
+		var matureTestInstructionComboBoxOptionsName string
+		var optionsList []string
+		for optionsIndex, matureTestInstructionWithCorrectResponseVariablesType := range matureTestInstructionsWithCorrectResponseVariablesType {
+
+			// Create names to be used as options in ComboBox
+			matureTestInstructionComboBoxOptionsName = fmt.Sprintf("%s [%s]",
+				matureTestInstructionWithCorrectResponseVariablesType.MatureTestInstructionNameWithCorrectResponseVariablesType,
+				sharedCode.GenerateShortUuidFromFullUuid(matureTestInstructionWithCorrectResponseVariablesType.
+					MatureTestInstructionUuidWithCorrectResponseVariablesType))
+
+			// Add the options name back to the object
+			matureTestInstructionsWithCorrectResponseVariablesType[optionsIndex].
+				MatureTestInstructionComboBoxOptionsName = matureTestInstructionComboBoxOptionsName
+
+			// Add the object back to the slice
+			matureTestInstructionsWithCorrectResponseVariablesType[optionsIndex] = matureTestInstructionWithCorrectResponseVariablesType
+
+			// Add to the options array to be able to feed the Combobox
+			optionsList = append(optionsList, matureTestInstructionComboBoxOptionsName)
+
+			// Sort OptionsList
+			sort.Strings(optionsList)
+		}
+
+		// Save the 'matureTestInstructionsWithCorrectResponseVariablesType' back to the Attribute in TestCase-model
+		attributeItem.AttributeResponseVariableComboBoxProperty.
+			MatureTestInstructionsWithCorrectResponseVariablesType = &matureTestInstructionsWithCorrectResponseVariablesType
+
+		newAttributeSelect := widget.NewSelect(optionsList, nil)
+		attributeItem.SelectRef = newAttributeSelect
+
+		// Set previous selected value if exist
+		newAttributeSelect.SetSelected(attributeItem.AttributeValue)
+		newAttributeSelect.OnChanged = func(newValue string) {
+			// Find which attributes that we are dealing with
+			var tempAttributeItem *testCaseModel.AttributeStruct
+			var foundAttribute bool
+
+			for _, tempAttributeItem = range *attributesList {
+				if tempAttributeItem.SelectRef == newAttributeSelect {
+					foundAttribute = true
+					break
+				}
+			}
+			if foundAttribute == false {
+				errorId := "bac28755-d9a8-4565-83b0-b01368ecbe9d"
+				err = errors.New(fmt.Sprintf("Couldn't find Attribute in attribute list [ErrorID: %s]",
+					errorId))
+
+				//TODO Send ERRORS over error-channel
+
+				// Hard exit
+				log.Fatalln(err)
+
+			}
+
+			if newValue != tempAttributeItem.AttributeValue {
+				tempAttributeItem.AttributeIsChanged = true
+				tempAttributeItem.AttributeChangedValue = newValue
+			} else {
+				tempAttributeItem.AttributeIsChanged = false
+				tempAttributeItem.AttributeChangedValue = newValue
+			}
+
+		}
+		attributesFormContainer.Add(newAttributeSelect)
+
+	default:
+		errorId := "c526f868-6c5c-4c4f-b64b-2d2c77272319"
+		err := errors.New(fmt.Sprintf("Unhandled Attribute-type, %s [ErrorID: %s]",
+			fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum_name[int32(
+				attributeItem.AttributeType)],
+			errorId))
+
+		// Exit
+		log.Fatalln(err)
+
 	}
-	attributesFormContainer.Add(newAttributeEntry)
 
 }
 
@@ -210,7 +417,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringLi
 
 	}
 
-	// Used when creating th UI for first time
+	// Used when creating the UI for first time
 
 	if testInstructionElementMatureUuid == "" {
 
@@ -241,13 +448,63 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringLi
 
 	// Loop over attributes and append to slice of attributes with 'Name' and 'value'
 	for _, testInstructionAttribute := range matureTestInstruction.TestInstructionAttributesList {
-		attributesList = append(attributesList, &testCaseModel.AttributeStruct{
-			AttributeUuid:                        testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeUuid,
-			AttributeName:                        testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeName,
-			AttributeValue:                       testInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxAttributeValue,
-			AttributeTypeName:                    testInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxAttributeTypeName,
-			TestInstructionElementMatureUuidUuid: testInstructionElementMatureUuid,
-		})
+
+		// Depending on Attribute Type pick correct attribute data
+		switch testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeType {
+
+		case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_TEXTBOX:
+			attributesList = append(attributesList, &testCaseModel.AttributeStruct{
+				AttributeUuid:                        testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeUuid,
+				AttributeName:                        testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeName,
+				AttributeValue:                       testInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxAttributeValue,
+				AttributeTypeName:                    testInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxAttributeTypeName,
+				AttributeType:                        testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeType,
+				AttributeTextBoxProperty:             testInstructionAttribute.AttributeInformation.GetInputTextBoxProperty(),
+				TestInstructionElementMatureUuidUuid: testInstructionElementMatureUuid,
+			})
+
+		case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_COMBOBOX:
+			attributesList = append(attributesList, &testCaseModel.AttributeStruct{
+				AttributeUuid:                        testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeUuid,
+				AttributeName:                        testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeName,
+				AttributeValue:                       testInstructionAttribute.AttributeInformation.InputComboBoxProperty.ComboBoxAttributeValue,
+				AttributeTypeName:                    testInstructionAttribute.AttributeInformation.InputComboBoxProperty.ComboBoxAttributeTypeName,
+				AttributeType:                        testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeType,
+				AttributeComboBoxProperty:            testInstructionAttribute.AttributeInformation.GetInputComboBoxProperty(),
+				TestInstructionElementMatureUuidUuid: testInstructionElementMatureUuid,
+			})
+
+		case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_RESPONSE_VARIABLE_COMBOBOX:
+			var tempAttributeResponseVariableComboBoxProperty *testCaseModel.AttributeResponseVariableComboBoxPropertyStruct
+			tempAttributeResponseVariableComboBoxProperty = &testCaseModel.AttributeResponseVariableComboBoxPropertyStruct{
+				AttributeResponseVariableComboBoxProperty:              testInstructionAttribute.AttributeInformation.GetResponseVariableComboBoxProperty(),
+				MatureTestInstructionsWithCorrectResponseVariablesType: nil,
+			}
+
+			attributesList = append(attributesList, &testCaseModel.AttributeStruct{
+				AttributeUuid:     testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeUuid,
+				AttributeName:     testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeName,
+				AttributeValue:    testInstructionAttribute.AttributeInformation.ResponseVariableComboBoxProperty.ComboBoxAttributeValueAsString,
+				AttributeTypeName: testInstructionAttribute.AttributeInformation.ResponseVariableComboBoxProperty.ComboBoxAttributeTypeName,
+				AttributeType:     testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeType,
+				AttributeResponseVariableComboBoxProperty: tempAttributeResponseVariableComboBoxProperty,
+				TestInstructionElementMatureUuidUuid:      testInstructionElementMatureUuid,
+			})
+
+		default:
+			errorId := "c526f868-6c5c-4c4f-b64b-2d2c77272319"
+			err = errors.New(fmt.Sprintf("Unhandled Attribute-type, %s [ErrorID: %s]",
+				fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum_name[int32(
+					testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeType)],
+				errorId))
+
+			//TODO Send ERRORS over error-channel
+			fmt.Println(err)
+
+			return nil, err
+
+		}
+
 	}
 
 	// Sort Attributes in Name-order, within each Type
@@ -275,4 +532,333 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringLi
 	//attributesListRef = &attributesList
 
 	return attributesList, err
+}
+
+// Traverse the element model to left and/or upward to the top element. This to be able to find all matching response variables
+// This is use in UI for user to chose from. Then this information is used in runtime to get the value that a certain
+// TestInstruction returned when it was executed
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+	currentTestCase *testCaseModel.TestCaseModelStruct,
+	elementUuidToCheck string,
+	allowedResponseVariablesTypeUuidPtr *[]string,
+	testInstructionWithCorrectResponseVariablesTypePtr *[]*testCaseModel.MatureTestInstructionWithCorrectResponseVariablesTypeStruct,
+	thisIsTheStartElement bool,
+	previousProcessElementUuid string) (
+	err error) {
+
+	var allowedResponseVariablesTypeUuid []string
+	allowedResponseVariablesTypeUuid = *allowedResponseVariablesTypeUuidPtr
+
+	// Extract current element
+	currentElement, existInMap := currentTestCase.TestCaseModelMap[elementUuidToCheck]
+
+	// If the element doesn't exit then there is something really wrong
+	if existInMap == false {
+		errorId := "b53ca94b-deaa-4136-88ec-5a434335cac0"
+		err = errors.New(fmt.Sprintf("Element, '%s', couldn't be found in map  [ErrorID: %s]",
+			elementUuidToCheck,
+			errorId))
+
+		//TODO Send ERRORS over error-channel
+		fmt.Println(err)
+
+		return err
+	}
+
+	// Check if this is the top Element of the full element tree
+	if currentElement.MatureTestCaseModelElementMessage.
+		ParentElementUuid == currentElement.MatureTestCaseModelElementMessage.MatureElementUuid {
+
+		// This is the top element so start rewinding recursive loop
+		return err
+
+	}
+
+	// Extract the parent element
+	var parentElement testCaseModel.MatureTestCaseModelElementStruct
+	parentElement, existInMap = currentTestCase.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.ParentElementUuid]
+
+	// If the element doesn't exit then there is something really wrong
+	if existInMap == false {
+		errorId := "fdfdcfec-551b-446e-91c9-7ce54825081d"
+		err = errors.New(fmt.Sprintf("Parent Element, '%s', couldn't be found in map  [ErrorID: %s]",
+			elementUuidToCheck,
+			errorId))
+
+		//TODO Send ERRORS over error-channel
+		fmt.Println(err)
+
+		return err
+	}
+
+	// Get parent TestInstructionContainer
+	var parentTestInstructionContainer testCaseModel.MatureTestInstructionContainerStruct
+	parentTestInstructionContainer, existInMap = currentTestCase.
+		MatureTestInstructionContainerMap[parentElement.MatureTestCaseModelElementMessage.MatureElementUuid]
+
+	// If the element doesn't exit then there is something really wrong
+	if existInMap == false {
+		errorId := "8260c569-da2f-4de9-95a6-29702dab165d"
+		err = errors.New(fmt.Sprintf("Parent TestInstructionContainer, '%s', couldn't be found in map  [ErrorID: %s]",
+			parentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
+			errorId))
+
+		//TODO Send ERRORS over error-channel
+		fmt.Println(err)
+
+		return err
+	}
+
+	// Get parent TestInstructionContainer ExecutionType
+	var parentTestInstructionContainerExecutionType fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionContainerExecutionTypeEnum
+	parentTestInstructionContainerExecutionType = parentTestInstructionContainer.EditableTestInstructionContainerAttributes.
+		GetTestInstructionContainerExecutionType()
+
+	// Depending on ElementType do different task
+	var testCaseModelElementype fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum
+	testCaseModelElementype = currentElement.MatureTestCaseModelElementMessage.GetTestCaseModelElementType()
+	switch testCaseModelElementype {
+
+	// When TestInstruction then check Response Variables
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE:
+
+		// Extract ResponseVariables from TestInstruction if this is not the start element
+		if thisIsTheStartElement == false {
+			var tempResponseVariables map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ResponseVariableMessage
+			var tempImmatureTestInstructionMessage *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage
+
+			tempImmatureTestInstructionMessage, existInMap = testCasesUiCanvasObject.TestCasesModelReference.
+				AvailableImmatureTestInstructionsMap[currentElement.MatureTestCaseModelElementMessage.GetOriginalElementUuid()]
+
+			if existInMap == false {
+				errorId := "41aa60e3-f87e-4088-8433-0afa31c41bcc"
+				err = errors.New(fmt.Sprintf("ImmatureTestInstruction, '%s', couldn't be found in "+
+					"'AvailableImmatureTestInstructionsMap' + [ErrorID: %s]",
+					currentElement.MatureTestCaseModelElementMessage.GetOriginalElementUuid(),
+					errorId))
+
+				//TODO Send ERRORS over error-channel
+				fmt.Println(err)
+
+				return err
+			}
+
+			tempResponseVariables = tempImmatureTestInstructionMessage.GetResponseVariablesMapStructure().
+				ResponseVariablesMap
+
+			// Loop TestInstructions ResponseVariables
+			for _, tempResponseVariable := range tempResponseVariables {
+
+				// Loop ResponseVariableTypes To match
+				for _, allowedResponseVariableTypeUuid := range allowedResponseVariablesTypeUuid {
+
+					// When TestInstructions Response Variable Type is the same as the ResponseVariableType then add to Slice
+					if allowedResponseVariableTypeUuid == tempResponseVariable.GetResponseVariableTypeUuid() {
+						// Add TestInstructions Original UUID Name
+						var tempMatureTestInstructionWithCorrectResponseVariablesType *testCaseModel.
+							MatureTestInstructionWithCorrectResponseVariablesTypeStruct
+
+						tempMatureTestInstructionWithCorrectResponseVariablesType = &testCaseModel.
+							MatureTestInstructionWithCorrectResponseVariablesTypeStruct{
+							MatureTestInstructionUuidWithCorrectResponseVariablesType: currentElement.
+								MatureTestCaseModelElementMessage.GetMatureElementUuid(),
+							MatureTestInstructionNameWithCorrectResponseVariablesType: currentElement.
+								MatureTestCaseModelElementMessage.GetOriginalElementName(),
+							MatureTestInstructionComboBoxOptionsName: "",
+						}
+						*testInstructionWithCorrectResponseVariablesTypePtr = append(*testInstructionWithCorrectResponseVariablesTypePtr,
+							tempMatureTestInstructionWithCorrectResponseVariablesType)
+					}
+				}
+
+			}
+		}
+
+	// When TestInstructionContainer then do nothing due to that we travers horizontal or upwards in structure
+	// TestInstructionContainer have a path downwards in tree
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE:
+
+		// When Current Element is the same as Previous Parent Element, then we are att the
+		// TestInstructionContainer that were just processed, then we need to decided if we should walk
+		if currentElement.MatureTestCaseModelElementMessage.MatureElementUuid == previousProcessElementUuid {
+
+			// Check if elements are process in serial or in parallel
+			switch parentTestInstructionContainerExecutionType {
+
+			// Serial processed TestInstructionContainer -> Traverse up in this TestInstructionContainer
+			case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionContainerExecutionTypeEnum_SERIAL_PROCESSED:
+
+				err = testCasesUiCanvasObject.recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+					currentTestCase,
+					currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid,
+					allowedResponseVariablesTypeUuidPtr,
+					testInstructionWithCorrectResponseVariablesTypePtr,
+					false,
+					currentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
+				)
+
+				return err
+
+			// Parallel processed TestInstructionContainer -> Traverse from first to last element within this TestInstructionContainer
+			case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionContainerExecutionTypeEnum_PARALLELLED_PROCESSED:
+
+				err = testCasesUiCanvasObject.recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+					currentTestCase,
+					parentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid,
+					allowedResponseVariablesTypeUuidPtr,
+					testInstructionWithCorrectResponseVariablesTypePtr,
+					false,
+					currentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
+				)
+
+				return err
+
+			default:
+				errorId := "aba4370f-2002-4c6b-8fbd-313cd4487438"
+				err = errors.New(fmt.Sprintf("Unhandled 'TestCaseModelElementTypeEnum', '%d' [ErrorID: %s]",
+					currentElement.MatureTestCaseModelElementMessage.GetTestCaseModelElementType(),
+					errorId))
+
+				// Hard Exit
+				log.Fatalln(err)
+
+			}
+
+		}
+
+	// When Bond the Traverse right if possible
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1f_BOND_NONE_SWAPPABLE,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1l_BOND_NONE_SWAPPABLE,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10ox_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE:
+
+	default:
+		errorId := "07d8e9b3-fdd1-48d3-a1fe-d178aa92e3aa"
+		err = errors.New(fmt.Sprintf("Unhandled 'TestCaseModelElementTypeEnum', '%d' [ErrorID: %s]",
+			currentElement.MatureTestCaseModelElementMessage.GetTestCaseModelElementType(),
+			errorId))
+
+		// Hard Exit
+		log.Fatalln(err)
+
+		return err
+
+	}
+
+	// Different processing depending on if parent TestInstructionContainer is a serial or parallel executed one
+	switch parentTestInstructionContainerExecutionType {
+
+	// Serial processed TestInstructionContainer -> Traverse up in TestInstructionContainer
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionContainerExecutionTypeEnum_SERIAL_PROCESSED:
+
+		// If this is the start element and not the first element, then use previous element as next
+		if currentElement.MatureTestCaseModelElementMessage.
+			MatureElementUuid != currentElement.MatureTestCaseModelElementMessage.
+			PreviousElementUuid && thisIsTheStartElement == true {
+
+			// Traverse up/back in the Tree
+			err = testCasesUiCanvasObject.recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+				currentTestCase,
+				currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid,
+				allowedResponseVariablesTypeUuidPtr,
+				testInstructionWithCorrectResponseVariablesTypePtr,
+				false,
+				currentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
+			)
+
+			return err
+		}
+
+		// Check if this is the first element in the TestInstructionContainer
+		if currentElement.MatureTestCaseModelElementMessage.
+			MatureElementUuid == currentElement.MatureTestCaseModelElementMessage.
+			PreviousElementUuid {
+
+			// Traverse up on level in the Tree
+			err = testCasesUiCanvasObject.recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+				currentTestCase,
+				parentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
+				allowedResponseVariablesTypeUuidPtr,
+				testInstructionWithCorrectResponseVariablesTypePtr,
+				false,
+				currentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
+			)
+
+			return err
+
+		} else {
+
+			// This is not the first element in the TestInstructionContainer so
+			// traverse one element upwards/back within TestInstructionContainer
+			err = testCasesUiCanvasObject.recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+				currentTestCase,
+				currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid,
+				allowedResponseVariablesTypeUuidPtr,
+				testInstructionWithCorrectResponseVariablesTypePtr,
+				false,
+				currentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
+			)
+
+			return err
+		}
+
+	// Parallel processed TestInstructionContainer -> Traverse from first to last element within TestInstructionContainer
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionContainerExecutionTypeEnum_PARALLELLED_PROCESSED:
+
+		// Check if this is the last element in the TestInstructionContainer or this is the start element
+		if currentElement.MatureTestCaseModelElementMessage.
+			MatureElementUuid == currentElement.MatureTestCaseModelElementMessage.
+			NextElementUuid || thisIsTheStartElement == true {
+
+			// Traverse up on level in the Tree
+			err = testCasesUiCanvasObject.recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+				currentTestCase,
+				currentElement.MatureTestCaseModelElementMessage.ParentElementUuid,
+				allowedResponseVariablesTypeUuidPtr,
+				testInstructionWithCorrectResponseVariablesTypePtr,
+				false,
+				currentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
+			)
+
+			return err
+
+		} else {
+
+			// This is not the last element in the TestInstructionContainer so
+			// traverse one element forward/right within TestInstructionContainer
+			err = testCasesUiCanvasObject.recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+				currentTestCase,
+				currentElement.MatureTestCaseModelElementMessage.NextElementUuid,
+				allowedResponseVariablesTypeUuidPtr,
+				testInstructionWithCorrectResponseVariablesTypePtr,
+				false,
+				currentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
+			)
+
+			return err
+		}
+
+	default:
+		errorId := "cd4e981c-0336-443d-a086-ff832485baf6"
+		err = errors.New(fmt.Sprintf("Unhandled 'TestCaseModelElementTypeEnum', '%d' [ErrorID: %s]",
+			currentElement.MatureTestCaseModelElementMessage.GetTestCaseModelElementType(),
+			errorId))
+
+		// Hard Exit
+		log.Fatalln(err)
+
+	}
+
+	return err
 }

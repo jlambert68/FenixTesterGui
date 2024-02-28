@@ -8,6 +8,15 @@ import (
 	"strconv"
 )
 
+// GenerateShortUuidFromFullUuid
+// Generate a short version of the UUID to be used in GUI
+func GenerateShortUuidFromFullUuid(fullUuid string) (shortUuid string) {
+
+	shortUuid = fullUuid[0 : numberOfCharactersFromUuid-1]
+
+	return shortUuid
+}
+
 // ConvertRGBAHexStringIntoRGBAColor- Converts a colors in a hex-string into 'color.RGBA'-format. "#FF03AFFF"
 func ConvertRGBAHexStringIntoRGBAColor(rgbaHexString string) (rgbaValue color.RGBA, err error) {
 

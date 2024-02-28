@@ -8,6 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	"log"
 )
 
 // SaveFullTestCase - Save the TestCase to the Database
@@ -629,7 +630,26 @@ func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCa
 				}
 
 				// Save changed value for Attribute
-				tempTestInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxAttributeValue = attribute.AttributeChangedValue
+				switch attribute.AttributeType {
+
+				case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_TEXTBOX:
+					tempTestInstructionAttribute.AttributeInformation.InputTextBoxProperty.
+						TextBoxAttributeValue = attribute.AttributeChangedValue
+
+				case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_RESPONSE_VARIABLE_COMBOBOX:
+					tempTestInstructionAttribute.AttributeInformation.ResponseVariableComboBoxProperty.
+						ComboBoxAttributeValueAsString = attribute.AttributeChangedValue
+				default:
+
+					errorId := "8d5c40ca-1a88-4eae-8926-898d03e6806b"
+					err = errors.New(fmt.Sprintf("Unhandled AttributeType '%s'. [ErrorID: %s]",
+						attribute.AttributeType.String(),
+						errorId))
+
+					// Hard Exit
+					log.Fatalln(err) //TODO Send error over error-channel
+
+				}
 
 			}
 		}

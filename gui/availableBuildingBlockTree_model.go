@@ -159,18 +159,19 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvai
 			BasicTestInstructionInformation:    immatureTestInstruction.BasicTestInstructionInformation,
 			ImmatureTestInstructionInformation: immatureTestInstruction.ImmatureTestInstructionInformation,
 			ImmatureSubTestCaseModel:           immatureTestInstruction.ImmatureSubTestCaseModel,
+			ResponseVariablesMapStructure:      immatureTestInstruction.ResponseVariablesMapStructure,
 		}
 
 		/*
-			tempImmatureTestInstructionMessage = testCaseModeReference.AvailableImmatureTestInstructionsMap[immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid]
+			tempImmatureTestInstructionMessage = testCaseModeReference.AvailableImmatureTestInstructionsMap[immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOriginalUuid]
 
 			tempImmatureTestInstructionMessage.BasicTestInstructionInformation = immatureTestInstruction.BasicTestInstructionInformation
 			tempImmatureTestInstructionMessage.ImmatureTestInstructionInformation = immatureTestInstruction.ImmatureTestInstructionInformation
 			tempImmatureTestInstructionMessage.ImmatureSubTestCaseModel = immatureTestInstruction.ImmatureSubTestCaseModel
 		*/
-		testCaseModeReference.AvailableImmatureTestInstructionsMap[immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid] = tempImmatureTestInstructionMessage
+		testCaseModeReference.AvailableImmatureTestInstructionsMap[immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOriginalUuid] = tempImmatureTestInstructionMessage
 
-		//testCaseModeReference.AvailableImmatureTestInstructionsMap[immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid] = immatureTestInstruction
+		//testCaseModeReference.AvailableImmatureTestInstructionsMap[immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOriginalUuid] = immatureTestInstruction
 
 		// Extract DropZone and add ti Map
 		for _, dropZoneMessage := range immatureTestInstruction.ImmatureTestInstructionInformation.AvailableDropZones {
@@ -178,7 +179,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvai
 			// DropZoneUuid should not be empty
 			if dropZoneMessage.DropZoneUuid == "" {
 				errorId := "a8226610-8203-4305-a71d-1eb80923374c"
-				err := errors.New(fmt.Sprintf("dropZoneUuid is emtpy in TestInstruction %s with name %s 'immatureTestInstruction.ImmatureTestInstructionInformation.AvailableDropZones ' [ErrorID: %s]", immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOrignalUuid, immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOriginalName, errorId))
+				err := errors.New(fmt.Sprintf("dropZoneUuid is emtpy in TestInstruction %s with name %s 'immatureTestInstruction.ImmatureTestInstructionInformation.AvailableDropZones ' [ErrorID: %s]", immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOriginalUuid, immatureTestInstruction.BasicTestInstructionInformation.NonEditableInformation.TestInstructionOriginalName, errorId))
 
 				fmt.Println(err) //TODO Send error over error-channel
 			}

@@ -34,7 +34,7 @@ func PullPubSubTestInstructionExecutionMessagesGcpClientLib() {
 	// Extract PubSub-Id and remove characters that are not allowed
 	var subID string
 	subID = generatePubSubTopicSubscriptionNameForExecutionStatusUpdates(sharedCode.CurrentUserAuthenticatedTowardsGCP)
-	subID = strings.ReplaceAll(subID, "@", "")
+	subID = strings.ReplaceAll(subID, "@", ".")
 
 	var pubSubClient *pubsub.Client
 	var err error

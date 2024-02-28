@@ -319,7 +319,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 		// Generate ComboBox options names
 		var matureTestInstructionComboBoxOptionsName string
 		var optionsList []string
-		for optionsIndex, matureTestInstructionWithCorrectResponseVariablesType := range matureTestInstructionsWithCorrectResponseVariablesType {
+		var optionsListLenght int
+		optionsListLenght = len(matureTestInstructionsWithCorrectResponseVariablesType)
+		for optionsIndex := optionsListLenght - 1; optionsIndex >= 0; optionsIndex-- {
+
+			// Extract
+			matureTestInstructionWithCorrectResponseVariablesType := matureTestInstructionsWithCorrectResponseVariablesType[optionsIndex]
 
 			// Create names to be used as options in ComboBox
 			matureTestInstructionComboBoxOptionsName = fmt.Sprintf("%s [%s]",
@@ -337,8 +342,6 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 			// Add to the options array to be able to feed the Combobox
 			optionsList = append(optionsList, matureTestInstructionComboBoxOptionsName)
 
-			// Sort OptionsList
-			sort.Strings(optionsList)
 		}
 
 		// Save the 'matureTestInstructionsWithCorrectResponseVariablesType' back to the Attribute in TestCase-model

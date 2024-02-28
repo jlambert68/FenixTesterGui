@@ -81,7 +81,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION,
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE:
 
-			// Extract the node name
+			// Extract the node name and shorten its Mature Uuid
 			var shortedUuid string
 			shortedUuid = sharedCode.GenerateShortUuidFromFullUuid(child.Uuid)
 			nodeName := fmt.Sprintf("%s [%s]",
@@ -139,8 +139,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE:
 
 			// Create the Accordion-object to hold information about the TestInstructionContainer
+			// Extract the node name and shorten its Mature Uuid
+			var shortedUuid string
+			shortedUuid = sharedCode.GenerateShortUuidFromFullUuid(child.Uuid)
+			nodeName := fmt.Sprintf("%s [%s]",
+				child.NodeName,
+				shortedUuid,
+			)
+
 			dummyText := widget.NewLabel("this is just a dummy text and might show other TestInstructionContainer-attributes later on")
-			newTestInstructionAccordionItem := widget.NewAccordionItem(child.NodeName+" - "+child.Uuid, dummyText)
+			newTestInstructionAccordionItem := widget.NewAccordionItem(nodeName, dummyText)
 			newTestInstructionContainerAccordion := testCasesUiCanvasObject.newClickableAccordion(
 				newTestInstructionAccordionItem, true, testCaseUuid, child.OriginalUuid) //widget.NewAccordion(newTestInstructionAccordionItem)
 

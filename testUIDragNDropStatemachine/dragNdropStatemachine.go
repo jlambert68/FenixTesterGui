@@ -68,7 +68,13 @@ type noneDroppableLabel struct {
 
 // InitiateStateStateMachine
 // InitiateState State machine
-func (stateMachine *StateMachineDragAndDropStruct) InitiateStateStateMachine(dragNDropText *canvas.Text, dragNDropRectangleRef *canvas.Rectangle, dragNDropRectangle2Ref *canvas.Rectangle, dragNDropContainerRef *fyne.Container, commandChannelRef *sharedCode.CommandChannelType) {
+func (stateMachine *StateMachineDragAndDropStruct) InitiateStateStateMachine(
+	dragNDropText *canvas.Text,
+	dragNDropRectangleRef *canvas.Rectangle,
+	dragNDropRectangle2Ref *canvas.Rectangle,
+	dragNDropContainerRef *fyne.Container,
+	commandChannelRef *sharedCode.CommandChannelType) {
+
 	textRef = dragNDropText
 	rectangleRef = dragNDropRectangleRef
 	rectangle2Ref = dragNDropRectangle2Ref
@@ -204,8 +210,8 @@ func (t *DraggableLabel) Dragged(ev *fyne.DragEvent) {
 
 	// Move 'Drag N Drop'-object container, so it is to the right of the mouse-pointer
 	diffPos := fyne.Position{
-		X: 5,
-		Y: -10,
+		X: -200,
+		Y: 50,
 	}
 	//newPos := ev.AbsolutePosition.Add(diffPos)
 	newPos := ev.AbsolutePosition.Add(diffPos).Add(fyne.NewSize(rectangleRef.Size().Width/2, rectangleRef.Size().Height/2))

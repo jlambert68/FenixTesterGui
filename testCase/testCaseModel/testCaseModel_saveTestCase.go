@@ -639,6 +639,21 @@ func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCa
 				case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_RESPONSE_VARIABLE_COMBOBOX:
 					tempTestInstructionAttribute.AttributeInformation.ResponseVariableComboBoxProperty.
 						ComboBoxAttributeValueAsString = attribute.AttributeChangedValue
+
+					// The Uuid of the chosen allowed response variable type
+					tempTestInstructionAttribute.AttributeInformation.ResponseVariableComboBoxProperty.
+						ChosenResponseVariableTypeUuid = attribute.AttributeResponseVariableComboBoxProperty.
+						AttributeResponseVariableComboBoxProperty.GetChosenResponseVariableTypeUuid()
+
+					// The Name of the chosen allowed response variable type
+					tempTestInstructionAttribute.AttributeInformation.ResponseVariableComboBoxProperty.
+						ChosenResponseVariableTypeName = attribute.AttributeResponseVariableComboBoxProperty.
+						AttributeResponseVariableComboBoxProperty.GetChosenResponseVariableTypeName()
+
+					tempTestInstructionAttribute.AttributeInformation.ResponseVariableComboBoxProperty.
+						ComboBoxAttributeValueAsString = attribute.AttributeResponseVariableComboBoxProperty.
+						AttributeResponseVariableComboBoxProperty.GetComboBoxAttributeValueAsString()
+
 				default:
 
 					errorId := "8d5c40ca-1a88-4eae-8926-898d03e6806b"

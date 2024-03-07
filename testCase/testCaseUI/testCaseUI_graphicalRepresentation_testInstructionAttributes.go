@@ -295,12 +295,13 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 
 		// Call to traverse the elements model to find all TestInstructions that has a matching response variable as
 		// 'this' TestInstructions attribute need
-		err = testCasesUiCanvasObject.recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+		err = testCasesUiCanvasObject.recursiveTraverseUpwardsTestInstructionContainerElementsForResponseVariablesThatMatch(
 			currentTestCase,
 			testInstructionElementMatureUuid,
 			&allowedResponseVariablesTypeUuid,
 			&matureTestInstructionsWithCorrectResponseVariablesType,
 			true,
+			"",
 			"")
 
 		if err != nil {
@@ -319,9 +320,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 		// Generate ComboBox options names
 		var matureTestInstructionComboBoxOptionsName string
 		var optionsList []string
-		var optionsListLenght int
-		optionsListLenght = len(matureTestInstructionsWithCorrectResponseVariablesType)
-		for optionsIndex := optionsListLenght - 1; optionsIndex >= 0; optionsIndex-- {
+		var optionsListLength int
+		optionsListLength = len(matureTestInstructionsWithCorrectResponseVariablesType)
+		for optionsIndex := optionsListLength - 1; optionsIndex >= 0; optionsIndex-- {
 
 			// Extract
 			matureTestInstructionWithCorrectResponseVariablesType := matureTestInstructionsWithCorrectResponseVariablesType[optionsIndex]
@@ -374,6 +375,41 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 				// Hard exit
 				log.Fatalln(err)
 
+			}
+
+			// Loop Available TestInstructions with correct ResponseVariable and find the chosen
+			var foundChosenTestInstruction bool
+			for _, tempChosenTestInstruction := range *tempAttributeItem.AttributeResponseVariableComboBoxProperty.
+				MatureTestInstructionsWithCorrectResponseVariablesType {
+
+				foundChosenTestInstruction = true
+
+				// Stop when we find the chosen TestInstruction
+				if tempChosenTestInstruction.MatureTestInstructionComboBoxOptionsName == newValue {
+					// Set Chosen TestInstruction
+					tempAttributeItem.AttributeResponseVariableComboBoxProperty.AttributeResponseVariableComboBoxProperty.
+						ChosenResponseVariableTypeUuid = tempChosenTestInstruction.
+						MatureTestInstructionUuidWithCorrectResponseVariablesType
+					tempAttributeItem.AttributeResponseVariableComboBoxProperty.AttributeResponseVariableComboBoxProperty.
+						ChosenResponseVariableTypeName = tempChosenTestInstruction.
+						MatureTestInstructionNameWithCorrectResponseVariablesType
+					tempAttributeItem.AttributeResponseVariableComboBoxProperty.AttributeResponseVariableComboBoxProperty.
+						ComboBoxAttributeValueAsString = tempChosenTestInstruction.
+						MatureTestInstructionComboBoxOptionsName
+
+					break
+				}
+			}
+
+			if foundChosenTestInstruction == false {
+				errorId := "baa28755-d9a8-4565-83b0-b02368ecbe9d"
+				err = errors.New(fmt.Sprintf("Couldn't find Attribute in attribute list [ErrorID: %s]",
+					errorId))
+
+				//TODO Send ERRORS over error-channel
+
+				// Hard exit
+				log.Fatalln(err)
 			}
 
 			if newValue != tempAttributeItem.AttributeValue {
@@ -537,20 +573,19 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringLi
 	return attributesList, err
 }
 
-// Traverse the element model to left and/or upward to the top element. This to be able to find all matching response variables
+// Traverse the element model to left and/or upward to the top element. This to be able to find all matching response variables.
+// When the traverse logic comes to a TestInstructionContainer it will start to traverse down in this path, going first down and then right.
 // This is use in UI for user to chose from. Then this information is used in runtime to get the value that a certain
 // TestInstruction returned when it was executed
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveTraverseUpwardsTestInstructionContainerElementsForResponseVariablesThatMatch(
 	currentTestCase *testCaseModel.TestCaseModelStruct,
 	elementUuidToCheck string,
 	allowedResponseVariablesTypeUuidPtr *[]string,
 	testInstructionWithCorrectResponseVariablesTypePtr *[]*testCaseModel.MatureTestInstructionWithCorrectResponseVariablesTypeStruct,
 	thisIsTheStartElement bool,
-	previousProcessElementUuid string) (
+	previousProcessedElementUuid string,
+	previousProcessedElementsParentUuid string) (
 	err error) {
-
-	var allowedResponseVariablesTypeUuid []string
-	allowedResponseVariablesTypeUuid = *allowedResponseVariablesTypeUuidPtr
 
 	// Extract current element
 	currentElement, existInMap := currentTestCase.TestCaseModelMap[elementUuidToCheck]
@@ -618,9 +653,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveTraverseTestInst
 		GetTestInstructionContainerExecutionType()
 
 	// Depending on ElementType do different task
-	var testCaseModelElementype fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum
-	testCaseModelElementype = currentElement.MatureTestCaseModelElementMessage.GetTestCaseModelElementType()
-	switch testCaseModelElementype {
+	var testCaseModelElementType fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum
+	testCaseModelElementType = currentElement.MatureTestCaseModelElementMessage.GetTestCaseModelElementType()
+	switch testCaseModelElementType {
 
 	// When TestInstruction then check Response Variables
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION,
@@ -628,6 +663,20 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveTraverseTestInst
 
 		// Extract ResponseVariables from TestInstruction if this is not the start element
 		if thisIsTheStartElement == false {
+
+			err = testCasesUiCanvasObject.extractResponseVariablesFromTestInstruction(
+				allowedResponseVariablesTypeUuidPtr,
+				&currentElement,
+				testInstructionWithCorrectResponseVariablesTypePtr)
+
+			// When Error then exit recursively
+			if err != nil {
+
+				return err
+
+			}
+
+			/* Moved to separate function 'extractResponseVariablesFromTestInstruction'
 			var tempResponseVariables map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ResponseVariableMessage
 			var tempImmatureTestInstructionMessage *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage
 
@@ -676,6 +725,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveTraverseTestInst
 				}
 
 			}
+
+			*/
 		}
 
 	// When TestInstructionContainer then do nothing due to that we travers horizontal or upwards in structure
@@ -684,8 +735,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveTraverseTestInst
 		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE:
 
 		// When Current Element is the same as Previous Parent Element, then we are att the
-		// TestInstructionContainer that were just processed, then we need to decided if we should walk
-		if currentElement.MatureTestCaseModelElementMessage.MatureElementUuid == previousProcessElementUuid {
+		// TestInstructionContainer that were just processed, then we need to decided how we should walk
+		if currentElement.MatureTestCaseModelElementMessage.MatureElementUuid == previousProcessedElementUuid {
 
 			// Check if elements are process in serial or in parallel
 			switch parentTestInstructionContainerExecutionType {
@@ -693,13 +744,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveTraverseTestInst
 			// Serial processed TestInstructionContainer -> Traverse up in this TestInstructionContainer
 			case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionContainerExecutionTypeEnum_SERIAL_PROCESSED:
 
-				err = testCasesUiCanvasObject.recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+				err = testCasesUiCanvasObject.recursiveTraverseUpwardsTestInstructionContainerElementsForResponseVariablesThatMatch(
 					currentTestCase,
 					currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid,
 					allowedResponseVariablesTypeUuidPtr,
 					testInstructionWithCorrectResponseVariablesTypePtr,
 					false,
 					currentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
+					currentElement.MatureTestCaseModelElementMessage.ParentElementUuid,
 				)
 
 				return err
@@ -707,13 +759,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveTraverseTestInst
 			// Parallel processed TestInstructionContainer -> Traverse from first to last element within this TestInstructionContainer
 			case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionContainerExecutionTypeEnum_PARALLELLED_PROCESSED:
 
-				err = testCasesUiCanvasObject.recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+				err = testCasesUiCanvasObject.recursiveTraverseUpwardsTestInstructionContainerElementsForResponseVariablesThatMatch(
 					currentTestCase,
 					parentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid,
 					allowedResponseVariablesTypeUuidPtr,
 					testInstructionWithCorrectResponseVariablesTypePtr,
 					false,
 					currentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
+					currentElement.MatureTestCaseModelElementMessage.ParentElementUuid,
 				)
 
 				return err
@@ -729,6 +782,20 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveTraverseTestInst
 
 			}
 
+		}
+
+		if currentElement.MatureTestCaseModelElementMessage.MatureElementUuid != previousProcessedElementsParentUuid {
+			// Travers down this TestInstructionContainer to First child element
+			err = testCasesUiCanvasObject.recursiveTraverseDownwardsTestInstructionContainerElementsForResponseVariablesThatMatch(
+				currentTestCase,
+				currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid,
+				allowedResponseVariablesTypeUuidPtr,
+				testInstructionWithCorrectResponseVariablesTypePtr)
+
+			// When Error then exit recursively
+			if err != nil {
+				return err
+			}
 		}
 
 	// When Bond the Traverse right if possible
@@ -771,13 +838,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveTraverseTestInst
 			PreviousElementUuid && thisIsTheStartElement == true {
 
 			// Traverse up/back in the Tree
-			err = testCasesUiCanvasObject.recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+			err = testCasesUiCanvasObject.recursiveTraverseUpwardsTestInstructionContainerElementsForResponseVariablesThatMatch(
 				currentTestCase,
 				currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid,
 				allowedResponseVariablesTypeUuidPtr,
 				testInstructionWithCorrectResponseVariablesTypePtr,
 				false,
 				currentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
+				currentElement.MatureTestCaseModelElementMessage.ParentElementUuid,
 			)
 
 			return err
@@ -789,13 +857,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveTraverseTestInst
 			PreviousElementUuid {
 
 			// Traverse up on level in the Tree
-			err = testCasesUiCanvasObject.recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+			err = testCasesUiCanvasObject.recursiveTraverseUpwardsTestInstructionContainerElementsForResponseVariablesThatMatch(
 				currentTestCase,
 				parentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
 				allowedResponseVariablesTypeUuidPtr,
 				testInstructionWithCorrectResponseVariablesTypePtr,
 				false,
 				currentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
+				currentElement.MatureTestCaseModelElementMessage.ParentElementUuid,
 			)
 
 			return err
@@ -804,13 +873,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveTraverseTestInst
 
 			// This is not the first element in the TestInstructionContainer so
 			// traverse one element upwards/back within TestInstructionContainer
-			err = testCasesUiCanvasObject.recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+			err = testCasesUiCanvasObject.recursiveTraverseUpwardsTestInstructionContainerElementsForResponseVariablesThatMatch(
 				currentTestCase,
 				currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid,
 				allowedResponseVariablesTypeUuidPtr,
 				testInstructionWithCorrectResponseVariablesTypePtr,
 				false,
 				currentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
+				currentElement.MatureTestCaseModelElementMessage.ParentElementUuid,
 			)
 
 			return err
@@ -825,13 +895,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveTraverseTestInst
 			NextElementUuid || thisIsTheStartElement == true {
 
 			// Traverse up on level in the Tree
-			err = testCasesUiCanvasObject.recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+			err = testCasesUiCanvasObject.recursiveTraverseUpwardsTestInstructionContainerElementsForResponseVariablesThatMatch(
 				currentTestCase,
 				currentElement.MatureTestCaseModelElementMessage.ParentElementUuid,
 				allowedResponseVariablesTypeUuidPtr,
 				testInstructionWithCorrectResponseVariablesTypePtr,
 				false,
 				currentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
+				currentElement.MatureTestCaseModelElementMessage.ParentElementUuid,
 			)
 
 			return err
@@ -840,13 +911,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveTraverseTestInst
 
 			// This is not the last element in the TestInstructionContainer so
 			// traverse one element forward/right within TestInstructionContainer
-			err = testCasesUiCanvasObject.recursiveTraverseTestInstructionContainerElementsForResponseVariablesThatMatch(
+			err = testCasesUiCanvasObject.recursiveTraverseUpwardsTestInstructionContainerElementsForResponseVariablesThatMatch(
 				currentTestCase,
 				currentElement.MatureTestCaseModelElementMessage.NextElementUuid,
 				allowedResponseVariablesTypeUuidPtr,
 				testInstructionWithCorrectResponseVariablesTypePtr,
 				false,
 				currentElement.MatureTestCaseModelElementMessage.MatureElementUuid,
+				currentElement.MatureTestCaseModelElementMessage.ParentElementUuid,
 			)
 
 			return err
@@ -863,5 +935,216 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveTraverseTestInst
 
 	}
 
+	return err
+}
+
+// When the traverse logic comes to a TestInstructionContainer it will start to traverse down in this path, going first down and then right.
+// This is use in UI for user to chose from. Then this information is used in runtime to get the value that a certain
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveTraverseDownwardsTestInstructionContainerElementsForResponseVariablesThatMatch(
+	currentTestCase *testCaseModel.TestCaseModelStruct,
+	elementUuidToCheck string,
+	allowedResponseVariablesTypeUuidPtr *[]string,
+	testInstructionWithCorrectResponseVariablesTypePtr *[]*testCaseModel.MatureTestInstructionWithCorrectResponseVariablesTypeStruct) (
+	err error) {
+
+	// Extract current element
+	currentElement, existInMap := currentTestCase.TestCaseModelMap[elementUuidToCheck]
+
+	// If the element doesn't exit then there is something really wrong
+	if existInMap == false {
+		errorId := "b53ca94b-deaa-4136-88ec-5a434335cac0"
+		err = errors.New(fmt.Sprintf("Element, '%s', couldn't be found in map  [ErrorID: %s]",
+			elementUuidToCheck,
+			errorId))
+
+		//TODO Send ERRORS over error-channel
+		fmt.Println(err)
+
+		return err
+	}
+
+	// Depending on ElementType do different task
+	var testCaseModelElementType fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum
+	testCaseModelElementType = currentElement.MatureTestCaseModelElementMessage.GetTestCaseModelElementType()
+	switch testCaseModelElementType {
+
+	// When TestInstruction then check Response Variables and Traverse to Next element
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE:
+
+		err = testCasesUiCanvasObject.extractResponseVariablesFromTestInstruction(
+			allowedResponseVariablesTypeUuidPtr,
+			&currentElement,
+			testInstructionWithCorrectResponseVariablesTypePtr)
+
+		// When Error then exit recursively
+		if err != nil {
+			return err
+		}
+
+		// Is this the last element, then exit
+		if currentElement.MatureTestCaseModelElementMessage.
+			MatureElementUuid == currentElement.MatureTestCaseModelElementMessage.NextElementUuid {
+
+			return err
+		}
+
+		// Recursively traverse to next element
+		err = testCasesUiCanvasObject.recursiveTraverseDownwardsTestInstructionContainerElementsForResponseVariablesThatMatch(
+			currentTestCase,
+			currentElement.MatureTestCaseModelElementMessage.NextElementUuid,
+			allowedResponseVariablesTypeUuidPtr,
+			testInstructionWithCorrectResponseVariablesTypePtr)
+
+		return err
+
+	// When TestInstructionContainer then first traverse Down to first child element.
+	//When coming back then Traverse to Next element
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TICx_TESTINSTRUCTIONCONTAINER_NONE_REMOVABLE:
+
+		// Is this the last element, then exit
+		if currentElement.MatureTestCaseModelElementMessage.
+			MatureElementUuid == currentElement.MatureTestCaseModelElementMessage.NextElementUuid {
+
+			return err
+		}
+
+		// Recursively traverse to first child element
+		err = testCasesUiCanvasObject.recursiveTraverseDownwardsTestInstructionContainerElementsForResponseVariablesThatMatch(
+			currentTestCase,
+			currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid,
+			allowedResponseVariablesTypeUuidPtr,
+			testInstructionWithCorrectResponseVariablesTypePtr)
+
+		// When Error then exit recursively
+		if err != nil {
+			return err
+		}
+
+		// Is this the Last element, then exit
+		if currentElement.MatureTestCaseModelElementMessage.
+			MatureElementUuid == currentElement.MatureTestCaseModelElementMessage.NextElementUuid {
+
+			return err
+		}
+
+		// Recursively traverse to next element
+		err = testCasesUiCanvasObject.recursiveTraverseDownwardsTestInstructionContainerElementsForResponseVariablesThatMatch(
+			currentTestCase,
+			currentElement.MatureTestCaseModelElementMessage.NextElementUuid,
+			allowedResponseVariablesTypeUuidPtr,
+			testInstructionWithCorrectResponseVariablesTypePtr)
+
+		return err
+
+		// When Bond the Traverse right if possible
+	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1f_BOND_NONE_SWAPPABLE,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B1l_BOND_NONE_SWAPPABLE,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10ox_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11fx_BOND_NONE_SWAPPABLE,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11lx_BOND_NONE_SWAPPABLE,
+		fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12x_BOND_NONE_SWAPPABLE:
+
+		// Is this the Last element, then exit
+		if currentElement.MatureTestCaseModelElementMessage.
+			MatureElementUuid == currentElement.MatureTestCaseModelElementMessage.NextElementUuid {
+
+			return err
+		}
+
+		// Recursively traverse to Next element
+		err = testCasesUiCanvasObject.recursiveTraverseDownwardsTestInstructionContainerElementsForResponseVariablesThatMatch(
+			currentTestCase,
+			currentElement.MatureTestCaseModelElementMessage.NextElementUuid,
+			allowedResponseVariablesTypeUuidPtr,
+			testInstructionWithCorrectResponseVariablesTypePtr)
+
+		return err
+
+	default:
+		errorId := "b212ab28-4701-46f8-a864-7f3506c63f75"
+		err = errors.New(fmt.Sprintf("Unhandled 'TestCaseModelElementTypeEnum', '%d' [ErrorID: %s]",
+			currentElement.MatureTestCaseModelElementMessage.GetTestCaseModelElementType(),
+			errorId))
+
+		// Hard Exit
+		log.Fatalln(err)
+
+		return err
+
+	}
+
+	return err
+
+}
+
+// // Extract ResponseVariables from TestInstruction, used within the two traverse functions
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) extractResponseVariablesFromTestInstruction(
+	allowedResponseVariablesTypeUuidPtr *[]string,
+	currentElement *testCaseModel.MatureTestCaseModelElementStruct,
+	testInstructionWithCorrectResponseVariablesTypePtr *[]*testCaseModel.MatureTestInstructionWithCorrectResponseVariablesTypeStruct) (
+	err error) {
+
+	var allowedResponseVariablesTypeUuid []string
+	allowedResponseVariablesTypeUuid = *allowedResponseVariablesTypeUuidPtr
+
+	var tempResponseVariables map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ResponseVariableMessage
+	var tempImmatureTestInstructionMessage *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionMessage
+
+	// Extract Immature TestInstruction
+	var existInMap bool
+	tempImmatureTestInstructionMessage, existInMap = testCasesUiCanvasObject.TestCasesModelReference.
+		AvailableImmatureTestInstructionsMap[currentElement.MatureTestCaseModelElementMessage.GetOriginalElementUuid()]
+
+	if existInMap == false {
+		errorId := "3bfeb6c1-eba1-4a69-9374-3bce36f48746"
+		err = errors.New(fmt.Sprintf("ImmatureTestInstruction, '%s', couldn't be found in "+
+			"'AvailableImmatureTestInstructionsMap' + [ErrorID: %s]",
+			currentElement.MatureTestCaseModelElementMessage.GetOriginalElementUuid(),
+			errorId))
+
+		//TODO Send ERRORS over error-channel
+		fmt.Println(err)
+
+		return err
+	}
+
+	tempResponseVariables = tempImmatureTestInstructionMessage.GetResponseVariablesMapStructure().
+		ResponseVariablesMap
+
+	// Loop TestInstructions ResponseVariables
+	for _, tempResponseVariable := range tempResponseVariables {
+
+		// Loop ResponseVariableTypes To match
+		for _, allowedResponseVariableTypeUuid := range allowedResponseVariablesTypeUuid {
+
+			// When TestInstructions Response Variable Type is the same as the ResponseVariableType then add to Slice
+			if allowedResponseVariableTypeUuid == tempResponseVariable.GetResponseVariableTypeUuid() {
+				// Add TestInstructions Original UUID Name
+				var tempMatureTestInstructionWithCorrectResponseVariablesType *testCaseModel.
+					MatureTestInstructionWithCorrectResponseVariablesTypeStruct
+
+				tempMatureTestInstructionWithCorrectResponseVariablesType = &testCaseModel.
+					MatureTestInstructionWithCorrectResponseVariablesTypeStruct{
+					MatureTestInstructionUuidWithCorrectResponseVariablesType: currentElement.
+						MatureTestCaseModelElementMessage.GetMatureElementUuid(),
+					MatureTestInstructionNameWithCorrectResponseVariablesType: currentElement.
+						MatureTestCaseModelElementMessage.GetOriginalElementName(),
+					MatureTestInstructionComboBoxOptionsName: "",
+				}
+				*testInstructionWithCorrectResponseVariablesTypePtr = append(*testInstructionWithCorrectResponseVariablesTypePtr,
+					tempMatureTestInstructionWithCorrectResponseVariablesType)
+			}
+		}
+
+	}
 	return err
 }

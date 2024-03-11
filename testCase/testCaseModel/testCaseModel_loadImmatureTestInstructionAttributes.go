@@ -11,7 +11,7 @@ func (testCaseModel *TestCasesModelsStruct) LoadModelWithImmatureTestInstruction
 
 	var immatureTestInstructionAttributesMessage *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionAttributesMessage
 
-	immatureTestInstructionAttributesMessage = testCaseModel.GrpcOutReference.ListAllTestInstructionAttributes("s41797") //TODO change to use current logged in to computer user
+	immatureTestInstructionAttributesMessage = testCaseModel.GrpcOutReference.ListAllTestInstructionAttributes() //TODO change to use current logged in to computer user
 
 	if immatureTestInstructionAttributesMessage.AckNackResponse.AckNack == false {
 

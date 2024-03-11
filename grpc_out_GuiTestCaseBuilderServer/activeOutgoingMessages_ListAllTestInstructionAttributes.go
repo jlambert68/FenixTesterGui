@@ -10,7 +10,7 @@ import (
 )
 
 // ListAllTestInstructionAttributes - Get all attributes used within TestInstructions that can be used within a TestCase
-func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListAllTestInstructionAttributes(userId string) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionAttributesMessage) {
+func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListAllTestInstructionAttributes() (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionAttributesMessage) {
 
 	var ctx context.Context
 	var returnMessageAckNack bool

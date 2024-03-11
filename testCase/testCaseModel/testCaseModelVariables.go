@@ -2,8 +2,10 @@ package testCaseModel
 
 import (
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/widget"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	"regexp"
 	"time"
 )
 
@@ -92,6 +94,10 @@ type AttributeStruct struct {
 	SelectRef                                 *widget.Select
 	AttributeIsChanged                        bool
 	TestInstructionElementMatureUuidUuid      string
+	AttributeValueIsValidRegExAsString        string
+	CompileRegEx                              *regexp.Regexp
+	AttributeValueIsValid                     bool
+	AttributeValueIsValidWarningBox           *canvas.Rectangle
 }
 
 type AttributeResponseVariableComboBoxPropertyStruct struct {

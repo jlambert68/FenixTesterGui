@@ -102,10 +102,23 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 
 			// First attribute-data or a new AttributeType is presented
 			if attributeItemCounter == 0 || attributeItem.AttributeTypeName != previousAttributeTypeName {
-				attributesContainer.Add(widget.NewLabel(attributeItem.AttributeTypeName))
+
+				// Add  previous FormContainer and aa separator
+				if attributeItemCounter != 0 || attributeItem.AttributeTypeName != previousAttributeTypeName {
+					attributesContainer.Add(attributesFormContainer)
+					attributesContainer.Add(widget.NewSeparator())
+
+				}
 
 				// Generate a new FormContainer
 				attributesFormContainer = container.New(layout.NewFormLayout())
+
+				//attributesContainer.Add(widget.NewLabel(attributeItem.AttributeTypeName))
+				attributesFormContainer.Add(widget.NewLabel(attributeItem.AttributeTypeName + "::"))
+				attributesFormContainer.Add(layout.NewSpacer()) //(layout.NewSpacer())
+
+				// Generate a new FormContainer
+				//attributesFormContainer = container.New(layout.NewFormLayout())
 			}
 
 			// Generate and add an 'attribute row' to be used in attributes
@@ -117,14 +130,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 				testInstructionElementMatureUuid,
 				immatureTestInstructionUuid)
 
-			attributesContainer.Add(attributesFormContainer)
+			//attributesContainer.Add(attributesFormContainer)
 
 			previousAttributeTypeName = attributeItem.AttributeTypeName
 
 		}
 
 		// Handle last batch of batch Attributes
-		//attributesContainer.Add(attributesFormContainer)
+		attributesContainer.Add(attributesFormContainer)
 
 	} else {
 		// No attributes so return simple label
@@ -247,17 +260,29 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 		}
 
 		// Create The Attribute HBox-container
-		var attributeHboxContainer *fyne.Container
-		attributeHboxContainer = container.New(layout.NewHBoxLayout())
+		//var attributeHboxContainer *fyne.Container
+		//attributeHboxContainer = container.New(layout.NewHBoxLayout())
 
 		// Create the 'AttributeValueIsValidWarningBox'
-		attributeItem.AttributeValueIsValidWarningBox = canvas.NewRectangle(color.NRGBA{R: 255, A: 255})
-		attributeItem.AttributeValueIsValidWarningBox.SetMinSize(fyne.NewSize(15, newAttributeEntry.Size().Height)) // Set the size of the red square
-		attributeHboxContainer.Add(attributeItem.AttributeValueIsValidWarningBox)
-		attributeHboxContainer.Add(newAttributeEntry)
+		var colorToUse color.NRGBA
 
-		// Add the attribute HBox-container to the 'attributesFormContainer'
-		attributesFormContainer.Add(attributeHboxContainer)
+		// Set Warning box that value is not the correct one
+		if attributeItem.CompileRegEx.MatchString(attributeItem.AttributeValue) == false {
+			colorToUse = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+			attributeItem.AttributeValueIsValid = false
+		} else {
+			colorToUse = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
+			attributeItem.AttributeValueIsValid = true
+		}
+
+		attributeItem.AttributeValueIsValidWarningBox = canvas.NewRectangle(colorToUse)
+
+		// Create a custom TextBoxEntry to use
+		var customTextBoxEntry *customAttributeEntryWidget
+		customTextBoxEntry = newCustomAttributeEntryWidget(newAttributeEntry, attributeItem.AttributeValueIsValidWarningBox)
+
+		// Add the attribute container to the 'attributesFormContainer'
+		attributesFormContainer.Add(customTextBoxEntry)
 
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_COMBOBOX:
 		// Add the Select-widget (ComboBox)
@@ -451,7 +476,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 			}
 
 			// Set Warning box that value is not selected
-			if len(newValue) == 0 {
+			if attributeItem.CompileRegEx.MatchString(newValue) == false {
 				attributeItem.AttributeValueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
 				attributeItem.AttributeValueIsValid = false
 			} else {
@@ -464,18 +489,27 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 
 		}
 
-		// Create The Attribute HBox-container
-		var attributeHboxContainer *fyne.Container
-		attributeHboxContainer = container.New(layout.NewHBoxLayout())
-
 		// Create the 'AttributeValueIsValidWarningBox'
-		attributeItem.AttributeValueIsValidWarningBox = canvas.NewRectangle(color.NRGBA{R: 255, A: 255})
-		attributeItem.AttributeValueIsValidWarningBox.SetMinSize(fyne.NewSize(15, newAttributeSelect.Size().Height)) // Set the size of the red square
-		attributeHboxContainer.Add(attributeItem.AttributeValueIsValidWarningBox)
-		attributeHboxContainer.Add(newAttributeSelect)
+		var colorToUse color.NRGBA
+
+		// Set Warning box that value is not the correct one
+		if attributeItem.CompileRegEx.MatchString(attributeItem.AttributeValue) == false {
+			colorToUse = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+			attributeItem.AttributeValueIsValid = false
+		} else {
+			colorToUse = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
+			attributeItem.AttributeValueIsValid = true
+		}
+
+		attributeItem.AttributeValueIsValidWarningBox = canvas.NewRectangle(colorToUse)
+
+		// Create a custom SelectComboBox to use
+		// Create a custom TextBoxEntry to use
+		var customSelectComboBox *customAttributeSelectComboBox
+		customSelectComboBox = newCustomAttributeSelectComboBoxWidget(newAttributeSelect, attributeItem.AttributeValueIsValidWarningBox)
 
 		// Add the attribute HBox-container to the 'attributesFormContainer'
-		attributesFormContainer.Add(attributeHboxContainer)
+		attributesFormContainer.Add(customSelectComboBox)
 
 	default:
 		errorId := "c526f868-6c5c-4c4f-b64b-2d2c77272319"
@@ -544,12 +578,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringLi
 
 		// Compile the RegEx for Attribute
 		var compileRegEx *regexp.Regexp
-		compileRegEx = regexp.MustCompile(testInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxInputMask)
 
 		// Depending on Attribute Type pick correct attribute data
 		switch testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeType {
 
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_TEXTBOX:
+
+			compileRegEx = regexp.MustCompile(testInstructionAttribute.AttributeInformation.InputTextBoxProperty.TextBoxInputMask)
+
 			attributesList = append(attributesList, &testCaseModel.AttributeStruct{
 				AttributeUuid:                             testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeUuid,
 				AttributeName:                             testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeName,
@@ -571,6 +607,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringLi
 			})
 
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_COMBOBOX:
+
+			compileRegEx = regexp.MustCompile(testInstructionAttribute.AttributeInformation.InputComboBoxProperty.ComboBoxInputMask)
+
 			attributesList = append(attributesList, &testCaseModel.AttributeStruct{
 				AttributeUuid:                             testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeUuid,
 				AttributeName:                             testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeName,
@@ -598,6 +637,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringLi
 				MatureTestInstructionsWithCorrectResponseVariablesType: nil,
 			}
 
+			compileRegEx = regexp.MustCompile(testInstructionAttribute.AttributeInformation.ResponseVariableComboBoxProperty.ComboBoxResponseVariableInputMask)
+
 			attributesList = append(attributesList, &testCaseModel.AttributeStruct{
 				AttributeUuid:                             testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeUuid,
 				AttributeName:                             testInstructionAttribute.BaseAttributeInformation.TestInstructionAttributeName,
@@ -612,7 +653,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringLi
 				SelectRef:                                 nil,
 				AttributeIsChanged:                        false,
 				TestInstructionElementMatureUuidUuid:      testInstructionElementMatureUuid,
-				AttributeValueIsValidRegExAsString:        "",
+				AttributeValueIsValidRegExAsString:        testInstructionAttribute.AttributeInformation.ResponseVariableComboBoxProperty.ComboBoxResponseVariableInputMask,
 				CompileRegEx:                              compileRegEx,
 				AttributeValueIsValid:                     false,
 				AttributeValueIsValidWarningBox:           nil,

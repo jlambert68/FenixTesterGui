@@ -328,7 +328,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 								TestInstructionAttributeInputTextBoUuid:  attribute.TestInstructionAttributeUuid,
 								TestInstructionAttributeInputTextBoxName: attribute.TestInstructionAttributeName,
 								TextBoxEditable:                          attribute.TestInstructionAttributeEnable,
-								TextBoxInputMask:                         "", //TODO add TextBoxInputMask
+								TextBoxInputMask:                         attribute.TestInstructionAttributeInputMask,
 								TextBoxAttributeTypeUuid:                 attribute.TestInstructionAttributeTypeUuid,
 								TextBoxAttributeTypeName:                 attribute.TestInstructionAttributeTypeName,
 								TextBoxAttributeValue:                    attributeDataFromDropZone.AttributeValueAsString,
@@ -373,6 +373,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 						TestInstructionAttributeMandatory:             attribute.TestInstructionAttributeMandatory,
 						TestInstructionAttributeVisibleInTestCaseArea: attribute.TestInstructionAttributeVisibleInTestCaseArea,
 						TestInstructionAttributeIsDeprecated:          attribute.TestInstructionAttributeIsDeprecated,
+						//TestInstructionAttributeType: attribute.TestInstructionAttributeUIType,
+
 						//TestInstructionAttributeType: attribute.TestInstructionAttributeUIType//fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_TEXTBOX),
 					}
 
@@ -398,7 +400,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 							TestInstructionAttributeInputTextBoUuid:  attribute.TestInstructionAttributeUuid,
 							TestInstructionAttributeInputTextBoxName: attribute.TestInstructionAttributeName,
 							TextBoxEditable:                          attribute.TestInstructionAttributeEnable,
-							TextBoxInputMask:                         "", //TODO add TextBoxInputMask
+							TextBoxInputMask:                         attribute.TestInstructionAttributeInputMask,
 							TextBoxAttributeTypeUuid:                 attribute.TestInstructionAttributeTypeUuid,
 							TextBoxAttributeTypeName:                 attribute.TestInstructionAttributeTypeName,
 							TextBoxAttributeValue:                    attribute.TestInstructionAttributeValueAsString,
@@ -442,6 +444,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 							ChosenResponseVariableTypeUuid:                       "",
 							ChosenResponseVariableTypeName:                       "",
 							ComboBoxAttributeValueAsString:                       "",
+							ComboBoxResponseVariableInputMask:                    attribute.TestInstructionAttributeInputMask,
 						}
 
 						newTestInstructionAttributeInformation.ResponseVariableComboBoxProperty = responseVariableComboBoxProperty

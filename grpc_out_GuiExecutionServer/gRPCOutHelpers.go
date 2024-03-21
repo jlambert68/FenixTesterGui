@@ -58,7 +58,7 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecution
 		if sharedCode.ExecutionLocationForFenixGuiExecutionServer == sharedCode.GCP {
 			// GuiExecutionServer is running in GCP
 
-			// Should ProxyServer be used for outgoing conenctions
+			// Should ProxyServer be used for outgoing connections
 			if sharedCode.ShouldProxyServerBeUsed == true {
 				// Use Proxy
 				remoteFenixGuiExecutionServerConnection, err = gcp.GRPCDialer("")

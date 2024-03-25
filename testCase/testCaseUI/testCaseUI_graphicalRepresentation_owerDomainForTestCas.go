@@ -4,9 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"image/color"
 )
 
 // Generate the OwnerDomain Area for the TestCase
@@ -58,8 +60,15 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 	// Add Header to the Forms-container
 	testCaseOwnerDomainNameFormContainer.Add(widget.NewLabel("Domain that 'Own' the TestCase"))
 
+	// Generate Warnings-rectangle for valid value, or that value exist
+	var valueIsValidWarningBox *canvas.Rectangle
+	var colorToUse color.NRGBA
+	colorToUse = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+	valueIsValidWarningBox = canvas.NewRectangle(colorToUse)
+
 	// Add the DropDown box with all domains that can own the TestCase
-	newOwnerDomainDropDown := widget.NewSelect(options,
+	var newOwnerDomainSelect *widget.Select
+	newOwnerDomainSelect = widget.NewSelect(options,
 		func(value string) {
 			// This function is called when an option is selected.
 			// You can handle the selection here.
@@ -77,15 +86,33 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 
 			// Store back TestCase-model in Map
 			testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = tempTestCase
+
+			// Set Warning box that value is not selected
+			if len(value) == 0 {
+				valueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+			} else {
+				valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
+			}
 		})
 
 	// Set the Visible value for DropDown, if there is any
 	if len(tempCurrentOwnerDomainToBeChosenInDropDown) > 0 {
-		newOwnerDomainDropDown.SetSelected(tempCurrentOwnerDomainToBeChosenInDropDown)
+		newOwnerDomainSelect.SetSelected(tempCurrentOwnerDomainToBeChosenInDropDown)
 	}
 
+	// Set correct warning box color
+	if len(newOwnerDomainSelect.Selected) == 0 {
+		valueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+	} else {
+		valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
+	}
+
+	// Create a custom SelectComboBox, with valueIsValidWarningBox
+	var customSelectComboBox *customAttributeSelectComboBox
+	customSelectComboBox = newCustomAttributeSelectComboBoxWidget(newOwnerDomainSelect, valueIsValidWarningBox)
+
 	// Add the Entry-widget to the Forms-container
-	testCaseOwnerDomainNameFormContainer.Add(newOwnerDomainDropDown)
+	testCaseOwnerDomainNameFormContainer.Add(customSelectComboBox)
 
 	// Create the VBox-container that will be returned
 	testCaseOwnerDomainontainer = container.NewVBox(testCaseOwnerDomainNameFormContainer)

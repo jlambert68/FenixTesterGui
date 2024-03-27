@@ -1,6 +1,6 @@
-Change how TestCase {{SubCustody.Today(0)}} is using Domain, from single to multiple domains depending on used TestInstructions
-Change how TestCase {{SubCustody.Today(-1)}} is using Domain, from single to multiple domains depending on used TestInstructions
-Change how TestCase {{SubCustody.Today(1)}} is using Domain, from single to multiple domains depending on used TestInstructions
+Change how TestCase {{SubCustody.TodayShiftDay(0)}} is using Domain, from single to multiple domains depending on used TestInstructions
+Change how TestCase {{SubCustody.TodayShiftDay(-1)}} is using Domain, from single to multiple domains depending on used TestInstructions
+Change how TestCase {{SubCustody.TodayShiftDay(1)}} is using Domain, from single to multiple domains depending on used TestInstructions
 
 Change how TestCase {{SubCustody.RandomFloatValue(2, 2)}} is using Domain, from single to multiple domains depending on used TestInstructions
 Change how TestCase {{SubCustody.RandomFloatValue[3](2, 2)}} is using Domain, from single to multiple domains depending on used TestInstructions

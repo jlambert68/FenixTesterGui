@@ -5,3 +5,7 @@ Change how TestCase {{SubCustody.TodayShiftDay(1)}} is using Domain, from single
 Change how TestCase {{SubCustody.RandomFloatValue(2, 2)}} is using Domain, from single to multiple domains depending on used TestInstructions
 Change how TestCase {{SubCustody.RandomFloatValue.ArrayValue[1](2, 2)}} is using Domain, from single to multiple domains depending on used TestInstructions
 Change how TestCase {{SubCustody.RandomFloatValue.ArrayValue[3](2, 2)}} is using Domain, from single to multiple domains depending on used TestInstructions
+
+Change how TestCase {{SubCustody.RandomFloatValue.ArrayValue_Sum[1](2, 2)}} is using Domain, from single to multiple domains depending on used TestInstructions
+Change how TestCase {{SubCustody.RandomFloatValue.ArrayValue_Sum[1, 3](2, 2)}} is using Domain, from single to multiple domains depending on used TestInstructions
+Change how TestCase {{SubCustody.RandomFloatValue.ArrayValue_Sum[1, -3](2, 2)}} is using Domain, from single to multiple domains depending on used TestInstructions

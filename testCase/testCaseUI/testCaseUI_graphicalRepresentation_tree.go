@@ -195,19 +195,13 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 
 		// Some kind of droppable Bond
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND,
-			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND,
-			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND,
-			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND,
-			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND,
-			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10ox_BOND,
-			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND,
-			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND:
+			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND:
 
 			newDroppableBondLabel := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableLabel(
 				child.NodeName+" - "+child.Uuid, nodeTreeLevel, testCaseNodeRectangleSize, child.Uuid, testCaseUuid)
 			newDroppableBondLabelContainer := container.NewMax(
 				newDroppableBondLabel.BackgroundRectangle, newDroppableBondLabel)
-			newDroppableBondLabel.Hide()
+			//newDroppableBondLabel.Hide()
 
 			// Create color to use
 			newTransaparentColor := color.RGBA{
@@ -236,6 +230,51 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 				newIndentationRectangleContainer,
 				testInstructionNodeTransparentContainer,
 				newDroppableBondLabelContainer,
+				layout.NewSpacer())
+
+			// Add the child
+			testcaseTreeContainer.Add(nodeContainer)
+
+		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11f_BOND,
+			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B11l_BOND,
+			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B12_BOND,
+			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10ox_BOND,
+			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND,
+			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND:
+
+			newDroppableBondRectangle := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableRectangle(
+				nodeTreeLevel, testCaseNodeRectangleSize, child.Uuid, testCaseUuid)
+			newDroppableBondLabelRectangle := container.NewStack(
+				newDroppableBondRectangle)
+			//newDroppableBondLabel.Hide()
+
+			// Create color to use
+			newTransaparentColor := color.RGBA{
+				R: 0x00,
+				G: 0x00,
+				B: 0x00,
+				A: 0x00,
+			}
+
+			// Create indentation colorRectangle to move node to right
+			newIndentationRectangle := canvas.NewRectangle(newTransaparentColor)
+			newIndentationRectangle.StrokeColor = color.Black
+			newIndentationRectangle.StrokeWidth = 0
+			newIndentationRectangle.SetMinSize(fyne.NewSize(testCaseNodeRectangleSize*nodeTreeLevel, float32(0)))
+			newIndentationRectangleContainer := container.NewMax(newIndentationRectangle)
+
+			// Create indentation within TestInstructionContainer
+			newTestInstructionColorRectangle := canvas.NewRectangle(newTransaparentColor)
+			newTestInstructionColorRectangle.StrokeColor = color.Black
+			newTestInstructionColorRectangle.StrokeWidth = 0
+			newTestInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(0)))
+			testInstructionNodeTransparentContainer := container.NewMax(newTestInstructionColorRectangle)
+
+			// Create the none container object to be put on GUI
+			nodeContainer := container.NewHBox(
+				newIndentationRectangleContainer,
+				testInstructionNodeTransparentContainer,
+				newDroppableBondLabelRectangle,
 				layout.NewSpacer())
 
 			// Add the child

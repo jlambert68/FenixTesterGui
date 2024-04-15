@@ -264,7 +264,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 		}
 	}
 
-	// If there are ony TestCaseExecution that is not already within the TestCaseExecutionsMap then get them first before process the updates
+	// If there are only TestCaseExecution that is not already within the TestCaseExecutionsMap then get them first before process the updates
 	// This is also done when this is the first Status-message that is received
 	if len(testCaseExecutionKeysMap) > 0 {
 
@@ -531,7 +531,9 @@ func isTestCaseExecutionStatusAnEndStatus(testCaseExecutionStatus fenixExecution
 		fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_FINISHED_NOT_OK,
 		fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_FINISHED_NOT_OK_CAN_BE_RERUN,
 		fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_UNEXPECTED_INTERRUPTION,
-		fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_UNEXPECTED_INTERRUPTION_CAN_BE_RERUN:
+		fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_UNEXPECTED_INTERRUPTION_CAN_BE_RERUN,
+		fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_TIMEOUT_INTERRUPTION,
+		fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_TIMEOUT_INTERRUPTION_CAN_BE_RERUN:
 
 		isTestCaseEndStatus = true
 

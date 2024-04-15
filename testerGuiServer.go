@@ -44,7 +44,23 @@ func cleanup() {
 }
 
 func fenixGuiBuilderServerMain() {
+	/*
+		id := "8e3bfe8a-e920-44fc-bdf4-f476bfd048b2"
+		sharedCode.LogDebugLevel(id, "Couldn't generate access token", map[string]interface{}{"returnMessageString": true})
 
+		id = "e51caf43-9937-43e0-b87c-aa1abe92eaa5"
+		sharedCode.LogInfoLevel(id, "Couldn't generate access token", map[string]interface{}{"returnMessageString": false})
+
+		id = "8e2a6111-08b3-43f0-a1e1-ede036038f2f"
+		sharedCode.LogWarningLevel(id, "Couldn't generate access token", map[string]interface{}{"returnMessageString": true})
+
+		id = "90c27674-6496-4bf0-b516-f49e00fa1795"
+		sharedCode.LogErrorLevel(id, "Couldn't generate access token", map[string]interface{}{"returnMessageString": false})
+
+		id = "90c27674-6496-4bf0-b516-f49e00fa1795"
+		sharedCode.LogFatalLevel(id, "Couldn't generate access token", map[string]interface{}{"returnMessageString": false})
+
+	*/
 	// Create Unique Uuid for run time instance used as identification when communication with GuiExecutionServer
 	sharedCode.ApplicationRunTimeUuid = uuidGenerator.New().String()
 	fmt.Println("sharedCode.ApplicationRunTimeUuid: " + sharedCode.ApplicationRunTimeUuid)
@@ -78,8 +94,9 @@ func fenixGuiBuilderServerMain() {
 		}
 	}
 
-	// Initiate logging
+	// Initiate logging - 'zerolog'
 	fenixTesterGuiObject.InitLogger(filePathName)
+	sharedCode.InitiateLoggerEngine(filePathName)
 
 	// Store logger reference in shared code 'for all to use'
 	sharedCode.Logger = fenixTesterGuiObject.logger
@@ -106,10 +123,15 @@ func fenixGuiBuilderServerMain() {
 	}()
 	_, returnMessageAckNack, returnMessageString = gcp.GcpObject.GenerateGCPAccessToken(ctx, gcp.TargetServerGuiTestCaseBuilderServer)
 	if returnMessageAckNack == false {
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":                  "8e3bfe8a-e920-44fc-bdf4-f476bfd048b2",
-			"returnMessageString": returnMessageString,
-		}).Fatalln("Couldn't generate access token")
+		/*
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":                  "8e3bfe8a-e920-44fc-bdf4-f476bfd048b2",
+				"returnMessageString": returnMessageString,
+			}).Fatalln("Couldn't generate access token")
+		*/
+		id := "8e3bfe8a-e920-44fc-bdf4-f476bfd048b2"
+		sharedCode.LogFatalLevel(id, "Couldn't generate access token", map[string]interface{}{"returnMessageString": returnMessageString})
+
 	}
 	fmt.Println("va fannnnn")
 

@@ -4,6 +4,7 @@ import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/detailedTestCaseExecutionUI_summaryTableDefinition"
 	"github.com/sirupsen/logrus"
+	"time"
 )
 
 func InitiateCommandChannelReaderForDetailedStatusUpdates() {
@@ -17,6 +18,11 @@ func InitiateCommandChannelReaderForDetailedStatusUpdates() {
 
 	// Start channel reader
 	go detailedExecutionsModelObject.startCommandChannelReaderForDetailedStatusUpdates()
+
+	// Initiate 'testCasesSummaryTableRefreshThrottler', used for only Refresh (repaint) the TestCasesSummaryTable at
+	// regular interval. When many updates are made to it
+	testCasesSummaryTableRefreshThrottler = newRefreshTestCasesSummaryTableThrottler(5 * time.Second)
+	//defer throttler.Stop()
 
 }
 
@@ -86,7 +92,8 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) trigge
 	// Recreate the Detailed Executions Summary Table
 	*TestCasesSummaryTable = *CreateSummaryTableForDetailedTestCaseExecutionsList()
 
-	TestCasesSummaryTable.Refresh()
+	// Only refresh (repaint) the table at a maximum refresh-rate
+	testCasesSummaryTableRefreshThrottler.RequestRefreshTestCasesSummaryTable()
 
 }
 
@@ -105,7 +112,8 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) trigge
 	// Recreate the Detailed Executions Summary Table
 	*TestCasesSummaryTable = *CreateSummaryTableForDetailedTestCaseExecutionsList()
 
-	TestCasesSummaryTable.Refresh()
+	// Only refresh (repaint) the table at a maximum refresh-rate
+	testCasesSummaryTableRefreshThrottler.RequestRefreshTestCasesSummaryTable()
 
 }
 
@@ -127,7 +135,8 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) trigge
 	// Recreate the Detailed Executions Summary Table
 	*TestCasesSummaryTable = *CreateSummaryTableForDetailedTestCaseExecutionsList()
 
-	TestCasesSummaryTable.Refresh()
+	// Only refresh (repaint) the table at a maximum refresh-rate
+	testCasesSummaryTableRefreshThrottler.RequestRefreshTestCasesSummaryTable()
 
 }
 
@@ -149,6 +158,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) trigge
 	// Recreate the Detailed Executions Summary Table
 	*TestCasesSummaryTable = *CreateSummaryTableForDetailedTestCaseExecutionsList()
 
-	TestCasesSummaryTable.Refresh()
+	// Only refresh (repaint) the table at a maximum refresh-rate
+	testCasesSummaryTableRefreshThrottler.RequestRefreshTestCasesSummaryTable()
 
 }

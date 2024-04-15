@@ -30,7 +30,7 @@ func (stateMachine *StateMachineDragAndDropStruct) NewDroppableRectangle(
 		R: 0x33,
 		G: 0x33,
 		B: 0x33,
-		A: 0x22,
+		A: 0x00,
 	}
 
 	rect := canvas.NewRectangle(color)
@@ -103,7 +103,7 @@ func (h *DroppableRectangle) MouseIn(e *desktop.MouseEvent) {
 			R: 0x99,
 			G: 0x99,
 			B: 0x99,
-			A: 0x99,
+			A: 0xFF,
 		}
 
 		h.Rectangle.Show()
@@ -143,10 +143,10 @@ func (h *DroppableRectangle) MouseOut() {
 		switchStateForSource(sourceStateDragging)
 		switchStateForTarget(targetStateSourceIsDraggingObject)
 		h.Rectangle.FillColor = color.RGBA{
-			R: 0x33,
-			G: 0x33,
-			B: 0x33,
-			A: 0x22,
+			R: 0x03,
+			G: 0x03,
+			B: 0x03,
+			A: 0xFF,
 		}
 		//b.BackgroundRectangle.Hide()
 		h.Rectangle.Refresh()

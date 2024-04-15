@@ -199,7 +199,19 @@ func expandDropAreas() {
 			A: 0xAA,
 		}
 		targetRectangle.Rectangle.StrokeColor = strokeColor
-		targetRectangle.Rectangle.Show()
+
+		/*
+			backgroundColor := color.RGBA{
+				R: 0x33,
+				G: 0x33,
+				B: 0x33,
+				A: 0x22,
+			}
+			targetRectangle.Rectangle.FillColor = backgroundColor
+
+		*/
+
+		//targetRectangle.Rectangle.Show()
 		//targetRectangle.Show()
 	}
 
@@ -261,7 +273,6 @@ func shrinkDropAreas() {
 		targetLabel.BackgroundRectangle.StrokeColor = strokeColor
 		//targetLabel.BackgroundRectangle.Show()
 		//targetLabel.Hide()
-
 	}
 
 	for _, targetRectangle := range stateMachineDragAndDrop.registeredDroppableTargetRectangle {
@@ -274,6 +285,17 @@ func shrinkDropAreas() {
 			A: 0x00,
 		}
 		targetRectangle.Rectangle.StrokeColor = strokeColor
+		/*
+			backgroundColor := color.RGBA{
+				R: 0x03,
+				G: 0x03,
+				B: 0x03,
+				A: 0xFF,
+			}
+			targetRectangle.Rectangle.FillColor = backgroundColor
+
+		*/
+
 		//targetLabel.BackgroundRectangle.Show()
 		//targetRectangle.Rectangle.Hide()
 

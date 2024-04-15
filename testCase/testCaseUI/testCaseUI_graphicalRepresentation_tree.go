@@ -197,9 +197,21 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND,
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND:
 
+			var nodeText string
+
+			switch child.NodeTypeEnum {
+			case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND:
+				nodeText = "<Empty TestCase>" // child.NodeName+" - "+child.Uuid
+
+			case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10_BOND:
+				nodeText = "<Empty TestInstructionContainer>" // child.NodeName+" - "+child.Uuid
+
+			}
+
 			newDroppableBondLabel := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableLabel(
-				child.NodeName+" - "+child.Uuid, nodeTreeLevel, testCaseNodeRectangleSize, child.Uuid, testCaseUuid)
-			newDroppableBondLabelContainer := container.NewMax(
+				nodeText, nodeTreeLevel, testCaseNodeRectangleSize, child.Uuid, testCaseUuid)
+
+			newDroppableBondLabelContainer := container.NewStack(
 				newDroppableBondLabel.BackgroundRectangle, newDroppableBondLabel)
 			//newDroppableBondLabel.Hide()
 

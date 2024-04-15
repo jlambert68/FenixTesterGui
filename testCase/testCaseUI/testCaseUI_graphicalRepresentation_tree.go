@@ -249,7 +249,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			//newDroppableBondLabel.Hide()
 
 			// Create color to use
-			newTransaparentColor := color.RGBA{
+			newTransparentColor := color.RGBA{
 				R: 0x00,
 				G: 0x00,
 				B: 0x00,
@@ -257,14 +257,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			}
 
 			// Create indentation colorRectangle to move node to right
-			newIndentationRectangle := canvas.NewRectangle(newTransaparentColor)
+			newIndentationRectangle := canvas.NewRectangle(newTransparentColor)
 			newIndentationRectangle.StrokeColor = color.Black
 			newIndentationRectangle.StrokeWidth = 0
 			newIndentationRectangle.SetMinSize(fyne.NewSize(testCaseNodeRectangleSize*nodeTreeLevel, float32(0)))
 			newIndentationRectangleContainer := container.NewMax(newIndentationRectangle)
 
 			// Create indentation within TestInstructionContainer
-			newTestInstructionColorRectangle := canvas.NewRectangle(newTransaparentColor)
+			newTestInstructionColorRectangle := canvas.NewRectangle(newTransparentColor)
 			newTestInstructionColorRectangle.StrokeColor = color.Black
 			newTestInstructionColorRectangle.StrokeWidth = 0
 			newTestInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(0)))

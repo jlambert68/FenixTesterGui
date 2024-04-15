@@ -26,6 +26,9 @@ type DroppableLabel struct {
 // MouseIn is called when a desktop pointer enters the widget
 func (b *DroppableLabel) MouseIn(*desktop.MouseEvent) {
 
+	// Set targetDroppedType to use
+	stateMachineDragAndDrop.targetDroppedType = droppableLabelType
+
 	switch stateMachineDragAndDrop.targetStateMachine.currentState {
 
 	case targetStateWaitingForSourceToEnteringTarget:

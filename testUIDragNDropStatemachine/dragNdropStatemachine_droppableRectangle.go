@@ -11,7 +11,7 @@ import (
 
 type DroppableRectangle struct {
 	widget.BaseWidget
-	rect                      *canvas.Rectangle
+	Rectangle                 *canvas.Rectangle
 	TargetUuid                string
 	IsDroppable               bool
 	labelStandardHeight       float32
@@ -20,12 +20,42 @@ type DroppableRectangle struct {
 	CurrentTestCaseUuid       string
 }
 
+func (stateMachine *StateMachineDragAndDropStruct) NewDroppableRectangle(
+	nodeLevel float32,
+	testCaseNodeRectangleSize int,
+	uuid string,
+	testCaseUuid string) *DroppableRectangle {
+
+	color := color.RGBA{
+		R: 0x33,
+		G: 0x33,
+		B: 0x33,
+		A: 0x22,
+	}
+
+	rect := canvas.NewRectangle(color)
+	rect.SetMinSize(fyne.NewSize(targetDropRectangleWidth, targetDropRectangleHeight))
+	droppableRectangle := &DroppableRectangle{
+		Rectangle: rect,
+	}
+
+	droppableRectangle.ExtendBaseWidget(droppableRectangle)
+
+	droppableRectangle.TargetUuid = uuid
+	droppableRectangle.nodeLevel = nodeLevel
+	droppableRectangle.CurrentTestCaseUuid = testCaseUuid
+
+	stateMachineDragAndDrop.registeredDroppableTargetRectangle = append(stateMachineDragAndDrop.registeredDroppableTargetRectangle, droppableRectangle)
+
+	return droppableRectangle
+}
+
 func (h *DroppableRectangle) CreateRenderer() fyne.WidgetRenderer {
-	return &droppableRectRenderer{rect: h.rect}
+	return &droppableRectRenderer{rectangle: h.Rectangle}
 }
 
 type droppableRectRenderer struct {
-	rect *canvas.Rectangle
+	rectangle *canvas.Rectangle
 }
 
 func (r *droppableRectRenderer) Destroy() {
@@ -33,19 +63,19 @@ func (r *droppableRectRenderer) Destroy() {
 }
 
 func (r *droppableRectRenderer) Layout(size fyne.Size) {
-	r.rect.Resize(size)
+	r.rectangle.Resize(size)
 }
 
 func (r *droppableRectRenderer) MinSize() fyne.Size {
-	return fyne.NewSize(150, 150) // Ensure the minimum size covers the rectangle
+	return fyne.NewSize(targetDropRectangleWidth, targetDropRectangleHeight) // Ensure the minimum size covers the rectangle
 }
 
 func (r *droppableRectRenderer) Objects() []fyne.CanvasObject {
-	return []fyne.CanvasObject{r.rect}
+	return []fyne.CanvasObject{r.rectangle}
 }
 
 func (r *droppableRectRenderer) Refresh() {
-	r.rect.Refresh()
+	r.rectangle.Refresh()
 }
 
 func (h *DroppableRectangle) Tapped(*fyne.PointEvent) {
@@ -53,6 +83,9 @@ func (h *DroppableRectangle) Tapped(*fyne.PointEvent) {
 }
 
 func (h *DroppableRectangle) MouseIn(e *desktop.MouseEvent) {
+
+	// Set targetDroppedType to use
+	stateMachineDragAndDrop.targetDroppedType = droppableRecangleType
 
 	switch stateMachineDragAndDrop.targetStateMachine.currentState {
 
@@ -66,15 +99,15 @@ func (h *DroppableRectangle) MouseIn(e *desktop.MouseEvent) {
 		//if b.IsDroppable == true {
 		switchStateForSource(sourceStateEnteringTarget)
 		switchStateForTarget(targetStateSourceEnteredTargetWithObject)
-		h.rect.FillColor = color.RGBA{
+		h.Rectangle.FillColor = color.RGBA{
 			R: 0x99,
 			G: 0x99,
 			B: 0x99,
 			A: 0x99,
 		}
 
-		h.rect.Show()
-		h.rect.Refresh()
+		h.Rectangle.Show()
+		h.Rectangle.Refresh()
 
 		stateMachineDragAndDrop.targetDroppableRectangle = *h
 		//}
@@ -109,14 +142,14 @@ func (h *DroppableRectangle) MouseOut() {
 		// switch state to 'targetStateSourceIsDraggingObject'
 		switchStateForSource(sourceStateDragging)
 		switchStateForTarget(targetStateSourceIsDraggingObject)
-		h.rect.FillColor = color.RGBA{
+		h.Rectangle.FillColor = color.RGBA{
 			R: 0x33,
 			G: 0x33,
 			B: 0x33,
 			A: 0x22,
 		}
 		//b.BackgroundRectangle.Hide()
-		h.rect.Refresh()
+		h.Rectangle.Refresh()
 
 	case targetStateSourceReleasingOnTarget:
 		return

@@ -2,6 +2,7 @@ package testUIDragNDropStatemachine
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -35,6 +36,14 @@ const (
 	targetDropLabelRectangleHeight = 12
 	targetDropRectangleWidth       = 500
 	targetDropRectangleHeight      = 12
+)
+
+type targetDroppedTypeType uint8
+
+const (
+	unspecifiedType targetDroppedTypeType = iota
+	droppableLabelType
+	droppableRecangleType
 )
 
 // Local variables for the Drag n Drop object
@@ -119,36 +128,6 @@ func (stateMachine *StateMachineDragAndDropStruct) NewDroppableLabel(
 	return droppableLabel
 }
 
-func (stateMachine *StateMachineDragAndDropStruct) NewDroppableRectangle(
-	nodeLevel float32,
-	testCaseNodeRectangleSize int,
-	uuid string,
-	testCaseUuid string) *DroppableRectangle {
-
-	color := color.RGBA{
-		R: 0x33,
-		G: 0x33,
-		B: 0x33,
-		A: 0x22,
-	}
-
-	rect := canvas.NewRectangle(color)
-	rect.SetMinSize(fyne.NewSize(targetDropRectangleWidth, targetDropRectangleHeight))
-	droppableRectangle := &DroppableRectangle{
-		rect: rect,
-	}
-
-	droppableRectangle.ExtendBaseWidget(droppableRectangle)
-
-	droppableRectangle.TargetUuid = uuid
-	droppableRectangle.nodeLevel = nodeLevel
-	droppableRectangle.CurrentTestCaseUuid = testCaseUuid
-
-	stateMachineDragAndDrop.registeredDroppableTargetRectangle = append(stateMachineDragAndDrop.registeredDroppableTargetRectangle, droppableRectangle)
-
-	return droppableRectangle
-}
-
 func newNoneDroppableLabel(uuid string) *noneDroppableLabel {
 	nonDroppableLabel := &noneDroppableLabel{}
 	nonDroppableLabel.ExtendBaseWidget(nonDroppableLabel)
@@ -168,6 +147,7 @@ type StateMachineDragAndDropStruct struct {
 	registeredDroppableTargetRectangle []*DroppableRectangle
 	SourceUuid                         string
 	SourceType                         int
+	targetDroppedType                  targetDroppedTypeType
 	targetDroppableLabel               DroppableLabel
 	targetDroppableRectangle           DroppableRectangle
 }
@@ -193,7 +173,7 @@ func expandDropAreas() {
 
 		targetLabel.BackgroundRectangle.StrokeWidth = 2
 
-		targetLabel.Resize(fyne.NewSize(targetDropRectangleWidth, targetDropRectangleHeight))
+		targetLabel.Resize(fyne.NewSize(targetDropRectangleWidth, labelStandardHeight))
 		strokeColor := color.RGBA{
 			R: 0xFF,
 			G: 0x00,
@@ -209,7 +189,7 @@ func expandDropAreas() {
 
 		//rectangleWidth := float32(500)
 
-		targetRectangle.rect.StrokeWidth = 2
+		targetRectangle.Rectangle.StrokeWidth = 2
 
 		//targetLabel.Resize(fyne.NewSize(rectangleWidth, 12))
 		strokeColor := color.RGBA{
@@ -218,8 +198,8 @@ func expandDropAreas() {
 			B: 0x00,
 			A: 0xAA,
 		}
-		targetRectangle.rect.StrokeColor = strokeColor
-		targetRectangle.rect.Show()
+		targetRectangle.Rectangle.StrokeColor = strokeColor
+		targetRectangle.Rectangle.Show()
 		//targetRectangle.Show()
 	}
 
@@ -286,16 +266,16 @@ func shrinkDropAreas() {
 
 	for _, targetRectangle := range stateMachineDragAndDrop.registeredDroppableTargetRectangle {
 
-		targetRectangle.rect.StrokeWidth = 2
+		targetRectangle.Rectangle.StrokeWidth = 2
 		strokeColor := color.RGBA{
 			R: 0x00,
 			G: 0x00,
 			B: 0x00,
 			A: 0x00,
 		}
-		targetRectangle.rect.StrokeColor = strokeColor
+		targetRectangle.Rectangle.StrokeColor = strokeColor
 		//targetLabel.BackgroundRectangle.Show()
-		//targetRectangle.rect.Hide()
+		//targetRectangle.Rectangle.Hide()
 
 	}
 	/*
@@ -348,17 +328,46 @@ func shrinkDropAreas() {
 }
 
 func executeDropAction() {
-	fmt.Println(fmt.Sprintf("'%s' was dropped in '%s'. Current TestCase is '%s'", stateMachineDragAndDrop.SourceUuid, stateMachineDragAndDrop.targetDroppableLabel.TargetUuid, stateMachineDragAndDrop.targetDroppableLabel.CurrentTestCaseUuid))
 
-	commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
-		ChannelCommand:  sharedCode.ChannelCommandSwapElement,
-		FirstParameter:  stateMachineDragAndDrop.targetDroppableLabel.TargetUuid,
-		SecondParameter: stateMachineDragAndDrop.SourceUuid,
-		ActiveTestCase:  stateMachineDragAndDrop.targetDroppableLabel.CurrentTestCaseUuid,
-		ElementType:     sharedCode.BuildingBlock(stateMachineDragAndDrop.SourceType),
+	// In what target was it dropped
+	switch stateMachineDragAndDrop.targetDroppedType {
+
+	case droppableLabelType:
+
+		fmt.Println(fmt.Sprintf("'%s' was dropped in '%s'. Current TestCase is '%s'", stateMachineDragAndDrop.SourceUuid, stateMachineDragAndDrop.targetDroppableLabel.TargetUuid, stateMachineDragAndDrop.targetDroppableLabel.CurrentTestCaseUuid))
+
+		commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
+			ChannelCommand:  sharedCode.ChannelCommandSwapElement,
+			FirstParameter:  stateMachineDragAndDrop.targetDroppableLabel.TargetUuid,
+			SecondParameter: stateMachineDragAndDrop.SourceUuid,
+			ActiveTestCase:  stateMachineDragAndDrop.targetDroppableLabel.CurrentTestCaseUuid,
+			ElementType:     sharedCode.BuildingBlock(stateMachineDragAndDrop.SourceType),
+		}
+
+		// Send command message over channel to Command and Rule Engine
+		*commandChannelReference <- commandEngineChannelMessage
+
+	case droppableRecangleType:
+
+		fmt.Println(fmt.Sprintf("'%s' was dropped in '%s'. Current TestCase is '%s'", stateMachineDragAndDrop.SourceUuid, stateMachineDragAndDrop.targetDroppableRectangle.TargetUuid, stateMachineDragAndDrop.targetDroppableRectangle.CurrentTestCaseUuid))
+
+		commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
+			ChannelCommand:  sharedCode.ChannelCommandSwapElement,
+			FirstParameter:  stateMachineDragAndDrop.targetDroppableRectangle.TargetUuid,
+			SecondParameter: stateMachineDragAndDrop.SourceUuid,
+			ActiveTestCase:  stateMachineDragAndDrop.targetDroppableRectangle.CurrentTestCaseUuid,
+			ElementType:     sharedCode.BuildingBlock(stateMachineDragAndDrop.SourceType),
+		}
+
+		// Send command message over channel to Command and Rule Engine
+		*commandChannelReference <- commandEngineChannelMessage
+
+	default:
+		errorID := "37b775a6-6a06-4022-94a0-22631a6c9286"
+		err := errors.New(fmt.Sprintf("Unknown or unhandled targetDroppedType: '%d' . [ErrorID:'%s']", stateMachineDragAndDrop.targetDroppedType, errorID))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
 	}
-
-	// Send command message over channel to Command and Rule Engine
-	*commandChannelReference <- commandEngineChannelMessage
 
 }

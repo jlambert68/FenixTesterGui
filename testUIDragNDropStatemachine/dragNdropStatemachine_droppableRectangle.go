@@ -11,20 +11,23 @@ import (
 
 type DroppableRectangle struct {
 	widget.BaseWidget
-	Rectangle                 *canvas.Rectangle
-	TargetUuid                string
-	IsDroppable               bool
-	labelStandardHeight       float32
-	nodeLevel                 float32
-	testCaseNodeRectangleSize int
-	CurrentTestCaseUuid       string
+	Rectangle                               *canvas.Rectangle
+	TargetUuid                              string
+	IsDroppable                             bool
+	labelStandardHeight                     float32
+	nodeLevel                               float32
+	testCaseNodeRectangleSize               int
+	CurrentTestCaseUuid                     string
+	parentTestInstructionContainerUuid      string
+	parentTestInstructionContainerRectangle *canvas.Rectangle
 }
 
 func (stateMachine *StateMachineDragAndDropStruct) NewDroppableRectangle(
 	nodeLevel float32,
 	testCaseNodeRectangleSize int,
 	uuid string,
-	testCaseUuid string) *DroppableRectangle {
+	testCaseUuid string,
+	tempParentTestInstructionContainerUuid string) *DroppableRectangle {
 
 	color := color.RGBA{
 		R: 0x33,
@@ -33,10 +36,16 @@ func (stateMachine *StateMachineDragAndDropStruct) NewDroppableRectangle(
 		A: 0x00,
 	}
 
+	// Extract parent TestInstructionContainer-Bond-rectangle
+	var parentTestInstructionContainerRectangle *canvas.Rectangle
+	parentTestInstructionContainerRectangle = stateMachineDragAndDrop.testInstructionContainerBondBelongingRectangleMap[tempParentTestInstructionContainerUuid]
+
 	rect := canvas.NewRectangle(color)
 	rect.SetMinSize(fyne.NewSize(targetDropRectangleWidth, targetDropRectangleHeight))
 	droppableRectangle := &DroppableRectangle{
-		Rectangle: rect,
+		Rectangle:                               rect,
+		parentTestInstructionContainerUuid:      tempParentTestInstructionContainerUuid,
+		parentTestInstructionContainerRectangle: parentTestInstructionContainerRectangle,
 	}
 
 	droppableRectangle.ExtendBaseWidget(droppableRectangle)
@@ -85,7 +94,7 @@ func (h *DroppableRectangle) Tapped(*fyne.PointEvent) {
 func (h *DroppableRectangle) MouseIn(e *desktop.MouseEvent) {
 
 	// Set targetDroppedType to use
-	stateMachineDragAndDrop.targetDroppedType = droppableRecangleType
+	stateMachineDragAndDrop.targetDroppedType = droppableRectangleType
 
 	switch stateMachineDragAndDrop.targetStateMachine.currentState {
 
@@ -110,6 +119,10 @@ func (h *DroppableRectangle) MouseIn(e *desktop.MouseEvent) {
 		h.Rectangle.Refresh()
 
 		stateMachineDragAndDrop.targetDroppableRectangle = *h
+
+		// Show parent TestInstructionContainer
+		h.parentTestInstructionContainerRectangle.FillColor = color.White
+
 		//}
 
 	case targetStateSourceEnteredTargetWithObject:
@@ -150,6 +163,9 @@ func (h *DroppableRectangle) MouseOut() {
 		}
 		//b.BackgroundRectangle.Hide()
 		h.Rectangle.Refresh()
+
+		// Hide parent TestInstructionContainer
+		h.parentTestInstructionContainerRectangle.FillColor = color.Transparent
 
 	case targetStateSourceReleasingOnTarget:
 		return

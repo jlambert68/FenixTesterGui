@@ -43,7 +43,7 @@ type targetDroppedTypeType uint8
 const (
 	unspecifiedType targetDroppedTypeType = iota
 	droppableLabelType
-	droppableRecangleType
+	droppableRectangleType
 )
 
 // Local variables for the Drag n Drop object
@@ -80,6 +80,9 @@ func (stateMachine *StateMachineDragAndDropStruct) InitiateStateStateMachine(
 	tempLabel := widget.NewLabel("temp")
 	tempLabel.Refresh()
 	labelStandardHeight = tempLabel.MinSize().Height
+
+	// Make map which keeps track of TestInstructionContainers Bond-belongings map
+	stateMachineDragAndDrop.testInstructionContainerBondBelongingRectangleMap = make(map[string]*canvas.Rectangle)
 
 }
 
@@ -141,15 +144,17 @@ func newNoneDroppableLabel(uuid string) *noneDroppableLabel {
 //****************************************************
 
 type StateMachineDragAndDropStruct struct {
-	sourceStateMachine                 stateMachineSourceAndDestinationStruct
-	targetStateMachine                 stateMachineSourceAndDestinationStruct
-	registeredDroppableTargetLabels    []*DroppableLabel
-	registeredDroppableTargetRectangle []*DroppableRectangle
-	SourceUuid                         string
-	SourceType                         int
-	targetDroppedType                  targetDroppedTypeType
-	targetDroppableLabel               DroppableLabel
-	targetDroppableRectangle           DroppableRectangle
+	sourceStateMachine                                stateMachineSourceAndDestinationStruct
+	targetStateMachine                                stateMachineSourceAndDestinationStruct
+	registeredDroppableTargetLabels                   []*DroppableLabel
+	registeredDroppableTargetRectangle                []*DroppableRectangle
+	SourceUuid                                        string
+	SourceType                                        int
+	targetDroppedType                                 targetDroppedTypeType
+	targetDroppableLabel                              DroppableLabel
+	targetDroppableRectangle                          DroppableRectangle
+	testInstructionContainerBondBelongingRectangleMap map[string]*canvas.Rectangle //map[TestInstructionContainerUuid]*canvas.Rectangle
+
 }
 
 // Structure for 'Drag-part of 'Drag-N-Drop' state machine
@@ -158,6 +163,11 @@ type stateMachineSourceAndDestinationStruct struct {
 }
 
 var stateMachineDragAndDrop StateMachineDragAndDropStruct
+
+// Add testInstructionContainerBondBelongingRectangle to map
+func TestInstructionContainerBondBelongingRectangleToMap(testInstructionContainerUuid string, rectangle *canvas.Rectangle) {
+	stateMachineDragAndDrop.testInstructionContainerBondBelongingRectangleMap[testInstructionContainerUuid] = rectangle
+}
 
 func switchStateForSource(newState int) {
 	stateMachineDragAndDrop.sourceStateMachine.currentState = newState
@@ -369,7 +379,7 @@ func executeDropAction() {
 		// Send command message over channel to Command and Rule Engine
 		*commandChannelReference <- commandEngineChannelMessage
 
-	case droppableRecangleType:
+	case droppableRectangleType:
 
 		fmt.Println(fmt.Sprintf("'%s' was dropped in '%s'. Current TestCase is '%s'", stateMachineDragAndDrop.SourceUuid, stateMachineDragAndDrop.targetDroppableRectangle.TargetUuid, stateMachineDragAndDrop.targetDroppableRectangle.CurrentTestCaseUuid))
 

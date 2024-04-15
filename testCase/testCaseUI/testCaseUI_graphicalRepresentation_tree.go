@@ -108,7 +108,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			newIndentationRectangle.StrokeColor = color.Black
 			newIndentationRectangle.StrokeWidth = 0
 			newIndentationRectangle.SetMinSize(fyne.NewSize(testCaseNodeRectangleSize*nodeTreeLevel, float32(0)))
-			newIndentationRectangleContainer := container.NewMax(newIndentationRectangle)
+			newIndentationRectangleContainer := container.NewStack(newIndentationRectangle)
 
 			// Create indentation within TestInstructionContainer
 
@@ -116,7 +116,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			newTestInstructionColorRectangle := testCasesUiCanvasObject.NewClickableRectangle(
 				rectangleColor, testCaseUuid, child.Uuid)
 
-			testInstructionNodeColorContainer := container.NewMax(
+			testInstructionNodeColorContainer := container.NewStack(
 				newTestInstructionColorRectangle.colorRectangle,
 				newTestInstructionColorRectangle.selectedRectangle,
 				newTestInstructionColorRectangle)
@@ -165,18 +165,29 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			newIndentationRectangle.StrokeColor = color.Black
 			newIndentationRectangle.StrokeWidth = 0
 			newIndentationRectangle.SetMinSize(fyne.NewSize(testCaseNodeRectangleSize*nodeTreeLevel, float32(0)))
-			newIndentationRectangleContainer := container.NewMax(newIndentationRectangle)
+			newIndentationRectangleContainer := container.NewStack(newIndentationRectangle)
+
+			// Create colorRectangle used to show which TestInstructionContainer a Bond belongs to when hovering over Bond
+			newBondBelongingRectangle := canvas.NewRectangle(color.Transparent)
+			newBondBelongingRectangle.StrokeColor = color.Black
+			newBondBelongingRectangle.StrokeWidth = 0
+			newBondBelongingRectangle.SetMinSize(fyne.NewSize(10, labelStandardHeight))
+
+			// Add testInstructionContainerBondBelongingRectangle to map
+			testUIDragNDropStatemachine.TestInstructionContainerBondBelongingRectangleToMap(
+				child.Uuid,
+				newBondBelongingRectangle)
 
 			// Create the Horizontal node container object to be put on GUI
 			nodeHContainer := container.NewHBox(
-				newIndentationRectangleContainer, newTestInstructionContainerAccordion, layout.NewSpacer())
+				newIndentationRectangleContainer, newBondBelongingRectangle, newTestInstructionContainerAccordion, layout.NewSpacer())
 
 			// Create trailer colorRectangle for TestInstructionContainer
 			newITrailerRectangle := canvas.NewRectangle(newTransparentColor)
 			newITrailerRectangle.StrokeColor = color.Black
 			newITrailerRectangle.StrokeWidth = 0
 			newITrailerRectangle.SetMinSize(fyne.NewSize(1, 4))
-			newITrailerRectangleContainer := container.NewMax(newITrailerRectangle)
+			newITrailerRectangleContainer := container.NewStack(newITrailerRectangle)
 
 			// Create the node container object to be put on GUI
 			nodeContainer := container.NewVBox(nodeHContainer, newITrailerRectangleContainer)
@@ -228,16 +239,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			newIndentationRectangle.StrokeColor = color.Black
 			newIndentationRectangle.StrokeWidth = 0
 			newIndentationRectangle.SetMinSize(fyne.NewSize(testCaseNodeRectangleSize*nodeTreeLevel, float32(0)))
-			newIndentationRectangleContainer := container.NewMax(newIndentationRectangle)
+			newIndentationRectangleContainer := container.NewStack(newIndentationRectangle)
 
 			// Create indentation within TestInstructionContainer
 			newTestInstructionColorRectangle := canvas.NewRectangle(newTransaparentColor)
 			newTestInstructionColorRectangle.StrokeColor = color.Black
 			newTestInstructionColorRectangle.StrokeWidth = 0
 			newTestInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(0)))
-			testInstructionNodeTransparentContainer := container.NewMax(newTestInstructionColorRectangle)
+			testInstructionNodeTransparentContainer := container.NewStack(newTestInstructionColorRectangle)
 
-			// Create the none container object to be put on GUI
+			// Create the node container object to be put on GUI
 			nodeContainer := container.NewHBox(
 				newIndentationRectangleContainer,
 				testInstructionNodeTransparentContainer,
@@ -254,8 +265,27 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10oxo_BOND,
 			fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B10xo_BOND:
 
+			// Get parent TestInstructionContainerUuid
+			var parentTestInstructionContainerUuid string
+			var testCases map[string]testCaseModel.TestCaseModelStruct
+			var testCaseModel testCaseModel.TestCaseModelStruct
+			var existInMap bool
+
+			testCases = testCasesUiCanvasObject.TestCasesModelReference.TestCases
+			testCaseModel, existInMap = testCases[testCaseUuid]
+			if existInMap == false {
+				errorId := "2acf66fc-cfef-47c7-a133-0f0b466c425c"
+				err := errors.New(fmt.Sprintf("couldn't find TestCase: '%s' in testCases-map [ErrorID: %s]", testCaseUuid, errorId))
+
+				println(err) // TODO Send on Error-channel
+
+				return
+			}
+
+			parentTestInstructionContainerUuid = testCaseModel.TestCaseModelMap[child.Uuid].MatureTestCaseModelElementMessage.ParentElementUuid
+
 			newDroppableBondRectangle := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableRectangle(
-				nodeTreeLevel, testCaseNodeRectangleSize, child.Uuid, testCaseUuid)
+				nodeTreeLevel, testCaseNodeRectangleSize, child.Uuid, testCaseUuid, parentTestInstructionContainerUuid)
 			newDroppableBondLabelRectangle := container.NewStack(
 				newDroppableBondRectangle)
 			//newDroppableBondLabel.Hide()
@@ -273,14 +303,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			newIndentationRectangle.StrokeColor = color.Black
 			newIndentationRectangle.StrokeWidth = 0
 			newIndentationRectangle.SetMinSize(fyne.NewSize(testCaseNodeRectangleSize*nodeTreeLevel, float32(0)))
-			newIndentationRectangleContainer := container.NewMax(newIndentationRectangle)
+			newIndentationRectangleContainer := container.NewStack(newIndentationRectangle)
 
 			// Create indentation within TestInstructionContainer
 			newTestInstructionColorRectangle := canvas.NewRectangle(newTransparentColor)
 			newTestInstructionColorRectangle.StrokeColor = color.Black
 			newTestInstructionColorRectangle.StrokeWidth = 0
 			newTestInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize), float32(0)))
-			testInstructionNodeTransparentContainer := container.NewMax(newTestInstructionColorRectangle)
+			testInstructionNodeTransparentContainer := container.NewStack(newTestInstructionColorRectangle)
 
 			// Create the none container object to be put on GUI
 			nodeContainer := container.NewHBox(

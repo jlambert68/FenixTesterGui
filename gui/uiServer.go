@@ -503,7 +503,8 @@ func (uiServer *UIServerStruct) loadUI() fyne.CanvasObject {
 		uiServer.testCasesUiModel.DragNDropObject.DragNDropRectangle,
 		uiServer.testCasesUiModel.DragNDropObject.DragNDropRectangleTextBackground,
 		uiServer.testCasesUiModel.DragNDropObject.DragNDropContainer,
-		uiServer.commandAndRuleEngine.CommandChannelReference)
+		uiServer.commandAndRuleEngine.CommandChannelReference,
+		uiServer.commandAndRuleEngine.Testcases)
 
 	// ****************************
 	// TODO Used for Testing only and can be removed

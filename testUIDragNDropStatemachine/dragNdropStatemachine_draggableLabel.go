@@ -15,6 +15,16 @@ type DraggableLabel struct {
 	BuildingBlockType int
 }
 
+func (stateMachine *StateMachineDragAndDropStruct) NewDraggableLabel(uuid string) *DraggableLabel {
+	draggableLabel := &DraggableLabel{}
+	draggableLabel.ExtendBaseWidget(draggableLabel)
+
+	draggableLabel.SourceUuid = uuid
+	draggableLabel.Text = uuid
+
+	return draggableLabel
+}
+
 // ***** The Object from the Drag starts *****
 
 // Dragged
@@ -120,19 +130,29 @@ func (t *DraggableLabel) DragEnd() {
 
 		shrinkDropAreas()
 
-		for _, droppableTargetLabel := range stateMachineDragAndDrop.registeredDroppableTargetLabels {
-			droppableTargetLabel.BackgroundRectangle.StrokeWidth = 0
-			droppableTargetLabel.BackgroundRectangle.StrokeColor = color.RGBA{
-				R: 0x00,
-				G: 0x00,
-				B: 0x00,
-				A: 0x00,
-			}
-			droppableTargetLabel.BackgroundRectangle.FillColor = color.RGBA{
-				R: 0x00,
-				G: 0x00,
-				B: 0x00,
-				A: 0x00,
+		// Get registeredDroppableTargetLabels for currentTestCase
+		var droppableLabelsRef *[]*DroppableLabel
+		var droppableLabels []*DroppableLabel
+		droppableLabelsRef = stateMachineDragAndDrop.registeredDroppableTargetLabelsMap[stateMachineDragAndDrop.testCasesRef.CurrentActiveTestCaseUuid]
+
+		if droppableLabelsRef != nil {
+			droppableLabels = *droppableLabelsRef
+
+			for _, targetLabel := range droppableLabels {
+
+				targetLabel.BackgroundRectangle.StrokeWidth = 0
+				targetLabel.BackgroundRectangle.StrokeColor = color.RGBA{
+					R: 0x00,
+					G: 0x00,
+					B: 0x00,
+					A: 0x00,
+				}
+				targetLabel.BackgroundRectangle.FillColor = color.RGBA{
+					R: 0x00,
+					G: 0x00,
+					B: 0x00,
+					A: 0x00,
+				}
 			}
 		}
 

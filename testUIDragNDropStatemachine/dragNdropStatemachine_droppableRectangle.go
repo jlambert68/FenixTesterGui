@@ -54,7 +54,25 @@ func (stateMachine *StateMachineDragAndDropStruct) NewDroppableRectangle(
 	droppableRectangle.nodeLevel = nodeLevel
 	droppableRectangle.CurrentTestCaseUuid = testCaseUuid
 
-	stateMachineDragAndDrop.registeredDroppableTargetRectangle = append(stateMachineDragAndDrop.registeredDroppableTargetRectangle, droppableRectangle)
+	// Get registeredDroppableTargetLabels for currentTestCase
+	var droppableRectanglesRef *[]*DroppableRectangle
+	var droppableRectangles []*DroppableRectangle
+	var existInMap bool
+
+	droppableRectanglesRef, existInMap = stateMachineDragAndDrop.registeredDroppableTargetRectangleMap[testCaseUuid]
+	if existInMap == false {
+		// Create a new slice and add 'droppableRectangle'
+		droppableRectangles = append(droppableRectangles, droppableRectangle)
+
+		// Add slice to map
+		stateMachineDragAndDrop.registeredDroppableTargetRectangleMap[testCaseUuid] = &droppableRectangles
+
+	} else {
+
+		// Add 'droppableRectangle' to existing slice
+		*droppableRectanglesRef = append(*droppableRectanglesRef, droppableRectangle)
+
+	}
 
 	return droppableRectangle
 }

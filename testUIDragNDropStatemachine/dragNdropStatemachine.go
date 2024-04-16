@@ -2,6 +2,7 @@ package testUIDragNDropStatemachine
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -68,7 +69,8 @@ func (stateMachine *StateMachineDragAndDropStruct) InitiateStateStateMachine(
 	dragNDropRectangleRef *canvas.Rectangle,
 	dragNDropRectangle2Ref *canvas.Rectangle,
 	dragNDropContainerRef *fyne.Container,
-	commandChannelRef *sharedCode.CommandChannelType) {
+	commandChannelRef *sharedCode.CommandChannelType,
+	testCasesRef *testCaseModel.TestCasesModelsStruct) {
 
 	textRef = dragNDropText
 	rectangleRef = dragNDropRectangleRef
@@ -84,52 +86,17 @@ func (stateMachine *StateMachineDragAndDropStruct) InitiateStateStateMachine(
 	// Make map which keeps track of TestInstructionContainers Bond-belongings map
 	stateMachineDragAndDrop.testInstructionContainerBondBelongingRectangleMap = make(map[string]*canvas.Rectangle)
 
+	// Maps that keeps track of all registered TargetLabels and TargetRectangles
+	stateMachineDragAndDrop.registeredDroppableTargetLabelsMap = make(map[string]*[]*DroppableLabel)
+	stateMachineDragAndDrop.registeredDroppableTargetRectangleMap = make(map[string]*[]*DroppableRectangle)
+
+	// Store reference to TestCases
+	stateMachine.testCasesRef = testCasesRef
+	stateMachineDragAndDrop.testCasesRef = testCasesRef
+
 }
 
 //****************************************************
-
-func (stateMachine *StateMachineDragAndDropStruct) NewDraggableLabel(uuid string) *DraggableLabel {
-	draggableLabel := &DraggableLabel{}
-	draggableLabel.ExtendBaseWidget(draggableLabel)
-
-	draggableLabel.SourceUuid = uuid
-	draggableLabel.Text = uuid
-
-	return draggableLabel
-}
-
-func (stateMachine *StateMachineDragAndDropStruct) NewDroppableLabel(
-	labelText string,
-	nodeLevel float32,
-	testCaseNodeRectangleSize int,
-	uuid string, testCaseUuid string) *DroppableLabel {
-
-	droppableLabel := &DroppableLabel{}
-	droppableLabel.ExtendBaseWidget(droppableLabel)
-
-	droppableLabel.TargetUuid = uuid
-	droppableLabel.Text = labelText
-	droppableLabel.nodeLevel = nodeLevel
-	droppableLabel.testCaseNodeRectangleSize = testCaseNodeRectangleSize
-	droppableLabel.CurrentTestCaseUuid = testCaseUuid
-
-	droppableLabel.BackgroundRectangle = canvas.NewRectangle(color.RGBA{
-		R: 0x33,
-		G: 0x33,
-		B: 0x33,
-		A: 0x22,
-	})
-
-	droppableLabel.Refresh()
-	droppableLabel.BackgroundRectangle.SetMinSize(fyne.NewSize(targetDropLabelRectangleWidth, labelStandardHeight)) //(droppableLabel.Size())
-	//droppableLabel.BackgroundRectangle.Hide()
-
-	stateMachineDragAndDrop.registeredDroppableTargetLabels = append(stateMachineDragAndDrop.registeredDroppableTargetLabels, droppableLabel)
-
-	droppableLabel.labelStandardHeight = droppableLabel.MinSize().Height
-
-	return droppableLabel
-}
 
 func newNoneDroppableLabel(uuid string) *noneDroppableLabel {
 	nonDroppableLabel := &noneDroppableLabel{}
@@ -144,10 +111,11 @@ func newNoneDroppableLabel(uuid string) *noneDroppableLabel {
 //****************************************************
 
 type StateMachineDragAndDropStruct struct {
+	testCasesRef                                      *testCaseModel.TestCasesModelsStruct
 	sourceStateMachine                                stateMachineSourceAndDestinationStruct
 	targetStateMachine                                stateMachineSourceAndDestinationStruct
-	registeredDroppableTargetLabels                   []*DroppableLabel
-	registeredDroppableTargetRectangle                []*DroppableRectangle
+	registeredDroppableTargetLabelsMap                map[string]*[]*DroppableLabel
+	registeredDroppableTargetRectangleMap             map[string]*[]*DroppableRectangle
 	SourceUuid                                        string
 	SourceType                                        int
 	targetDroppedType                                 targetDroppedTypeType
@@ -179,184 +147,101 @@ func switchStateForTarget(newState int) {
 
 func expandDropAreas() {
 
-	for _, targetLabel := range stateMachineDragAndDrop.registeredDroppableTargetLabels {
+	// Get registeredDroppableTargetLabels for currentTestCase
+	var droppableLabelsRef *[]*DroppableLabel
+	var droppableLabels []*DroppableLabel
+	droppableLabelsRef = stateMachineDragAndDrop.registeredDroppableTargetLabelsMap[stateMachineDragAndDrop.testCasesRef.CurrentActiveTestCaseUuid]
 
-		targetLabel.BackgroundRectangle.StrokeWidth = 2
+	if droppableLabelsRef != nil {
+		droppableLabels = *droppableLabelsRef
 
-		targetLabel.Resize(fyne.NewSize(targetDropRectangleWidth, labelStandardHeight))
-		strokeColor := color.RGBA{
-			R: 0xFF,
-			G: 0x00,
-			B: 0x00,
-			A: 0xAA,
+		for _, targetLabel := range droppableLabels {
+
+			targetLabel.BackgroundRectangle.StrokeWidth = 2
+
+			targetLabel.Resize(fyne.NewSize(targetDropRectangleWidth, labelStandardHeight))
+			strokeColor := color.RGBA{
+				R: 0xFF,
+				G: 0x00,
+				B: 0x00,
+				A: 0xAA,
+			}
+			targetLabel.BackgroundRectangle.StrokeColor = strokeColor
+			//targetLabel.BackgroundRectangle.Show()
+			//targetLabel.Show()
 		}
-		targetLabel.BackgroundRectangle.StrokeColor = strokeColor
-		//targetLabel.BackgroundRectangle.Show()
-		//targetLabel.Show()
 	}
 
-	for _, targetRectangle := range stateMachineDragAndDrop.registeredDroppableTargetRectangle {
+	// Get registeredDroppableTargetLabels for currentTestCase
+	var droppableRectangleRef *[]*DroppableRectangle
+	var droppableRectangle []*DroppableRectangle
+	droppableRectangleRef = stateMachineDragAndDrop.registeredDroppableTargetRectangleMap[stateMachineDragAndDrop.testCasesRef.CurrentActiveTestCaseUuid]
 
-		//rectangleWidth := float32(500)
+	if droppableRectangleRef != nil {
+		droppableRectangle = *droppableRectangleRef
 
-		targetRectangle.Rectangle.StrokeWidth = 2
+		for _, targetRectangle := range droppableRectangle {
 
-		//targetLabel.Resize(fyne.NewSize(rectangleWidth, 12))
-		strokeColor := color.RGBA{
-			R: 0xFF,
-			G: 0x00,
-			B: 0x00,
-			A: 0xAA,
-		}
-		targetRectangle.Rectangle.StrokeColor = strokeColor
+			//rectangleWidth := float32(500)
 
-		/*
-			backgroundColor := color.RGBA{
-				R: 0x33,
-				G: 0x33,
-				B: 0x33,
-				A: 0x22,
+			targetRectangle.Rectangle.StrokeWidth = 2
+
+			strokeColor := color.RGBA{
+				R: 0xFF,
+				G: 0x00,
+				B: 0x00,
+				A: 0xAA,
 			}
-			targetRectangle.Rectangle.FillColor = backgroundColor
+			targetRectangle.Rectangle.StrokeColor = strokeColor
 
-		*/
-
-		//targetRectangle.Rectangle.Show()
-		//targetRectangle.Show()
+		}
 	}
-
-	/*
-			go func(targetReferenceLabel *DroppableLabel) {
-				rectangleColorAnimation := canvas.NewColorRGBAAnimation(color.RGBA{
-					R: 0x00,
-					G: 0x00,
-					B: 0x00,
-					A: 0x00,
-				}, color.RGBA{
-					R: 0xFF,
-					G: 0x00,
-					B: 0x00,
-					A: 0xAA,
-				}, time.Millisecond*300, func(c color.Color) {
-					targetReferenceLabel.BackgroundRectangle.StrokeColor = c
-					canvas.Refresh(targetReferenceLabel.BackgroundRectangle)
-				})
-
-				rectangleSizeAnimation := canvas.NewSizeAnimation(
-					fyne.NewSize(rectangleWidth, targetReferenceLabel.labelStandardHeight/2),
-					fyne.NewSize(rectangleWidth, targetReferenceLabel.labelStandardHeight),
-					time.Millisecond*600,
-					func(animationSize fyne.Size) {
-						targetReferenceLabel.BackgroundRectangle.SetMinSize(animationSize)
-						canvas.Refresh(targetReferenceLabel.BackgroundRectangle)
-						//targetReferenceLabel.parrentAccordion.Refresh()
-						//canvas.Refresh(DropFour)
-						//canvas.Refresh(dropContainer)
-					})
-
-				rectangleColorAnimation.Start()
-				rectangleSizeAnimation.Start()
-			}(targetLabel)
-
-		}
-
-		go func() {
-			time.Sleep(800 * time.Millisecond)
-			for _, targetLabel := range stateMachineDragAndDrop.registeredDroppableTargetLabels {
-				targetLabel.Show()
-			}
-		}()
-	*/
-
 }
 
 func shrinkDropAreas() {
-	for _, targetLabel := range stateMachineDragAndDrop.registeredDroppableTargetLabels {
 
-		targetLabel.BackgroundRectangle.StrokeWidth = 2
-		strokeColor := color.RGBA{
-			R: 0x00,
-			G: 0x00,
-			B: 0x00,
-			A: 0x00,
+	// Get registeredDroppableTargetLabels for currentTestCase
+	var droppableLabelsRef *[]*DroppableLabel
+	var droppableLabels []*DroppableLabel
+	droppableLabelsRef = stateMachineDragAndDrop.registeredDroppableTargetLabelsMap[stateMachineDragAndDrop.testCasesRef.CurrentActiveTestCaseUuid]
+
+	if droppableLabelsRef != nil {
+		droppableLabels = *droppableLabelsRef
+
+		for _, targetLabel := range droppableLabels {
+
+			targetLabel.BackgroundRectangle.StrokeWidth = 2
+			strokeColor := color.RGBA{
+				R: 0x00,
+				G: 0x00,
+				B: 0x00,
+				A: 0x00,
+			}
+			targetLabel.BackgroundRectangle.StrokeColor = strokeColor
 		}
-		targetLabel.BackgroundRectangle.StrokeColor = strokeColor
-		//targetLabel.BackgroundRectangle.Show()
-		//targetLabel.Hide()
 	}
 
-	for _, targetRectangle := range stateMachineDragAndDrop.registeredDroppableTargetRectangle {
+	// Get registeredDroppableTargetLabels for currentTestCase
+	var droppableRectangleRef *[]*DroppableRectangle
+	var droppableRectangle []*DroppableRectangle
+	droppableRectangleRef = stateMachineDragAndDrop.registeredDroppableTargetRectangleMap[stateMachineDragAndDrop.testCasesRef.CurrentActiveTestCaseUuid]
 
-		targetRectangle.Rectangle.StrokeWidth = 2
-		strokeColor := color.RGBA{
-			R: 0x00,
-			G: 0x00,
-			B: 0x00,
-			A: 0x00,
-		}
-		targetRectangle.Rectangle.StrokeColor = strokeColor
-		/*
-			backgroundColor := color.RGBA{
-				R: 0x03,
-				G: 0x03,
-				B: 0x03,
-				A: 0xFF,
+	if droppableRectangleRef != nil {
+		droppableRectangle = *droppableRectangleRef
+
+		for _, targetRectangle := range droppableRectangle {
+
+			targetRectangle.Rectangle.StrokeWidth = 2
+			strokeColor := color.RGBA{
+				R: 0x00,
+				G: 0x00,
+				B: 0x00,
+				A: 0x00,
 			}
-			targetRectangle.Rectangle.FillColor = backgroundColor
+			targetRectangle.Rectangle.StrokeColor = strokeColor
 
-		*/
-
-		//targetLabel.BackgroundRectangle.Show()
-		//targetRectangle.Rectangle.Hide()
-
+		}
 	}
-	/*
-			go func(targetReferenceLabel *DroppableLabel) {
-				rectangleColorAnimation := canvas.NewColorRGBAAnimation(color.RGBA{
-					R: 0x00,
-					G: 0x00,
-					B: 0x00,
-					A: 0x00,
-				}, color.RGBA{
-					R: 0xFF,
-					G: 0x00,
-					B: 0x00,
-					A: 0xAA,
-				}, time.Millisecond*300, func(c color.Color) {
-					targetReferenceLabel.BackgroundRectangle.StrokeColor = c
-					canvas.Refresh(targetReferenceLabel.BackgroundRectangle)
-				})
-
-				rectangleWidth := float32(500)
-
-				rectangleSizeAnimation := canvas.NewSizeAnimation(
-					fyne.NewSize(rectangleWidth, targetReferenceLabel.labelStandardHeight),
-					fyne.NewSize(rectangleWidth, targetReferenceLabel.labelStandardHeight/2),
-					time.Millisecond*300,
-					func(animationSize fyne.Size) {
-						targetReferenceLabel.BackgroundRectangle.SetMinSize(animationSize)
-						canvas.Refresh(targetReferenceLabel.BackgroundRectangle)
-						//canvas.Refresh(DropFour)
-						//canvas.Refresh(dropContainer)
-					})
-
-				rectangleColorAnimation.Start()
-				rectangleSizeAnimation.Start()
-			}(targetLabel)
-
-		}
-
-		go func() {
-			time.Sleep(400 * time.Millisecond)
-			for _, targetLabel := range stateMachineDragAndDrop.registeredDroppableTargetLabels {
-				targetLabel.BackgroundRectangle.Hide()
-				targetLabel.BackgroundRectangle.Refresh()
-
-			}
-		}()
-
-	*/
-
 }
 
 func executeDropAction() {

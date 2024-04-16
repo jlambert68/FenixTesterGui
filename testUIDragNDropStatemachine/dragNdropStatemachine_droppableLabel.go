@@ -1,6 +1,7 @@
 package testUIDragNDropStatemachine
 
 import (
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/widget"
@@ -19,6 +20,57 @@ type DroppableLabel struct {
 	nodeLevel                 float32
 	testCaseNodeRectangleSize int
 	CurrentTestCaseUuid       string
+}
+
+func (stateMachine *StateMachineDragAndDropStruct) NewDroppableLabel(
+	labelText string,
+	nodeLevel float32,
+	testCaseNodeRectangleSize int,
+	uuid string, testCaseUuid string) *DroppableLabel {
+
+	droppableLabel := &DroppableLabel{}
+	droppableLabel.ExtendBaseWidget(droppableLabel)
+
+	droppableLabel.TargetUuid = uuid
+	droppableLabel.Text = labelText
+	droppableLabel.nodeLevel = nodeLevel
+	droppableLabel.testCaseNodeRectangleSize = testCaseNodeRectangleSize
+	droppableLabel.CurrentTestCaseUuid = testCaseUuid
+
+	droppableLabel.BackgroundRectangle = canvas.NewRectangle(color.RGBA{
+		R: 0x33,
+		G: 0x33,
+		B: 0x33,
+		A: 0x22,
+	})
+
+	droppableLabel.Refresh()
+	droppableLabel.BackgroundRectangle.SetMinSize(fyne.NewSize(targetDropLabelRectangleWidth, labelStandardHeight)) //(droppableLabel.Size())
+	//droppableLabel.BackgroundRectangle.Hide()
+
+	// Get registeredDroppableTargetLabels for currentTestCase
+	var droppableLabelsRef *[]*DroppableLabel
+	var droppableLabels []*DroppableLabel
+	var existInMap bool
+
+	droppableLabelsRef, existInMap = stateMachineDragAndDrop.registeredDroppableTargetLabelsMap[testCaseUuid]
+	if existInMap == false {
+		// Create a new slice and add 'droppableLabels'
+		droppableLabels = append(droppableLabels, droppableLabel)
+
+		// Add slice to map
+		stateMachineDragAndDrop.registeredDroppableTargetLabelsMap[testCaseUuid] = &droppableLabels
+
+	} else {
+
+		// Add 'droppableRectangle' to existing slice
+		*droppableLabelsRef = append(*droppableLabelsRef, droppableLabel)
+
+	}
+
+	droppableLabel.labelStandardHeight = droppableLabel.MinSize().Height
+
+	return droppableLabel
 }
 
 // ***** The Object from the Drop Ends *****

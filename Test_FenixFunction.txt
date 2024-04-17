@@ -25,8 +25,8 @@ Change how TestCase {{Fenix.ControlledUniqueId[](Time: %hh:mm:ss%)}} is using Do
 Change how TestCase {{Fenix.ControlledUniqueId[](Time: %hhmmss%)}} is using Domain, from single to multiple domains depending on used TestInstructions
 Change how TestCase {{Fenix.ControlledUniqueId[](Time: %hhmm%)}} is using Domain, from single to multiple domains depending on used TestInstructions
 Change how TestCase {{Fenix.ControlledUniqueId[](Random Number: %nnnnn%)}} is using Domain, from single to multiple domains depending on used TestInstructions
-Change how TestCase {{Fenix.ControlledUniqueId[](\"Random String Lowercase: %a(5; 11)%\")}} is using Domain, from single to multiple domains depending on used TestInstructions
-Change how TestCase {{Fenix.ControlledUniqueId[]("\Random String Uppercase: %A(5; 10)%\")}} is using Domain, from single to multiple domains depending on used TestInstructions
+Change how TestCase {{Fenix.ControlledUniqueId[](Random String Lowercase: %a(5; 11)%)}} is using Domain, from single to multiple domains depending on used TestInstructions
+Change how TestCase {{Fenix.ControlledUniqueId[](Random String Uppercase: %A(5; 10)%)}} is using Domain, from single to multiple domains depending on used TestInstructions
 Change how TestCase {{Fenix.ControlledUniqueId[](Time: %hh:mm:ss%)}} is using Domain, from single to multiple domains depending on used TestInstructions
 Change how TestCase {{Fenix.ControlledUniqueId[](Time: %hh.mm.ss%)}} is using Domain, from single to multiple domains depending on used TestInstructions
 

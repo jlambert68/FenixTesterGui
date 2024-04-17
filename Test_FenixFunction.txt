@@ -18,5 +18,7 @@ Change how TestCase {{Fenix.RandomPositiveDecimalValue.Sum[1](2, 2)}} is using D
 Change how TestCase {{Fenix.RandomPositiveDecimalValue.Sum[1, 3](2, 2)}} is using Domain, from single to multiple domains depending on used TestInstructions
 Change how TestCase {{Fenix.RandomPositiveDecimalValue.Sum[1, -3](2, 2)}} is using Domain, from single to multiple domains depending on used TestInstructions
 
+Change how TestCase {{Fenix.ControlledUniqueId[](Date: %YYYY-MM-DD%, Date: %YYYYMMDD%, Date: %YYMMDD%, Time: %hh:mm:ss%, Time: %hhmmss%, Time: %hhmm%, Random Number: %nnnnn%, Random String: %a(5, 11)%, Random String Uppercase: %A(5, 10)%, Time: %hh:mm:ss%, Time: %hh.mm.ss%}} is using Domain, from single to multiple domains depending on used TestInstructions
+
 Change how TestCase {{Fenix.TodayShiftDay[1](1)}} is using Domain, from single to multiple domains depending on used TestInstructions
 Change how TestCase {{Fenix.TodayShiftDay[1,2](1)}} is using Domain, from single to multiple domains depending on used TestInstructions

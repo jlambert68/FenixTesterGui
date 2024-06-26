@@ -191,6 +191,9 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Get Available Building BLocks form GUI-server
 	uiServer.AvailableBuildingBlocksModel.loadPinnedBuildingBlocksFromServer()
 
+	// Load list with TemplateRepositoryApiUrls form GUI-server
+	uiServer.AvailableBuildingBlocksModel.loadTemplateRepositoryApiUrls(&uiServer.testCasesModel)
+
 	// Load Available Bonds
 	uiServer.commandAndRuleEngine.LoadAvailableBondsFromServer()
 
@@ -564,6 +567,7 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 			// Load Available Building Blocks and Pinned Building Blocks from Server
 			uiServer.AvailableBuildingBlocksModel.loadAvailableBuildingBlocksFromServer((&uiServer.testCasesModel))
 			uiServer.AvailableBuildingBlocksModel.loadPinnedBuildingBlocksFromServer()
+			uiServer.AvailableBuildingBlocksModel.loadTemplateRepositoryApiUrls(&uiServer.testCasesModel)
 
 			// Recreate the TreeUIModel
 			uiServer.AvailableBuildingBlocksModel.makeTreeUIModel()

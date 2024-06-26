@@ -141,6 +141,9 @@ type AvailableBuildingBlocksModelStruct struct {
 
 	// Domains that can own a TestCase for this user
 	DomainsThatCanOwnTheTestCase []*fenixGuiTestCaseBuilderServerGrpcApi.DomainsThatCanOwnTheTestCaseMessage
+
+	// URLs to repositories with Template for this user
+	TemplateRepositoryApiUrls []*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage
 }
 type GlobalUIServerStruct struct {
 	logger                             *logrus.Logger

@@ -5,6 +5,7 @@ import (
 	"FenixTesterGui/gcp"
 	"context"
 	"github.com/sirupsen/logrus"
+	"strings"
 	"time"
 )
 
@@ -22,7 +23,8 @@ func PullPubSubTestInstructionExecutionMessagesGcpRestApi() {
 
 	// Generate Subscription name to use
 	var subID string
-	subID = generatePubSubTopicSubscriptionNameForExecutionStatusUpdates(sharedCode.CurrentUserIdLogedInOnComputer)
+	subID = generatePubSubTopicSubscriptionNameForExecutionStatusUpdates(sharedCode.CurrentUserAuthenticatedTowardsGCP)
+	subID = strings.ReplaceAll(subID, "@", ".")
 
 	// Create a loop to be able to have a continuous PubSub Subscription Engine
 	var numberOfMessagesInPullResponse int

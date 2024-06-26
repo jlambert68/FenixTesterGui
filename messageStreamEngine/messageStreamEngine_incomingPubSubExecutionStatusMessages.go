@@ -19,7 +19,8 @@ import (
 
 func PullPubSubTestInstructionExecutionMessages() {
 	projectID := sharedCode.GcpProject
-	subID := generatePubSubTopicSubscriptionNameForExecutionStatusUpdates(sharedCode.CurrentUserIdLogedInOnComputer)
+	subID := generatePubSubTopicSubscriptionNameForExecutionStatusUpdates(sharedCode.CurrentUserAuthenticatedTowardsGCP)
+	subID = strings.ReplaceAll(subID, "@", ".")
 
 	var pubSubClient *pubsub.Client
 	var err error

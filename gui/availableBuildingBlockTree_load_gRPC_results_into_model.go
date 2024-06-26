@@ -444,6 +444,29 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeDom
 
 }
 
+// Store list with TemplateRepositoryApiUrls
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeTemplateRepositoryApiUrls(
+	templateRepositoryApiUrlsToBeStored []*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage,
+	testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
+
+	// Store the list with TemplateRepositoryApiUrls
+	availableBuildingBlocksModel.TemplateRepositoryApiUrls = templateRepositoryApiUrlsToBeStored
+
+	// Store the TemplateRepositoryApiUrls-list in the TestCaseModel
+	testCaseModeReference.TemplateRepositoryApiUrlMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
+		RepositoryApiUrlResponseMessage)
+
+	// Store the Available TemplateRepositoryApiUrls as a map structure in TestCase-struct
+	for _, templateRepositoryApiUrlToBeStored := range templateRepositoryApiUrlsToBeStored {
+
+		testCaseModeReference.
+			TemplateRepositoryApiUrlMap[templateRepositoryApiUrlToBeStored.GetRepositoryApiUrlName()] =
+			templateRepositoryApiUrlToBeStored
+
+	}
+
+}
+
 // Convert gRPC-message for TI or TIC into model used within the TestCase-model
 func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) convertGrpcElementModelIntoTestCaseElementModel(immatureGrpcElementModelMessage *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureElementModelMessage) (immatureTestCaseElementModel testCaseModel.ImmatureElementStruct) {
 

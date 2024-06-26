@@ -313,6 +313,27 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvai
 
 }
 
+// Load list with TemplateRepositoryApiUrls form GUI-server
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadTemplateRepositoryApiUrls(testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
+
+	var allRepositoryApiUrlsResponseMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListAllRepositoryApiUrlsResponseMessage
+	allRepositoryApiUrlsResponseMessage = availableBuildingBlocksModel.grpcOut.SendListAllRepositoryApiUrls()
+
+	if allRepositoryApiUrlsResponseMessage.GetAckNackResponse().AckNack == false {
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"ID":    "eb292613-bb8b-4aa9-8a9b-7a15a5d8d884",
+			"error": allRepositoryApiUrlsResponseMessage.GetAckNackResponse().Comments,
+		}).Warning("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'loadTemplateRepositoryApiUrls'")
+
+		return
+
+	}
+
+	// Store list with TemplateRepositoryApiUrls
+	availableBuildingBlocksModel.storeTemplateRepositoryApiUrls(allRepositoryApiUrlsResponseMessage.GetRepositoryApiUrls(), testCaseModeReference)
+
+}
+
 // Load all Pinned Building Blocks from Gui-server
 func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadPinnedBuildingBlocksFromServer() {
 

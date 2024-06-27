@@ -14,8 +14,8 @@ func InitiateImportFilesFromGitHubWindow(
 	templateRepositoryApiUrls []*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage,
 	mainWindow fyne.Window,
 	myApp fyne.App,
-	responseChannel *chan bool,
-	tempSelectedFiles []GitHubFile) *[]GitHubFile {
+	responseChannel *chan SharedResponseChannelStruct,
+	tempSelectedFiles []GitHubFile) {
 
 	selectedFiles = tempSelectedFiles
 
@@ -114,13 +114,14 @@ func InitiateImportFilesFromGitHubWindow(
 
 	// Set the callback function for window close event to show the Main window again
 	githubFileImporterWindow.SetOnClosed(func() {
-		*sharedResponseChannel <- false
+		*sharedResponseChannel <- SharedResponseChannelStruct{
+			SharedResponse:   false,
+			SelectedFilesPtr: &selectedFiles,
+		}
 		fenixMainWindow.Show()
 	})
 
 	// Show the githubFileImporterWindow
 	githubFileImporterWindow.Show()
-
-	return &selectedFiles
 
 }

@@ -3,19 +3,20 @@ package testCaseUI
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/importFilesFromGitHub"
+	"FenixTesterGui/testCase/testCaseModel"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+	"github.com/sirupsen/logrus"
 )
-
-var templatesFilesInTestCaseTable *widget.Table
-var templatesFilesInTestCase []GitHubFile
 
 // Generate the Template-table Area for the TestCase
 func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTestCaseArea(
 	testCaseUuid string) (
 	fyne.CanvasObject,
 	error) {
+
+	var templatesFilesInTestCaseTable *widget.Table
 
 	var tableAndButtonContainer *fyne.Container
 	var tableAccordionItem *widget.AccordionItem
@@ -25,23 +26,60 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	templatesFilesInTestCaseTable = generateTemplateFilesTable()
 
 	// Update the Table used for showing Templates in TestCase
-	updateTemplateFilesTable(templatesFilesInTestCaseTable, &templatesFilesInTestCase, false)
+	updateTemplateFilesTable(
+		templatesFilesInTestCaseTable,
+		testCaseUuid,
+		false,
+		testCasesUiCanvasObject)
 
 	// Create Button to be able to Add or Remove Template from TestCase
 
-	var responseChannel chan bool
-	responseChannel = make(chan bool)
-	var selectedFiles *[]importFilesFromGitHub.GitHubFile
-	selectedFiles = &[]importFilesFromGitHub.GitHubFile{}
+	var responseChannel chan importFilesFromGitHub.SharedResponseChannelStruct
+	responseChannel = make(chan importFilesFromGitHub.SharedResponseChannelStruct)
+
 	githubFilesImporterButton := widget.NewButton("Import files from GitHub", func() {
+
+		var existInMap bool
+		var currectTestCase testCaseModel.TestCaseModelStruct
+
+		currectTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		if existInMap == false {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":           "a54bce68-fa84-4b29-aa62-5d47b8bdc7fb",
+				"testCaseUuid": testCaseUuid,
+			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
+		}
+
 		var tempFenixMasterWindow fyne.Window
 		tempFenixMasterWindow = *sharedCode.FenixMasterWindowPtr
 		tempFenixMasterWindow.Hide()
 
-		var tempSelectedFiles []importFilesFromGitHub.GitHubFile
-		tempSelectedFiles = *selectedFiles
-		selectedFiles = importFilesFromGitHub.InitiateImportFilesFromGitHubWindow(
-			*sharedCode.TemplateRepositoryApiUrlsPtr, *sharedCode.FenixMasterWindowPtr, *sharedCode.FenixAppPtr, &responseChannel, tempSelectedFiles)
+		importFilesFromGitHub.InitiateImportFilesFromGitHubWindow(
+			*sharedCode.TemplateRepositoryApiUrlsPtr,
+			*sharedCode.FenixMasterWindowPtr,
+			*sharedCode.FenixAppPtr,
+			&responseChannel,
+			currectTestCase.ImportedTemplateFilesFromGitHub)
+
+		// Wait for respons from Files Selector Window to close
+		var channelResponseForSelectedFiles importFilesFromGitHub.SharedResponseChannelStruct
+
+		channelResponseForSelectedFiles = <-responseChannel
+
+		var localCopyForSelectedFiles []importFilesFromGitHub.GitHubFile
+		localCopyForSelectedFiles = *channelResponseForSelectedFiles.SelectedFilesPtr
+
+		// Update Template files for TestCase
+		currectTestCase.ImportedTemplateFilesFromGitHub = localCopyForSelectedFiles
+
+		// Store back TestCase
+		testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = currectTestCase
+
+		updateTemplateFilesTable(templatesFilesInTestCaseTable,
+			testCaseUuid,
+			false,
+			testCasesUiCanvasObject)
+
 	})
 
 	// Create Button to be able to check which Templates that are updated

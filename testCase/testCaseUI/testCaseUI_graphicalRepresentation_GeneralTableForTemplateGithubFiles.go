@@ -1,10 +1,15 @@
 package testCaseUI
 
 import (
+	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/importFilesFromGitHub"
+	"FenixTesterGui/testCase/testCaseModel"
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"github.com/sirupsen/logrus"
 	"time"
 )
 
@@ -65,6 +70,8 @@ func generateTemplateFilesTable() *widget.Table {
 
 }
 
+/*
+
 // Struct for parsing JSON response for files from Github
 type GitHubFile struct {
 	Name                string `json:"name"`
@@ -86,13 +93,27 @@ type GitHubFileDetail struct {
 	// Include other fields as needed
 }
 
+*/
+
 func updateTemplateFilesTable(
 	templateFilesTable *widget.Table,
-	templateFilesFromGithubPtr *[]GitHubFile,
-	filesAreClickable bool) {
+	testCaseUuid string,
+	filesAreClickable bool,
+	testCasesUiCanvasObject *TestCasesUiModelStruct) {
 
-	var templateFilesFromGithub []GitHubFile
-	templateFilesFromGithub = *templateFilesFromGithubPtr
+	var existInMap bool
+	var currentTestCase testCaseModel.TestCaseModelStruct
+
+	currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+	if existInMap == false {
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"ID":           "76ce3c8f-7791-44c9-8f18-be1ed0d9544d",
+			"testCaseUuid": testCaseUuid,
+		}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
+	}
+
+	var templateFilesFromGithub []importFilesFromGitHub.GitHubFile
+	templateFilesFromGithub = currentTestCase.ImportedTemplateFilesFromGitHub
 
 	templateFilesTable.Length = func() (int, int) {
 		return len(templateFilesFromGithub), 2
@@ -102,6 +123,16 @@ func updateTemplateFilesTable(
 
 	}
 	templateFilesTable.UpdateCell = func(id widget.TableCellID, cell fyne.CanvasObject) {
+
+		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		if existInMap == false {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":           "76ce3c8f-7791-44c9-8f18-be1ed0d9544d",
+				"testCaseUuid": testCaseUuid,
+			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
+		}
+
+		templateFilesFromGithub = currentTestCase.ImportedTemplateFilesFromGitHub
 
 		// A cell/row can be clickable to remove file when it is in first column and incoming 'filesAreClickable' is true
 		// 1)
@@ -117,17 +148,21 @@ func updateTemplateFilesTable(
 
 			clickable.onDoubleTap = func() {
 
-				// Remove the file from templateFilesFromGithub and refresh the list
-				for fileIndex, file := range templateFilesFromGithub {
-					if file.URL == templateFilesFromGithub[id.Row].URL {
-						templateFilesFromGithub = append(templateFilesFromGithub[:fileIndex], templateFilesFromGithub[fileIndex+1:]...)
-						*templateFilesFromGithubPtr = templateFilesFromGithub
-						templateFilesTable.Unselect(id)
-						templateFilesTable.Refresh()
-						updateTemplateFilesTable(templateFilesTable, templateFilesFromGithubPtr, filesAreClickable)
-						break
+				fmt.Println("Not Implemeted,yet!")
+				/*
+					// Remove the file from templateFilesFromGithub and refresh the list
+					for fileIndex, file := range templateFilesFromGithub {
+						if file.URL == templateFilesFromGithub[id.Row].URL {
+							templateFilesFromGithub = append(templateFilesFromGithub[:fileIndex], templateFilesFromGithub[fileIndex+1:]...)
+							*templateFilesFromGithubPtr = templateFilesFromGithub
+							templateFilesTable.Unselect(id)
+							templateFilesTable.Refresh()
+							updateTemplateFilesTable(templateFilesTable, templateFilesFromGithubPtr, filesAreClickable)
+							break
+						}
 					}
-				}
+
+				*/
 
 			}
 

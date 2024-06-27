@@ -2,6 +2,7 @@ package testCaseModel
 
 import (
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
+	"FenixTesterGui/importFilesFromGitHub"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/widget"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
@@ -77,6 +78,8 @@ type TestCaseModelStruct struct {
 	ThisIsANewTestCase                       bool
 	TestCaseHash                             string
 	TestCaseHashWhenTestCaseWasSavedOrLoaded string
+
+	ImportedTemplateFilesFromGitHub []importFilesFromGitHub.GitHubFile
 }
 
 type AttributeStructSliceReferenceType []*AttributeStruct

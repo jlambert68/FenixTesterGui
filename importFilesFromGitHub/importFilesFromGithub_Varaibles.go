@@ -9,7 +9,12 @@ import (
 // Channel used to inform when this window closes and there are values to use
 // True = files where picked
 // False = No file where picked
-var sharedResponseChannel *chan bool
+var sharedResponseChannel *chan SharedResponseChannelStruct
+
+type SharedResponseChannelStruct struct {
+	SharedResponse   bool
+	SelectedFilesPtr *[]GitHubFile
+}
 
 // A pointer to Fenix Main Window
 var fenixMainWindow fyne.Window

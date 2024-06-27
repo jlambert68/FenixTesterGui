@@ -1,10 +1,8 @@
 package importFilesFromGitHub
 
 import (
-	sharedCode "FenixTesterGui/common_code"
 	"encoding/json"
 	"fmt"
-	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -12,12 +10,6 @@ import (
 
 // List files and folders for a certain GitHub url
 func getFileListFromGitHub(apiUrl string) {
-
-	var templateRepositoryApiUrls []*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage
-	templateRepositoryApiUrls = *sharedCode.TemplateRepositoryApiUrlsPtr
-
-	var gitHubApiKey string
-	gitHubApiKey = templateRepositoryApiUrls[0].GetGitHubApiKey()
 
 	var tempGithubFiles []GitHubFile
 	client := &http.Client{}
@@ -27,7 +19,7 @@ func getFileListFromGitHub(apiUrl string) {
 	}
 
 	// Add the API token in the request header
-	apiToken := gitHubApiKey // Replace with your actual API token
+	apiToken := currentGitHubApiKey // Replace with your actual API token
 	req.Header.Add("Authorization", "token "+apiToken)
 
 	resp, err := client.Do(req)

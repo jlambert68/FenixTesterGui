@@ -45,3 +45,9 @@ var importSelectedFilesFromGithubButton *widget.Button
 
 // The button that cancel everything and closes the window
 var cancelButton *widget.Button
+
+// The Select holding the different URLs to chose from
+var githubRepositorySelect *widget.Select
+
+// The GitHubKey for the selected repository in Select 'githubRepositorySelect'
+var currentGitHubApiKey string

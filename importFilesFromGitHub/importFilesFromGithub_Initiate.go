@@ -37,6 +37,8 @@ func InitiateImportFilesFromGitHubWindow(
 	rootApiUrl = templateRepositoryApiUrls[0].GetRepositoryApiFullUrl()
 	currentApiUrl = rootApiUrl
 
+	currentGitHubApiKey = templateRepositoryApiUrls[0].GetGitHubApiKey()
+
 	currentPathShowedinGUI = binding.NewString()
 	currentPathShowedinGUI.Set(strings.Split(currentApiUrl, "?")[0]) // Setting initial value
 
@@ -70,15 +72,27 @@ func InitiateImportFilesFromGitHubWindow(
 	// Generate the button that cancel everything and closes the window
 	generateCancelButton(githubFileImporterWindow)
 
+	// Generate the list with URLs to use in Select
+	var urlInSelect []string
+	for _, templateRepositoryApiUrl := range templateRepositoryApiUrls {
+		urlInSelect = append(urlInSelect, templateRepositoryApiUrl.GetRepositoryApiFullUrl())
+	}
+
+	// Generate the DropDown that holds the list of Repositories
+	generateGitHubRepositorySelect(urlInSelect, templateRepositoryApiUrls)
+
 	// Set initial size of the window
 	githubFileImporterWindow.Resize(fyne.NewSize(1200, 1000))
+
+	var pathSelectorContainer *fyne.Container
+	pathSelectorContainer = container.NewBorder(nil, nil, nil, nil, githubRepositorySelect)
 
 	// Generate the row that holds the up/back button and the path itself
 	var pathRowContainer *fyne.Container
 	pathRowContainer = container.NewHBox(moveUpInFolderStructureButton, pathLabel)
 
 	// Create the top element which has the Filter button and the path.label and the back/upp button
-	myTopLayout := container.NewVBox(fileFilterPopupButton, pathRowContainer)
+	myTopLayout := container.NewVBox(fileFilterPopupButton, pathSelectorContainer, pathRowContainer)
 
 	// Create the container that 'selectedFilesTable' will be placed in
 	var selectedFilesTableContainer *fyne.Container

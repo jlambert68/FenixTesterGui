@@ -15,7 +15,7 @@ type clickableLabel struct {
 	isClickable bool
 }
 
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) newClickableLabel(text string, onDoubleTap func(), tempIsClickable bool) *clickableLabel {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) newClickableLabel(text string, onDoubleTap func(), tempIsClickable bool) *clickableLabel {
 	l := &clickableLabel{
 		widget.Label{Text: text},
 		onDoubleTap,
@@ -47,7 +47,7 @@ func (l *clickableLabel) MouseMoved(*desktop.MouseEvent) {}
 func (l *clickableLabel) MouseOut()                      {}
 
 // Create the UI-list that holds the selected files
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) generateSelectedFilesListTable(parentWindow fyne.Window) {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) generateSelectedFilesListTable(parentWindow fyne.Window) {
 	// Correctly initialize the selectedFilesTable as a new table
 	importFilesFromGitHubObject.selectedFilesTable = widget.NewTable(
 		func() (int, int) { return 0, 2 }, // Start with zero rows, 2 columns
@@ -77,7 +77,7 @@ func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) generateSelectedF
 
 }
 
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) UpdateSelectedFilesTable() {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) UpdateSelectedFilesTable() {
 
 	importFilesFromGitHubObject.selectedFilesTable.Length = func() (int, int) {
 		return len(importFilesFromGitHubObject.selectedFiles), 2
@@ -143,7 +143,7 @@ type customLabel struct {
 	lastTap     time.Time
 }
 
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) newCustomLabel(text string, onDoubleTap func()) *customLabel {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) newCustomLabel(text string, onDoubleTap func()) *customLabel {
 	l := &customLabel{Label: widget.Label{Text: text}, onDoubleTap: onDoubleTap, lastTap: time.Now()}
 	l.ExtendBaseWidget(l)
 	return l
@@ -173,11 +173,11 @@ type coloredLabelItem struct {
 	color color.Color
 }
 
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) newColoredLabelItem(text string, color color.Color) *coloredLabelItem {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) newColoredLabelItem(text string, color color.Color) *coloredLabelItem {
 	return &coloredLabelItem{text: text, color: color}
 }
 
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) (item *coloredLabelItem) CreateRenderer() fyne.WidgetRenderer {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) (item *coloredLabelItem) CreateRenderer() fyne.WidgetRenderer {
 	label := widget.NewLabel(item.text)
 	label.color = item.color
 	label.Refresh()

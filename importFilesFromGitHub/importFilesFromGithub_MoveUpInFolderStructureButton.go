@@ -8,7 +8,7 @@ import (
 )
 
 // Generate the Button that moves upwards in the folder structure in GitHub
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) generateMoveUpInFolderStructureButton() {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) generateMoveUpInFolderStructureButton() {
 
 	importFilesFromGitHubObject.moveUpInFolderStructureButton = widget.NewButtonWithIcon("", theme.NavigateBackIcon(), func() {
 		// Handle the button click - go back in your navigation, for instance
@@ -31,7 +31,7 @@ func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) generateMoveUpInF
 }
 
 // Move one step in the folder structure
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) moveUpInPath(currentPath string) (string, error) {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) moveUpInPath(currentPath string) (string, error) {
 	// Trim any trailing slashes
 	trimmedPath := strings.TrimRight(currentPath, "/")
 

@@ -11,7 +11,7 @@ type checklistItem struct {
 	Checked bool
 }
 
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) generateFileFilterPopup(parentWindow fyne.Window) {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) generateFileFilterPopup(parentWindow fyne.Window) {
 
 	var checkBoxitems = []checklistItem{
 		{"*.go", false},            // Not prechecked

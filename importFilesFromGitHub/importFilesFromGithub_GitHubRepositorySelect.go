@@ -9,7 +9,7 @@ import (
 )
 
 // Create Domain-Select-DropDown
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) generateGitHubRepositorySelect(
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) generateGitHubRepositorySelect(
 	githubRepositoryUrls []string,
 	templateRepositoryApiUrls []*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage) {
 

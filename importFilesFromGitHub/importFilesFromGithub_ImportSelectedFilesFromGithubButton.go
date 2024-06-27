@@ -10,7 +10,7 @@ import (
 )
 
 // Generate the button that imports the selected files from Github
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) generateImportSelectedFilesFromGithubButton(parentWindow fyne.Window) {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) generateImportSelectedFilesFromGithubButton(parentWindow fyne.Window) {
 
 	importFilesFromGitHubObject.importSelectedFilesFromGithubButton = widget.NewButton("Import Files", func() {
 		for fileIndex, file := range importFilesFromGitHubObject.selectedFiles {
@@ -44,7 +44,7 @@ func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) generateImportSel
 }
 
 // Extra the file content from the json
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) extractContentFromJson(jsonData string) (string, error) {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) extractContentFromJson(jsonData string) (string, error) {
 	var fileDetail GitHubFileDetail
 	err := json.Unmarshal([]byte(jsonData), &fileDetail)
 	if err != nil {
@@ -55,7 +55,7 @@ func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) extractContentFro
 }
 
 // Decode the file content from base64 to string
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) decodeBase64Content(encodedContent string) (string, error) {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) decodeBase64Content(encodedContent string) (string, error) {
 	decodedBytes, err := base64.StdEncoding.DecodeString(encodedContent)
 	if err != nil {
 		return "", err

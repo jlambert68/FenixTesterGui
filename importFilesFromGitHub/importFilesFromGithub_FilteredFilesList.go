@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) generateFilteredList(parentWindow fyne.Window) {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) generateFilteredList(parentWindow fyne.Window) {
 
 	importFilesFromGitHubObject.filteredFileList = widget.NewList(
 		func() int {
@@ -72,7 +72,7 @@ func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) generateFilteredL
 	)
 }
 
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) filterFileListFromGitHub() {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) filterFileListFromGitHub() {
 
 	var fullRegExFilter string
 	var tempGithubFilesFiltered []GitHubFile
@@ -120,7 +120,7 @@ type customFilteredLabel struct {
 	lastTap     time.Time
 }
 
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) newCustomFilteredLabel(text string, onDoubleTap func()) *customFilteredLabel {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) newCustomFilteredLabel(text string, onDoubleTap func()) *customFilteredLabel {
 	l := &customFilteredLabel{Label: widget.Label{Text: text}, onDoubleTap: onDoubleTap}
 	l.ExtendBaseWidget(l)
 	return l

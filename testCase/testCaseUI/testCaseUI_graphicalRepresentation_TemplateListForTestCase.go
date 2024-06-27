@@ -54,7 +54,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 		tempFenixMasterWindow = *sharedCode.FenixMasterWindowPtr
 		tempFenixMasterWindow.Hide()
 
-		var localImportFilesFromGitHubObject importFilesFromGitHub.ImportFilesFromGitHubStruct
+		var localImportFilesFromGitHubObject *importFilesFromGitHub.ImportFilesFromGitHubStruct
+		localImportFilesFromGitHubObject = &importFilesFromGitHub.ImportFilesFromGitHubStruct{}
 
 		localImportFilesFromGitHubObject.InitiateImportFilesFromGitHubWindow(
 			*sharedCode.TemplateRepositoryApiUrlsPtr,
@@ -63,7 +64,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 			&responseChannel,
 			currectTestCase.ImportedTemplateFilesFromGitHub)
 
-		// Wait for respons from Files Selector Window to close
+		// Wait for response from Files Selector Window to close
 		var channelResponseForSelectedFiles importFilesFromGitHub.SharedResponseChannelStruct
 
 		channelResponseForSelectedFiles = <-responseChannel

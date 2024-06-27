@@ -9,7 +9,7 @@ import (
 )
 
 // List files and folders for a certain GitHub url
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) getFileListFromGitHub(apiUrl string) {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) getFileListFromGitHub(apiUrl string) {
 
 	var tempGithubFiles []GitHubFile
 	client := &http.Client{}
@@ -44,7 +44,7 @@ func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) getFileListFromGi
 }
 
 // Load the files content from GitHub
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) loadFileContent(file GitHubFile) ([]byte, error) {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) loadFileContent(file GitHubFile) ([]byte, error) {
 	// Assuming file.URL is the URL to the raw content of the file
 	resp, err := http.Get(file.URL)
 	if err != nil {

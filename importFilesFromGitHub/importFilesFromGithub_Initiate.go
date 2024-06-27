@@ -10,16 +10,19 @@ import (
 	"strings"
 )
 
-func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) InitiateImportFilesFromGitHubWindow(
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) InitiateImportFilesFromGitHubWindow(
 	templateRepositoryApiUrls []*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage,
 	mainWindow fyne.Window,
 	myApp fyne.App,
 	responseChannel *chan SharedResponseChannelStruct,
 	tempSelectedFiles []GitHubFile) {
 
+	if tempSelectedFiles == nil {
+		tempSelectedFiles = []GitHubFile{}
+	}
 	importFilesFromGitHubObject.selectedFiles = tempSelectedFiles
 
-	// Cleare list from Previous Import
+	// Clear list from Previous Import
 	importFilesFromGitHubObject.githubFilesFiltered = nil
 
 	// Disable the main window

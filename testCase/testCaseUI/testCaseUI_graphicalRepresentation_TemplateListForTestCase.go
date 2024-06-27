@@ -54,7 +54,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 		tempFenixMasterWindow = *sharedCode.FenixMasterWindowPtr
 		tempFenixMasterWindow.Hide()
 
-		importFilesFromGitHub.InitiateImportFilesFromGitHubWindow(
+		var localImportFilesFromGitHubObject importFilesFromGitHub.ImportFilesFromGitHubStruct
+
+		localImportFilesFromGitHubObject.InitiateImportFilesFromGitHubWindow(
 			*sharedCode.TemplateRepositoryApiUrlsPtr,
 			*sharedCode.FenixMasterWindowPtr,
 			*sharedCode.FenixAppPtr,

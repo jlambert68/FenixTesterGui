@@ -8,30 +8,30 @@ import (
 )
 
 // Generate the Button that moves upwards in the folder structure in GitHub
-func generateMoveUpInFolderStructureButton() {
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) generateMoveUpInFolderStructureButton() {
 
-	moveUpInFolderStructureButton = widget.NewButtonWithIcon("", theme.NavigateBackIcon(), func() {
+	importFilesFromGitHubObject.moveUpInFolderStructureButton = widget.NewButtonWithIcon("", theme.NavigateBackIcon(), func() {
 		// Handle the button click - go back in your navigation, for instance
 
-		if strings.Split(currentApiUrl, "?")[0] == rootApiUrl {
+		if strings.Split(importFilesFromGitHubObject.currentApiUrl, "?")[0] == importFilesFromGitHubObject.rootApiUrl {
 			return
 		}
 
-		newPath, err := moveUpInPath(currentApiUrl)
+		newPath, err := importFilesFromGitHubObject.moveUpInPath(importFilesFromGitHubObject.currentApiUrl)
 		if err == nil || len(newPath) > 0 {
-			currentApiUrl = newPath
+			importFilesFromGitHubObject.currentApiUrl = newPath
 
-			currentPathShowedinGUI.Set(strings.Split(currentApiUrl, "?")[0])
-			getFileListFromGitHub(currentApiUrl)
-			filterFileListFromGitHub()
-			filteredFileList.Refresh() // Refresh the list to update it with the new contents
+			importFilesFromGitHubObject.currentPathShowedinGUI.Set(strings.Split(importFilesFromGitHubObject.currentApiUrl, "?")[0])
+			importFilesFromGitHubObject.getFileListFromGitHub(importFilesFromGitHubObject.currentApiUrl)
+			importFilesFromGitHubObject.filterFileListFromGitHub()
+			importFilesFromGitHubObject.filteredFileList.Refresh() // Refresh the list to update it with the new contents
 
 		}
 	})
 }
 
 // Move one step in the folder structure
-func moveUpInPath(currentPath string) (string, error) {
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) moveUpInPath(currentPath string) (string, error) {
 	// Trim any trailing slashes
 	trimmedPath := strings.TrimRight(currentPath, "/")
 

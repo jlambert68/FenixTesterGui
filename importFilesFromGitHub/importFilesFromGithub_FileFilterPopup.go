@@ -11,7 +11,7 @@ type checklistItem struct {
 	Checked bool
 }
 
-func generateFileFilterPopup(parentWindow fyne.Window) {
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) generateFileFilterPopup(parentWindow fyne.Window) {
 
 	var checkBoxitems = []checklistItem{
 		{"*.go", false},            // Not prechecked
@@ -32,22 +32,22 @@ func generateFileFilterPopup(parentWindow fyne.Window) {
 		checkbox := widget.NewCheck(checkBoxitem.Label, func(checked bool) {
 			selectedOptions[checkBoxitem.Label] = checked
 			if checked == true {
-				fileRegExFilterMap[checkBoxitem.Label] = checkBoxitem.Label
+				importFilesFromGitHubObject.fileRegExFilterMap[checkBoxitem.Label] = checkBoxitem.Label
 			} else {
-				delete(fileRegExFilterMap, checkBoxitem.Label)
+				delete(importFilesFromGitHubObject.fileRegExFilterMap, checkBoxitem.Label)
 			}
-			filterFileListFromGitHub()
-			filteredFileList.Refresh()
+			importFilesFromGitHubObject.filterFileListFromGitHub()
+			importFilesFromGitHubObject.filteredFileList.Refresh()
 		})
 		if checkBoxitem.Checked == true {
-			fileRegExFilterMap[checkBoxitem.Label] = checkBoxitem.Label
+			importFilesFromGitHubObject.fileRegExFilterMap[checkBoxitem.Label] = checkBoxitem.Label
 			checkbox.SetChecked(true)
 		}
 		checkboxList.Add(checkbox)
 	}
 
 	// Button to show the multi-select dropdown
-	fileFilterPopupButton = widget.NewButton("Select Options", func() {
+	importFilesFromGitHubObject.fileFilterPopupButton = widget.NewButton("Select Options", func() {
 		popUp := widget.NewPopUp(checkboxList, parentWindow.Canvas())
 		popUp.Show()
 		popUp.Resize(fyne.NewSize(200, 200)) // Adjust size as needed

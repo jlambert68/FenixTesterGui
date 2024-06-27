@@ -22,37 +22,40 @@ var fenixMainWindow fyne.Window
 // The window for the File Importer
 var githubFileImporterWindow fyne.Window
 
-// THe root ApiUrl
-var rootApiUrl string
+type ImportFilesFromGitHubStruct struct {
 
-// The current ApiUrl tp fetch files and folders from
-var currentApiUrl string
+	// THe root ApiUrl
+	rootApiUrl string
 
-var fileRegExFilterMap map[string]string
+	// The current ApiUrl tp fetch files and folders from
+	currentApiUrl string
 
-var githubFiles, githubFilesFiltered, selectedFiles []GitHubFile
+	fileRegExFilterMap map[string]string
 
-// Create a string data binding
-var currentPathShowedinGUI binding.String
+	githubFiles, githubFilesFiltered, selectedFiles []GitHubFile
 
-var selectedFilesTable *widget.Table
-var filteredFileList *widget.List
-var fileFilterPopupButton *widget.Button
+	// Create a string data binding
+	currentPathShowedinGUI binding.String
 
-// Create a label with data binding used for showing current GitHub path
-var pathLabel *widget.Label
+	selectedFilesTable    *widget.Table
+	filteredFileList      *widget.List
+	fileFilterPopupButton *widget.Button
 
-// The Button that moves upwards in the folder structure in GitHub
-var moveUpInFolderStructureButton *widget.Button
+	// Create a label with data binding used for showing current GitHub path
+	pathLabel *widget.Label
 
-// The button that imports the selected files from GitHub
-var importSelectedFilesFromGithubButton *widget.Button
+	// The Button that moves upwards in the folder structure in GitHub
+	moveUpInFolderStructureButton *widget.Button
 
-// The button that cancel everything and closes the window
-var cancelButton *widget.Button
+	// The button that imports the selected files from GitHub
+	importSelectedFilesFromGithubButton *widget.Button
 
-// The Select holding the different URLs to chose from
-var githubRepositorySelect *widget.Select
+	// The button that cancel everything and closes the window
+	cancelButton *widget.Button
 
-// The GitHubKey for the selected repository in Select 'githubRepositorySelect'
-var currentGitHubApiKey string
+	// The Select holding the different URLs to chose from
+	githubRepositorySelect *widget.Select
+
+	// The GitHubKey for the selected repository in Select 'githubRepositorySelect'
+	currentGitHubApiKey string
+}

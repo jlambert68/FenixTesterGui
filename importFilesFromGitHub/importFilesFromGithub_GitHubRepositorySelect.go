@@ -9,11 +9,11 @@ import (
 )
 
 // Create Domain-Select-DropDown
-func generateGitHubRepositorySelect(
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) generateGitHubRepositorySelect(
 	githubRepositoryUrls []string,
 	templateRepositoryApiUrls []*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage) {
 
-	githubRepositorySelect = widget.NewSelect(
+	importFilesFromGitHubObject.githubRepositorySelect = widget.NewSelect(
 		githubRepositoryUrls,
 		func(selected string) {
 
@@ -37,15 +37,15 @@ func generateGitHubRepositorySelect(
 
 				selected = "Didn't find the correct URL in list with repository URLs"
 			} else {
-				currentGitHubApiKey = templateRepositoryApiUrls[indexForGithubRepositoryUrl].GetGitHubApiKey()
+				importFilesFromGitHubObject.currentGitHubApiKey = templateRepositoryApiUrls[indexForGithubRepositoryUrl].GetGitHubApiKey()
 			}
 
-			currentPathShowedinGUI.Set(strings.Split(selected, "?")[0])
-			rootApiUrl = selected
-			getFileListFromGitHub(selected)
-			filterFileListFromGitHub()
-			filteredFileList.Refresh() // Refresh the list to update it with the new contents
+			importFilesFromGitHubObject.currentPathShowedinGUI.Set(strings.Split(selected, "?")[0])
+			importFilesFromGitHubObject.rootApiUrl = selected
+			importFilesFromGitHubObject.getFileListFromGitHub(selected)
+			importFilesFromGitHubObject.filterFileListFromGitHub()
+			importFilesFromGitHubObject.filteredFileList.Refresh() // Refresh the list to update it with the new contents
 		})
 
-	githubRepositorySelect.Refresh()
+	importFilesFromGitHubObject.githubRepositorySelect.Refresh()
 }

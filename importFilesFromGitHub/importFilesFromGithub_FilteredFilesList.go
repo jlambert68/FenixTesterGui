@@ -11,15 +11,15 @@ import (
 	"time"
 )
 
-func generateFilteredList(parentWindow fyne.Window) {
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) generateFilteredList(parentWindow fyne.Window) {
 
-	filteredFileList = widget.NewList(
+	importFilesFromGitHubObject.filteredFileList = widget.NewList(
 		func() int {
-			return len(githubFilesFiltered)
+			return len(importFilesFromGitHubObject.githubFilesFiltered)
 		},
 		func() fyne.CanvasObject {
 			// Create a customFilteredLabel for each item.
-			label := newCustomFilteredLabel("Template", func() {
+			label := importFilesFromGitHubObject.newCustomFilteredLabel("Template", func() {
 				// Define double-click action here.
 			})
 			return label
@@ -27,28 +27,28 @@ func generateFilteredList(parentWindow fyne.Window) {
 		func(id widget.ListItemID, obj fyne.CanvasObject) {
 			// Update the label text and double-click action for each item.
 			label := obj.(*customFilteredLabel)
-			label.Text = githubFilesFiltered[id].Name
+			label.Text = importFilesFromGitHubObject.githubFilesFiltered[id].Name
 
-			if githubFilesFiltered[id].Type == "file" {
+			if importFilesFromGitHubObject.githubFilesFiltered[id].Type == "file" {
 				label.TextStyle = fyne.TextStyle{Italic: true}
 			}
 
 			label.onDoubleTap = func() {
 
-				selectedFile := githubFilesFiltered[id]
+				selectedFile := importFilesFromGitHubObject.githubFilesFiltered[id]
 				if selectedFile.Type == "dir" {
 					// The item is a directory; fetch its contents
-					getFileListFromGitHub(selectedFile.URL)
-					filterFileListFromGitHub()
-					filteredFileList.Refresh() // Refresh the list to update it with the new contents
-					currentPathShowedinGUI.Set(strings.Split(selectedFile.URL, "?")[0])
+					importFilesFromGitHubObject.getFileListFromGitHub(selectedFile.URL)
+					importFilesFromGitHubObject.filterFileListFromGitHub()
+					importFilesFromGitHubObject.filteredFileList.Refresh() // Refresh the list to update it with the new contents
+					importFilesFromGitHubObject.currentPathShowedinGUI.Set(strings.Split(selectedFile.URL, "?")[0])
 
-					currentApiUrl = selectedFile.URL
+					importFilesFromGitHubObject.currentApiUrl = selectedFile.URL
 				} else if selectedFile.Type == "file" {
 					// Add file to selectedFiles and refresh the list only when if it doesn't exist
 					var shouldAddFile bool
 					shouldAddFile = true
-					for _, existingSelectedFile := range selectedFiles {
+					for _, existingSelectedFile := range importFilesFromGitHubObject.selectedFiles {
 						if existingSelectedFile.URL == selectedFile.URL {
 							shouldAddFile = false
 							break
@@ -56,15 +56,15 @@ func generateFilteredList(parentWindow fyne.Window) {
 					}
 
 					if shouldAddFile == true {
-						selectedFiles = append(selectedFiles, selectedFile)
-						UpdateSelectedFilesTable()
-						selectedFilesTable.Refresh()
+						importFilesFromGitHubObject.selectedFiles = append(importFilesFromGitHubObject.selectedFiles, selectedFile)
+						importFilesFromGitHubObject.UpdateSelectedFilesTable()
+						importFilesFromGitHubObject.selectedFilesTable.Refresh()
 
 					}
 
 				} else {
 					// Show a dialog when other.
-					dialog.ShowInformation("Info", "Double-clicked on: "+githubFiles[id].Name+" with Type "+githubFiles[id].Type, parentWindow)
+					dialog.ShowInformation("Info", "Double-clicked on: "+importFilesFromGitHubObject.githubFiles[id].Name+" with Type "+importFilesFromGitHubObject.githubFiles[id].Type, parentWindow)
 				}
 			}
 			label.Refresh()
@@ -72,14 +72,14 @@ func generateFilteredList(parentWindow fyne.Window) {
 	)
 }
 
-func filterFileListFromGitHub() {
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) filterFileListFromGitHub() {
 
 	var fullRegExFilter string
 	var tempGithubFilesFiltered []GitHubFile
 
 	var tempRegex string
 
-	for fileFilter, _ := range fileRegExFilterMap {
+	for fileFilter, _ := range importFilesFromGitHubObject.fileRegExFilterMap {
 		if fileFilter == "*.*" {
 			tempRegex = ".*"
 		} else {
@@ -105,13 +105,13 @@ func filterFileListFromGitHub() {
 		return
 	}
 
-	for _, githubFile := range githubFiles {
+	for _, githubFile := range importFilesFromGitHubObject.githubFiles {
 		if combinedRegex.MatchString(githubFile.Name) == true || githubFile.Type == "dir" {
 			tempGithubFilesFiltered = append(tempGithubFilesFiltered, githubFile)
 		}
 	}
 
-	githubFilesFiltered = tempGithubFilesFiltered
+	importFilesFromGitHubObject.githubFilesFiltered = tempGithubFilesFiltered
 }
 
 type customFilteredLabel struct {
@@ -120,7 +120,7 @@ type customFilteredLabel struct {
 	lastTap     time.Time
 }
 
-func newCustomFilteredLabel(text string, onDoubleTap func()) *customFilteredLabel {
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) newCustomFilteredLabel(text string, onDoubleTap func()) *customFilteredLabel {
 	l := &customFilteredLabel{Label: widget.Label{Text: text}, onDoubleTap: onDoubleTap}
 	l.ExtendBaseWidget(l)
 	return l

@@ -10,17 +10,17 @@ import (
 	"strings"
 )
 
-func InitiateImportFilesFromGitHubWindow(
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) InitiateImportFilesFromGitHubWindow(
 	templateRepositoryApiUrls []*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage,
 	mainWindow fyne.Window,
 	myApp fyne.App,
 	responseChannel *chan SharedResponseChannelStruct,
 	tempSelectedFiles []GitHubFile) {
 
-	selectedFiles = tempSelectedFiles
+	importFilesFromGitHubObject.selectedFiles = tempSelectedFiles
 
 	// Cleare list from Previous Import
-	githubFilesFiltered = nil
+	importFilesFromGitHubObject.githubFilesFiltered = nil
 
 	// Disable the main window
 	mainWindow.Hide()
@@ -34,43 +34,43 @@ func InitiateImportFilesFromGitHubWindow(
 	// Create the window for GitHub files
 	githubFileImporterWindow = myApp.NewWindow("Template file importer")
 
-	rootApiUrl = templateRepositoryApiUrls[0].GetRepositoryApiFullUrl()
-	currentApiUrl = rootApiUrl
+	importFilesFromGitHubObject.rootApiUrl = templateRepositoryApiUrls[0].GetRepositoryApiFullUrl()
+	importFilesFromGitHubObject.currentApiUrl = importFilesFromGitHubObject.rootApiUrl
 
-	currentGitHubApiKey = templateRepositoryApiUrls[0].GetGitHubApiKey()
+	importFilesFromGitHubObject.currentGitHubApiKey = templateRepositoryApiUrls[0].GetGitHubApiKey()
 
-	currentPathShowedinGUI = binding.NewString()
-	currentPathShowedinGUI.Set(strings.Split(currentApiUrl, "?")[0]) // Setting initial value
+	importFilesFromGitHubObject.currentPathShowedinGUI = binding.NewString()
+	importFilesFromGitHubObject.currentPathShowedinGUI.Set(strings.Split(importFilesFromGitHubObject.currentApiUrl, "?")[0]) // Setting initial value
 
-	fileRegExFilterMap = make(map[string]string)
+	importFilesFromGitHubObject.fileRegExFilterMap = make(map[string]string)
 
 	// Retrieve and Filter files from GitHub
-	getFileListFromGitHub(currentApiUrl)
-	filterFileListFromGitHub()
+	importFilesFromGitHubObject.getFileListFromGitHub(importFilesFromGitHubObject.currentApiUrl)
+	importFilesFromGitHubObject.filterFileListFromGitHub()
 
 	// Create the UI-list that holds the selected files
-	generateSelectedFilesListTable(githubFileImporterWindow)
+	importFilesFromGitHubObject.generateSelectedFilesListTable(githubFileImporterWindow)
 
 	// Update the table
-	UpdateSelectedFilesTable()
+	importFilesFromGitHubObject.UpdateSelectedFilesTable()
 
 	// Create the UI-list that holds the filtered files and folders from GitHub
-	generateFilteredList(githubFileImporterWindow)
+	importFilesFromGitHubObject.generateFilteredList(githubFileImporterWindow)
 
 	// Generate the File filter PopUp
-	generateFileFilterPopup(githubFileImporterWindow)
+	importFilesFromGitHubObject.generateFileFilterPopup(githubFileImporterWindow)
 
 	// Create a label with data binding used for showing current GitHub path
-	pathLabel = widget.NewLabelWithData(currentPathShowedinGUI)
+	importFilesFromGitHubObject.pathLabel = widget.NewLabelWithData(importFilesFromGitHubObject.currentPathShowedinGUI)
 
 	// Generate the Button that moves upwards in the folder structure in GitHub
-	generateMoveUpInFolderStructureButton()
+	importFilesFromGitHubObject.generateMoveUpInFolderStructureButton()
 
 	// Generate the button that imports the selected files from GitHub
-	generateImportSelectedFilesFromGithubButton(githubFileImporterWindow)
+	importFilesFromGitHubObject.generateImportSelectedFilesFromGithubButton(githubFileImporterWindow)
 
 	// Generate the button that cancel everything and closes the window
-	generateCancelButton(githubFileImporterWindow)
+	importFilesFromGitHubObject.generateCancelButton(githubFileImporterWindow)
 
 	// Generate the list with URLs to use in Select
 	var urlInSelect []string
@@ -79,32 +79,32 @@ func InitiateImportFilesFromGitHubWindow(
 	}
 
 	// Generate the DropDown that holds the list of Repositories
-	generateGitHubRepositorySelect(urlInSelect, templateRepositoryApiUrls)
+	importFilesFromGitHubObject.generateGitHubRepositorySelect(urlInSelect, templateRepositoryApiUrls)
 
 	// Set initial size of the window
 	githubFileImporterWindow.Resize(fyne.NewSize(1200, 1000))
 
 	var pathSelectorContainer *fyne.Container
-	pathSelectorContainer = container.NewBorder(nil, nil, nil, nil, githubRepositorySelect)
+	pathSelectorContainer = container.NewBorder(nil, nil, nil, nil, importFilesFromGitHubObject.githubRepositorySelect)
 
 	// Generate the row that holds the up/back button and the path itself
 	var pathRowContainer *fyne.Container
-	pathRowContainer = container.NewHBox(moveUpInFolderStructureButton, pathLabel)
+	pathRowContainer = container.NewHBox(importFilesFromGitHubObject.moveUpInFolderStructureButton, importFilesFromGitHubObject.pathLabel)
 
 	// Create the top element which has the Filter button and the path.label and the back/upp button
-	myTopLayout := container.NewVBox(fileFilterPopupButton, pathSelectorContainer, pathRowContainer)
+	myTopLayout := container.NewVBox(importFilesFromGitHubObject.fileFilterPopupButton, pathSelectorContainer, pathRowContainer)
 
 	// Create the container that 'selectedFilesTable' will be placed in
 	var selectedFilesTableContainer *fyne.Container
-	selectedFilesTableContainer = container.NewStack(selectedFilesTable)
+	selectedFilesTableContainer = container.NewStack(importFilesFromGitHubObject.selectedFilesTable)
 
 	// Generate the container which has the filtered folders and files to the left and the selected files to the right
-	splitContainer := container.NewHSplit(filteredFileList, selectedFilesTableContainer)
+	splitContainer := container.NewHSplit(importFilesFromGitHubObject.filteredFileList, selectedFilesTableContainer)
 	splitContainer.Offset = 0.5 // Adjust if you want different initial proportions
 
 	// Generate the row that has the import button and the cancel button
 	var importCancelRow *fyne.Container
-	importCancelRow = container.NewHBox(layout.NewSpacer(), importSelectedFilesFromGithubButton, cancelButton)
+	importCancelRow = container.NewHBox(layout.NewSpacer(), importFilesFromGitHubObject.importSelectedFilesFromGithubButton, importFilesFromGitHubObject.cancelButton)
 
 	// Create the full content that should be showed in the window
 	content := container.NewBorder(myTopLayout, importCancelRow, nil, nil, splitContainer)
@@ -116,7 +116,7 @@ func InitiateImportFilesFromGitHubWindow(
 	githubFileImporterWindow.SetOnClosed(func() {
 		*sharedResponseChannel <- SharedResponseChannelStruct{
 			SharedResponse:   false,
-			SelectedFilesPtr: &selectedFiles,
+			SelectedFilesPtr: &importFilesFromGitHubObject.selectedFiles,
 		}
 		fenixMainWindow.Show()
 	})

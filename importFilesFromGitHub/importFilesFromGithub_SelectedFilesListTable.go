@@ -15,7 +15,7 @@ type clickableLabel struct {
 	isClickable bool
 }
 
-func newClickableLabel(text string, onDoubleTap func(), tempIsClickable bool) *clickableLabel {
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) newClickableLabel(text string, onDoubleTap func(), tempIsClickable bool) *clickableLabel {
 	l := &clickableLabel{
 		widget.Label{Text: text},
 		onDoubleTap,
@@ -47,9 +47,9 @@ func (l *clickableLabel) MouseMoved(*desktop.MouseEvent) {}
 func (l *clickableLabel) MouseOut()                      {}
 
 // Create the UI-list that holds the selected files
-func generateSelectedFilesListTable(parentWindow fyne.Window) {
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) generateSelectedFilesListTable(parentWindow fyne.Window) {
 	// Correctly initialize the selectedFilesTable as a new table
-	selectedFilesTable = widget.NewTable(
+	importFilesFromGitHubObject.selectedFilesTable = widget.NewTable(
 		func() (int, int) { return 0, 2 }, // Start with zero rows, 2 columns
 		func() fyne.CanvasObject {
 			return widget.NewLabel("") // Create cells as labels
@@ -77,32 +77,32 @@ func generateSelectedFilesListTable(parentWindow fyne.Window) {
 
 }
 
-func UpdateSelectedFilesTable() {
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) UpdateSelectedFilesTable() {
 
-	selectedFilesTable.Length = func() (int, int) {
-		return len(selectedFiles), 2
+	importFilesFromGitHubObject.selectedFilesTable.Length = func() (int, int) {
+		return len(importFilesFromGitHubObject.selectedFiles), 2
 	}
-	selectedFilesTable.CreateCell = func() fyne.CanvasObject {
-		return newClickableLabel("", func() {}, false)
+	importFilesFromGitHubObject.selectedFilesTable.CreateCell = func() fyne.CanvasObject {
+		return importFilesFromGitHubObject.newClickableLabel("", func() {}, false)
 
 	}
-	selectedFilesTable.UpdateCell = func(id widget.TableCellID, cell fyne.CanvasObject) {
+	importFilesFromGitHubObject.selectedFilesTable.UpdateCell = func(id widget.TableCellID, cell fyne.CanvasObject) {
 		switch id.Col {
 		case 0:
 			// For the "Name" column, use the clickable label
 			clickable := cell.(*clickableLabel)
-			clickable.SetText(selectedFiles[id.Row].Name)
+			clickable.SetText(importFilesFromGitHubObject.selectedFiles[id.Row].Name)
 			clickable.isClickable = true
 
 			clickable.onDoubleTap = func() {
 
 				// Remove the file from selectedFiles and refresh the list
-				for fileIndex, file := range selectedFiles {
-					if file.URL == selectedFiles[id.Row].URL {
-						selectedFiles = append(selectedFiles[:fileIndex], selectedFiles[fileIndex+1:]...)
-						selectedFilesTable.Unselect(id)
-						selectedFilesTable.Refresh()
-						UpdateSelectedFilesTable()
+				for fileIndex, file := range importFilesFromGitHubObject.selectedFiles {
+					if file.URL == importFilesFromGitHubObject.selectedFiles[id.Row].URL {
+						importFilesFromGitHubObject.selectedFiles = append(importFilesFromGitHubObject.selectedFiles[:fileIndex], importFilesFromGitHubObject.selectedFiles[fileIndex+1:]...)
+						importFilesFromGitHubObject.selectedFilesTable.Unselect(id)
+						importFilesFromGitHubObject.selectedFilesTable.Refresh()
+						importFilesFromGitHubObject.UpdateSelectedFilesTable()
 						break
 					}
 				}
@@ -113,13 +113,13 @@ func UpdateSelectedFilesTable() {
 			// For the "URL" column, use a regular label
 
 			nonClickable := cell.(*clickableLabel)
-			nonClickable.SetText(selectedFiles[id.Row].URL)
+			nonClickable.SetText(importFilesFromGitHubObject.selectedFiles[id.Row].URL)
 		}
 	}
 
 	maxNameWidth := float32(150) // Start with a minimum width
 	maxUrlWidth := float32(250)  // Start with a minimum width
-	for _, file := range selectedFiles {
+	for _, file := range importFilesFromGitHubObject.selectedFiles {
 		textNameWidth := fyne.MeasureText(file.Name, theme.TextSize(), fyne.TextStyle{}).Width
 		textUrlWidth := fyne.MeasureText(file.URL, theme.TextSize(), fyne.TextStyle{}).Width
 		if textNameWidth > maxNameWidth {
@@ -130,10 +130,10 @@ func UpdateSelectedFilesTable() {
 		}
 	}
 
-	selectedFilesTable.SetColumnWidth(0, maxNameWidth+theme.Padding()*4) // Add padding
-	selectedFilesTable.SetColumnWidth(1, maxUrlWidth+theme.Padding()*4)  // Path column width can be static or calculated similarly
+	importFilesFromGitHubObject.selectedFilesTable.SetColumnWidth(0, maxNameWidth+theme.Padding()*4) // Add padding
+	importFilesFromGitHubObject.selectedFilesTable.SetColumnWidth(1, maxUrlWidth+theme.Padding()*4)  // Path column width can be static or calculated similarly
 
-	selectedFilesTable.Refresh()
+	importFilesFromGitHubObject.selectedFilesTable.Refresh()
 
 }
 
@@ -143,7 +143,7 @@ type customLabel struct {
 	lastTap     time.Time
 }
 
-func newCustomLabel(text string, onDoubleTap func()) *customLabel {
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) newCustomLabel(text string, onDoubleTap func()) *customLabel {
 	l := &customLabel{Label: widget.Label{Text: text}, onDoubleTap: onDoubleTap, lastTap: time.Now()}
 	l.ExtendBaseWidget(l)
 	return l
@@ -173,11 +173,11 @@ type coloredLabelItem struct {
 	color color.Color
 }
 
-func newColoredLabelItem(text string, color color.Color) *coloredLabelItem {
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) newColoredLabelItem(text string, color color.Color) *coloredLabelItem {
 	return &coloredLabelItem{text: text, color: color}
 }
 
-func (item *coloredLabelItem) CreateRenderer() fyne.WidgetRenderer {
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) (item *coloredLabelItem) CreateRenderer() fyne.WidgetRenderer {
 	label := widget.NewLabel(item.text)
 	label.color = item.color
 	label.Refresh()

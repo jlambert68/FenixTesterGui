@@ -9,7 +9,7 @@ import (
 )
 
 // List files and folders for a certain GitHub url
-func getFileListFromGitHub(apiUrl string) {
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) getFileListFromGitHub(apiUrl string) {
 
 	var tempGithubFiles []GitHubFile
 	client := &http.Client{}
@@ -19,7 +19,7 @@ func getFileListFromGitHub(apiUrl string) {
 	}
 
 	// Add the API token in the request header
-	apiToken := currentGitHubApiKey // Replace with your actual API token
+	apiToken := importFilesFromGitHubObject.currentGitHubApiKey // Replace with your actual API token
 	req.Header.Add("Authorization", "token "+apiToken)
 
 	resp, err := client.Do(req)
@@ -40,11 +40,11 @@ func getFileListFromGitHub(apiUrl string) {
 		log.Fatalf("Error unmarshalling JSON: %s", err.Error())
 	}
 
-	githubFiles = tempGithubFiles
+	importFilesFromGitHubObject.githubFiles = tempGithubFiles
 }
 
 // Load the files content from GitHub
-func loadFileContent(file GitHubFile) ([]byte, error) {
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) loadFileContent(file GitHubFile) ([]byte, error) {
 	// Assuming file.URL is the URL to the raw content of the file
 	resp, err := http.Get(file.URL)
 	if err != nil {

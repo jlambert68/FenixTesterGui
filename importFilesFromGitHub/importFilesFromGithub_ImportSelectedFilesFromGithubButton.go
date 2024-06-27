@@ -10,24 +10,24 @@ import (
 )
 
 // Generate the button that imports the selected files from Github
-func generateImportSelectedFilesFromGithubButton(parentWindow fyne.Window) {
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) generateImportSelectedFilesFromGithubButton(parentWindow fyne.Window) {
 
-	importSelectedFilesFromGithubButton = widget.NewButton("Import Files", func() {
-		for fileIndex, file := range selectedFiles {
-			content, err := loadFileContent(file)
+	importFilesFromGitHubObject.importSelectedFilesFromGithubButton = widget.NewButton("Import Files", func() {
+		for fileIndex, file := range importFilesFromGitHubObject.selectedFiles {
+			content, err := importFilesFromGitHubObject.loadFileContent(file)
 			if err != nil {
 				dialog.ShowError(err, parentWindow)
 				continue
 			}
 			// Do something with the content, e.g., display it, process it, etc.
-			selectedFiles[fileIndex].Content = content
+			importFilesFromGitHubObject.selectedFiles[fileIndex].Content = content
 
-			extractedContent, err := extractContentFromJson(string(content))
+			extractedContent, err := importFilesFromGitHubObject.extractContentFromJson(string(content))
 			if err != nil {
 				log.Fatalf("Error parsing JSON: %s", err)
 			}
 
-			contentAsString, err := decodeBase64Content(string(extractedContent))
+			contentAsString, err := importFilesFromGitHubObject.decodeBase64Content(string(extractedContent))
 			if err != nil {
 				log.Fatalf("Failed to decode content: %s", err)
 			}
@@ -35,7 +35,7 @@ func generateImportSelectedFilesFromGithubButton(parentWindow fyne.Window) {
 			//fmt.Println(contentAsString)
 
 			// Save the file content
-			selectedFiles[fileIndex].FileContentAsString = contentAsString
+			importFilesFromGitHubObject.selectedFiles[fileIndex].FileContentAsString = contentAsString
 		}
 
 		fenixMainWindow.Show()
@@ -44,7 +44,7 @@ func generateImportSelectedFilesFromGithubButton(parentWindow fyne.Window) {
 }
 
 // Extra the file content from the json
-func extractContentFromJson(jsonData string) (string, error) {
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) extractContentFromJson(jsonData string) (string, error) {
 	var fileDetail GitHubFileDetail
 	err := json.Unmarshal([]byte(jsonData), &fileDetail)
 	if err != nil {
@@ -55,7 +55,7 @@ func extractContentFromJson(jsonData string) (string, error) {
 }
 
 // Decode the file content from base64 to string
-func decodeBase64Content(encodedContent string) (string, error) {
+func (importFilesFromGitHubObject ImportFilesFromGitHubStruct) decodeBase64Content(encodedContent string) (string, error) {
 	decodedBytes, err := base64.StdEncoding.DecodeString(encodedContent)
 	if err != nil {
 		return "", err

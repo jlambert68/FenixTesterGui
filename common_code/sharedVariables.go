@@ -1,6 +1,10 @@
 package sharedCode
 
-import "github.com/sirupsen/logrus"
+import (
+	"fyne.io/fyne/v2"
+	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	"github.com/sirupsen/logrus"
+)
 
 // CommandChannel Channel used for triggering command to CommandEngine
 
@@ -82,3 +86,12 @@ const TestCaseTabNameVisibleLength = 50
 
 // The number of characters that will be extracted from a UUID when shorting it to be used in UI
 const numberOfCharactersFromUuid = 8
+
+// Variable holding pointers to the App and the main window
+var (
+	FenixAppPtr          *fyne.App
+	FenixMasterWindowPtr *fyne.Window
+)
+
+// Variable holding pointer to main object that keeps a list of all Repository-link data
+var TemplateRepositoryApiUrlsPtr *[]*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage

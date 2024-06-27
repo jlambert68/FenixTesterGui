@@ -43,7 +43,7 @@ func (uiServer *UIServerStruct) makeCommandStackUI() {
 	commandStackListUI.OnSelected = func(id widget.ListItemID) {
 		commandStackListUI.Unselect(id)
 		d, _ := bindedCommandListData.GetValue(id)
-		w := uiServer.fyneApp.NewWindow("Edit Data")
+		w := uiServer.fenixApp.NewWindow("Edit Data")
 
 		itemName := widget.NewEntry()
 		itemName.Text = d
@@ -80,7 +80,7 @@ func (uiServer *UIServerStruct) makeCommandStackUI() {
 	}
 	/*
 		add := widget.NewButton("Add", func() {
-			w := myTestCase.fyneApp.NewWindow("Add Data")
+			w := myTestCase.fenixApp.NewWindow("Add Data")
 
 			itemName := widget.NewEntry()
 

@@ -1,6 +1,7 @@
 package gui
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
@@ -451,6 +452,9 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeTem
 
 	// Store the list with TemplateRepositoryApiUrls
 	availableBuildingBlocksModel.TemplateRepositoryApiUrls = templateRepositoryApiUrlsToBeStored
+
+	// Store a pointer to 'TemplateRepositoryApiUrls'
+	sharedCode.TemplateRepositoryApiUrlsPtr = &availableBuildingBlocksModel.TemplateRepositoryApiUrls
 
 	// Store the TemplateRepositoryApiUrls-list in the TestCaseModel
 	testCaseModeReference.TemplateRepositoryApiUrlMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.

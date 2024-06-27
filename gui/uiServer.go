@@ -43,7 +43,7 @@ type testCaseUIStruct struct {
 	tree         *widget.Label // *widget.Tree
 	testcase     *widget.Label
 	commandStack *widget.List
-	fyneApp      fyne.App
+	fenixApp      fyne.App
 	logger       *logrus.Logger
 }
 
@@ -57,7 +57,8 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 
 	uiServer := &UIServerStruct{
 		logger:                             nil,
-		fyneApp:                            nil,
+		fenixApp:                           nil,
+		fenixMasterWindow:                  nil,
 		tree:                               nil,
 		content:                            nil,
 		fenixGuiBuilderServerAddressToDial: "",
@@ -156,11 +157,11 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	uiServer.AvailableBuildingBlocksModel.grpcOut.SetLogger(uiServer.logger)
 	uiServer.AvailableBuildingBlocksModel.grpcOut.SetDialAddressString(uiServer.fenixGuiBuilderServerAddressToDial)
 
-	uiServer.fyneApp = app.NewWithID("se.fenix.testcasebuilder")
-	//fyneApp.Settings().SetTheme(&myTheme{})
-	fyneMasterWindow := uiServer.fyneApp.NewWindow("Fenix TestCase Builder")
-	fyneMasterWindow.SetMaster()
-	fyneMasterWindow.CenterOnScreen()
+	uiServer.fenixApp = app.NewWithID("se.fenix.testcasebuilder")
+	//fenixApp.Settings().SetTheme(&myTheme{})
+	uiServer.fenixMasterWindow = uiServer.fenixApp.NewWindow("Fenix TestCase Builder")
+	uiServer.fenixMasterWindow.SetMaster()
+	uiServer.fenixMasterWindow.CenterOnScreen()
 
 	/*
 		var w fyne.Window
@@ -183,7 +184,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	splashWindowProlongedVisibleChannel = make(chan time.Duration)
 	createSplashWindow(&splashWindow, &splashWindowProlongedVisibleChannel)
 
-	uiServer.commandAndRuleEngine.MasterFenixWindow = &fyneMasterWindow
+	uiServer.commandAndRuleEngine.MasterFenixWindow = &uiServer.fenixMasterWindow
 
 	// Get Available Building BLocks form GUI-server
 	uiServer.AvailableBuildingBlocksModel.loadAvailableBuildingBlocksFromServer(&uiServer.testCasesModel)
@@ -238,16 +239,16 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	uiServer.makeTreeUI()
 	tree.OpenAllBranches()
 
-	// Initiate the commandStack which describes how fyneApp TestCase is constructed
+	// Initiate the commandStack which describes how fenixApp TestCase is constructed
 	uiServer.makeCommandStackUI()
 
-	// Create fyneApp window for the Command Stack
+	// Create fenixApp window for the Command Stack
 	//TODO Remove StackWindow
-	//commandStackWindow := uiServer.fyneApp.NewWindow("Command Stack")
+	//commandStackWindow := uiServer.fenixApp.NewWindow("Command Stack")
 	//commandStackWindow.SetContent(commandStackListUI)
 	//commandStackWindow.Show()
 
-	//list := &notelist{pref: fyneApp.Preferences()}
+	//list := &notelist{pref: fenixApp.Preferences()}
 	//list.load()
 	//builderUI := &testCaseUIStruct{notes: list}
 	/*
@@ -260,7 +261,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	*/
 
-	myCanvas := fyneMasterWindow.Canvas()
+	myCanvas := uiServer.fenixMasterWindow.Canvas()
 
 	//blue := color.NRGBA{R: 0, G: 0, B: 180, A: 255}
 	//rect := canvas.NewRectangle(blue)
@@ -273,7 +274,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	mySliderDataAsString := binding.NewString()
 
-	uiServer.fyneApp.Settings().Scale()
+	uiServer.fenixApp.Settings().Scale()
 	scaleEnvKey := "FYNE_SCALE"
 	envVal := os.Getenv(scaleEnvKey)
 	fmt.Println(envVal)
@@ -329,11 +330,11 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	sizeSlider.OnChanged = func(f float64) {
 
 		err := os.Setenv(scaleEnvKey, "1.5")
-		fyneMasterWindow.Hide()
-		fyneMasterWindow.Show()
+		uiServer.fenixMasterWindow.Hide()
+		uiServer.fenixMasterWindow.Show()
 		fmt.Println("err: ", err)
 		//		_ = os.Setenv(scaleEnvKey, s)
-		set := uiServer.fyneApp.Settings().Scale()
+		set := uiServer.fenixApp.Settings().Scale()
 		fmt.Println(set)
 		set = fyne.CurrentApp().Settings().Scale()
 		fmt.Println(set)
@@ -353,14 +354,18 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	//myCanvas.Overlays().Add(myCanvasLabel)
 
-	//fyneMasterWindow.SetContent(myCanvas) //(uiServer.loadUI())
+	//uiServer.fenixMasterWindow.SetContent(myCanvas) //(uiServer.loadUI())
 
-	//fyneMasterWindow.SetContent(widget.NewLabel("Fenix TestCase Builder"))
-	//builderUI.registerKeys(fyneMasterWindow)
+	//uiServer.fenixMasterWindow.SetContent(widget.NewLabel("Fenix TestCase Builder"))
+	//builderUI.registerKeys(uiServer.fenixMasterWindow)
 
-	fyneMasterWindow.Resize(fyne.NewSize(3000, 1500))
+	uiServer.fenixMasterWindow.Resize(fyne.NewSize(3000, 1500))
 
 	//w.Hide()
+
+	// Store pointers to FenixApp and FenixMainWindow
+	sharedCode.FenixAppPtr = &uiServer.fenixApp
+	sharedCode.FenixMasterWindowPtr = &uiServer.fenixMasterWindow
 
 	splashWindow.RequestFocus()
 	splashWindow.Show()
@@ -369,8 +374,8 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 		splashWindow.RequestFocus()
 		splashWindowProlongedVisibleChannel <- time.Second * 6
 	}()
-	fyneMasterWindow.RequestFocus()
-	fyneMasterWindow.ShowAndRun()
+	uiServer.fenixMasterWindow.RequestFocus()
+	uiServer.fenixMasterWindow.ShowAndRun()
 
 }
 

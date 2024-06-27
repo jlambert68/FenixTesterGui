@@ -148,7 +148,7 @@ type AvailableBuildingBlocksModelStruct struct {
 type GlobalUIServerStruct struct {
 	logger                             *logrus.Logger
 	fenixGuiBuilderServerAddressToDial string
-	//fyneApp                            fyne.App
+	//fenixApp                            fyne.App
 	//tree                               *widget.Label
 	//content                            *widget.Entry
 	//grpcOut                            grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct
@@ -162,7 +162,8 @@ var localUIServer UIServerStruct
 
 type UIServerStruct struct {
 	logger                             *logrus.Logger
-	fyneApp                            fyne.App
+	fenixApp                           fyne.App
+	fenixMasterWindow                  fyne.Window
 	tree                               *widget.Label
 	content                            *widget.Entry
 	grpcOut                            grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct

@@ -1,0 +1,44 @@
+[37mDEBU[0m[2023-06-20T15:57:09.847151738+02:00] Starting UI server                            [37mid[0m=a4d2716f-ded1-4062-bffb-fd0c03d69ca3
+[36mINFO[0m[2023-06-20T15:57:09.847214367+02:00] Backend Server tries to start                 [36mId[0m=054bc0ef-93bb-4b75-8630-74e3823f71da
+[36mINFO[0m[2023-06-20T15:57:09.847403731+02:00] Start listening on:                           [36mcommon_config.ApplicationGrpcPort: [0m=6668 [36mId[0m=ca3593b1-466b-4536-be91-5e038de178f4
+[37mDEBU[0m[2023-06-20T15:57:09.847192922+02:00] Incoming 'initiateGuiExecutionServerRequestForMessages'  [37mid[0m=3a20b488-3b03-4be7-b2ea-0cae5c82ffc4
+[36mINFO[0m[2023-06-20T15:57:09.847577768+02:00] Success in listening on port:                 [36mId[0m=ba070b9b-5d57-4c0a-ab4c-a76247a50fd3 [36mcommon_config.ApplicationGrpcPort: [0m=6668
+[36mINFO[0m[2023-06-20T15:57:09.847589942+02:00] Starting Backend gRPC Server                  [36mId[0m=b0ccffb5-4367-464c-a3bc-460cafed16cb
+[36mINFO[0m[2023-06-20T15:57:09.847633274+02:00] 'RegisterFenixTestCaseBuilderServerGrpcServicesServer' for FenixGuiBuilderProxyServer  [36mId[0m=e843ece9-b707-4c60-b1d8-14464305e68f [36mcommon_config.ApplicationGrpcPort: [0m=6668
+[36mINFO[0m[2023-06-20T15:57:09.847918811+02:00] gRPC connection OK to FenixGuiExecutionServer  [36mgrpc_out_GuiExecutionServer.FenixGuiExecutionServerAddressToDial[0m="127.0.0.1:6669" [36mID[0m=b267f74c-9fd8-4b39-8584-73d5224bc6a8
+[31mERRO[0m[2023-06-20T15:57:09.848247329+02:00] Couldn't open streamClient from GuiExecutionServer. Will wait 1 second and try again  [31mID[0m=436d9106-d1f7-4b62-ac97-fa8850ea32d1 [31merr[0m="rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing dial tcp 127.0.0.1:6669: connect: connection refused\""
+[37mDEBU[0m[2023-06-20T15:57:09.848333627+02:00] Running Defer Cancel function                 [37mID[0m=19f720f0-bfe1-4b32-b605-02b094746169
+[37mDEBU[0m[2023-06-20T15:57:09.848345311+02:00] Outgoing 'initiateGuiExecutionServerRequestForMessages'  [37mid[0m=23978650-fd08-4b6d-b6a4-238ac030c207
+[36mINFO[0m[2023-06-20T15:57:10.462640501+02:00] gRPC connection OK to FenixGuiExecutionServer  [36mID[0m=d5cccdd1-a72a-4697-924a-d517816e3083 [36mFenixGuiTestCaseBuilderServerAddressToDial[0m="fenixguitestcasebuilderserver-must-be-logged-in-nwxrrpoxea-lz.a.run.app:443"
+[37mDEBU[0m[2023-06-20T15:57:10.46274148+02:00] Incoming 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=df375b80-449b-4b6f-96ba-1600146f8860
+[37mDEBU[0m[2023-06-20T15:57:10.462913668+02:00] Local webServer Started                       [37mID[0m=689d42de-3cc0-4237-b1e9-3a6c769f65ea
+[37mDEBU[0m[2023-06-20T15:57:10.848615205+02:00] Incoming 'initiateGuiExecutionServerRequestForMessages'  [37mid[0m=3a20b488-3b03-4be7-b2ea-0cae5c82ffc4
+[36mINFO[0m[2023-06-20T15:57:10.849579887+02:00] gRPC connection OK to FenixGuiExecutionServer  [36mID[0m=b267f74c-9fd8-4b39-8584-73d5224bc6a8 [36mgrpc_out_GuiExecutionServer.FenixGuiExecutionServerAddressToDial[0m="127.0.0.1:6669"
+[31mERRO[0m[2023-06-20T15:57:10.850490736+02:00] Couldn't open streamClient from GuiExecutionServer. Will wait 1 second and try again  [31mID[0m=436d9106-d1f7-4b62-ac97-fa8850ea32d1 [31merr[0m="rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing dial tcp 127.0.0.1:6669: connect: connection refused\""
+[37mDEBU[0m[2023-06-20T15:57:10.850622157+02:00] Running Defer Cancel function                 [37mID[0m=19f720f0-bfe1-4b32-b605-02b094746169
+[37mDEBU[0m[2023-06-20T15:57:10.850664961+02:00] Outgoing 'initiateGuiExecutionServerRequestForMessages'  [37mid[0m=23978650-fd08-4b6d-b6a4-238ac030c207
+[37mDEBU[0m[2023-06-20T15:57:11.851564208+02:00] Incoming 'initiateGuiExecutionServerRequestForMessages'  [37mid[0m=3a20b488-3b03-4be7-b2ea-0cae5c82ffc4
+[36mINFO[0m[2023-06-20T15:57:11.851791098+02:00] gRPC connection OK to FenixGuiExecutionServer  [36mID[0m=b267f74c-9fd8-4b39-8584-73d5224bc6a8 [36mgrpc_out_GuiExecutionServer.FenixGuiExecutionServerAddressToDial[0m="127.0.0.1:6669"
+[31mERRO[0m[2023-06-20T15:57:11.851998231+02:00] Couldn't open streamClient from GuiExecutionServer. Will wait 1 second and try again  [31mID[0m=436d9106-d1f7-4b62-ac97-fa8850ea32d1 [31merr[0m="rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing dial tcp 127.0.0.1:6669: connect: connection refused\""
+[37mDEBU[0m[2023-06-20T15:57:11.852031839+02:00] Running Defer Cancel function                 [37mID[0m=19f720f0-bfe1-4b32-b605-02b094746169
+[37mDEBU[0m[2023-06-20T15:57:11.85204317+02:00] Outgoing 'initiateGuiExecutionServerRequestForMessages'  [37mid[0m=23978650-fd08-4b6d-b6a4-238ac030c207
+[37mDEBU[0m[2023-06-20T15:57:12.852750563+02:00] Incoming 'initiateGuiExecutionServerRequestForMessages'  [37mid[0m=3a20b488-3b03-4be7-b2ea-0cae5c82ffc4
+[36mINFO[0m[2023-06-20T15:57:12.85341896+02:00] gRPC connection OK to FenixGuiExecutionServer  [36mID[0m=b267f74c-9fd8-4b39-8584-73d5224bc6a8 [36mgrpc_out_GuiExecutionServer.FenixGuiExecutionServerAddressToDial[0m="127.0.0.1:6669"
+[31mERRO[0m[2023-06-20T15:57:12.854323699+02:00] Couldn't open streamClient from GuiExecutionServer. Will wait 1 second and try again  [31mID[0m=436d9106-d1f7-4b62-ac97-fa8850ea32d1 [31merr[0m="rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing dial tcp 127.0.0.1:6669: connect: connection refused\""
+[37mDEBU[0m[2023-06-20T15:57:12.854398606+02:00] Running Defer Cancel function                 [37mID[0m=19f720f0-bfe1-4b32-b605-02b094746169
+[37mDEBU[0m[2023-06-20T15:57:12.854426977+02:00] Outgoing 'initiateGuiExecutionServerRequestForMessages'  [37mid[0m=23978650-fd08-4b6d-b6a4-238ac030c207
+[37mDEBU[0m[2023-06-20T15:57:13.854706783+02:00] Incoming 'initiateGuiExecutionServerRequestForMessages'  [37mid[0m=3a20b488-3b03-4be7-b2ea-0cae5c82ffc4
+[36mINFO[0m[2023-06-20T15:57:13.855520131+02:00] gRPC connection OK to FenixGuiExecutionServer  [36mID[0m=b267f74c-9fd8-4b39-8584-73d5224bc6a8 [36mgrpc_out_GuiExecutionServer.FenixGuiExecutionServerAddressToDial[0m="127.0.0.1:6669"
+[31mERRO[0m[2023-06-20T15:57:13.856474391+02:00] Couldn't open streamClient from GuiExecutionServer. Will wait 1 second and try again  [31mID[0m=436d9106-d1f7-4b62-ac97-fa8850ea32d1 [31merr[0m="rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing dial tcp 127.0.0.1:6669: connect: connection refused\""
+[37mDEBU[0m[2023-06-20T15:57:13.856584376+02:00] Running Defer Cancel function                 [37mID[0m=19f720f0-bfe1-4b32-b605-02b094746169
+[37mDEBU[0m[2023-06-20T15:57:13.856628008+02:00] Outgoing 'initiateGuiExecutionServerRequestForMessages'  [37mid[0m=23978650-fd08-4b6d-b6a4-238ac030c207
+[37mDEBU[0m[2023-06-20T15:57:14.692412185+02:00] Trying to stop local web server               [37mID[0m=1f4e0354-2a09-4a1d-be61-67ecda781142
+[37mDEBU[0m[2023-06-20T15:57:14.826718965+02:00] Outgoing 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=623fffe0-ff28-42ef-b8ea-8b2875edc32f
+[37mDEBU[0m[2023-06-20T15:57:14.857400678+02:00] Incoming 'initiateGuiExecutionServerRequestForMessages'  [37mid[0m=3a20b488-3b03-4be7-b2ea-0cae5c82ffc4
+[36mINFO[0m[2023-06-20T15:57:14.85761715+02:00] gRPC connection OK to FenixGuiExecutionServer  [36mID[0m=b267f74c-9fd8-4b39-8584-73d5224bc6a8 [36mgrpc_out_GuiExecutionServer.FenixGuiExecutionServerAddressToDial[0m="127.0.0.1:6669"
+[31mERRO[0m[2023-06-20T15:57:14.857867205+02:00] Couldn't open streamClient from GuiExecutionServer. Will wait 1 second and try again  [31mID[0m=436d9106-d1f7-4b62-ac97-fa8850ea32d1 [31merr[0m="rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing dial tcp 127.0.0.1:6669: connect: connection refused\""
+[37mDEBU[0m[2023-06-20T15:57:14.857892862+02:00] Running Defer Cancel function                 [37mID[0m=19f720f0-bfe1-4b32-b605-02b094746169
+[37mDEBU[0m[2023-06-20T15:57:14.857901124+02:00] Outgoing 'initiateGuiExecutionServerRequestForMessages'  [37mid[0m=23978650-fd08-4b6d-b6a4-238ac030c207
+[31mERRO[0m[2023-06-20T15:57:14.901866317+02:00] Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListAllAvailableTestInstructionsAndTestInstructionContainers'  [31mID[0m=30e6f1ee-202a-47bf-a2c4-5066d0f8cf75 [31mMessage from FenixTestGuiBuilderServer[0m="Got some Error when retrieving ImmatureTestInstructions from database"
+[31mERRO[0m[2023-06-20T15:57:14.901983289+02:00] Running Defer Cancel function                 [31mID[0m=797c00e1-510d-4cbe-a48b-dc63828ecd7e
+[31mFATA[0m[2023-06-20T15:57:14.902030569+02:00] Code should not come here if AckNack == false  [31mid[0m=1c1d6645-4679-4140-8363-c3ed4c105540

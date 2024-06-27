@@ -1,0 +1,53 @@
+[37mDEBU[0m[2023-06-27T13:28:35.114928971+02:00] Starting UI server                            [37mid[0m=a4d2716f-ded1-4062-bffb-fd0c03d69ca3
+[36mINFO[0m[2023-06-27T13:28:35.114854794+02:00] Backend Server tries to start                 [36mId[0m=054bc0ef-93bb-4b75-8630-74e3823f71da
+[36mINFO[0m[2023-06-27T13:28:35.115587396+02:00] Start listening on:                           [36mcommon_config.ApplicationGrpcPort: [0m=6668 [36mId[0m=ca3593b1-466b-4536-be91-5e038de178f4
+[37mDEBU[0m[2023-06-27T13:28:35.114858104+02:00] Incoming 'initiateGuiExecutionServerRequestForMessages'  [37mid[0m=3a20b488-3b03-4be7-b2ea-0cae5c82ffc4
+[36mINFO[0m[2023-06-27T13:28:35.115820135+02:00] Success in listening on port:                 [36mcommon_config.ApplicationGrpcPort: [0m=6668 [36mId[0m=ba070b9b-5d57-4c0a-ab4c-a76247a50fd3
+[36mINFO[0m[2023-06-27T13:28:35.11584299+02:00] Starting Backend gRPC Server                  [36mId[0m=b0ccffb5-4367-464c-a3bc-460cafed16cb
+[36mINFO[0m[2023-06-27T13:28:35.115893136+02:00] 'RegisterFenixTestCaseBuilderServerGrpcServicesServer' for FenixGuiBuilderProxyServer  [36mcommon_config.ApplicationGrpcPort: [0m=6668 [36mId[0m=e843ece9-b707-4c60-b1d8-14464305e68f
+[36mINFO[0m[2023-06-27T13:28:35.25689343+02:00] gRPC connection OK to FenixGuiExecutionServer  [36mID[0m=b267f74c-9fd8-4b39-8584-73d5224bc6a8 [36mgrpc_out_GuiExecutionServer.FenixGuiExecutionServerAddressToDial[0m="fenixguiexecutionserver-must-be-logged-in-nwxrrpoxea-lz.a.run.app:443"
+[37mDEBU[0m[2023-06-27T13:28:35.256949669+02:00] Incoming 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=df375b80-449b-4b6f-96ba-1600146f8860
+[37mDEBU[0m[2023-06-27T13:28:35.257157479+02:00] Local webServer Started                       [37mID[0m=689d42de-3cc0-4237-b1e9-3a6c769f65ea
+[37mDEBU[0m[2023-06-27T13:28:35.699757668+02:00] Incoming - 'SendListAllAvailableTestInstructionsAndTestInstructionContainers'  [37mID[0m=b2289982-1853-419c-8265-5393f3baa6ad
+[36mINFO[0m[2023-06-27T13:28:35.827741471+02:00] gRPC connection OK to FenixGuiExecutionServer  [36mID[0m=d5cccdd1-a72a-4697-924a-d517816e3083 [36mFenixGuiTestCaseBuilderServerAddressToDial[0m="fenixguitestcasebuilderserver-must-be-logged-in-nwxrrpoxea-lz.a.run.app:443"
+[37mDEBU[0m[2023-06-27T13:28:35.827994601+02:00] Incoming 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=df375b80-449b-4b6f-96ba-1600146f8860
+[37mDEBU[0m[2023-06-27T13:28:39.174713857+02:00] Trying to stop local web server               [37mID[0m=1f4e0354-2a09-4a1d-be61-67ecda781142
+[37mDEBU[0m[2023-06-27T13:28:39.729279017+02:00] Outgoing 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=623fffe0-ff28-42ef-b8ea-8b2875edc32f
+[37mDEBU[0m[2023-06-27T13:28:39.730053568+02:00] Outgoing 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=623fffe0-ff28-42ef-b8ea-8b2875edc32f
+[37mDEBU[0m[2023-06-27T13:28:54.899218046+02:00] 'Keep alive' message received from GuiExecutionServer  [37mID[0m=b8c4e3fc-0fe6-439d-9a23-b4954e6d9f2c [37msubscribeToMessagesStreamResponse[0m="ProtoFileVersionUsedByClient:VERSION_0_2  IsKeepAliveMessage:true"
+[31mERRO[0m[2023-06-27T13:29:05.828104396+02:00] Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListAllAvailableTestInstructionsAndTestInstructionContainers'  [31mID[0m=d7235084-33e5-43a2-9fa7-dfb05ec6869e [31merror[0m="rpc error: code = DeadlineExceeded desc = context deadline exceeded"
+[31mERRO[0m[2023-06-27T13:29:05.828214503+02:00] Running Defer Cancel function                 [31mID[0m=797c00e1-510d-4cbe-a48b-dc63828ecd7e
+[37mDEBU[0m[2023-06-27T13:29:05.82824185+02:00] Outgoing - 'SendListAllAvailableTestInstructionsAndTestInstructionContainers'  [37mID[0m=b2289982-1853-419c-8265-5393f3baa6ad
+[36mINFO[0m[2023-06-27T13:29:05.828292331+02:00] Clean up and shut down servers                [36mId[0m=14dc7af0-5e46-4073-b920-8dffee7ca307
+[36mINFO[0m[2023-06-27T13:29:05.828314363+02:00] Gracefully stop for: 'registerFenixUserGuiServer' 
+[36mINFO[0m[2023-06-27T13:29:05.829676556+02:00] Close net.Listing                             [36mcommon_config.ApplicationGrpcPort: [0m=6668
+
+
+-nwxrrpoxea-lz.a.run.app:443"
+[37mDEBU[0m[2023-06-27T13:10:14.033782165+02:00] Incoming 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=df375b80-449b-4b6f-96ba-1600146f8860
+[37mDEBU[0m[2023-06-27T13:10:14.033921644+02:00] Outgoing 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=623fffe0-ff28-42ef-b8ea-8b2875edc32f
+[31mERRO[0m[2023-06-27T13:10:14.090310812+02:00] Running Defer Cancel function                 [31mID[0m=793227a3-fe75-4e69-9634-e16096038bd1
+[36mINFO[0m[2023-06-27T13:10:14.190628346+02:00] gRPC connection OK to FenixGuiExecutionServer  [36mID[0m=d5cccdd1-a72a-4697-924a-d517816e3083 [36mFenixGuiTestCaseBuilderServerAddressToDial[0m="fenixguitestcasebuilderserver-must-be-logged-in-nwxrrpoxea-lz.a.run.app:443"
+[37mDEBU[0m[2023-06-27T13:10:14.190815681+02:00] Incoming 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=df375b80-449b-4b6f-96ba-1600146f8860
+[37mDEBU[0m[2023-06-27T13:10:14.190941719+02:00] Outgoing 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=623fffe0-ff28-42ef-b8ea-8b2875edc32f
+[31mERRO[0m[2023-06-27T13:10:14.263452309+02:00] Running Defer Cancel function                 [31mID[0m=0ae9bacb-de78-48dc-baba-01dbe56349e0
+[36mINFO[0m[2023-06-27T13:10:14.371052039+02:00] gRPC connection OK to FenixGuiExecutionServer  [36mID[0m=556f52bf-630c-44e8-b666-cd7c562bc100 [36mFenixGuiExecutionServerAddressToDial[0m="fenixguiexecutionserver-must-be-logged-in-nwxrrpoxea-lz.a.run.app:443"
+[37mDEBU[0m[2023-06-27T13:10:14.371365505+02:00] Incoming 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=df375b80-449b-4b6f-96ba-1600146f8860
+[37mDEBU[0m[2023-06-27T13:10:14.371470418+02:00] Outgoing 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=623fffe0-ff28-42ef-b8ea-8b2875edc32f
+[31mERRO[0m[2023-06-27T13:10:14.440463808+02:00] Running Defer Cancel function                 [31mID[0m=66c2dcf3-0b51-417b-b402-438a60c7eb86
+[36mINFO[0m[2023-06-27T13:10:14.593584289+02:00] gRPC connection OK to FenixGuiExecutionServer  [36mID[0m=556f52bf-630c-44e8-b666-cd7c562bc100 [36mFenixGuiExecutionServerAddressToDial[0m="fenixguiexecutionserver-must-be-logged-in-nwxrrpoxea-lz.a.run.app:443"
+[37mDEBU[0m[2023-06-27T13:10:14.593762739+02:00] Incoming 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=df375b80-449b-4b6f-96ba-1600146f8860
+[37mDEBU[0m[2023-06-27T13:10:14.593879047+02:00] Outgoing 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=623fffe0-ff28-42ef-b8ea-8b2875edc32f
+[31mERRO[0m[2023-06-27T13:10:14.650747159+02:00] Running Defer Cancel function                 [31mID[0m=66c2dcf3-0b51-417b-b402-438a60c7eb86
+[36mINFO[0m[2023-06-27T13:10:14.786593143+02:00] gRPC connection OK to FenixGuiExecutionServer  [36mID[0m=556f52bf-630c-44e8-b666-cd7c562bc100 [36mFenixGuiExecutionServerAddressToDial[0m="fenixguiexecutionserver-must-be-logged-in-nwxrrpoxea-lz.a.run.app:443"
+[37mDEBU[0m[2023-06-27T13:10:14.78666591+02:00] Incoming 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=df375b80-449b-4b6f-96ba-1600146f8860
+[37mDEBU[0m[2023-06-27T13:10:14.786693241+02:00] Outgoing 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=623fffe0-ff28-42ef-b8ea-8b2875edc32f
+[31mERRO[0m[2023-06-27T13:10:14.857775959+02:00] Running Defer Cancel function                 [31mID[0m=742a0ac4-8947-4a65-a944-b62401252184
+[37mDEBU[0m[2023-06-27T13:10:28.732822518+02:00] 'Keep alive' message received from GuiExecutionServer  [37msubscribeToMessagesStreamResponse[0m="ProtoFileVersionUsedByClient:VERSION_0_2  IsKeepAliveMessage:true" [37mID[0m=b8c4e3fc-0fe6-439d-9a23-b4954e6d9f2c
+[36mINFO[0m[2023-06-27T13:10:35.074075259+02:00] gRPC connection OK to FenixGuiExecutionServer  [36mFenixGuiTestCaseBuilderServerAddressToDial[0m="fenixguitestcasebuilderserver-must-be-logged-in-nwxrrpoxea-lz.a.run.app:443" [36mID[0m=d5cccdd1-a72a-4697-924a-d517816e3083
+[37mDEBU[0m[2023-06-27T13:10:35.074138029+02:00] Incoming 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=df375b80-449b-4b6f-96ba-1600146f8860
+[37mDEBU[0m[2023-06-27T13:10:35.074158766+02:00] Outgoing 'GenerateGCPAccessTokenForAuthorizedUser'  [37mid[0m=623fffe0-ff28-42ef-b8ea-8b2875edc32f
+[37mDEBU[0m[2023-06-27T13:10:43.668225666+02:00] 'Keep alive' message received from GuiExecutionServer  [37mID[0m=b8c4e3fc-0fe6-439d-9a23-b4954e6d9f2c [37msubscribeToMessagesStreamResponse[0m="ProtoFileVersionUsedByClient:VERSION_0_2  IsKeepAliveMessage:true"
+[37mDEBU[0m[2023-06-27T13:10:58.9467396+02:00] 'Keep alive' message received from GuiExecutionServer  [37mID[0m=b8c4e3fc-0fe6-439d-9a23-b4954e6d9f2c [37msubscribeToMessagesStreamResponse[0m="ProtoFileVersionUsedByClient:VERSION_0_2  IsKeepAliveMessage:true"
+[31mERRO[0m[2023-06-27T13:11:05.074372425+02:00] Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SaveFullTestCase'  [31merror[0m="rpc error: code = DeadlineExceeded desc = context deadline exceeded" [31mID[0m=dc065973-cbab-4cf9-8091-a0f687cd2d36
+[31mERRO[0m[2023-06-27T13:11:05.07468121+02:00] Running Defer Cancel function                 [31mID[0m=8f935725-745f-4aa9-b647-335cba045b08

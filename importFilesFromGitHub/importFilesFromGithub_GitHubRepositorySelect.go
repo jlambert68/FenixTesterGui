@@ -41,6 +41,7 @@ func generateGitHubRepositorySelect(
 			}
 
 			currentPathShowedinGUI.Set(strings.Split(selected, "?")[0])
+			rootApiUrl = selected
 			getFileListFromGitHub(selected)
 			filterFileListFromGitHub()
 			filteredFileList.Refresh() // Refresh the list to update it with the new contents

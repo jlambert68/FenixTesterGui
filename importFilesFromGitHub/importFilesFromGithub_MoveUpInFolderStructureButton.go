@@ -13,7 +13,7 @@ func generateMoveUpInFolderStructureButton() {
 	moveUpInFolderStructureButton = widget.NewButtonWithIcon("", theme.NavigateBackIcon(), func() {
 		// Handle the button click - go back in your navigation, for instance
 
-		if currentApiUrl == rootApiUrl {
+		if strings.Split(currentApiUrl, "?")[0] == rootApiUrl {
 			return
 		}
 

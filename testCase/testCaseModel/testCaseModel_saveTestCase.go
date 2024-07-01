@@ -43,12 +43,14 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 		gRPCMatureTestInstructions            []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage_MatureTestInstructionMessage
 		gRPCMatureTestInstructionContainers   []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage_MatureTestInstructionContainerMessage
 		gRPCTestCaseExtraInformation          *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExtraInformationMessage
+		gRPCTestCaseTemplateFiles             *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseTemplateFilesMessage
 		finalHash                             string
 	)
 	gRPCMatureTestCaseModelElementMessage,
 		gRPCMatureTestInstructions,
 		gRPCMatureTestInstructionContainers,
 		gRPCTestCaseExtraInformation,
+		gRPCTestCaseTemplateFiles,
 		finalHash, err = testCaseModel.generateTestCaseForGrpcAndHash(testCaseUuid)
 	if err != nil {
 		return err
@@ -106,6 +108,7 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 			MatureTestInstructionContainers: gRPCMatureTestInstructionContainers},
 		MessageHash:              currentTestCase.TestCaseHash,
 		TestCaseExtraInformation: gRPCTestCaseExtraInformation,
+		TestCaseTemplateFiles:    gRPCTestCaseTemplateFiles,
 	}
 
 	// Send using gRPC
@@ -401,12 +404,67 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseExtraInformationForG
 
 }
 
+// Convert the TestCaseTemplateFiles into its gRPC-version
+func (testCaseModel *TestCasesModelsStruct) generateTestCaseTemplateFilesForGrpc(
+	testCaseUuid string) (
+	gRPCTestCaseTemplateFiles *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseTemplateFilesMessage,
+	hashedSlice string,
+	err error) {
+
+	var valuesToBeHashedSlice []string
+
+	// Get current TestCase
+	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+	if existsInMap == false {
+
+		errorId := "e6ceecbe-00e2-42af-9782-eb83af2d03c2"
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map witsh all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return nil, "", err
+	}
+
+	// Loop map with all 'TestCaseTemplateFiles' in the TestCase and add to gPRC-version
+	for _, importedTemplateFileFromGitHub := range currentTestCase.ImportedTemplateFilesFromGitHub {
+
+		// Create the gRPC-version of the 'ImportedTemplateFileFromGitHub'
+		var tempTestCaseTemplateFileMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseTemplateFileMessage
+		tempTestCaseTemplateFileMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseTemplateFileMessage{
+			Name:                importedTemplateFileFromGitHub.Name,
+			URL:                 importedTemplateFileFromGitHub.URL,
+			DownloadURL:         importedTemplateFileFromGitHub.DownloadURL,
+			SHA:                 importedTemplateFileFromGitHub.SHA,
+			Size:                int64(importedTemplateFileFromGitHub.Size),
+			FileContentAsString: importedTemplateFileFromGitHub.FileContentAsString,
+		}
+
+		// Generate Hash for  'importedTemplateFileFromGitHub'
+		tempJson := protojson.Format(tempTestCaseTemplateFileMessage)
+		valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
+
+		// Add to Slice of all gRPC-versions of all 'ImportedTemplateFileFromGitHub'
+		gRPCTestCaseTemplateFiles.TestCaseTemplateFile = append(gRPCTestCaseTemplateFiles.TestCaseTemplateFile, tempTestCaseTemplateFileMessage)
+
+	}
+
+	// Generate Hash of all sub-message-hashes
+	hashedSlice = sharedCode.HashValues(valuesToBeHashedSlice, false)
+
+	// Add hash to gRPC-versions of 'TestCaseTemplateFiles'
+	gRPCTestCaseTemplateFiles.HashForAllFiles = hashedSlice
+
+	return gRPCTestCaseTemplateFiles, hashedSlice, err
+
+}
+
 // Pack different parts of the TestCase into gRPC-version into one message together with Hash of TestCase
 func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testCaseUuid string) (
 	gRPCMatureTestCaseModelElementMessage []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage,
 	gRPCMatureTestInstructions []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage_MatureTestInstructionMessage,
 	gRPCMatureTestInstructionContainers []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage_MatureTestInstructionContainerMessage,
 	gRPCTestCaseExtraInformation *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExtraInformationMessage,
+	gRPCTestCaseTemplateFiles *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseTemplateFilesMessage,
 	finalHash string,
 	err error) {
 
@@ -419,7 +477,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 
 		fmt.Println(err) // TODO Send on Error-channel
 
-		return nil, nil, nil, nil, "", err
+		return nil, nil, nil, nil, nil, "", err
 	}
 
 	// Initiate 'subHashPartsSlice', used for holding all Hashes and content, to be logged. Used for debugging when
@@ -438,7 +496,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCMatureTestCaseModelElementMessage, hashedMatureTestCaseModelElements, valuesToBeHashedSlice, err =
 		testCaseModel.generateTestCaseModelElementsForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, nil, "", err
+		return nil, nil, nil, nil, nil, "", err
 	}
 
 	// Add hash and values to slice
@@ -455,7 +513,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCMatureTestInstructions, hashedgRPCMatureTestInstructions, valuesToBeHashedSlice, err =
 		testCaseModel.generateMatureTestInstructionsForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, nil, "", err
+		return nil, nil, nil, nil, nil, "", err
 	}
 	// Add hash and values to slice
 	var tempGrpcMatureTestInstructions subHashPartsMapValueType
@@ -471,7 +529,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCMatureTestInstructionContainers, hashedgRPCMatureTestInstructionContainers, valuesToBeHashedSlice, err =
 		testCaseModel.generateMatureTestInstructionContainersForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, nil, "", err
+		return nil, nil, nil, nil, nil, "", err
 	}
 	// Add hash and values to slice
 	var tempGrpcMatureTestInstructionContainers subHashPartsMapValueType
@@ -487,7 +545,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCTestCaseExtraInformation, hashedgRPCTestCaseExtraInformation, valuesToBeHashedSlice, err =
 		testCaseModel.generateTestCaseExtraInformationForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, nil, "", err
+		return nil, nil, nil, nil, nil, "", err
 	}
 	// Add hash and values to slice
 	var tempGrpcTestCaseExtraInformation subHashPartsMapValueType
@@ -497,6 +555,22 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 		contentAsStringSlice: valuesToBeHashedSlice,
 	}
 	subHashPartsSlice = append(subHashPartsSlice, tempGrpcTestCaseExtraInformation)
+
+	// TestCaseTemplateFiles
+	var hashedgRPCTestCaseTemplateFiles string
+	gRPCTestCaseTemplateFiles, hashedgRPCTestCaseTemplateFiles, err =
+		testCaseModel.generateTestCaseTemplateFilesForGrpc(testCaseUuid)
+	if err != nil {
+		return nil, nil, nil, nil, nil, "", err
+	}
+	// Add hash and values to slice
+	var tempGrpcTestCaseTemplateFiles subHashPartsMapValueType
+	tempGrpcTestCaseTemplateFiles = subHashPartsMapValueType{
+		nameOfContent:        "gRPCTestCaseTemplateFiles",
+		hash:                 hashedgRPCTestCaseTemplateFiles,
+		contentAsStringSlice: []string{},
+	}
+	subHashPartsSlice = append(subHashPartsSlice, tempGrpcTestCaseTemplateFiles)
 
 	var valuesToReHash []string
 
@@ -548,6 +622,8 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 
 	valuesToReHash = append(valuesToReHash, hashedgRPCTestCaseExtraInformation)
 
+	valuesToReHash = append(valuesToReHash, hashedgRPCTestCaseTemplateFiles)
+
 	finalHash = sharedCode.HashValues(valuesToReHash, false)
 	// Add hash and values to slice
 	var tempFinalHash subHashPartsMapValueType
@@ -569,6 +645,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 		gRPCMatureTestInstructions,
 		gRPCMatureTestInstructionContainers,
 		gRPCTestCaseExtraInformation,
+		gRPCTestCaseTemplateFiles,
 		finalHash,
 		err
 

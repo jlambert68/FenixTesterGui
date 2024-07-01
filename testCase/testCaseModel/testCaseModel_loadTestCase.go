@@ -1,6 +1,7 @@
 package testCaseModel
 
 import (
+	"FenixTesterGui/importFilesFromGitHub"
 	"errors"
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
@@ -47,13 +48,15 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 			CreatedAndUpdatedInformation: *detailedTestCaseResponse.DetailedTestCase.
 				TestCaseBasicInformation.GetCreatedAndUpdatedInformation(),
 		},
-		testCaseModelAdaptedForUiTree:     nil,
-		CurrentSelectedTestCaseElement:    CurrentSelectedTestCaseElementStruct{},
-		MatureTestInstructionMap:          nil, // Created below
-		MatureTestInstructionContainerMap: nil, // Created below
-		AttributesList:                    nil, // Initialized below
-		ThisIsANewTestCase:                false,
-		TestCaseHash:                      detailedTestCaseResponse.DetailedTestCase.MessageHash,
+		testCaseModelAdaptedForUiTree:            nil,
+		CurrentSelectedTestCaseElement:           CurrentSelectedTestCaseElementStruct{},
+		MatureTestInstructionMap:                 nil, // Created below
+		MatureTestInstructionContainerMap:        nil, // Created below
+		AttributesList:                           nil, // Initialized below
+		ThisIsANewTestCase:                       false,
+		TestCaseHash:                             detailedTestCaseResponse.DetailedTestCase.MessageHash,
+		TestCaseHashWhenTestCaseWasSavedOrLoaded: "",
+		ImportedTemplateFilesFromGitHub:          nil,
 	}
 
 	// Initialize AttributesList
@@ -182,6 +185,25 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 			append(tempTestCaseModel.TextualTestCaseRepresentationExtendedStack, tempTextualTestCaseRepresentationExtendedInstance)
 	}
 
+	// Generate ImportedTemplateFilesFromGitHub
+	for _, tempTestCaseTemplateFile := range detailedTestCaseResponse.GetDetailedTestCase().TestCaseTemplateFiles.GetTestCaseTemplateFile() {
+
+		var githubFile importFilesFromGitHub.GitHubFile
+		githubFile = importFilesFromGitHub.GitHubFile{
+			Name:                tempTestCaseTemplateFile.Name,
+			Type:                "",
+			URL:                 tempTestCaseTemplateFile.URL,
+			DownloadURL:         tempTestCaseTemplateFile.DownloadURL,
+			Content:             nil,
+			SHA:                 tempTestCaseTemplateFile.SHA,
+			Size:                int(tempTestCaseTemplateFile.Size),
+			FileContentAsString: tempTestCaseTemplateFile.FileContentAsString,
+		}
+
+		tempTestCaseModel.ImportedTemplateFilesFromGitHub = append(
+			tempTestCaseModel.ImportedTemplateFilesFromGitHub, githubFile)
+	}
+
 	// Update The Hash for the TestCase
 	tempTestCaseModel.TestCaseHashWhenTestCaseWasSavedOrLoaded = detailedTestCaseResponse.DetailedTestCase.MessageHash
 
@@ -198,7 +220,7 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 
 	// Verify that calculated Hash is the same as the Stored Hash from the Database
 	var generatedHash string
-	_, _, _, _, generatedHash, err = testCaseModel.generateTestCaseForGrpcAndHash(tempTestCaseUuid)
+	_, _, _, _, _, generatedHash, err = testCaseModel.generateTestCaseForGrpcAndHash(tempTestCaseUuid)
 	if err != nil {
 
 		// Remove temporary stored TestCase

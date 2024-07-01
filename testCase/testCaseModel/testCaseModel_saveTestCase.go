@@ -412,6 +412,10 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseTemplateFilesForGrpc
 	err error) {
 
 	var valuesToBeHashedSlice []string
+	gRPCTestCaseTemplateFiles = &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseTemplateFilesMessage{
+		TestCaseTemplateFile: nil,
+		HashForAllFiles:      "",
+	}
 
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
@@ -449,7 +453,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseTemplateFilesForGrpc
 	}
 
 	// Generate Hash of all sub-message-hashes
-	hashedSlice = sharedCode.HashValues(valuesToBeHashedSlice, false)
+	hashedSlice = sharedCode.HashValues(valuesToBeHashedSlice, true)
 
 	// Add hash to gRPC-versions of 'TestCaseTemplateFiles'
 	gRPCTestCaseTemplateFiles.HashForAllFiles = hashedSlice

@@ -26,7 +26,7 @@ func (testCaseModel *TestCasesModelsStruct) VerifyTestCaseHashTowardsDatabase(te
 
 	// Create TestCase-hash
 	var testcaseHash string
-	_, _, _, _, testcaseHash, err = testCaseModel.generateTestCaseForGrpcAndHash(testCaseUuid)
+	_, _, _, _, _, testcaseHash, err = testCaseModel.generateTestCaseForGrpcAndHash(testCaseUuid)
 	if err != nil {
 		return false, err
 	}
@@ -147,7 +147,7 @@ func (testCaseModel *TestCasesModelsStruct) TestCaseHashIsChangedSinceLoadedOrSa
 
 	// Create TestCase-hash
 	var testcaseHash string
-	_, _, _, _, testcaseHash, err = testCaseModel.generateTestCaseForGrpcAndHash(testCaseUuid)
+	_, _, _, _, _, testcaseHash, err = testCaseModel.generateTestCaseForGrpcAndHash(testCaseUuid)
 	if err != nil {
 		return false, err
 	}

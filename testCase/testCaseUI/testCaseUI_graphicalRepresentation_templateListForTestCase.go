@@ -37,6 +37,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	var responseChannel chan importFilesFromGitHub.SharedResponseChannelStruct
 	responseChannel = make(chan importFilesFromGitHub.SharedResponseChannelStruct)
 
+	// Import the Template-files
 	githubFilesImporterButton := widget.NewButton("Import files from GitHub", func() {
 
 		var existInMap bool

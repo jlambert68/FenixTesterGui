@@ -64,5 +64,15 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateBaseInformationAr
 	// Add the 'TemplateList-UI-object' to the 'BaseInformationArea'
 	tempBaseInformationAreaContainer.Add(templateListArea)
 
+	// Generate TestDataSelector-UI-object
+	var testDataSelectorArea fyne.CanvasObject
+	testDataSelectorArea, err = testCasesUiCanvasObject.generateSelectedTestDataForTestCaseArea(testCaseUuid)
+	if err != nil {
+		return tempBaseInformationAreaContainer, err
+	}
+
+	// Add the 'TestDataSelector-UI-object' to the 'BaseInformationArea'
+	tempBaseInformationAreaContainer.Add(testDataSelectorArea)
+
 	return tempBaseInformationAreaContainer, err
 }

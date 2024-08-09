@@ -9,17 +9,17 @@ import (
 	"time"
 )
 
-// SendListAllRepositoryApiUrls - Load all Repository Api Urls for where Templates are stored
-func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllRepositoryApiUrls() (
-	returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListAllRepositoryApiUrlsResponseMessage) {
+// SendListAllTestData - Load all TestData that the user can use
+func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllTestData() (
+	returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListAllTestDataForTestDataAreasResponseMessage) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "adf93689-47c1-4546-8792-389536823082",
-	}).Debug("Incoming 'grpcOut - SendListAllRepositoryApiUrls'")
+		"id": "75afebad-8f8f-42fc-9f0b-3aa94b953e89",
+	}).Debug("Incoming 'grpcOut - SendListAllTestData'")
 
 	defer sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "959a74ea-cd3f-46c9-8ff2-bf7e47665996",
-	}).Debug("Outgoing 'grpcOut - SendListAllRepositoryApiUrls'")
+		"id": "0f29b9d8-54f2-49cf-873c-00d9b83b9d93",
+	}).Debug("Outgoing 'grpcOut - SendListAllTestData'")
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -42,9 +42,9 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllRepositoryApiUr
 					grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 			}
 
-			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListAllRepositoryApiUrlsResponseMessage{
-				AckNackResponse:   ackNackResponse,
-				RepositoryApiUrls: nil,
+			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListAllTestDataForTestDataAreasResponseMessage{
+				AckNackResponse:                     ackNackResponse,
+				TestDataFromSimpleTestDataAreaFiles: nil,
 			}
 
 			return returnMessage
@@ -85,9 +85,9 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllRepositoryApiUr
 					grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 			}
 
-			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListAllRepositoryApiUrlsResponseMessage{
-				AckNackResponse:   ackNackResponse,
-				RepositoryApiUrls: nil,
+			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListAllTestDataForTestDataAreasResponseMessage{
+				AckNackResponse:                     ackNackResponse,
+				TestDataFromSimpleTestDataAreaFiles: nil,
 			}
 
 			return returnMessage
@@ -96,27 +96,27 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllRepositoryApiUr
 	}
 
 	// Do the gRPC-call
-	returnMessage, err = fenixGuiTestCaseCaseBuilderServerGrpcClient.ListAllRepositoryApiUrls(ctx, userIdentificationMessage)
+	returnMessage, err = fenixGuiTestCaseCaseBuilderServerGrpcClient.ListAllTestDataForTestDataAreas(ctx, userIdentificationMessage)
 
 	// Shouldn't happen
 	if err != nil {
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":    "c3df6f17-8e33-410a-b8f2-69185a91b270",
+			"ID":    "ccdb63b5-0fd5-427a-8f3f-0c7e594d3539",
 			"error": err,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'ListAllRepositoryApiUrls'")
 
 		// When error
 		ackNackResponse := &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{
 			AckNack:    false,
-			Comments:   "Problem to do gRPC-call to FenixTestGuiBuilderServer for 'ListAllRepositoryApiUrls'",
+			Comments:   "Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListAllTestData'",
 			ErrorCodes: nil,
 			ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
 				grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 		}
 
-		returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListAllRepositoryApiUrlsResponseMessage{
-			AckNackResponse:   ackNackResponse,
-			RepositoryApiUrls: nil,
+		returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListAllTestDataForTestDataAreasResponseMessage{
+			AckNackResponse:                     ackNackResponse,
+			TestDataFromSimpleTestDataAreaFiles: nil,
 		}
 
 		return returnMessage
@@ -124,9 +124,9 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllRepositoryApiUr
 	} else if returnMessage.AckNackResponse.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":                                     "c4aaad0d-545e-4fad-b051-1e97746c3a41",
+			"ID":                                     "a3f6a6b6-a4a0-487a-a584-adea665f047b",
 			"Message from FenixTestGuiBuilderServer": returnMessage.AckNackResponse.Comments,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'ListAllRepositoryApiUrls'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListAllTestData'")
 	}
 
 	return returnMessage

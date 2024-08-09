@@ -95,6 +95,7 @@ type GitHubFileDetail struct {
 
 */
 
+// Update the Table used for showing Templates in TestCase
 func updateTemplateFilesTable(
 	templateFilesTable *widget.Table,
 	testCaseUuid string,

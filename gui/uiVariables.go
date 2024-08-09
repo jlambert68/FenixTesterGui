@@ -144,6 +144,9 @@ type AvailableBuildingBlocksModelStruct struct {
 
 	// URLs to repositories with Template for this user
 	TemplateRepositoryApiUrls []*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage
+
+	// TestData that this User can use
+	TestData []*fenixGuiTestCaseBuilderServerGrpcApi.TestDataFromOneSimpleTestDataAreaFileMessage
 }
 type GlobalUIServerStruct struct {
 	logger                             *logrus.Logger

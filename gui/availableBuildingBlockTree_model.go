@@ -334,6 +334,27 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadTemp
 
 }
 
+// Load list with loadTestData form GUI-server
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadTestData(testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
+
+	var allTestDataForTestDataAreasResponseMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListAllTestDataForTestDataAreasResponseMessage
+	allTestDataForTestDataAreasResponseMessage = availableBuildingBlocksModel.grpcOut.SendListAllTestData()
+
+	if allTestDataForTestDataAreasResponseMessage.GetAckNackResponse().AckNack == false {
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"ID":    "b475ebd1-edb7-4984-889c-2721b55b9410",
+			"error": allTestDataForTestDataAreasResponseMessage.GetAckNackResponse().Comments,
+		}).Warning("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'loadTestData'")
+
+		return
+	}
+
+	// Store list with TemplateRepositoryApiUrls
+	availableBuildingBlocksModel.storeTestData(allTestDataForTestDataAreasResponseMessage.
+		GetTestDataFromSimpleTestDataAreaFiles(), testCaseModeReference)
+
+}
+
 // Load all Pinned Building Blocks from Gui-server
 func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadPinnedBuildingBlocksFromServer() {
 

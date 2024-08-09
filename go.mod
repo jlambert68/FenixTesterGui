@@ -1,6 +1,8 @@
 module FenixTesterGui
 
-go 1.18
+go 1.22
+
+toolchain go1.22.5
 
 require (
 	cloud.google.com/go/pubsub v1.36.2
@@ -13,9 +15,10 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/pat v1.0.2
-	github.com/gorilla/sessions v1.2.2
-	github.com/jlambert68/FenixGrpcApi v0.0.0-20240628124004-53e8be40818c
-	github.com/markbates/goth v1.79.0
+	github.com/gorilla/sessions  v1.2.2 // v1.3.0 gives session error when trying to get token from GCP
+	github.com/jlambert68/FenixGrpcApi v0.0.0-20240727110216-c209b701e444
+	github.com/jlambert68/FenixScriptEngine v0.0.0-20240714194535-aa801b48871c
+	github.com/markbates/goth v1.80.0
 	github.com/rs/zerolog v1.32.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.9.0

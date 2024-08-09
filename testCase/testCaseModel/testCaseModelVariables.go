@@ -6,6 +6,7 @@ import (
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/widget"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	"github.com/jlambert68/FenixScriptEngine/testDataEngine"
 	"regexp"
 	"time"
 )
@@ -36,6 +37,7 @@ type TestCasesModelsStruct struct {
 	ImmatureDropZonesDataMap                      map[string]ImmatureDropZoneDataMapStruct                                                                                             // map[DropZoneUuid]ImmatureDropZoneDataMapStruct
 	DomainsThatCanOwnTheTestCaseMap               map[string]*DomainThatCanOwnTheTestCaseStruct
 	TemplateRepositoryApiUrlMap                   map[string]*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage
+
 	//AvailableBuildingBlocksModel                  *gui.AvailableBuildingBlocksModelStruct
 
 }
@@ -80,6 +82,7 @@ type TestCaseModelStruct struct {
 	TestCaseHashWhenTestCaseWasSavedOrLoaded string
 
 	ImportedTemplateFilesFromGitHub []importFilesFromGitHub.GitHubFile
+	TestData                        *testDataEngine.TestDataForGroupObjectStruct
 }
 
 type AttributeStructSliceReferenceType []*AttributeStruct

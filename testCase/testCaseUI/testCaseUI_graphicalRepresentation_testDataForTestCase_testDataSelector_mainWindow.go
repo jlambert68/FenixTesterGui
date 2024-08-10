@@ -290,6 +290,13 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) MainTestDataSelector(
 				newOrEditTestDataPointGroupUI.TestDataPointsForAGroupSelect.SetOptions(testDataPointsToStringSliceFunction())
 				newOrEditTestDataPointGroupUI.TestDataPointsForAGroupSelect.Refresh()
 
+				// Update TestData-Selects in TestCase main area
+				testDataPointGroupsSelectInMainTestCaseArea.SetOptions(testDataPointGroupsToStringSliceFunction())
+				testDataPointsForAGroupSelectInMainTestCaseArea.SetOptions(testDataPointsToStringSliceFunction())
+
+				testDataPointGroupsSelectInMainTestCaseArea.Refresh()
+				testDataPointsForAGroupSelectInMainTestCaseArea.Refresh()
+
 			}
 		}
 	}()

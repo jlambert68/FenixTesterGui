@@ -32,14 +32,6 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 	// Initiate the TestData-object used for keeping Groups and their TestData in the TestCases
 	currentTestCase.TestData = &testDataEngine.TestDataForGroupObjectStruct{}
 
-	// The Select-items for Groups ans TestDataPoints for a Group
-	var testDataPointGroupsSelect *widget.Select
-	var testDataPointGroupsSelectSelected string
-	var testDataPointsForAGroupSelect *widget.Select
-	var testDataPointForAGroupSelectSelected string
-	var testDataRowsForTestDataPointsSelect *widget.Select
-	var testDataRowForTestDataPointsSelectSelected string
-
 	// Accordion objects
 	var testDataAccordionItem *widget.AccordionItem
 	var testDataAccordion *widget.Accordion
@@ -83,41 +75,41 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 	}
 
 	// Create the Group dropdown - <Name of the group>
-	testDataPointGroupsSelect = widget.NewSelect(getTestGroupsFromTestDataEngineFunction(), func(selected string) {
+	testDataPointGroupsSelectInMainTestCaseArea = widget.NewSelect(getTestGroupsFromTestDataEngineFunction(), func(selected string) {
 
-		testDataPointGroupsSelectSelected = selected
+		testDataPointGroupsSelectSelectedInMainTestCaseArea = selected
 
 		// Select the correct TestDataPoint in the dropdown for TestDataPoints
-		testDataPointsForAGroupSelect.SetOptions(testDataPointsToStringSliceFunction(selected))
-		testDataPointsForAGroupSelect.Refresh()
+		testDataPointsForAGroupSelectInMainTestCaseArea.SetOptions(testDataPointsToStringSliceFunction(selected))
+		testDataPointsForAGroupSelectInMainTestCaseArea.Refresh()
 
 		// UnSelect in DropDown- and List for TestDataPoints
-		testDataPointsForAGroupSelect.ClearSelected()
+		testDataPointsForAGroupSelectInMainTestCaseArea.ClearSelected()
 
 	})
 
 	// Create the Groups TestDataPoints dropdown - <Sub Custody/Main TestData Area/SEK/AccTest/SE/CRDT/CH/Switzerland/BBH/EUR/EUR/SEK>
-	testDataPointsForAGroupSelect = widget.NewSelect(testDataPointsToStringSliceFunction(
-		testDataPointGroupsSelectSelected), func(selected string) {
+	testDataPointsForAGroupSelectInMainTestCaseArea = widget.NewSelect(testDataPointsToStringSliceFunction(
+		testDataPointGroupsSelectSelectedInMainTestCaseArea), func(selected string) {
 
-		testDataPointForAGroupSelectSelected = selected
+		testDataPointForAGroupSelectSelectedInMainTestCaseArea = selected
 
 		// Select the correct TestDataPoint in the dropdown for TestDataPoints
-		testDataRowsForTestDataPointsSelect.SetOptions(testDataRowSliceToStringSliceFunction(
-			testDataPointGroupsSelect.Selected, selected))
-		testDataRowsForTestDataPointsSelect.Refresh()
+		testDataRowsForTestDataPointsSelectInMainTestCaseArea.SetOptions(testDataRowSliceToStringSliceFunction(
+			testDataPointGroupsSelectInMainTestCaseArea.Selected, selected))
+		testDataRowsForTestDataPointsSelectInMainTestCaseArea.Refresh()
 
 		// UnSelect in DropDown- and List for Specific TestDataPoints
-		testDataRowsForTestDataPointsSelect.ClearSelected()
+		testDataRowsForTestDataPointsSelectInMainTestCaseArea.ClearSelected()
 
 	})
 
 	// Create the Groups Specific TestDataPoint dropdown - <All the specific values>
-	testDataRowsForTestDataPointsSelect = widget.NewSelect(testDataRowSliceToStringSliceFunction(
-		testDataPointGroupsSelectSelected, testDataPointForAGroupSelectSelected), func(selected string) {
+	testDataRowsForTestDataPointsSelectInMainTestCaseArea = widget.NewSelect(testDataRowSliceToStringSliceFunction(
+		testDataPointGroupsSelectSelectedInMainTestCaseArea, testDataPointForAGroupSelectSelectedInMainTestCaseArea), func(selected string) {
 
-		testDataRowForTestDataPointsSelectSelected = selected
-		fmt.Println(testDataRowForTestDataPointsSelectSelected) //TODO REMOVE
+		testDataRowForTestDataPointsSelectSelectedInMainTestCaseArea = selected
+		fmt.Println(testDataRowForTestDataPointsSelectSelectedInMainTestCaseArea) //TODO REMOVE
 
 	})
 
@@ -146,13 +138,13 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 	// Create UI component for selected TestData-selectors
 	testDataSelectorsContainer := container.New(layout.NewFormLayout())
 	testDataSelectorsContainer.Add(widget.NewLabel("TestData Group"))
-	testDataSelectorsContainer.Add(testDataPointGroupsSelect)
+	testDataSelectorsContainer.Add(testDataPointGroupsSelectInMainTestCaseArea)
 
 	testDataSelectorsContainer.Add(widget.NewLabel("TestData Point"))
-	testDataSelectorsContainer.Add(testDataPointsForAGroupSelect)
+	testDataSelectorsContainer.Add(testDataPointsForAGroupSelectInMainTestCaseArea)
 
 	testDataSelectorsContainer.Add(widget.NewLabel("TestData Row"))
-	testDataSelectorsContainer.Add(testDataRowsForTestDataPointsSelect)
+	testDataSelectorsContainer.Add(testDataRowsForTestDataPointsSelectInMainTestCaseArea)
 
 	// Create an Accordion item for the buttons
 	buttonContainer := container.NewHBox(selectTestDataButton)

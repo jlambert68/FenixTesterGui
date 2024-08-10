@@ -24,6 +24,9 @@ func generateSelectedPointsListUIComponent(
 	var newOrEditedChosenTestDataPointsThisGroupMap map[testDataEngine.TestDataPointGroupNameType]*testDataEngine.TestDataPointNameMapType
 	newOrEditedChosenTestDataPointsThisGroupMap = *newOrEditedChosenTestDataPointsThisGroupMapPtr
 
+	// Cleare Existing TestDataPoints
+	allSelectedPoints = []testDataEngine.DataPointTypeForGroupsStruct{}
+
 	// WHen a Group already exist then move over the TestDataPoints to the SelectedPointsList
 	if isNew == false {
 

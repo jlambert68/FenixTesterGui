@@ -135,6 +135,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
 		}
 
+		// Open up TestData Selector Window
+		testCasesUiCanvasObject.MainTestDataSelector(
+			*sharedCode.FenixAppPtr,
+			*sharedCode.FenixMasterWindowPtr,
+			currentTestCase.TestData)
+
 	})
 
 	// Create UI component for selected TestData-selectors

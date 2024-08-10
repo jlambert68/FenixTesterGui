@@ -5,6 +5,7 @@ import (
 	"FenixTesterGui/testCase/testCaseModel"
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	"github.com/jlambert68/FenixScriptEngine/testDataEngine"
 	"github.com/sirupsen/logrus"
 )
 
@@ -473,25 +474,67 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeTem
 
 // Store TestData that user can use within TestCases
 func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeTestData(
-	testDataFromOneSimpleTestDataAreaFiles []*fenixGuiTestCaseBuilderServerGrpcApi.TestDataFromOneSimpleTestDataAreaFileMessage,
+	testDataFromSimpleTestDataAreaFiles []*fenixGuiTestCaseBuilderServerGrpcApi.TestDataFromOneSimpleTestDataAreaFileMessage,
 	testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
 
 	// Store the TestData
-	availableBuildingBlocksModel.TestData = testDataFromOneSimpleTestDataAreaFiles
+	availableBuildingBlocksModel.TestData = testDataFromSimpleTestDataAreaFiles
 
-	// Store the TestData in the TestCaseModel
-	testCaseModeReference.TemplateRepositoryApiUrlMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
-		RepositoryApiUrlResponseMessage)
-	/*
-		// Store the Available TemplateRepositoryApiUrls as a map structure in TestCase-struct
-		for _, templateRepositoryApiUrlToBeStored := range templateRepositoryApiUrlsToBeStored {
+	// Loop all TestDataFiles for TestData-Areas and add to the TestData-model
+	var testDataFromTestDataArea testDataEngine.TestDataFromSimpleTestDataAreaStruct
+	for _, testDataFromOneSimpleTestDataAreaFile := range testDataFromSimpleTestDataAreaFiles {
 
-			testCaseModeReference.
-				TemplateRepositoryApiUrlMap[templateRepositoryApiUrlToBeStored.GetRepositoryApiUrlName()] =
-				templateRepositoryApiUrlToBeStored
-
+		// Convert Headers
+		var header struct {
+			ShouldHeaderActAsFilter bool
+			HeaderName              string
+			HeaderUiName            string
 		}
-	*/
+		var headers []struct {
+			ShouldHeaderActAsFilter bool
+			HeaderName              string
+			HeaderUiName            string
+		}
+		for _, rawHeader := range testDataFromOneSimpleTestDataAreaFile.HeadersForTestDataFromOneSimpleTestDataAreaFile {
+
+			// Set values to 'header'
+			header.ShouldHeaderActAsFilter = rawHeader.GetShouldHeaderActAsFilter()
+			header.HeaderName = rawHeader.GetHeaderName()
+			header.HeaderUiName = rawHeader.GetHeaderUiName()
+
+			// Add to the slice of headers
+			headers = append(headers, header)
+		}
+
+		// Convert TestDataRows
+		var row []string
+		var rows [][]string
+
+		for _, simpleTestDataRow := range testDataFromOneSimpleTestDataAreaFile.SimpleTestDataRows {
+
+			// Set values to 'row'
+			row = simpleTestDataRow.GetTestDataValue()
+
+			// Add to the slice of headers
+			rows = append(rows, row)
+		}
+
+		// Populate the TestDataFromTestDataArea-structure
+		testDataFromTestDataArea = testDataEngine.TestDataFromSimpleTestDataAreaStruct{
+			TestDataDomainUuid:         testDataFromOneSimpleTestDataAreaFile.GetTestDataDomainUuid(),
+			TestDataDomainName:         testDataFromOneSimpleTestDataAreaFile.GetTestDataDomainName(),
+			TestDataDomainTemplateName: testDataFromOneSimpleTestDataAreaFile.GetTestDataDomainTemplateName(),
+			TestDataAreaUuid:           testDataFromOneSimpleTestDataAreaFile.GetTestDataAreaUuid(),
+			TestDataAreaName:           testDataFromOneSimpleTestDataAreaFile.GetTestDataAreaName(),
+			Headers:                    headers,
+			TestDataRows:               rows,
+			TestDataFileSha256Hash:     testDataFromOneSimpleTestDataAreaFile.GetTestDataFileSha256Hash(),
+		}
+
+		// Add TestData to TestDataModel
+		testDataEngine.AddTestDataToTestDataModel(testDataFromTestDataArea)
+	}
+
 }
 
 // Convert gRPC-message for TI or TIC into model used within the TestCase-model

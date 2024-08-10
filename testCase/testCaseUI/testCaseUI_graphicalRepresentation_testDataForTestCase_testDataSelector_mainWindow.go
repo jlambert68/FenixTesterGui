@@ -1,16 +1,16 @@
 package testCaseUI
 
 import (
+	"FenixTesterGui/testData/newOrEditTestDataPointGroupUI"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	"github.com/jlambert68/FenixScriptEngine/testDataEngine"
-	"github.com/jlambert68/testCase/testData/newOrEditTestDataPointGroupUI"
 )
 
-func MainTestDataSelector(
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) MainTestDataSelector(
 	app fyne.App,
 	parent fyne.Window,
 	testDataForGroupObject *testDataEngine.TestDataForGroupObjectStruct) {

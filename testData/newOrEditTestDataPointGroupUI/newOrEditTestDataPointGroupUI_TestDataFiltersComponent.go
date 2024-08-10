@@ -63,6 +63,12 @@ func generateTestDataSelectionsUIComponent(
 	testAreasLabel = widget.NewLabel(testDataTestAreaLabelText)
 	testAreasLabel.TextStyle.Bold = true
 
+	// Initiate  Container-objects
+	testDomainContainer = container.NewVBox(domainsLabel, widget.NewSelect([]string{}, func(s string) {}))
+	testAreasContainer = container.NewVBox(testAreasLabel, testAreaSelect)
+	testDataValuesSelectionContainer = container.NewHBox()
+	testDataSelectionsContainer = container.NewHBox(testDomainContainer, testAreasContainer, testDataValuesSelectionContainer)
+
 	// Extract TestData on Domain-level
 	for _, tempTestDataDomainModel := range testDataModelMap {
 		domainOptions = append(domainOptions, string(tempTestDataDomainModel.TestDataDomainName))
@@ -233,8 +239,8 @@ func generateTestDataSelectionsUIComponent(
 
 		// Replace existing TestDataArea-Select  with a new one
 		testAreasContainer.Objects[1] = testAreaSelect
-		testAreasContainer.Refresh()
 
+		testAreasContainer.Refresh()
 		// Replace existing TestDataHeaders-filter container with a new one
 		testDataSelectionsContainer.Objects[2] = container.NewHBox()
 		testDataSelectionsContainer.Refresh()

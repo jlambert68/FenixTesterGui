@@ -349,7 +349,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadTest
 		return
 	}
 
-	// Store list with TemplateRepositoryApiUrls
+	// Store the TestData
 	availableBuildingBlocksModel.storeTestData(allTestDataForTestDataAreasResponseMessage.
 		GetTestDataFromSimpleTestDataAreaFiles(), testCaseModeReference)
 

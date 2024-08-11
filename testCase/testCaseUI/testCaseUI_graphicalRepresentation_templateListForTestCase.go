@@ -4,6 +4,7 @@ import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/importFilesFromGitHub"
 	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testCase/testCaseUI/templateViewer"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
@@ -22,6 +23,17 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	var tableAccordionItem *widget.AccordionItem
 	var accordion *widget.Accordion
 
+	var existInMap bool
+	var currectTestCase testCaseModel.TestCaseModelStruct
+
+	currectTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+	if existInMap == false {
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"ID":           "a54bce68-fa84-4b29-aa62-5d47b8bdc7fb",
+			"testCaseUuid": testCaseUuid,
+		}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
+	}
+
 	// Generate the Table used for showing Templates in TestCase
 	templatesFilesInTestCaseTable = generateTemplateFilesTable()
 
@@ -39,17 +51,6 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 
 	// Import the Template-files
 	githubFilesImporterButton := widget.NewButton("Import files from GitHub", func() {
-
-		var existInMap bool
-		var currectTestCase testCaseModel.TestCaseModelStruct
-
-		currectTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
-		if existInMap == false {
-			sharedCode.Logger.WithFields(logrus.Fields{
-				"ID":           "a54bce68-fa84-4b29-aa62-5d47b8bdc7fb",
-				"testCaseUuid": testCaseUuid,
-			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
-		}
 
 		var tempFenixMasterWindow fyne.Window
 		tempFenixMasterWindow = *sharedCode.FenixMasterWindowPtr
@@ -96,8 +97,20 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 
 	})
 
+	// Create Button to be able to view Template and the effect of TestData- and PlaceHolder-engine
+	viewTemplateButton := widget.NewButton("View Templates", func() {
+
+		templateViewer.InitiatetemplateViewer(
+			*sharedCode.FenixMasterWindowPtr,
+			*sharedCode.FenixAppPtr,
+			&currectTestCase.ImportedTemplateFilesFromGitHub,
+			currectTestCase.TestData,
+			testCaseUuid)
+
+	})
+
 	// Create an Accordion item for the buttons
-	buttonContainer := container.NewHBox(githubFilesImporterButton, checkIfTemplatesAreChangedButton)
+	buttonContainer := container.NewHBox(githubFilesImporterButton, checkIfTemplatesAreChangedButton, viewTemplateButton)
 
 	tableAndButtonContainer = container.NewBorder(nil, buttonContainer, nil, nil, templatesFilesInTestCaseTable)
 	tableAndButtonContainer.Refresh()

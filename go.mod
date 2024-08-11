@@ -15,7 +15,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/pat v1.0.2
-	github.com/gorilla/sessions  v1.2.2 // v1.3.0 gives session error when trying to get token from GCP
+	github.com/gorilla/sessions v1.2.2 // v1.3.0 gives session error when trying to get token from GCP
 	github.com/jlambert68/FenixGrpcApi v0.0.0-20240727110216-c209b701e444
 	github.com/jlambert68/FenixScriptEngine v0.0.0-20240714194535-aa801b48871c
 	github.com/markbates/goth v1.80.0
@@ -68,6 +68,7 @@ require (
 	github.com/srwiley/rasterx v0.0.0-20220730225603-2ab79fcdd4ef // indirect
 	github.com/tevino/abool v1.2.0 // indirect
 	github.com/yuin/goldmark v1.5.5 // indirect
+	github.com/yuin/gopher-lua v1.1.1 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.49.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.49.0 // indirect

@@ -114,12 +114,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 	})
 
 	// Select TestData the TestCase
-	selectTestDataButton := widget.NewButton("Select TestData", func() {
+	selectTestDataButton := widget.NewButton("Add TestData to TestCase", func() {
 
-		var existInMap bool
-		//var currentTestCase testCaseModel.TestCaseModelStruct
-
-		_, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
 		if existInMap == false {
 			sharedCode.Logger.WithFields(logrus.Fields{
 				"ID":           "a54bce68-fa84-4b29-aa62-5d47b8bdc7fb",
@@ -131,7 +128,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 		testCasesUiCanvasObject.MainTestDataSelector(
 			*sharedCode.FenixAppPtr,
 			*sharedCode.FenixMasterWindowPtr,
-			currentTestCase.TestData)
+			&currentTestCase,
+			testCaseUuid)
 
 	})
 

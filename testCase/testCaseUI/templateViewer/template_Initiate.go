@@ -14,7 +14,7 @@ import (
 	"strings"
 )
 
-func InitiatetemplateViewer(
+func InitiateTemplateViewer(
 	mainWindow fyne.Window,
 	myApp fyne.App,
 	importedFilesPtr *[]importFilesFromGitHub.GitHubFile,

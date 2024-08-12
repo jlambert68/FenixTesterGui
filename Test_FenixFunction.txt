@@ -46,5 +46,6 @@ Change how TestCase {{SubCustody.TestData.AccountEnvironment}} is using Domain, 
 Change how TestCase {{SubCustody.TestData.MarketCountry}} is using Domain, from single to multiple domains depending on used TestInstructions
 Change how TestCase {{SubCustody.TestData.SecurityType}} is using Domain, from single to multiple domains depending on used TestInstructions
 Change how TestCase {{SubCustody.TestData.ISIN}} is using Domain, from single to multiple domains depending on used TestInstructions
+Change how TestCase {{SubCustody.TestData.DoesNotExist}} is using Domain, from single to multiple domains depending on used TestInstructions
 
 

@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+	"github.com/jlambert68/FenixScriptEngine/luaEngine"
 	"github.com/sirupsen/logrus"
 )
 
@@ -24,9 +25,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	var accordion *widget.Accordion
 
 	var existInMap bool
-	var currectTestCase testCaseModel.TestCaseModelStruct
+	var currentTestCase testCaseModel.TestCaseModelStruct
 
-	currectTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+	// Initiate Lua-script-Engine. TODO For now only Fenix-Placeholders are supported
+	luaEngine.InitiateLuaScriptEngine([][]byte{})
+
+	currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
 	if existInMap == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":           "a54bce68-fa84-4b29-aa62-5d47b8bdc7fb",
@@ -52,6 +56,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	// Import the Template-files
 	githubFilesImporterButton := widget.NewButton("Import files from GitHub", func() {
 
+		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		if existInMap == false {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":           "59fab568-2da4-43f9-8300-6858eae73431",
+				"testCaseUuid": testCaseUuid,
+			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
+		}
+
 		var tempFenixMasterWindow fyne.Window
 		tempFenixMasterWindow = *sharedCode.FenixMasterWindowPtr
 		tempFenixMasterWindow.Hide()
@@ -64,7 +76,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 			*sharedCode.FenixMasterWindowPtr,
 			*sharedCode.FenixAppPtr,
 			&responseChannel,
-			currectTestCase.ImportedTemplateFilesFromGitHub)
+			currentTestCase.ImportedTemplateFilesFromGitHub)
 
 		// Wait for response from Files Selector Window to close
 		var channelResponseForSelectedFiles importFilesFromGitHub.SharedResponseChannelStruct
@@ -75,10 +87,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 		localCopyForSelectedFiles = *channelResponseForSelectedFiles.SelectedFilesPtr
 
 		// Update Template files for TestCase
-		currectTestCase.ImportedTemplateFilesFromGitHub = localCopyForSelectedFiles
+		currentTestCase.ImportedTemplateFilesFromGitHub = localCopyForSelectedFiles
 
 		// Store back TestCase
-		testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = currectTestCase
+		testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = currentTestCase
 
 		updateTemplateFilesTable(templatesFilesInTestCaseTable,
 			testCaseUuid,
@@ -100,11 +112,19 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	// Create Button to be able to view Template and the effect of TestData- and PlaceHolder-engine
 	viewTemplateButton := widget.NewButton("View Templates", func() {
 
-		templateViewer.InitiatetemplateViewer(
+		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		if existInMap == false {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":           "994ac3c8-2a89-4786-8c70-96bb86fbe70d",
+				"testCaseUuid": testCaseUuid,
+			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
+		}
+
+		templateViewer.InitiateTemplateViewer(
 			*sharedCode.FenixMasterWindowPtr,
 			*sharedCode.FenixAppPtr,
-			&currectTestCase.ImportedTemplateFilesFromGitHub,
-			currectTestCase.TestData,
+			&currentTestCase.ImportedTemplateFilesFromGitHub,
+			currentTestCase.TestData,
 			testCaseUuid)
 
 	})

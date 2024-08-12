@@ -102,6 +102,15 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	// Create Button to be able to check which Templates that are updated
 	checkIfTemplatesAreChangedButton := widget.NewButton("Check if Templates are changed", func() {
 		// Add button functionality here
+
+		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		if existInMap == false {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":           "59fab568-2da4-43f9-8300-6858eae73431",
+				"testCaseUuid": testCaseUuid,
+			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
+		}
+
 		fyne.CurrentApp().SendNotification(&fyne.Notification{
 			Title:   "Check if Templates are changed",
 			Content: "Button 'checkIfTemplatesAreChangedButton' clicked",

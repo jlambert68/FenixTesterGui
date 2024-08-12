@@ -6,13 +6,19 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+	fenixSyncShared "github.com/jlambert68/FenixSyncShared"
 	"log"
 )
 
 // Generate the button that imports the selected files from Github
-func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) generateImportSelectedFilesFromGithubButton(parentWindow fyne.Window) {
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) generateImportSelectedFilesFromGithubButton(
+	parentWindow fyne.Window) {
 
 	importFilesFromGitHubObject.importSelectedFilesFromGithubButton = widget.NewButton("Import Files", func() {
+
+		var fileHash string
+
+		// Loop files in Selected Files Slice
 		for fileIndex, file := range importFilesFromGitHubObject.selectedFiles {
 			content, err := importFilesFromGitHubObject.loadFileContent(file)
 			if err != nil {
@@ -36,6 +42,9 @@ func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) generateImportSe
 
 			// Save the file content
 			importFilesFromGitHubObject.selectedFiles[fileIndex].FileContentAsString = contentAsString
+
+			fileHash = fenixSyncShared.HashSingleValue(contentAsString)
+			importFilesFromGitHubObject.selectedFiles[fileIndex].FileHash = fileHash
 		}
 
 		fenixMainWindow.Show()

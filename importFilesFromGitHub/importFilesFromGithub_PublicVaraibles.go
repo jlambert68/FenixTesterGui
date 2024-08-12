@@ -9,8 +9,10 @@ type GitHubFile struct {
 	Content             []byte `json:"content"`
 	SHA                 string `json:"sha"`
 	Size                int    `json:"size"`
-	FileContentAsString string
+	FileContentAsString string `json:"FileContentAsString"`
+	FileHash            string `json:"FileHash"`
 }
+
 type GitHubFileDetail struct {
 	Name        string `json:"name"`
 	Path        string `json:"path"`

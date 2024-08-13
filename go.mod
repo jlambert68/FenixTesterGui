@@ -15,6 +15,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/pat v1.0.2
+	// github.com/gorilla/sessions v1.2.2 // v1.3.0 gives session error when trying to get token from GCP
 	github.com/gorilla/sessions v1.2.2 // v1.3.0 gives session error when trying to get token from GCP
 	github.com/jlambert68/FenixGrpcApi v0.0.0-20240727110216-c209b701e444
 	github.com/jlambert68/FenixScriptEngine v0.0.0-20240813105044-967f7b44560c

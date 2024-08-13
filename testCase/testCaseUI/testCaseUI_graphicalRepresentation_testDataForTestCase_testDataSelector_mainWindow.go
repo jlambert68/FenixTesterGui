@@ -15,7 +15,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) MainTestDataSelector(
 	app fyne.App,
 	parent fyne.Window,
 	currentTestCase *testCaseModel.TestCaseModelStruct,
-	testCaseUuid string) {
+	testCaseUuid string,
+	testDataSelectorsContainer *fyne.Container,
+	testDataPointGroupsSelectInMainTestCaseArea *widget.Select,
+	testDataPointsForAGroupSelectInMainTestCaseArea *widget.Select,
+	testDataRowsForTestDataPointsSelectInMainTestCaseArea *widget.Select) {
 
 	parent.Hide()
 
@@ -239,8 +243,40 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) MainTestDataSelector(
 				testDataPointsForAGroupList.UnselectAll()
 				newOrEditTestDataPointGroupUI.SelectedIndexForGroupTestDataPoints = -1
 
+				// When the delete Group is the one in the Group-Select, then Unselect it
+				if string(groupNameToDelete) == newOrEditTestDataPointGroupUI.TestDataPointGroupsSelect.Selected {
+					newOrEditTestDataPointGroupUI.TestDataPointGroupsSelect.ClearSelected()
+					newOrEditTestDataPointGroupUI.TestDataPointGroupsSelect.SetOptions(currentTestCase.TestData.ListTestDataGroups())
+					newOrEditTestDataPointGroupUI.TestDataPointGroupsSelect.Refresh()
+				}
+
 				// Update TestData on the TestCase
 				testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = *currentTestCase
+
+				// Update TestData-Selects in TestCase main area if the Deleted Group is selected in main TestCase area
+				if string(groupNameToDelete) == testDataPointGroupsSelectInMainTestCaseArea.Selected {
+
+					// Reset Select options
+					testDataPointGroupsSelectInMainTestCaseArea.SetOptions(currentTestCase.TestData.ListTestDataGroups())
+					testDataPointsForAGroupSelectInMainTestCaseArea.SetOptions([]string{})
+					testDataRowsForTestDataPointsSelectInMainTestCaseArea.SetOptions([]string{})
+
+					// Reset Selected
+					testDataPointGroupsSelectInMainTestCaseArea.ClearSelected()
+
+					testDataPointGroupsSelectInMainTestCaseArea.Refresh()
+					testDataPointsForAGroupSelectInMainTestCaseArea.Refresh()
+					testDataRowsForTestDataPointsSelectInMainTestCaseArea.Refresh()
+
+					// If there are no TestDataGroups then hide the Selects in main TestCase window
+					if len(currentTestCase.TestData.ListTestDataGroups()) == 0 {
+						testDataSelectorsContainer.Hide()
+					}
+				} else {
+					testDataPointGroupsSelectInMainTestCaseArea.SetOptions(currentTestCase.TestData.ListTestDataGroups())
+					testDataPointGroupsSelectInMainTestCaseArea.Refresh()
+				}
+
 			}
 		}, myWindow)
 	})
@@ -315,6 +351,13 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) MainTestDataSelector(
 				// Update TestData on the TestCase
 				testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = *currentTestCase
 
+				// If there are no TestDataGroups then hide the Selects in main TestCase window
+				if len(currentTestCase.TestData.ListTestDataGroups()) == 0 {
+					testDataSelectorsContainer.Hide()
+
+				} else {
+					testDataSelectorsContainer.Show()
+				}
 			}
 		}
 	}()

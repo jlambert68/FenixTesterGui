@@ -41,6 +41,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 	var testDataPointsForAGroup []string
 	var testDataRowsForATestDataPoint []string
 
+	// Create UI component for selected TestData-selectors
+	testDataSelectorsContainer := container.New(layout.NewFormLayout())
+
 	// Create function that converts a GroupSlice into a string slice
 	getTestGroupsFromTestDataEngineFunction := func() []string {
 
@@ -76,6 +79,22 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 
 	// Create the Group dropdown - <Name of the group>
 	testDataPointGroupsSelectInMainTestCaseArea = widget.NewSelect(getTestGroupsFromTestDataEngineFunction(), func(selected string) {
+
+		// Check that the selected Group name exist options
+		if len(selected) > 0 {
+
+			var foundGroupName bool
+			for _, groupName := range getTestGroupsFromTestDataEngineFunction() {
+				if groupName == selected {
+					foundGroupName = true
+					break
+				}
+			}
+
+			if foundGroupName == false {
+				selected = ""
+			}
+		}
 
 		testDataPointGroupsSelectSelectedInMainTestCaseArea = selected
 
@@ -129,12 +148,15 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 			*sharedCode.FenixAppPtr,
 			*sharedCode.FenixMasterWindowPtr,
 			&currentTestCase,
-			testCaseUuid)
+			testCaseUuid,
+			testDataSelectorsContainer,
+			testDataPointGroupsSelectInMainTestCaseArea,
+			testDataPointsForAGroupSelectInMainTestCaseArea,
+			testDataRowsForTestDataPointsSelectInMainTestCaseArea)
 
 	})
 
-	// Create UI component for selected TestData-selectors
-	testDataSelectorsContainer := container.New(layout.NewFormLayout())
+	// Add the Select UI component for TestData-selectors
 	testDataSelectorsContainer.Add(widget.NewLabel("TestData Group"))
 	testDataSelectorsContainer.Add(testDataPointGroupsSelectInMainTestCaseArea)
 
@@ -143,6 +165,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 
 	testDataSelectorsContainer.Add(widget.NewLabel("TestData Row"))
 	testDataSelectorsContainer.Add(testDataRowsForTestDataPointsSelectInMainTestCaseArea)
+
+	// If there is no TestData then hide the "Select-boxes"
+	if len(currentTestCase.TestData.ListTestDataGroups()) == 0 {
+		testDataSelectorsContainer.Hide()
+	}
 
 	// Create an Accordion item for the buttons
 	buttonContainer := container.NewHBox(selectTestDataButton)

@@ -353,7 +353,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	}
 
 	myCanvas.SetContent(tabs)
-	_ = os.Setenv(scaleEnvKey, "0.7")
+	_ = os.Setenv(scaleEnvKey, sharedCode.FYNE_SCALE)
 
 	//myCanvas.Overlays().Add(myCanvasLabel)
 

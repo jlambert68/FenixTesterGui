@@ -20,7 +20,10 @@ func InitiateTemplateViewer(
 	importedFilesPtr *[]importFilesFromGitHub.GitHubFile,
 	testDataForGroupObject *testDataEngine.TestDataForGroupObjectStruct,
 	randomUuidForScriptEngine string,
-	choseFileName string) {
+	choseTemplateName string,
+	testDataPointGroupName string,
+	testDataPointName string,
+	testDataRowName string) {
 
 	// Disable the main window
 	mainWindow.Hide()
@@ -203,9 +206,14 @@ func InitiateTemplateViewer(
 	leftContainer = container.NewBorder(nil, nil, nil, nil, richText)
 
 	// Set File if that was included in call
-	if choseFileName != "" {
-		fileSelectorDropdown.SetSelected(choseFileName)
+	if choseTemplateName != "" {
+		fileSelectorDropdown.SetSelected(choseTemplateName)
 	}
+
+	// Set TestDataGroup, TestDataPoint and TestDataRow
+	testDataPointGroupsSelect.SetSelected(testDataPointGroupName)
+	testDataPointsForAGroupSelect.SetSelected(testDataPointName)
+	testDataRowsForTestDataPointsSelect.SetSelected(testDataRowName)
 
 	// Create split container
 	split := container.NewHSplit(leftContainer, rightContainer)

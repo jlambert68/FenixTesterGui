@@ -245,9 +245,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) MainTestDataSelector(
 		}, myWindow)
 	})
 
+	// Crete the 'Cllose'-button which closes the window
+	closeButton := widget.NewButton("Close", func() {
+		myWindow.Close()
+	})
+
 	// Create the container for handling TestDataGroups
 	var buttonsContainer *fyne.Container
-	buttonsContainer = container.NewHBox(newButton, editButton, deleteButton)
+	buttonsContainer = container.NewHBox(newButton, editButton, deleteButton, closeButton)
 
 	// Create the container that holds all UI components used for Groups and Points
 	myContainer := container.NewBorder(nil, buttonsContainer, nil, nil, testDataGroupsAndPointsContainer)

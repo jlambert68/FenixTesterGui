@@ -138,7 +138,10 @@ func generateTemplateFilesTable(
 							&currentTestCase.ImportedTemplateFilesFromGitHub,
 							currentTestCase.TestData,
 							testCaseUuid,
-							templateFilesFromGithub[id.Row].Name)
+							templateFilesFromGithub[id.Row].Name,
+							testDataPointGroupsSelectSelectedInMainTestCaseArea,
+							testDataPointForAGroupSelectSelectedInMainTestCaseArea,
+							testDataRowForTestDataPointsSelectSelectedInMainTestCaseArea)
 						/*
 							// Remove the file from templateFilesFromGithub and refresh the list
 							for fileIndex, file := range templateFilesFromGithub {

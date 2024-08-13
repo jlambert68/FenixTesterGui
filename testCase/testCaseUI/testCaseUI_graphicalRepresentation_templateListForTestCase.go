@@ -156,7 +156,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 			&currentTestCase.ImportedTemplateFilesFromGitHub,
 			currentTestCase.TestData,
 			testCaseUuid,
-			"")
+			"",
+			testDataPointGroupsSelectSelectedInMainTestCaseArea,
+			testDataPointForAGroupSelectSelectedInMainTestCaseArea,
+			testDataRowForTestDataPointsSelectSelectedInMainTestCaseArea)
 
 	})
 

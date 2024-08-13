@@ -155,7 +155,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 			*sharedCode.FenixAppPtr,
 			&currentTestCase.ImportedTemplateFilesFromGitHub,
 			currentTestCase.TestData,
-			testCaseUuid)
+			testCaseUuid,
+			"")
 
 	})
 

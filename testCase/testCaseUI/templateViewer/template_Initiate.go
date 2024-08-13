@@ -19,7 +19,8 @@ func InitiateTemplateViewer(
 	myApp fyne.App,
 	importedFilesPtr *[]importFilesFromGitHub.GitHubFile,
 	testDataForGroupObject *testDataEngine.TestDataForGroupObjectStruct,
-	randomUuidForScriptEngine string) {
+	randomUuidForScriptEngine string,
+	choseFileName string) {
 
 	// Disable the main window
 	mainWindow.Hide()
@@ -200,6 +201,11 @@ func InitiateTemplateViewer(
 	rightContainer = container.NewBorder(nil, nil, nil, nil, richTextWithValues)
 
 	leftContainer = container.NewBorder(nil, nil, nil, nil, richText)
+
+	// Set File if that was included in call
+	if choseFileName != "" {
+		fileSelectorDropdown.SetSelected(choseFileName)
+	}
 
 	// Create split container
 	split := container.NewHSplit(leftContainer, rightContainer)

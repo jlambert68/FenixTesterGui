@@ -4,6 +4,7 @@ import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/importFilesFromGitHub"
 	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testCase/testCaseUI/templateViewer"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/driver/desktop"
@@ -99,7 +100,9 @@ func generateTemplateFilesTable(
 			CreateCell: func() fyne.CanvasObject {
 
 				fmt.Println("CreateCell_01")
-				return newClickableLabel("", func() {}, false)
+				return newClickableLabel("",
+					func() {},
+					false)
 			},
 			UpdateCell: func(id widget.TableCellID, cell fyne.CanvasObject) {
 				fmt.Println("UpdateCell_01", id)
@@ -129,7 +132,13 @@ func generateTemplateFilesTable(
 
 					clickable.onDoubleTap = func() {
 
-						fmt.Println("Not Implemented,yet!")
+						templateViewer.InitiateTemplateViewer(
+							*sharedCode.FenixMasterWindowPtr,
+							*sharedCode.FenixAppPtr,
+							&currentTestCase.ImportedTemplateFilesFromGitHub,
+							currentTestCase.TestData,
+							testCaseUuid,
+							templateFilesFromGithub[id.Row].Name)
 						/*
 							// Remove the file from templateFilesFromGithub and refresh the list
 							for fileIndex, file := range templateFilesFromGithub {

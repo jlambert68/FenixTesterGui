@@ -18,11 +18,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	fyne.CanvasObject,
 	error) {
 
-	var templatesFilesInTestCaseTable *widget.Table
+	var templatesFilesInTestCaseTable *CustomTemplateTable
 
 	var tableAndButtonContainer *fyne.Container
 	var tableAccordionItem *widget.AccordionItem
 	var accordion *widget.Accordion
+	var templateListArea fyne.CanvasObject
+
+	var githubFilesImporterButton *widget.Button
+	var checkIfTemplatesAreChangedButton *widget.Button
+	var viewTemplateButton *widget.Button
 
 	var existInMap bool
 	var currentTestCase testCaseModel.TestCaseModelStruct
@@ -39,14 +44,17 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	}
 
 	// Generate the Table used for showing Templates in TestCase
-	templatesFilesInTestCaseTable = generateTemplateFilesTable()
-
-	// Update the Table used for showing Templates in TestCase
-	updateTemplateFilesTable(
-		templatesFilesInTestCaseTable,
+	templatesFilesInTestCaseTable = generateTemplateFilesTable(
 		testCaseUuid,
 		false,
 		testCasesUiCanvasObject)
+
+	// Update the Table used for showing Templates in TestCase
+	//updateTemplateFilesTable(
+	//	templatesFilesInTestCaseTable,
+	//	testCaseUuid,
+	//	false,
+	//	testCasesUiCanvasObject)
 
 	// Create Button to be able to Add or Remove Template from TestCase
 
@@ -54,7 +62,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	responseChannel = make(chan importFilesFromGitHub.SharedResponseChannelStruct)
 
 	// Import the Template-files
-	githubFilesImporterButton := widget.NewButton("Import files from GitHub", func() {
+	githubFilesImporterButton = widget.NewButton("Import files from GitHub", func() {
 
 		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
 		if existInMap == false {
@@ -92,15 +100,28 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 		// Store back TestCase
 		testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = currentTestCase
 
-		updateTemplateFilesTable(templatesFilesInTestCaseTable,
+		//updateTemplateFilesTable(templatesFilesInTestCaseTable,
+		//	testCaseUuid,
+		//	false,
+		//	testCasesUiCanvasObject)
+
+		//		accordion.Resize(fyne.NewSize(accordion.Size().Width, templatesFilesInTestCaseTable.Size().Height))
+		// tableAndButtonContainer.Refresh()
+		// accordion.Refresh()
+
+		// Update size of Columns and rows
+		templatesFilesInTestCaseTable.updateColumnAndRowSizes(
 			testCaseUuid,
-			false,
-			testCasesUiCanvasObject)
+			testCasesUiCanvasObject,
+			checkIfTemplatesAreChangedButton,
+			viewTemplateButton)
+
+		templateListArea.Refresh()
 
 	})
 
 	// Create Button to be able to check which Templates that are updated
-	checkIfTemplatesAreChangedButton := widget.NewButton("Check if Templates are changed", func() {
+	checkIfTemplatesAreChangedButton = widget.NewButton("Check if Templates are changed", func() {
 		// Add button functionality here
 
 		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
@@ -119,7 +140,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	})
 
 	// Create Button to be able to view Template and the effect of TestData- and PlaceHolder-engine
-	viewTemplateButton := widget.NewButton("View Templates", func() {
+	viewTemplateButton = widget.NewButton("View Templates", func() {
 
 		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
 		if existInMap == false {
@@ -138,6 +159,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 
 	})
 
+	templatesFilesInTestCaseTable.updateColumnAndRowSizes(
+		testCaseUuid,
+		testCasesUiCanvasObject,
+		checkIfTemplatesAreChangedButton,
+		viewTemplateButton)
+
 	// Create an Accordion item for the buttons
 	buttonContainer := container.NewHBox(githubFilesImporterButton, checkIfTemplatesAreChangedButton, viewTemplateButton)
 
@@ -150,7 +177,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	accordion = widget.NewAccordion(tableAccordionItem) // widget.NewAccordion(tableAccordionItem)
 
 	// Create the VBox-container that will be returned
-	templateListArea := container.NewVBox(accordion)
+	templateListArea = container.NewVBox(accordion)
 
 	return templateListArea, nil
 

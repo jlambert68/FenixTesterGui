@@ -17,7 +17,7 @@ require (
 	github.com/gorilla/pat v1.0.2
 	// github.com/gorilla/sessions v1.2.2 // v1.3.0 gives session error when trying to get token from GCP
 	github.com/gorilla/sessions v1.2.2 // v1.3.0 gives session error when trying to get token from GCP
-	github.com/jlambert68/FenixGrpcApi v0.0.0-20240727110216-c209b701e444
+	github.com/jlambert68/FenixGrpcApi v0.0.0-20240815091640-29e393e6aed3
 	github.com/jlambert68/FenixScriptEngine v0.0.0-20240813105044-967f7b44560c
 	github.com/markbates/goth v1.80.0
 	github.com/rs/zerolog v1.32.0

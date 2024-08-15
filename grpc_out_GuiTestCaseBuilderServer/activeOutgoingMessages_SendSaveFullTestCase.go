@@ -41,7 +41,6 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendSaveFullTestCase(gRPCF
 	//ctx := context.Background()
 	timeOutDuration := time.Now().Add(30 * time.Second)
 	ctx, cancel := context.WithDeadline(context.Background(), timeOutDuration)
-	//ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer func() {
 		cancel()
 	}()

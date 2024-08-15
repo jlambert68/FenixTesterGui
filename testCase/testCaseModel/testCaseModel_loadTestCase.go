@@ -198,6 +198,7 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 			SHA:                 tempTestCaseTemplateFile.SHA,
 			Size:                int(tempTestCaseTemplateFile.Size),
 			FileContentAsString: tempTestCaseTemplateFile.FileContentAsString,
+			FileHash:            tempTestCaseTemplateFile.FileHash,
 		}
 
 		tempTestCaseModel.ImportedTemplateFilesFromGitHub = append(

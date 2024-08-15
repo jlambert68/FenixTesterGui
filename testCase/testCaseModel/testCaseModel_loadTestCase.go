@@ -221,7 +221,7 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 
 	// Verify that calculated Hash is the same as the Stored Hash from the Database
 	var generatedHash string
-	_, _, _, _, _, generatedHash, err = testCaseModel.generateTestCaseForGrpcAndHash(tempTestCaseUuid)
+	_, _, _, _, _, _, generatedHash, err = testCaseModel.generateTestCaseForGrpcAndHash(tempTestCaseUuid)
 	if err != nil {
 
 		// Remove temporary stored TestCase

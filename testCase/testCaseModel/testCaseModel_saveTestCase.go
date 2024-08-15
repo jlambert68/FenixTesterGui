@@ -472,10 +472,6 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseTestDataForGrpc(
 	gRPCUsersChosenTestDataForTestCase *fenixGuiTestCaseBuilderServerGrpcApi.UsersChosenTestDataForTestCaseMessage,
 	err error) {
 
-	// Initiate the map for 'chosenTestDataPointsPerGroupMap'
-	var tempTestDataRowsMessage map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage
-	tempTestDataRowsMessage = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage)
-
 	// Get current TestCase
 	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
 	if existsInMap == false {
@@ -488,16 +484,24 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseTestDataForGrpc(
 		return nil, err
 	}
 
+	// The gRPC-version of 'testDataPointNameMap'
+	var chosenTestDataPointsPerGroupMapGrpc map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
+		TestDataPointNameMapMessage
+	chosenTestDataPointsPerGroupMapGrpc = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
+		TestDataPointNameMapMessage)
+
+	var testDataPointNameMapMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestDataPointNameMapMessage
+	testDataPointNameMapMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestDataPointNameMapMessage{}
+
 	// Loop TestDataGroups
 	for testDataGroupName, testDataPointNameMap := range currentTestCase.TestData.ChosenTestDataPointsPerGroupMap {
 
 		// The gRPC-version of 'testDataPointNameMap'
-		var usersChosenTestDataForTestCaseMessageGrpc map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
-			TestDataRowsMessage
-		usersChosenTestDataForTestCaseMessageGrpc = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
-			TestDataRowsMessage)
+		var chosenTestDataRowsPerTestDataPointMapGprc map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage
+		chosenTestDataRowsPerTestDataPointMapGprc = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage)
 
-		var testDataRowsInUsersChosenTestDataForTestCaseMessageGrpc []*fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowMessage
+		var testDataRowsGrpc *fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage
+		testDataRowsGrpc = &fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage{}
 
 		// Extract TestDataPoints for the TestDataPointNameMap
 		for testDataPointName, testDataPointsSlice := range *testDataPointNameMap {
@@ -546,48 +550,26 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseTestDataForGrpc(
 				testDataRowMessageSliceGrc = append(testDataRowMessageSliceGrc, testDataRowMessageGrpc)
 			}
 
-			testDataRowsInUsersChosenTestDataForTestCaseMessageGrpc = append(
-				testDataRowsInUsersChosenTestDataForTestCaseMessageGrpc,
-				testDataRowMessageSliceGrc...)
+			// Add 'testDataRowMessageSliceGrc' into "single message"
+			testDataRowsGrpc.TestDataRows = testDataRowMessageSliceGrc
 
-			// Add 'testDataRowMessageSliceGrc' to 'chosenTestDataRowsPerTestDataPointMapGrpc'
-			usersChosenTestDataForTestCaseMessageGrpc[string(testDataPointName)] = testDataRowsInUsersChosenTestDataForTestCaseMessageGrpc
+			// Store "single-message" with TestDataRows in map 'chosenTestDataRowsPerTestDataPointMapGprc'
+			chosenTestDataRowsPerTestDataPointMapGprc[string(testDataPointName)] = testDataRowsGrpc
 
 		}
 
-	}
+		// And 'chosenTestDataRowsPerTestDataPointMapGprc' into "single message"
+		testDataPointNameMapMessage.ChosenTestDataRowsPerTestDataPointMap = chosenTestDataRowsPerTestDataPointMapGprc
 
-	// Loop map with all 'TestCaseTemplateFiles' in the TestCase and add to gPRC-version
-	for _, importedTemplateFileFromGitHub := range currentTestCase.ImportedTemplateFilesFromGitHub {
-
-		// Create the gRPC-version of the 'ImportedTemplateFileFromGitHub'
-		var tempTestCaseTemplateFileMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseTemplateFileMessage
-		tempTestCaseTemplateFileMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseTemplateFileMessage{
-			Name:                importedTemplateFileFromGitHub.Name,
-			URL:                 importedTemplateFileFromGitHub.URL,
-			DownloadURL:         importedTemplateFileFromGitHub.DownloadURL,
-			SHA:                 importedTemplateFileFromGitHub.SHA,
-			Size:                int64(importedTemplateFileFromGitHub.Size),
-			FileContentAsString: importedTemplateFileFromGitHub.FileContentAsString,
-			FileHash:            importedTemplateFileFromGitHub.FileHash,
-		}
-
-		// Generate Hash for  'importedTemplateFileFromGitHub'
-		tempJson := protojson.Format(tempTestCaseTemplateFileMessage)
-		valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
-
-		// Add to Slice of all gRPC-versions of all 'ImportedTemplateFileFromGitHub'
-		gRPCTestCaseTemplateFiles.TestCaseTemplateFile = append(gRPCTestCaseTemplateFiles.TestCaseTemplateFile, tempTestCaseTemplateFileMessage)
+		// Store "singe-message with Group-data in map 'chosenTestDataPointsPerGroupMapGrpc'
+		chosenTestDataPointsPerGroupMapGrpc[string(testDataGroupName)] = testDataPointNameMapMessage
 
 	}
 
-	// Generate Hash of all sub-message-hashes
-	hashedSlice = sharedCode.HashValues(valuesToBeHashedSlice, true)
+	gRPCUsersChosenTestDataForTestCase = &fenixGuiTestCaseBuilderServerGrpcApi.UsersChosenTestDataForTestCaseMessage{
+		ChosenTestDataPointsPerGroupMap: chosenTestDataPointsPerGroupMapGrpc}
 
-	// Add hash to gRPC-versions of 'TestCaseTemplateFiles'
-	gRPCTestCaseTemplateFiles.HashForAllFiles = hashedSlice
-
-	return gRPCTestCaseTemplateFiles, hashedSlice, err
+	return gRPCUsersChosenTestDataForTestCase, err
 
 }
 

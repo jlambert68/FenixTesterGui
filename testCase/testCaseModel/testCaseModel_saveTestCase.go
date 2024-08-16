@@ -490,21 +490,21 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseTestDataForGrpc(
 	chosenTestDataPointsPerGroupMapGrpc = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
 		TestDataPointNameMapMessage)
 
-	var testDataPointNameMapMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestDataPointNameMapMessage
-	testDataPointNameMapMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestDataPointNameMapMessage{}
-
 	// Loop TestDataGroups
 	for testDataGroupName, testDataPointNameMap := range currentTestCase.TestData.ChosenTestDataPointsPerGroupMap {
+
+		var testDataPointNameMapMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestDataPointNameMapMessage
+		testDataPointNameMapMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestDataPointNameMapMessage{}
 
 		// The gRPC-version of 'testDataPointNameMap'
 		var chosenTestDataRowsPerTestDataPointMapGprc map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage
 		chosenTestDataRowsPerTestDataPointMapGprc = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage)
 
-		var testDataRowsGrpc *fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage
-		testDataRowsGrpc = &fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage{}
-
 		// Extract TestDataPoints for the TestDataPointNameMap
 		for testDataPointName, testDataPointsSlice := range *testDataPointNameMap {
+
+			var testDataRowsGrpc *fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage
+			testDataRowsGrpc = &fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage{}
 
 			// The gRPC-version of 'testDataPointsSlice'
 			var testDataRowMessageSliceGrc []*fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowMessage
@@ -567,7 +567,13 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseTestDataForGrpc(
 	}
 
 	gRPCUsersChosenTestDataForTestCase = &fenixGuiTestCaseBuilderServerGrpcApi.UsersChosenTestDataForTestCaseMessage{
-		ChosenTestDataPointsPerGroupMap: chosenTestDataPointsPerGroupMapGrpc}
+		ChosenTestDataPointsPerGroupMap:     chosenTestDataPointsPerGroupMapGrpc,
+		HashOfThisMessageWithEmptyHashField: ""}
+
+	// Generate Hash of gRPC-message and add it to the message
+	tempJson := protojson.Format(gRPCUsersChosenTestDataForTestCase)
+	hashedJson := sharedCode.HashSingleValue(tempJson)
+	gRPCUsersChosenTestDataForTestCase.HashOfThisMessageWithEmptyHashField = hashedJson
 
 	return gRPCUsersChosenTestDataForTestCase, err
 

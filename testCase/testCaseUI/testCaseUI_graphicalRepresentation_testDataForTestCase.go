@@ -156,6 +156,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 
 	})
 
+	refreshButtonForTest := widget.NewButton("Add TestData to TestCase", func() {
+		testDataPointGroupsSelectInMainTestCaseArea.Refresh()
+	})
+
 	// Add the Select UI component for TestData-selectors
 	testDataSelectorsContainer.Add(widget.NewLabel("TestData Group"))
 	testDataSelectorsContainer.Add(testDataPointGroupsSelectInMainTestCaseArea)
@@ -172,7 +176,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 	}
 
 	// Create an Accordion item for the buttons
-	buttonContainer := container.NewHBox(selectTestDataButton)
+	buttonContainer := container.NewHBox(selectTestDataButton, refreshButtonForTest)
 
 	selectorAndButtonContainer := container.NewBorder(nil, buttonContainer, nil, nil, testDataSelectorsContainer)
 	selectorAndButtonContainer.Refresh()

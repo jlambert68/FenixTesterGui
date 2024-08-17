@@ -60,9 +60,11 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 
 	// Check if changes are done to TestCase, but is only done if the TestCase is not saved before
 	if currentTestCase.ThisIsANewTestCase == true ||
-		currentTestCase.TestCaseHash != finalHash {
+		currentTestCase.TestCaseHash != finalHash ||
+		currentTestCase.TestDataHash != gRPCTestCaseTestData.GetHashOfThisMessageWithEmptyHashField() {
 
 		currentTestCase.TestCaseHash = finalHash
+		currentTestCase.TestDataHash = gRPCTestCaseTestData.GetHashOfThisMessageWithEmptyHashField()
 
 	} else {
 		return nil
@@ -132,6 +134,7 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 
 	// Update The Hash for the TestCase
 	currentTestCase.TestCaseHashWhenTestCaseWasSavedOrLoaded = gRPCFullTestCaseMessageToSend.MessageHash
+	currentTestCase.TestDataHashWhenTestCaseWasSavedOrLoaded = gRPCFullTestCaseMessageToSend.GetTestCaseTestData().GetHashOfThisMessageWithEmptyHashField()
 
 	// Save the TestCase back in Map
 	testCaseModel.TestCases[testCaseUuid] = currentTestCase
@@ -490,80 +493,83 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseTestDataForGrpc(
 	chosenTestDataPointsPerGroupMapGrpc = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
 		TestDataPointNameMapMessage)
 
-	// Loop TestDataGroups
-	for testDataGroupName, testDataPointNameMap := range currentTestCase.TestData.ChosenTestDataPointsPerGroupMap {
+	if currentTestCase.TestData != nil {
 
-		var testDataPointNameMapMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestDataPointNameMapMessage
-		testDataPointNameMapMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestDataPointNameMapMessage{}
+		// Loop TestDataGroups
+		for testDataGroupName, testDataPointNameMap := range currentTestCase.TestData.ChosenTestDataPointsPerGroupMap {
 
-		// The gRPC-version of 'testDataPointNameMap'
-		var chosenTestDataRowsPerTestDataPointMapGprc map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage
-		chosenTestDataRowsPerTestDataPointMapGprc = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage)
+			var testDataPointNameMapMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestDataPointNameMapMessage
+			testDataPointNameMapMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestDataPointNameMapMessage{}
 
-		// Extract TestDataPoints for the TestDataPointNameMap
-		for testDataPointName, testDataPointsSlice := range *testDataPointNameMap {
+			// The gRPC-version of 'testDataPointNameMap'
+			var chosenTestDataRowsPerTestDataPointMapGprc map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage
+			chosenTestDataRowsPerTestDataPointMapGprc = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage)
 
-			var testDataRowsGrpc *fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage
-			testDataRowsGrpc = &fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage{}
+			// Extract TestDataPoints for the TestDataPointNameMap
+			for testDataPointName, testDataPointsSlice := range *testDataPointNameMap {
 
-			// The gRPC-version of 'testDataPointsSlice'
-			var testDataRowMessageSliceGrc []*fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowMessage
+				var testDataRowsGrpc *fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage
+				testDataRowsGrpc = &fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowsMessage{}
 
-			// Loop the TestDataPoints
-			for _, testDataPoint := range *testDataPointsSlice {
+				// The gRPC-version of 'testDataPointsSlice'
+				var testDataRowMessageSliceGrc []*fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowMessage
 
-				// gRPC-version of 'SelectedTestDataPointUuidMap'
-				var testDataPointRowValueSummaryMapGrpc map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
-					TestDataPointRowValueSummaryMapMessage
-				testDataPointRowValueSummaryMapGrpc = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
-					TestDataPointRowValueSummaryMapMessage)
+				// Loop the TestDataPoints
+				for _, testDataPoint := range *testDataPointsSlice {
 
-				// Loop the 'selected' TestDataRows in the TestDataPoint
-				for _, testDataPointRowData := range testDataPoint.SelectedTestDataPointUuidMap {
-
-					// Create gRPC-version of 'testDataPointRowData'
-					var testDataPointRowDataGrpc *fenixGuiTestCaseBuilderServerGrpcApi.
+					// gRPC-version of 'SelectedTestDataPointUuidMap'
+					var testDataPointRowValueSummaryMapGrpc map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
 						TestDataPointRowValueSummaryMapMessage
-					testDataPointRowDataGrpc = &fenixGuiTestCaseBuilderServerGrpcApi.
-						TestDataPointRowValueSummaryMapMessage{
-						TestDataPointRowUuid:          string(testDataPointRowData.TestDataPointRowUuid),
-						TestDataPointRowValuesSummary: string(testDataPointRowData.TestDataPointRowValuesSummary),
+					testDataPointRowValueSummaryMapGrpc = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
+						TestDataPointRowValueSummaryMapMessage)
+
+					// Loop the 'selected' TestDataRows in the TestDataPoint
+					for _, testDataPointRowData := range testDataPoint.SelectedTestDataPointUuidMap {
+
+						// Create gRPC-version of 'testDataPointRowData'
+						var testDataPointRowDataGrpc *fenixGuiTestCaseBuilderServerGrpcApi.
+							TestDataPointRowValueSummaryMapMessage
+						testDataPointRowDataGrpc = &fenixGuiTestCaseBuilderServerGrpcApi.
+							TestDataPointRowValueSummaryMapMessage{
+							TestDataPointRowUuid:          string(testDataPointRowData.TestDataPointRowUuid),
+							TestDataPointRowValuesSummary: string(testDataPointRowData.TestDataPointRowValuesSummary),
+						}
+
+						// Add 'testDataPointRowDataGrpc' to gRPC-version of 'SelectedTestDataPointUuidMap'
+						testDataPointRowValueSummaryMapGrpc[string(testDataPointRowData.TestDataPointRowUuid)] =
+							testDataPointRowDataGrpc
 					}
 
-					// Add 'testDataPointRowDataGrpc' to gRPC-version of 'SelectedTestDataPointUuidMap'
-					testDataPointRowValueSummaryMapGrpc[string(testDataPointRowData.TestDataPointRowUuid)] =
-						testDataPointRowDataGrpc
+					// Create the gRPC-version of 'testDataPoint'
+					var testDataRowMessageGrpc *fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowMessage
+					testDataRowMessageGrpc = &fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowMessage{
+						TestDataDomainUuid:              string(testDataPoint.TestDataDomainUuid),
+						TestDataDomainName:              string(testDataPoint.TestDataDomainName),
+						TestDataAreaUuid:                string(testDataPoint.TestDataAreaUuid),
+						TestDataAreaName:                string(testDataPoint.TestDataAreaName),
+						TestDataPointName:               string(testDataPoint.TestDataPointName),
+						TestDataPointRowValueSummaryMap: testDataPointRowValueSummaryMapGrpc,
+					}
+
+					// Append to slice of TestDataPoint-message
+					testDataRowMessageSliceGrc = append(testDataRowMessageSliceGrc, testDataRowMessageGrpc)
 				}
 
-				// Create the gRPC-version of 'testDataPoint'
-				var testDataRowMessageGrpc *fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowMessage
-				testDataRowMessageGrpc = &fenixGuiTestCaseBuilderServerGrpcApi.TestDataRowMessage{
-					TestDataDomainUuid:              string(testDataPoint.TestDataDomainUuid),
-					TestDataDomainName:              string(testDataPoint.TestDataDomainName),
-					TestDataAreaUuid:                string(testDataPoint.TestDataAreaUuid),
-					TestDataAreaName:                string(testDataPoint.TestDataAreaName),
-					TestDataPointName:               string(testDataPoint.TestDataPointName),
-					TestDataPointRowValueSummaryMap: testDataPointRowValueSummaryMapGrpc,
-				}
+				// Add 'testDataRowMessageSliceGrc' into "single message"
+				testDataRowsGrpc.TestDataRows = testDataRowMessageSliceGrc
 
-				// Append to slice of TestDataPoint-message
-				testDataRowMessageSliceGrc = append(testDataRowMessageSliceGrc, testDataRowMessageGrpc)
+				// Store "single-message" with TestDataRows in map 'chosenTestDataRowsPerTestDataPointMapGprc'
+				chosenTestDataRowsPerTestDataPointMapGprc[string(testDataPointName)] = testDataRowsGrpc
+
 			}
 
-			// Add 'testDataRowMessageSliceGrc' into "single message"
-			testDataRowsGrpc.TestDataRows = testDataRowMessageSliceGrc
+			// And 'chosenTestDataRowsPerTestDataPointMapGprc' into "single message"
+			testDataPointNameMapMessage.ChosenTestDataRowsPerTestDataPointMap = chosenTestDataRowsPerTestDataPointMapGprc
 
-			// Store "single-message" with TestDataRows in map 'chosenTestDataRowsPerTestDataPointMapGprc'
-			chosenTestDataRowsPerTestDataPointMapGprc[string(testDataPointName)] = testDataRowsGrpc
+			// Store "singe-message with Group-data in map 'chosenTestDataPointsPerGroupMapGrpc'
+			chosenTestDataPointsPerGroupMapGrpc[string(testDataGroupName)] = testDataPointNameMapMessage
 
 		}
-
-		// And 'chosenTestDataRowsPerTestDataPointMapGprc' into "single message"
-		testDataPointNameMapMessage.ChosenTestDataRowsPerTestDataPointMap = chosenTestDataRowsPerTestDataPointMapGprc
-
-		// Store "singe-message with Group-data in map 'chosenTestDataPointsPerGroupMapGrpc'
-		chosenTestDataPointsPerGroupMapGrpc[string(testDataGroupName)] = testDataPointNameMapMessage
-
 	}
 
 	gRPCUsersChosenTestDataForTestCase = &fenixGuiTestCaseBuilderServerGrpcApi.UsersChosenTestDataForTestCaseMessage{

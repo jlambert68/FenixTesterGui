@@ -10,7 +10,9 @@ import (
 )
 
 // LoadDetailedTestCase - Load a Detailed TestCase from Database via gRPC-call to TestCaseBuilderServer
-func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) LoadDetailedTestCase(userId string, testCaseUuidToLoad string) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.GetDetailedTestCaseResponse) {
+func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) LoadDetailedTestCase(
+	userId string, testCaseUuidToLoad string) (
+	returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.GetDetailedTestCaseResponse) {
 
 	var ctx context.Context
 	var returnMessageAckNack bool

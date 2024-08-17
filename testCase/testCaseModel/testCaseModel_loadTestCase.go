@@ -57,6 +57,8 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 		ThisIsANewTestCase:                       false,
 		TestCaseHash:                             detailedTestCaseResponse.DetailedTestCase.MessageHash,
 		TestCaseHashWhenTestCaseWasSavedOrLoaded: "",
+		TestDataHash:                             detailedTestCaseResponse.DetailedTestCase.GetTestCaseTestData().GetHashOfThisMessageWithEmptyHashField(),
+		TestDataHashWhenTestCaseWasSavedOrLoaded: "",
 		ImportedTemplateFilesFromGitHub:          nil,
 		TestData:                                 nil,
 	}
@@ -210,30 +212,35 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 	// Generate users TestData for TestCase
 	var usersChosenTestDataForTestCaseMessage *fenixGuiTestCaseBuilderServerGrpcApi.UsersChosenTestDataForTestCaseMessage
 	usersChosenTestDataForTestCaseMessage = detailedTestCaseResponse.GetDetailedTestCase().GetTestCaseTestData()
+
+	var chosenTestDataPointsPerGroupMap map[testDataEngine.TestDataPointGroupNameType]*testDataEngine.TestDataPointNameMapType
+	chosenTestDataPointsPerGroupMap = make(map[testDataEngine.TestDataPointGroupNameType]*testDataEngine.TestDataPointNameMapType)
+
+	var testData *testDataEngine.TestDataForGroupObjectStruct
+	testData = &testDataEngine.TestDataForGroupObjectStruct{
+		TestDataPointGroups:             nil,
+		TestDataPointsForAGroup:         nil,
+		ChosenTestDataPointsPerGroupMap: chosenTestDataPointsPerGroupMap,
+		ShouldUpdateMainWindow: testDataEngine.ResponseChannelStruct{
+			ShouldBeUpdated:        false,
+			TestDataPointGroupName: "",
+		},
+	}
+
 	if usersChosenTestDataForTestCaseMessage != nil {
 		// User has TestData stored for the TestCase
 
-		var chosenTestDataPointsPerGroupMap map[testDataEngine.TestDataPointGroupNameType]*testDataEngine.TestDataPointNameMapType
-		chosenTestDataPointsPerGroupMap = make(map[testDataEngine.TestDataPointGroupNameType]*testDataEngine.TestDataPointNameMapType)
 		var testDataPointNameMap map[testDataEngine.TestDataValueNameType]*[]*testDataEngine.DataPointTypeForGroupsStruct
 		testDataPointNameMap = make(map[testDataEngine.TestDataValueNameType]*[]*testDataEngine.DataPointTypeForGroupsStruct)
 
-		var testData *testDataEngine.TestDataForGroupObjectStruct
-		testData = &testDataEngine.TestDataForGroupObjectStruct{
-			TestDataPointGroups:             nil,
-			TestDataPointsForAGroup:         nil,
-			ChosenTestDataPointsPerGroupMap: nil,
-			ShouldUpdateMainWindow: testDataEngine.ResponseChannelStruct{
-				ShouldBeUpdated:        false,
-				TestDataPointGroupName: "",
-			},
-		}
-
+		// Loop all Groups with TestDataPoints in gRPC-message
 		for testDataGroupNameGrpc, testDataGroupGrpc := range usersChosenTestDataForTestCaseMessage.ChosenTestDataPointsPerGroupMap {
+
+			var testDataPointNameMapAsObject testDataEngine.TestDataPointNameMapType
 
 			for testDataPointNameGrpc, testDataPointGrpc := range testDataGroupGrpc.ChosenTestDataRowsPerTestDataPointMap {
 
-				var dataPointTypeForGroups *[]*testDataEngine.DataPointTypeForGroupsStruct
+				var dataPointTypeForGroups []*testDataEngine.DataPointTypeForGroupsStruct
 
 				for _, testDataRowGrpc := range testDataPointGrpc.TestDataRows {
 
@@ -273,22 +280,35 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 					}
 
 					// Add 'dataPointTypeForGroup' to slice of 'dataPointTypeForGroups'
-					*dataPointTypeForGroups = append(*dataPointTypeForGroups, dataPointTypeForGroup)
-
-					xxx
+					dataPointTypeForGroups = append(dataPointTypeForGroups, dataPointTypeForGroup)
 
 				}
+
+				// Add the slice of TestDataRows to the map for TestDataPoints
+				testDataPointNameMap[testDataEngine.TestDataValueNameType(testDataPointNameGrpc)] = &dataPointTypeForGroups
+
 			}
 
+			// Move Map into object
+			testDataPointNameMapAsObject = testDataPointNameMap
+
+			chosenTestDataPointsPerGroupMap[testDataEngine.TestDataPointGroupNameType(testDataGroupNameGrpc)] = &testDataPointNameMapAsObject
+
+			testData.ChosenTestDataPointsPerGroupMap = chosenTestDataPointsPerGroupMap
+
+			tempTestCaseModel.TestData = testData
 		}
 
 	} else {
 		// User has no TestData stored for the TestCase
-		fmt.Println("kolla vad detta blir utan testdata")
+		testData.ChosenTestDataPointsPerGroupMap = chosenTestDataPointsPerGroupMap
+
+		tempTestCaseModel.TestData = testData
 	}
 
 	// Update The Hash for the TestCase
 	tempTestCaseModel.TestCaseHashWhenTestCaseWasSavedOrLoaded = detailedTestCaseResponse.DetailedTestCase.MessageHash
+	tempTestCaseModel.TestDataHashWhenTestCaseWasSavedOrLoaded = detailedTestCaseResponse.GetDetailedTestCase().GetTestCaseTestData().GetHashOfThisMessageWithEmptyHashField()
 
 	// Add TestCase to map with all TestCases
 	if testCaseModel.TestCases == nil {

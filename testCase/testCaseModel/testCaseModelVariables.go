@@ -80,6 +80,8 @@ type TestCaseModelStruct struct {
 	ThisIsANewTestCase                       bool
 	TestCaseHash                             string
 	TestCaseHashWhenTestCaseWasSavedOrLoaded string
+	TestDataHash                             string
+	TestDataHashWhenTestCaseWasSavedOrLoaded string
 
 	ImportedTemplateFilesFromGitHub []importFilesFromGitHub.GitHubFile
 	TestData                        *testDataEngine.TestDataForGroupObjectStruct

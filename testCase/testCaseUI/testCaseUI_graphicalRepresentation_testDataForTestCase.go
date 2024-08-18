@@ -156,10 +156,6 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 
 	})
 
-	refreshButtonForTest := widget.NewButton("Add TestData to TestCase", func() {
-		testDataPointGroupsSelectInMainTestCaseArea.Refresh()
-	})
-
 	// Add the Select UI component for TestData-selectors
 	testDataSelectorsContainer.Add(widget.NewLabel("TestData Group"))
 	testDataSelectorsContainer.Add(testDataPointGroupsSelectInMainTestCaseArea)
@@ -170,13 +166,25 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 	testDataSelectorsContainer.Add(widget.NewLabel("TestData Row"))
 	testDataSelectorsContainer.Add(testDataRowsForTestDataPointsSelectInMainTestCaseArea)
 
+	currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+	if existInMap == false {
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"ID":           "2aa83455-5d5f-42e0-9300-9b1eb55d53b8",
+			"testCaseUuid": testCaseUuid,
+		}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
+	}
+
 	// If there is no TestData then hide the "Select-boxes"
 	if len(currentTestCase.TestData.ListTestDataGroups()) == 0 {
 		testDataSelectorsContainer.Hide()
+	} else {
+		testDataPointGroupsSelectInMainTestCaseArea.SetOptions(getTestGroupsFromTestDataEngineFunction())
+		testDataSelectorsContainer.Show()
+		testDataPointGroupsSelectInMainTestCaseArea.Refresh()
 	}
 
 	// Create an Accordion item for the buttons
-	buttonContainer := container.NewHBox(selectTestDataButton, refreshButtonForTest)
+	buttonContainer := container.NewHBox(selectTestDataButton)
 
 	selectorAndButtonContainer := container.NewBorder(nil, buttonContainer, nil, nil, testDataSelectorsContainer)
 	selectorAndButtonContainer.Refresh()

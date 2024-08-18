@@ -216,6 +216,8 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 	var chosenTestDataPointsPerGroupMap map[testDataEngine.TestDataPointGroupNameType]*testDataEngine.TestDataPointNameMapType
 	chosenTestDataPointsPerGroupMap = make(map[testDataEngine.TestDataPointGroupNameType]*testDataEngine.TestDataPointNameMapType)
 
+	var testDataPointGroups []testDataEngine.TestDataPointGroupNameType
+
 	var testData *testDataEngine.TestDataForGroupObjectStruct
 	testData = &testDataEngine.TestDataForGroupObjectStruct{
 		TestDataPointGroups:             nil,
@@ -289,15 +291,21 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 
 			}
 
+			// Add to slice of GroupNames
+			testDataPointGroups = append(testDataPointGroups, testDataEngine.TestDataPointGroupNameType(testDataGroupNameGrpc))
+
 			// Move Map into object
 			testDataPointNameMapAsObject = testDataPointNameMap
 
 			chosenTestDataPointsPerGroupMap[testDataEngine.TestDataPointGroupNameType(testDataGroupNameGrpc)] = &testDataPointNameMapAsObject
 
-			testData.ChosenTestDataPointsPerGroupMap = chosenTestDataPointsPerGroupMap
-
-			tempTestCaseModel.TestData = testData
 		}
+
+		testData.ChosenTestDataPointsPerGroupMap = chosenTestDataPointsPerGroupMap
+
+		testData.TestDataPointGroups = testDataPointGroups
+
+		tempTestCaseModel.TestData = testData
 
 	} else {
 		// User has no TestData stored for the TestCase

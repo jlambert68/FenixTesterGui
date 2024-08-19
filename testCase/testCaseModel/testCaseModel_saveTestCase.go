@@ -9,6 +9,7 @@ import (
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"log"
+	"strings"
 )
 
 // SaveFullTestCase - Save the TestCase to the Database
@@ -209,6 +210,11 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionsForGrp
 		gRPCMatureTestInstructions = append(gRPCMatureTestInstructions, &MatureTestInstructionMessage)
 	}
 
+	// Remove spaces before hashing, due to some bug that generates "double space" sometimes when running in non-debug-mode
+	for index, textToReplaceIn := range valuesToBeHashedSlice {
+		valuesToBeHashedSlice[index] = strings.ReplaceAll(textToReplaceIn, " ", "")
+	}
+
 	// Generate Hash of all sub-message-hashes
 	hashedSlice = sharedCode.HashValues(valuesToBeHashedSlice, false)
 
@@ -279,6 +285,11 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionContain
 		gRPCMatureTestInstructionContainers = append(gRPCMatureTestInstructionContainers, &MatureTestInstructionContainerMessage)
 	}
 
+	// Remove spaces before hashing, due to some bug that generates "double space" sometimes when running in non-debug-mode
+	for index, textToReplaceIn := range valuesToBeHashedSlice {
+		valuesToBeHashedSlice[index] = strings.ReplaceAll(textToReplaceIn, " ", "")
+	}
+
 	// Generate Hash of all sub-message-hashes
 	hashedSlice = sharedCode.HashValues(valuesToBeHashedSlice, false)
 
@@ -316,6 +327,11 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseModelElementsForGrpc
 		tempJson := protojson.Format(&matureTestCaseModelElement.MatureTestCaseModelElementMessage)
 		valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 
+	}
+
+	// Remove spaces before hashing, due to some bug that generates "double space" sometimes when running in non-debug-mode
+	for index, textToReplaceIn := range valuesToBeHashedSlice {
+		valuesToBeHashedSlice[index] = strings.ReplaceAll(textToReplaceIn, " ", "")
 	}
 
 	// Generate Hash of all sub-message-hashes
@@ -398,6 +414,11 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseExtraInformationForG
 	tempJson := protojson.Format(&tempTestCaseTextualRepresentationHistory)
 	valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 
+	// Remove spaces before hashing, due to some bug that generates "double space" sometimes when running in non-debug-mode
+	for index, textToReplaceIn := range valuesToBeHashedSlice {
+		valuesToBeHashedSlice[index] = strings.ReplaceAll(textToReplaceIn, " ", "")
+	}
+
 	// Generate Hash of all sub-message-hashes
 	hashedSlice = sharedCode.HashValues(valuesToBeHashedSlice, false)
 
@@ -457,6 +478,11 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseTemplateFilesForGrpc
 		// Add to Slice of all gRPC-versions of all 'ImportedTemplateFileFromGitHub'
 		gRPCTestCaseTemplateFiles.TestCaseTemplateFile = append(gRPCTestCaseTemplateFiles.TestCaseTemplateFile, tempTestCaseTemplateFileMessage)
 
+	}
+
+	// Remove spaces before hashing, due to some bug that generates "double space" sometimes when running in non-debug-mode
+	for index, textToReplaceIn := range valuesToBeHashedSlice {
+		valuesToBeHashedSlice[index] = strings.ReplaceAll(textToReplaceIn, " ", "")
 	}
 
 	// Generate Hash of all sub-message-hashes
@@ -578,6 +604,10 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseTestDataForGrpc(
 
 	// Generate Hash of gRPC-message and add it to the message
 	tempJson := protojson.Format(gRPCUsersChosenTestDataForTestCase)
+
+	// Remove spaces before hashing, due to some bug that generates "double space" sometimes when running in non-debug-mode
+	tempJson = strings.ReplaceAll(tempJson, " ", "")
+
 	hashedJson := sharedCode.HashSingleValue(tempJson)
 	gRPCUsersChosenTestDataForTestCase.HashOfThisMessageWithEmptyHashField = hashedJson
 

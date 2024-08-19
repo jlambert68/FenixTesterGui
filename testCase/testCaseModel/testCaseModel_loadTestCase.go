@@ -232,11 +232,11 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 	if usersChosenTestDataForTestCaseMessage != nil {
 		// User has TestData stored for the TestCase
 
-		var testDataPointNameMap map[testDataEngine.TestDataValueNameType]*[]*testDataEngine.DataPointTypeForGroupsStruct
-		testDataPointNameMap = make(map[testDataEngine.TestDataValueNameType]*[]*testDataEngine.DataPointTypeForGroupsStruct)
-
 		// Loop all Groups with TestDataPoints in gRPC-message
 		for testDataGroupNameGrpc, testDataGroupGrpc := range usersChosenTestDataForTestCaseMessage.ChosenTestDataPointsPerGroupMap {
+
+			var testDataPointNameMap map[testDataEngine.TestDataValueNameType]*[]*testDataEngine.DataPointTypeForGroupsStruct
+			testDataPointNameMap = make(map[testDataEngine.TestDataValueNameType]*[]*testDataEngine.DataPointTypeForGroupsStruct)
 
 			var testDataPointNameMapAsObject testDataEngine.TestDataPointNameMapType
 

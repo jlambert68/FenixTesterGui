@@ -16,6 +16,8 @@ import (
 	"fyne.io/fyne/v2/widget"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	"github.com/jlambert68/FenixScriptEngine/testDataEngine"
+	"github.com/sirupsen/logrus"
 	"image/color"
 	"log"
 	"strconv"
@@ -168,6 +170,49 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 	var testCaseUuidToBeExecuted string
 	testCaseUuidToBeExecuted = incomingChannelCommand.FirstParameter
 
+	var existInMap bool
+	var currentTestCase testCaseModel.TestCaseModelStruct
+
+	currentTestCase, existInMap = commandAndRuleEngine.Testcases.TestCases[testCaseUuidToBeExecuted]
+	if existInMap == false {
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"ID":           "8d25e3da-e1b5-4222-9446-d25dd7d930f1",
+			"testCaseUuid": testCaseUuidToBeExecuted,
+		}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
+	}
+
+	// Extract values from TestData-model
+	domainName := currentTestCase.TestData.TestDataColumnDataNameToValueMap["First part:"]
+	testDataAreaName := currentTestCase.TestData.TestDataColumnDataNameToValueMap["Second part:"]
+	testDataPointRowUuid := currentTestCase.TestData.TestDataColumnDataNameToValueMap["TestDataPointRowUuid"]
+
+	testDataDomainAndAreaNameToUuidMap := *testDataEngine.TestDataModel.TestDataDomainAndAreaNameToUuidMap
+	domainUuid := testDataDomainAndAreaNameToUuidMap[testDataEngine.TestDataDomainOrAreaNameType(domainName)]
+	testDataAreaUuid := testDataDomainAndAreaNameToUuidMap[testDataEngine.TestDataDomainOrAreaNameType(testDataAreaName)]
+
+	testDataModelMap := *testDataEngine.TestDataModel.TestDataModelMap
+	testDataDomainTemplateName := testDataModelMap[testDataEngine.TestDataDomainUuidType(domainUuid)].TestDataDomainTemplateName
+
+	testDataAreasMap := *testDataModelMap[testDataEngine.TestDataDomainUuidType(domainUuid)].TestDataAreasMap
+	testDataFileSha256Hash := testDataAreasMap[testDataEngine.TestDataAreaUuidType(testDataAreaUuid)].TestDataFileSha256Hash
+
+	//testDataValueMap := currentTestCase.TestData.TestDataColumnDataNameToValueMap
+
+	var testDataValueMap map[string]*fenixExecutionServerGuiGrpcApi.TestDataValueMapValueMessage
+
+	// Get selected TestData for execution
+	var testDataForTestCaseExecution *fenixExecutionServerGuiGrpcApi.TestDataForTestCaseExecutionMessage
+	testDataForTestCaseExecution = &fenixExecutionServerGuiGrpcApi.TestDataForTestCaseExecutionMessage{
+		TestDataDomainUuid:         string(domainUuid),
+		TestDataDomainName:         domainName,
+		TestDataDomainTemplateName: string(testDataDomainTemplateName),
+		TestDataAreaUuid:           string(testDataAreaUuid),
+		TestDataAreaName:           testDataAreaName,
+		TestDataValueMap:           testDataValueMap,
+		TestDataRowIdentifier:      testDataPointRowUuid,
+		TestDataFileSha256Hash:     string(testDataFileSha256Hash),
+	}
+
 	// Create message to be sent to GuiExecutionServer
 	var initiateSingleTestCaseExecutionRequestMessage *fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionRequestMessage
 	initiateSingleTestCaseExecutionRequestMessage = &fenixExecutionServerGuiGrpcApi.InitiateSingleTestCaseExecutionRequestMessage{
@@ -178,9 +223,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 			ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
 				grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion()),
 		},
-		TestCaseUuid:               testCaseUuidToBeExecuted,
-		TestDataSetUuid:            testCaseUuidToBeExecuted,                                                                              //TODO change into a correct 'TestDataSetUuid' when that is supported
-		ExecutionStatusReportLevel: fenixExecutionServerGuiGrpcApi.ExecutionStatusReportLevelEnum_REPORT_ALL_STATUS_CHANGES_ON_EXECUTIONS, //fenixExecutionServerGuiGrpcApi.ExecutionStatusReportLevelEnum_REPORT_ALL_STATUS_CHANGES_ON_EXECUTIONS,
+		TestCaseUuid:                 testCaseUuidToBeExecuted,
+		TestDataSetUuid:              testCaseUuidToBeExecuted,                                                                              //TODO change into a correct 'TestDataSetUuid' when that is supported
+		ExecutionStatusReportLevel:   fenixExecutionServerGuiGrpcApi.ExecutionStatusReportLevelEnum_REPORT_ALL_STATUS_CHANGES_ON_EXECUTIONS, //fenixExecutionServerGuiGrpcApi.ExecutionStatusReportLevelEnum_REPORT_ALL_STATUS_CHANGES_ON_EXECUTIONS,
+		TestDataForTestCaseExecution: &fenixExecutionServerGuiGrpcApi.TestDataForTestCaseExecutionMessage{},
 	}
 
 	// Initiate TestCaseExecution

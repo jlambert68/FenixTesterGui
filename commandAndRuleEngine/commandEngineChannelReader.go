@@ -199,7 +199,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 				len(currentTestCase.TestData.SelectedTestDataPoint) == 0 ||
 				len(currentTestCase.TestData.SelectedTestDataPointRowSummary) == 0) {
 
-			dialog.NewConfirm("Confirmation", "There are TestData to chose from, " +
+			dialog.NewConfirm("Confirmation", "There are TestData to chose from, "+
 				"but no TestData was selected for the TestCase."+
 				"\n\nWould you like to execute the TestCase WITHOUT TestData?", func(response bool) {
 
@@ -214,44 +214,53 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 			}
 		}
 
-		nedanstående ska endast göras då det finns data
-		// Extract values from TestData-model
-		testDataPointRowUuid := currentTestCase.TestData.TestDataColumnDataNameToValueMap["TestDataPointRowUuid"]
-		testDataModelMap := *testDataEngine.TestDataModel.TestDataModelMap
-		testDataAreasMap := *testDataModelMap[testDataEngine.TestDataDomainUuidType(
-			currentTestCase.TestData.SelectedTestDataDomainUuid)].TestDataAreasMap
-		testDataFileSha256Hash := testDataAreasMap[testDataEngine.TestDataAreaUuidType(
-			currentTestCase.TestData.SelectedTestDataTestDataAreaUuid)].TestDataFileSha256Hash
+		if executeWithOutTestData == true {
 
-		// Create the TestDataValueMap
-		var testDataValueMap map[string]*fenixExecutionServerGuiGrpcApi.TestDataValueMapValueMessage
-		for headerDataName, dataValue := range currentTestCase.TestData.TestDataColumnDataNameToValueMap {
-			var testDataValueMapValueMessage fenixExecutionServerGuiGrpcApi.TestDataValueMapValueMessage
-			testDataValueMapValueMessage = fenixExecutionServerGuiGrpcApi.TestDataValueMapValueMessage{
-				HeaderDataName:                    headerDataName,
-				TestDataValue:                     dataValue,
-				TestDataValueIsReplaced:           false, // TODO implement this
-				TestDataOriginalValueWhenReplaced: "",    // TODO implement this
+			// TestData exist but not chosen
+			testDataForTestCaseExecution = &fenixExecutionServerGuiGrpcApi.TestDataForTestCaseExecutionMessage{}
+
+		} else {
+
+			// Extract values from TestData-model
+			testDataPointRowUuid := currentTestCase.TestData.TestDataColumnDataNameToValueMap["TestDataPointRowUuid"]
+			testDataModelMap := *testDataEngine.TestDataModel.TestDataModelMap
+			testDataAreasMap := *testDataModelMap[testDataEngine.TestDataDomainUuidType(
+				currentTestCase.TestData.SelectedTestDataDomainUuid)].TestDataAreasMap
+			testDataFileSha256Hash := testDataAreasMap[testDataEngine.TestDataAreaUuidType(
+				currentTestCase.TestData.SelectedTestDataTestDataAreaUuid)].TestDataFileSha256Hash
+
+			// Create the TestDataValueMap
+			var testDataValueMap map[string]*fenixExecutionServerGuiGrpcApi.TestDataValueMapValueMessage
+			for headerDataName, dataValue := range currentTestCase.TestData.TestDataColumnDataNameToValueMap {
+				var testDataValueMapValueMessage fenixExecutionServerGuiGrpcApi.TestDataValueMapValueMessage
+				testDataValueMapValueMessage = fenixExecutionServerGuiGrpcApi.TestDataValueMapValueMessage{
+					HeaderDataName:                    headerDataName,
+					TestDataValue:                     dataValue,
+					TestDataValueIsReplaced:           false, // TODO implement this
+					TestDataOriginalValueWhenReplaced: "",    // TODO implement this
+				}
+
+				// Add too TestDataValueMap
+				testDataValueMap[headerDataName] = &testDataValueMapValueMessage
+
 			}
 
-			// Add too TestDataValueMap
-			testDataValueMap[headerDataName] = &testDataValueMapValueMessage
+			// Get selected TestData for execution
 
-		}
-
-		// Get selected TestData for execution
-
-		testDataForTestCaseExecution = &fenixExecutionServerGuiGrpcApi.TestDataForTestCaseExecutionMessage{
-			TestDataDomainUuid:         currentTestCase.TestData.SelectedTestDataDomainUuid,
-			TestDataDomainName:         currentTestCase.TestData.SelectedTestDataDomainName,
-			TestDataDomainTemplateName: currentTestCase.TestData.SelectedTestDataDomainTemplateName,
-			TestDataAreaUuid:           currentTestCase.TestData.SelectedTestDataTestDataAreaUuid,
-			TestDataAreaName:           currentTestCase.TestData.SelectedTestDataAreaName,
-			TestDataValueMap:           testDataValueMap,
-			TestDataRowIdentifier:      testDataPointRowUuid,
-			TestDataFileSha256Hash:     string(testDataFileSha256Hash),
+			testDataForTestCaseExecution = &fenixExecutionServerGuiGrpcApi.TestDataForTestCaseExecutionMessage{
+				TestDataDomainUuid:         currentTestCase.TestData.SelectedTestDataDomainUuid,
+				TestDataDomainName:         currentTestCase.TestData.SelectedTestDataDomainName,
+				TestDataDomainTemplateName: currentTestCase.TestData.SelectedTestDataDomainTemplateName,
+				TestDataAreaUuid:           currentTestCase.TestData.SelectedTestDataTestDataAreaUuid,
+				TestDataAreaName:           currentTestCase.TestData.SelectedTestDataAreaName,
+				TestDataValueMap:           testDataValueMap,
+				TestDataRowIdentifier:      testDataPointRowUuid,
+				TestDataFileSha256Hash:     string(testDataFileSha256Hash),
+			}
 		}
 	} else {
+
+		// No TestData exists
 		testDataForTestCaseExecution = &fenixExecutionServerGuiGrpcApi.TestDataForTestCaseExecutionMessage{}
 	}
 

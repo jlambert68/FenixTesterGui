@@ -3,7 +3,6 @@ package testCaseUI
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
-	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
@@ -166,20 +165,32 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 
 		// Extract Unique id, first column, for the TestDataRow
 
+		var (
+			domainUuid         string
+			domainName         string
+			domainTemplateName string
+			testDataAreaUuid   string
+			testDataAreaName   string
+		)
+
 		// Extract correlation between ColumnDataName and data value for DataRow
 		var testDataColumnDataNameMap map[string]string // map[TestDataColumnDataNameType]TestDataValueType
-		testDataColumnDataNameMap = currentTestCase.TestData.
-			GetTestDataPointValuesMapBasedOnGroupPointNameAndSummaryValue(
+		testDataColumnDataNameMap,
+			domainUuid, domainName, domainTemplateName, testDataAreaUuid, testDataAreaName =
+			currentTestCase.TestData.GetTestDataPointValuesMapBasedOnGroupPointNameAndSummaryValue(
 				testDataPointGroupsSelectSelectedInMainTestCaseArea,
 				testDataPointForAGroupSelectSelectedInMainTestCaseArea,
 				testDataRowForTestDataPointsSelectSelectedInMainTestCaseArea)
 
+		// Store Selected TestData on the TestCase
+		currentTestCase.TestData.SelectedTestDataDomainUuid = domainUuid
+		currentTestCase.TestData.SelectedTestDataDomainName = domainName
+		currentTestCase.TestData.SelectedTestDataDomainTemplateName = domainTemplateName
+		currentTestCase.TestData.SelectedTestDataTestDataAreaUuid = testDataAreaUuid
+		currentTestCase.TestData.SelectedTestDataAreaName = testDataAreaName
 		currentTestCase.TestData.TestDataColumnDataNameToValueMap = testDataColumnDataNameMap
 
-		for a, b := range testDataColumnDataNameMap {
-			fmt.Println(a, b)
-		}
-
+		// Store back the TestCase
 		testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = currentTestCase
 
 	})

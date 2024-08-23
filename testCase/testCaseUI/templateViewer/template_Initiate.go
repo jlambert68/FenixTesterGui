@@ -86,10 +86,11 @@ func InitiateTemplateViewer(
 
 		selectedFile = selected
 
-		testDataPointValues = testDataForGroupObject.GetTestDataPointValuesMapBasedOnGroupPointNameAndSummaryValue(
-			testDataPointGroupsSelectSelected,
-			testDataPointForAGroupSelectSelected,
-			testDataRowForTestDataPointsSelectSelected)
+		testDataPointValues, _, _, _, _, _ = testDataForGroupObject.
+			GetTestDataPointValuesMapBasedOnGroupPointNameAndSummaryValue(
+				testDataPointGroupsSelectSelected,
+				testDataPointForAGroupSelectSelected,
+				testDataRowForTestDataPointsSelectSelected)
 
 		for _, file := range *importedFilesPtr {
 			if file.Name == selected {

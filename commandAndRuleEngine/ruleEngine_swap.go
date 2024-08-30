@@ -1,6 +1,7 @@
 package commandAndRuleEngine
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
@@ -163,6 +164,15 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 		fmt.Println(err.Error()) //TODO Send to Error-channel
 
 		return err
+	}
+
+	// Generate OptionsList for ExecutionsDomains
+	var executionDomainsThatCanReceiveDirectTargetedTestInstructions []*fenixGuiTestCaseBuilderServerGrpcApi.
+		ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMessage
+	executionDomainsThatCanReceiveDirectTargetedTestInstructions = *sharedCode.ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsPtr
+	var optionsListForExecutionsDomains []string
+	for _, tempExecutionDomain := range executionDomainsThatCanReceiveDirectTargetedTestInstructions {
+		optionsListForExecutionsDomains = append(optionsListForExecutionsDomains, tempExecutionDomain.ExecutionDomainUuid)
 	}
 
 	// Used for extracting data to be used
@@ -419,6 +429,29 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 							TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.
 								TestInstructionAttributeTypeEnum_COMBOBOX)
 
+						var comboBoxProperty *fenixGuiTestCaseBuilderServerGrpcApi.
+							MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputComboBoxProperty
+
+						comboBoxProperty = &fenixGuiTestCaseBuilderServerGrpcApi.
+							MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputComboBoxProperty{
+							TestInstructionAttributeComboBoxUuid: attribute.TestInstructionAttributeUuid,
+							TestInstructionAttributeComboBoxName: attribute.TestInstructionAttributeName,
+							ComboBoxEditable:                     attribute.TestInstructionAttributeEnable,
+							ComboBoxInputMask:                    attribute.TestInstructionAttributeInputMask,
+							ComboBoxAttributeTypeUuid:            attribute.TestInstructionAttributeTypeUuid,
+							ComboBoxAttributeTypeName:            attribute.TestInstructionAttributeTypeName,
+							ComboBoxAttributeValueUuid:           attribute.TestInstructionAttributeValueUuid,
+							ComboBoxAttributeValue:               attribute.TestInstructionAttributeValueAsString,
+							ComboBoxAllowedValues:                attribute.TestInstructionAttributeComboBoxPredefinedValues,
+						}
+
+						newTestInstructionAttributeInformation.InputComboBoxProperty = comboBoxProperty
+
+						// If it shouldn't be any value in the Textbox then adjust that
+						if newTestInstructionAttributeInformation.InputComboBoxProperty.ComboBoxAttributeValue == "#NO_VALUE#" {
+							newTestInstructionAttributeInformation.InputComboBoxProperty.ComboBoxAttributeValue = ""
+						}
+
 					case "FILE_SELECTOR":
 						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.
 							TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.
@@ -457,6 +490,26 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.
 							TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.
 								TestInstructionAttributeTypeEnum_COMBOBOX)
+
+						var responseVariableComboBoxProperty *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeResponseVariableComboBoxProperty
+
+						responseVariableComboBoxProperty = &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeResponseVariableComboBoxProperty{
+							TestInstructionAttributeResponseVariableComboBoxUuid: attribute.TestInstructionAttributeUuid,
+							TestInstructionAttributeResponseVariableComboBoxName: attribute.TestInstructionAttributeName,
+							ComboBoxAttributeTypeUuid:                            attribute.TestInstructionAttributeTypeUuid,
+							ComboBoxAttributeTypeName:                            attribute.TestInstructionAttributeTypeName,
+							AllowedResponseVariableType:                          optionsListForExecutionsDomains,
+							ChosenResponseVariableTypeUuid:                       "",
+							ChosenResponseVariableTypeName:                       "",
+							ComboBoxAttributeValueAsString:                       "",
+							ComboBoxResponseVariableInputMask:                    attribute.TestInstructionAttributeInputMask,
+						}
+
+						newTestInstructionAttributeInformation.ResponseVariableComboBoxProperty = responseVariableComboBoxProperty
+
+						if newTestInstructionAttributeInformation.ResponseVariableComboBoxProperty.ComboBoxAttributeValueAsString == "#NO_VALUE#" {
+							newTestInstructionAttributeInformation.ResponseVariableComboBoxProperty.ComboBoxAttributeValueAsString = ""
+						}
 
 					default:
 						errorId := "117d964e-860f-4497-b367-02c041553615"

@@ -131,7 +131,8 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) makeTree
 }
 
 // Load all Available Building Blocks from Gui-server
-func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvailableBuildingBlocksFromServer(testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvailableBuildingBlocksFromServer(
+	testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
 
 	var testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage
 
@@ -309,7 +310,32 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadAvai
 		}
 	}
 
-	// fmt.Println(testInstructionsAndTestContainersMessage)
+	var immatureTestInstructionAttributesMap map[string]map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionAttributesMessage_TestInstructionAttributeMessage
+	immatureTestInstructionAttributesMap = make(map[string]map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionAttributesMessage_TestInstructionAttributeMessage)
+
+	// Loop all Attributes and put into map
+	for _, attribute := range testInstructionsAndTestContainersMessage.ImmatureTestInstructionAttributes.TestInstructionAttributesList {
+
+		// Create a map for the Attribute useing the following map-format:  map[TestInstructionUuid]map[TestInstructionAttributeUuid]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionAttributesMessage_TestInstructionAttributeMessage
+		testInstructionUuidMap, existInMap := immatureTestInstructionAttributesMap[attribute.TestInstructionUuid]
+		if existInMap == true {
+			testInstructionUuidMap[attribute.TestInstructionAttributeUuid] = attribute
+			immatureTestInstructionAttributesMap[attribute.TestInstructionUuid] = testInstructionUuidMap
+		} else {
+			testInstructionUuidMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionAttributesMessage_TestInstructionAttributeMessage)
+			testInstructionUuidMap[attribute.TestInstructionAttributeUuid] = attribute
+			immatureTestInstructionAttributesMap[attribute.TestInstructionUuid] = testInstructionUuidMap
+		}
+
+	}
+
+	// Save Attributes in TestCase-model //TODO Place Attributes, Bonds and Immature TI and Immature TIC in separate object
+	testCaseModeReference.ImmatureTestInstructionAttributesMap = immatureTestInstructionAttributesMap
+
+	// Store list with AvailableExecutionDomains
+	availableBuildingBlocksModel.storeUsersAvailableExecutionDomains(
+		testInstructionsAndTestContainersMessage.GetExecutionDomainsThatCanReceiveDirectTargetedTestInstructions(),
+		testCaseModeReference)
 
 }
 

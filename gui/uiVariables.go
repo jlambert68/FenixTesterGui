@@ -147,6 +147,10 @@ type AvailableBuildingBlocksModelStruct struct {
 
 	// TestData that this User can use
 	TestData []*fenixGuiTestCaseBuilderServerGrpcApi.TestDataFromOneSimpleTestDataAreaFileMessage
+
+	// Users available ExecutionDomains to be used with Fenix-created TestInstructions that should be sent to other Domain then Fenix
+	executionDomainsThatCanReceiveDirectTargetedTestInstructions []*fenixGuiTestCaseBuilderServerGrpcApi.
+									ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMessage
 }
 type GlobalUIServerStruct struct {
 	logger                             *logrus.Logger

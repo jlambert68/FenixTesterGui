@@ -453,6 +453,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 							newTestInstructionAttributeInformation.ResponseVariableComboBoxProperty.ComboBoxAttributeValueAsString = ""
 						}
 
+					case "TESTCASE_BUILDER_SERVER_INJECTED_COMBOBOX":
+						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.
+							TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.
+								TestInstructionAttributeTypeEnum_COMBOBOX)
+
 					default:
 						errorId := "117d964e-860f-4497-b367-02c041553615"
 						err = errors.New(fmt.Sprintf("unknown 'attribute.TestInstructionAttributeUIType' %s [ErrorID: %s]", attribute.TestInstructionAttributeUIType, errorId))

@@ -879,6 +879,10 @@ func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCa
 					tempTestInstructionAttribute.AttributeInformation.InputTextBoxProperty.
 						TextBoxAttributeValue = attribute.AttributeChangedValue
 
+				case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_COMBOBOX:
+					tempTestInstructionAttribute.AttributeInformation.InputComboBoxProperty.
+						ComboBoxAttributeValue = attribute.AttributeChangedValue
+
 				case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_RESPONSE_VARIABLE_COMBOBOX:
 					tempTestInstructionAttribute.AttributeInformation.ResponseVariableComboBoxProperty.
 						ComboBoxAttributeValueAsString = attribute.AttributeChangedValue

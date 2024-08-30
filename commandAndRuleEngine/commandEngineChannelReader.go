@@ -231,6 +231,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 
 			// Create the TestDataValueMap
 			var testDataValueMap map[string]*fenixExecutionServerGuiGrpcApi.TestDataValueMapValueMessage
+			testDataValueMap = make(map[string]*fenixExecutionServerGuiGrpcApi.TestDataValueMapValueMessage)
 			for headerDataName, dataValue := range currentTestCase.TestData.TestDataColumnDataNameToValueMap {
 				var testDataValueMapValueMessage fenixExecutionServerGuiGrpcApi.TestDataValueMapValueMessage
 				testDataValueMapValueMessage = fenixExecutionServerGuiGrpcApi.TestDataValueMapValueMessage{

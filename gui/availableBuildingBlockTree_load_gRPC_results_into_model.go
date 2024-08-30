@@ -537,6 +537,22 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeTes
 
 }
 
+// Store Users available ExecutionDomains to be used with Fenix-created TestInstructions that should be sent to other Domain then Fenix
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeUsersAvailableExecutionDomains(
+	executionDomainsThatCanReceiveDirectTargetedTestInstructions []*fenixGuiTestCaseBuilderServerGrpcApi.
+		ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMessage,
+	testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
+
+	// Store the list with TemplateRepositoryApiUrls
+	availableBuildingBlocksModel.executionDomainsThatCanReceiveDirectTargetedTestInstructions =
+		executionDomainsThatCanReceiveDirectTargetedTestInstructions
+
+	// Store a pointer to 'ExecutionDomains'
+	sharedCode.ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsPtr =
+		&availableBuildingBlocksModel.executionDomainsThatCanReceiveDirectTargetedTestInstructions
+
+}
+
 // Convert gRPC-message for TI or TIC into model used within the TestCase-model
 func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) convertGrpcElementModelIntoTestCaseElementModel(immatureGrpcElementModelMessage *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureElementModelMessage) (immatureTestCaseElementModel testCaseModel.ImmatureElementStruct) {
 

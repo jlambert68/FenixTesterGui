@@ -286,34 +286,92 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_COMBOBOX:
 		// Add the Select-widget (ComboBox)
-		/*
-			// Get available values
-			var availableValues []string
-			for _, availableValue := attributeItem.AttributeComboBoxProperty.
 
-			newAttributeSelect := widget.NewSelect(nil, nil)
-			attributeItem.SelectRef = newAttributeSelect
-			newAttributeSelect.SetSelected(attributeItem.AttributeValue)
-			newAttributeSelect.OnChanged = func(newValue string) {
-				// Find which attributes that we are dealing with
-				var tempAttributeItem *testCaseModel.AttributeStruct
+		var err error
 
-				for _, tempAttributeItem = range *attributesList {
-					if tempAttributeItem.SelectRef == newAttributeSelect {
-						break
-					}
+		// Get the available options from centralized stored list
+		var optionsList []string
+
+		var executionDomainsThatCanReceiveDirectTargetedTestInstructions []*fenixGuiTestCaseBuilderServerGrpcApi.
+			ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMessage
+		executionDomainsThatCanReceiveDirectTargetedTestInstructions = *sharedCode.ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsPtr
+		for _, tempExecutionDomain := range executionDomainsThatCanReceiveDirectTargetedTestInstructions {
+			optionsList = append(optionsList, tempExecutionDomain.ExecutionDomainUuid)
+		}
+
+		// Create the Select
+		newAttributeSelect := widget.NewSelect(optionsList, nil)
+		attributeItem.SelectRef = newAttributeSelect
+
+		// Set previous selected value if exist
+		newAttributeSelect.SetSelected(attributeItem.AttributeValue)
+		newAttributeSelect.OnChanged = func(newValue string) {
+			// Find which attributes that we are dealing with
+			var tempAttributeItem *testCaseModel.AttributeStruct
+			var foundAttribute bool
+
+			for _, tempAttributeItem = range *attributesList {
+				if tempAttributeItem.SelectRef == newAttributeSelect {
+					foundAttribute = true
+					break
 				}
-				if newValue != tempAttributeItem.AttributeValue {
-					tempAttributeItem.AttributeIsChanged = true
-					tempAttributeItem.AttributeChangedValue = newValue
-				} else {
-					tempAttributeItem.AttributeIsChanged = false
-					tempAttributeItem.AttributeChangedValue = newValue
-				}
+			}
+			if foundAttribute == false {
+				errorId := "bac28755-d9a8-4565-83b0-b01368ecbe9d"
+				err = errors.New(fmt.Sprintf("Couldn't find Attribute in attribute list [ErrorID: %s]",
+					errorId))
+
+				//TODO Send ERRORS over error-channel
+
+				// Hard exit
+				log.Fatalln(err)
 
 			}
-			attributesFormContainer.Add(newAttributeEntry)
-		*/
+
+			if newValue != tempAttributeItem.AttributeValue {
+				tempAttributeItem.AttributeIsChanged = true
+				tempAttributeItem.AttributeChangedValue = newValue
+			} else {
+				tempAttributeItem.AttributeIsChanged = false
+				tempAttributeItem.AttributeChangedValue = newValue
+			}
+
+			// Set Warning box that value is not selected
+			if attributeItem.CompileRegEx.MatchString(newValue) == false {
+				attributeItem.AttributeValueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+				attributeItem.AttributeValueIsValid = false
+			} else {
+				attributeItem.AttributeValueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
+				attributeItem.AttributeValueIsValid = true
+			}
+
+			// Update the attributesFormContainer
+			attributesFormContainer.Refresh()
+
+		}
+
+		// Create the 'AttributeValueIsValidWarningBox'
+		var colorToUse color.NRGBA
+
+		// Set Warning box that value is not the correct one
+		if attributeItem.CompileRegEx.MatchString(attributeItem.AttributeValue) == false {
+			colorToUse = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+			attributeItem.AttributeValueIsValid = false
+		} else {
+			colorToUse = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
+			attributeItem.AttributeValueIsValid = true
+		}
+
+		attributeItem.AttributeValueIsValidWarningBox = canvas.NewRectangle(colorToUse)
+
+		// Create a custom SelectComboBox to use
+		// Create a custom TextBoxEntry to use
+		var customSelectComboBox *customAttributeSelectComboBox
+		customSelectComboBox = newCustomAttributeSelectComboBoxWidget(newAttributeSelect, attributeItem.AttributeValueIsValidWarningBox)
+
+		// Add the attribute HBox-container to the 'attributesFormContainer'
+		attributesFormContainer.Add(customSelectComboBox)
+
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_RESPONSE_VARIABLE_COMBOBOX:
 		// Add the Select-widget (ComboBox)
 

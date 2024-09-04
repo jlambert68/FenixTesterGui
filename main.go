@@ -11,7 +11,7 @@ import (
 
 	//"github.com/getlantern/systray"
 	//"github.com/getlantern/systray/example/icon"
-
+	testInstruction_SendTestDataToThisDomain_version_1_0 "github.com/jlambert68/FenixStandardTestInstructionAdmin/TestInstructionsAndTesInstructionContainersAndAllowedUsers/TestInstructions/TestInstruction_SendTestDataToThisDomain/version_1_0"
 	_ "net/http/pprof"
 	"os/user"
 )
@@ -40,6 +40,9 @@ func main() {
 		return
 	}
 	sharedCode.CurrentUserIdLogedInOnComputer = strings.ReplaceAll(currentUser.Username, "\\", "")
+
+	// Initiate this due that some Constants are used when handling Attributes in the GUI when TestInstruction "Send TestData to ExecutionDomain" is used
+	testInstruction_SendTestDataToThisDomain_version_1_0.Initate_TestInstruction_FenixSentToUsersDomain_SendTestDataToThisDomain()
 
 	fenixGuiBuilderServerMain()
 }

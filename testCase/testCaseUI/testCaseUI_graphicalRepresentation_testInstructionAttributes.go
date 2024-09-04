@@ -11,6 +11,7 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	testInstruction_SendTestDataToThisDomain_version_1_0 "github.com/jlambert68/FenixStandardTestInstructionAdmin/TestInstructionsAndTesInstructionContainersAndAllowedUsers/TestInstructions/TestInstruction_SendTestDataToThisDomain/version_1_0"
 	"image/color"
 	"log"
 	"regexp"
@@ -222,11 +223,15 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 
 	// Depending on attribute chose correct UI-component
 	switch attributeItem.AttributeType {
-
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_TEXTBOX:
 		// Add the Entry-widget (TextBox)
 		newAttributeEntry := widget.NewEntry()
 		attributeItem.EntryRef = newAttributeEntry
+		if attributeItem.AttributeTextBoxProperty.TextBoxEditable == true {
+			newAttributeEntry.Enable()
+		} else {
+			newAttributeEntry.Disable()
+		}
 		newAttributeEntry.SetText(attributeItem.AttributeValue)
 		newAttributeEntry.OnChanged = func(newValue string) {
 			// Find which attributes that we are dealing with
@@ -292,11 +297,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 		// Get the available options from centralized stored list
 		var optionsList []string
 
-		var executionDomainsThatCanReceiveDirectTargetedTestInstructions []*fenixGuiTestCaseBuilderServerGrpcApi.
+		var executionDomainsThatCanReceiveDirectTargetedTestInstructions map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
 			ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMessage
-		executionDomainsThatCanReceiveDirectTargetedTestInstructions = *sharedCode.ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsPtr
+		executionDomainsThatCanReceiveDirectTargetedTestInstructions = *sharedCode.ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMapPtr
 		for _, tempExecutionDomain := range executionDomainsThatCanReceiveDirectTargetedTestInstructions {
-			optionsList = append(optionsList, tempExecutionDomain.ExecutionDomainUuid)
+			optionsList = append(optionsList, tempExecutionDomain.GetNameUsedInGui())
 		}
 
 		// Create the Select
@@ -331,6 +336,48 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 			if newValue != tempAttributeItem.AttributeValue {
 				tempAttributeItem.AttributeIsChanged = true
 				tempAttributeItem.AttributeChangedValue = newValue
+
+				// SPECIAL
+				// When the attribute is the ComboBox that the user use to chose to which ExecutionDomain the TestData for the TestExecution
+				// should be sent to. Then set DomainUuid and ExecutionDomainUuid in attribute fields for that. Used by the ExecutionServer
+				if tempAttributeItem.AttributeUuid == string(testInstruction_SendTestDataToThisDomain_version_1_0.
+					TestInstructionAttributeUUID_FenixSentToUsersDomain_SendTestDataToThisDomain_SendTestDataToThisExecutionDomain) {
+
+					var executionDomainsThatCanReceiveDirectTargetedTestInstructionsMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
+						ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMessage
+					executionDomainsThatCanReceiveDirectTargetedTestInstructionsMap = *sharedCode.ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMapPtr
+
+					// Loop Attributes and find TextBox for DomainUuid and TextBox for ExecutionDomainUuid and populate from 'map'
+					for _, tempAttribute := range *attributesList {
+
+						// Check if this attribute used for DomainUuid, then set the value for DomainUuid
+						if tempAttribute.AttributeUuid == string(testInstruction_SendTestDataToThisDomain_version_1_0.
+							TestInstructionAttributeUUID_SendTestDataToThisDomain_SendTestDataToThisDomainTextBox) {
+
+							// Set the value in the Attibute itself
+							tempAttribute.AttributeValue = executionDomainsThatCanReceiveDirectTargetedTestInstructionsMap[newValue].
+								GetDomainUuid()
+
+							// Set the value in the UI-component for the Attribute
+							tempAttribute.EntryRef.SetText(tempAttribute.AttributeValue)
+
+						}
+
+						// Check if this attribute used for ExecutionDomainUuid, then set the value for ExecutionDomainUuid
+						if tempAttribute.AttributeUuid == string(testInstruction_SendTestDataToThisDomain_version_1_0.
+							TestInstructionAttributeUUID_SendTestDataToThisDomain_SendTestDataToThisExecutionDomainTextBox) {
+
+							tempAttribute.AttributeValue = executionDomainsThatCanReceiveDirectTargetedTestInstructionsMap[newValue].
+								GetExecutionDomainUuid()
+
+							// Set the value in the UI-component for the Attribute
+							tempAttribute.EntryRef.SetText(tempAttribute.AttributeValue)
+						}
+
+					}
+
+				}
+
 			} else {
 				tempAttributeItem.AttributeIsChanged = false
 				tempAttributeItem.AttributeChangedValue = newValue

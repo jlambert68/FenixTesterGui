@@ -97,5 +97,5 @@ var (
 var TemplateRepositoryApiUrlsPtr *[]*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage
 
 // Variable holding pointer o the main object that keeps the list of users available ExecutionDomains
-var ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsPtr *[]*fenixGuiTestCaseBuilderServerGrpcApi.
+var ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMapPtr *map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
 	ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMessage

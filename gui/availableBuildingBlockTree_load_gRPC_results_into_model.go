@@ -543,13 +543,20 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeUse
 		ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMessage,
 	testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
 
-	// Store the list with TemplateRepositoryApiUrls
-	availableBuildingBlocksModel.executionDomainsThatCanReceiveDirectTargetedTestInstructions =
-		executionDomainsThatCanReceiveDirectTargetedTestInstructions
+	// Initiate the Map
+	availableBuildingBlocksModel.
+		executionDomainsThatCanReceiveDirectTargetedTestInstructionsMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
+		ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMessage)
+
+	// Loop slice with ExecutionDomains and add to the Map
+	for _, executionDomainsThatCanReceiveDirectTargetedTestInstruction := range executionDomainsThatCanReceiveDirectTargetedTestInstructions {
+		availableBuildingBlocksModel.
+			executionDomainsThatCanReceiveDirectTargetedTestInstructionsMap[executionDomainsThatCanReceiveDirectTargetedTestInstruction.GetNameUsedInGui()] = executionDomainsThatCanReceiveDirectTargetedTestInstruction
+	}
 
 	// Store a pointer to 'ExecutionDomains'
-	sharedCode.ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsPtr =
-		&availableBuildingBlocksModel.executionDomainsThatCanReceiveDirectTargetedTestInstructions
+	sharedCode.ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMapPtr =
+		&availableBuildingBlocksModel.executionDomainsThatCanReceiveDirectTargetedTestInstructionsMap
 
 }
 

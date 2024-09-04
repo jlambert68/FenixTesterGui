@@ -167,12 +167,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 	}
 
 	// Generate OptionsList for ExecutionsDomains
-	var executionDomainsThatCanReceiveDirectTargetedTestInstructions []*fenixGuiTestCaseBuilderServerGrpcApi.
+	var executionDomainsThatCanReceiveDirectTargetedTestInstructionsMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
 		ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMessage
-	executionDomainsThatCanReceiveDirectTargetedTestInstructions = *sharedCode.ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsPtr
+	executionDomainsThatCanReceiveDirectTargetedTestInstructionsMap = *sharedCode.ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMapPtr
 	var optionsListForExecutionsDomains []string
-	for _, tempExecutionDomain := range executionDomainsThatCanReceiveDirectTargetedTestInstructions {
-		optionsListForExecutionsDomains = append(optionsListForExecutionsDomains, tempExecutionDomain.ExecutionDomainUuid)
+	for _, tempExecutionDomain := range executionDomainsThatCanReceiveDirectTargetedTestInstructionsMap {
+		optionsListForExecutionsDomains = append(optionsListForExecutionsDomains, tempExecutionDomain.GetNameUsedInGui())
 	}
 
 	// Used for extracting data to be used

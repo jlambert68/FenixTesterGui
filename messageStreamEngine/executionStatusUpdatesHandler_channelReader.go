@@ -38,7 +38,10 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) startCommandChannelR
 
 		case ChannelCommandExecutionsStatusesHaveBeUpdated:
 			// TestCaseExecutionStatus or TestInstructionExecutionStatus has been updated
-			fmt.Println(incomingChannelCommandAndMessage)
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"Id":                               "88f9c29e-4a6c-4f2d-81da-2fc7cba050b3",
+				"incomingChannelCommandAndMessage": incomingChannelCommandAndMessage,
+			}).Debug("Incoming ChannelCommandAndMessage")
 
 			// Forward incoming status message to channelEngine for DetailedTestCaseExecutions-handler
 			var channelCommandDetailedExecutions detailedExecutionsModel.ChannelCommandDetailedExecutionsStruct
@@ -47,6 +50,19 @@ func (messageStreamEngineObject *MessageStreamEngineStruct) startCommandChannelR
 				TestCaseExecutionKey:                                              "",
 				FullTestCaseExecutionResponseMessage:                              nil,
 				TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage: incomingChannelCommandAndMessage.ExecutionsStatusMessage,
+			}
+
+			// Don't put on Channel if more than 9 items from max capacity
+			currentChannelSize = int32(len(detailedExecutionsModel.DetailedExecutionStatusCommandChannel))
+			if currentChannelSize > detailedExecutionsModel.MessageChannelMaxSizeDetailedExecutionStatus-9 {
+				for {
+					time.Sleep(5 * time.Second)
+
+					currentChannelSize = int32(len(detailedExecutionsModel.DetailedExecutionStatusCommandChannel))
+					if currentChannelSize < detailedExecutionsModel.MessageChannelMaxSizeDetailedExecutionStatus-9 {
+						break
+					}
+				}
 			}
 
 			// Send command on channel

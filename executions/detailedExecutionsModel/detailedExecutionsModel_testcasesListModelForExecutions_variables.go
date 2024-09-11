@@ -99,7 +99,7 @@ var DetailedExecutionStatusCommandChannel DetailedExecutionStatusChannelType
 type DetailedExecutionStatusChannelType chan ChannelCommandDetailedExecutionsStruct
 
 // Number of messages that the channel can queue
-const messageChannelMaxSizeDetailedExecutionStatus int32 = 100
+const MessageChannelMaxSizeDetailedExecutionStatus int32 = 100
 
 // ChannelCommandTypeForDetailedExecutionStatus
 // The type used for ChannelCommands

@@ -3,7 +3,6 @@ package detailedExecutionsModel
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/detailedTestCaseExecutionUI_summaryTableDefinition"
-	"fmt"
 	"github.com/sirupsen/logrus"
 	"sort"
 	"strconv"
@@ -60,10 +59,11 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) update
 			// Create TestCase-UI-name for SummaryTable: TestCaseName + part of UUID + VersionNumber
 			var testCaseExecutionUIName string
 
-			//TODO REMOVE only used when debugging
+			// If the TestCase doesn't exist then just skip, due to that the pubsub queue har executions from when the TesterGui was previously opened
 			if tempTestCaseExecutionsDetail.TestCaseExecutionsBaseInformation.TestCaseExecutionBasicInformation == nil {
-				fmt.Println("Is Nil")
+				continue
 			}
+
 			testCaseExecutionUIName = tempTestCaseExecutionsDetail.TestCaseExecutionsBaseInformation.
 				TestCaseExecutionBasicInformation.TestCaseName + " [" +
 				sharedCode.GenerateShortUuidFromFullUuid(tempTestCaseExecutionsDetail.

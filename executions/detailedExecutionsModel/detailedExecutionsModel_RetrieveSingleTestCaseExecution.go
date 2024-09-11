@@ -4,10 +4,10 @@ import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/grpc_out_GuiExecutionServer"
 	"errors"
-	"fmt"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"strconv"
+	"time"
 )
 
 // RetrieveSingleTestCaseExecution
@@ -77,10 +77,27 @@ func RetrieveSingleTestCaseExecution(testCaseExecutionKey string) (err error) {
 			TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage: nil,
 		}
 
+		// Don't put on Channel if more than 9 items from max capacity
+		var currentChannelSize int32
+		currentChannelSize = int32(len(DetailedExecutionStatusCommandChannel))
+		if currentChannelSize > MessageChannelMaxSizeDetailedExecutionStatus-9 {
+			for {
+				time.Sleep(5 * time.Second)
+
+				currentChannelSize = int32(len(DetailedExecutionStatusCommandChannel))
+				if currentChannelSize < MessageChannelMaxSizeDetailedExecutionStatus-9 {
+					break
+				}
+			}
+		}
+
 		// Send command ion channel
 		DetailedExecutionStatusCommandChannel <- channelCommandDetailedExecutions
 
-		fmt.Println(getSingleTestCaseExecutionResponse)
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"Id":                                 "dd4b0e47-e8e2-4069-aaf9-371d7bc2b91d",
+			"getSingleTestCaseExecutionResponse": getSingleTestCaseExecutionResponse,
+		}).Debug("'getSingleTestCaseExecutionResponse' after calling GuiExecutionServer")
 
 		return nil
 	}

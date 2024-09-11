@@ -31,7 +31,7 @@ require (
 )
 
 require (
-	github.com/jlambert68/FenixStandardTestInstructionAdmin v0.0.0-20240902153743-5a94592b5fd9
+	github.com/jlambert68/FenixStandardTestInstructionAdmin v0.0.0-20240911165400-ad73ef605b80
 	github.com/jlambert68/FenixSyncShared v0.0.0-20240215140904-db0840b5d70a
 )
 

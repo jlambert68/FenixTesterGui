@@ -411,7 +411,8 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() (testcaseExecutionsSu
 	testcaseExecutionsSummaryTableContainer.Add(summaryHeaderLabel)
 
 	// Loop all TestCaseExecutions for SummaryTable
-	for testCaseCounter, tempTestCaseExecutionStatusForSummaryTableReference := range detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsStatusForSummaryTable {
+	for testCaseCounter, tempTestCaseExecutionStatusForSummaryTableReference := range detailedTestCaseExecutionUI_summaryTableDefinition.
+		TestCaseExecutionsStatusForSummaryTable {
 
 		tempTestCaseExecutionStatusForSummaryTable := *tempTestCaseExecutionStatusForSummaryTableReference
 

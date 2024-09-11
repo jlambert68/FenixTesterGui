@@ -466,9 +466,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.
 							TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.
 								TestInstructionAttributeTypeEnum_RESPONSE_VARIABLE_COMBOBOX)
-						var responseVariableComboBoxProperty *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeResponseVariableComboBoxProperty
+						var responseVariableComboBoxProperty *fenixGuiTestCaseBuilderServerGrpcApi.
+							MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeResponseVariableComboBoxProperty
 
-						responseVariableComboBoxProperty = &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeResponseVariableComboBoxProperty{
+						responseVariableComboBoxProperty = &fenixGuiTestCaseBuilderServerGrpcApi.
+							MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeResponseVariableComboBoxProperty{
 							TestInstructionAttributeResponseVariableComboBoxUuid: attribute.TestInstructionAttributeUuid,
 							TestInstructionAttributeResponseVariableComboBoxName: attribute.TestInstructionAttributeName,
 							ComboBoxAttributeTypeUuid:                            attribute.TestInstructionAttributeTypeUuid,
@@ -491,21 +493,50 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 							TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.
 								TestInstructionAttributeTypeEnum_COMBOBOX)
 
-						var responseVariableComboBoxProperty *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeResponseVariableComboBoxProperty
+						var responseVariableComboBoxProperty *fenixGuiTestCaseBuilderServerGrpcApi.
+							MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputComboBoxProperty
 
-						responseVariableComboBoxProperty = &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeResponseVariableComboBoxProperty{
-							TestInstructionAttributeResponseVariableComboBoxUuid: attribute.TestInstructionAttributeUuid,
-							TestInstructionAttributeResponseVariableComboBoxName: attribute.TestInstructionAttributeName,
-							ComboBoxAttributeTypeUuid:                            attribute.TestInstructionAttributeTypeUuid,
-							ComboBoxAttributeTypeName:                            attribute.TestInstructionAttributeTypeName,
-							AllowedResponseVariableType:                          optionsListForExecutionsDomains,
-							ChosenResponseVariableTypeUuid:                       "",
-							ChosenResponseVariableTypeName:                       "",
-							ComboBoxAttributeValueAsString:                       "",
-							ComboBoxResponseVariableInputMask:                    attribute.TestInstructionAttributeInputMask,
+						responseVariableComboBoxProperty = &fenixGuiTestCaseBuilderServerGrpcApi.
+							MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputComboBoxProperty{
+							TestInstructionAttributeComboBoxUuid: attribute.TestInstructionAttributeUuid,
+							TestInstructionAttributeComboBoxName: attribute.TestInstructionAttributeName,
+							ComboBoxEditable:                     false,
+							ComboBoxInputMask:                    attribute.TestInstructionAttributeInputMask,
+							ComboBoxAttributeTypeUuid:            attribute.TestInstructionAttributeTypeUuid,
+							ComboBoxAttributeTypeName:            attribute.TestInstructionAttributeTypeName,
+							ComboBoxAttributeValueUuid:           "",
+							ComboBoxAttributeValue:               "",
+							ComboBoxAllowedValues:                optionsListForExecutionsDomains,
 						}
 
-						newTestInstructionAttributeInformation.ResponseVariableComboBoxProperty = responseVariableComboBoxProperty
+						newTestInstructionAttributeInformation.InputComboBoxProperty = responseVariableComboBoxProperty
+
+						if newTestInstructionAttributeInformation.ResponseVariableComboBoxProperty.ComboBoxAttributeValueAsString == "#NO_VALUE#" {
+							newTestInstructionAttributeInformation.ResponseVariableComboBoxProperty.ComboBoxAttributeValueAsString = ""
+						}
+
+					case "FENIX_OWNED_TESTER_GUI_INJECTED_COMBOBOX":
+						newTestInstructionBaseAttributeInformation.TestInstructionAttributeType = fenixGuiTestCaseBuilderServerGrpcApi.
+							TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.
+								TestInstructionAttributeTypeEnum_COMBOBOX)
+
+						var responseVariableComboBoxProperty *fenixGuiTestCaseBuilderServerGrpcApi.
+							MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputComboBoxProperty
+
+						responseVariableComboBoxProperty = &fenixGuiTestCaseBuilderServerGrpcApi.
+							MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputComboBoxProperty{
+							TestInstructionAttributeComboBoxUuid: attribute.TestInstructionAttributeUuid,
+							TestInstructionAttributeComboBoxName: attribute.TestInstructionAttributeName,
+							ComboBoxEditable:                     false,
+							ComboBoxInputMask:                    attribute.TestInstructionAttributeInputMask,
+							ComboBoxAttributeTypeUuid:            attribute.TestInstructionAttributeTypeUuid,
+							ComboBoxAttributeTypeName:            attribute.TestInstructionAttributeTypeName,
+							ComboBoxAttributeValueUuid:           "",
+							ComboBoxAttributeValue:               "",
+							ComboBoxAllowedValues:                []string{"hej", "då", "på", "dig"},
+						}
+
+						newTestInstructionAttributeInformation.InputComboBoxProperty = responseVariableComboBoxProperty
 
 						if newTestInstructionAttributeInformation.ResponseVariableComboBoxProperty.ComboBoxAttributeValueAsString == "#NO_VALUE#" {
 							newTestInstructionAttributeInformation.ResponseVariableComboBoxProperty.ComboBoxAttributeValueAsString = ""

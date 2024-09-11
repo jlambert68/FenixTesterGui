@@ -3,6 +3,7 @@ package detailedExecutionsModel
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"github.com/sirupsen/logrus"
+	"time"
 )
 
 // RemoveTestCaseExecutionFromSummaryTable
@@ -25,6 +26,20 @@ func RemoveTestCaseExecutionFromSummaryTable(testCaseExecutionKey string) (err e
 		TestCaseExecutionKey:                                              testCaseExecutionKey,
 		FullTestCaseExecutionResponseMessage:                              nil,
 		TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage: nil,
+	}
+
+	// Don't put on Channel if more than 9 items from max capacity
+	var currentChannelSize int32
+	currentChannelSize = int32(len(DetailedExecutionStatusCommandChannel))
+	if currentChannelSize > MessageChannelMaxSizeDetailedExecutionStatus-9 {
+		for {
+			time.Sleep(5 * time.Second)
+
+			currentChannelSize = int32(len(DetailedExecutionStatusCommandChannel))
+			if currentChannelSize < MessageChannelMaxSizeDetailedExecutionStatus-9 {
+				break
+			}
+		}
 	}
 
 	// Send command ion channel

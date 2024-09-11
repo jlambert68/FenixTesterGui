@@ -10,7 +10,7 @@ import (
 func InitiateCommandChannelReaderForDetailedStatusUpdates() {
 
 	// Initiate channel for Detailed Executions Status updates
-	DetailedExecutionStatusCommandChannel = make(chan ChannelCommandDetailedExecutionsStruct, messageChannelMaxSizeDetailedExecutionStatus)
+	DetailedExecutionStatusCommandChannel = make(chan ChannelCommandDetailedExecutionsStruct, MessageChannelMaxSizeDetailedExecutionStatus)
 
 	// Initiate the map that stores all Detailed TestCaseExecutions-data
 	detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap =
@@ -38,11 +38,11 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) startC
 
 		// If channel is near its maximum size then create error message
 		currentChannelSize = int32(len(DetailedExecutionStatusCommandChannel))
-		if currentChannelSize > messageChannelMaxSizeDetailedExecutionStatus-10 {
+		if currentChannelSize > MessageChannelMaxSizeDetailedExecutionStatus-10 {
 			sharedCode.Logger.WithFields(logrus.Fields{
 				"ID":                 "8986fa1f-1d63-4441-b416-91955b9a351a",
 				"currentChannelSize": currentChannelSize,
-				"messageChannelMaxSizeDetailedExecutionStatus": messageChannelMaxSizeDetailedExecutionStatus,
+				"MessageChannelMaxSizeDetailedExecutionStatus": MessageChannelMaxSizeDetailedExecutionStatus,
 			}).Warning("Number of messages on 'DetailedExecutionStatusCommandChannel' is close to its maximum")
 		}
 

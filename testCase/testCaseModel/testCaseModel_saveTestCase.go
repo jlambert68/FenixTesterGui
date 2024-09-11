@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	testInstruction_SendTestDataToThisDomain_version_1_0 "github.com/jlambert68/FenixStandardTestInstructionAdmin/TestInstructionsAndTesInstructionContainersAndAllowedUsers/TestInstructions/TestInstruction_SendTestDataToThisDomain/version_1_0"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -181,13 +182,16 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionsForGrp
 		valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 
 		// Loop over all 'TestInstruction Attributes' in the TestInstruction and create slice
-		var testInstructionAttributesList []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage
-		for _, testInstructionAttribute := range tempMatureTestInstruction.TestInstructionAttributesList {
+		var testInstructionAttributesList []*fenixGuiTestCaseBuilderServerGrpcApi.
+			MatureTestInstructionInformationMessage_TestInstructionAttributeMessage
+		for _, tempTestInstructionAttribute := range tempMatureTestInstruction.TestInstructionAttributesList {
 
-			testInstructionAttributesList = append(testInstructionAttributesList, testInstructionAttribute)
+			// Get all values from general map of Attributes on the TestCase
 
-			// Generate Hash for  'testInstructionAttribute'
-			tempJson := protojson.Format(testInstructionAttribute)
+			testInstructionAttributesList = append(testInstructionAttributesList, tempTestInstructionAttribute)
+
+			// Generate Hash for  'tempTestInstructionAttribute'
+			tempJson := protojson.Format(tempTestInstructionAttribute)
 			valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 
 		}
@@ -820,6 +824,8 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 // SaveChangedTestCaseAttributeInTestCase - Save changed Attributes into the TestCase-model under correct TestInstruction
 func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCase(testCaseUuid string) (err error) {
 
+	var atleastOneAttributeIsChanged bool
+
 	// Extract current TestCase
 	testCase, existInMap := testCaseModel.TestCases[testCaseUuid]
 	if existInMap == false {
@@ -852,6 +858,8 @@ func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCa
 			if attribute.AttributeIsChanged == true {
 				// Attribute is changed so save it,
 
+				atleastOneAttributeIsChanged = true
+
 				// Extract TestInstruction
 				tempMatureTestInstruction, existInMap := testCase.MatureTestInstructionMap[testInstructionElementMatureUuidUuid]
 				if existInMap == false {
@@ -879,9 +887,52 @@ func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCa
 					tempTestInstructionAttribute.AttributeInformation.InputTextBoxProperty.
 						TextBoxAttributeValue = attribute.AttributeChangedValue
 
+					// Save back Attribute into TestInstruction
+					tempMatureTestInstruction.TestInstructionAttributesList[attribute.AttributeUuid] = tempTestInstructionAttribute
+
+					// Save back TestInstruction into TestCase
+					testCase.MatureTestInstructionMap[testInstructionElementMatureUuidUuid] = tempMatureTestInstruction
+
 				case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_COMBOBOX:
 					tempTestInstructionAttribute.AttributeInformation.InputComboBoxProperty.
 						ComboBoxAttributeValue = attribute.AttributeChangedValue
+					tempTestInstructionAttribute.AttributeInformation.InputComboBoxProperty.
+						ComboBoxAttributeValueUuid = sharedCode.ZeroUuid
+
+					// SPECIAL
+					// When the attribute is the ComboBox that the user use to chose to which ExecutionDomain the TestData for the TestExecution
+					// should be sent to. Then set DomainUuid and ExecutionDomainUuid for TestInstruction
+					if attribute.AttributeUuid == string(testInstruction_SendTestDataToThisDomain_version_1_0.
+						TestInstructionAttributeUUID_FenixSentToUsersDomain_SendTestDataToThisDomain_SendTestDataToThisExecutionDomain) {
+
+						var executionDomainsThatCanReceiveDirectTargetedTestInstructionsMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
+							ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMessage
+						executionDomainsThatCanReceiveDirectTargetedTestInstructionsMap = *sharedCode.ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMapPtr
+
+						domainUuid := executionDomainsThatCanReceiveDirectTargetedTestInstructionsMap[attribute.AttributeChangedValue].
+							GetDomainUuid()
+						domainName := executionDomainsThatCanReceiveDirectTargetedTestInstructionsMap[attribute.AttributeChangedValue].
+							GetDomainName()
+						executionDomainUuid := executionDomainsThatCanReceiveDirectTargetedTestInstructionsMap[attribute.AttributeChangedValue].
+							GetExecutionDomainUuid()
+						executionDomainName := executionDomainsThatCanReceiveDirectTargetedTestInstructionsMap[attribute.AttributeChangedValue].
+							GetExecutionDomainName()
+
+						// Update TestInstruction with DomainUuid and DomainName
+						tempMatureTestInstruction.BasicTestInstructionInformation_NonEditableInformation.DomainUuid = domainUuid
+						tempMatureTestInstruction.BasicTestInstructionInformation_NonEditableInformation.DomainName = domainName
+
+						// Update TestInstruction with ExecutionDomainUuid and ExecutionDomainName
+						tempMatureTestInstruction.BasicTestInstructionInformation_NonEditableInformation.ExecutionDomainUuid = executionDomainUuid
+						tempMatureTestInstruction.BasicTestInstructionInformation_NonEditableInformation.ExecutionDomainName = executionDomainName
+
+					}
+
+					// Save back Attribute into TestInstruction
+					tempMatureTestInstruction.TestInstructionAttributesList[attribute.AttributeUuid] = tempTestInstructionAttribute
+
+					// Save back TestInstruction into TestCase
+					testCase.MatureTestInstructionMap[testInstructionElementMatureUuidUuid] = tempMatureTestInstruction
 
 				case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_RESPONSE_VARIABLE_COMBOBOX:
 					tempTestInstructionAttribute.AttributeInformation.ResponseVariableComboBoxProperty.
@@ -901,6 +952,12 @@ func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCa
 						ComboBoxAttributeValueAsString = attribute.AttributeResponseVariableComboBoxProperty.
 						AttributeResponseVariableComboBoxProperty.GetComboBoxAttributeValueAsString()
 
+					// Save back Attribute into TestInstruction
+					tempMatureTestInstruction.TestInstructionAttributesList[attribute.AttributeUuid] = tempTestInstructionAttribute
+
+					// Save back TestInstruction into TestCase
+					testCase.MatureTestInstructionMap[testInstructionElementMatureUuidUuid] = tempMatureTestInstruction
+
 				default:
 
 					errorId := "8d5c40ca-1a88-4eae-8926-898d03e6806b"
@@ -915,6 +972,11 @@ func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCa
 
 			}
 		}
+	}
+
+	// Save back TestCase if any Attribute was changed
+	if atleastOneAttributeIsChanged == true {
+		testCaseModel.TestCases[testCaseUuid] = testCase
 	}
 
 	return err

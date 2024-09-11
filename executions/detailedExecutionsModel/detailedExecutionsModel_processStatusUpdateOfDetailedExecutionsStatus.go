@@ -280,6 +280,20 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 				TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage: nil,
 			}
 
+			// Don't put on Channel if more than 9 items from max capacity
+			var currentChannelSize int32
+			currentChannelSize = int32(len(DetailedExecutionStatusCommandChannel))
+			if currentChannelSize > MessageChannelMaxSizeDetailedExecutionStatus-9 {
+				for {
+					time.Sleep(5 * time.Second)
+
+					currentChannelSize = int32(len(DetailedExecutionStatusCommandChannel))
+					if currentChannelSize < MessageChannelMaxSizeDetailedExecutionStatus-9 {
+						break
+					}
+				}
+			}
+
 			// Send command ion channel
 			DetailedExecutionStatusCommandChannel <- channelCommandDetailedExecutions
 		}
@@ -352,6 +366,20 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 					TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage: nil,
 				}
 
+				// Don't put on Channel if more than 9 items from max capacity
+				var currentChannelSize int32
+				currentChannelSize = int32(len(DetailedExecutionStatusCommandChannel))
+				if currentChannelSize > MessageChannelMaxSizeDetailedExecutionStatus-9 {
+					for {
+						time.Sleep(5 * time.Second)
+
+						currentChannelSize = int32(len(DetailedExecutionStatusCommandChannel))
+						if currentChannelSize < MessageChannelMaxSizeDetailedExecutionStatus-9 {
+							break
+						}
+					}
+				}
+
 				// Send command ion channel
 				DetailedExecutionStatusCommandChannel <- channelCommandDetailedExecutions
 
@@ -378,6 +406,20 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 					TestCaseExecutionKey:                                              tempTestCaseExecutionMapKey,
 					FullTestCaseExecutionResponseMessage:                              nil,
 					TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage: nil,
+				}
+
+				// Don't put on Channel if more than 9 items from max capacity
+				var currentChannelSize int32
+				currentChannelSize = int32(len(DetailedExecutionStatusCommandChannel))
+				if currentChannelSize > MessageChannelMaxSizeDetailedExecutionStatus-9 {
+					for {
+						time.Sleep(5 * time.Second)
+
+						currentChannelSize = int32(len(DetailedExecutionStatusCommandChannel))
+						if currentChannelSize < MessageChannelMaxSizeDetailedExecutionStatus-9 {
+							break
+						}
+					}
 				}
 
 				// Send command ion channel
@@ -498,6 +540,20 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 					TestCaseExecutionKey:                                              tempTestCaseExecutionMapKey,
 					FullTestCaseExecutionResponseMessage:                              nil,
 					TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage: nil,
+				}
+
+				// Don't put on Channel if more than 9 items from max capacity
+				var currentChannelSize int32
+				currentChannelSize = int32(len(DetailedExecutionStatusCommandChannel))
+				if currentChannelSize > MessageChannelMaxSizeDetailedExecutionStatus-9 {
+					for {
+						time.Sleep(5 * time.Second)
+
+						currentChannelSize = int32(len(DetailedExecutionStatusCommandChannel))
+						if currentChannelSize < MessageChannelMaxSizeDetailedExecutionStatus-9 {
+							break
+						}
+					}
 				}
 
 				// Send command ion channel

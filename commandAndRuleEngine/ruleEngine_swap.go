@@ -529,14 +529,19 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 
 							// Extract Templates
 							for _, templateGitHubFile := range currentTestCase.ImportedTemplateFilesFromGitHub {
-								comboBoxAllowedValues = append(comboBoxAllowedValues,
-									fmt.Sprintf("%s [%s]",
-										templateGitHubFile.Name,
-										templateGitHubFile.FileHash[0:8]))
+
+								// Only add File if it is not already in use
+								if templateGitHubFile.FileIsUsedInTestCase == false {
+
+									comboBoxAllowedValues = append(comboBoxAllowedValues,
+										fmt.Sprintf("%s [%s]",
+											templateGitHubFile.Name,
+											templateGitHubFile.FileHash[0:8]))
+								}
 							}
 
 						} else {
-							comboBoxAllowedValues = []string{"hej", "då", "på", "dig"}
+							comboBoxAllowedValues = []string{}
 						}
 
 						var responseVariableComboBoxProperty *fenixGuiTestCaseBuilderServerGrpcApi.

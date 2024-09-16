@@ -192,7 +192,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	testCaseGraphicalAreas.TestCaseMetaDataArea = testCaseMetaDataArea
 
 	// Generate the TestCaseAttributes Area for the TestCase
-	testCaseAttributesArea, testInstructionAttributesAccordion, err := testCasesUiCanvasObject.generateTestCaseAttributesAreaForTestCase(testCaseToBeAddedUuid, "") // "" used for first time creation
+	testCaseAttributesArea, testInstructionAttributesAccordion, err := testCasesUiCanvasObject.
+		generateTestCaseAttributesAreaForTestCase(testCaseToBeAddedUuid, "") // "" used for first time creation
 
 	if err != nil {
 		return err

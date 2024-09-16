@@ -101,3 +101,11 @@ func (c *ClickableRectangle) updateSelectedUINode() {
 	c.testCasesUiModelStruct.TestCasesModelReference.TestCases[c.testCaseUuid] = currentTestCaseModel
 
 }
+
+// Do a click on the Rectangle
+func (c *ClickableRectangle) ForceClick() {
+
+	// Update Selected Node/Element
+	c.testCasesUiModelStruct.generateTestCaseAttributesAreaForTestCase(c.testCaseUuid, c.testInstructionUuid)
+
+}

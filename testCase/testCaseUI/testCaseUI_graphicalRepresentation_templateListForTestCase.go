@@ -118,6 +118,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 
 		templateListArea.Refresh()
 
+		// Update Attributes area of TestCase
+		if testCasesUiCanvasObject.CurrentSelectedTestCaseUIElement != nil {
+			testCasesUiCanvasObject.CurrentSelectedTestCaseUIElement.ForceClick()
+		}
+
 		// Update ComboBox, if exists, for available Templates to chose from
 
 	})

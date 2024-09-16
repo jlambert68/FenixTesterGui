@@ -309,9 +309,36 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 			optionsList = append(optionsList, tempExecutionDomain.GetNameUsedInGui())
 		}
 
-		// If there are values for the Combobox then use that
-		if len(attributeItem.AttributeComboBoxProperty.GetComboBoxAllowedValues()) > 0 {
-			optionsList = attributeItem.AttributeComboBoxProperty.GetComboBoxAllowedValues()
+		// SPECIAL
+		// When the attribute is the ComboBox with Template, then change in lite with Templates if Template is in use or not
+		if attributeItem.AttributeUuid == string(testInstruction_SendTemplateToThisDomain_version_1_0.
+			TestInstructionAttributeUUID_FenixSentToUsersDomain_FenixOwnedSendTemplateToThisDomain_FenixOwnedSendTemplateComboBox) {
+			// Loop all Template to build the name used in the ComboBox
+
+			optionsList = nil
+			var templateName string
+
+			for _, templateGitHubFile := range currentTestCase.ImportedTemplateFilesFromGitHub {
+
+				templateName =
+					fmt.Sprintf("%s [%s]",
+						templateGitHubFile.Name,
+						templateGitHubFile.FileHash[0:8])
+
+				// Only Add the Template to the list if
+				// it is not in use OR it is the chose Template for this ComboBox
+				if templateGitHubFile.FileIsUsedInTestCase == false || attributeItem.AttributeValue == templateName {
+
+					optionsList = append(optionsList, templateName)
+				}
+
+			}
+		} else {
+
+			// If there are values for the Combobox then use that
+			if len(attributeItem.AttributeComboBoxProperty.GetComboBoxAllowedValues()) > 0 {
+				optionsList = attributeItem.AttributeComboBoxProperty.GetComboBoxAllowedValues()
+			}
 		}
 
 		// Create the Select
@@ -400,7 +427,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 					// save back updated AttributeList
 					currentTestCase.AttributesList = attributesList
 
-					// Save back Updated TestCasd
+					// Save back Updated TestCase
 					testCasesUiCanvasObject.TestCasesModelReference.TestCases[currentTestCaseUuid] = *currentTestCase
 
 				// SPECIAL
@@ -447,6 +474,38 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 						}
 
 					}
+
+					// SPECIAL
+				// When the attribute is the ComboBox with Template, then change in lite with Templates if Template is in use or not
+				case string(testInstruction_SendTemplateToThisDomain_version_1_0.
+					TestInstructionAttributeUUID_FenixSentToUsersDomain_FenixOwnedSendTemplateToThisDomain_FenixOwnedSendTemplateComboBox):
+
+					var oldSelectedTemplateName string
+					var templateName string
+					oldSelectedTemplateName = tempAttributeItem.AttributeValue
+
+					// Set if  Template is used or not
+					for templateFileIndex, templateGitHubFile := range currentTestCase.ImportedTemplateFilesFromGitHub {
+
+						templateName =
+							fmt.Sprintf("%s [%s]",
+								templateGitHubFile.Name,
+								templateGitHubFile.FileHash[0:8])
+
+						// Change old template to be available again
+						if templateName == oldSelectedTemplateName {
+							currentTestCase.ImportedTemplateFilesFromGitHub[templateFileIndex].FileIsUsedInTestCase = false
+						}
+
+						// Change new template to not be available
+						if templateName == newValue {
+							currentTestCase.ImportedTemplateFilesFromGitHub[templateFileIndex].FileIsUsedInTestCase = true
+
+						}
+					}
+
+					// Save back Updated TestCase
+					testCasesUiCanvasObject.TestCasesModelReference.TestCases[currentTestCaseUuid] = *currentTestCase
 
 				default:
 

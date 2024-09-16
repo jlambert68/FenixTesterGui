@@ -317,6 +317,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 
 			optionsList = nil
 			var templateName string
+			var foundOldSelectedName bool
 
 			for _, templateGitHubFile := range currentTestCase.ImportedTemplateFilesFromGitHub {
 
@@ -328,11 +329,20 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 				// Only Add the Template to the list if
 				// it is not in use OR it is the chose Template for this ComboBox
 				if templateGitHubFile.FileIsUsedInTestCase == false || attributeItem.AttributeValue == templateName {
-
 					optionsList = append(optionsList, templateName)
 				}
 
+				if templateName == attributeItem.AttributeValue {
+					foundOldSelectedName = true
+				}
+
 			}
+
+			// Check if Old Selected was remove, if so clear attributeItem.AttributeValue
+			if foundOldSelectedName == false {
+				attributeItem.AttributeValue = ""
+			}
+
 		} else {
 
 			// If there are values for the Combobox then use that

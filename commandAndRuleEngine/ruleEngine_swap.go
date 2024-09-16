@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	testInstruction_SendTemplateToThisDomain_version_1_0 "github.com/jlambert68/FenixStandardTestInstructionAdmin/TestInstructionsAndTesInstructionContainersAndAllowedUsers/TestInstructions/TestInstruction_SendTemplateToThisDomain/version_1_0"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -520,6 +521,24 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 							TestInstructionAttributeTypeEnum(fenixGuiTestCaseBuilderServerGrpcApi.
 								TestInstructionAttributeTypeEnum_COMBOBOX)
 
+						var comboBoxAllowedValues []string
+
+						// Check if this is a Templates Combobox served by Fenix shared TestInstructions
+						if attribute.TestInstructionAttributeUuid == string(testInstruction_SendTemplateToThisDomain_version_1_0.
+							TestInstructionAttributeUUID_FenixSentToUsersDomain_FenixOwnedSendTemplateToThisDomain_FenixOwnedSendTemplateComboBox) {
+
+							// Extract Templates
+							for _, templateGitHubFile := range currentTestCase.ImportedTemplateFilesFromGitHub {
+								comboBoxAllowedValues = append(comboBoxAllowedValues,
+									fmt.Sprintf("%s [%s]",
+										templateGitHubFile.Name,
+										templateGitHubFile.FileHash[0:8]))
+							}
+
+						} else {
+							comboBoxAllowedValues = []string{"hej", "då", "på", "dig"}
+						}
+
 						var responseVariableComboBoxProperty *fenixGuiTestCaseBuilderServerGrpcApi.
 							MatureTestInstructionInformationMessage_TestInstructionAttributeMessage_AttributeInformationMessage_TestInstructionAttributeInputComboBoxProperty
 
@@ -533,7 +552,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 							ComboBoxAttributeTypeName:            attribute.TestInstructionAttributeTypeName,
 							ComboBoxAttributeValueUuid:           "",
 							ComboBoxAttributeValue:               "",
-							ComboBoxAllowedValues:                []string{"hej", "då", "på", "dig"},
+							ComboBoxAllowedValues:                comboBoxAllowedValues,
 						}
 
 						newTestInstructionAttributeInformation.InputComboBoxProperty = responseVariableComboBoxProperty

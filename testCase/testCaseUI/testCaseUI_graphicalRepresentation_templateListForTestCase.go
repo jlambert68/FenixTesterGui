@@ -118,6 +118,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 
 		templateListArea.Refresh()
 
+		// Update ComboBox, if exists, for available Templates to chose from
+
 	})
 
 	// Create Button to be able to check which Templates that are updated

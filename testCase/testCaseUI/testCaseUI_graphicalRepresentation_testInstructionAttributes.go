@@ -496,11 +496,13 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 				case string(testInstruction_SendTemplateToThisDomain_version_1_0.
 					TestInstructionAttributeUUID_FenixSentToUsersDomain_FenixOwnedSendTemplateToThisDomain_FenixOwnedSendTemplateComboBox):
 
+					var anyChange bool
+
 					var oldSelectedTemplateName string
 					var templateName string
 					oldSelectedTemplateName = tempAttributeItem.AttributeValue
 
-					// Set if  Template is used or not
+					// Set if  Template is not used
 					for templateFileIndex, templateGitHubFile := range currentTestCase.ImportedTemplateFilesFromGitHub {
 
 						templateName =
@@ -511,21 +513,87 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 						// Change old template to be available again
 						if templateName == oldSelectedTemplateName {
 							currentTestCase.ImportedTemplateFilesFromGitHub[templateFileIndex].FileIsUsedInTestCase = false
-						}
 
-						// Change new template to not be available
-						if templateName == newValue {
-							currentTestCase.ImportedTemplateFilesFromGitHub[templateFileIndex].FileIsUsedInTestCase = true
+							// Loop Attributes and find TextBox for TemplateAsString to clear
+							for _, tempAttribute := range *attributesList {
 
+								// Check if this attribute used for TemplateAsString, then clear the value for TemplateAsString
+								if tempAttribute.AttributeUuid == string(testInstruction_SendTemplateToThisDomain_version_1_0.
+									TestInstructionAttributeUUID_FenixOwnedSendTemplateToThisDomain_FenixOwnedTemplateAsString) {
+
+									// Set the value in the Attribute itself
+									tempAttribute.AttributeValue = ""
+
+									// Set the value in the UI-component for the Attribute
+									tempAttribute.EntryRef.SetText(tempAttribute.AttributeValue)
+
+									// Set that attribute was changed
+									tempAttribute.AttributeIsChanged = true
+
+									// Indicate that a change was done
+									anyChange = true
+
+									break
+								}
+							}
+
+							break
 						}
 					}
 
-					// Save back Updated TestCase
-					testCasesUiCanvasObject.TestCasesModelReference.TestCases[currentTestCaseUuid] = *currentTestCase
+					// Set if  Template is used
+					for templateFileIndex, templateGitHubFile := range currentTestCase.ImportedTemplateFilesFromGitHub {
+
+						templateName =
+							fmt.Sprintf("%s [%s]",
+								templateGitHubFile.Name,
+								templateGitHubFile.FileHash[0:8])
+
+						// Change old template to be available again
+						if templateName == newValue {
+							currentTestCase.ImportedTemplateFilesFromGitHub[templateFileIndex].FileIsUsedInTestCase = true
+
+							// Loop Attributes and find TextBox for TemplateAsString to clear
+							for _, tempAttribute := range *attributesList {
+
+								// Check if this attribute used for TemplateAsString, then clear the value for TemplateAsString
+								if tempAttribute.AttributeUuid == string(testInstruction_SendTemplateToThisDomain_version_1_0.
+									TestInstructionAttributeUUID_FenixOwnedSendTemplateToThisDomain_FenixOwnedTemplateAsString) {
+
+									// Set the value in the Attribute itself
+									tempAttribute.AttributeValue = templateGitHubFile.FileContentAsString
+
+									// Set the value in the UI-component for the Attribute
+									tempAttribute.EntryRef.SetText(tempAttribute.AttributeValue)
+
+									// Set that attribute was changed
+									tempAttribute.AttributeIsChanged = true
+
+									// Indicate that a change was done
+									anyChange = true
+
+									break
+								}
+							}
+
+							break
+						}
+					}
+
+					// Do a save if any change was done
+					if anyChange == true {
+
+						// save back updated AttributeList
+						currentTestCase.AttributesList = attributesList
+
+						// Save back Updated TestCase
+						testCasesUiCanvasObject.TestCasesModelReference.TestCases[currentTestCaseUuid] = *currentTestCase
+					}
 
 				default:
 
 				}
+
 			} else {
 				tempAttributeItem.AttributeIsChanged = false
 				tempAttributeItem.AttributeChangedValue = newValue

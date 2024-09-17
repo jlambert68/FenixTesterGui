@@ -11,7 +11,9 @@ import (
 
 	//"github.com/getlantern/systray"
 	//"github.com/getlantern/systray/example/icon"
+	testInstruction_SendTemplateToThisDomainversion_1_0 "github.com/jlambert68/FenixStandardTestInstructionAdmin/TestInstructionsAndTesInstructionContainersAndAllowedUsers/TestInstructions/TestInstruction_SendTemplateToThisDomain/version_1_0"
 	testInstruction_SendTestDataToThisDomain_version_1_0 "github.com/jlambert68/FenixStandardTestInstructionAdmin/TestInstructionsAndTesInstructionContainersAndAllowedUsers/TestInstructions/TestInstruction_SendTestDataToThisDomain/version_1_0"
+
 	_ "net/http/pprof"
 	"os/user"
 )
@@ -41,8 +43,10 @@ func main() {
 	}
 	sharedCode.CurrentUserIdLogedInOnComputer = strings.ReplaceAll(currentUser.Username, "\\", "")
 
-	// Initiate this due that some Constants are used when handling Attributes in the GUI when TestInstruction "Send TestData to ExecutionDomain" is used
+	// Initiate this due that some Constants are used when handling Attributes in the GUI when
+	// TestInstruction "Send TestData to ExecutionDomain"  or Send Template ti ExecutionDomain" is used
 	testInstruction_SendTestDataToThisDomain_version_1_0.Initate_TestInstruction_FenixSentToUsersDomain_SendTestDataToThisDomain()
+	testInstruction_SendTemplateToThisDomainversion_1_0.Initate_TestInstruction_FenixSentToUsersDomain_FenixOwnedSendTemplateToThisDomain()
 
 	fenixGuiBuilderServerMain()
 }

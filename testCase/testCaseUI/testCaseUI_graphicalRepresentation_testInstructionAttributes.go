@@ -406,7 +406,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 						if tempAttribute.AttributeUuid == string(testInstruction_SendTestDataToThisDomain_version_1_0.
 							TestInstructionAttributeUUID_SendTestDataToThisDomain_SendTestDataToThisDomainTextBox) {
 
-							// Set the value in the Attibute itself
+							// Set the value in the Attribute itself
 							tempAttribute.AttributeValue = executionDomainsThatCanReceiveDirectTargetedTestInstructionsMap[newValue].
 								GetDomainUuid()
 
@@ -484,6 +484,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 						}
 
 					}
+
+					// save back updated AttributeList
+					currentTestCase.AttributesList = attributesList
+
+					// Save back Updated TestCase
+					testCasesUiCanvasObject.TestCasesModelReference.TestCases[currentTestCaseUuid] = *currentTestCase
 
 					// SPECIAL
 				// When the attribute is the ComboBox with Template, then change in lite with Templates if Template is in use or not
@@ -769,8 +775,6 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 		log.Fatalln(err)
 
 	}
-
-	fmt.Println("hej")
 
 }
 

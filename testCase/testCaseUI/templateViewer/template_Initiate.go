@@ -104,8 +104,8 @@ func InitiateTemplateViewer(
 				myContainerObjects = rightContainer.Objects
 				for index, object := range myContainerObjects {
 					if object == richTextWithValues {
-						_, richTextWithValues, _ = parseAndFormatText(file.FileContentAsString, &testDataPointValues, randomUuidForScriptEngine)
-						//_, richTextWithValues, _ = placeholderReplacementEngine.ParseAndFormatPlaceholders(file.FileContentAsString, &testDataPointValues, randomUuidForScriptEngine)
+						//_, richTextWithValues, _ = parseAndFormatText(file.FileContentAsString, &testDataPointValues, randomUuidForScriptEngine)
+						_, richTextWithValues, _ = placeholderReplacementEngine.ParseAndFormatPlaceholders(file.FileContentAsString, &testDataPointValues, randomUuidForScriptEngine)
 						myContainerObjects[index] = richTextWithValues
 						rightContainer.Refresh()
 					}

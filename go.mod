@@ -1,8 +1,8 @@
 module FenixTesterGui
 
-go 1.22
+go 1.23
 
-toolchain go1.22.5
+toolchain go1.23.1
 
 require (
 	cloud.google.com/go/pubsub v1.43.0
@@ -17,7 +17,7 @@ require (
 	// github.com/gorilla/sessions v1.2.2 // v1.3.0 gives session error when trying to get token from GCP
 	github.com/gorilla/sessions v1.2.2 // v1.3.0 gives session error when trying to get token from GCP
 	github.com/jlambert68/FenixGrpcApi v0.0.0-20240902161440-74b93725d1bc
-	github.com/jlambert68/FenixScriptEngine v0.0.0-20240823133128-e998fc3d4fed
+	github.com/jlambert68/FenixScriptEngine v0.0.0-20240918095429-fa7acea1d0a4
 	github.com/markbates/goth v1.80.0
 	github.com/rs/zerolog v1.33.0
 	github.com/sirupsen/logrus v1.9.3

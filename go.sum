@@ -344,8 +344,8 @@ github.com/jlambert68/FenixGrpcApi v0.0.0-20240902161440-74b93725d1bc h1:fcTcVSM
 github.com/jlambert68/FenixGrpcApi v0.0.0-20240902161440-74b93725d1bc/go.mod h1:5BO7Hq8qdgzK5W7KY14yXPYN/fNuXAMdDQTY7xHIeXc=
 github.com/jlambert68/FenixScriptEngine v0.0.0-20240918095429-fa7acea1d0a4 h1:hlMZoSL3i8g+JZ/flU2UXxezAAfTQS1tsqyROiT/S78=
 github.com/jlambert68/FenixScriptEngine v0.0.0-20240918095429-fa7acea1d0a4/go.mod h1:ItUgEd5NIO8xb5Qs372NLxdm5385gMcp+ZcQ94RwBA0=
-github.com/jlambert68/FenixStandardTestInstructionAdmin v0.0.0-20240911190026-b70392a73cd0 h1:INNhOy/klqhfkY5Fan137DwKunvFUmY0Av1HYsDNCAY=
-github.com/jlambert68/FenixStandardTestInstructionAdmin v0.0.0-20240911190026-b70392a73cd0/go.mod h1:02WShNYzqtTIsUK/6AXtdJmRSXLxJzXuK0mzcCJcqf0=
+github.com/jlambert68/FenixStandardTestInstructionAdmin v0.0.0-20240919081445-a249ea1fb7f5 h1:z9qwX7FN21P3/itlIlQvNbsXY0DZ96UvcYmyjZVMmOk=
+github.com/jlambert68/FenixStandardTestInstructionAdmin v0.0.0-20240919081445-a249ea1fb7f5/go.mod h1:02WShNYzqtTIsUK/6AXtdJmRSXLxJzXuK0mzcCJcqf0=
 github.com/jlambert68/FenixSyncShared v0.0.0-20240911064419-da3d922610cb h1:lyXuGpWnF2z5r1P8SbL9RmRjv5rFtzbl3GmdYSz/dGs=
 github.com/jlambert68/FenixSyncShared v0.0.0-20240911064419-da3d922610cb/go.mod h1:INK8mS1S8N7hcrcalKgs3O67XNsFwbws9sXRJbBGUM4=
 github.com/jlambert68/FenixTestInstructionsAdminShared v0.0.0-20240830110518-fbce28ce9256 h1:Yjwjym/M+zsWl7Y42QuuChrqc4iArNkXEhcziHiUGaQ=

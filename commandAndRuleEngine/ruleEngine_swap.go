@@ -6,6 +6,8 @@ import (
 	"errors"
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	fenixTestInstructions "github.com/jlambert68/FenixStandardTestInstructionAdmin/TestInstructionsAndTesInstructionContainersAndAllowedUsers/TestInstructions"
+	testInstruction_SendTemplateToThisDomain "github.com/jlambert68/FenixStandardTestInstructionAdmin/TestInstructionsAndTesInstructionContainersAndAllowedUsers/TestInstructions/TestInstruction_SendTemplateToThisDomain"
 	testInstruction_SendTemplateToThisDomain_version_1_0 "github.com/jlambert68/FenixStandardTestInstructionAdmin/TestInstructionsAndTesInstructionContainersAndAllowedUsers/TestInstructions/TestInstruction_SendTemplateToThisDomain/version_1_0"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -276,8 +278,51 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 			}
 			*/
 
+			// All create all Attributes for the TestInstruction, both from the original and from Fenix if needed
+			var allImmatureTestInstructionAttributesMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionAttributesMessage_TestInstructionAttributeMessage
+			allImmatureTestInstructionAttributesMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionAttributesMessage_TestInstructionAttributeMessage)
+
+			// Loop original attributes and add them
+			for tempAttributeUuid, tempAttribute := range immatureTestInstructionAttributesMap {
+				// Add Attribute to map
+				allImmatureTestInstructionAttributesMap[tempAttributeUuid] = tempAttribute
+			}
+
+			// Check if this TestInstruction is a FenixTestInstruction-Add-On-type and should import the Attributes from Fenix
+			if commandAndRuleEngine.Testcases.AvailableImmatureTestInstructionsMap[matureElement.OriginalElementUuid].
+				BasicTestInstructionInformation.NonEditableInformation.TestInstructionTypeUuid ==
+				string(fenixTestInstructions.TestInstructionTypeUUID_FenixSentToUsersDomain_FenixSendTemplateAddOn) {
+
+				// Get all attributes for the immature TestInstruction
+				immatureFenixTestInstructionAttributesMap, _ := commandAndRuleEngine.Testcases.
+					ImmatureTestInstructionAttributesMap[string(testInstruction_SendTemplateToThisDomain.
+					TestInstructionUUID_FenixSentToUsersDomain_SendTemplateToThisDomain)]
+
+				// Loop original Fenix-attributes and add them
+				for tempAttributeUuid, tempAttribute := range immatureFenixTestInstructionAttributesMap {
+
+					// Only add certain Attributes to map
+					switch tempAttribute.TestInstructionAttributeUuid {
+
+					// These Attributes should be EXCLUDED when adding the attributes
+					case string(testInstruction_SendTemplateToThisDomain_version_1_0.
+						TestInstructionAttributeUUID_FenixSentToUsersDomain_FenixOwnedSendTemplateToThisDomain_FenixOwnedSendTemplateToThisExecutionDomainComboBox),
+						string(testInstruction_SendTemplateToThisDomain_version_1_0.
+							TestInstructionAttributeUUID_FenixOwnedSendTemplateToThisDomain_FenixOwnedSendTemplateToThisDomainTextBox),
+						string(testInstruction_SendTemplateToThisDomain_version_1_0.
+							TestInstructionAttributeUUID_FenixOwnedSendTemplateToThisDomain_FenixOwnedSendTemplateToThisExecutionDomainTextBox):
+
+					// Add Attribute to map of all attributes for TestInstruction
+					default:
+						allImmatureTestInstructionAttributesMap[tempAttributeUuid] = tempAttribute
+
+					}
+
+				}
+			}
+
 			// Loop alla attributes for the ImmatureTestInstruction
-			for attributeUuid, attribute := range immatureTestInstructionAttributesMap {
+			for attributeUuid, attribute := range allImmatureTestInstructionAttributesMap {
 
 				// Add attributes-data to newly created TestInstruction
 				var newTestInstructionAttributes *fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionInformationMessage_TestInstructionAttributeMessage

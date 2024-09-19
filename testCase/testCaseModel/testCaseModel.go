@@ -220,11 +220,17 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 
 		// TI
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION:
-		nodeColor = currentTestCase.MatureTestInstructionMap[currentElementsUuid].MatureBasicTestInstructionInformation.ChosenDropZoneColor //currentElement.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString //nodeColor_TI_TIC
-		isBond = false
+		if currentTestCase.MatureTestInstructionMap[currentElementsUuid].MatureBasicTestInstructionInformation.ChosenDropZoneUuid == "No DropZone exists" {
+			nodeColor = currentTestCase.MatureTestInstructionMap[currentElementsUuid].BasicTestInstructionInformation_NonEditableInformation.TestInstructionColor
+
+		} else {
+			nodeColor = currentTestCase.MatureTestInstructionMap[currentElementsUuid].MatureBasicTestInstructionInformation.ChosenDropZoneColor //currentElement.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString //nodeColor_TI_TIC
+			isBond = false
+		}
 
 		// TIC
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER:
+
 		nodeColor = currentElement.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString //nodeColor_TI_TIC
 		isBond = false
 

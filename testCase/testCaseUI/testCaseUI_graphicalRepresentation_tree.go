@@ -114,7 +114,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 
 			// Create colorRectangle to show TestInstruction-color
 			newTestInstructionColorRectangle := testCasesUiCanvasObject.NewClickableRectangle(
-				rectangleColor, testCaseUuid, child.Uuid)
+				rectangleColor,
+				testCaseUuid,
+				child.Uuid,
+				rectangleForTestInstruction)
 
 			testInstructionNodeColorContainer := container.NewStack(
 				newTestInstructionColorRectangle.colorRectangle,
@@ -167,6 +170,54 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			newIndentationRectangle.SetMinSize(fyne.NewSize(testCaseNodeRectangleSize*nodeTreeLevel, float32(0)))
 			newIndentationRectangleContainer := container.NewStack(newIndentationRectangle)
 
+			// Get current TestCase
+			currentTestCase, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+			if existsInMap == false {
+				errorId := "0efefe02-6ef3-4612-8ef5-0e506b0765be"
+				err := errors.New(fmt.Sprintf("couldn't find TestCase: '%s' in testCases-map [ErrorID: %s]", testCaseUuid, errorId))
+
+				println(err) // TODO Send on Error-channel
+
+				return widget.NewLabel(err.Error())
+			}
+
+			// Get the Mature TestInstructionContainer
+			var matureTestInstructionContainer testCaseModel.MatureTestInstructionContainerStruct
+			matureTestInstructionContainer, existsInMap = currentTestCase.MatureTestInstructionContainerMap[child.Uuid]
+
+			if existsInMap == false {
+				errorId := "17620910-02bb-45d2-9f0d-a94a769328e7"
+				err := errors.New(fmt.Sprintf("couldn't find TestCaseContainer: '%s' in MatureTestInstructionContainerMap "+
+					"for TestCase '%s' [ErrorID: %s]", child, testCaseUuid, errorId))
+
+				println(err) // TODO Send on Error-channel
+
+				return widget.NewLabel(err.Error())
+			}
+
+			// Found out if TestInstructionContainer is Serial or Parallel processed
+			var testInstructionContainerProcessingType rectangleTypeType
+
+			if matureTestInstructionContainer.EditableTestInstructionContainerAttributes.
+				TestInstructionContainerExecutionType == fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionContainerExecutionTypeEnum_SERIAL_PROCESSED {
+
+				testInstructionContainerProcessingType = rectangleForSerialTestInstructionsContainer
+			} else {
+
+				testInstructionContainerProcessingType = rectangleForParallelTestInstructionsContainer
+			}
+
+			// Create colorRectangle to show TestInstruction-color
+			newTestInstructionColorRectangle := testCasesUiCanvasObject.NewClickableRectangle(
+				newTransparentColor,
+				testCaseUuid,
+				child.Uuid,
+				testInstructionContainerProcessingType)
+
+			testInstructionContainerProcessingImageContainer := container.NewStack(
+				newTestInstructionColorRectangle.rectangleImage,
+				newTestInstructionColorRectangle)
+
 			// Create colorRectangle used to show which TestInstructionContainer a Bond belongs to when hovering over Bond
 			newBondBelongingRectangle := canvas.NewRectangle(color.Transparent)
 			newBondBelongingRectangle.StrokeColor = color.Black
@@ -180,7 +231,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 
 			// Create the Horizontal node container object to be put on GUI
 			nodeHContainer := container.NewHBox(
-				newIndentationRectangleContainer, newBondBelongingRectangle, newTestInstructionContainerAccordion, layout.NewSpacer())
+				newIndentationRectangleContainer, newBondBelongingRectangle, testInstructionContainerProcessingImageContainer, newTestInstructionContainerAccordion, layout.NewSpacer())
 
 			// Create trailer colorRectangle for TestInstructionContainer
 			newITrailerRectangle := canvas.NewRectangle(newTransparentColor)

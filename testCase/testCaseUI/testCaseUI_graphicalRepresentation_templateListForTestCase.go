@@ -188,7 +188,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	accordion = widget.NewAccordion(tableAccordionItem) // widget.NewAccordion(tableAccordionItem)
 
 	// Create the VBox-container that will be returned
-	templateListArea = container.NewVBox(accordion)
+	templateListArea = container.NewVBox(accordion, widget.NewLabel(""), widget.NewSeparator())
 
 	return templateListArea, nil
 

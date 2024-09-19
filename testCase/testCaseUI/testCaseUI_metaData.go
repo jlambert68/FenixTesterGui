@@ -4,11 +4,18 @@ import (
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 )
 
 // Generate the MetaData Area for the TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateMetaDataAreaForTestCase(testCaseUuid string) (testCaseMetaDataArea fyne.CanvasObject, err error) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateMetaDataAreaForTestCase(
+	testCaseUuid string) (
+	testCaseMetaDataArea fyne.CanvasObject, err error) {
+
+	var metaDataAccordionItem *widget.AccordionItem
+	var accordion *widget.Accordion
+	var metaDataArea fyne.CanvasObject
 
 	// Get current TestCase-UI-model
 	_, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
@@ -20,7 +27,13 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateMetaDataAreaForTe
 		return nil, err
 	}
 
-	testCaseMetaDataArea = widget.NewLabel("'testCaseMetaDataArea'")
+	// Create an Accordion item for the MetaData
+	metaDataAccordionItem = widget.NewAccordionItem("TestCase MetaData", widget.NewLabel("'testCaseMetaDataArea'"))
 
-	return testCaseMetaDataArea, err
+	accordion = widget.NewAccordion(metaDataAccordionItem)
+
+	// Create the VBox-container that will be returned
+	metaDataArea = container.NewVBox(accordion, widget.NewLabel(""), widget.NewSeparator())
+
+	return metaDataArea, err
 }

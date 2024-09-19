@@ -204,7 +204,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 		testCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Open(0)
 		testCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject.Refresh()
 
-		attributesContainer = container.NewVBox(testCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseTestInstructionAttributesAccordionObject)
+		attributesContainer = container.NewVBox(testCaseUIModel.currentTestCaseGraphicalStructure.
+			currentTestCaseTestInstructionAttributesAccordionObject, widget.NewLabel(""), widget.NewSeparator())
 
 	}
 

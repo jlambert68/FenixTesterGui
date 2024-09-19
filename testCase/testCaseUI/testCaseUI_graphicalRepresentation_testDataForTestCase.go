@@ -258,7 +258,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 	testDataAccordion = widget.NewAccordion(testDataAccordionItem) // widget.NewAccordion(tableAccordionItem)
 
 	// Create the VBox-container that will be returned
-	testDataArea := container.NewVBox(testDataAccordion)
+	testDataArea := container.NewVBox(testDataAccordion, widget.NewLabel(""), widget.NewSeparator())
 
 	return testDataArea, nil
 

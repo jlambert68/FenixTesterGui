@@ -229,13 +229,17 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 		widget.NewSeparator(),
 		testCaseGraphicalAreas.TestCaseMetaDataArea,
 		widget.NewSeparator(),
+	)
+
+	// Create the BorderContainer for BaseInformation, MetaData and TestCaseAttributes...
+	baseInformationMetaDataTestCaseAttributesBorderContainer := container.NewBorder(
+		baseInformationMetaDataTestCaseAttributes, nil, nil, nil,
 		testCaseGraphicalAreas.TestCaseAttributesArea)
-	//layout.NewSpacer())
 
 	// Create the UI area for all parts of one TestCase
 	testCaseAdaptiveSplitContainer := newAdaptiveSplit(
 		textualAndGraphicalRepresentations, container.NewWithoutLayout(),
-		baseInformationMetaDataTestCaseAttributes, container.NewWithoutLayout())
+		baseInformationMetaDataTestCaseAttributesBorderContainer, container.NewWithoutLayout())
 
 	// Create a new Tab-object
 	newTestCaseTabObject := container.NewTabItem(tabName, testCaseAdaptiveSplitContainer)

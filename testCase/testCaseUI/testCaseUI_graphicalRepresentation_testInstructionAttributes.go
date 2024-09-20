@@ -209,7 +209,13 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 
 	}
 
-	return attributesContainer, testInstructionAttributesAccordion, err
+	// Create a container for the Accordion
+	accordionContainer := container.NewVBox(testInstructionAttributesAccordion)
+
+	// Wrap the container in a scrollContainer
+	accordionScrollContainer := container.NewScroll(accordionContainer)
+
+	return accordionScrollContainer, testInstructionAttributesAccordion, err
 }
 
 // Generate and add an 'attribute row' to be used in attributes

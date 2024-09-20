@@ -2,7 +2,10 @@ package testCaseUI
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+	"image/color"
 )
 
 // Generate the Graphical Representation Area for the TestCase
@@ -38,16 +41,43 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateGraphicalRepresen
 	testCaseGraphicalModelAreaAccordion := widget.NewAccordion(testCaseGraphicalModelAreaAccordionItem)
 	testCaseGraphicalModelAreaAccordion.RemoveIndex(0)
 
+	myColor := color.RGBA{
+		R: 0,
+		G: 0,
+		B: 0,
+		A: 0,
+	}
+
+	var myRectangle *canvas.Rectangle
+	myRectangle = canvas.NewRectangle(myColor)
+	myRectangle.SetMinSize(fyne.NewSize(1, 200))
+
 	graphicalTestCaseUIObject = testCasesUiCanvasObject.makeTestCaseGraphicalUIObject(testCaseUuid)
+	//graphicalTestCaseUIObjectContainer := container.NewBorder(nil, nil, nil, nil, graphicalTestCaseUIObject)
 
 	testCaseGraphicalModelAreaAccordionItem = widget.NewAccordionItem("Graphical Representation of the TestCase", graphicalTestCaseUIObject) //treeExpandedContainer)
 	testCaseGraphicalModelAreaAccordion.Append(testCaseGraphicalModelAreaAccordionItem)
+	testCaseGraphicalModelAreaAccordion.OpenAll()
+
+	// Create a container for the Accordion
+	accordionContainer := container.NewVBox(testCaseGraphicalModelAreaAccordion)
+
+	// Wrap the container in a scrollContainer
+	accordionScrollContainer := container.NewScroll(accordionContainer)
+
+	// Set a minimum size for the vertical scroll to prevent collapsing
+	//verticalScroll.SetMinSize(fyne.NewSize(300, 400)) // Adjust the minimum size based on your needs
+
+	// Finally, wrap the vertical scroll in a horizontal scroll (if needed)
+	//scrollContainer := container.NewHScroll(verticalScroll)
+	//scrollContainer.Refresh()
 
 	//canvasGraphicalRepresentationAccordionObject := container.NewScroll(testCaseGraphicalModelAreaAccordion)
 
-	//testCaseGraphicalModelArea = container.NewBorder(nil, nil, nil, nil, canvasGraphicalRepresentationAccordionObject)
+	//testCaseGraphicalModelArea = container.NewBorder(nil, nil, nil, nil, testCaseGraphicalModelAreaAccordionNewHScroll)
 	//testCaseGraphicalModelArea =  container.NewVBox(canvasGraphicalRepresentationAccordionObject)
-	//testCaseGraphicalModelAreaWithScroll := container.NewHScroll(testCaseGraphicalModelArea)
+	//testCaseGraphicalModelAreaWithScroll := container.NewVScroll(testCaseGraphicalModelArea)
+	//testCaseGraphicalModelAreaWithScroll.SetMinSize(fyne.NewSize(testCaseGraphicalModelAreaWithScroll.Size().Width, 300))
 
-	return testCaseGraphicalModelAreaAccordion, graphicalTestCaseUIObject, testCaseGraphicalModelAreaAccordion, err
+	return accordionScrollContainer, graphicalTestCaseUIObject, testCaseGraphicalModelAreaAccordion, err
 }

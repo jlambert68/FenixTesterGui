@@ -216,11 +216,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	}
 
 	// Create canvas-object for Textual and Graphical Representation
-	textualAndGraphicalRepresentations := container.NewVBox(
+	textualAndGraphicalRepresentations := container.NewBorder(
 		testCaseGraphicalAreas.TestCaseTextualModelArea,
-		widget.NewSeparator(),
-		testCaseGraphicalAreas.TestCaseGraphicalModelArea,
-		layout.NewSpacer())
+		nil,
+		nil,
+		nil,
+		testCaseGraphicalAreas.TestCaseGraphicalModelArea)
 
 	// Create canvas-object for BaseInformation, MetaData and TestCaseAttributes
 	baseInformationMetaDataTestCaseAttributes := container.NewVBox(

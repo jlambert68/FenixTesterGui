@@ -5,8 +5,15 @@ import (
 	"fyne.io/fyne/v2/container"
 )
 
-func newAdaptiveSplit(left, right fyne.CanvasObject) *fyne.Container {
-	split := container.NewHSplit(left, right)
+func newAdaptiveSplit(leftTop, leftBottom, rightTop, rightBottom fyne.CanvasObject) *fyne.Container {
+
+	leftSplit := container.NewVSplit(leftTop, leftBottom)
+	leftSplit.Offset = 0.8
+
+	rightSplit := container.NewVSplit(rightTop, rightBottom)
+	rightSplit.Offset = 0.8
+
+	split := container.NewHSplit(leftSplit, rightSplit)
 	split.Offset = 0.33
 	return container.New(&adaptiveLayout{split: split}, split)
 }

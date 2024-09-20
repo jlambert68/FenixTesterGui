@@ -189,7 +189,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Get Available Building BLocks form GUI-server
 	uiServer.AvailableBuildingBlocksModel.loadAvailableBuildingBlocksFromServer(&uiServer.testCasesModel)
 
-	// Get Available Building BLocks form GUI-server
+	// Get Available Building Blocks form GUI-server
 	uiServer.AvailableBuildingBlocksModel.loadPinnedBuildingBlocksFromServer()
 
 	// Load list with TemplateRepositoryApiUrls form GUI-server
@@ -657,7 +657,11 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 
 	// Create the complete TestCase BuildingBlocks UI area
 	availableTestCaseBuildingBlocksBorderedLayout := layout.NewBorderLayout(availableAvailableBuildingBlocksUIBar, nil, nil, nil)
-	tempcompleteAvailableTestCaseBuildingBlocksUI := container.New(availableTestCaseBuildingBlocksBorderedLayout, availableAvailableBuildingBlocksUIBar, container.NewVSplit(availableTestCaseBuildingBlocksTreeUI, uiServer.createTestCaseCommandsUI()))
+
+	buildingBlockSplit := container.NewVSplit(availableTestCaseBuildingBlocksTreeUI, uiServer.createTestCaseCommandsUI())
+	buildingBlockSplit.Offset = 0.8
+
+	tempcompleteAvailableTestCaseBuildingBlocksUI := container.New(availableTestCaseBuildingBlocksBorderedLayout, availableAvailableBuildingBlocksUIBar, buildingBlockSplit)
 	//tempcompleteAvailableTestCaseBuildingBlocksUI.MinSize(fyne.NewSize(float32(300), float32(400))
 
 	//templabel := widget.NewLabel("MyLabel")

@@ -44,6 +44,7 @@ func (uiServer *UIServerStruct) makeCommandStackUI() {
 		commandStackListUI.Unselect(id)
 		d, _ := bindedCommandListData.GetValue(id)
 		w := uiServer.fenixApp.NewWindow("Edit Data")
+		w.CenterOnScreen()
 
 		itemName := widget.NewEntry()
 		itemName.Text = d

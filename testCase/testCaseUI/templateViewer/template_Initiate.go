@@ -43,6 +43,7 @@ func InitiateTemplateViewer(
 	templateViewerWindow = myApp.NewWindow("Imported Files Viewer")
 	// Set initial size of the window
 	templateViewerWindow.Resize(fyne.NewSize(800, 700))
+	templateViewerWindow.CenterOnScreen()
 
 	var leftContainer *fyne.Container
 	var rightContainer *fyne.Container

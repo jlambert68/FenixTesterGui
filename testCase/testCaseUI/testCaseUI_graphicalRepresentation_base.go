@@ -2,12 +2,16 @@ package testCaseUI
 
 import (
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 )
 
 // Generate the Graphical Representation Area for the TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateGraphicalRepresentationAreaForTestCase(testCaseUuid string) (testCaseGraphicalModelArea fyne.CanvasObject, graphicalTestCaseUIObject fyne.CanvasObject, testCaseGraphicalModelAreaAccordion2 *widget.Accordion, err error) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateGraphicalRepresentationAreaForTestCase(
+	testCaseUuid string) (
+	testCaseGraphicalModelArea fyne.CanvasObject,
+	graphicalTestCaseUIObject fyne.CanvasObject,
+	testCaseGraphicalModelAreaAccordion2 *widget.Accordion,
+	err error) {
 
 	/*
 		// Get current TestCase-UI-model
@@ -39,8 +43,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateGraphicalRepresen
 	testCaseGraphicalModelAreaAccordionItem = widget.NewAccordionItem("Graphical Representation of the TestCase", graphicalTestCaseUIObject) //treeExpandedContainer)
 	testCaseGraphicalModelAreaAccordion.Append(testCaseGraphicalModelAreaAccordionItem)
 
-	testCaseGraphicalModelArea = container.NewVBox(testCaseGraphicalModelAreaAccordion)
+	//canvasGraphicalRepresentationAccordionObject := container.NewScroll(testCaseGraphicalModelAreaAccordion)
+
+	//testCaseGraphicalModelArea = container.NewBorder(nil, nil, nil, nil, canvasGraphicalRepresentationAccordionObject)
+	//testCaseGraphicalModelArea =  container.NewVBox(canvasGraphicalRepresentationAccordionObject)
 	//testCaseGraphicalModelAreaWithScroll := container.NewHScroll(testCaseGraphicalModelArea)
 
-	return testCaseGraphicalModelArea, graphicalTestCaseUIObject, testCaseGraphicalModelAreaAccordion, err
+	return testCaseGraphicalModelAreaAccordion, graphicalTestCaseUIObject, testCaseGraphicalModelAreaAccordion, err
 }

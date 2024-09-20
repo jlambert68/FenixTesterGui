@@ -9,7 +9,9 @@ import (
 )
 
 // Generate the BaseInformation Area for the TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateBaseInformationAreaForTestCase(testCaseUuid string) (testCaseBaseInformationArea fyne.CanvasObject, err error) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateBaseInformationAreaForTestCase(
+	testCaseUuid string) (
+	testCaseBaseInformationArea fyne.CanvasObject, err error) {
 
 	// Get current TestCase-UI-model
 	_, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
@@ -23,6 +25,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateBaseInformationAr
 
 	var tempBaseInformationAreaContainer *fyne.Container
 	tempBaseInformationAreaContainer = container.New(layout.NewVBoxLayout())
+
+	// Generate "All Mandatory Fields" filled in as expected
+
+	// Add the ' "AllMandatoryFields"-UI-object' to the 'BaseInformationArea'
 
 	// Generate TestCaseName-UI-object
 	var tempTestCaseNameArea fyne.CanvasObject

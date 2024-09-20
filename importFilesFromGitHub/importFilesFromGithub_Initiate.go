@@ -36,6 +36,7 @@ func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) InitiateImportFi
 
 	// Create the window for GitHub files
 	githubFileImporterWindow = myApp.NewWindow("Template file importer")
+	githubFileImporterWindow.CenterOnScreen()
 
 	importFilesFromGitHubObject.rootApiUrl = templateRepositoryApiUrls[0].GetRepositoryApiFullUrl()
 	importFilesFromGitHubObject.currentApiUrl = importFilesFromGitHubObject.rootApiUrl

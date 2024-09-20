@@ -125,7 +125,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectF
 // GenerateNewTestCaseTabObject
 // Generate a new TestCase UI-model
 
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObject(testCaseToBeAddedUuid string) (err error) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObject(
+	testCaseToBeAddedUuid string) (
+	err error) {
 
 	var tabName string
 
@@ -230,7 +232,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	//layout.NewSpacer())
 
 	// Create the UI area for all parts of one TestCase
-	testCaseAdaptiveSplitContainer := newAdaptiveSplit(textualAndGraphicalRepresentations, baseInformationMetaDataTestCaseAttributes)
+	testCaseAdaptiveSplitContainer := newAdaptiveSplit(
+		textualAndGraphicalRepresentations, container.NewWithoutLayout(),
+		baseInformationMetaDataTestCaseAttributes, container.NewWithoutLayout())
 
 	// Create a new Tab-object
 	newTestCaseTabObject := container.NewTabItem(tabName, testCaseAdaptiveSplitContainer)

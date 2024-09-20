@@ -37,3 +37,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateMetaDataAreaForTe
 
 	return metaDataArea, err
 }
+
+/*
+Att göra
+* Lägga till funktion som gör att testFallet håller reda på om fält int evaliderar rätt
+* FIxa så att trädet för Testfallet ligger i en scroll-continaer både horisontalt och vertikalt
+* Gäller öven attributesdelen men då bara vertikalt
+* Fixa så att man får felmeddelanden "uppPoppande" med flash
+*/

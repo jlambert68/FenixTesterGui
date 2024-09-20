@@ -25,6 +25,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) MainTestDataSelector(
 
 	myWindow := app.NewWindow("TestData Management")
 	myWindow.Resize(fyne.NewSize(600, 500))
+	myWindow.CenterOnScreen()
 
 	// When this window closed then show parent and send response to parent window
 	myWindow.SetOnClosed(func() {

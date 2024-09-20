@@ -133,7 +133,6 @@ func fenixGuiBuilderServerMain() {
 		sharedCode.LogFatalLevel(id, "Couldn't generate access token", map[string]interface{}{"returnMessageString": returnMessageString})
 
 	}
-	fmt.Println("va fannnnn")
 
 	// Start RestApi-server
 	//go fenixTesterGuiObject.subPackageObjects.restAPI.RestAPIServer()

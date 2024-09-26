@@ -10,7 +10,7 @@
 {{SubCustodyISO15022.TestData.ISIN_Description}}
 :16S:TRADDET
 :16R:FIAC
-:36B::SETT//UNIT/{{Fenix.ControlledUniqueId[](Random Number: %nn%)}},
+:36B::SETT//UNIT/{{Fenix.ControlledUniqueId[](%nn%)}},
 :97A::SAFE//{{SubCustodyISO15022.TestData.ReceivingSafekeepingAccount}}
 :16S:FIAC
 :16R:SETDET

@@ -342,8 +342,8 @@ github.com/jeandeaual/go-locale v0.0.0-20240223122105-ce5225dcaa49 h1:Po+wkNdMmN
 github.com/jeandeaual/go-locale v0.0.0-20240223122105-ce5225dcaa49/go.mod h1:YiutDnxPRLk5DLUFj6Rw4pRBBURZY07GFr54NdV9mQg=
 github.com/jlambert68/FenixGrpcApi v0.0.0-20240902161440-74b93725d1bc h1:fcTcVSMMeeYtEZPx0dxGl61QaGDt0p3tOF76m5hIm1U=
 github.com/jlambert68/FenixGrpcApi v0.0.0-20240902161440-74b93725d1bc/go.mod h1:5BO7Hq8qdgzK5W7KY14yXPYN/fNuXAMdDQTY7xHIeXc=
-github.com/jlambert68/FenixScriptEngine v0.0.0-20240918095429-fa7acea1d0a4 h1:hlMZoSL3i8g+JZ/flU2UXxezAAfTQS1tsqyROiT/S78=
-github.com/jlambert68/FenixScriptEngine v0.0.0-20240918095429-fa7acea1d0a4/go.mod h1:ItUgEd5NIO8xb5Qs372NLxdm5385gMcp+ZcQ94RwBA0=
+github.com/jlambert68/FenixScriptEngine v0.0.0-20240926173607-33468503e5cd h1:vqd8uk0jIvgMSDMfnqQUIMHqqvs46YL0jfpOlLbHzgc=
+github.com/jlambert68/FenixScriptEngine v0.0.0-20240926173607-33468503e5cd/go.mod h1:ItUgEd5NIO8xb5Qs372NLxdm5385gMcp+ZcQ94RwBA0=
 github.com/jlambert68/FenixStandardTestInstructionAdmin v0.0.0-20240919081445-a249ea1fb7f5 h1:z9qwX7FN21P3/itlIlQvNbsXY0DZ96UvcYmyjZVMmOk=
 github.com/jlambert68/FenixStandardTestInstructionAdmin v0.0.0-20240919081445-a249ea1fb7f5/go.mod h1:02WShNYzqtTIsUK/6AXtdJmRSXLxJzXuK0mzcCJcqf0=
 github.com/jlambert68/FenixSyncShared v0.0.0-20240911064419-da3d922610cb h1:lyXuGpWnF2z5r1P8SbL9RmRjv5rFtzbl3GmdYSz/dGs=

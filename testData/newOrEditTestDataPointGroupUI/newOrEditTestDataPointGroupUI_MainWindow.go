@@ -54,7 +54,7 @@ func ShowNewOrEditGroupWindow(
 	generateAllAvailablePointsListUIComponent(&newOrEditTestDataPointGroupWindow, &testDataEngine.TestDataModel)
 
 	// *** Create the selection boxes for selecting TestDataValues values
-	generateTestDataSelectionsUIComponent(&testDataEngine.TestDataModel, testDataModelMap)
+	generateTestDataSelectionsUIComponent(&testDataEngine.TestDataModel, testDataModelMap, newOrEditTestDataPointGroupWindow)
 
 	// Create and configure the list-component of selected TestDataPoints
 	generateSelectedPointsListUIComponent(

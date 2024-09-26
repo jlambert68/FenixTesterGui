@@ -13,7 +13,8 @@ import (
 // *** Create the selection boxes for selecting TestDataValues values
 func generateTestDataSelectionsUIComponent(
 	testDataModel *testDataEngine.TestDataModelStruct,
-	testDataModelMap map[testDataEngine.TestDataDomainUuidType]*testDataEngine.TestDataDomainModelStruct) {
+	testDataModelMap map[testDataEngine.TestDataDomainUuidType]*testDataEngine.TestDataDomainModelStruct,
+	newOrEditTestDataPointGroupWindow fyne.Window) {
 
 	var existInMap bool
 
@@ -231,6 +232,7 @@ func generateTestDataSelectionsUIComponent(
 			// Replace existing TestDataHeaders-filter container with a new one
 			testDataSelectionsContainer.Objects[2] = tempTestDataValuesSelectionContainer
 			testDataSelectionsContainer.Refresh()
+			newOrEditTestDataPointGroupWindow.CenterOnScreen()
 
 		})
 
@@ -244,11 +246,13 @@ func generateTestDataSelectionsUIComponent(
 		// Replace existing TestDataHeaders-filter container with a new one
 		testDataSelectionsContainer.Objects[2] = container.NewHBox()
 		testDataSelectionsContainer.Refresh()
+		newOrEditTestDataPointGroupWindow.CenterOnScreen()
 
 		// If there is only one item in TestArea-item then select that one
 		if len(testAreaOptions) == 1 {
 			testAreaSelect.SetSelected(testAreaOptions[0])
 			testAreaSelect.Refresh()
+			newOrEditTestDataPointGroupWindow.CenterOnScreen()
 		}
 
 	})
@@ -257,6 +261,7 @@ func generateTestDataSelectionsUIComponent(
 	if len(domainOptions) == 1 {
 		domainsSelect.SetSelected(domainOptions[0])
 		domainsSelect.Refresh()
+		newOrEditTestDataPointGroupWindow.CenterOnScreen()
 
 		// Set label for TestAreas
 		testAreasLabel.SetText(fmt.Sprintf(testDataTestAreaLabelText+"'%s'", domainOptions[0]))
@@ -281,6 +286,8 @@ func generateTestDataSelectionsUIComponent(
 
 	// Create Search TestData-button
 	searchTestDataButton = widget.NewButton("Search for TestDataPoints", func() {
+
+		defer newOrEditTestDataPointGroupWindow.CenterOnScreen()
 
 		var tempTestDataModelMap map[testDataEngine.TestDataDomainUuidType]*testDataEngine.TestDataDomainModelStruct
 		var tempTestDataDomainModel testDataEngine.TestDataDomainModelStruct
@@ -616,6 +623,8 @@ func generateTestDataSelectionsUIComponent(
 		return testDataSelectionsContainer, searchAndClearButtonsContainer
 	*/
 
+	// Center the window
+	newOrEditTestDataPointGroupWindow.CenterOnScreen()
 }
 
 // Sort a slice with DataPoints

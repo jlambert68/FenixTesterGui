@@ -1,0 +1,29 @@
+{1:F01{{SubCustodyISO15022.TestData.SenderBIC}}{{Fenix.ControlledUniqueId[](Random Number: %nnnn%)}}{{Fenix.ControlledUniqueId[](Random Number: %nnnnnn%)}}}{2:I542{{SubCustodyISO15022.TestData.ReceiverBIC}}}{3:{108:{{Fenix.ControlledUniqueId[](Random String Uppercase: %A(16; 10)%)}}}}{4:
+:16R:GENL
+:20C::SEME//{{Fenix.ControlledUniqueId[](%YYYYMMDD%)}}{{Fenix.ControlledUniqueId[](%hhmmss%)}}-{{Fenix.ControlledUniqueId[2](%nnnn%)}}}
+:23G:NEWM
+:16S:GENL
+:16R:TRADDET
+:98A::SETT//{{Fenix.TodayShiftDay(0)}}
+:98A::TRAD//{{Fenix.TodayShiftDay(0)}}
+:35B:ISIN {{SubCustodyISO15022.TestData.ISIN_Number}}
+{{SubCustodyISO15022.TestData.ISIN_Description}}
+:16S:TRADDET
+:16R:FIAC
+:36B::SETT//UNIT/{{Fenix.ControlledUniqueId[](Random Number: %nn%)}},
+:97A::SAFE//{{SubCustodyISO15022.TestData.ReceivingSafekeepingAccount}}
+:16S:FIAC
+:16R:SETDET
+:22F::SETR//TRAD
+:22F::STCO/NCSD/ENCH
+:16R:SETPRTY
+:95P::REAG//{{SubCustodyISO15022.TestData.ReceivingAgent}}
+:16S:SETPRTY
+:16R:SETPRTY
+:95P::BUYR//{{SubCustodyISO15022.TestData.BUYER_BIC}}
+:16S:SETPRTY
+:16R:SETPRTY
+:95P::PSET//{{SubCustodyISO15022.TestData.PSET_BIC}}
+:16S:SETPRTY
+:16S:SETDET
+-}

@@ -57,6 +57,8 @@ func generateTestDataSelectionsUIComponent(
 	// Create Search TestData-button
 	var searchTestDataButton *widget.Button
 	var clearTestDataFilterCheckBoxesButton *widget.Button
+	var searchTestDataButtonFunction func()
+	var clearTestDataFilterCheckBoxesButtonFunction func()
 
 	// Create label for Domains
 	domainsLabel = widget.NewLabel(testDataDomainLabelText)
@@ -109,6 +111,10 @@ func generateTestDataSelectionsUIComponent(
 			if currentSelectedTestDataArea == selected {
 				return
 			}
+
+			defer searchTestDataButtonFunction()
+			defer clearTestDataFilterCheckBoxesButtonFunction()
+
 			currentSelectedTestDataArea = selected
 
 			// Create available TestDataSelections for TestArea
@@ -284,10 +290,32 @@ func generateTestDataSelectionsUIComponent(
 	// Create the main TestData-selection-container
 	testDataSelectionsContainer = container.NewHBox(testDomainContainer, testAreasContainer, testDataValuesSelectionContainer)
 
-	// Create Search TestData-button
-	searchTestDataButton = widget.NewButton("Search for TestDataPoints", func() {
+	// Function used when clicking on  'searchTestDataButton'
+	searchTestDataButtonFunction = func() {
 
 		defer newOrEditTestDataPointGroupWindow.CenterOnScreen()
+
+		// Verify that Domain is selected
+		if len(domainsSelect.Selected) == 0 {
+			// Optional: Notify the user
+			fyne.CurrentApp().SendNotification(&fyne.Notification{
+				Title:   "Warning",
+				Content: "A Domain must be selected",
+			})
+
+			return
+		}
+
+		// Verify that TestDataArea is selected
+		if len(testAreaSelect.Selected) == 0 {
+			// Optional: Notify the user
+			fyne.CurrentApp().SendNotification(&fyne.Notification{
+				Title:   "Warning",
+				Content: "A TestDataArea must be selected",
+			})
+
+			return
+		}
 
 		var tempTestDataModelMap map[testDataEngine.TestDataDomainUuidType]*testDataEngine.TestDataDomainModelStruct
 		var tempTestDataDomainModel testDataEngine.TestDataDomainModelStruct
@@ -462,10 +490,13 @@ func generateTestDataSelectionsUIComponent(
 		// Refresh the List-widget
 		allAvailablePointsList.Refresh()
 
-	})
+	}
 
-	// Create Clear checkboxes-button
-	clearTestDataFilterCheckBoxesButton = widget.NewButton("Clear checkboxes", func() {
+	// Create Search TestData-button
+	searchTestDataButton = widget.NewButton("Search for TestDataPoints", searchTestDataButtonFunction)
+
+	// Function for Clicking Clear Checkboxes-button
+	clearTestDataFilterCheckBoxesButtonFunction = func() {
 
 		var selected []string
 
@@ -476,7 +507,11 @@ func generateTestDataSelectionsUIComponent(
 
 		}
 
-	})
+	}
+
+	// Create Clear checkboxes-button
+	clearTestDataFilterCheckBoxesButton = widget.NewButton("Clear checkboxes",
+		clearTestDataFilterCheckBoxesButtonFunction)
 
 	// Create the container for the Search- and Clear-buttons
 	searchAndClearButtonsContainer = container.NewHBox(searchTestDataButton, clearTestDataFilterCheckBoxesButton)

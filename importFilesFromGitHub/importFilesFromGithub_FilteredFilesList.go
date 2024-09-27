@@ -22,6 +22,10 @@ func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) generateFiltered
 			label := importFilesFromGitHubObject.newCustomFilteredLabel("Template", func() {
 				// Define double-click action here.
 			})
+
+			//var labelContainer *fyne.Container
+			//labelContainer = container.NewStack(label, label.backgroundRectangle)
+
 			return label
 		},
 		func(id widget.ListItemID, obj fyne.CanvasObject) {
@@ -120,8 +124,15 @@ type customFilteredLabel struct {
 	lastTap     time.Time
 }
 
-func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) newCustomFilteredLabel(text string, onDoubleTap func()) *customFilteredLabel {
-	l := &customFilteredLabel{Label: widget.Label{Text: text}, onDoubleTap: onDoubleTap}
+func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) newCustomFilteredLabel(
+	text string,
+	onDoubleTap func(),
+) *customFilteredLabel {
+
+	l := &customFilteredLabel{
+		Label:       widget.Label{Text: text},
+		onDoubleTap: onDoubleTap}
+
 	l.ExtendBaseWidget(l)
 	return l
 }
@@ -140,6 +151,12 @@ func (l *customFilteredLabel) TappedSecondary(*fyne.PointEvent) {
 	// Implement if you need right-click (secondary tap) actions.
 }
 
-func (l *customFilteredLabel) MouseIn(*desktop.MouseEvent)    {}
+func (l *customFilteredLabel) MouseIn(*desktop.MouseEvent) {
+	l.TextStyle = fyne.TextStyle{Bold: true}
+	l.Refresh()
+}
 func (l *customFilteredLabel) MouseMoved(*desktop.MouseEvent) {}
-func (l *customFilteredLabel) MouseOut()                      {}
+func (l *customFilteredLabel) MouseOut() {
+	l.TextStyle = fyne.TextStyle{Bold: false}
+	l.Refresh()
+}

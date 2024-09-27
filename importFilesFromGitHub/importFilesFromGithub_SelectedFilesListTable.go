@@ -42,9 +42,25 @@ func (l *clickableLabel) TappedSecondary(*fyne.PointEvent) {
 	// Implement if you need right-click (secondary tap) actions.
 }
 
-func (l *clickableLabel) MouseIn(*desktop.MouseEvent)    {}
+func (l *clickableLabel) MouseIn(*desktop.MouseEvent) {
+	if l.isClickable == false {
+		return
+	}
+
+	l.TextStyle = fyne.TextStyle{Bold: true}
+	l.Refresh()
+
+}
 func (l *clickableLabel) MouseMoved(*desktop.MouseEvent) {}
-func (l *clickableLabel) MouseOut()                      {}
+func (l *clickableLabel) MouseOut() {
+	if l.isClickable == false {
+		return
+	}
+
+	l.TextStyle = fyne.TextStyle{Bold: false}
+	l.Refresh()
+
+}
 
 // Create the UI-list that holds the selected files
 func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) generateSelectedFilesListTable(parentWindow fyne.Window) {

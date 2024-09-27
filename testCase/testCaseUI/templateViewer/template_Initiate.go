@@ -7,6 +7,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"github.com/jlambert68/FenixScriptEngine/placeholderReplacementEngine"
 	"github.com/jlambert68/FenixScriptEngine/testDataEngine"
+	"strings"
 )
 
 func InitiateTemplateViewer(
@@ -199,10 +200,44 @@ func InitiateTemplateViewer(
 		testDataPointsForAGroupSelect,
 		testDataRowsForTestDataPointsSelect)
 
-	// Placeholder for rightContainer - add your form view here
-	rightContainer = container.NewBorder(nil, nil, nil, nil, richTextWithValues)
+	// Button for copy the "Template"
+	var copyTemplateTextButton *widget.Button
+	copyTemplateTextButton = widget.NewButton("Copy Template", func() {
+		var templateText string
+		templateText = getTextFromRichText(richText)
 
-	leftContainer = container.NewBorder(nil, nil, nil, nil, richText)
+		clipboard := mainWindow.Clipboard()
+		clipboard.SetContent(templateText)
+
+		// Optional: Notify the user
+		fyne.CurrentApp().SendNotification(&fyne.Notification{
+			Title:   "Clipboard",
+			Content: "Template copied to clipboard!",
+		})
+
+	})
+
+	// Button for copy the "Template with values"
+	var copyTemplateWithValuesButton *widget.Button
+	copyTemplateWithValuesButton = widget.NewButton("Copy Template", func() {
+		var templateText string
+		templateText = getTextFromRichText(richTextWithValues)
+
+		clipboard := mainWindow.Clipboard()
+		clipboard.SetContent(templateText)
+
+		// Optional: Notify the user
+		fyne.CurrentApp().SendNotification(&fyne.Notification{
+			Title:   "Clipboard",
+			Content: "Template - with values- copied to clipboard!",
+		})
+
+	})
+
+	// Placeholder for rightContainer - add your form view here
+	rightContainer = container.NewBorder(copyTemplateWithValuesButton, nil, nil, nil, richTextWithValues)
+
+	leftContainer = container.NewBorder(copyTemplateTextButton, nil, nil, nil, richText)
 
 	// Set File if that was included in call
 	if choseTemplateName != "" {
@@ -229,4 +264,22 @@ func InitiateTemplateViewer(
 
 	// Show the File Viewe Window
 	templateViewerWindow.Show()
+}
+
+// Function to extract text from RichText
+func getTextFromRichText(richText *widget.RichText) string {
+	var sb strings.Builder
+
+	// Iterate over each segment in the RichText
+	for _, seg := range richText.Segments {
+		switch s := seg.(type) {
+		case *widget.TextSegment:
+			sb.WriteString(s.Text)
+		case *widget.HyperlinkSegment:
+			sb.WriteString(s.Text)
+			// Add cases for other segment types if needed
+		}
+	}
+
+	return sb.String()
 }

@@ -17,7 +17,7 @@ import (
 )
 
 // The color of a row in the TestData-popup-table when it is selected
-var selectedRowColor = color.NRGBA{R: 0xa5, G: 0xf2, B: 0xa2, A: 0xff}
+var selectedRowColor = color.NRGBA{R: 0x05, G: 0x6b, B: 0x01, A: 0xff}
 
 // The color of a row when it is selected and the user is hovering the row
 var selectedAndHoveredRowColor = color.NRGBA{R: 0x60, G: 0xb8, B: 0xf7, A: 0xff}

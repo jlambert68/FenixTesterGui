@@ -285,7 +285,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	// Create the UI for List TestCases-UI
 	var tempListTestCasesUI fyne.CanvasObject
-	tempListTestCasesUI = listTestCasesUI.LoadListTestCasesUI()
+	tempListTestCasesUI = listTestCasesUI.GenerateListTestCasesUI(uiServer.testCasesModel)
 
 	mySliderDataAsString := binding.NewString()
 

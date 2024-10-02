@@ -24,7 +24,10 @@ func LoadTestCaseThatCanBeEditedByUser(
 		return
 	}
 
-	// Store the slice with TestCases that a user can edit
+	// Store the slice with TestCases
+	testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = listTestCasesThatCanBeEditedResponseMessage.GetTestCasesThatCanBeEditedByUser()
+
+	// Store the slice with TestCases that a user can edit as a Map
 	storeTestCaseThatCanBeEditedByUser(
 		listTestCasesThatCanBeEditedResponseMessage.GetTestCasesThatCanBeEditedByUser(),
 		testCaseModeReference)
@@ -37,13 +40,13 @@ func storeTestCaseThatCanBeEditedByUser(
 	testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
 
 	// Store the TestCaseThatCanBeEditedByUser-list in the TestCaseModel
-	testCaseModeReference.TestCasesThatCanBeEditedByUser = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
+	testCaseModeReference.TestCasesThatCanBeEditedByUserMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
 		TestCaseThatCanBeEditedByUserMessage)
 
 	// Store the Available TemplateRepositoryApiUrls as a map structure in TestCase-struct
 	for _, testCaseThatCanBeEditedByUser := range testCasesThatCanBeEditedByUserAsSlice {
 
-		testCaseModeReference.TestCasesThatCanBeEditedByUser[testCaseThatCanBeEditedByUser.GetTestCaseUuid()] =
+		testCaseModeReference.TestCasesThatCanBeEditedByUserMap[testCaseThatCanBeEditedByUser.GetTestCaseUuid()] =
 			testCaseThatCanBeEditedByUser
 
 	}

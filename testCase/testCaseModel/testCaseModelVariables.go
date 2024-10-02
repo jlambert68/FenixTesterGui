@@ -37,6 +37,7 @@ type TestCasesModelsStruct struct {
 	ImmatureDropZonesDataMap                      map[string]ImmatureDropZoneDataMapStruct                                                                                             // map[DropZoneUuid]ImmatureDropZoneDataMapStruct
 	DomainsThatCanOwnTheTestCaseMap               map[string]*DomainThatCanOwnTheTestCaseStruct
 	TemplateRepositoryApiUrlMap                   map[string]*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage
+	TestCasesThatCanBeEditedByUser                map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseThatCanBeEditedByUserMessage
 
 	//AvailableBuildingBlocksModel                  *gui.AvailableBuildingBlocksModelStruct
 

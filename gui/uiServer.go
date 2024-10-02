@@ -13,6 +13,8 @@ import (
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testCase/testCaseUI"
 	"FenixTesterGui/testCaseSubscriptionHandler"
+	"FenixTesterGui/testCases/listTestCasesModel"
+	"FenixTesterGui/testCases/listTestCasesUI"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -198,6 +200,9 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Load available TestData for the User
 	uiServer.AvailableBuildingBlocksModel.loadTestData(&uiServer.testCasesModel)
 
+	// Load list with TestCases that the user can edit
+	listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(&uiServer.testCasesModel)
+
 	// Load Available Bonds
 	uiServer.commandAndRuleEngine.LoadAvailableBondsFromServer()
 
@@ -274,7 +279,13 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	//rect = rect.newCustomRect()
 	//myCanvasLabel := widget.NewLabel("My Canvas Overlay Label")
 
-	applicationUI := uiServer.loadUI()
+	// Create the UI for Build TestCase-UI
+	var buildTestCasesUI fyne.CanvasObject
+	buildTestCasesUI = uiServer.loadUI()
+
+	// Create the UI for List TestCases-UI
+	var tempListTestCasesUI fyne.CanvasObject
+	tempListTestCasesUI = listTestCasesUI.LoadListTestCasesUI()
 
 	mySliderDataAsString := binding.NewString()
 
@@ -303,7 +314,8 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	detailedTestCaseExecutionTab := detailedTestCaseExecutionsUI.DetailedTestCaseExecutionsUIObject.GenerateBaseUITabForDetailedTestCaseExecutions()
 
 	tabs := container.NewAppTabs(
-		container.NewTabItem("TestCases", applicationUI),
+		container.NewTabItem("Build TestCase", buildTestCasesUI),
+		container.NewTabItem("List TestCases", tempListTestCasesUI),
 		container.NewTabItem("Executions (Subscriptions)", subscriptionExecutionsUITab),
 		container.NewTabItem("Executions", executionsUITab),
 		container.NewTabItem("Detailed TestCaseExecutions", detailedTestCaseExecutionTab),

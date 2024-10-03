@@ -2,6 +2,7 @@ package listTestCasesUI
 
 import (
 	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testCases/listTestCasesModel"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -11,7 +12,7 @@ import (
 )
 
 // Create the UI used for list all TestCases that the User can edit
-func GenerateListTestCasesUI(testCasesModel testCaseModel.TestCasesModelsStruct) (listTestCasesUI fyne.CanvasObject) {
+func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct) (listTestCasesUI fyne.CanvasObject) {
 
 	//var testCaseTable *widget.Table
 
@@ -19,44 +20,65 @@ func GenerateListTestCasesUI(testCasesModel testCaseModel.TestCasesModelsStruct)
 	var testCasesListScrollContainer *container.Scroll
 	var statisticsContainer *fyne.Container
 
-	var listTestCasesButton *widget.Button
-	var listTestCasesButtonFunction func()
+	var loadTestCaseFromDataBaseButton *widget.Button
+	var loadTestCaseFromDataBaseFunction func()
+	var filterTestCasesButton *widget.Button
+	var filterTestCasesButtonFunction func()
 	var clearFiltersButton *widget.Button
 	var clearFiltersButtonFunction func()
 	var buttonsContainer *fyne.Container
 
-	var numberOfTestCasesInTheSearchLabel *widget.Label
+	var numberOfTestCasesAfterLocalFilterLabel *widget.Label
+	var numberOfTestCasesRetrievedFromDatabaseLabel *widget.Label
 
 	var filterAndButtonsContainer *fyne.Container
 
-	// Define the function to be executed to list TestCases that the user can edit
-	listTestCasesButtonFunction = func() {
-		fmt.Println("'listTestCasesButtonFunction' was pressed")
+	// Define the function to be executed to load TestCases from that Database that the user can edit
+	loadTestCaseFromDataBaseFunction = func() {
+		fmt.Println("'loadTestCaseFromDataBaseButton' was pressed")
+		listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(testCasesModel)
+		filterTestCasesButtonFunction()
+	}
+
+	// Define the 'loadTestCaseFromDataBaseButton'
+	loadTestCaseFromDataBaseButton = widget.NewButton("Load TestCases from Database", loadTestCaseFromDataBaseFunction)
+
+	// Define the function to be executed to filter TestCases that the user can edit
+	filterTestCasesButtonFunction = func() {
+		fmt.Println("'filterTestCasesButton' was pressed")
 		loadTestCaseListTableTable(testCasesModel)
 		calculateAndSetCorrectColumnWidths()
 		updateTestCasesListTable()
 
 		// Update the number TestCases in the list
-		numberOfRowsAsString := strconv.Itoa(len(testCaseListTableTable))
-		numberOfTestCasesInTheSearch.Set(
-			fmt.Sprintf("Number of TestCases in the Search: %s",
+		var numberOfRowsAsString string
+		numberOfRowsAsString = strconv.Itoa(len(testCaseListTableTable))
+		numberOfTestCasesAfterLocalFilters.Set(
+			fmt.Sprintf("Number of TestCases after local filters was applied: %s",
 				numberOfRowsAsString))
+
+		// Update the number TestCases retrieved from Database
+		var numberOfRowsFromDatabaseAsString string
+		numberOfRowsFromDatabaseAsString = strconv.Itoa(len(testCaseListTableTable))
+		numberOfTestCasesInTheDatabaseSearch.Set(
+			fmt.Sprintf("Number of TestCases retrieved from the Database: %s",
+				numberOfRowsFromDatabaseAsString))
 
 	}
 
-	// Define the 'listTestCasesButton'
-	listTestCasesButton = widget.NewButton("List TestCases", listTestCasesButtonFunction)
+	// Define the 'filterTestCasesButton'
+	filterTestCasesButton = widget.NewButton("Filter TestCases", filterTestCasesButtonFunction)
 
 	// Define the function to be executed to list TestCases that the user can edit
 	clearFiltersButtonFunction = func() {
 		fmt.Println("'clearFiltersButtonFunction' was pressed")
 	}
 
-	// Define the 'listTestCasesButton'
+	// Define the 'filterTestCasesButton'
 	clearFiltersButton = widget.NewButton("Clear all search filters", clearFiltersButtonFunction)
 
 	// Add the buttons to the buttonsContainer
-	buttonsContainer = container.NewHBox(listTestCasesButton, clearFiltersButton)
+	buttonsContainer = container.NewHBox(loadTestCaseFromDataBaseButton, filterTestCasesButton, clearFiltersButton)
 
 	// Add objects to the 'filterAndButtonsContainer'
 	filterAndButtonsContainer = container.NewVBox(buttonsContainer)
@@ -68,14 +90,18 @@ func GenerateListTestCasesUI(testCasesModel testCaseModel.TestCasesModelsStruct)
 	// Create the Scroll container for the List
 	testCasesListScrollContainer = container.NewScroll(testCaseTableContainer)
 
-	// Create the label used for showing number of TestCases in the Search
-	numberOfTestCasesInTheSearch = binding.NewString()
-	err := numberOfTestCasesInTheSearch.Set("No TestCases in the List")
-	fmt.Println(err)
-	numberOfTestCasesInTheSearchLabel = widget.NewLabelWithData(numberOfTestCasesInTheSearch)
+	// Create the label used for showing number of TestCases in the local filter
+	numberOfTestCasesAfterLocalFilters = binding.NewString()
+	_ = numberOfTestCasesAfterLocalFilters.Set("No TestCases in the List")
+	numberOfTestCasesAfterLocalFilterLabel = widget.NewLabelWithData(numberOfTestCasesAfterLocalFilters)
+
+	// Create the label used for showing number of TestCases retrieved from the Database
+	numberOfTestCasesInTheDatabaseSearch = binding.NewString()
+	_ = numberOfTestCasesInTheDatabaseSearch.Set("No TestCases in the List")
+	numberOfTestCasesRetrievedFromDatabaseLabel = widget.NewLabelWithData(numberOfTestCasesInTheDatabaseSearch)
 
 	// Initiate 'statisticsContainer'
-	statisticsContainer = container.NewHBox(numberOfTestCasesInTheSearchLabel)
+	statisticsContainer = container.NewHBox(numberOfTestCasesAfterLocalFilterLabel, numberOfTestCasesRetrievedFromDatabaseLabel)
 
 	// Add 'testCasesListScrollContainer' to 'testCasesListContainer'
 	testCasesListContainer = container.NewBorder(filterAndButtonsContainer, statisticsContainer, nil, nil, testCasesListScrollContainer)

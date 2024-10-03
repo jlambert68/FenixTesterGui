@@ -17,6 +17,7 @@ type clickableLabel struct {
 	onDoubleTap func()
 	lastTapTime time.Time
 	isClickable bool
+	currentRow  int16
 }
 
 func newClickableLabel(text string, onDoubleTap func(), tempIsClickable bool) *clickableLabel {
@@ -24,7 +25,8 @@ func newClickableLabel(text string, onDoubleTap func(), tempIsClickable bool) *c
 		widget.Label{Text: text},
 		onDoubleTap,
 		time.Now(),
-		tempIsClickable}
+		tempIsClickable,
+		-1}
 	l.ExtendBaseWidget(l)
 	return l
 }
@@ -51,6 +53,15 @@ func (l *clickableLabel) MouseIn(*desktop.MouseEvent) {
 		return
 	}
 
+	// Hinder concurrent setting of variable
+	currentRowThatMouseIsHoveringAboveMutex.Lock()
+
+	// Set current TestCaseUuid to be highlighted
+	currentRowThatMouseIsHoveringAbove = testCaseListTableTable[l.currentRow][testCaseUuidColumnNumber]
+
+	// Release variable
+	currentRowThatMouseIsHoveringAboveMutex.Unlock()
+
 	l.TextStyle = fyne.TextStyle{Bold: true}
 	l.Refresh()
 
@@ -60,6 +71,15 @@ func (l *clickableLabel) MouseOut() {
 	if l.isClickable == false {
 		return
 	}
+
+	// Hinder concurrent setting of variable
+	currentRowThatMouseIsHoveringAboveMutex.Lock()
+
+	// Set current TestCaseUuid to be highlighted
+	currentRowThatMouseIsHoveringAbove = ""
+
+	// Release variable
+	currentRowThatMouseIsHoveringAboveMutex.Unlock()
 
 	l.TextStyle = fyne.TextStyle{Bold: false}
 	l.Refresh()
@@ -80,6 +100,11 @@ func generateTestCasesListTable() {
 		},
 	)
 
+	testCaseListTable.ShowHeaderRow = true
+	testCaseListTable.CreateHeader = func() fyne.CanvasObject {
+		return widget.NewLabel("") // Create cells as labels
+	}
+
 }
 
 // Update the Table
@@ -97,6 +122,7 @@ func updateTestCasesListTable() {
 		clickable := cell.(*clickableLabel)
 		clickable.SetText(testCaseListTableTable[id.Row][id.Col])
 		clickable.isClickable = true
+		clickable.currentRow = int16(id.Row)
 
 		clickable.onDoubleTap = func() {
 
@@ -104,6 +130,12 @@ func updateTestCasesListTable() {
 
 		}
 
+	}
+
+	testCaseListTable.UpdateHeader = func(id widget.TableCellID, cell fyne.CanvasObject) {
+		clickable := cell.(*widget.Label)
+		clickable.SetText(testCaseListTableHeader[id.Col])
+		clickable.TextStyle = fyne.TextStyle{Bold: true}
 	}
 
 	testCaseListTable.Refresh()
@@ -122,12 +154,15 @@ func calculateAndSetCorrectColumnWidths() {
 	var columnsMaxSizeSlice []float32
 	columnsMaxSizeSlice = make([]float32, 8)
 
-	// Set initial value for max width size
-	for index, _ := range columnsMaxSizeSlice {
-		columnsMaxSizeSlice[index] = 0
-	}
-
 	var columnWidth float32
+
+	// Set initial value for max width size
+	for index, headerValue := range testCaseListTableHeader {
+
+		// Calculate the column width base on this value
+		columnWidth = fyne.MeasureText(headerValue, theme.TextSize(), fyne.TextStyle{Bold: true}).Width
+		columnsMaxSizeSlice[index] = columnWidth
+	}
 
 	// Loop all rows
 	for _, tempRow := range testCaseListTableTable {
@@ -157,7 +192,7 @@ func calculateAndSetCorrectColumnWidths() {
 
 }
 
-func loadTestCaseListTableTable(testCasesModel testCaseModel.TestCasesModelsStruct) {
+func loadTestCaseListTableTable(testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
 	testCaseListTableTable = nil
 

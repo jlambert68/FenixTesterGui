@@ -11,6 +11,7 @@ import (
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"log"
+	"os"
 	"strings"
 )
 
@@ -746,28 +747,51 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 
 	// NonEditableInformation, start by clearing Version because it s not the same after save to Database
 	currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.TestCaseVersion = 0
-	tempNonEditableInformation := fmt.Sprint(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation)
-	hashNonEditableInformation := sharedCode.HashSingleValue(tempNonEditableInformation)
+	//tempNonEditableInformation := fmt.Sprint(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation)
+
+	// Generate Hash for  'tempNonEditableInformation'
+	valuesToBeHashedSlice = nil
+	tempJson := protojson.Format(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation)
+	valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
+
+	// Remove spaces before hashing, due to some bug that generates "double space" sometimes when running in non-debug-mode
+	for index, textToReplaceIn := range valuesToBeHashedSlice {
+		valuesToBeHashedSlice[index] = strings.ReplaceAll(textToReplaceIn, " ", "")
+	}
+
+	hashNonEditableInformation := sharedCode.HashSingleValue(valuesToBeHashedSlice[0])
 	valuesToReHash = append(valuesToReHash, hashNonEditableInformation)
+
 	// Add hash and values to slice
 	var tempNonEditableInformationValue subHashPartsMapValueType
 	tempNonEditableInformationValue = subHashPartsMapValueType{
 		nameOfContent:        "tempNonEditableInformation",
 		hash:                 hashNonEditableInformation,
-		contentAsStringSlice: []string{tempNonEditableInformation},
+		contentAsStringSlice: []string{tempJson},
 	}
 	subHashPartsSlice = append(subHashPartsSlice, tempNonEditableInformationValue)
 
 	// EditableInformation
-	tempEditableInformation := fmt.Sprint(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation)
-	hashEditableInformation := sharedCode.HashSingleValue(tempEditableInformation)
+	//tempEditableInformation := fmt.Sprint(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation)
+	// Generate Hash for  'tempNonEditableInformation'
+	valuesToBeHashedSlice = nil
+	tempJson = protojson.Format(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation)
+	valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
+
+	// Remove spaces before hashing, due to some bug that generates "double space" sometimes when running in non-debug-mode
+	for index, textToReplaceIn := range valuesToBeHashedSlice {
+		valuesToBeHashedSlice[index] = strings.ReplaceAll(textToReplaceIn, " ", "")
+	}
+
+	hashEditableInformation := sharedCode.HashSingleValue(valuesToBeHashedSlice[0])
 	valuesToReHash = append(valuesToReHash, hashEditableInformation)
+
 	// Add hash and values to slice
 	var tempEditableInformationValue subHashPartsMapValueType
 	tempEditableInformationValue = subHashPartsMapValueType{
 		nameOfContent:        "tempEditableInformation",
 		hash:                 hashEditableInformation,
-		contentAsStringSlice: []string{tempEditableInformation},
+		contentAsStringSlice: []string{tempJson},
 	}
 	subHashPartsSlice = append(subHashPartsSlice, tempEditableInformationValue)
 
@@ -810,6 +834,39 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 		"testCaseUuid":      testCaseUuid,
 		"subHashPartsSlice": subHashPartsSlice,
 	}).Debug("Used for bug findings when TestCase model gets of sync when saving TestCase and the Loading the same TestCase")
+
+	/*
+		for _, subHashPartSlice := range subHashPartsSlice {
+			fmt.Println(fmt.Sprintf("TestCaseUuid = '%s', NameOfContent = '%s', Hash = '%s', ContentAsStringSlice = '%s'",
+				testCaseUuid,
+				subHashPartSlice.nameOfContent,
+				subHashPartSlice.hash,
+				subHashPartSlice.contentAsStringSlice))
+		}
+	*/
+
+	// Open the file in append mode. If it doesn't exist, create it.
+	file, err := os.OpenFile("SaveLoadTestCaseProblems.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		fmt.Printf("Error opening file: %v\n", err)
+		return
+	}
+	defer file.Close() // Ensure the file is closed when the function exits
+
+	for _, subHashPartSlice := range subHashPartsSlice {
+		// Format the string as before
+		line := fmt.Sprintf("TestCaseUuid = '%s', NameOfContent = '%s', Hash = '%s', ContentAsStringSlice = '%s'\n",
+			testCaseUuid,
+			subHashPartSlice.nameOfContent,
+			subHashPartSlice.hash,
+			subHashPartSlice.contentAsStringSlice)
+
+		// Write the string to the file
+		if _, err := file.WriteString(line); err != nil {
+			fmt.Printf("Error writing to file: %v\n", err)
+
+		}
+	}
 
 	return gRPCMatureTestCaseModelElementMessage,
 		gRPCMatureTestInstructions,

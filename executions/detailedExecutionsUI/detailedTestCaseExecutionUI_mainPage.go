@@ -48,6 +48,13 @@ func (detailedTestCaseExecutionsUIObject *DetailedTestCaseExecutionsUIModelStruc
 
 }
 
+// Exposed veriosn of function to Generate the description for which color symbolize what execution status
+func GenerateExecutionColorPalette() *fyne.Container {
+
+	return DetailedTestCaseExecutionsUIObject.generateExecutionColorPalette()
+
+}
+
 // Generates the description for which color symbolize what execution status
 func (detailedTestCaseExecutionsUIObject *DetailedTestCaseExecutionsUIModelStruct) generateExecutionColorPalette() (
 	executionColorPaletteContainerObject *fyne.Container) {

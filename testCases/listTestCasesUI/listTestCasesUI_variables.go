@@ -25,6 +25,15 @@ var testCaseListTableHeader = []string{
 // Keeps track of the in which column the TestCaseUUID exist in the data source for the UI-table
 const testCaseUuidColumnNumber uint8 = 2
 
+// Keeps track of the in which column the "Latest TestCaseExecution Status" exist in the data source for the UI-table
+const latestTestCaseExecutionStatus uint8 = 4
+
+// Keeps track of the in which column the ""Latest TestCaseExecution TimeStamp"" exist in the data source for the UI-table
+const latestTestCaseExecutionTimeStamp uint8 = 5
+
+// Keeps track of the in which column the ""Latest TestCaseExecution TimeStamp"" exist in the data source for the UI-table
+const latestOkFinishedTestCaseExecutionTimeStamp uint8 = 6
+
 // The row that the mouse is currently hovering above. Used for highlight that row in the UI-Table
 var currentRowThatMouseIsHoveringAbove int16 = -1
 

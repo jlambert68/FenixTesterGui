@@ -2,6 +2,7 @@ package listTestCasesUI
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/executions/detailedExecutionsModel"
 	"FenixTesterGui/testCase/testCaseModel"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -10,7 +11,6 @@ import (
 	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
-	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"image/color"
 	"strconv"
 	"time"
@@ -187,6 +187,32 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 		} else {
 			clickable.TextStyle = fyne.TextStyle{Bold: false}
 			rectangle.FillColor = color.Transparent
+			rectangle.StrokeColor = color.Transparent
+			rectangle.StrokeWidth = 3
+
+			// Special handling for certain Columns for Status color and Timestamps
+			switch uint8(id.Col) {
+
+			case latestTestCaseExecutionStatus:
+				var statusId uint8
+				var statusBackgroundColor color.RGBA
+				var statusStrokeColor color.RGBA
+				var useStroke bool
+
+				statusId = detailedExecutionsModel.ExecutionStatusColorNameToNumberMap[clickable.Text].ExecutionStatusNumber
+				statusBackgroundColor = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].BackgroundColor
+				rectangle.FillColor = statusBackgroundColor
+
+				useStroke = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].UseStroke
+				if useStroke == true {
+					statusStrokeColor = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].StrokeColor
+					rectangle.StrokeColor = statusStrokeColor
+				}
+
+			default:
+
+			}
+
 		}
 		clickableContainer.Refresh()
 
@@ -287,18 +313,40 @@ func loadTestCaseListTableTable(testCasesModel *testCaseModel.TestCasesModelsStr
 
 		// Column 4:
 		// LatestTestCaseExecutionStatus
-		tempRowslice = append(tempRowslice, fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExecutionStatusEnum_name[int32(
-			tempTestCase.GetLatestTestCaseExecutionStatus())])
+		var tempLatestTestCaseExecutionStatus string
+
+		if tempTestCase.GetLatestTestCaseExecutionStatus() > 0 {
+
+			tempLatestTestCaseExecutionStatus = detailedExecutionsModel.ExecutionStatusColorMap[int32(tempTestCase.GetLatestTestCaseExecutionStatus())].ExecutionStatusName
+		} else {
+			tempLatestTestCaseExecutionStatus = "<no execution>"
+		}
+
+		tempRowslice = append(tempRowslice, tempLatestTestCaseExecutionStatus)
 
 		// Column 5:
 		// LatestTestCaseExecutionStatusInsertTimeStamp
-		tempRowslice = append(tempRowslice, tempTestCase.
-			GetLatestTestCaseExecutionStatusInsertTimeStamp().String())
+		var tempLatestTestCaseExecutionStatusInsertTimeStamp string
+
+		if tempTestCase.GetLatestTestCaseExecutionStatusInsertTimeStamp() != nil {
+			tempLatestTestCaseExecutionStatusInsertTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestCase.
+				GetLatestTestCaseExecutionStatusInsertTimeStamp())
+		} else {
+			tempLatestTestCaseExecutionStatusInsertTimeStamp = "<no execution>"
+		}
+		tempRowslice = append(tempRowslice, tempLatestTestCaseExecutionStatusInsertTimeStamp)
 
 		// Column 6:
 		// LatestFinishedOkTestCaseExecutionStatusInsertTimeStamp
-		tempRowslice = append(tempRowslice, tempTestCase.
-			GetLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp().String())
+		var tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp string
+
+		if tempTestCase.GetLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp() != nil {
+			tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(
+				tempTestCase.GetLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp())
+		} else {
+			tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp = "<no successful execution yet>"
+		}
+		tempRowslice = append(tempRowslice, tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp)
 
 		// Column 7:
 		// DomainUuid

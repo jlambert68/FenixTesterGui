@@ -63,10 +63,18 @@ func CreateSummaryTableForDetailedTestCaseExecutionsList() *fyne.Container {
 // ExecutionStatusColorMapStruct
 // Holds the structure for one ExecutionStatus-definition
 type ExecutionStatusColorMapStruct struct {
-	TextColor       color.RGBA
-	BackgroundColor color.RGBA
-	StrokeColor     color.RGBA
-	UseStroke       bool
+	TextColor             color.RGBA
+	BackgroundColor       color.RGBA
+	StrokeColor           color.RGBA
+	UseStroke             bool
+	ExecutionStatusName   string
+	ExecutionStatusNumber uint8
+}
+
+// ExecutionStatusColorNameToNumberMapStruct
+// Holds the conversion from Name to Number for one ExecutionStatus-definition
+type ExecutionStatusColorNameToNumberMapStruct struct {
+	ExecutionStatusNumber uint8
 }
 
 const backgroundStrokeWidth = 4
@@ -87,7 +95,9 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 			G: 0xd7,
 			B: 0xa8,
 			A: 0xFF},
-		UseStroke: false,
+		UseStroke:             false,
+		ExecutionStatusName:   "INITIATED",
+		ExecutionStatusNumber: 1,
 	},
 
 	//  'EXECUTING = 2'
@@ -102,7 +112,9 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 			G: 0xff,
 			B: 0x00,
 			A: 0xFF},
-		UseStroke: false,
+		UseStroke:             false,
+		ExecutionStatusName:   "EXECUTING",
+		ExecutionStatusNumber: 2,
 	},
 
 	// 'CONTROLLED_INTERRUPTION = 3'
@@ -117,7 +129,9 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 			G: 0x86,
 			B: 0xe8,
 			A: 0xFF},
-		UseStroke: false,
+		UseStroke:             false,
+		ExecutionStatusName:   "CONTROLLED_INTERRUPTION",
+		ExecutionStatusNumber: 3,
 	},
 
 	// 'CONTROLLED_INTERRUPTION_CAN_BE_RERUN = 4'
@@ -137,7 +151,9 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 			G: 0xFF,
 			B: 0x00,
 			A: 0xFF},
-		UseStroke: true,
+		UseStroke:             true,
+		ExecutionStatusName:   "CONTROLLED_INTERRUPTION_CAN_BE_RERUN",
+		ExecutionStatusNumber: 4,
 	},
 
 	// 'FINISHED_OK = 5'
@@ -152,7 +168,9 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 			G: 0xff,
 			B: 0x00,
 			A: 0xFF},
-		UseStroke: false,
+		UseStroke:             false,
+		ExecutionStatusName:   "FINISHED_OK",
+		ExecutionStatusNumber: 5,
 	},
 
 	// 'FINISHED_OK_CAN_BE_RERUN = 6'
@@ -172,7 +190,9 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 			G: 0xFF,
 			B: 0x00,
 			A: 0xFF},
-		UseStroke: true,
+		UseStroke:             true,
+		ExecutionStatusName:   "FINISHED_OK_CAN_BE_RERUN",
+		ExecutionStatusNumber: 6,
 	},
 
 	// 'FINISHED_NOT_OK = 7'
@@ -187,7 +207,9 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 			G: 0x00,
 			B: 0x00,
 			A: 0xFF},
-		UseStroke: false,
+		UseStroke:             false,
+		ExecutionStatusName:   "FINISHED_NOT_OK",
+		ExecutionStatusNumber: 7,
 	},
 
 	// 'FINISHED_NOT_OK_CAN_BE_RERUN = 8'
@@ -207,7 +229,9 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 			G: 0xFF,
 			B: 0x00,
 			A: 0xFF},
-		UseStroke: true,
+		UseStroke:             true,
+		ExecutionStatusName:   "FINISHED_NOT_OK_CAN_BE_RERUN",
+		ExecutionStatusNumber: 8,
 	},
 
 	// 'UNEXPECTED_INTERRUPTION = 9'
@@ -222,7 +246,9 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 			G: 0x00,
 			B: 0xff,
 			A: 0xFF},
-		UseStroke: false,
+		UseStroke:             false,
+		ExecutionStatusName:   "UNEXPECTED_INTERRUPTION",
+		ExecutionStatusNumber: 9,
 	},
 
 	// 'UNEXPECTED_INTERRUPTION_CAN_BE_RERUN = 10'
@@ -242,7 +268,9 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 			G: 0xFF,
 			B: 0x00,
 			A: 0xFF},
-		UseStroke: true,
+		UseStroke:             true,
+		ExecutionStatusName:   "UNEXPECTED_INTERRUPTION_CAN_BE_RERUN",
+		ExecutionStatusNumber: 10,
 	},
 
 	// 'TIMEOUT_INTERRUPTION = 11'
@@ -257,7 +285,9 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 			G: 0xbc,
 			B: 0x04,
 			A: 0xFF},
-		UseStroke: false,
+		UseStroke:             false,
+		ExecutionStatusName:   "TIMEOUT_INTERRUPTION",
+		ExecutionStatusNumber: 11,
 	},
 
 	// 'TIMEOUT_INTERRUPTION_CAN_BE_RERUN = 12'
@@ -277,7 +307,52 @@ var ExecutionStatusColorMap = map[int32]ExecutionStatusColorMapStruct{
 			G: 0xFF,
 			B: 0x00,
 			A: 0xFF},
-		UseStroke: true,
+		UseStroke:             true,
+		ExecutionStatusName:   "TIMEOUT_INTERRUPTION_CAN_BE_RERUN",
+		ExecutionStatusNumber: 12,
+	},
+}
+
+// ExecutionStatusColorNameToNumberMap
+// map[int32]ExecutionStatusColorNameToNumberMapStruct
+// Holds the definitions for which Status name to Status number
+var ExecutionStatusColorNameToNumberMap = map[string]ExecutionStatusColorNameToNumberMapStruct{
+	// 'INITIATED = 1'
+	"INITIATED": ExecutionStatusColorNameToNumberMapStruct{
+		ExecutionStatusNumber: 1,
+	},
+	"EXECUTING": ExecutionStatusColorNameToNumberMapStruct{
+		ExecutionStatusNumber: 2,
+	},
+	"CONTROLLED_INTERRUPTION": ExecutionStatusColorNameToNumberMapStruct{
+		ExecutionStatusNumber: 3,
+	},
+	"CONTROLLED_INTERRUPTION_CAN_BE_RERUN": ExecutionStatusColorNameToNumberMapStruct{
+		ExecutionStatusNumber: 4,
+	},
+	"FINISHED_OK": ExecutionStatusColorNameToNumberMapStruct{
+		ExecutionStatusNumber: 5,
+	},
+	"FINISHED_OK_CAN_BE_RERUN": ExecutionStatusColorNameToNumberMapStruct{
+		ExecutionStatusNumber: 6,
+	},
+	"FINISHED_NOT_OK": ExecutionStatusColorNameToNumberMapStruct{
+		ExecutionStatusNumber: 7,
+	},
+	"FINISHED_NOT_OK_CAN_BE_RERUN": ExecutionStatusColorNameToNumberMapStruct{
+		ExecutionStatusNumber: 8,
+	},
+	"UNEXPECTED_INTERRUPTION": ExecutionStatusColorNameToNumberMapStruct{
+		ExecutionStatusNumber: 9,
+	},
+	"UNEXPECTED_INTERRUPTION_CAN_BE_RERUN": ExecutionStatusColorNameToNumberMapStruct{
+		ExecutionStatusNumber: 10,
+	},
+	"TIMEOUT_INTERRUPTION": ExecutionStatusColorNameToNumberMapStruct{
+		ExecutionStatusNumber: 11,
+	},
+	"TIMEOUT_INTERRUPTION_CAN_BE_RERUN": ExecutionStatusColorNameToNumberMapStruct{
+		ExecutionStatusNumber: 12,
 	},
 }
 

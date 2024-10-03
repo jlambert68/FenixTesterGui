@@ -1,6 +1,7 @@
 package listTestCasesUI
 
 import (
+	detailedTestCaseExecutionsUI "FenixTesterGui/executions/detailedExecutionsUI"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testCases/listTestCasesModel"
 	"fmt"
@@ -19,6 +20,8 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 	var testCasesListContainer *fyne.Container
 	var testCasesListScrollContainer *container.Scroll
 	var statisticsContainer *fyne.Container
+	var executionColorPaletteContainer *fyne.Container
+	var statisticsAndColorPaletteContainer *fyne.Container
 
 	var loadTestCaseFromDataBaseButton *widget.Button
 	var loadTestCaseFromDataBaseFunction func()
@@ -83,6 +86,9 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 	// Add objects to the 'filterAndButtonsContainer'
 	filterAndButtonsContainer = container.NewVBox(buttonsContainer)
 
+	// Generate the ExecutionColorPaletteContainer
+	executionColorPaletteContainer = detailedTestCaseExecutionsUI.GenerateExecutionColorPalette()
+
 	// Initiate the Table
 	generateTestCasesListTable(testCasesModel)
 	testCaseTableContainer := container.NewBorder(nil, nil, nil, nil, testCaseListTable)
@@ -103,8 +109,10 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 	// Initiate 'statisticsContainer'
 	statisticsContainer = container.NewHBox(numberOfTestCasesAfterLocalFilterLabel, numberOfTestCasesRetrievedFromDatabaseLabel)
 
+	statisticsAndColorPaletteContainer = container.NewVBox(executionColorPaletteContainer, statisticsContainer)
+
 	// Add 'testCasesListScrollContainer' to 'testCasesListContainer'
-	testCasesListContainer = container.NewBorder(filterAndButtonsContainer, statisticsContainer, nil, nil, testCasesListScrollContainer)
+	testCasesListContainer = container.NewBorder(filterAndButtonsContainer, statisticsAndColorPaletteContainer, nil, nil, testCasesListScrollContainer)
 
 	return testCasesListContainer
 }

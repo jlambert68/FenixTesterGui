@@ -48,7 +48,7 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 		fmt.Println("'filterTestCasesButton' was pressed")
 		loadTestCaseListTableTable(testCasesModel)
 		calculateAndSetCorrectColumnWidths()
-		updateTestCasesListTable()
+		updateTestCasesListTable(testCasesModel)
 
 		// Update the number TestCases in the list
 		var numberOfRowsAsString string
@@ -84,7 +84,7 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 	filterAndButtonsContainer = container.NewVBox(buttonsContainer)
 
 	// Initiate the Table
-	generateTestCasesListTable()
+	generateTestCasesListTable(testCasesModel)
 	testCaseTableContainer := container.NewBorder(nil, nil, nil, nil, testCaseListTable)
 
 	// Create the Scroll container for the List
@@ -97,7 +97,7 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 
 	// Create the label used for showing number of TestCases retrieved from the Database
 	numberOfTestCasesInTheDatabaseSearch = binding.NewString()
-	_ = numberOfTestCasesInTheDatabaseSearch.Set("No TestCases in the List")
+	_ = numberOfTestCasesInTheDatabaseSearch.Set("No TestCases retrieved from the Database")
 	numberOfTestCasesRetrievedFromDatabaseLabel = widget.NewLabelWithData(numberOfTestCasesInTheDatabaseSearch)
 
 	// Initiate 'statisticsContainer'

@@ -23,10 +23,10 @@ var testCaseListTableHeader = []string{
 	"Latest TestCaseExecution TimeStamp", "Latest OK Finished TestCaseExecution TimeStamp", "DomainUuid"}
 
 // Keeps track of the in which column the TestCaseUUID exist in the data source for the UI-table
-const testCaseUuidColumnNumber uint8 = 7
+const testCaseUuidColumnNumber uint8 = 2
 
 // The row that the mouse is currently hovering above. Used for highlight that row in the UI-Table
-var currentRowThatMouseIsHoveringAbove string
+var currentRowThatMouseIsHoveringAbove int16 = -1
 
 // Use a mutex to synchronize access to 'currentRowThatMouseIsHoveringAbove'
 var currentRowThatMouseIsHoveringAboveMutex sync.Mutex

@@ -1,32 +1,46 @@
 package listTestCasesUI
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
 	"fmt"
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	"image/color"
 	"strconv"
 	"time"
 )
 
 type clickableLabel struct {
 	widget.Label
-	onDoubleTap func()
-	lastTapTime time.Time
-	isClickable bool
-	currentRow  int16
+	onDoubleTap         func()
+	lastTapTime         time.Time
+	isClickable         bool
+	currentRow          int16
+	currentTestCaseUuid string
+	background          *canvas.Rectangle
+	testCasesModel      *testCaseModel.TestCasesModelsStruct
 }
 
-func newClickableLabel(text string, onDoubleTap func(), tempIsClickable bool) *clickableLabel {
+func newClickableLabel(text string, onDoubleTap func(), tempIsClickable bool,
+	testCasesModel *testCaseModel.TestCasesModelsStruct) *clickableLabel {
+
 	l := &clickableLabel{
-		widget.Label{Text: text},
-		onDoubleTap,
-		time.Now(),
-		tempIsClickable,
-		-1}
+		Label:       widget.Label{Text: text},
+		onDoubleTap: onDoubleTap,
+		lastTapTime: time.Now(),
+		isClickable: tempIsClickable,
+		currentRow:  -1}
+
+	l.background = canvas.NewRectangle(color.Transparent)
+	l.testCasesModel = testCasesModel
+	l.currentTestCaseUuid = ""
+
 	l.ExtendBaseWidget(l)
 	return l
 }
@@ -44,11 +58,27 @@ func (l *clickableLabel) Tapped(e *fyne.PointEvent) {
 	l.lastTapTime = time.Now()
 }
 
+// TappedSecondary
+// Implement if you need right-click (secondary tap) actions.
 func (l *clickableLabel) TappedSecondary(*fyne.PointEvent) {
-	// Implement if you need right-click (secondary tap) actions.
+	if l.isClickable == false {
+		return
+	}
+
+	fenixMasterWindow := *sharedCode.FenixMasterWindowPtr
+	clipboard := fenixMasterWindow.Clipboard()
+	clipboard.SetContent(l.Text)
+
+	// Optional: Notify the user
+	fyne.CurrentApp().SendNotification(&fyne.Notification{
+		Title:   "Clipboard",
+		Content: fmt.Sprintf("'%s' copied to clipboard!", l.Text),
+	})
+
 }
 
 func (l *clickableLabel) MouseIn(*desktop.MouseEvent) {
+
 	if l.isClickable == false {
 		return
 	}
@@ -57,17 +87,19 @@ func (l *clickableLabel) MouseIn(*desktop.MouseEvent) {
 	currentRowThatMouseIsHoveringAboveMutex.Lock()
 
 	// Set current TestCaseUuid to be highlighted
-	currentRowThatMouseIsHoveringAbove = testCaseListTableTable[l.currentRow][testCaseUuidColumnNumber]
+	currentRowThatMouseIsHoveringAbove = l.currentRow
 
 	// Release variable
 	currentRowThatMouseIsHoveringAboveMutex.Unlock()
 
 	l.TextStyle = fyne.TextStyle{Bold: true}
 	l.Refresh()
+	testCaseListTable.Refresh()
 
 }
 func (l *clickableLabel) MouseMoved(*desktop.MouseEvent) {}
 func (l *clickableLabel) MouseOut() {
+
 	if l.isClickable == false {
 		return
 	}
@@ -76,18 +108,19 @@ func (l *clickableLabel) MouseOut() {
 	currentRowThatMouseIsHoveringAboveMutex.Lock()
 
 	// Set current TestCaseUuid to be highlighted
-	currentRowThatMouseIsHoveringAbove = ""
+	currentRowThatMouseIsHoveringAbove = -1
 
 	// Release variable
 	currentRowThatMouseIsHoveringAboveMutex.Unlock()
 
 	l.TextStyle = fyne.TextStyle{Bold: false}
 	l.Refresh()
+	testCaseListTable.Refresh()
 
 }
 
 // Create the UI-list that holds the list of TestCases that the user can edit
-func generateTestCasesListTable() {
+func generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
 	// Correctly initialize the selectedFilesTable as a new table
 	testCaseListTable = widget.NewTable(
@@ -105,30 +138,57 @@ func generateTestCasesListTable() {
 		return widget.NewLabel("") // Create cells as labels
 	}
 
+	updateTestCasesListTable(testCasesModel)
+	calculateAndSetCorrectColumnWidths()
+
 }
 
 // Update the Table
-func updateTestCasesListTable() {
+func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
 	testCaseListTable.Length = func() (int, int) {
 		return len(testCaseListTableTable), 8
 	}
 	testCaseListTable.CreateCell = func() fyne.CanvasObject {
-		return newClickableLabel("", func() {}, false)
+
+		tempNewClickableLabel := newClickableLabel("", func() {}, false, testCasesModel)
+		tempContainer := container.NewStack(canvas.NewRectangle(color.Transparent), tempNewClickableLabel)
+
+		return tempContainer
 
 	}
 	testCaseListTable.UpdateCell = func(id widget.TableCellID, cell fyne.CanvasObject) {
 
-		clickable := cell.(*clickableLabel)
+		clickableContainer := cell.(*fyne.Container)
+		clickable := clickableContainer.Objects[1].(*clickableLabel)
+		rectangle := clickableContainer.Objects[0].(*canvas.Rectangle)
 		clickable.SetText(testCaseListTableTable[id.Row][id.Col])
 		clickable.isClickable = true
 		clickable.currentRow = int16(id.Row)
+		clickable.currentTestCaseUuid = testCaseListTableTable[id.Row][testCaseUuidColumnNumber]
 
 		clickable.onDoubleTap = func() {
 
-			// TODO Open TestCase
+			// Open TestCase
+			openTestCase(clickable.currentTestCaseUuid, clickable.testCasesModel)
 
 		}
+
+		// Check if this row should be highlighted or not
+		if int16(id.Row) == currentRowThatMouseIsHoveringAbove {
+			clickable.TextStyle = fyne.TextStyle{Bold: false}
+			rectangle.FillColor = color.RGBA{
+				R: 0x4A,
+				G: 0x4B,
+				B: 0x4D,
+				A: 0xFF,
+			}
+
+		} else {
+			clickable.TextStyle = fyne.TextStyle{Bold: false}
+			rectangle.FillColor = color.Transparent
+		}
+		clickableContainer.Refresh()
 
 	}
 
@@ -171,7 +231,7 @@ func calculateAndSetCorrectColumnWidths() {
 		for columnIndex, tempColumnValue := range tempRow {
 
 			// Calculate the column width base on this value
-			columnWidth = fyne.MeasureText(tempColumnValue, theme.TextSize(), fyne.TextStyle{}).Width
+			columnWidth = fyne.MeasureText(tempColumnValue, theme.TextSize(), fyne.TextStyle{Bold: true}).Width
 
 			// If this value is bigger than current then set this to max column size
 			if columnWidth > columnsMaxSizeSlice[columnIndex] {

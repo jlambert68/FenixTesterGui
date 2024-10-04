@@ -12,6 +12,7 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	"github.com/sirupsen/logrus"
 	"image/color"
 	"strconv"
 )
@@ -39,13 +40,31 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUIOb
 	var testcaseTreeContainer *fyne.Container
 	testcaseTreeContainer = container.NewVBox()
 
+	// Extract the TestCaseModel
+	testCasesModel, existInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+	if existInMap == false {
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"ID":           "056cf73f-3b6b-4123-a510-bbade40a45b0",
+			"testCaseUuid": testCaseUuid,
+		}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
+	}
+
+	// Clear Preview object for the TestCase
+	var tempTestCasePreviewObject *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage
+	tempTestCasePreviewObject = &fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage{}
+	testCasesModel.TestCasePreviewObject = tempTestCasePreviewObject
+
 	// Start processing model for TestCase
 	testCaseCanvasObject = testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject(
 		"",
 		&treeViewModelForTestCase,
 		nil, 1,
 		testCaseUuid,
-		testcaseTreeContainer)
+		testcaseTreeContainer,
+		&testCasesModel)
+
+	// Save back the TestCase in the model
+	testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = testCasesModel
 
 	return testcaseTreeContainer
 
@@ -58,7 +77,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 	firstAccordion *clickableAccordion,
 	nodeTreeLevel float32,
 	testCaseUuid string,
-	testcaseTreeContainer *fyne.Container) (
+	testcaseTreeContainer *fyne.Container,
+	testCasesModel *testCaseModel.TestCaseModelStruct) (
 	testCaseCanvasObject fyne.CanvasObject) {
 
 	var newTestInstructionAccordion *clickableAccordion
@@ -136,6 +156,22 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 
 			// Add the child
 			testcaseTreeContainer.Add(nodeContainer)
+
+			// Create the TestInstruction-object used in TestCasePreview
+			var testInstructionPreviewObject *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_TestCaseStructureObjectMessage
+			testInstructionPreviewObject = &fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_TestCaseStructureObjectMessage{
+				TestCaseStructureObjectType:      fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_TestInstruction,
+				IndentationLevel:                 uint32(nodeTreeLevel),
+				TestInstructionContainerName:     "",
+				TestInstructionIsSerialProcessed: false,
+				TestInstructionName:              nodeName,
+				TestInstructionColor:             child.NodeColor,
+				TestInstructionAttributes:        nil,
+			}
+
+			// Append the 'TestInstructionPreviewObject' to slice
+			testCasesModel.TestCasePreviewObject.TestCaseStructureObjects = append(
+				testCasesModel.TestCasePreviewObject.TestCaseStructureObjects, testInstructionPreviewObject)
 
 		// Some kind of TestInstructionContainer
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIC_TESTINSTRUCTIONCONTAINER,
@@ -246,6 +282,34 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			// Add the child
 			testcaseTreeContainer.Add(nodeContainer)
 
+			// Create the TestInstruction-object used in TestCasePreview
+			var testInstructionPreviewObject *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_TestCaseStructureObjectMessage
+			testInstructionPreviewObject = &fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_TestCaseStructureObjectMessage{
+				TestCaseStructureObjectType:      fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_TestInstructionContainer,
+				IndentationLevel:                 uint32(nodeTreeLevel),
+				TestInstructionContainerName:     nodeName,
+				TestInstructionIsSerialProcessed: false,
+				TestInstructionName:              "",
+				TestInstructionColor:             "",
+				TestInstructionAttributes:        nil,
+			}
+
+			// Decide if TestInstructionContainer is Serial or Parallel processed
+			switch testInstructionContainerProcessingType {
+
+			case rectangleForParallelTestInstructionsContainer:
+
+			case rectangleForSerialTestInstructionsContainer:
+				testInstructionPreviewObject.TestInstructionIsSerialProcessed = true
+
+			default:
+
+			}
+
+			// Append the 'TestInstructionPreviewObject' to slice
+			testCasesModel.TestCasePreviewObject.TestCaseStructureObjects = append(
+				testCasesModel.TestCasePreviewObject.TestCaseStructureObjects, testInstructionPreviewObject)
+
 			// Process children for TestInstructionContainer
 			_ = testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject(
 				child.Uuid,
@@ -253,7 +317,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 				newTestInstructionContainerAccordion,
 				nodeTreeLevel+2.0,
 				testCaseUuid,
-				testcaseTreeContainer)
+				testcaseTreeContainer,
+				testCasesModel)
 
 		// Some kind of droppable Bond
 		case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_B0_BOND,

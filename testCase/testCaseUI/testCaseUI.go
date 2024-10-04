@@ -164,7 +164,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	testCaseGraphicalAreas.TestCaseTextualModelArea = canvasTextualRepresentationAccordionObject
 
 	// Generate the Graphical Representation Area for the TestCase
-	testCaseGraphicalModelArea, graphicalTestCaseUIObject, testCaseGraphicalModelAreaAccordion, err := testCasesUiCanvasObject.generateGraphicalRepresentationAreaForTestCase(testCaseToBeAddedUuid)
+	testCaseGraphicalModelArea,
+		graphicalTestCaseUIObject,
+		testCaseGraphicalModelAreaAccordion, err := testCasesUiCanvasObject.
+		generateGraphicalRepresentationAreaForTestCase(testCaseToBeAddedUuid)
 
 	if err != nil {
 		return err

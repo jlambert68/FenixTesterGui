@@ -87,6 +87,8 @@ type TestCaseModelStruct struct {
 
 	ImportedTemplateFilesFromGitHub []importFilesFromGitHub.GitHubFile
 	TestData                        *testDataEngine.TestDataForGroupObjectStruct
+
+	TestCasePreviewObject *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage
 }
 
 type AttributeStructSliceReferenceType []*AttributeStruct

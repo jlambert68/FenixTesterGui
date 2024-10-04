@@ -49,6 +49,7 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 		gRPCTestCaseExtraInformation          *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExtraInformationMessage
 		gRPCTestCaseTemplateFiles             *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseTemplateFilesMessage
 		gRPCTestCaseTestData                  *fenixGuiTestCaseBuilderServerGrpcApi.UsersChosenTestDataForTestCaseMessage
+		gRPCTestCasePreviewMessage            *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewMessage
 		finalHash                             string
 	)
 	gRPCMatureTestCaseModelElementMessage,
@@ -57,6 +58,7 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 		gRPCTestCaseExtraInformation,
 		gRPCTestCaseTemplateFiles,
 		gRPCTestCaseTestData,
+		gRPCTestCasePreviewMessage,
 		finalHash, err = testCaseModel.generateTestCaseForGrpcAndHash(testCaseUuid)
 	if err != nil {
 		return err
@@ -118,6 +120,7 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 		TestCaseExtraInformation: gRPCTestCaseExtraInformation,
 		TestCaseTemplateFiles:    gRPCTestCaseTemplateFiles,
 		TestCaseTestData:         gRPCTestCaseTestData,
+		TestCasePreview:          gRPCTestCasePreviewMessage,
 	}
 
 	// Send using gRPC
@@ -621,6 +624,139 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseTestDataForGrpc(
 
 }
 
+// Convert the TestCasePreviewMessage into its gRPC-version
+func (testCaseModel *TestCasesModelsStruct) generateTestCasePreviewMessageForGrpc(
+	testCaseUuid string) (
+	gRPCTestCasePreviewMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewMessage,
+	err error) {
+
+	// Get current TestCase
+	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+	if existsInMap == false {
+
+		errorId := "9f3050d4-920e-4065-b7c9-f9d41bee7fb6"
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map witsh all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return nil, err
+	}
+
+	// Generate the Domain that owns the TestCase
+	var domainNameThatOwnsTestCase string
+	domainNameThatOwnsTestCase = fmt.Sprintf("%s [%s]",
+		currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainName,
+		currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid[0:8])
+
+	// Generate the Complex Textual Model of the TestCase
+	var complexTextualModel string
+	complexTextualModel = currentTestCase.TextualTestCaseRepresentationComplexStack[len(
+		currentTestCase.TextualTestCaseRepresentationComplexStack)-1]
+
+	// Loop all TestInstructions and create Attributes for Preview-model
+	var existInMap bool
+	var tempMatureTestInstruction MatureTestInstructionStruct
+	for index, testCaseStructureObject := range currentTestCase.TestCasePreviewObject.TestCaseStructureObjects {
+
+		// Check if this is a TestInstruction, if so then add the Attributes to the TestInstruction in Preview-model
+		if testCaseStructureObject.GetTestCaseStructureObjectType() == fenixGuiTestCaseBuilderServerGrpcApi.
+			TestCasePreviewStructureMessage_TestInstruction {
+
+			// Extract the Mature TestInstruction
+			tempMatureTestInstruction, existInMap = currentTestCase.MatureTestInstructionMap[testCaseStructureObject.GetTestInstructionUuid()]
+			if existInMap == false {
+				errorId := "9f35c094-f35e-47a6-b005-9a637a6eabe9"
+				err = errors.New(fmt.Sprintf("TestInstruction '%s' is missing in map with all TestCases [ErrorID: %s]",
+					testCaseStructureObject.GetTestInstructionUuid(), errorId))
+
+				// TODO Send on Error-channel
+				fmt.Println(err)
+
+				return
+			}
+
+			var tempPreviewAttributes []*fenixGuiTestCaseBuilderServerGrpcApi.
+				TestCasePreviewStructureMessage_TestCaseStructureObjectMessage_TestInstructionAttributeMessage
+			// Loop Attributes in the Mature TestInstruction and add to Preview-model
+			for _, tempAttribute := range tempMatureTestInstruction.TestInstructionAttributesList {
+
+				var tempPreviewAttribute *fenixGuiTestCaseBuilderServerGrpcApi.
+					TestCasePreviewStructureMessage_TestCaseStructureObjectMessage_TestInstructionAttributeMessage
+				tempPreviewAttribute = &fenixGuiTestCaseBuilderServerGrpcApi.
+					TestCasePreviewStructureMessage_TestCaseStructureObjectMessage_TestInstructionAttributeMessage{
+					AttributeName:      tempAttribute.BaseAttributeInformation.GetTestInstructionAttributeName(),
+					AttributeValue:     "",
+					AttributeGroupName: tempAttribute.BaseAttributeInformation.GetTestInstructionAttributeTypeName(),
+				}
+
+				// Get the value based on type
+				switch tempAttribute.BaseAttributeInformation.GetTestInstructionAttributeType() {
+
+				case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_TEXTBOX:
+					tempPreviewAttribute.AttributeValue = tempAttribute.AttributeInformation.InputTextBoxProperty.
+						GetTextBoxAttributeValue()
+
+				case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_COMBOBOX:
+					tempPreviewAttribute.AttributeValue = tempAttribute.AttributeInformation.InputComboBoxProperty.
+						GetComboBoxAttributeValue()
+
+				case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_RESPONSE_VARIABLE_COMBOBOX:
+					tempPreviewAttribute.AttributeValue = tempAttribute.AttributeInformation.ResponseVariableComboBoxProperty.
+						GetComboBoxAttributeValueAsString()
+
+				case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_TESTCASE_BUILDER_SERVER_INJECTED_COMBOBOX:
+					tempPreviewAttribute.AttributeValue = "<Unknown value for Attribute for TESTCASE_BUILDER_SERVER_INJECTED_COMBOBOX >"
+
+				default:
+					tempPreviewAttribute.AttributeValue = "<Unknown value for Attribute>"
+
+				}
+
+				// Add Attribute to slice of attributes for TestInstruction
+				tempPreviewAttributes = append(tempPreviewAttributes, tempPreviewAttribute)
+			}
+
+			// Add the attributes to the TestInstruction
+			testCaseStructureObject.TestInstructionAttributes = tempPreviewAttributes
+		}
+
+		// Save back the testCaseStructureObject
+		currentTestCase.TestCasePreviewObject.TestCaseStructureObjects[index] = testCaseStructureObject
+	}
+
+	// Generate the full TestCasePreview-object
+	var tempTestCasePreview *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage
+	tempTestCasePreview = &fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage{
+		TestCaseName:                    currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.GetTestCaseName(),
+		DomainThatOwnTheTestCase:        domainNameThatOwnsTestCase,
+		TestCaseDescription:             currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.GetTestCaseDescription(),
+		TestCaseStructureObjects:        currentTestCase.TestCasePreviewObject.TestCaseStructureObjects,
+		ComplexTextualDescription:       complexTextualModel,
+		TestCaseUuid:                    currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.GetTestCaseUuid(),
+		TestCaseVersion:                 "",
+		LastSavedByUserOnComputer:       sharedCode.CurrentUserIdLogedInOnComputer,
+		LastSavedByUserGCPAuthorization: sharedCode.CurrentUserAuthenticatedTowardsGCP,
+		LastSavedTimeStamp:              "",
+	}
+
+	gRPCTestCasePreviewMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewMessage{
+		TestCasePreview:     tempTestCasePreview,
+		TestCasePreviewHash: "",
+	}
+
+	// Generate Hash of gRPC-message and add it to the message
+	tempJson := protojson.Format(gRPCTestCasePreviewMessage)
+
+	// Remove spaces before hashing, due to some bug that generates "double space" sometimes when running in non-debug-mode
+	tempJson = strings.ReplaceAll(tempJson, " ", "")
+
+	hashedJson := sharedCode.HashSingleValue(tempJson)
+	gRPCTestCasePreviewMessage.TestCasePreviewHash = hashedJson
+
+	return gRPCTestCasePreviewMessage, err
+
+}
+
 // Pack different parts of the TestCase into gRPC-version into one message together with Hash of TestCase
 func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testCaseUuid string) (
 	gRPCMatureTestCaseModelElementMessage []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage,
@@ -629,6 +765,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCTestCaseExtraInformation *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExtraInformationMessage,
 	gRPCTestCaseTemplateFiles *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseTemplateFilesMessage,
 	gRPCTestCaseTestData *fenixGuiTestCaseBuilderServerGrpcApi.UsersChosenTestDataForTestCaseMessage,
+	gRPCTestCasePreviewMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewMessage,
 	finalHash string,
 	err error) {
 
@@ -641,7 +778,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 
 		fmt.Println(err) // TODO Send on Error-channel
 
-		return nil, nil, nil, nil, nil, nil, "", err
+		return nil, nil, nil, nil, nil, nil, nil, "", err
 	}
 
 	// Initiate 'subHashPartsSlice', used for holding all Hashes and content, to be logged. Used for debugging when
@@ -660,7 +797,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCMatureTestCaseModelElementMessage, hashedMatureTestCaseModelElements, valuesToBeHashedSlice, err =
 		testCaseModel.generateTestCaseModelElementsForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, nil, nil, nil, "", err
+		return nil, nil, nil, nil, nil, nil, nil, "", err
 	}
 
 	// Add hash and values to slice
@@ -677,7 +814,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCMatureTestInstructions, hashedgRPCMatureTestInstructions, valuesToBeHashedSlice, err =
 		testCaseModel.generateMatureTestInstructionsForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, nil, nil, nil, "", err
+		return nil, nil, nil, nil, nil, nil, nil, "", err
 	}
 	// Add hash and values to slice
 	var tempGrpcMatureTestInstructions subHashPartsMapValueType
@@ -693,7 +830,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCMatureTestInstructionContainers, hashedgRPCMatureTestInstructionContainers, valuesToBeHashedSlice, err =
 		testCaseModel.generateMatureTestInstructionContainersForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, nil, nil, nil, "", err
+		return nil, nil, nil, nil, nil, nil, nil, "", err
 	}
 	// Add hash and values to slice
 	var tempGrpcMatureTestInstructionContainers subHashPartsMapValueType
@@ -709,7 +846,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCTestCaseExtraInformation, hashedgRPCTestCaseExtraInformation, valuesToBeHashedSlice, err =
 		testCaseModel.generateTestCaseExtraInformationForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, nil, nil, nil, "", err
+		return nil, nil, nil, nil, nil, nil, nil, "", err
 	}
 	// Add hash and values to slice
 	var tempGrpcTestCaseExtraInformation subHashPartsMapValueType
@@ -725,7 +862,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCTestCaseTemplateFiles, hashedgRPCTestCaseTemplateFiles, err =
 		testCaseModel.generateTestCaseTemplateFilesForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, nil, nil, nil, "", err
+		return nil, nil, nil, nil, nil, nil, nil, "", err
 	}
 	// Add hash and values to slice
 	var tempGrpcTestCaseTemplateFiles subHashPartsMapValueType
@@ -740,7 +877,14 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCTestCaseTestData, err =
 		testCaseModel.generateTestCaseTestDataForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, nil, nil, nil, "", err
+		return nil, nil, nil, nil, nil, nil, nil, "", err
+	}
+
+	// gRPCTestCasePreviewMessage
+	gRPCTestCasePreviewMessage, err =
+		testCaseModel.generateTestCasePreviewMessageForGrpc(testCaseUuid)
+	if err != nil {
+		return nil, nil, nil, nil, nil, nil, nil, "", err
 	}
 
 	var valuesToReHash []string
@@ -874,6 +1018,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 		gRPCTestCaseExtraInformation,
 		gRPCTestCaseTemplateFiles,
 		gRPCTestCaseTestData,
+		gRPCTestCasePreviewMessage,
 		finalHash,
 		err
 

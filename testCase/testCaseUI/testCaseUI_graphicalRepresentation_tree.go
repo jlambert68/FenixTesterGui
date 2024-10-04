@@ -163,8 +163,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 				TestCaseStructureObjectType:      fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_TestInstruction,
 				IndentationLevel:                 uint32(nodeTreeLevel),
 				TestInstructionContainerName:     "",
+				TestInstructionContainerUuid:     "",
 				TestInstructionIsSerialProcessed: false,
 				TestInstructionName:              nodeName,
+				TestInstructionUuid:              child.Uuid,
 				TestInstructionColor:             child.NodeColor,
 				TestInstructionAttributes:        nil,
 			}
@@ -288,8 +290,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 				TestCaseStructureObjectType:      fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_TestInstructionContainer,
 				IndentationLevel:                 uint32(nodeTreeLevel),
 				TestInstructionContainerName:     nodeName,
+				TestInstructionContainerUuid:     child.Uuid,
 				TestInstructionIsSerialProcessed: false,
 				TestInstructionName:              "",
+				TestInstructionUuid:              "",
 				TestInstructionColor:             "",
 				TestInstructionAttributes:        nil,
 			}

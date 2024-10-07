@@ -201,7 +201,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	uiServer.AvailableBuildingBlocksModel.loadTestData(&uiServer.testCasesModel)
 
 	// Load list with TestCases that the user can edit
-	listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(&uiServer.testCasesModel)
+	listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(&uiServer.testCasesModel, time.Now().Add(-time.Hour*1000), time.Now().Add(-time.Hour*1000))
 
 	// Load Available Bonds
 	uiServer.commandAndRuleEngine.LoadAvailableBondsFromServer()

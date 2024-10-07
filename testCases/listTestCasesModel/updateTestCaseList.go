@@ -5,15 +5,19 @@ import (
 	"FenixTesterGui/testCase/testCaseModel"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
+	"time"
 )
 
 // LoadTestCaseThatCanBeEditedByUser
 // Load list with TestCases that the user can edit
 func LoadTestCaseThatCanBeEditedByUser(
-	testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
+	testCaseModeReference *testCaseModel.TestCasesModelsStruct,
+	testCaseUpdatedMinTimeStamp time.Time,
+	testCaseExecutionUpdatedMinTimeStamp time.Time) {
 
 	var listTestCasesThatCanBeEditedResponseMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListTestCasesThatCanBeEditedResponseMessage
-	listTestCasesThatCanBeEditedResponseMessage = testCaseModeReference.GrpcOutReference.ListTestCasesThatCanBeEditedResponseMessage()
+	listTestCasesThatCanBeEditedResponseMessage = testCaseModeReference.GrpcOutReference.
+		ListTestCasesThatCanBeEditedResponseMessage(testCaseUpdatedMinTimeStamp, testCaseExecutionUpdatedMinTimeStamp)
 
 	if listTestCasesThatCanBeEditedResponseMessage.GetAckNackResponse().AckNack == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
@@ -24,13 +28,18 @@ func LoadTestCaseThatCanBeEditedByUser(
 		return
 	}
 
-	// Store the slice with TestCases
-	testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = listTestCasesThatCanBeEditedResponseMessage.GetTestCasesThatCanBeEditedByUser()
-
 	// Store the slice with TestCases that a user can edit as a Map
 	storeTestCaseThatCanBeEditedByUser(
 		listTestCasesThatCanBeEditedResponseMessage.GetTestCasesThatCanBeEditedByUser(),
 		testCaseModeReference)
+
+	// Store the slice with TestCases
+	//testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = listTestCasesThatCanBeEditedResponseMessage.GetTestCasesThatCanBeEditedByUser()
+	testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = nil
+	for _, tempTestCasesThatCanBeEditedByUser := range testCaseModeReference.TestCasesThatCanBeEditedByUserMap {
+		testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = append(
+			testCaseModeReference.TestCasesThatCanBeEditedByUserSlice, tempTestCasesThatCanBeEditedByUser)
+	}
 
 }
 

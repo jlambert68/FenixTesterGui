@@ -20,6 +20,7 @@ import (
 	"image/png"
 	"log"
 	"strconv"
+	"time"
 )
 
 //go:embed resources/TIC-Horizontal_32x32.png
@@ -59,7 +60,7 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 	// Define the function to be executed to load TestCases from that Database that the user can edit
 	loadTestCaseFromDataBaseFunction = func() {
 		fmt.Println("'loadTestCaseFromDataBaseButton' was pressed")
-		listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(testCasesModel)
+		listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(testCasesModel, time.Now().Add(-time.Hour*1000), time.Now().Add(-time.Hour*1000))
 		filterTestCasesButtonFunction()
 	}
 

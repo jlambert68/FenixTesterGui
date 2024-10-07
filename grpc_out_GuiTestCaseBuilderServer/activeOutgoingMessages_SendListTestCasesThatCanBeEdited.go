@@ -6,12 +6,15 @@ import (
 	"context"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"time"
 )
 
-// SendListTestCasesThatCanBeEdited - List all TestCases that can be edited, used for producing a list
+// ListTestCasesThatCanBeEditedResponseMessage - List all TestCases that can be edited, used for producing a list
 // that the used can chose TestCase to edit from
-func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListTestCasesThatCanBeEditedResponseMessage() (
+func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListTestCasesThatCanBeEditedResponseMessage(
+	testCaseUpdatedMinTimeStamp time.Time,
+	testCaseExecutionUpdatedMinTimeStamp time.Time) (
 	returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListTestCasesThatCanBeEditedResponseMessage) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{
@@ -59,6 +62,8 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListTestCasesThatCanBeEdit
 		GCPAuthenticatedUser: sharedCode.CurrentUserAuthenticatedTowardsGCP,
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
 			grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
+		TestCaseUpdatedMinTimeStamp:          timestamppb.New(testCaseUpdatedMinTimeStamp),
+		TestCaseExecutionUpdatedMinTimeStamp: timestamppb.New(testCaseExecutionUpdatedMinTimeStamp),
 	}
 
 	// Do gRPC-call

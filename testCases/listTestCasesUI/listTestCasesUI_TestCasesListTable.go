@@ -53,9 +53,19 @@ func (l *clickableLabel) Tapped(e *fyne.PointEvent) {
 	if time.Since(l.lastTapTime) < 500*time.Millisecond {
 		if l.onDoubleTap != nil {
 			l.onDoubleTap()
+
+			l.lastTapTime = time.Now()
+
+			return
 		}
 	}
+
 	l.lastTapTime = time.Now()
+
+	// Update TestCase Preview
+	GenerateTestCasePreviewContainer(l.currentTestCaseUuid, l.testCasesModel)
+	testCaseThatIsShownInPreview = l.currentTestCaseUuid
+
 }
 
 // TappedSecondary
@@ -124,7 +134,7 @@ func generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStr
 
 	// Correctly initialize the selectedFilesTable as a new table
 	testCaseListTable = widget.NewTable(
-		func() (int, int) { return 0, 8 }, // Start with zero rows, 8 columns
+		func() (int, int) { return 0, numberColumnsInTestCasesListUI }, // Start with zero rows, 8 columns
 		func() fyne.CanvasObject {
 			return widget.NewLabel("") // Create cells as labels
 		},
@@ -147,7 +157,7 @@ func generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStr
 func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
 	testCaseListTable.Length = func() (int, int) {
-		return len(testCaseListTableTable), 8
+		return len(testCaseListTableTable), numberColumnsInTestCasesListUI
 	}
 	testCaseListTable.CreateCell = func() fyne.CanvasObject {
 
@@ -185,11 +195,28 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 			}
 
 		} else {
-			clickable.TextStyle = fyne.TextStyle{Bold: false}
-			rectangle.FillColor = color.Transparent
-			rectangle.StrokeColor = color.Transparent
-			rectangle.StrokeWidth = 3
 
+			// If this row is the one that is shown in TestCase preview window
+			if clickable.currentTestCaseUuid == testCaseThatIsShownInPreview {
+
+				clickable.TextStyle = fyne.TextStyle{Bold: false}
+				rectangle.FillColor = color.RGBA{
+					R: 0x08,
+					G: 0x5C,
+					B: 0x04,
+					A: 0xFF,
+				}
+				rectangle.StrokeColor = color.Transparent
+				rectangle.StrokeWidth = 3
+
+			} else {
+
+				clickable.TextStyle = fyne.TextStyle{Bold: false}
+				rectangle.FillColor = color.Transparent
+				rectangle.StrokeColor = color.Transparent
+				rectangle.StrokeWidth = 3
+
+			}
 			// Special handling for certain Columns for Status color and Timestamps
 			switch uint8(id.Col) {
 
@@ -238,7 +265,7 @@ func calculateAndSetCorrectColumnWidths() {
 
 	// Initiate slice for keeping track of max column width size
 	var columnsMaxSizeSlice []float32
-	columnsMaxSizeSlice = make([]float32, 8)
+	columnsMaxSizeSlice = make([]float32, numberColumnsInTestCasesListUI)
 
 	var columnWidth float32
 
@@ -295,7 +322,7 @@ func loadTestCaseListTableTable(testCasesModel *testCaseModel.TestCasesModelsStr
 		var domainNameForTable string
 		domainNameForTable = fmt.Sprintf("%s [%s]",
 			tempTestCase.GetDomainName(),
-			tempTestCase.GetTestCaseUuid()[0:8])
+			tempTestCase.GetDomainUuid()[0:8])
 
 		tempRowslice = append(tempRowslice, domainNameForTable)
 
@@ -348,7 +375,19 @@ func loadTestCaseListTableTable(testCasesModel *testCaseModel.TestCasesModelsStr
 		}
 		tempRowslice = append(tempRowslice, tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp)
 
-		// Column 7:
+		// Column 8:
+		// LastSavedTimeStamp
+		var tempLastSavedTimeStamp string
+
+		if tempTestCase.GetLastSavedTimeStamp() != nil {
+			tempLastSavedTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestCase.
+				GetLastSavedTimeStamp())
+		} else {
+			tempLastSavedTimeStamp = "<This should not happen, due to it must have been saved!>"
+		}
+		tempRowslice = append(tempRowslice, tempLastSavedTimeStamp)
+
+		// Column 8:
 		// DomainUuid
 		tempRowslice = append(tempRowslice, tempTestCase.GetDomainUuid())
 

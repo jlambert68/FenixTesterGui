@@ -133,6 +133,7 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 
 	// Add 'testCasesListScrollContainer' to 'testCasesListContainer'
 	testCasesListContainer = container.NewBorder(filterAndButtonsContainer, statisticsAndColorPaletteContainer, nil, nil, testCasesListScrollContainer)
+	testCasesListScrollContainer2 := container.NewScroll(testCasesListContainer)
 
 	// Create the Temporary container that should be shown
 	temporaryContainer := container.NewCenter(widget.NewLabel("Select a TestCase to get the Preview"))
@@ -142,7 +143,8 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 	// Generate the container for the Preview, 'testCasePreviewContainer'
 	testCasePreviewContainerScroll = container.NewScroll(testCasePreviewContainer)
 
-	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(testCasesListContainer, testCasePreviewContainerScroll)
+	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(testCasesListScrollContainer2, testCasePreviewContainerScroll)
+	tempTestCaseListAndTestCasePreviewSplitContainer.Offset = 0.75
 
 	TestCaseListAndTestCasePreviewSplitContainer = tempTestCaseListAndTestCasePreviewSplitContainer
 
@@ -169,38 +171,54 @@ func GenerateTestCasePreviewContainer(
 	testCasePreviewTopContainer = container.New(layout.NewFormLayout())
 
 	// Add TestCaseName to Top container
-	testCasePreviewTopContainer.Add(widget.NewLabel("TestCaseName"))
+	tempTestCaseNameLabel := widget.NewLabel("TestCaseName:")
+	tempTestCaseNameLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testCasePreviewTopContainer.Add(tempTestCaseNameLabel)
 	testCasePreviewTopContainer.Add(widget.NewLabel(tempTestCasePreviewStructureMessage.GetTestCaseName()))
 
 	// Add TestCaseOwner Domain Top container
-	testCasePreviewTopContainer.Add(widget.NewLabel("OwnerDomain"))
+	tempOwnerDomainLabel := widget.NewLabel("OwnerDomain:")
+	tempOwnerDomainLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testCasePreviewTopContainer.Add(tempOwnerDomainLabel)
 	testCasePreviewTopContainer.Add(widget.NewLabel(tempTestCasePreviewStructureMessage.GetDomainThatOwnTheTestCase()))
 
 	// Add Description Top container
-	testCasePreviewTopContainer.Add(widget.NewLabel("Description"))
+	tempTestCaseDescription := widget.NewLabel("Description:")
+	tempTestCaseDescription.TextStyle = fyne.TextStyle{Bold: true}
+	testCasePreviewTopContainer.Add(tempTestCaseDescription)
 	testCasePreviewTopContainer.Add(widget.NewRichTextWithText(tempTestCasePreviewStructureMessage.GetTestCaseDescription()))
 
 	// Create the Bottom container
 	testCasePreviewBottomContainer = container.New(layout.NewFormLayout())
 
 	// Add ComplexTextualDescription to Bottom container
-	testCasePreviewBottomContainer.Add(widget.NewLabel("ComplexTextualDescription"))
+	tempComplexTextualDescriptionLabel := widget.NewLabel("ComplexTextualDescription:")
+	tempComplexTextualDescriptionLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testCasePreviewBottomContainer.Add(tempComplexTextualDescriptionLabel)
 	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCasePreviewStructureMessage.GetComplexTextualDescription()))
 
 	// Add TestCaseVersion to Bottom container
-	testCasePreviewBottomContainer.Add(widget.NewLabel("TestCaseVersion"))
+	tempTestCaseVersionLabel := widget.NewLabel("TestCaseVersion:")
+	tempTestCaseVersionLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testCasePreviewBottomContainer.Add(tempTestCaseVersionLabel)
 	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCasePreviewStructureMessage.GetTestCaseVersion()))
 
 	// Add LastSavedByUserOnComputer to Bottom container
-	testCasePreviewBottomContainer.Add(widget.NewLabel("Last saved by user (on computer)"))
+	tempLastSavedByUserOnComputerLabel := widget.NewLabel("Last saved by user (on computer)::")
+	tempLastSavedByUserOnComputerLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testCasePreviewBottomContainer.Add(tempLastSavedByUserOnComputerLabel)
 	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCasePreviewStructureMessage.GetLastSavedByUserOnComputer()))
 
 	// Add LastSavedByUserGCPAuthorization to Bottom container
-	testCasePreviewBottomContainer.Add(widget.NewLabel("Last saved by GCP authenticated user"))
+	tempLastSavedByUserGCPAuthorizationLabel := widget.NewLabel("Last saved by GCP authenticated user:")
+	tempLastSavedByUserGCPAuthorizationLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testCasePreviewBottomContainer.Add(tempLastSavedByUserGCPAuthorizationLabel)
 	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCasePreviewStructureMessage.GetLastSavedByUserGCPAuthorization()))
 
 	// Add LastSavedTimeStamp to Bottom container
-	testCasePreviewBottomContainer.Add(widget.NewLabel("Last saved TimeStamp"))
+	tempLastSavedTimeStamp := widget.NewLabel("Last saved TimeStamp:")
+	tempLastSavedTimeStamp.TextStyle = fyne.TextStyle{Bold: true}
+	testCasePreviewBottomContainer.Add(tempLastSavedTimeStamp)
 	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCasePreviewStructureMessage.GetLastSavedTimeStamp()))
 
 	// Create the area used for TIC, TI and the attributes
@@ -352,17 +370,20 @@ func GenerateTestCasePreviewContainer(
 		}
 	}
 
-	tempContainer := container.NewBorder(nil, nil, nil, nil, testCaseMainAreaForPreviewContainer)
+	testCaseMainAreaForPreviewBorderContainer := container.NewBorder(nil, nil, nil, nil, testCaseMainAreaForPreviewContainer)
+	testCaseMainAreaForPreviewScrollContainer := container.NewScroll(testCaseMainAreaForPreviewBorderContainer)
 
 	// Create the container used for the TestCase, with TIC, TI and Attributes
 	//testCasePreviewScrollContainer = container.NewScroll(tempContainer)
 
-	// Creat a new version of the PreView-container
+	// Create Top header for Preview
+	tempTopHeaderLabel := widget.NewLabel("TestCase Preview")
+	tempTopHeaderLabel.TextStyle = fyne.TextStyle{Bold: true}
 
 	testCasePreviewContainer.Objects[0] = container.NewBorder(
-		container.NewVBox(testCasePreviewTopContainer, widget.NewSeparator()),
+		container.NewVBox(container.NewCenter(tempTopHeaderLabel), testCasePreviewTopContainer, widget.NewSeparator()),
 		container.NewVBox(widget.NewSeparator(), testCasePreviewBottomContainer), nil, nil,
-		tempContainer)
+		testCaseMainAreaForPreviewScrollContainer)
 
 	// Refresh the 'testCasePreviewContainer'
 	testCasePreviewContainer.Refresh()

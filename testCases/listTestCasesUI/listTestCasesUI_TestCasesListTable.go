@@ -65,6 +65,7 @@ func (l *clickableLabel) Tapped(e *fyne.PointEvent) {
 	// Update TestCase Preview
 	GenerateTestCasePreviewContainer(l.currentTestCaseUuid, l.testCasesModel)
 	testCaseThatIsShownInPreview = l.currentTestCaseUuid
+	testCaseListTable.Refresh()
 
 }
 

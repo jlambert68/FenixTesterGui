@@ -59,7 +59,7 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 		gRPCTestCaseTemplateFiles,
 		gRPCTestCaseTestData,
 		gRPCTestCasePreviewMessage,
-		finalHash, err = testCaseModel.generateTestCaseForGrpcAndHash(testCaseUuid)
+		finalHash, err = testCaseModel.generateTestCaseForGrpcAndHash(testCaseUuid, true)
 	if err != nil {
 		return err
 	}
@@ -758,7 +758,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCasePreviewMessageForGrp
 }
 
 // Pack different parts of the TestCase into gRPC-version into one message together with Hash of TestCase
-func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testCaseUuid string) (
+func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testCaseUuid string, shouldBeSaved bool) (
 	gRPCMatureTestCaseModelElementMessage []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage,
 	gRPCMatureTestInstructions []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage_MatureTestInstructionMessage,
 	gRPCMatureTestInstructionContainers []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage_MatureTestInstructionContainerMessage,
@@ -880,11 +880,15 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 		return nil, nil, nil, nil, nil, nil, nil, "", err
 	}
 
-	// gRPCTestCasePreviewMessage
-	gRPCTestCasePreviewMessage, err =
-		testCaseModel.generateTestCasePreviewMessageForGrpc(testCaseUuid)
-	if err != nil {
-		return nil, nil, nil, nil, nil, nil, nil, "", err
+	// Only Generate Preview when an actual SaveTestCase is performed
+	if shouldBeSaved == true {
+
+		// gRPCTestCasePreviewMessage
+		gRPCTestCasePreviewMessage, err =
+			testCaseModel.generateTestCasePreviewMessageForGrpc(testCaseUuid)
+		if err != nil {
+			return nil, nil, nil, nil, nil, nil, nil, "", err
+		}
 	}
 
 	var valuesToReHash []string

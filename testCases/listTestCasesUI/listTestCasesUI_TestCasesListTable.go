@@ -25,6 +25,7 @@ type clickableLabel struct {
 	currentTestCaseUuid string
 	background          *canvas.Rectangle
 	testCasesModel      *testCaseModel.TestCasesModelsStruct
+	textInsteadOfLabel  *canvas.Text
 }
 
 func newClickableLabel(text string, onDoubleTap func(), tempIsClickable bool,
@@ -42,7 +43,27 @@ func newClickableLabel(text string, onDoubleTap func(), tempIsClickable bool,
 	l.currentTestCaseUuid = ""
 
 	l.ExtendBaseWidget(l)
+
+	l.textInsteadOfLabel = &canvas.Text{
+		Alignment: fyne.TextAlignCenter,
+		Color: color.RGBA{
+			R: 0x00,
+			G: 0x00,
+			B: 0x00,
+			A: 0xFF,
+		},
+		Text:     "",
+		TextSize: theme.TextSize(),
+		TextStyle: fyne.TextStyle{
+			Bold:      false,
+			Italic:    false,
+			Monospace: false,
+			Symbol:    false,
+			TabWidth:  0,
+		},
+	}
 	return l
+
 }
 
 func (l *clickableLabel) Tapped(e *fyne.PointEvent) {
@@ -163,7 +184,7 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 	testCaseListTable.CreateCell = func() fyne.CanvasObject {
 
 		tempNewClickableLabel := newClickableLabel("", func() {}, false, testCasesModel)
-		tempContainer := container.NewStack(canvas.NewRectangle(color.Transparent), tempNewClickableLabel)
+		tempContainer := container.NewStack(canvas.NewRectangle(color.Transparent), tempNewClickableLabel, tempNewClickableLabel.textInsteadOfLabel)
 
 		return tempContainer
 
@@ -193,6 +214,22 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 				G: 0x4B,
 				B: 0x4D,
 				A: 0xFF,
+			}
+
+			// Special handling for certain Columns for Status color and Timestamps
+			switch uint8(id.Col) {
+
+			case latestTestCaseExecutionStatus:
+
+				clickable.textInsteadOfLabel.Text = clickable.Text
+				clickable.Text = ""
+				clickable.textInsteadOfLabel.Show()
+				clickable.Hide()
+
+			default:
+				clickable.textInsteadOfLabel.Hide()
+				clickable.Show()
+
 			}
 
 		} else {
@@ -235,6 +272,23 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 				if useStroke == true {
 					statusStrokeColor = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].StrokeColor
 					rectangle.StrokeColor = statusStrokeColor
+				}
+
+				// When no background color
+				if statusBackgroundColor.R+statusBackgroundColor.G+statusBackgroundColor.B+statusBackgroundColor.A == 0 {
+
+					clickable.Alignment = fyne.TextAlignCenter
+					clickable.textInsteadOfLabel.Hide()
+					clickable.Show()
+
+				} else {
+
+					clickable.textInsteadOfLabel.Text = clickable.Text
+					clickable.textInsteadOfLabel.TextStyle = clickable.TextStyle
+					clickable.Text = ""
+					clickable.textInsteadOfLabel.Show()
+					clickable.Hide()
+
 				}
 
 			default:

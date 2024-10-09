@@ -30,6 +30,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateBaseInformationAr
 
 	// Add the ' "AllMandatoryFields"-UI-object' to the 'BaseInformationArea'
 
+	// Generate TestCaseDeleteDate-UI-object
+	var tempTestCaseDeleteDateArea fyne.CanvasObject
+	tempTestCaseDeleteDateArea, err = testCasesUiCanvasObject.generateTestCaseDeletionDateArea(testCaseUuid)
+	if err != nil {
+		return nil, err
+	}
+
+	// Add the 'TestCaseName-UI-object' to the 'BaseInformationArea'
+	tempBaseInformationAreaContainer.Add(tempTestCaseDeleteDateArea)
+
 	// Generate TestCaseName-UI-object
 	var tempTestCaseNameArea fyne.CanvasObject
 	tempTestCaseNameArea, err = testCasesUiCanvasObject.generateTestCaseNameArea(testCaseUuid)

@@ -52,13 +52,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 	}
 
 	// Create Form-layout container to be used for Name
-	var testCaseOwnerDomainontainer *fyne.Container
+	var testCaseOwnerDomainContainer *fyne.Container
 	var testCaseOwnerDomainNameFormContainer *fyne.Container
-	testCaseOwnerDomainontainer = container.New(layout.NewVBoxLayout())
+	testCaseOwnerDomainContainer = container.New(layout.NewVBoxLayout())
 	testCaseOwnerDomainNameFormContainer = container.New(layout.NewFormLayout())
 
 	// Add Header to the Forms-container
-	testCaseOwnerDomainNameFormContainer.Add(widget.NewLabel("Domain that 'Own' the TestCase"))
+	var headerLabel *widget.Label
+	headerLabel = widget.NewLabel("Domain that 'Own' the TestCase")
+	headerLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testCaseOwnerDomainNameFormContainer.Add(headerLabel)
 
 	// Generate Warnings-rectangle for valid value, or that value exist
 	var valueIsValidWarningBox *canvas.Rectangle
@@ -115,7 +118,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 	testCaseOwnerDomainNameFormContainer.Add(customSelectComboBox)
 
 	// Create the VBox-container that will be returned
-	testCaseOwnerDomainontainer = container.NewVBox(testCaseOwnerDomainNameFormContainer)
+	testCaseOwnerDomainContainer = container.NewVBox(testCaseOwnerDomainNameFormContainer)
 
-	return testCaseOwnerDomainontainer, err
+	return testCaseOwnerDomainContainer, err
 }

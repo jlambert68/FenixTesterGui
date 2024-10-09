@@ -37,7 +37,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseNameArea(
 	testCaseNameFormContainer = container.New(layout.NewFormLayout())
 
 	// Add Header to the Forms-container
-	testCaseNameFormContainer.Add(widget.NewLabel("TestCaseName"))
+	var headerLabel *widget.Label
+	headerLabel = widget.NewLabel("TestCaseName")
+	headerLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testCaseNameFormContainer.Add(headerLabel)
 
 	// Add the Entry-widget for TestCaseName
 	newTestCaseNameEntry := widget.NewEntry()

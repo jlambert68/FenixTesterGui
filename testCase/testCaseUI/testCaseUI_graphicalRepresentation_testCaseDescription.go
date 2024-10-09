@@ -36,7 +36,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDescripti
 	testCaseDescriptionFormContainer = container.New(layout.NewFormLayout())
 
 	// Add Header to the Forms-container
-	testCaseDescriptionFormContainer.Add(widget.NewLabel("TestCaseDescription"))
+	var headerLabel *widget.Label
+	headerLabel = widget.NewLabel("TestCaseDescription")
+	headerLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testCaseDescriptionFormContainer.Add(headerLabel)
 
 	// Add the Entry-widget for TestCaseDescription
 	newTestCaseDescriptionEntry := widget.NewMultiLineEntry()

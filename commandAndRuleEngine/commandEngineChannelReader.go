@@ -581,10 +581,19 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandOpen
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandRemoveTestCaseWithOutSaving(
 	incomingChannelCommand sharedCode.ChannelCommandStruct) {
 
+	// Send 'update TestCase graphics' command over channel
+	outgoingChannelCommandGraphicsUpdatedData := sharedCode.ChannelCommandGraphicsUpdatedStruct{
+		ChannelCommandGraphicsUpdate: sharedCode.ChannelCommandGraphicsRemoveTestCaseTabBasedOnTestCaseUuid,
+		CreateNewTestCaseUI:          false,
+		ActiveTestCase:               incomingChannelCommand.FirstParameter,
+		TextualTestCaseSimple:        "",
+		TextualTestCaseComplex:       "",
+		TextualTestCaseExtended:      "",
+		TestInstructionUuid:          "",
+		TestCaseTabName:              "",
+	}
 
-	delete(commandAndRuleEngine..TestCaseUITabRefToTestCaseUuidMap, testCaseUuid)
-	delete(testCasesUiCanvasObject.TestCasesUiModelMap, testCaseUuid)
-	delete(commandAndRuleEngine.Testcases, testCaseUuid)
+	*commandAndRuleEngine.GraphicsUpdateChannelReference <- outgoingChannelCommandGraphicsUpdatedData
 
 }
 

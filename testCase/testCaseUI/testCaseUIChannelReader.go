@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"github.com/sirupsen/logrus"
 )
 
 // Channel reader which is used for reading out command to update GUI
@@ -33,6 +34,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) startGUICommandChannelRea
 
 		case sharedCode.ChannelCommandGraphicsUpdatedUpdateTestCaseTabName:
 			testCasesUiCanvasObject.updatedUpdateTestCaseTabName(incomingChannelCommandGraphicsUpdatedData)
+
+		case sharedCode.ChannelCommandGraphicsRemoveTestCaseTabBasedOnTestCaseUuid:
+			testCasesUiCanvasObject.removeTestCaseTabBasedOnTestCaseUuid(incomingChannelCommandGraphicsUpdatedData)
 
 		default:
 			errorId := "388e2a87-1d0e-4db3-8dcf-18a69ac1faa4"
@@ -138,5 +142,49 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) updatedUpdateTestCaseTabN
 
 	testCasesUiCanvasObject.TestCasesTabs.Selected().Text = incomingChannelCommandGraphicsUpdatedData.TestCaseTabName
 	testCasesUiCanvasObject.TestCasesTabs.Refresh()
+
+}
+
+// Remove tab that have the TestCase
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnTestCaseUuid(
+	incomingChannelCommandGraphicsUpdatedData sharedCode.ChannelCommandGraphicsUpdatedStruct) {
+
+	var foundTestCase bool
+	var tabReference *container.TabItem
+
+	// Loop Map with TestCase-tabs to find relation between TabItem and UUID
+	for _, tempTestCaseUITabRefToTestCaseUuidMapStructObject := range testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap {
+
+		// Is this the TestCaseUuid we are looking for
+		if tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUuid == incomingChannelCommandGraphicsUpdatedData.ActiveTestCase {
+			foundTestCase = true
+			tabReference = tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUiTabRef
+			break
+		}
+	}
+
+	// When TestCase was found then remove tab
+	if foundTestCase == true {
+		testCasesUiCanvasObject.TestCasesTabs.Remove(tabReference)
+		//testCasesUiCanvasObject.TestCasesTabs.Refresh()
+
+		// Remove TestCase from UI-map
+		delete(testCasesUiCanvasObject.TestCasesUiModelMap, incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
+
+		// Remove TestCase TestCases-model
+		delete(testCasesUiCanvasObject.TestCasesModelReference.TestCases, incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
+
+		return
+
+	} else {
+		// No TestCase was found
+		//TODO Send error over error-channel
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"id": "5c4319ec-7952-4713-8b3a-63c92fcf71f9",
+			"incomingChannelCommandGraphicsUpdatedData.ActiveTestCase": incomingChannelCommandGraphicsUpdatedData.ActiveTestCase,
+		}).Fatal(fmt.Sprintf("No Tab was found, but was expected for TestCase: '%s'", incomingChannelCommandGraphicsUpdatedData.ActiveTestCase))
+
+		return
+	}
 
 }

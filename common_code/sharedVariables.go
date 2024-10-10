@@ -57,6 +57,7 @@ const (
 	ChannelCommandGraphicsUpdatedSelectTestInstruction
 	ChannelCommandGraphicsUpdatedSelectTestCaseTabBasedOnTestCaseUuid
 	ChannelCommandGraphicsUpdatedUpdateTestCaseTabName
+	ChannelCommandGraphicsRemoveTestCaseTabBasedOnTestCaseUuid
 )
 
 // BuildingBlock - Used for defining which type of element that user dragged from available building blocks tree

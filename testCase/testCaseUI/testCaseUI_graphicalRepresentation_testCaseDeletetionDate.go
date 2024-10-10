@@ -1,15 +1,126 @@
 package testCaseUI
 
 import (
+	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/testCase/testCaseModel"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"github.com/sirupsen/logrus"
 	"image/color"
 	"time"
 )
+
+var tickerCountDownlabel *widget.Label
+var tickerCountDownlabelDataBinding binding.String
+var enableDeletionCheckbox *widget.Check
+var tickerDoneChannel chan bool
+
+func countDownTicker() {
+	tickerDoneChannel = make(chan bool)
+	countdown := 10 // Start from 5 seconds
+	tickerCountDownlabelDataBinding.Set(fmt.Sprintf("Countdown: %d seconds remaining", countdown))
+	tickerCountDownlabel.Show()
+
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop() // Stop the ticker when we're done
+
+	go func() {
+
+		for {
+			select {
+			case <-tickerDoneChannel:
+				return
+			case <-ticker.C:
+				tickerCountDownlabelDataBinding.Set(fmt.Sprintf("Countdown: %d seconds remaining", countdown))
+
+				if countdown <= 0 {
+					tickerDoneChannel <- true
+				}
+				countdown--
+			}
+		}
+	}()
+
+	// Wait for the countdown to finish
+	<-tickerDoneChannel
+	tickerCountDownlabel.Hide()
+	enableDeletionCheckbox.SetChecked(false)
+
+}
+
+// Functions that hides the Fenix Screen and the flash the full screen
+func flashScreen(mainApp fyne.App, mainWindow fyne.Window) {
+	// Hide the main window
+	mainWindow.Hide()
+
+	// Create a new window for the red screen
+	redWindow := mainApp.NewWindow("Red Screen")
+
+	// Set the window to full-screen mode
+	redWindow.SetFullScreen(true)
+
+	// Create a red rectangle
+	redRect := canvas.NewRectangle(color.NRGBA{R: 255, G: 0, B: 0, A: 255})
+
+	// Use a Max layout to ensure the rectangle fills the window
+	content := fyne.NewContainerWithLayout(
+		layout.NewMaxLayout(),
+		redRect,
+	)
+
+	// Set the content of the window
+	redWindow.SetContent(content)
+
+	// Show the red window
+	redWindow.Show()
+
+	tickerDoneChannel := make(chan bool)
+	countdown := 10 // Start from 5 seconds
+
+	var isRed bool
+	isRed = true
+
+	ticker := time.NewTicker(100 * time.Millisecond)
+	defer ticker.Stop() // Stop the ticker when we're done
+
+	go func() {
+
+		for {
+			select {
+			case <-tickerDoneChannel:
+				return
+			case <-ticker.C:
+				if isRed == true {
+					fmt.Println("isRed == true")
+					redRect.FillColor = color.NRGBA{R: 255, G: 255, B: 0, A: 255}
+					redRect.Refresh()
+					isRed = false
+				} else {
+					fmt.Println("isRed == false")
+					redRect.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+					redRect.Refresh()
+					isRed = true
+				}
+
+				if countdown <= 0 {
+					tickerDoneChannel <- true
+				}
+				countdown--
+			}
+		}
+	}()
+
+	// Wait for the countdown to finish
+	<-tickerDoneChannel
+	redWindow.Close()
+	mainWindow.Show()
+
+}
 
 // Generate the TestCaseDeletionDate Area for the TestCase
 func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionDateArea(
@@ -33,7 +144,6 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 
 	*/
 
-	var enableDeletionCheckbox *widget.Check
 	var deleteTestCaseButton *widget.Button
 
 	// Create Form-layout container to be used for DeletionDate
@@ -42,9 +152,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 	testCaseDeletionDateContainer = container.New(layout.NewVBoxLayout())
 	testCaseDeletionDateFormContainer = container.New(layout.NewFormLayout())
 
+	// Add Ticker count down label
+	tickerCountDownlabelDataBinding = binding.NewString()
+	tickerCountDownlabel = widget.NewLabelWithData(tickerCountDownlabelDataBinding)
+	tickerCountDownlabel.TextStyle = fyne.TextStyle{Bold: true, Italic: true}
+	tickerCountDownlabel.Hide()
+
 	// Add Header to the Forms-container
 	var headerLabel *widget.Label
 	headerLabel = widget.NewLabel("TestCase will be deleted by this date")
+
 	headerLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseDeletionDateFormContainer.Add(headerLabel)
 
@@ -80,7 +197,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 	// Add the Entry-widget for testCaseDeletionDate
 	var newTestCaseDeletionDateEntry *widget.Entry
 	newTestCaseDeletionDateEntry = widget.NewEntry()
-	newTestCaseDeletionDateEntry.SetPlaceHolder("Enter Date when TestCase should be removed, use format: YYYY-MM-DD")
+	newTestCaseDeletionDateEntry.SetPlaceHolder("Date when TestCase should be removed: YYYY-MM-DD")
 	//newTestCaseDeletionDateEntry.Disable()
 	newTestCaseDeletionDateEntry.OnChanged = func(s string) {
 		var dateIsValid bool
@@ -106,6 +223,76 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 	// The button that activates the Deletion of the TestCase
 	deleteTestCaseButton = widget.NewButton("Auto-Delete TestCase at specified date", func() {
 		fmt.Println("DELETE")
+		tickerDoneChannel <- true
+
+		var existInMap bool
+		var currentTestCase testCaseModel.TestCaseModelStruct
+
+		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		if existInMap == false {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":           "879e46d2-4439-404b-ac6d-d99a3307b6f6",
+				"testCaseUuid": testCaseUuid,
+			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
+		}
+
+		// Get App and Main window
+		var fenixMasterWindow fyne.Window
+		fenixMasterWindow = *sharedCode.FenixMasterWindowPtr
+
+		var fenixApp fyne.App
+		fenixApp = *sharedCode.FenixAppPtr
+
+		// Which type of Delete should be performed?
+		var dateIsInTheFuture bool
+
+		// This TestCase is not saved in Database
+		if currentTestCase.ThisIsANewTestCase == true {
+
+			// Check if The date is Today() or in the future
+			var parseError error
+
+			var validTodayDate string
+			validTodayDate = time.Now().Format("2006-01-02")
+
+			_, parseError = time.Parse("2006-01-02", newTestCaseDeletionDateEntry.Text)
+			if parseError != nil {
+				dateIsInTheFuture = false
+
+			} else {
+
+				// Date must be equal or bigger then Today()
+				if newTestCaseDeletionDateEntry.Text > validTodayDate {
+					dateIsInTheFuture = true
+				} else {
+					dateIsInTheFuture = false
+				}
+
+			}
+
+			if dateIsInTheFuture == false {
+				// flash the window if Te
+				flashScreen(fenixApp, fenixMasterWindow)
+
+				// Remove TestCase from TestCase model and the UI-model
+				commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
+					ChannelCommand:  sharedCode.ChannelCommandRemoveTestCaseWithOutSaving,
+					FirstParameter:  testCaseUuid,
+					SecondParameter: "",
+					ActiveTestCase:  "",
+					ElementType:     sharedCode.Undefined,
+				}
+
+				// Send command message over channel to Command and Rule Engine
+				*testCasesUiCanvasObject.CommandChannelReference <- commandEngineChannelMessage
+
+			}
+		}
+
+		// This TestCase is saved in Database and Delete date is Today()
+
+		// This TestCase is saved in Database and Delete date is in the future
+
 	})
 	deleteTestCaseButton.Disable()
 
@@ -114,6 +301,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 		// Switch button for the actual deletion
 		if b == true {
 			deleteTestCaseButton.Enable()
+			go countDownTicker()
 		} else {
 			deleteTestCaseButton.Disable()
 		}
@@ -145,7 +333,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 	testCaseDeletionDateFormContainer.Add(entryContainer)
 
 	// Create the VBox-container that will be returned
-	testCaseDeletionDateContainer = container.NewVBox(testCaseDeletionDateFormContainer)
+	testCaseDeletionDateContainer = container.NewVBox(tickerCountDownlabel, testCaseDeletionDateFormContainer)
 
 	// Create an Accordion item for the list
 	testCaseDeletionAccordionItem := widget.NewAccordionItem("Delete TestCase", testCaseDeletionDateContainer)

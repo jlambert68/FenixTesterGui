@@ -22,6 +22,7 @@ const (
 	ChannelCommandExecuteTestCase
 	ChannelCommandChangeActiveTestCase
 	ChannelCommandOpenTestCase
+	ChannelCommandRemoveTestCaseWithOutSaving
 )
 
 type ChannelCommandStruct struct {

@@ -56,6 +56,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) startCommandChanne
 		case sharedCode.ChannelCommandOpenTestCase:
 			commandAndRuleEngine.channelCommandOpenTestCase(incomingChannelCommand)
 
+		case sharedCode.ChannelCommandRemoveTestCaseWithOutSaving:
+			commandAndRuleEngine.channelCommandRemoveTestCaseWithOutSaving(incomingChannelCommand)
+
 		// No other command is supported
 		default:
 			//TODO Send Error over ERROR-channel
@@ -484,7 +487,8 @@ func runPopUp(w fyne.Window, uuidChannel chan<- string) (modal *widget.PopUp) {
 }
 
 // Opens a saved TestCase from Database
-func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandOpenTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct) {
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandOpenTestCase(
+	incomingChannelCommand sharedCode.ChannelCommandStruct) {
 
 	var existInMap bool
 
@@ -570,6 +574,17 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandOpen
 	}
 
 	*commandAndRuleEngine.GraphicsUpdateChannelReference <- outgoingChannelCommandGraphicsUpdatedData
+
+}
+
+// Remove the TestCase without saving it to theDatabase
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandRemoveTestCaseWithOutSaving(
+	incomingChannelCommand sharedCode.ChannelCommandStruct) {
+
+
+	delete(commandAndRuleEngine..TestCaseUITabRefToTestCaseUuidMap, testCaseUuid)
+	delete(testCasesUiCanvasObject.TestCasesUiModelMap, testCaseUuid)
+	delete(commandAndRuleEngine.Testcases, testCaseUuid)
 
 }
 

@@ -19,6 +19,7 @@ var tickerCountDownlabel *widget.Label
 var tickerCountDownlabelDataBinding binding.String
 var enableDeletionCheckbox *widget.Check
 var tickerDoneChannel chan bool
+var newTestCaseDeletionDateEntry *widget.Entry
 
 func countDownTicker() {
 	tickerDoneChannel = make(chan bool)
@@ -195,7 +196,6 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 	}
 
 	// Add the Entry-widget for testCaseDeletionDate
-	var newTestCaseDeletionDateEntry *widget.Entry
 	newTestCaseDeletionDateEntry = widget.NewEntry()
 	newTestCaseDeletionDateEntry.SetPlaceHolder("Date when TestCase should be removed: YYYY-MM-DD")
 	//newTestCaseDeletionDateEntry.Disable()
@@ -236,58 +236,59 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
 		}
 
-		// Get App and Main window
-		var fenixMasterWindow fyne.Window
-		fenixMasterWindow = *sharedCode.FenixMasterWindowPtr
-
-		var fenixApp fyne.App
-		fenixApp = *sharedCode.FenixAppPtr
-
 		// Which type of Delete should be performed?
 		var dateIsInTheFuture bool
 
 		// This TestCase is not saved in Database
-		if currentTestCase.ThisIsANewTestCase == true {
+		//if currentTestCase.ThisIsANewTestCase == true {
 
-			// Check if The date is Today() or in the future
-			var parseError error
+		// Check if The date is Today() or in the future
+		var parseError error
 
-			var validTodayDate string
-			validTodayDate = time.Now().Format("2006-01-02")
+		var validTodayDate string
+		validTodayDate = time.Now().Format("2006-01-02")
 
-			_, parseError = time.Parse("2006-01-02", newTestCaseDeletionDateEntry.Text)
-			if parseError != nil {
-				dateIsInTheFuture = false
+		_, parseError = time.Parse("2006-01-02", newTestCaseDeletionDateEntry.Text)
+		if parseError != nil {
 
+			newTestCaseDeletionDateEntry.SetText("")
+			enableDeletionCheckbox.Disable()
+
+			return
+
+		} else {
+
+			// Date must be equal or bigger then Today()
+			if newTestCaseDeletionDateEntry.Text > validTodayDate {
+				dateIsInTheFuture = true
 			} else {
-
-				// Date must be equal or bigger then Today()
-				if newTestCaseDeletionDateEntry.Text > validTodayDate {
-					dateIsInTheFuture = true
-				} else {
-					dateIsInTheFuture = false
-				}
-
+				dateIsInTheFuture = false
 			}
 
-			if dateIsInTheFuture == false {
-				// flash the window if Te
-				flashScreen(fenixApp, fenixMasterWindow)
-
-				// Remove TestCase from TestCase model and the UI-model
-				commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
-					ChannelCommand:  sharedCode.ChannelCommandRemoveTestCaseWithOutSaving,
-					FirstParameter:  testCaseUuid,
-					SecondParameter: "",
-					ActiveTestCase:  "",
-					ElementType:     sharedCode.Undefined,
-				}
-
-				// Send command message over channel to Command and Rule Engine
-				*testCasesUiCanvasObject.CommandChannelReference <- commandEngineChannelMessage
-
-			}
 		}
+
+		if dateIsInTheFuture == false {
+
+			// Save the Delete date in the local version of the TestCase
+			currentTestCase.LocalTestCaseMessage.DeleteTimeStamp = newTestCaseDeletionDateEntry.Text
+
+			// Save back the updated TestCase
+			testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = currentTestCase
+
+			// Remove TestCase from TestCase model and the UI-model
+			commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
+				ChannelCommand:  sharedCode.ChannelCommandRemoveTestCaseWithOutSaving,
+				FirstParameter:  testCaseUuid,
+				SecondParameter: "",
+				ActiveTestCase:  "",
+				ElementType:     sharedCode.Undefined,
+			}
+
+			// Send command message over channel to Command and Rule Engine
+			*testCasesUiCanvasObject.CommandChannelReference <- commandEngineChannelMessage
+
+		}
+		//}
 
 		// This TestCase is saved in Database and Delete date is Today()
 

@@ -11,6 +11,7 @@ import (
 	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"github.com/sirupsen/logrus"
 	"image/color"
 	"strconv"
 	"time"
@@ -148,6 +149,45 @@ func (l *clickableLabel) MouseOut() {
 	l.TextStyle = fyne.TextStyle{Bold: false}
 	l.Refresh()
 	testCaseListTable.Refresh()
+
+}
+
+// Remove a TestCase from the List
+func RemoveTestCaseFromlList(testCaseUuidToBeRemoved string, testCasesModel *testCaseModel.TestCasesModelsStruct) {
+
+	var existInMap bool
+
+	_, existInMap = testCasesModel.TestCases[testCaseUuidToBeRemoved]
+	if existInMap == false {
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"ID":                      "533a67d1-2382-428b-b4e2-4d33756364ed",
+			"testCaseUuidToBeRemoved": testCaseUuidToBeRemoved,
+		}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
+	}
+
+	// Delete TestCase from 'TestCasesThatCanBeEditedByUserMap'
+	delete(testCasesModel.TestCasesThatCanBeEditedByUserMap, testCaseUuidToBeRemoved)
+
+	// Delete TestCase from 'TestCasesThatCanBeEditedByUserSlice'
+	for index, tempTestCasesThatCanBeEditedByUser := range testCasesModel.TestCasesThatCanBeEditedByUserSlice {
+
+		// Is this the TestCase to be removed from slice
+		if tempTestCasesThatCanBeEditedByUser.TestCaseUuid == testCaseUuidToBeRemoved {
+
+			// Remove TestCase at index
+			testCasesModel.TestCasesThatCanBeEditedByUserSlice = append(
+				testCasesModel.TestCasesThatCanBeEditedByUserSlice[:index],
+				testCasesModel.TestCasesThatCanBeEditedByUserSlice[index+1:]...)
+
+			break
+		}
+
+	}
+
+	// Update table-list and update Table
+	loadTestCaseListTableTable(testCasesModel)
+	calculateAndSetCorrectColumnWidths()
+	updateTestCasesListTable(testCasesModel)
 
 }
 

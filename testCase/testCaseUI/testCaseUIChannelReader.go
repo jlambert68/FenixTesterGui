@@ -2,11 +2,14 @@ package testCaseUI
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testCases/listTestCasesUI"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"github.com/sirupsen/logrus"
+	"time"
 )
 
 // Channel reader which is used for reading out command to update GUI
@@ -149,7 +152,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) updatedUpdateTestCaseTabN
 func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnTestCaseUuid(
 	incomingChannelCommandGraphicsUpdatedData sharedCode.ChannelCommandGraphicsUpdatedStruct) {
 
-	var foundTestCase bool
+	var foundTestCaseTab bool
 	var tabReference *container.TabItem
 
 	// Loop Map with TestCase-tabs to find relation between TabItem and UUID
@@ -157,24 +160,117 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 
 		// Is this the TestCaseUuid we are looking for
 		if tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUuid == incomingChannelCommandGraphicsUpdatedData.ActiveTestCase {
-			foundTestCase = true
+			foundTestCaseTab = true
 			tabReference = tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUiTabRef
 			break
 		}
 	}
 
 	// When TestCase was found then remove tab
-	if foundTestCase == true {
-		testCasesUiCanvasObject.TestCasesTabs.Remove(tabReference)
-		//testCasesUiCanvasObject.TestCasesTabs.Refresh()
+	if foundTestCaseTab == true {
 
-		// Remove TestCase from UI-map
-		delete(testCasesUiCanvasObject.TestCasesUiModelMap, incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
+		// Set TestCase to be deleted in Database
 
-		// Remove TestCase TestCases-model
-		delete(testCasesUiCanvasObject.TestCasesModelReference.TestCases, incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
+		// Check if The date is Today() or in the future
+		var parseError error
 
-		return
+		var validTodayDate string
+		validTodayDate = time.Now().Format("2006-01-02")
+
+		_, parseError = time.Parse("2006-01-02", newTestCaseDeletionDateEntry.Text)
+		if parseError != nil {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"id": "fb41e410-cf07-489d-a993-20bb3e65305c",
+				"incomingChannelCommandGraphicsUpdatedData.ActiveTestCase": incomingChannelCommandGraphicsUpdatedData.ActiveTestCase,
+			}).Fatal(fmt.Sprintf("Couldn't parse time.Now(), should never happen:"))
+
+		}
+
+		var existInMap bool
+		var currentTestCase testCaseModel.TestCaseModelStruct
+
+		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.
+			TestCases[incomingChannelCommandGraphicsUpdatedData.ActiveTestCase]
+		if existInMap == false {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":           "2e89c13f-0d3f-4dbd-86dd-c35e2a4b59e8",
+				"testCaseUuid": incomingChannelCommandGraphicsUpdatedData.ActiveTestCase,
+			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
+		}
+
+		// This TestCase is New and not saved in Database
+		if currentTestCase.ThisIsANewTestCase == true {
+
+			//If Delete date is equal to Today() then Delete everything
+			if currentTestCase.LocalTestCaseMessage.DeleteTimeStamp <= validTodayDate {
+
+				// flash the window if Te
+				go flashScreen(*sharedCode.FenixAppPtr, *sharedCode.FenixMasterWindowPtr)
+
+				// Remove the Tab with the TestCase UI-objects
+				testCasesUiCanvasObject.TestCasesTabs.Remove(tabReference)
+				//testCasesUiCanvasObject.TestCasesTabs.Refresh()
+
+				// Remove TestCase from UI-map
+				delete(testCasesUiCanvasObject.TestCasesUiModelMap, incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
+
+				// Remove TestCase TestCases-model
+				delete(testCasesUiCanvasObject.TestCasesModelReference.TestCases, incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
+
+				return
+			} else {
+				// Delete date is in the future so do nothing
+			}
+
+		} else {
+
+			// Try to set Delete date in database for the TestCase
+			var err error
+			err = testCasesUiCanvasObject.TestCasesModelReference.DeleteTestCaseAtThisDate(incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
+
+			if err != nil {
+
+				errorId := "8daeb14c-2d73-4413-95ed-21033c7b46c6"
+				err = errors.New(fmt.Sprintf("Couldn't Set delete date for TestCase '%s' in database [ErrorID: %s]. Error='%s'",
+					incomingChannelCommandGraphicsUpdatedData.ActiveTestCase, errorId, err.Error()))
+
+				fmt.Println(err) // TODO Send on Error-channel
+
+				// Clear Date in Entry-box
+				newTestCaseDeletionDateEntry.SetText("")
+				enableDeletionCheckbox.Disable()
+
+				return
+			}
+
+			//If Delete date is equal to Today() then Delete everything
+			if currentTestCase.LocalTestCaseMessage.DeleteTimeStamp <= validTodayDate {
+
+				// flash the window if Te
+				go flashScreen(*sharedCode.FenixAppPtr, *sharedCode.FenixMasterWindowPtr)
+
+				// Remove the Tab with the TestCase UI-objects
+				testCasesUiCanvasObject.TestCasesTabs.Remove(tabReference)
+				//testCasesUiCanvasObject.TestCasesTabs.Refresh()
+
+				// Remove TestCase from UI-map
+				delete(testCasesUiCanvasObject.TestCasesUiModelMap,
+					incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
+
+				// Remove TestCase TestCases-model
+				delete(testCasesUiCanvasObject.TestCasesModelReference.TestCases,
+					incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
+
+				// Remove TestCase from TestCase-List
+				listTestCasesUI.RemoveTestCaseFromlList(incomingChannelCommandGraphicsUpdatedData.ActiveTestCase,
+					testCasesUiCanvasObject.TestCasesModelReference)
+
+				return
+			} else {
+				// Delete date is in the future so do nothing
+			}
+
+		}
 
 	} else {
 		// No TestCase was found

@@ -3,6 +3,7 @@ package testCaseUI
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
+	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -129,21 +130,18 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 	testCaseDeletionDateArea fyne.CanvasObject,
 	err error) {
 
-	/*
-		// Extract the current TestCase UI model
-		testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
-		if existsInMap == false {
-			errorId := "e98a46a6-ddb8-4f00-b68b-74d9132863e6"
-			err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCases [ErrorID: %s]", testCaseUuid, errorId))
+	// Extract the current TestCase UI model
+	testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+	if existsInMap == false {
+		errorId := "5c27a6eb-21b2-4719-ab26-04c43cb70f5a"
+		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCases [ErrorID: %s]", testCaseUuid, errorId))
 
-			//TODO Send ERRORS over error-channel
-			fmt.Println(err)
+		//TODO Send ERRORS over error-channel
+		fmt.Println(err)
 
-			return nil, err
+		return nil, err
 
-		}
-
-	*/
+	}
 
 	var deleteTestCaseButton *widget.Button
 
@@ -199,6 +197,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 	newTestCaseDeletionDateEntry = widget.NewEntry()
 	newTestCaseDeletionDateEntry.SetPlaceHolder("Date when TestCase should be removed: YYYY-MM-DD")
 	//newTestCaseDeletionDateEntry.Disable()
+	newTestCaseDeletionDateEntry.SetText(testCase_Model.LocalTestCaseMessage.DeleteTimeStamp)
 	newTestCaseDeletionDateEntry.OnChanged = func(s string) {
 		var dateIsValid bool
 
@@ -237,7 +236,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 		}
 
 		// Which type of Delete should be performed?
-		var dateIsInTheFuture bool
+		//var dateIsInTheFuture bool
 
 		// This TestCase is not saved in Database
 		//if currentTestCase.ThisIsANewTestCase == true {
@@ -245,8 +244,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 		// Check if The date is Today() or in the future
 		var parseError error
 
-		var validTodayDate string
-		validTodayDate = time.Now().Format("2006-01-02")
+		//var validTodayDate string
+		//validTodayDate = time.Now().Format("2006-01-02")
 
 		_, parseError = time.Parse("2006-01-02", newTestCaseDeletionDateEntry.Text)
 		if parseError != nil {
@@ -258,36 +257,39 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 
 		} else {
 
-			// Date must be equal or bigger then Today()
-			if newTestCaseDeletionDateEntry.Text > validTodayDate {
-				dateIsInTheFuture = true
-			} else {
-				dateIsInTheFuture = false
-			}
+			/*
+				// Date must be equal or bigger then Today()
+				if newTestCaseDeletionDateEntry.Text > validTodayDate {
+					dateIsInTheFuture = true
+				} else {
+					dateIsInTheFuture = false
+				}
+
+			*/
 
 		}
 
-		if dateIsInTheFuture == false {
+		//if dateIsInTheFuture == false {
 
-			// Save the Delete date in the local version of the TestCase
-			currentTestCase.LocalTestCaseMessage.DeleteTimeStamp = newTestCaseDeletionDateEntry.Text
+		// Save the Delete date in the local version of the TestCase
+		currentTestCase.LocalTestCaseMessage.DeleteTimeStamp = newTestCaseDeletionDateEntry.Text
 
-			// Save back the updated TestCase
-			testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = currentTestCase
+		// Save back the updated TestCase
+		testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = currentTestCase
 
-			// Remove TestCase from TestCase model and the UI-model
-			commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
-				ChannelCommand:  sharedCode.ChannelCommandRemoveTestCaseWithOutSaving,
-				FirstParameter:  testCaseUuid,
-				SecondParameter: "",
-				ActiveTestCase:  "",
-				ElementType:     sharedCode.Undefined,
-			}
-
-			// Send command message over channel to Command and Rule Engine
-			*testCasesUiCanvasObject.CommandChannelReference <- commandEngineChannelMessage
-
+		// Remove TestCase from TestCase model and the UI-model
+		commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
+			ChannelCommand:  sharedCode.ChannelCommandRemoveTestCaseWithOutSaving,
+			FirstParameter:  testCaseUuid,
+			SecondParameter: "",
+			ActiveTestCase:  "",
+			ElementType:     sharedCode.Undefined,
 		}
+
+		// Send command message over channel to Command and Rule Engine
+		*testCasesUiCanvasObject.CommandChannelReference <- commandEngineChannelMessage
+
+		//}
 		//}
 
 		// This TestCase is saved in Database and Delete date is Today()

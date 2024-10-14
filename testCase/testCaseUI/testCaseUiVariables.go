@@ -14,6 +14,8 @@ import (
 
 const testCaseNodeRectangleSize = 40
 
+const testCaseNotDeletedDate = "2068-11-18"
+
 // TestCaseUiStruct
 // This structure holds all UI-objects for all the TestCases
 type TestCasesUiModelStruct struct {

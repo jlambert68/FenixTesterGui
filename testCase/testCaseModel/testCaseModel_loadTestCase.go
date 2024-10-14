@@ -48,6 +48,7 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 				TestCaseBasicInformation.BasicTestCaseInformation.GetEditableInformation(),
 			CreatedAndUpdatedInformation: *detailedTestCaseResponse.DetailedTestCase.
 				TestCaseBasicInformation.GetCreatedAndUpdatedInformation(),
+			DeleteTimeStamp: detailedTestCaseResponse.GetDetailedTestCase().GetDeletedDate(),
 		},
 		testCaseModelAdaptedForUiTree:            nil,
 		CurrentSelectedTestCaseElement:           CurrentSelectedTestCaseElementStruct{},

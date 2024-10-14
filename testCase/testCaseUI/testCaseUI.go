@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
@@ -65,16 +66,27 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectF
 
 		// Remove Node in TestCase
 		widget.NewToolbarAction(theme.ContentRemoveIcon(), func() {
-			commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
-				ChannelCommand:  sharedCode.ChannelCommandRemoveElement,
-				FirstParameter:  testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid].CurrentSelectedTestCaseElement.CurrentSelectedTestCaseElementUuid,
-				SecondParameter: "",
-				ActiveTestCase:  testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid,
-				ElementType:     sharedCode.BuildingBlock(sharedCode.TestInstruction),
-			}
 
-			// Send command message over channel to Command and Rule Engine
-			*testCasesUiCanvasObject.CommandChannelReference <- commandEngineChannelMessage
+			// Show a confirmation dialog
+			dialog.ShowConfirm("Confirm to Close TestCse", "Do you want to close the TestCase wothout saving it?",
+				func(confirm bool) {
+					if confirm {
+
+						commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
+							ChannelCommand:  sharedCode.ChannelCommandCloseOpenTestCaseWithOutSaving,
+							FirstParameter:  testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid].CurrentSelectedTestCaseElement.CurrentSelectedTestCaseElementUuid,
+							SecondParameter: "",
+							ActiveTestCase:  testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid,
+							ElementType:     sharedCode.BuildingBlock(sharedCode.TestInstruction),
+						}
+
+						// Send command message over channel to Command and Rule Engine
+						*testCasesUiCanvasObject.CommandChannelReference <- commandEngineChannelMessage
+					} else {
+						// Do nothing
+					}
+				}, *sharedCode.FenixMasterWindowPtr)
+
 		}),
 
 		// Execute 'current' TestCase

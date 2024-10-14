@@ -59,6 +59,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) startCommandChanne
 		case sharedCode.ChannelCommandRemoveTestCaseWithOutSaving:
 			commandAndRuleEngine.channelCommandRemoveTestCaseWithOutSaving(incomingChannelCommand)
 
+		case sharedCode.ChannelCommandCloseOpenTestCaseWithOutSaving:
+			commandAndRuleEngine.channelCommandCloseOpenTestCaseWithOutSaving(incomingChannelCommand)
+
 		// No other command is supported
 		default:
 			//TODO Send Error over ERROR-channel
@@ -586,6 +589,26 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandRemo
 		ChannelCommandGraphicsUpdate: sharedCode.ChannelCommandGraphicsRemoveTestCaseTabBasedOnTestCaseUuid,
 		CreateNewTestCaseUI:          false,
 		ActiveTestCase:               incomingChannelCommand.FirstParameter,
+		TextualTestCaseSimple:        "",
+		TextualTestCaseComplex:       "",
+		TextualTestCaseExtended:      "",
+		TestInstructionUuid:          "",
+		TestCaseTabName:              "",
+	}
+
+	*commandAndRuleEngine.GraphicsUpdateChannelReference <- outgoingChannelCommandGraphicsUpdatedData
+
+}
+
+// Close open TestCase without saving it to theDatabase
+func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandCloseOpenTestCaseWithOutSaving(
+	incomingChannelCommand sharedCode.ChannelCommandStruct) {
+
+	// Send 'update TestCase graphics' command over channel
+	outgoingChannelCommandGraphicsUpdatedData := sharedCode.ChannelCommandGraphicsUpdatedStruct{
+		ChannelCommandGraphicsUpdate: sharedCode.ChannelCommandGraphicsCloseTestCaseTabBasedOnTestCaseUuiWithOutSaving,
+		CreateNewTestCaseUI:          false,
+		ActiveTestCase:               incomingChannelCommand.ActiveTestCase,
 		TextualTestCaseSimple:        "",
 		TextualTestCaseComplex:       "",
 		TextualTestCaseExtended:      "",

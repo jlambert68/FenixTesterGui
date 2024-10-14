@@ -41,6 +41,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) startGUICommandChannelRea
 		case sharedCode.ChannelCommandGraphicsRemoveTestCaseTabBasedOnTestCaseUuid:
 			testCasesUiCanvasObject.removeTestCaseTabBasedOnTestCaseUuid(incomingChannelCommandGraphicsUpdatedData)
 
+		case sharedCode.ChannelCommandGraphicsCloseTestCaseTabBasedOnTestCaseUuiWithOutSaving:
+			testCasesUiCanvasObject.closeTestCaseTabBasedOnTestCaseUuiWithOutSaving(incomingChannelCommandGraphicsUpdatedData)
+
 		default:
 			errorId := "388e2a87-1d0e-4db3-8dcf-18a69ac1faa4"
 			err := errors.New(fmt.Sprintf("unknow 'incomingChannelCommandGraphicsUpdatedData', [ErrorID: %s]", errorId))
@@ -267,7 +270,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 
 				return
 			} else {
-				// Delete date is in the future so do nothing
+				// Delete date is in the future so only Notify That testCase is set to bed deleted in the future
+				fyne.CurrentApp().SendNotification(&fyne.Notification{
+					Title: "TestCase Deleted",
+					Content: fmt.Sprintf("The TestCase was set to Deleted in the future (%s)",
+						currentTestCase.LocalTestCaseMessage.DeleteTimeStamp),
+				})
 			}
 
 		}
@@ -277,6 +285,76 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 		//TODO Send error over error-channel
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"id": "5c4319ec-7952-4713-8b3a-63c92fcf71f9",
+			"incomingChannelCommandGraphicsUpdatedData.ActiveTestCase": incomingChannelCommandGraphicsUpdatedData.ActiveTestCase,
+		}).Fatal(fmt.Sprintf("No Tab was found, but was expected for TestCase: '%s'", incomingChannelCommandGraphicsUpdatedData.ActiveTestCase))
+
+		return
+	}
+
+}
+
+// Close tab that have the TestCase without saving the TestCse
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) closeTestCaseTabBasedOnTestCaseUuiWithOutSaving(
+	incomingChannelCommandGraphicsUpdatedData sharedCode.ChannelCommandGraphicsUpdatedStruct) {
+
+	var foundTestCaseTab bool
+	var tabReference *container.TabItem
+
+	// Loop Map with TestCase-tabs to find relation between TabItem and UUID
+	for _, tempTestCaseUITabRefToTestCaseUuidMapStructObject := range testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap {
+
+		// Is this the TestCaseUuid we are looking for
+		if tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUuid == incomingChannelCommandGraphicsUpdatedData.ActiveTestCase {
+			foundTestCaseTab = true
+			tabReference = tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUiTabRef
+			break
+		}
+	}
+
+	// When TestCase was found then remove tab
+	if foundTestCaseTab == true {
+
+		var existInMap bool
+		var currentTestCase testCaseModel.TestCaseModelStruct
+
+		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.
+			TestCases[incomingChannelCommandGraphicsUpdatedData.ActiveTestCase]
+
+		if existInMap == false {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":           "b93f6a4d-7d35-4ed8-9b80-e11ba29c62a2",
+				"testCaseUuid": incomingChannelCommandGraphicsUpdatedData.ActiveTestCase,
+			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
+		}
+
+		// Remove the Tab with the TestCase UI-objects
+		testCasesUiCanvasObject.TestCasesTabs.Remove(tabReference)
+		//testCasesUiCanvasObject.TestCasesTabs.Refresh()
+
+		// Remove TestCase from UI-map
+		delete(testCasesUiCanvasObject.TestCasesUiModelMap,
+			incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
+
+		// Remove TestCase TestCases-model
+		delete(testCasesUiCanvasObject.TestCasesModelReference.TestCases,
+			incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
+
+		// Remove TestCase from TestCase-List
+		listTestCasesUI.RemoveTestCaseFromlList(incomingChannelCommandGraphicsUpdatedData.ActiveTestCase,
+			testCasesUiCanvasObject.TestCasesModelReference)
+
+		// Delete date is in the future so only Notify That testCase is set to bed deleted in the future
+		fyne.CurrentApp().SendNotification(&fyne.Notification{
+			Title: "TestCase Deleted",
+			Content: fmt.Sprintf("The TestCase was set to Deleted in the future (%s)",
+				currentTestCase.LocalTestCaseMessage.DeleteTimeStamp),
+		})
+
+	} else {
+		// No TestCase was found
+		//TODO Send error over error-channel
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"id": "9ef7a49d-531d-4d98-9c38-5f6b735598b9",
 			"incomingChannelCommandGraphicsUpdatedData.ActiveTestCase": incomingChannelCommandGraphicsUpdatedData.ActiveTestCase,
 		}).Fatal(fmt.Sprintf("No Tab was found, but was expected for TestCase: '%s'", incomingChannelCommandGraphicsUpdatedData.ActiveTestCase))
 

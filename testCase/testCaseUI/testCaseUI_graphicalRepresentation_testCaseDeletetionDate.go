@@ -122,6 +122,12 @@ func flashScreen(mainApp fyne.App, mainWindow fyne.Window) {
 	redWindow.Close()
 	mainWindow.Show()
 
+	// Notify That testCase is deleted per today
+	fyne.CurrentApp().SendNotification(&fyne.Notification{
+		Title:   "TestCase Deleted",
+		Content: "The TestCase was set to Deleted in the Database!",
+	})
+
 }
 
 // Generate the TestCaseDeletionDate Area for the TestCase

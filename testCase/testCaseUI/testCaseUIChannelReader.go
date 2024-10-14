@@ -315,9 +315,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) closeTestCaseTabBasedOnTe
 	if foundTestCaseTab == true {
 
 		var existInMap bool
-		var currentTestCase testCaseModel.TestCaseModelStruct
 
-		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.
+		_, existInMap = testCasesUiCanvasObject.TestCasesModelReference.
 			TestCases[incomingChannelCommandGraphicsUpdatedData.ActiveTestCase]
 
 		if existInMap == false {
@@ -338,10 +337,6 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) closeTestCaseTabBasedOnTe
 		// Remove TestCase TestCases-model
 		delete(testCasesUiCanvasObject.TestCasesModelReference.TestCases,
 			incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
-
-		// Remove TestCase from TestCase-List
-		listTestCasesUI.RemoveTestCaseFromlList(incomingChannelCommandGraphicsUpdatedData.ActiveTestCase,
-			testCasesUiCanvasObject.TestCasesModelReference)
 
 		// Delete date is in the future so only Notify That testCase is set to bed deleted in the future
 		fyne.CurrentApp().SendNotification(&fyne.Notification{

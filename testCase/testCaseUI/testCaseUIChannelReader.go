@@ -345,9 +345,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) closeTestCaseTabBasedOnTe
 
 		// Delete date is in the future so only Notify That testCase is set to bed deleted in the future
 		fyne.CurrentApp().SendNotification(&fyne.Notification{
-			Title: "TestCase Deleted",
-			Content: fmt.Sprintf("The TestCase was set to Deleted in the future (%s)",
-				currentTestCase.LocalTestCaseMessage.DeleteTimeStamp),
+			Title:   "TestCase Closed",
+			Content: "The TestCase was closed without sny changes were saved",
 		})
 
 	} else {

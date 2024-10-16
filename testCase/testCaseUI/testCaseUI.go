@@ -10,6 +10,7 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"github.com/sirupsen/logrus"
 )
 
 // GenerateBaseCanvasObjectForTestCaseUI
@@ -67,8 +68,30 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectF
 		// Remove Node in TestCase
 		widget.NewToolbarAction(theme.ContentRemoveIcon(), func() {
 
+			var foundTestCase bool
+			var testCaseName string
+
+			// Loop Map with TestCase-tabs to find relation between TabItem and UUID
+			for _, tempTestCaseUITabRefToTestCaseUuidMapStructObject := range testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap {
+
+				// Is this the TestCaseUuid we are looking for
+				if tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUuid == testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid {
+					testCaseName = tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUiTabRef.Text
+					break
+				}
+			}
+
+			// When TestCase was not found then
+			if foundTestCase == false {
+				sharedCode.Logger.WithFields(logrus.Fields{
+					"ID": "bbb933c2-3a57-40b9-be99-4725ce9727a0",
+					"testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid": testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid,
+				}).Fatal("TestCase doesn't exist in Tab-reference-map. This should not happen")
+
+			}
+
 			// Show a confirmation dialog
-			dialog.ShowConfirm("Confirm to Close TestCse", "Do you want to close the TestCase without saving it?",
+			dialog.ShowConfirm("Confirm to Close TestCase", "Do you want to close the TestCase without saving it?\n"+testCaseName+"\n"+testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid,
 				func(confirm bool) {
 					if confirm {
 

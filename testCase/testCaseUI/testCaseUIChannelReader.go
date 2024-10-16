@@ -243,7 +243,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 				// Delete tab from TabReference-map
 				delete(testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap, tabReferenceAsString)
 
-				// If no tab was found the active tab is "emtpty" base-tab, otherwise set the tabs TestCaseUuid to the active one
+				// If no tab was found the active tab is "empty" base-tab, otherwise set the tabs TestCaseUuid to the active one
 				if foundPreviousTestCaseTab == false {
 					testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid = ""
 				} else {

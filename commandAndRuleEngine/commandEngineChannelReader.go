@@ -303,6 +303,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 
 	}
 
+	// Notify User that the TestCase is execution
+	// Notify the user
+	fyne.CurrentApp().SendNotification(&fyne.Notification{
+		Title:   "TestCase Execution",
+		Content: "The TestCase is sent for Execution. See execution Tab for status.",
+	})
+
 	// Add TestCaseExecution to Executions-table for TestCaseExecutionOnQueue by send message to channel used to update OnQueue-table
 	// Create Remove-message to be put on channel
 	var onQueueTableAddRemoveChannelMessage executionsModelForSubscriptions.OnQueueTableAddRemoveChannelStruct

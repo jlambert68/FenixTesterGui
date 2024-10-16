@@ -297,7 +297,7 @@ func generateTestDataSelectionsUIComponent(
 
 		// Verify that Domain is selected
 		if len(domainsSelect.Selected) == 0 {
-			// Optional: Notify the user
+			//  Notify the user
 			fyne.CurrentApp().SendNotification(&fyne.Notification{
 				Title:   "Warning",
 				Content: "A Domain must be selected",
@@ -308,7 +308,7 @@ func generateTestDataSelectionsUIComponent(
 
 		// Verify that TestDataArea is selected
 		if len(testAreaSelect.Selected) == 0 {
-			// Optional: Notify the user
+			// Notify the user
 			fyne.CurrentApp().SendNotification(&fyne.Notification{
 				Title:   "Warning",
 				Content: "A TestDataArea must be selected",

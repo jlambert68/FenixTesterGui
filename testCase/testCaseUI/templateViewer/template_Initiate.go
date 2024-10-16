@@ -209,7 +209,7 @@ func InitiateTemplateViewer(
 		clipboard := mainWindow.Clipboard()
 		clipboard.SetContent(templateText)
 
-		// Optional: Notify the user
+		// Notify the user
 		fyne.CurrentApp().SendNotification(&fyne.Notification{
 			Title:   "Clipboard",
 			Content: "Template copied to clipboard!",
@@ -226,7 +226,7 @@ func InitiateTemplateViewer(
 		clipboard := mainWindow.Clipboard()
 		clipboard.SetContent(templateText)
 
-		// Optional: Notify the user
+		// Notify the user
 		fyne.CurrentApp().SendNotification(&fyne.Notification{
 			Title:   "Clipboard",
 			Content: "Template - with values- copied to clipboard!",

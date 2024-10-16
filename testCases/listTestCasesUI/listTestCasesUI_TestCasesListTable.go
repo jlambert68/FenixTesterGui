@@ -101,7 +101,7 @@ func (l *clickableLabel) TappedSecondary(*fyne.PointEvent) {
 	clipboard := fenixMasterWindow.Clipboard()
 	clipboard.SetContent(l.Text)
 
-	// Optional: Notify the user
+	// Notify the user
 	fyne.CurrentApp().SendNotification(&fyne.Notification{
 		Title:   "Clipboard",
 		Content: fmt.Sprintf("'%s' copied to clipboard!", l.Text),

@@ -157,16 +157,22 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 
 	var foundTestCaseTab bool
 	var tabReference *container.TabItem
+	var previousTabReference *container.TabItem
+	var tabReferenceAsString string
 
 	// Loop Map with TestCase-tabs to find relation between TabItem and UUID
-	for _, tempTestCaseUITabRefToTestCaseUuidMapStructObject := range testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap {
+	for tempTabReferenceAsString, tempTestCaseUITabRefToTestCaseUuidMapStructObject := range testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap {
 
 		// Is this the TestCaseUuid we are looking for
 		if tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUuid == incomingChannelCommandGraphicsUpdatedData.ActiveTestCase {
 			foundTestCaseTab = true
 			tabReference = tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUiTabRef
+			tabReferenceAsString = tempTabReferenceAsString
 			break
 		}
+
+		// Save the previous tab reference
+		previousTabReference = tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUiTabRef
 	}
 
 	// When TestCase was found then remove tab
@@ -220,6 +226,30 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 				// Remove TestCase TestCases-model
 				delete(testCasesUiCanvasObject.TestCasesModelReference.TestCases, incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
 
+				// Switch Active TestCase by Loop Map with TestCase-tabs to find relation between TabItem and UUID
+				var testCaseUuidToSwitchTo string
+				var foundPreviousTestCaseTab bool
+				for _, tempTestCaseUITabRefToTestCaseUuidMapStructObject := range testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap {
+
+					// Is this the TestCaseUuid we are looking for
+					if tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUiTabRef == previousTabReference {
+						foundPreviousTestCaseTab = true
+						testCaseUuidToSwitchTo = tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUuid
+						break
+					}
+
+				}
+
+				// Delete tab from TabReference-map
+				delete(testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap, tabReferenceAsString)
+
+				// If no tab was found the active tab is "emtpty" base-tab, otherwise set the tabs TestCaseUuid to the active one
+				if foundPreviousTestCaseTab == false {
+					testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid = ""
+				} else {
+					testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid = testCaseUuidToSwitchTo
+				}
+
 				return
 			} else {
 				// Delete date is in the future so do nothing
@@ -264,6 +294,30 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 				delete(testCasesUiCanvasObject.TestCasesModelReference.TestCases,
 					incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
 
+				// Switch Active TestCase by Loop Map with TestCase-tabs to find relation between TabItem and UUID
+				var testCaseUuidToSwitchTo string
+				var foundPreviousTestCaseTab bool
+				for _, tempTestCaseUITabRefToTestCaseUuidMapStructObject := range testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap {
+
+					// Is this the TestCaseUuid we are looking for
+					if tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUiTabRef == previousTabReference {
+						foundPreviousTestCaseTab = true
+						testCaseUuidToSwitchTo = tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUuid
+						break
+					}
+
+				}
+
+				// Delete tab from TabReference-map
+				delete(testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap, tabReferenceAsString)
+
+				// If no tab was found the active tab is "emtpty" base-tab, otherwise set the tabs TestCaseUuid to the active one
+				if foundPreviousTestCaseTab == false {
+					testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid = ""
+				} else {
+					testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid = testCaseUuidToSwitchTo
+				}
+
 				// Remove TestCase from TestCase-List
 				listTestCasesUI.RemoveTestCaseFromlList(incomingChannelCommandGraphicsUpdatedData.ActiveTestCase,
 					testCasesUiCanvasObject.TestCasesModelReference)
@@ -299,16 +353,22 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) closeTestCaseTabBasedOnTe
 
 	var foundTestCaseTab bool
 	var tabReference *container.TabItem
+	var previousTabReference *container.TabItem
+	var tabReferenceAsString string
 
 	// Loop Map with TestCase-tabs to find relation between TabItem and UUID
-	for _, tempTestCaseUITabRefToTestCaseUuidMapStructObject := range testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap {
+	for tempTabReferenceAsString, tempTestCaseUITabRefToTestCaseUuidMapStructObject := range testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap {
 
 		// Is this the TestCaseUuid we are looking for
 		if tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUuid == incomingChannelCommandGraphicsUpdatedData.ActiveTestCase {
 			foundTestCaseTab = true
 			tabReference = tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUiTabRef
+			tabReferenceAsString = tempTabReferenceAsString
 			break
 		}
+
+		// Save the previous tab reference
+		previousTabReference = tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUiTabRef
 	}
 
 	// When TestCase was found then remove tab
@@ -337,6 +397,30 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) closeTestCaseTabBasedOnTe
 		// Remove TestCase TestCases-model
 		delete(testCasesUiCanvasObject.TestCasesModelReference.TestCases,
 			incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
+
+		// Switch Active TestCase by Loop Map with TestCase-tabs to find relation between TabItem and UUID
+		var testCaseUuidToSwitchTo string
+		var foundPreviousTestCaseTab bool
+		for _, tempTestCaseUITabRefToTestCaseUuidMapStructObject := range testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap {
+
+			// Is this the TestCaseUuid we are looking for
+			if tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUiTabRef == previousTabReference {
+				foundPreviousTestCaseTab = true
+				testCaseUuidToSwitchTo = tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUuid
+				break
+			}
+
+		}
+
+		// Delete tab from TabReference-map
+		delete(testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap, tabReferenceAsString)
+
+		// If no tab was found the active tab is "emtpty" base-tab, otherwise set the tabs TestCaseUuid to the active one
+		if foundPreviousTestCaseTab == false {
+			testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid = ""
+		} else {
+			testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid = testCaseUuidToSwitchTo
+		}
 
 		// Delete date is in the future so only Notify That testCase is set to bed deleted in the future
 		fyne.CurrentApp().SendNotification(&fyne.Notification{

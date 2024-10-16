@@ -79,10 +79,11 @@ func generateTemplateFilesTable(
 
 				currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
 				if existInMap == false {
+
 					sharedCode.Logger.WithFields(logrus.Fields{
 						"ID":           "ebf42b07-76d6-4186-aebd-4cf18beb9f1d",
 						"testCaseUuid": testCaseUuid,
-					}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
+					}).Warning("TestCase doesn't exist in TestCaseMap. This should not happen")
 				}
 
 				templateFilesFromGithub = currentTestCase.ImportedTemplateFilesFromGitHub

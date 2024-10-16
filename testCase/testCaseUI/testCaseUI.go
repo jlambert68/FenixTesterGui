@@ -68,7 +68,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectF
 		widget.NewToolbarAction(theme.ContentRemoveIcon(), func() {
 
 			// Show a confirmation dialog
-			dialog.ShowConfirm("Confirm to Close TestCse", "Do you want to close the TestCase wothout saving it?",
+			dialog.ShowConfirm("Confirm to Close TestCse", "Do you want to close the TestCase without saving it?",
 				func(confirm bool) {
 					if confirm {
 

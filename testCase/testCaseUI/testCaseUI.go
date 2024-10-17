@@ -101,6 +101,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectF
 
 			}
 
+			soundEngine.PlaySoundChannel <- soundEngine.UserNeedToRespondSound
+
 			// Show a confirmation dialog
 			dialog.ShowConfirm("Confirm to Close TestCase", "Do you want to close the TestCase without saving it?\n"+testCaseName+"\n"+testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid,
 				func(confirm bool) {

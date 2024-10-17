@@ -8,6 +8,7 @@ import (
 	"github.com/hajimehoshi/go-mp3"
 	"github.com/sirupsen/logrus"
 	"io"
+	"time"
 )
 
 // Embed System Notification
@@ -20,12 +21,18 @@ var systemNotificationAsByteArray []byte
 //go:embed soundfiles/invalid-selection-39351.mp3
 var invalidSelectionAsByteArray []byte
 
+// Message for user to respond to
+//
+//go:embed soundfiles/message-ringtone-21467.mp3
+var userNeedToRespondAsByteArray []byte
+
 type SoundType uint
 
 const soundChannelSize uint16 = 100
 const (
 	SystemNotificationSound SoundType = iota
 	InvalidNotificationSound
+	UserNeedToRespondSound
 )
 
 var PlaySoundChannel chan SoundType
@@ -36,29 +43,36 @@ var otoCtx *oto.Context
 // Player for 'System Notification'
 var systemNotificationPlayer *oto.Player
 var invalidNotificationPlayer *oto.Player
+var userNeedToRespondPlayer *oto.Player
 
 // The reader for the Sound player
 func playerChannelReader() {
 
-	var soundToPlay SoundType
+	for {
 
-	// Wait for sound to be received on the channel
-	soundToPlay = <-PlaySoundChannel
+		var soundToPlay SoundType
 
-	switch soundToPlay {
+		// Wait for sound to be received on the channel
+		soundToPlay = <-PlaySoundChannel
 
-	case SystemNotificationSound:
-		go playSystemNotification()
+		switch soundToPlay {
 
-	case InvalidNotificationSound:
-		go playInvalidNotification()
+		case SystemNotificationSound:
+			playSystemNotification()
 
-	default:
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":          "12e0a633-45d4-45fd-be8b-69459cdd75c2",
-			"soundToPlay": soundToPlay,
-		}).Fatal("An unhandled sound was received on 'PlaySoundChannel'")
+		case InvalidNotificationSound:
+			playInvalidNotification()
 
+		case UserNeedToRespondSound:
+			playUserNeedToRespond()
+
+		default:
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":          "12e0a633-45d4-45fd-be8b-69459cdd75c2",
+				"soundToPlay": soundToPlay,
+			}).Fatal("An unhandled sound was received on 'PlaySoundChannel'")
+
+		}
 	}
 
 }
@@ -72,10 +86,38 @@ func initiatePlayerChannelEngine() {
 }
 
 // Init the Sound Enigine if that hasn't been done
-func initSoundEngine() {
+func InitSoundEngine() {
 	if otoCtx != nil {
 		return
 	}
+
+	var err error
+
+	// Prepare an Oto context (this will use your default audio device) that will
+	// play all our sounds. Its configuration can't be changed later.
+
+	var op *oto.NewContextOptions
+	op = &oto.NewContextOptions{}
+
+	// Usually 44100 or 48000. Other values might cause distortions in Oto
+	op.SampleRate = 44100
+
+	// Number of channels (aka locations) to play sounds from. Either 1 or 2.
+	// 1 is mono sound, and 2 is stereo (most speakers are stereo).
+	op.ChannelCount = 2
+
+	// Format of the source. go-mp3's format is signed 16bit integers.
+	op.Format = oto.FormatSignedInt16LE
+
+	// Remember that you should **not** create more than one context
+	//var otoCtx *oto.Context
+	var readyChan chan struct{}
+	otoCtx, readyChan, err = oto.NewContext(op)
+	if err != nil {
+		panic("oto.NewContext failed: " + err.Error())
+	}
+	// It might take a bit for the hardware audio devices to be ready, so we wait on the channel.
+	<-readyChan
 
 	// Initiate PlayerChannelEngine
 	initiatePlayerChannelEngine()
@@ -83,6 +125,7 @@ func initSoundEngine() {
 	// Initiate Sound Engine to be able to play all sounds, from memory
 	initiateSystemNotification()
 	initiateInvalidNotification()
+	initiateUserNeedToRespond()
 
 }
 
@@ -127,32 +170,6 @@ func initiateSystemNotification() {
 		panic("mp3.NewDecoder failed: " + err.Error())
 	}
 
-	// Prepare an Oto context (this will use your default audio device) that will
-	// play all our sounds. Its configuration can't be changed later.
-
-	var op *oto.NewContextOptions
-	op = &oto.NewContextOptions{}
-
-	// Usually 44100 or 48000. Other values might cause distortions in Oto
-	op.SampleRate = 44100
-
-	// Number of channels (aka locations) to play sounds from. Either 1 or 2.
-	// 1 is mono sound, and 2 is stereo (most speakers are stereo).
-	op.ChannelCount = 2
-
-	// Format of the source. go-mp3's format is signed 16bit integers.
-	op.Format = oto.FormatSignedInt16LE
-
-	// Remember that you should **not** create more than one context
-	//var otoCtx *oto.Context
-	var readyChan chan struct{}
-	otoCtx, readyChan, err = oto.NewContext(op)
-	if err != nil {
-		panic("oto.NewContext failed: " + err.Error())
-	}
-	// It might take a bit for the hardware audio devices to be ready, so we wait on the channel.
-	<-readyChan
-
 	// Create a new 'player' that will handle our sound. Paused by default.
 	//var player *oto.Player
 	systemNotificationPlayer = otoCtx.NewPlayer(decodedMp3)
@@ -174,35 +191,30 @@ func initiateInvalidNotification() {
 		panic("mp3.NewDecoder failed: " + err.Error())
 	}
 
-	// Prepare an Oto context (this will use your default audio device) that will
-	// play all our sounds. Its configuration can't be changed later.
-
-	var op *oto.NewContextOptions
-	op = &oto.NewContextOptions{}
-
-	// Usually 44100 or 48000. Other values might cause distortions in Oto
-	op.SampleRate = 44100
-
-	// Number of channels (aka locations) to play sounds from. Either 1 or 2.
-	// 1 is mono sound, and 2 is stereo (most speakers are stereo).
-	op.ChannelCount = 2
-
-	// Format of the source. go-mp3's format is signed 16bit integers.
-	op.Format = oto.FormatSignedInt16LE
-
-	// Remember that you should **not** create more than one context
-	//var otoCtx *oto.Context
-	var readyChan chan struct{}
-	otoCtx, readyChan, err = oto.NewContext(op)
-	if err != nil {
-		panic("oto.NewContext failed: " + err.Error())
-	}
-	// It might take a bit for the hardware audio devices to be ready, so we wait on the channel.
-	<-readyChan
-
 	// Create a new 'player' that will handle our sound. Paused by default.
 	//var player *oto.Player
 	invalidNotificationPlayer = otoCtx.NewPlayer(decodedMp3)
+
+}
+
+func initiateUserNeedToRespond() {
+
+	var err error
+
+	// Convert the pure bytes into a reader object that can be used with the mp3 decoder
+	var fileBytesReader *bytes.Reader
+	fileBytesReader = bytes.NewReader(userNeedToRespondAsByteArray)
+
+	// Decode file
+	var decodedMp3 *mp3.Decoder
+	decodedMp3, err = mp3.NewDecoder(fileBytesReader)
+	if err != nil {
+		panic("mp3.NewDecoder failed: " + err.Error())
+	}
+
+	// Create a new 'player' that will handle our sound. Paused by default.
+	//var player *oto.Player
+	userNeedToRespondPlayer = otoCtx.NewPlayer(decodedMp3)
 
 }
 
@@ -210,9 +222,6 @@ func initiateInvalidNotification() {
 func playSystemNotification() {
 
 	var err error
-
-	// Initiate sound engine if that not has been done
-	initSoundEngine()
 
 	// Restart from the beginning (or go to any location in the sound) using seek
 	//_, err = systemNotificationPlayer.(io.Seeker).Seek(0, io.SeekStart) //newPos
@@ -225,9 +234,9 @@ func playSystemNotification() {
 	systemNotificationPlayer.Play()
 
 	// We can wait for the sound to finish playing using something like this
-	//for systemNotificationPlayer.IsPlaying() {
-	//	time.Sleep(time.Millisecond)
-	//}
+	for systemNotificationPlayer.IsPlaying() {
+		time.Sleep(time.Millisecond)
+	}
 
 }
 
@@ -235,9 +244,6 @@ func playSystemNotification() {
 func playInvalidNotification() {
 
 	var err error
-
-	// Initiate sound engine if that not has been done
-	initSoundEngine()
 
 	// Restart from the beginning (or go to any location in the sound) using seek
 	//_, err = systemNotificationPlayer.(io.Seeker).Seek(0, io.SeekStart) //newPos
@@ -250,8 +256,30 @@ func playInvalidNotification() {
 	invalidNotificationPlayer.Play()
 
 	// We can wait for the sound to finish playing using something like this
-	//for systemNotificationPlayer.IsPlaying() {
-	//	time.Sleep(time.Millisecond)
-	//}
+	for systemNotificationPlayer.IsPlaying() {
+		time.Sleep(time.Millisecond)
+	}
+
+}
+
+// Play the User Need to Respond Sound
+func playUserNeedToRespond() {
+
+	var err error
+
+	// Restart from the beginning (or go to any location in the sound) using seek
+	//_, err = systemNotificationPlayer.(io.Seeker).Seek(0, io.SeekStart) //newPos
+	_, err = invalidNotificationPlayer.Seek(0, io.SeekStart) //newPos
+	if err != nil {
+		panic("player.Seek failed: " + err.Error())
+	}
+
+	// Play starts playing the sound and returns without waiting for it (Play() is async).
+	userNeedToRespondPlayer.Play()
+
+	// We can wait for the sound to finish playing using something like this
+	for systemNotificationPlayer.IsPlaying() {
+		time.Sleep(time.Millisecond)
+	}
 
 }

@@ -445,7 +445,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) closeTestCaseTabBasedOnTe
 
 		fyne.CurrentApp().SendNotification(&fyne.Notification{
 			Title:   "TestCase Closed",
-			Content: "The TestCase was closed without sny changes were saved",
+			Content: "The TestCase was closed without to be saved",
 		})
 
 	} else {

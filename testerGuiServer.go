@@ -9,6 +9,7 @@ import (
 	"FenixTesterGui/gui"
 	"FenixTesterGui/messageStreamEngine"
 	"FenixTesterGui/restAPI"
+	"FenixTesterGui/soundEngine"
 	"context"
 	"errors"
 	"fmt"
@@ -139,6 +140,12 @@ func fenixGuiBuilderServerMain() {
 
 	// Clean up when leaving. Is placed after logger because shutdown logs information
 	defer cleanup()
+
+	// Initiate SoundEngine
+	soundEngine.InitSoundEngine()
+
+	// Close down SoundEngine when leaving
+	defer soundEngine.CloseDownSoundEngine()
 
 	// Start Backend gRPC-server
 	go fenixTesterGuiObject.subPackageObjects.grpcIn.InitGrpcServer()

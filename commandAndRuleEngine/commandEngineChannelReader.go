@@ -123,8 +123,6 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSave
 
 	}
 
-	fmt.Println(fmt.Sprintf("TestCase '%s' was saved in Cloud-DB", currentTestCaseUuid))
-
 	// Extract the current TestCase UI model
 	testCase_Model, existsInMap := commandAndRuleEngine.Testcases.TestCases[currentTestCaseUuid]
 	if existsInMap == false {
@@ -154,6 +152,16 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSave
 	}
 
 	tabName = tabName + " [" + shortUUid + "]"
+
+	// Notify the user that the TestCase was Saved
+
+	// Trigger System Notification sound
+	soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
+
+	fyne.CurrentApp().SendNotification(&fyne.Notification{
+		Title:   "TestCase Save",
+		Content: tabName + " was successfully save in database",
+	})
 
 	// Send 'update TestCase name for Tab' command over channel
 	outgoingChannelCommandGraphicsUpdatedData := sharedCode.ChannelCommandGraphicsUpdatedStruct{

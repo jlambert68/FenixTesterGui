@@ -5,6 +5,7 @@ import (
 	"FenixTesterGui/executions/detailedExecutionsModel"
 	"FenixTesterGui/executions/executionsModelForSubscriptions"
 	"FenixTesterGui/grpc_out_GuiExecutionServer"
+	"FenixTesterGui/soundEngine"
 	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
@@ -305,6 +306,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 
 	// Notify User that the TestCase is execution
 	// Notify the user
+
+	// Trigger System Notification sound
+	soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
+
 	fyne.CurrentApp().SendNotification(&fyne.Notification{
 		Title:   "TestCase Execution",
 		Content: "The TestCase is sent for Execution. See execution Tab for status.",

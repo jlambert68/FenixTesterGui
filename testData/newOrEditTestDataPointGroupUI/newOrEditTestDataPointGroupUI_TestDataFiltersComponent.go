@@ -1,6 +1,7 @@
 package newOrEditTestDataPointGroupUI
 
 import (
+	"FenixTesterGui/soundEngine"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -298,6 +299,10 @@ func generateTestDataSelectionsUIComponent(
 		// Verify that Domain is selected
 		if len(domainsSelect.Selected) == 0 {
 			//  Notify the user
+
+			// Trigger System Notification sound
+			soundEngine.PlaySoundChannel <- soundEngine.InvalidNotificationSound
+
 			fyne.CurrentApp().SendNotification(&fyne.Notification{
 				Title:   "Warning",
 				Content: "A Domain must be selected",
@@ -309,6 +314,10 @@ func generateTestDataSelectionsUIComponent(
 		// Verify that TestDataArea is selected
 		if len(testAreaSelect.Selected) == 0 {
 			// Notify the user
+
+			// Trigger System Notification sound
+			soundEngine.PlaySoundChannel <- soundEngine.InvalidNotificationSound
+
 			fyne.CurrentApp().SendNotification(&fyne.Notification{
 				Title:   "Warning",
 				Content: "A TestDataArea must be selected",

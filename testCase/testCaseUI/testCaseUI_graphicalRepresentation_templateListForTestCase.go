@@ -3,6 +3,7 @@ package testCaseUI
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/importFilesFromGitHub"
+	"FenixTesterGui/soundEngine"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testCase/testCaseUI/templateViewer"
 	"fyne.io/fyne/v2"
@@ -138,6 +139,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 				"testCaseUuid": testCaseUuid,
 			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
 		}
+
+		// Trigger System Notification sound
+		soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
 
 		fyne.CurrentApp().SendNotification(&fyne.Notification{
 			Title:   "Check if Templates are changed",

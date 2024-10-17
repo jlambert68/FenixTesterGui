@@ -2,6 +2,7 @@ package testCaseUI
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/soundEngine"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -71,12 +72,22 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectF
 			var foundTestCase bool
 			var testCaseName string
 
+			// If only the "Home-tab" is left then play "angry sound"
+			if testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid == "" {
+
+				// Trigger Invalid Notification sound
+				soundEngine.PlaySoundChannel <- soundEngine.InvalidNotificationSound
+
+				return
+			}
+
 			// Loop Map with TestCase-tabs to find relation between TabItem and UUID
 			for _, tempTestCaseUITabRefToTestCaseUuidMapStructObject := range testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap {
 
 				// Is this the TestCaseUuid we are looking for
 				if tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUuid == testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid {
 					testCaseName = tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUiTabRef.Text
+					foundTestCase = true
 					break
 				}
 			}

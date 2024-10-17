@@ -2,6 +2,7 @@ package templateViewer
 
 import (
 	"FenixTesterGui/importFilesFromGitHub"
+	"FenixTesterGui/soundEngine"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
@@ -210,6 +211,10 @@ func InitiateTemplateViewer(
 		clipboard.SetContent(templateText)
 
 		// Notify the user
+
+		// Trigger System Notification sound
+		soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
+
 		fyne.CurrentApp().SendNotification(&fyne.Notification{
 			Title:   "Clipboard",
 			Content: "Template copied to clipboard!",
@@ -227,6 +232,10 @@ func InitiateTemplateViewer(
 		clipboard.SetContent(templateText)
 
 		// Notify the user
+
+		// Trigger System Notification sound
+		soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
+
 		fyne.CurrentApp().SendNotification(&fyne.Notification{
 			Title:   "Clipboard",
 			Content: "Template - with values- copied to clipboard!",

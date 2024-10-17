@@ -2,6 +2,7 @@ package testCaseUI
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/soundEngine"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testCases/listTestCasesUI"
 	"errors"
@@ -325,6 +326,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 				return
 			} else {
 				// Delete date is in the future so only Notify That testCase is set to bed deleted in the future
+
+				// Trigger System Notification sound
+				soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
+
 				fyne.CurrentApp().SendNotification(&fyne.Notification{
 					Title: "TestCase Deleted",
 					Content: fmt.Sprintf("The TestCase was set to Deleted in the future (%s)",
@@ -386,9 +391,13 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) closeTestCaseTabBasedOnTe
 			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
 		}
 
+		fmt.Println("TabIndex: ", testCasesUiCanvasObject.TestCasesTabs.SelectedIndex())
+
 		// Remove the Tab with the TestCase UI-objects
 		testCasesUiCanvasObject.TestCasesTabs.Remove(tabReference)
 		//testCasesUiCanvasObject.TestCasesTabs.Refresh()
+
+		fmt.Println("TabIndex: ", testCasesUiCanvasObject.TestCasesTabs.SelectedIndex())
 
 		// Remove TestCase from UI-map
 		delete(testCasesUiCanvasObject.TestCasesUiModelMap,
@@ -403,13 +412,20 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) closeTestCaseTabBasedOnTe
 		var foundPreviousTestCaseTab bool
 		for _, tempTestCaseUITabRefToTestCaseUuidMapStructObject := range testCasesUiCanvasObject.TestCaseUITabRefToTestCaseUuidMap {
 
-			// Is this the TestCaseUuid we are looking for
-			if tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUiTabRef == previousTabReference {
-				foundPreviousTestCaseTab = true
-				testCaseUuidToSwitchTo = tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUuid
+			// When 'previousTabReference' is nil then there only "Home"-tab left
+			if previousTabReference == nil {
+				testCaseUuidToSwitchTo = ""
 				break
-			}
 
+			} else {
+
+				// Is this the TestCaseUuid we are looking for
+				if tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUiTabRef == previousTabReference {
+					foundPreviousTestCaseTab = true
+					testCaseUuidToSwitchTo = tempTestCaseUITabRefToTestCaseUuidMapStructObject.TestCaseUuid
+					break
+				}
+			}
 		}
 
 		// Delete tab from TabReference-map
@@ -423,6 +439,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) closeTestCaseTabBasedOnTe
 		}
 
 		// Delete date is in the future so only Notify That testCase is set to bed deleted in the future
+
+		// Trigger System Notification sound
+		soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
+
 		fyne.CurrentApp().SendNotification(&fyne.Notification{
 			Title:   "TestCase Closed",
 			Content: "The TestCase was closed without sny changes were saved",

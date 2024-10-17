@@ -2,6 +2,7 @@ package testCaseUI
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/soundEngine"
 	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
@@ -123,6 +124,10 @@ func flashScreen(mainApp fyne.App, mainWindow fyne.Window) {
 	mainWindow.Show()
 
 	// Notify That testCase is deleted per today
+
+	// Trigger System Notification sound
+	soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
+
 	fyne.CurrentApp().SendNotification(&fyne.Notification{
 		Title:   "TestCase Deleted",
 		Content: "The TestCase was set to Deleted in the Database!",

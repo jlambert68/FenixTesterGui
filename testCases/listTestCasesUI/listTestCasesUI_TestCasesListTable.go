@@ -3,6 +3,7 @@ package listTestCasesUI
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/detailedExecutionsModel"
+	"FenixTesterGui/soundEngine"
 	"FenixTesterGui/testCase/testCaseModel"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -102,6 +103,10 @@ func (l *clickableLabel) TappedSecondary(*fyne.PointEvent) {
 	clipboard.SetContent(l.Text)
 
 	// Notify the user
+
+	// Trigger System Notification sound
+	soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
+
 	fyne.CurrentApp().SendNotification(&fyne.Notification{
 		Title:   "Clipboard",
 		Content: fmt.Sprintf("'%s' copied to clipboard!", l.Text),

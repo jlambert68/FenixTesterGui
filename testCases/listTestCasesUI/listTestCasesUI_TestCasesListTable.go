@@ -3,161 +3,24 @@ package listTestCasesUI
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/detailedExecutionsModel"
-	"FenixTesterGui/soundEngine"
 	"FenixTesterGui/testCase/testCaseModel"
+	"bytes"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"github.com/sirupsen/logrus"
 	"image/color"
+	"image/png"
+	"sort"
 	"strconv"
-	"time"
 )
 
-type clickableLabel struct {
-	widget.Label
-	onDoubleTap         func()
-	lastTapTime         time.Time
-	isClickable         bool
-	currentRow          int16
-	currentTestCaseUuid string
-	background          *canvas.Rectangle
-	testCasesModel      *testCaseModel.TestCasesModelsStruct
-	textInsteadOfLabel  *canvas.Text
-}
-
-func newClickableLabel(text string, onDoubleTap func(), tempIsClickable bool,
-	testCasesModel *testCaseModel.TestCasesModelsStruct) *clickableLabel {
-
-	l := &clickableLabel{
-		Label:       widget.Label{Text: text},
-		onDoubleTap: onDoubleTap,
-		lastTapTime: time.Now(),
-		isClickable: tempIsClickable,
-		currentRow:  -1}
-
-	l.background = canvas.NewRectangle(color.Transparent)
-	l.testCasesModel = testCasesModel
-	l.currentTestCaseUuid = ""
-
-	l.ExtendBaseWidget(l)
-
-	l.textInsteadOfLabel = &canvas.Text{
-		Alignment: fyne.TextAlignCenter,
-		Color: color.RGBA{
-			R: 0x00,
-			G: 0x00,
-			B: 0x00,
-			A: 0xFF,
-		},
-		Text:     "",
-		TextSize: theme.TextSize(),
-		TextStyle: fyne.TextStyle{
-			Bold:      false,
-			Italic:    false,
-			Monospace: false,
-			Symbol:    false,
-			TabWidth:  0,
-		},
-	}
-	return l
-
-}
-
-func (l *clickableLabel) Tapped(e *fyne.PointEvent) {
-	if l.isClickable == false {
-		return
-	}
-
-	if time.Since(l.lastTapTime) < 500*time.Millisecond {
-		if l.onDoubleTap != nil {
-			l.onDoubleTap()
-
-			l.lastTapTime = time.Now()
-
-			return
-		}
-	}
-
-	l.lastTapTime = time.Now()
-
-	// Update TestCase Preview
-	GenerateTestCasePreviewContainer(l.currentTestCaseUuid, l.testCasesModel)
-	testCaseThatIsShownInPreview = l.currentTestCaseUuid
-	testCaseListTable.Refresh()
-
-}
-
-// TappedSecondary
-// Implement if you need right-click (secondary tap) actions.
-func (l *clickableLabel) TappedSecondary(*fyne.PointEvent) {
-	if l.isClickable == false {
-		return
-	}
-
-	fenixMasterWindow := *sharedCode.FenixMasterWindowPtr
-	clipboard := fenixMasterWindow.Clipboard()
-	clipboard.SetContent(l.Text)
-
-	// Notify the user
-
-	// Trigger System Notification sound
-	soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
-
-	fyne.CurrentApp().SendNotification(&fyne.Notification{
-		Title:   "Clipboard",
-		Content: fmt.Sprintf("'%s' copied to clipboard!", l.Text),
-	})
-
-}
-
-func (l *clickableLabel) MouseIn(*desktop.MouseEvent) {
-
-	if l.isClickable == false {
-		return
-	}
-
-	// Hinder concurrent setting of variable
-	currentRowThatMouseIsHoveringAboveMutex.Lock()
-
-	// Set current TestCaseUuid to be highlighted
-	currentRowThatMouseIsHoveringAbove = l.currentRow
-
-	// Release variable
-	currentRowThatMouseIsHoveringAboveMutex.Unlock()
-
-	l.TextStyle = fyne.TextStyle{Bold: true}
-	l.Refresh()
-	testCaseListTable.Refresh()
-
-}
-func (l *clickableLabel) MouseMoved(*desktop.MouseEvent) {}
-func (l *clickableLabel) MouseOut() {
-
-	if l.isClickable == false {
-		return
-	}
-
-	// Hinder concurrent setting of variable
-	currentRowThatMouseIsHoveringAboveMutex.Lock()
-
-	// Set current TestCaseUuid to be highlighted
-	currentRowThatMouseIsHoveringAbove = -1
-
-	// Release variable
-	currentRowThatMouseIsHoveringAboveMutex.Unlock()
-
-	l.TextStyle = fyne.TextStyle{Bold: false}
-	l.Refresh()
-	testCaseListTable.Refresh()
-
-}
-
+// RemoveTestCaseFromList
 // Remove a TestCase from the List
-func RemoveTestCaseFromlList(testCaseUuidToBeRemoved string, testCasesModel *testCaseModel.TestCasesModelsStruct) {
+func RemoveTestCaseFromList(testCaseUuidToBeRemoved string, testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
 	// Delete TestCase from 'TestCasesThatCanBeEditedByUserMap'
 	delete(testCasesModel.TestCasesThatCanBeEditedByUserMap, testCaseUuidToBeRemoved)
@@ -199,9 +62,59 @@ func generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStr
 		},
 	)
 
+	var err error
+
+	// Load the Image, not active, for sort direction if not already done
+	if sortImageUnspecifiedAsImage == nil {
+		sortImageUnspecifiedAsImage, err = png.Decode(bytes.NewReader(sortUnspecifiedImageAsByteArray))
+		if err != nil {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"Id":  "7b887b6e-9c90-4b4c-bc53-a5a750a463cb",
+				"err": err,
+			}).Fatalln("Failed to decode 'sortUnspecifiedImageAsByteArray'")
+		}
+	}
+
+	// Load the Image, ascending, for sort direction if not already done
+	if sortImageAscendingAsImage == nil {
+		sortImageAscendingAsImage, err = png.Decode(bytes.NewReader(sortImageAscendingAsByteArray))
+		if err != nil {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"Id":  "1e2e622c-afe1-45af-ac01-e2f0ef716b20",
+				"err": err,
+			}).Fatalln("Failed to decode 'sortImageAscendingAsByteArray'")
+		}
+	}
+
+	// Load the Image, descending, for sort direction if not already done
+	if sortImageUnspecifiedAsImage == nil {
+		sortImageDescendingAsImage, err = png.Decode(bytes.NewReader(sortImageDescendingAsByteArray))
+		if err != nil {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"Id":  "a3826074-308d-4504-8695-85c95aba5eb3",
+				"err": err,
+			}).Fatalln("Failed to decode 'sortImageDescendingAsByteArray'")
+		}
+	}
+
+	// Define the Header
 	testCaseListTable.ShowHeaderRow = true
 	testCaseListTable.CreateHeader = func() fyne.CanvasObject {
-		return widget.NewLabel("") // Create cells as labels
+		//return widget.NewLabel("") // Create cells as labels
+
+		var tempNewSortableHeaderLabel *sortableHeaderLabel
+		tempNewSortableHeaderLabel = newSortableHeaderLabel("", true, 0)
+
+		// Create the Sort Icons container
+		var newSortIconsContainer *fyne.Container
+		newSortIconsContainer = container.NewStack(tempNewSortableHeaderLabel.sortImage.unspecifiedImageContainer, tempNewSortableHeaderLabel.sortImage)
+
+		var newSortableHeaderLabelContainer *fyne.Container
+		newSortableHeaderLabelContainer = container.NewHBox(
+			widget.NewLabel(tempNewSortableHeaderLabel.Text), newSortIconsContainer) //canvas.NewImageFromImage(sortImageUnspecifiedAsImage)) //tempNewSortableHeaderLabel.sortImage)
+
+		return newSortableHeaderLabelContainer
+
 	}
 
 	updateTestCasesListTable(testCasesModel)
@@ -217,7 +130,7 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 	}
 	testCaseListTable.CreateCell = func() fyne.CanvasObject {
 
-		tempNewClickableLabel := newClickableLabel("", func() {}, false, testCasesModel)
+		tempNewClickableLabel := newClickableTableLabel("", func() {}, false, testCasesModel)
 		tempContainer := container.NewStack(canvas.NewRectangle(color.Transparent), tempNewClickableLabel, tempNewClickableLabel.textInsteadOfLabel)
 
 		return tempContainer
@@ -226,7 +139,7 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 	testCaseListTable.UpdateCell = func(id widget.TableCellID, cell fyne.CanvasObject) {
 
 		clickableContainer := cell.(*fyne.Container)
-		clickable := clickableContainer.Objects[1].(*clickableLabel)
+		clickable := clickableContainer.Objects[1].(*clickableTableLabel)
 		rectangle := clickableContainer.Objects[0].(*canvas.Rectangle)
 		clickable.SetText(testCaseListTableTable[id.Row][id.Col])
 		clickable.isClickable = true
@@ -334,10 +247,25 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 
 	}
 
+	// Update the Header
 	testCaseListTable.UpdateHeader = func(id widget.TableCellID, cell fyne.CanvasObject) {
-		clickable := cell.(*widget.Label)
-		clickable.SetText(testCaseListTableHeader[id.Col])
-		clickable.TextStyle = fyne.TextStyle{Bold: true}
+		//clickable := cell.(*widget.Label)
+		//clickable.SetText(testCaseListTableHeader[id.Col])
+		//clickable.TextStyle = fyne.TextStyle{Bold: true}
+
+		// Set Header Text
+		tempSortableHeaderLabel := cell.(*fyne.Container).Objects[0].(*widget.Label)
+		tempSortableHeaderLabel.SetText(testCaseListTableHeader[id.Col])
+		tempSortableHeaderLabel.TextStyle = fyne.TextStyle{Bold: true}
+
+		// Set Column number
+		tempSortableHeaderColumnNumber := cell.(*fyne.Container).Objects[0]
+		// Set correct SortIconImage
+		//tempClickableSortImage := cell.(*fyne.Container).Objects[1].(*clickableSortImage)
+		//image := canvas.NewImageFromImage(sortImageUnspecifiedAsImage)
+		//image.FillMode = canvas.ImageFillContain // Ens
+		//tempClickableSortImage.unspecifiedImageContainer = container.NewStack(image)
+
 	}
 
 	testCaseListTable.Refresh()
@@ -361,8 +289,8 @@ func calculateAndSetCorrectColumnWidths() {
 	// Set initial value for max width size
 	for index, headerValue := range testCaseListTableHeader {
 
-		// Calculate the column width base on this value
-		columnWidth = fyne.MeasureText(headerValue, theme.TextSize(), fyne.TextStyle{Bold: true}).Width
+		// Calculate the column width base on this value. Add  'float32(30)' to give room for sort direction icon
+		columnWidth = fyne.MeasureText(headerValue, theme.TextSize(), fyne.TextStyle{Bold: true}).Width + float32(30) //
 		columnsMaxSizeSlice[index] = columnWidth
 	}
 
@@ -485,54 +413,53 @@ func loadTestCaseListTableTable(testCasesModel *testCaseModel.TestCasesModelsStr
 
 	}
 
-}
+	// Do an initial sort 'testCaseListTableTable' descending on 'LastSavedTimeStamp'
+	if testCasesModel.TestCasesThatCanBeEditedByUserSlice != nil &&
+		len(testCasesModel.TestCasesThatCanBeEditedByUserSlice) > 0 {
 
-type customLabel struct {
-	widget.Label
-	onDoubleTap func()
-	lastTap     time.Time
-}
+		sort2DStringSlice(testCaseListTableTable, initialColumnToSortOn, initialSortDirectionForInitialColumnToSortOn)
 
-func newCustomLabel(text string, onDoubleTap func()) *customLabel {
-	l := &customLabel{Label: widget.Label{Text: text}, onDoubleTap: onDoubleTap, lastTap: time.Now()}
-	l.ExtendBaseWidget(l)
-	return l
-}
-
-func (l *customLabel) Tapped(e *fyne.PointEvent) {
-	now := time.Now()
-	if now.Sub(l.lastTap) < 500*time.Millisecond { // 500 ms as double-click interval
-		if l.onDoubleTap != nil {
-			l.onDoubleTap()
-		}
 	}
-	l.lastTap = now
+
 }
 
-func (l *customLabel) TappedSecondary(*fyne.PointEvent) {
-	// Implement if you need right-click (secondary tap) actions.
+// Sort2DStringSlice sorts a 2D string slice by a specified column index.
+// It assumes that the column index is valid for all rows in the slice.
+func sort2DStringSlice(data [][]string, columnToSortOn int, sortingDirection SortingDirectionType) {
+	sort.Slice(data, func(i, j int) bool {
+		// Adjust the sorting logic as needed.
+		// In this case, sorting lexicographically based on the given columnToSortOn
+		// You can modify this to handle numeric sorting, etc.
+
+		// Example: sorting as numbers, if needed.
+		// First, try to convert strings to integers. If it fails, fall back to string comparison.
+		num1, err1 := strconv.Atoi(data[i][columnToSortOn])
+		num2, err2 := strconv.Atoi(data[j][columnToSortOn])
+
+		// Handle sorting direction
+		switch sortingDirection {
+
+		case SortingDirectionAscending:
+
+			if err1 == nil && err2 == nil {
+				return num1 < num2
+			}
+
+			// Default to string comparison if not numbers.
+			return data[i][columnToSortOn] < data[j][columnToSortOn]
+
+		case SortingDirectionDescending:
+
+			if err1 == nil && err2 == nil {
+				return num1 > num2
+			}
+
+			// Default to string comparison if not numbers.
+			return data[i][columnToSortOn] > data[j][columnToSortOn]
+		}
+
+		// Not important due that switch statement will handle all return values
+		return true
+
+	})
 }
-
-func (l *customLabel) MouseIn(*desktop.MouseEvent)    {}
-func (l *customLabel) MouseMoved(*desktop.MouseEvent) {}
-func (l *customLabel) MouseOut()                      {}
-
-/*
-type coloredLabelItem struct {
-	text  string
-	color color.Color
-}
-
-func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) newColoredLabelItem(text string, color color.Color) *coloredLabelItem {
-	return &coloredLabelItem{text: text, color: color}
-}
-
-func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) (item *coloredLabelItem) CreateRenderer() fyne.WidgetRenderer {
-	label := widget.NewLabel(item.text)
-	label.color = item.color
-	label.Refresh()
-
-	return widget.NewSimpleRenderer(label)
-}
-
-*/

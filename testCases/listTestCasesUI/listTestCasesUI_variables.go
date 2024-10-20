@@ -57,3 +57,28 @@ var TestCaseListAndTestCasePreviewSplitContainer *container.Split
 
 // The TestCase that is shown in Preview
 var testCaseThatIsShownInPreview string
+
+// SortingDirectionType
+// Define type for Sorting Direction
+type SortingDirectionType uint8
+
+const (
+	SortingDirectionUnSpecified SortingDirectionType = iota
+	SortingDirectionAscending
+	SortingDirectionDescending
+)
+
+// Define initial SortDirection for when the Table is first shown to use
+const (
+	initialSortDirectionForInitialColumnToSortOn SortingDirectionType = SortingDirectionDescending
+	initialColumnToSortOn                        int                  = 7
+)
+
+// The current column that the TestCase-list is sorted on
+var currentSortColumn int
+
+// The current Columns SortDirect
+var currentSortColumnsSortDirection SortingDirectionType
+
+// The previous column that the TestCase-list is sorted on
+var previousSortColumn int

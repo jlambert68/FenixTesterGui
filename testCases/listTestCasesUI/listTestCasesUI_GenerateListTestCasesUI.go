@@ -31,6 +31,18 @@ var imageData_tic_parallellImage image.Image
 var tic_serialImage []byte
 var imageData_tic_serialImage image.Image
 
+//go:embed resources/sort_cropped_32x51.png
+var sortUnspecifiedImageAsByteArray []byte
+var sortImageUnspecifiedAsImage image.Image
+
+//go:embed resources/sort-up-ascending_cropped_32x51.png
+var sortImageAscendingAsByteArray []byte
+var sortImageAscendingAsImage image.Image
+
+//go:embed resources/sort-down-descending_cropped_32x51.png
+var sortImageDescendingAsByteArray []byte
+var sortImageDescendingAsImage image.Image
+
 // Create the UI used for list all TestCases that the User can edit
 func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct) (listTestCasesUI fyne.CanvasObject) {
 

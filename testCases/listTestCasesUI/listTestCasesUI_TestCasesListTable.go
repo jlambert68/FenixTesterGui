@@ -102,18 +102,18 @@ func generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStr
 	testCaseListTable.CreateHeader = func() fyne.CanvasObject {
 		//return widget.NewLabel("") // Create cells as labels
 
-		var tempNewSortableHeaderLabel *sortableHeaderLabel
+		var tempNewSortableHeaderLabel *sortableHeaderLabelStruct
 		tempNewSortableHeaderLabel = newSortableHeaderLabel("", true, 0)
 
 		// Create the Sort Icons container
-		var newSortIconsContainer *fyne.Container
-		newSortIconsContainer = container.NewStack(tempNewSortableHeaderLabel.sortImage.unspecifiedImageContainer, tempNewSortableHeaderLabel.sortImage)
+		//var newSortIconsContainer *fyne.Container
+		//newSortIconsContainer = container.NewStack(tempNewSortableHeaderLabel.sortImage.unspecifiedImageContainer, tempNewSortableHeaderLabel.sortImage)
 
-		var newSortableHeaderLabelContainer *fyne.Container
-		newSortableHeaderLabelContainer = container.NewHBox(
-			widget.NewLabel(tempNewSortableHeaderLabel.Text), newSortIconsContainer) //canvas.NewImageFromImage(sortImageUnspecifiedAsImage)) //tempNewSortableHeaderLabel.sortImage)
+		//var newSortableHeaderLabelContainer *fyne.Container
+		//newSortableHeaderLabelContainer = container.NewHBox(
+		//	widget.NewLabel(tempNewSortableHeaderLabel.Text), newSortIconsContainer) //canvas.NewImageFromImage(sortImageUnspecifiedAsImage)) //tempNewSortableHeaderLabel.sortImage)
 
-		return newSortableHeaderLabelContainer
+		return tempNewSortableHeaderLabel
 
 	}
 
@@ -249,23 +249,17 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 
 	// Update the Header
 	testCaseListTable.UpdateHeader = func(id widget.TableCellID, cell fyne.CanvasObject) {
-		//clickable := cell.(*widget.Label)
-		//clickable.SetText(testCaseListTableHeader[id.Col])
-		//clickable.TextStyle = fyne.TextStyle{Bold: true}
-
-		// Set Header Text
-		tempSortableHeaderLabel := cell.(*fyne.Container).Objects[0].(*widget.Label)
-		tempSortableHeaderLabel.SetText(testCaseListTableHeader[id.Col])
-		tempSortableHeaderLabel.TextStyle = fyne.TextStyle{Bold: true}
+		tempSortableHeaderLabel := cell.(*sortableHeaderLabelStruct)
+		tempSortableHeaderLabel.label.SetText(testCaseListTableHeader[id.Col])
+		tempSortableHeaderLabel.label.TextStyle = fyne.TextStyle{Bold: true}
 
 		// Set Column number
-		tempSortableHeaderColumnNumber := cell.(*fyne.Container).Objects[0]
-		// Set correct SortIconImage
-		//tempClickableSortImage := cell.(*fyne.Container).Objects[1].(*clickableSortImage)
-		//image := canvas.NewImageFromImage(sortImageUnspecifiedAsImage)
-		//image.FillMode = canvas.ImageFillContain // Ens
-		//tempClickableSortImage.unspecifiedImageContainer = container.NewStack(image)
+		tempSortableHeaderLabel.columnNumber = id.Col
+		tempSortableHeaderLabel.latestSelectedSortOrder = SortingDirectionAscending
+		tempSortableHeaderLabel.updateColumnNumberFunction()
 
+		// Refresh the widget to update the UI
+		tempSortableHeaderLabel.Refresh()
 	}
 
 	testCaseListTable.Refresh()

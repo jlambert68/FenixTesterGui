@@ -77,8 +77,12 @@ const (
 // The current column that the TestCase-list is sorted on
 var currentSortColumn int
 
+// The previous column that the TestCase-list was sorted on
+var previousSortColumn int
+
+var currentHeader *sortableHeaderLabelStruct
+
+var previousHeader *sortableHeaderLabelStruct
+
 // The current Columns SortDirect
 var currentSortColumnsSortDirection SortingDirectionType
-
-// The previous column that the TestCase-list is sorted on
-var previousSortColumn int

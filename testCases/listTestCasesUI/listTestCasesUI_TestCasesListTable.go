@@ -87,7 +87,7 @@ func generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStr
 	}
 
 	// Load the Image, descending, for sort direction if not already done
-	if sortImageUnspecifiedAsImage == nil {
+	if sortImageDescendingAsImage == nil {
 		sortImageDescendingAsImage, err = png.Decode(bytes.NewReader(sortImageDescendingAsByteArray))
 		if err != nil {
 			sharedCode.Logger.WithFields(logrus.Fields{
@@ -255,8 +255,10 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 
 		// Set Column number
 		tempSortableHeaderLabel.columnNumber = id.Col
-		tempSortableHeaderLabel.latestSelectedSortOrder = SortingDirectionAscending
-		tempSortableHeaderLabel.updateColumnNumberFunction()
+		tempSortableHeaderLabel.sortImage.headerColumnNumber = id.Col
+
+		//tempSortableHeaderLabel.latestSelectedSortOrder = SortingDirectionAscending
+		//tempSortableHeaderLabel.updateColumnNumberFunction()
 
 		// Refresh the widget to update the UI
 		tempSortableHeaderLabel.Refresh()

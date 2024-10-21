@@ -41,7 +41,13 @@ func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNu
 				previousSortColumn = currentSortColumn
 				currentSortColumn = tempSortableHeaderLabel.columnNumber
 
-				previousHeader = currentHeader
+				if currentHeader != nil {
+					previousHeader = currentHeader
+					previousHeader.sortImage.unspecifiedImageContainer.Show()
+					previousHeader.sortImage.ascendingImageContainer.Hide()
+					previousHeader.sortImage.descendingImageContainer.Hide()
+
+				}
 				currentHeader = tempSortableHeaderLabel
 
 				// New column so use the previous  sort-direction if that existed

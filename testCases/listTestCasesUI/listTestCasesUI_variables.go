@@ -75,7 +75,7 @@ const (
 )
 
 // The current column that the TestCase-list is sorted on
-var currentSortColumn int
+var currentSortColumn int = -1
 
 // The previous column that the TestCase-list was sorted on
 var previousSortColumn int

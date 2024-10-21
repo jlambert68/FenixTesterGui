@@ -413,6 +413,7 @@ func loadTestCaseListTableTable(testCasesModel *testCaseModel.TestCasesModelsStr
 	if testCasesModel.TestCasesThatCanBeEditedByUserSlice != nil &&
 		len(testCasesModel.TestCasesThatCanBeEditedByUserSlice) > 0 {
 
+		currentSortColumn = initialColumnToSortOn
 		sort2DStringSlice(testCaseListTableTable, initialColumnToSortOn, initialSortDirectionForInitialColumnToSortOn)
 
 	}

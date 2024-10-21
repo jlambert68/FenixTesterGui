@@ -195,11 +195,11 @@ func (r *clickableSortImage) CreateRenderer() fyne.WidgetRenderer {
 func (r *clickableSortImage) updateImageVisibility() {
 
 	// Set that Previous Header only show 'unspecifiedImageContainer'
-	if previousHeader != nil {
-		previousHeader.sortImage.unspecifiedImageContainer.Show()
-		previousHeader.sortImage.ascendingImageContainer.Hide()
-		previousHeader.sortImage.descendingImageContainer.Hide()
-	}
+	//if previousHeader != nil {
+	//	previousHeader.sortImage.unspecifiedImageContainer.Show()
+	//	previousHeader.sortImage.ascendingImageContainer.Hide()
+	//	previousHeader.sortImage.descendingImageContainer.Hide()
+	//}
 
 	// Hide all images first
 	r.unspecifiedImageContainer.Hide()

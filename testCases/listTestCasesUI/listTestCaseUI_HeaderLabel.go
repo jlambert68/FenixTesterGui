@@ -43,9 +43,19 @@ func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNu
 
 				if currentHeader != nil {
 					previousHeader = currentHeader
-					previousHeader.sortImage.unspecifiedImageContainer.Show()
-					previousHeader.sortImage.ascendingImageContainer.Hide()
-					previousHeader.sortImage.descendingImageContainer.Hide()
+
+					// Reset the previous header's sort order to Unspecified
+					previousHeader.latestSelectedSortOrder = SortingDirectionUnSpecified
+					previousHeader.sortImage.latestSelectedSortOrder = SortingDirectionUnSpecified
+
+					// Refresh the previous header's sort image and widget
+					previousHeader.sortImage.Refresh()
+					previousHeader.Refresh()
+
+					//previousHeader.sortImage.unspecifiedImageContainer.Show()
+					//previousHeader.sortImage.ascendingImageContainer.Hide()
+					//previousHeader.sortImage.descendingImageContainer.Hide()
+					//previousHeader.sortImage.Refresh()
 
 				}
 				currentHeader = tempSortableHeaderLabel
@@ -93,8 +103,10 @@ func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNu
 				}
 			}
 
+			// Update the current header's sort image
 			tempSortableHeaderLabel.sortImage.latestSelectedSortOrder = tempSortableHeaderLabel.latestSelectedSortOrder
 			tempSortableHeaderLabel.sortImage.Refresh()
+			tempSortableHeaderLabel.Refresh()
 
 			sort2DStringSlice(testCaseListTableTable, currentSortColumn, tempSortableHeaderLabel.latestSelectedSortOrder)
 			testCaseListTable.Refresh()

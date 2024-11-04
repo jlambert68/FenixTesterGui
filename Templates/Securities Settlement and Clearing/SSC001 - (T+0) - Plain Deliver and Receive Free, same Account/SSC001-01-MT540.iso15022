@@ -4,8 +4,8 @@
 :23G:NEWM
 :16S:GENL
 :16R:TRADDET
-:98A::SETT//{{Fenix.TodayShiftDay(0)}}
-:98A::TRAD//{{Fenix.TodayShiftDay(0)}}
+:98A::SETT//{{Fenix.ControlledUniqueId[](%YYYYMMDD%)}}
+:98A::TRAD//{{Fenix.ControlledUniqueId[](%YYYYMMDD%)}}
 :35B:ISIN {{SubCustodyISO15022.TestData.ISIN_Number}}
 {{SubCustodyISO15022.TestData.ISIN_Description}}
 :16S:TRADDET

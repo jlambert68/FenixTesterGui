@@ -1,4 +1,4 @@
-{1:F01{{SubCustodyISO15022.TestData.SenderBIC}}{{Fenix.ControlledUniqueId[2](%nnnn%)}}{{Fenix.ControlledUniqueId[2](%nnnnnn%)}}}{2:I542{{SubCustodyISO15022.TestData.ReceiverBIC}}}{3:{108:{{Fenix.ControlledUniqueId[](%A(16; 10)%)}}}}{4:
+{1:F01{{SubCustodyISO15022.TestData.SenderBIC}}{{Fenix.ControlledUniqueId[2](%nnnn%)}}{{Fenix.ControlledUniqueId[2](%nnnnnn%)}}}{2:I542{{SubCustodyISO15022.TestData.ReceiverBIC}}}{3:{108:{{Fenix.ControlledUniqueId[1](%nnnnnnnnnnnnnnnn%)}}}}{4:
 :16R:GENL
 :20C::SEME//{{Fenix.ControlledUniqueId[](%YYMMDD%)}}{{Fenix.ControlledUniqueId[](%hhmmss%)}}-{{Fenix.ControlledUniqueId[2](%nn%)}}
 :23G:NEWM

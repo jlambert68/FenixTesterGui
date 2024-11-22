@@ -15,7 +15,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ## TesterGui
 TesterGui is the client that the Tester use for building TestCases and TestSuites, control executions and follow up on executions.
 
-![The San Juan Mountains are beautiful!](./Documentation/FenixInception-Overview-NonDetailed-TesterGui.png "San Juan Mountains")
+![Fenix Inception - TesterGui](./Documentation/FenixInception-Overview-NonDetailed-TesterGui.png "Fenix Inception - TesterGui")
 
 TesterGui is a "fat client" and is tested on Ubuntu and Window. Though it should be able to run on Mac.
 

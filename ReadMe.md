@@ -21,30 +21,30 @@ TesterGui is a "fat client" and is tested on Ubuntu and Window. Though it should
 
 The following environment variable is needed for TesterGui to be able to run.
 
-| Environment variable                              | Example value                                                           | comment                                                         |
-|---------------------------------------------------|-------------------------------------------------------------------------|-----------------------------------------------------------------|
-| ApplicationGrpcPort                               | 6668                                                                    | Local gRPC port to trigger some functionality, used for testing |
-| AuthClientId                                      | 46368345345345-au53543bleflkfs03423dfs.apps.googleusercontent.com       |                                                                 |
-| AuthClientSecret                                  | UYGJIU-KHskjshd7HDK7sdfsdf                                              |                                                                 |
-| ExecutionLocationForFenixGuiExecutionServer       | GCP                                                                     | LOCALHOST_NODOCKER, LOCALHOST_DOCKER or GCP                     |
-| ExecutionLocationForFenixGuiTestCaseBuilderServer | GCP                                                                     | LOCALHOST_NODOCKER, LOCALHOST_DOCKER or GCP                     |
-| ExecutionLocationForThisApplication               | LOCALHOST_NODOCKER                                                      | LOCALHOST_NODOCKER, LOCALHOST_DOCKER or GCP                     |
-| FenixGuiExecutionServerAddress                    | fenixguiexecutionserver-must-be-logged-in-ffwegrgwrg-lz.a.run.app       |                                                                 |
-| FenixGuiExecutionServerPort                       | 443                                                                     |                                                                 |
-| FenixGuiTestCaseBuilderServerAddress              | fenixguitestcasebuilderserver-must-be-logged-in-ffwegrgwrg-lz.a.run.app |                                                                 |
-| FYNE_SCALE                                        | 0.8                                                                     | Scale on the screen. Less the 0.8 gives a bad look              |
-| FYNE_THEME                                        | dark                                                                    | Dark is the only one that look good                             |
-| GCPAuthentication                                 | true                                                                    | Should authentication be used towards GCP                       |
-| GcpProject                                        | mycloud-run-project                                                     | GCP project name                                                |
-| LocalServiceAccountPath                           | #                                                                       | '#' = not used                                                  |
-| ProxyServerURL                                    | #                                                                       | Address tp proxy server, if used                                |
-| RunAsTrayApplication                              | NO                                                                      | Not used at all                                                 |
-| ShouldProxyServerBeUsed                           | false                                                                   | must a proxy server be used                                     |
-| TestExecutionStatusPubSubTopicBase                | TestExecutionStatusTopic                                                |                                                                 |
-| UseNativeGcpPubSubClientLibrary                   | true                                                                    |                                                                 |
-| UseServiceAccountForGuiExecutionServer            | false                                                                   | When local service account file is used                         |
-| UseServiceAccountForGuiTestCaseBuilderServer      | false                                                                   | When local service account file is used                         |
+| Environment variable                              | Example value                                                            | comment                                                         |
+|---------------------------------------------------|--------------------------------------------------------------------------|-----------------------------------------------------------------|
+| ApplicationGrpcPort                               | 6668                                                                     | Local gRPC port to trigger some functionality, used for testing |
+| AuthClientId                                      | 944682210385-jokmr7b6fdllr6k76kfo2hagic7kfvnt.apps.googleusercontent.com |                                                                 |
+| AuthClientSecret                                  | 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                                      |                                                                 |
+| ExecutionLocationForFenixGuiExecutionServer       | LOCALHOST_NODOCKER                                                       | LOCALHOST_NODOCKER, LOCALHOST_DOCKER or GCP                     |
+| ExecutionLocationForFenixGuiTestCaseBuilderServer | LOCALHOST_NODOCKER                                                       | LOCALHOST_NODOCKER, LOCALHOST_DOCKER or GCP                     |
+| ExecutionLocationForThisApplication               | LOCALHOST_NODOCKER                                                       | LOCALHOST_NODOCKER, LOCALHOST_DOCKER or GCP                     |
+| FenixGuiExecutionServerAddress                    | 127.0.0.1                                                                |                                                                 |
+| FenixGuiExecutionServerPort                       | 6669                                                                     |                                                                 |
+| FenixGuiTestCaseBuilderServerAddress              | 127.0.0.1                                                                |                                                                 |
+| FenixGuiTestCaseBuilderServerPort                 | 6670                                                                     |                                                                 |
+| FYNE_SCALE                                        | 0.8                                                                      | Scale on the screen. Less the 0.8 gives a bad look              |
+| FYNE_THEME                                        | dark                                                                     | Dark is the only one that look good                             |
+| GCPAuthentication                                 | true                                                                     | Should authentication be used towards GCP                       |
+| GcpProject                                        | mycloud-run-project                                                      | GCP project name                                                |
+| LocalServiceAccountPath                           | #                                                                        | '#' = not used                                                  |
+| ProxyServerURL                                    | #                                                                        | Address tp proxy server, if used                                |
+| RunAsTrayApplication                              | NO                                                                       | Not used at all                                                 |
+| ShouldProxyServerBeUsed                           | false                                                                    | must a proxy server be used                                     |
+| TestExecutionStatusPubSubTopicBase                | TestExecutionStatusTopic                                                 |                                                                 |
+| UseNativeGcpPubSubClientLibrary                   | true                                                                     |                                                                 |
+| UseServiceAccountForGuiExecutionServer            | false                                                                    | When local service account file is used                         |
+| UseServiceAccountForGuiTestCaseBuilderServer      | false                                                                    | When local service account file is used                         |
 
 
-
-When an executable is created these variables are injected into the executable at build time
+When an executable is created these variables are injected into the executable at build time.

@@ -16,12 +16,12 @@ require (
 	github.com/gorilla/pat v1.0.2
 	// github.com/gorilla/sessions v1.2.2 // v1.3.0 gives session error when trying to get token from GCP
 	github.com/gorilla/sessions v1.2.2 // v1.3.0 gives session error when trying to get token from GCP
-	github.com/jlambert68/FenixGrpcApi v0.0.0-20241014133757-e0eef4aa9e14
+	github.com/jlambert68/FenixGrpcApi v0.0.0-20250114063146-bad1bcdc4fde
 	github.com/jlambert68/FenixScriptEngine v0.0.0-20240926173607-33468503e5cd
 	github.com/markbates/goth v1.80.0
 	github.com/rs/zerolog v1.33.0
 	github.com/sirupsen/logrus v1.9.3
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	github.com/toqueteos/webbrowser v1.2.0
 	golang.org/x/net v0.30.0
 	golang.org/x/oauth2 v0.23.0
@@ -31,6 +31,8 @@ require (
 )
 
 require (
+	github.com/ebitengine/oto/v3 v3.3.1
+	github.com/hajimehoshi/go-mp3 v0.3.4
 	github.com/jlambert68/FenixStandardTestInstructionAdmin v0.0.0-20240919081445-a249ea1fb7f5
 	github.com/jlambert68/FenixSyncShared v0.0.0-20240911064419-da3d922610cb
 )
@@ -44,7 +46,6 @@ require (
 	fyne.io/systray v1.11.0 // indirect
 	github.com/BurntSushi/toml v1.4.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/ebitengine/oto/v3 v3.3.1 // indirect
 	github.com/ebitengine/purego v0.8.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fredbi/uri v1.1.0 // indirect
@@ -66,7 +67,6 @@ require (
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/context v1.1.2 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
-	github.com/hajimehoshi/go-mp3 v0.3.4 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.14.3 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect

@@ -24,8 +24,8 @@ The following environment variable is needed for TesterGui to be able to run.
 | Environment variable                              | Example value            | comment                                                         |
 |---------------------------------------------------|--------------------------|-----------------------------------------------------------------|
 | ApplicationGrpcPort                               | 6668                     | Local gRPC port to trigger some functionality, used for testing |
-| A@u@t@hClientId                                   | xxxxxxxxxxxxxxxxxx       |                                                                 |
-| AuthClientS@e@c@ret                               | xxxxxxxxxxxxxxxxxx       |                                                                 |
+| AuthClientId                                      | xxxxxxxxxxxxxxxxxx       |                                                                 |
+| AuthClientSecret                                  | xxxxxxxxxxxxxxxxxx       |                                                                 |
 | ExecutionLocationForFenixGuiExecutionServer       | LOCALHOST_NODOCKER       | LOCALHOST_NODOCKER, LOCALHOST_DOCKER or GCP                     |
 | ExecutionLocationForFenixGuiTestCaseBuilderServer | LOCALHOST_NODOCKER       | LOCALHOST_NODOCKER, LOCALHOST_DOCKER or GCP                     |
 | ExecutionLocationForThisApplication               | LOCALHOST_NODOCKER       | LOCALHOST_NODOCKER, LOCALHOST_DOCKER or GCP                     |

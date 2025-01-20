@@ -11,6 +11,7 @@ var TestCaseExecutionsModel TestCaseExecutionsModelStruct
 // TestCaseExecutionsModelStruct
 // Type for holding all data around Executions
 type TestCaseExecutionsModelStruct struct {
-	TestCaseExecutionsThatCanBeViewedByUserMap   map[string]*fenixExecutionServerGuiGrpcApi.ListTestCaseExecutionsResponse
-	TestCaseExecutionsThatCanBeViewedByUserSlice []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+	TestCaseExecutionsThatCanBeViewedByUserMap map[string]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+	//TestCaseExecutionsThatCanBeViewedByUserSlice []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+	CurrentActiveTestCaseExecutionUuid string
 }

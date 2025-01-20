@@ -26,20 +26,23 @@ func RemoveTestCaseFromList(testCaseUuidToBeRemoved string, testCasesModel *test
 	delete(testCasesModel.TestCasesThatCanBeEditedByUserMap, testCaseUuidToBeRemoved)
 
 	// Delete TestCase from 'TestCasesThatCanBeEditedByUserSlice'
-	for index, tempTestCasesThatCanBeEditedByUser := range testCasesModel.TestCasesThatCanBeEditedByUserSlice {
+	/*
+		for index, tempTestCasesThatCanBeEditedByUser := range testCasesModel.TestCasesThatCanBeEditedByUserSlice {
 
-		// Is this the TestCase to be removed from slice
-		if tempTestCasesThatCanBeEditedByUser.TestCaseUuid == testCaseUuidToBeRemoved {
+			// Is this the TestCase to be removed from slice
+			if tempTestCasesThatCanBeEditedByUser.TestCaseUuid == testCaseUuidToBeRemoved {
 
-			// Remove TestCase at index
-			testCasesModel.TestCasesThatCanBeEditedByUserSlice = append(
-				testCasesModel.TestCasesThatCanBeEditedByUserSlice[:index],
-				testCasesModel.TestCasesThatCanBeEditedByUserSlice[index+1:]...)
+				// Remove TestCase at index
+				testCasesModel.TestCasesThatCanBeEditedByUserSlice = append(
+					testCasesModel.TestCasesThatCanBeEditedByUserSlice[:index],
+					testCasesModel.TestCasesThatCanBeEditedByUserSlice[index+1:]...)
 
-			break
+				break
+			}
+
 		}
 
-	}
+	*/
 
 	// Update table-list and update Table
 	loadTestCaseListTableTable(testCasesModel)
@@ -323,7 +326,7 @@ func loadTestCaseListTableTable(testCasesModel *testCaseModel.TestCasesModelsStr
 	testCaseListTableTable = nil
 
 	// Loop all TestCases and add to '[][]string'-object for the Table
-	for _, tempTestCase := range testCasesModel.TestCasesThatCanBeEditedByUserSlice {
+	for _, tempTestCase := range testCasesModel.TestCasesThatCanBeEditedByUserMap {
 
 		// Create temporary Row-object for the table
 		var tempRowslice []string
@@ -410,8 +413,8 @@ func loadTestCaseListTableTable(testCasesModel *testCaseModel.TestCasesModelsStr
 	}
 
 	// Do an initial sort 'testCaseListTableTable' descending on 'LastSavedTimeStamp'
-	if testCasesModel.TestCasesThatCanBeEditedByUserSlice != nil &&
-		len(testCasesModel.TestCasesThatCanBeEditedByUserSlice) > 0 {
+	if testCasesModel.TestCasesThatCanBeEditedByUserMap != nil &&
+		len(testCasesModel.TestCasesThatCanBeEditedByUserMap) > 0 {
 
 		currentSortColumn = initialColumnToSortOn
 		sort2DStringSlice(testCaseListTableTable, initialColumnToSortOn, initialSortDirectionForInitialColumnToSortOn)

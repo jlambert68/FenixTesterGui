@@ -8,27 +8,27 @@ import (
 	"sync"
 )
 
-// The UI-table for the List with TestCase
-var testCaseListTable *widget.Table
+// The UI-table for the List with TestCaseExecutions
+var testCaseExecutionsListTable *widget.Table
 
-// The data source used to produce the UI-table for the List with TestCase
-var testCaseListTableTable [][]string
+// The data source used to produce the UI-table for the List with TestCaseExecutions
+var testCaseExecutionsListTableTable [][]string
 
-// Keeps the number of TestCase that is shown in the list, after local filter is applied
-var numberOfTestCasesAfterLocalFilters binding.String
+// Keeps the number of TestCaseExecutions that is shown in the list, after local filter is applied
+var numberOfTestCaseExecutionsAfterLocalFilters binding.String
 
-// Keeps the number of TestCase that have been retrieved from the Database
-var numberOfTestCasesInTheDatabaseSearch binding.String
+// Keeps the number of TestCaseExecutions that have been retrieved from the Database
+var numberOfTestCaseExecutionsInTheDatabaseSearch binding.String
 
-var testCaseListTableHeader = []string{
+var testCaseExecutionsListTableHeader = []string{
 	"DomainName", "TestCaseName", "TestCaseUuid", "TestCaseVersion", "Latest TestCaseExecution Status",
 	"Latest TestCaseExecution TimeStamp", "Latest OK Finished TestCaseExecution TimeStamp", "Last Saved TimeStamp", "DomainUuid"}
 
-// The number of visible columns in UI-table for TestCases
-const numberColumnsInTestCasesListUI int = 9
+// The number of visible columns in UI-table for TestCaseExecutions
+const numberColumnsInTestCaseExecutionsListUI int = 9
 
-// Keeps track of the in which column the TestCaseUUID exist in the data source for the UI-table
-const testCaseUuidColumnNumber uint8 = 2
+// Keeps track of the in which column the TestCaseExecutionUUID exist in the data source for the UI-table
+const testCaseExecutionUuidColumnNumber uint8 = 2
 
 // Keeps track of the in which column the "Latest TestCaseExecution Status" exist in the data source for the UI-table
 const latestTestCaseExecutionStatus uint8 = 4
@@ -49,14 +49,14 @@ var currentRowThatMouseIsHoveringAboveMutex sync.Mutex
 const testCaseNodeRectangleSize = 40
 
 // The TestCase Preview-container
-var testCasePreviewContainerScroll *container.Scroll
-var testCasePreviewContainer *fyne.Container
+var testCaseExecutionPreviewContainerScroll *container.Scroll
+var testCaseExecutionPreviewContainer *fyne.Container
 
-// The Split container have both the TestCase-list and the Preview-container in it
-var TestCaseListAndTestCasePreviewSplitContainer *container.Split
+// The Split container have both the TestCaseExecutions-list and the Preview-container in it
+var TestCaseExecutionListAndTestCaseExecutionPreviewSplitContainer *container.Split
 
-// The TestCase that is shown in Preview
-var testCaseThatIsShownInPreview string
+// The TestCaseExecutions that is shown in Preview
+var testCaseExecutionThatIsShownInPreview string
 
 // SortingDirectionType
 // Define type for Sorting Direction
@@ -77,7 +77,7 @@ const (
 // The current column that the TestCase-list is sorted on
 var currentSortColumn int = -1
 
-// The previous column that the TestCase-list was sorted on
+// The previous column that the TestCaseExecution-list was sorted on
 var previousSortColumn int
 
 var currentHeader *sortableHeaderLabelStruct

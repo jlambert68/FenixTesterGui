@@ -35,11 +35,13 @@ func LoadTestCaseThatCanBeEditedByUser(
 
 	// Store the slice with TestCases
 	//testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = listTestCasesThatCanBeEditedResponseMessage.GetTestCasesThatCanBeEditedByUser()
-	testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = nil
-	for _, tempTestCasesThatCanBeEditedByUser := range testCaseModeReference.TestCasesThatCanBeEditedByUserMap {
-		testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = append(
-			testCaseModeReference.TestCasesThatCanBeEditedByUserSlice, tempTestCasesThatCanBeEditedByUser)
-	}
+	/*
+		testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = nil
+		for _, tempTestCasesThatCanBeEditedByUser := range testCaseModeReference.TestCasesThatCanBeEditedByUserMap {
+			testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = append(
+				testCaseModeReference.TestCasesThatCanBeEditedByUserSlice, tempTestCasesThatCanBeEditedByUser)
+		}
+	*/
 
 }
 

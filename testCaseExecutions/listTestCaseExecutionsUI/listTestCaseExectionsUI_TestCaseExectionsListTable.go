@@ -3,7 +3,7 @@ package listTestCaseExecutionsUI
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/detailedExecutionsModel"
-	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
 	"bytes"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -18,42 +18,46 @@ import (
 	"strconv"
 )
 
-// RemoveTestCaseFromList
-// Remove a TestCase from the List
-func RemoveTestCaseFromList(testCaseUuidToBeRemoved string, testCasesModel *testCaseModel.TestCasesModelsStruct) {
+// RemoveTestCaseExecutionFromList
+// Remove a TestCaseExecution from the List
+func RemoveTestCaseExecutionFromList(testCaseExecutionUuidToBeRemoved string,
+	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
 
 	// Delete TestCase from 'TestCasesThatCanBeEditedByUserMap'
-	delete(testCasesModel.TestCasesThatCanBeEditedByUserMap, testCaseUuidToBeRemoved)
+	delete(testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap,
+		testCaseExecutionUuidToBeRemoved)
 
 	// Delete TestCase from 'TestCasesThatCanBeEditedByUserSlice'
-	for index, tempTestCasesThatCanBeEditedByUser := range testCasesModel.TestCasesThatCanBeEditedByUserSlice {
+	/*
+		for index, tempTestCasesThatCanBeEditedByUser := range testCasesModel.TestCasesThatCanBeEditedByUserSlice {
 
-		// Is this the TestCase to be removed from slice
-		if tempTestCasesThatCanBeEditedByUser.TestCaseUuid == testCaseUuidToBeRemoved {
+			// Is this the TestCase to be removed from slice
+			if tempTestCasesThatCanBeEditedByUser.TestCaseUuid == testCaseExecutionUuidToBeRemoved {
 
-			// Remove TestCase at index
-			testCasesModel.TestCasesThatCanBeEditedByUserSlice = append(
-				testCasesModel.TestCasesThatCanBeEditedByUserSlice[:index],
-				testCasesModel.TestCasesThatCanBeEditedByUserSlice[index+1:]...)
+				// Remove TestCase at index
+				testCasesModel.TestCasesThatCanBeEditedByUserSlice = append(
+					testCasesModel.TestCasesThatCanBeEditedByUserSlice[:index],
+					testCasesModel.TestCasesThatCanBeEditedByUserSlice[index+1:]...)
 
-			break
+				break
+			}
+
 		}
-
-	}
+	*/
 
 	// Update table-list and update Table
-	loadTestCaseListTableTable(testCasesModel)
+	loadTestCaseExecutionListTableTable(testCaseExecutionsModel)
 	calculateAndSetCorrectColumnWidths()
-	updateTestCasesListTable(testCasesModel)
+	updateTestCaseExecutionsListTable(testCaseExecutionsModel)
 
 }
 
 // Create the UI-list that holds the list of TestCases that the user can edit
-func generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruct) {
+func generateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
 
 	// Correctly initialize the selectedFilesTable as a new table
-	testCaseListTable = widget.NewTable(
-		func() (int, int) { return 0, numberColumnsInTestCasesListUI }, // Start with zero rows, 8 columns
+	testCaseExecutionsListTable = widget.NewTable(
+		func() (int, int) { return 0, numberColumnsInTestCaseExecutionsListUI }, // Start with zero rows, 8 columns
 		func() fyne.CanvasObject {
 			return widget.NewLabel("") // Create cells as labels
 		},
@@ -98,8 +102,8 @@ func generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStr
 	}
 
 	// Define the Header
-	testCaseListTable.ShowHeaderRow = true
-	testCaseListTable.CreateHeader = func() fyne.CanvasObject {
+	testCaseExecutionsListTable.ShowHeaderRow = true
+	testCaseExecutionsListTable.CreateHeader = func() fyne.CanvasObject {
 		//return widget.NewLabel("") // Create cells as labels
 
 		var tempNewSortableHeaderLabel *sortableHeaderLabelStruct
@@ -117,39 +121,39 @@ func generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStr
 
 	}
 
-	updateTestCasesListTable(testCasesModel)
+	updateTestCaseExecutionsListTable(testCaseExecutionsModel)
 	calculateAndSetCorrectColumnWidths()
 
 }
 
 // Update the Table
-func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruct) {
+func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
 
-	testCaseListTable.Length = func() (int, int) {
-		return len(testCaseListTableTable), numberColumnsInTestCasesListUI
+	testCaseExecutionsListTable.Length = func() (int, int) {
+		return len(testCaseExecutionsListTableTable), numberColumnsInTestCaseExecutionsListUI
 	}
-	testCaseListTable.CreateCell = func() fyne.CanvasObject {
+	testCaseExecutionsListTable.CreateCell = func() fyne.CanvasObject {
 
-		tempNewClickableLabel := newClickableTableLabel("", func() {}, false, testCasesModel)
+		tempNewClickableLabel := newClickableTableLabel("", func() {}, false, testCaseExecutionsModel)
 		tempContainer := container.NewStack(canvas.NewRectangle(color.Transparent), tempNewClickableLabel, tempNewClickableLabel.textInsteadOfLabel)
 
 		return tempContainer
 
 	}
-	testCaseListTable.UpdateCell = func(id widget.TableCellID, cell fyne.CanvasObject) {
+	testCaseExecutionsListTable.UpdateCell = func(id widget.TableCellID, cell fyne.CanvasObject) {
 
 		clickableContainer := cell.(*fyne.Container)
 		clickable := clickableContainer.Objects[1].(*clickableTableLabel)
 		rectangle := clickableContainer.Objects[0].(*canvas.Rectangle)
-		clickable.SetText(testCaseListTableTable[id.Row][id.Col])
+		clickable.SetText(testCaseExecutionsListTableTable[id.Row][id.Col])
 		clickable.isClickable = true
 		clickable.currentRow = int16(id.Row)
-		clickable.currentTestCaseUuid = testCaseListTableTable[id.Row][testCaseUuidColumnNumber]
+		clickable.currentTestCaseExcutionUuid = testCaseExecutionsListTableTable[id.Row][testCaseExecutionUuidColumnNumber]
 
 		clickable.onDoubleTap = func() {
 
 			// Open TestCase
-			openTestCase(clickable.currentTestCaseUuid, clickable.testCasesModel)
+			openTestCase(clickable.currentTestCaseExcutionUuid, clickable.testCaseExecutionsModel)
 
 		}
 
@@ -182,7 +186,7 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 		} else {
 
 			// If this row is the one that is shown in TestCase preview window
-			if clickable.currentTestCaseUuid == testCaseThatIsShownInPreview {
+			if clickable.currentTestCaseExcutionUuid == testCaseExecutionThatIsShownInPreview {
 
 				clickable.TextStyle = fyne.TextStyle{Bold: false}
 				rectangle.FillColor = color.RGBA{
@@ -248,9 +252,9 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 	}
 
 	// Update the Header
-	testCaseListTable.UpdateHeader = func(id widget.TableCellID, cell fyne.CanvasObject) {
+	testCaseExecutionsListTable.UpdateHeader = func(id widget.TableCellID, cell fyne.CanvasObject) {
 		tempSortableHeaderLabel := cell.(*sortableHeaderLabelStruct)
-		tempSortableHeaderLabel.label.SetText(testCaseListTableHeader[id.Col])
+		tempSortableHeaderLabel.label.SetText(testCaseExecutionsListTableHeader[id.Col])
 		tempSortableHeaderLabel.label.TextStyle = fyne.TextStyle{Bold: true}
 
 		// Set Column number
@@ -264,7 +268,7 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 		tempSortableHeaderLabel.Refresh()
 	}
 
-	testCaseListTable.Refresh()
+	testCaseExecutionsListTable.Refresh()
 }
 
 // TestCaseUuid
@@ -278,12 +282,12 @@ func calculateAndSetCorrectColumnWidths() {
 
 	// Initiate slice for keeping track of max column width size
 	var columnsMaxSizeSlice []float32
-	columnsMaxSizeSlice = make([]float32, numberColumnsInTestCasesListUI)
+	columnsMaxSizeSlice = make([]float32, numberColumnsInTestCaseExecutionsListUI)
 
 	var columnWidth float32
 
 	// Set initial value for max width size
-	for index, headerValue := range testCaseListTableHeader {
+	for index, headerValue := range testCaseExecutionsListTableHeader {
 
 		// Calculate the column width base on this value. Add  'float32(30)' to give room for sort direction icon
 		columnWidth = fyne.MeasureText(headerValue, theme.TextSize(), fyne.TextStyle{Bold: true}).Width + float32(30) //
@@ -291,7 +295,7 @@ func calculateAndSetCorrectColumnWidths() {
 	}
 
 	// Loop all rows
-	for _, tempRow := range testCaseListTableTable {
+	for _, tempRow := range testCaseExecutionsListTableTable {
 
 		// Loop columns for a row to get column width
 		for columnIndex, tempColumnValue := range tempRow {
@@ -310,20 +314,20 @@ func calculateAndSetCorrectColumnWidths() {
 
 	// Loop columns in table and set column width including some Padding
 	for columnIndex, columnWidth := range columnsMaxSizeSlice {
-		testCaseListTable.SetColumnWidth(columnIndex, columnWidth+theme.Padding()*4)
+		testCaseExecutionsListTable.SetColumnWidth(columnIndex, columnWidth+theme.Padding()*4)
 	}
 
 	// Refresh the table
-	testCaseListTable.Refresh()
+	testCaseExecutionsListTable.Refresh()
 
 }
 
-func loadTestCaseListTableTable(testCasesModel *testCaseModel.TestCasesModelsStruct) {
+func loadTestCaseExecutionListTableTable(testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
 
-	testCaseListTableTable = nil
+	testCaseExecutionsListTableTable = nil
 
 	// Loop all TestCases and add to '[][]string'-object for the Table
-	for _, tempTestCase := range testCasesModel.TestCasesThatCanBeEditedByUserSlice {
+	for _, tempTestCaseExecution := range testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap {
 
 		// Create temporary Row-object for the table
 		var tempRowslice []string
@@ -334,30 +338,30 @@ func loadTestCaseListTableTable(testCasesModel *testCaseModel.TestCasesModelsStr
 		// DomainName
 		var domainNameForTable string
 		domainNameForTable = fmt.Sprintf("%s [%s]",
-			tempTestCase.GetDomainName(),
-			tempTestCase.GetDomainUuid()[0:8])
+			tempTestCaseExecution.GetDomainName(),
+			tempTestCaseExecution.GetDomainUUID()[0:8])
 
 		tempRowslice = append(tempRowslice, domainNameForTable)
 
 		// Column 1:
 		// TestCaseName
-		tempRowslice = append(tempRowslice, tempTestCase.GetTestCaseName())
+		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetTestCaseName())
 
 		// Column 2:
 		// TestCaseUuid
-		tempRowslice = append(tempRowslice, tempTestCase.GetTestCaseUuid())
+		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetTestCaseUuid())
 
 		// Column 3:
 		// TestCaseVersion
-		tempRowslice = append(tempRowslice, strconv.Itoa(int(tempTestCase.GetTestCaseVersion())))
+		tempRowslice = append(tempRowslice, strconv.Itoa(int(tempTestCaseExecution.GetTestCaseVersion())))
 
 		// Column 4:
 		// LatestTestCaseExecutionStatus
 		var tempLatestTestCaseExecutionStatus string
 
-		if tempTestCase.GetLatestTestCaseExecutionStatus() > 0 {
+		if tempTestCaseExecution.GetLatestTestCaseExecutionStatus() > 0 {
 
-			tempLatestTestCaseExecutionStatus = detailedExecutionsModel.ExecutionStatusColorMap[int32(tempTestCase.GetLatestTestCaseExecutionStatus())].ExecutionStatusName
+			tempLatestTestCaseExecutionStatus = detailedExecutionsModel.ExecutionStatusColorMap[int32(tempTestCaseExecution.GetLatestTestCaseExecutionStatus())].ExecutionStatusName
 		} else {
 			tempLatestTestCaseExecutionStatus = "<no execution>"
 		}
@@ -368,8 +372,8 @@ func loadTestCaseListTableTable(testCasesModel *testCaseModel.TestCasesModelsStr
 		// LatestTestCaseExecutionStatusInsertTimeStamp
 		var tempLatestTestCaseExecutionStatusInsertTimeStamp string
 
-		if tempTestCase.GetLatestTestCaseExecutionStatusInsertTimeStamp() != nil {
-			tempLatestTestCaseExecutionStatusInsertTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestCase.
+		if tempTestCaseExecution.GetLatestTestCaseExecutionStatusInsertTimeStamp() != nil {
+			tempLatestTestCaseExecutionStatusInsertTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestCaseExecution.
 				GetLatestTestCaseExecutionStatusInsertTimeStamp())
 		} else {
 			tempLatestTestCaseExecutionStatusInsertTimeStamp = "<no execution>"
@@ -380,9 +384,9 @@ func loadTestCaseListTableTable(testCasesModel *testCaseModel.TestCasesModelsStr
 		// LatestFinishedOkTestCaseExecutionStatusInsertTimeStamp
 		var tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp string
 
-		if tempTestCase.GetLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp() != nil {
+		if tempTestCaseExecution.GetLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp() != nil {
 			tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(
-				tempTestCase.GetLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp())
+				tempTestCaseExecution.GetLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp())
 		} else {
 			tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp = "<no successful execution yet>"
 		}
@@ -392,8 +396,8 @@ func loadTestCaseListTableTable(testCasesModel *testCaseModel.TestCasesModelsStr
 		// LastSavedTimeStamp
 		var tempLastSavedTimeStamp string
 
-		if tempTestCase.GetLastSavedTimeStamp() != nil {
-			tempLastSavedTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestCase.
+		if tempTestCaseExecution.GetLastSavedTimeStamp() != nil {
+			tempLastSavedTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestCaseExecution.
 				GetLastSavedTimeStamp())
 		} else {
 			tempLastSavedTimeStamp = "<This should not happen, due to it must have been saved!>"
@@ -402,19 +406,19 @@ func loadTestCaseListTableTable(testCasesModel *testCaseModel.TestCasesModelsStr
 
 		// Column 8:
 		// DomainUuid
-		tempRowslice = append(tempRowslice, tempTestCase.GetDomainUuid())
+		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetDomainUuid())
 
 		// Add Row to slice of rows for the table
-		testCaseListTableTable = append(testCaseListTableTable, tempRowslice)
+		testCaseExecutionsListTableTable = append(testCaseExecutionsListTableTable, tempRowslice)
 
 	}
 
-	// Do an initial sort 'testCaseListTableTable' descending on 'LastSavedTimeStamp'
-	if testCasesModel.TestCasesThatCanBeEditedByUserSlice != nil &&
-		len(testCasesModel.TestCasesThatCanBeEditedByUserSlice) > 0 {
+	// Do an initial sort 'testCaseExecutionsListTableTable' descending on 'LastSavedTimeStamp'
+	if testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap != nil &&
+		len(testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap) > 0 {
 
 		currentSortColumn = initialColumnToSortOn
-		sort2DStringSlice(testCaseListTableTable, initialColumnToSortOn, initialSortDirectionForInitialColumnToSortOn)
+		sort2DStringSlice(testCaseExecutionsListTableTable, initialColumnToSortOn, initialSortDirectionForInitialColumnToSortOn)
 
 	}
 

@@ -2,7 +2,7 @@ package listTestCaseExecutionsModel
 
 import (
 	sharedCode "FenixTesterGui/common_code"
-	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/grpc_out_GuiExecutionServer"
 	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
@@ -12,18 +12,26 @@ import (
 // LoadTestCaseExecutionsThatCanBeViewedByUser
 // Load list with TestCaseExecutions that the user can view
 func LoadTestCaseExecutionsThatCanBeViewedByUser(
-	testCaseModeReference *testCaseModel.TestCasesModelsStruct,
-	testCaseUpdatedMinTimeStamp time.Time,
-	testCaseExecutionUpdatedMinTimeStamp time.Time) {
+	latestUniqueTestCaseExecutionDatabaseRowId int32,
+	onlyRetrieveLimitedSizedBatch bool,
+	batchSize int32,
+	testCaseExecutionFromTimeStamp time.Time,
+	testCaseExecutionToTimeStamp time.Time,
+	loadAllDataFromDatabase bool) {
 
-	var listTestCasesThatCanBeEditedResponseMessage *fenixExecutionServerGuiGrpcApi.ListTestCaseExecutionsResponse
-	listTestCasesThatCanBeEditedResponseMessage = testCaseModeReference.GrpcOutReference.
-		ListTestCasesThatCanBeEditedResponseMessage(testCaseUpdatedMinTimeStamp, testCaseExecutionUpdatedMinTimeStamp)
+	var listTestCaseExecutionsResponse *fenixExecutionServerGuiGrpcApi.ListTestCaseExecutionsResponse
+	listTestCaseExecutionsResponse = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.
+		SendListTestCaseExecutionsThatCanBeViewed(
+			latestUniqueTestCaseExecutionDatabaseRowId,
+			onlyRetrieveLimitedSizedBatch,
+			batchSize,
+			testCaseExecutionFromTimeStamp,
+			testCaseExecutionToTimeStamp)
 
-	if listTestCasesThatCanBeEditedResponseMessage.GetAckNackResponse().AckNack == false {
+	if listTestCaseExecutionsResponse.GetAckNackResponse().AckNack == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":    "e703c704-8b96-4235-b403-a36e73e08a18",
-			"error": listTestCasesThatCanBeEditedResponseMessage.GetAckNackResponse().Comments,
+			"ID":    "320c6409-a68b-4cf0-adc1-aa65d8c51343",
+			"error": listTestCaseExecutionsResponse.GetAckNackResponse().Comments,
 		}).Warning("Problem to do gRPC-call to FenixGuiExecutionServer in 'LoadTestCaseExecutionsThatCanBeViewedByUser'")
 
 		return
@@ -31,20 +39,22 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 
 	// Store the slice with TestCases that a user can edit as a Map
 	storeTestCaseExecutionsThatCanBeViewedByUser(
-		listTestCasesThatCanBeEditedResponseMessage.GetTestCasesThatCanBeEditedByUser(),
-		testCaseModeReference)
+		listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
+		&testCaseExecutionsModel.TestCaseExecutionsModel)
 
 	// Store the slice with TestCases
-	//testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = listTestCasesThatCanBeEditedResponseMessage.GetTestCasesThatCanBeEditedByUser()
+	//testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = listTestCaseExecutionsResponse.GetTestCasesThatCanBeEditedByUser()
 	testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = nil
 	for _, tempTestCasesThatCanBeEditedByUser := range testCaseModeReference.TestCasesThatCanBeEditedByUserMap {
 		testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = append(
 			testCaseModeReference.TestCasesThatCanBeEditedByUserSlice, tempTestCasesThatCanBeEditedByUser)
 	}
 
+	xx
+
 }
 
-// Store TestCases That Can Be Edited By User
+// Store TestCaseExecutions That Can Be Viewed By User
 func storeTestCaseExecutionsThatCanBeViewedByUser(
 	testCaseExecutionsList []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage,
 	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
@@ -52,13 +62,13 @@ func storeTestCaseExecutionsThatCanBeViewedByUser(
 	// Store the TestCaseExecutionsThatCanBeViewedByUser-list in the TestCaseModel
 	if testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap == nil {
 		testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap = make(map[string]*fenixExecutionServerGuiGrpcApi.
-			ListTestCaseExecutionsResponse)
+			TestCaseExecutionsListMessage)
 	}
 
 	// Store the TestCaseExecutionsThatCanBeViewedByUser as a map structure in TestCaseExecution-struct
 	for _, testCaseExecutions := range testCaseExecutionsList {
 
-		testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap[testCaseExecutions.GetTestCaseUuid()] =
+		testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap[testCaseExecutions.GetTestCaseExecutionUuid()] =
 			testCaseExecutions
 
 	}

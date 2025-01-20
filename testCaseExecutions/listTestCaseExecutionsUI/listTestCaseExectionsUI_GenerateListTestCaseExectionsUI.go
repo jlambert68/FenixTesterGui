@@ -4,6 +4,8 @@ import (
 	sharedCode "FenixTesterGui/common_code"
 	detailedTestCaseExecutionsUI "FenixTesterGui/executions/detailedExecutionsUI"
 	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testCaseExecutions/listTestCaseExecutionsModel"
+	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
 	"FenixTesterGui/testCases/listTestCasesModel"
 	"bytes"
 	_ "embed"
@@ -44,77 +46,78 @@ var sortImageDescendingAsByteArray []byte
 var sortImageDescendingAsImage image.Image
 
 // Create the UI used for list all TestCases that the User can edit
-func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct) (listTestCasesUI fyne.CanvasObject) {
+func GenerateListTestCaseExecutionsUI(testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) (listTestCasesUI fyne.CanvasObject) {
 
 	//var testCaseTable *widget.Table
 
 	var tempTestCaseListAndTestCasePreviewSplitContainer *container.Split
 
-	var testCasesListContainer *fyne.Container
-	var testCasesListScrollContainer *container.Scroll
+	var testCaseExecutionsListContainer *fyne.Container
+	var testCaseExecutionsListScrollContainer *container.Scroll
 	var statisticsContainer *fyne.Container
 	var executionColorPaletteContainer *fyne.Container
 	var statisticsAndColorPaletteContainer *fyne.Container
 
-	var loadTestCaseFromDataBaseButton *widget.Button
-	var loadTestCaseFromDataBaseFunction func()
-	var filterTestCasesButton *widget.Button
-	var filterTestCasesButtonFunction func()
+	var loadTestCaseExecutionsFromDataBaseButton *widget.Button
+	var loadTestCaseExcutionsFromDataBaseFunction func()
+	var filterTestCaseExcutionsButton *widget.Button
+	var filterTestCaseExcutionsButtonFunction func()
 	var clearFiltersButton *widget.Button
 	var clearFiltersButtonFunction func()
 	var buttonsContainer *fyne.Container
 
-	var numberOfTestCasesAfterLocalFilterLabel *widget.Label
-	var numberOfTestCasesRetrievedFromDatabaseLabel *widget.Label
+	var numberOfTestCaseExecutionsAfterLocalFilterLabel *widget.Label
+	var numberOfTestCaseExcutionsRetrievedFromDatabaseLabel *widget.Label
 
 	var filterAndButtonsContainer *fyne.Container
 
-	// Define the function to be executed to load TestCases from that Database that the user can edit
-	loadTestCaseFromDataBaseFunction = func() {
-		fmt.Println("'loadTestCaseFromDataBaseButton' was pressed")
-		listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(testCasesModel, time.Now().Add(-time.Hour*1000), time.Now().Add(-time.Hour*1000))
-		filterTestCasesButtonFunction()
+	// Define the function to be executed to load TestCaseExecutions from that Database that the user can edit
+	loadTestCaseExcutionsFromDataBaseFunction = func() {
+		fmt.Println("'loadTestCaseExecutionsFromDataBaseButton' was pressed")
+		listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(testCaseExecutionsModel
+		, time.Now().Add(-time.Hour*1000), time.Now().Add(-time.Hour*1000))
+		filterTestCaseExcutionsButtonFunction()
 	}
 
-	// Define the 'loadTestCaseFromDataBaseButton'
-	loadTestCaseFromDataBaseButton = widget.NewButton("Load TestCases from Database", loadTestCaseFromDataBaseFunction)
+	// Define the 'loadTestCaseExecutionsFromDataBaseButton'
+	loadTestCaseExecutionsFromDataBaseButton = widget.NewButton("Load TestCases from Database", loadTestCaseExcutionsFromDataBaseFunction)
 
 	// Define the function to be executed to filter TestCases that the user can edit
-	filterTestCasesButtonFunction = func() {
-		fmt.Println("'filterTestCasesButton' was pressed")
-		loadTestCaseListTableTable(testCasesModel)
+	filterTestCaseExcutionsButtonFunction = func() {
+		fmt.Println("'filterTestCaseExcutionsButton' was pressed")
+		loadTestCaseExecutionListTableTable(testCaseExecutionsModel)
 		calculateAndSetCorrectColumnWidths()
-		updateTestCasesListTable(testCasesModel)
+		updateTestCaseExecutionsListTable(testCaseExecutionsModel)
 
-		// Update the number TestCases in the list
+		// Update the number TestCaseExcutionss in the list
 		var numberOfRowsAsString string
-		numberOfRowsAsString = strconv.Itoa(len(testCaseListTableTable))
-		numberOfTestCasesAfterLocalFilters.Set(
+		numberOfRowsAsString = strconv.Itoa(len(testCaseExecutionsListTableTable))
+		numberOfTestCaseExecutionsAfterLocalFilters.Set(
 			fmt.Sprintf("Number of TestCases after local filters was applied: %s",
 				numberOfRowsAsString))
 
 		// Update the number TestCases retrieved from Database
 		var numberOfRowsFromDatabaseAsString string
-		numberOfRowsFromDatabaseAsString = strconv.Itoa(len(testCaseListTableTable))
-		numberOfTestCasesInTheDatabaseSearch.Set(
+		numberOfRowsFromDatabaseAsString = strconv.Itoa(len(testCaseExecutionsListTableTable))
+		numberOfTestCaseExecutionsInTheDatabaseSearch.Set(
 			fmt.Sprintf("Number of TestCases retrieved from the Database: %s",
 				numberOfRowsFromDatabaseAsString))
 
 	}
 
-	// Define the 'filterTestCasesButton'
-	filterTestCasesButton = widget.NewButton("Filter TestCases", filterTestCasesButtonFunction)
+	// Define the 'filterTestCaseExcutionsButton'
+	filterTestCaseExcutionsButton = widget.NewButton("Filter TestCases", filterTestCaseExcutionsButtonFunction)
 
 	// Define the function to be executed to list TestCases that the user can edit
 	clearFiltersButtonFunction = func() {
 		fmt.Println("'clearFiltersButtonFunction' was pressed")
 	}
 
-	// Define the 'filterTestCasesButton'
+	// Define the 'filterTestCaseExcutionsButton'
 	clearFiltersButton = widget.NewButton("Clear all search filters", clearFiltersButtonFunction)
 
 	// Add the buttons to the buttonsContainer
-	buttonsContainer = container.NewHBox(loadTestCaseFromDataBaseButton, filterTestCasesButton, clearFiltersButton)
+	buttonsContainer = container.NewHBox(loadTestCaseExecutionsFromDataBaseButton, filterTestCaseExcutionsButton, clearFiltersButton)
 
 	// Add objects to the 'filterAndButtonsContainer'
 	filterAndButtonsContainer = container.NewVBox(buttonsContainer)
@@ -123,40 +126,40 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 	executionColorPaletteContainer = detailedTestCaseExecutionsUI.GenerateExecutionColorPalette()
 
 	// Initiate the Table
-	generateTestCasesListTable(testCasesModel)
-	testCaseTableContainer := container.NewBorder(nil, nil, nil, nil, testCaseListTable)
+	generateTestCaseExecutionsListTable(testCaseExecutionsModel)
+	testCaseTableContainer := container.NewBorder(nil, nil, nil, nil, testCaseExecutionsListTable)
 
 	// Create the Scroll container for the List
-	testCasesListScrollContainer = container.NewScroll(testCaseTableContainer)
+	testCaseExecutionsListScrollContainer = container.NewScroll(testCaseTableContainer)
 
 	// Create the label used for showing number of TestCases in the local filter
-	numberOfTestCasesAfterLocalFilters = binding.NewString()
-	_ = numberOfTestCasesAfterLocalFilters.Set("No TestCases in the List")
-	numberOfTestCasesAfterLocalFilterLabel = widget.NewLabelWithData(numberOfTestCasesAfterLocalFilters)
+	numberOfTestCaseExecutionsAfterLocalFilters = binding.NewString()
+	_ = numberOfTestCaseExecutionsAfterLocalFilters.Set("No TestCases in the List")
+	numberOfTestCaseExecutionsAfterLocalFilterLabel = widget.NewLabelWithData(numberOfTestCaseExecutionsAfterLocalFilters)
 
 	// Create the label used for showing number of TestCases retrieved from the Database
-	numberOfTestCasesInTheDatabaseSearch = binding.NewString()
-	_ = numberOfTestCasesInTheDatabaseSearch.Set("No TestCases retrieved from the Database")
-	numberOfTestCasesRetrievedFromDatabaseLabel = widget.NewLabelWithData(numberOfTestCasesInTheDatabaseSearch)
+	numberOfTestCaseExecutionsInTheDatabaseSearch = binding.NewString()
+	_ = numberOfTestCaseExecutionsInTheDatabaseSearch.Set("No TestCases retrieved from the Database")
+	numberOfTestCaseExcutionsRetrievedFromDatabaseLabel = widget.NewLabelWithData(numberOfTestCaseExecutionsInTheDatabaseSearch)
 
 	// Initiate 'statisticsContainer'
-	statisticsContainer = container.NewHBox(numberOfTestCasesAfterLocalFilterLabel, numberOfTestCasesRetrievedFromDatabaseLabel)
+	statisticsContainer = container.NewHBox(numberOfTestCaseExecutionsAfterLocalFilterLabel, numberOfTestCaseExcutionsRetrievedFromDatabaseLabel)
 
 	statisticsAndColorPaletteContainer = container.NewVBox(executionColorPaletteContainer, statisticsContainer)
 
-	// Add 'testCasesListScrollContainer' to 'testCasesListContainer'
-	testCasesListContainer = container.NewBorder(filterAndButtonsContainer, statisticsAndColorPaletteContainer, nil, nil, testCasesListScrollContainer)
-	testCasesListScrollContainer2 := container.NewScroll(testCasesListContainer)
+	// Add 'testCaseExecutionsListScrollContainer' to 'testCaseExecutionsListContainer'
+	testCaseExecutionsListContainer = container.NewBorder(filterAndButtonsContainer, statisticsAndColorPaletteContainer, nil, nil, testCaseExecutionsListScrollContainer)
+	testCasesListScrollContainer2 := container.NewScroll(testCaseExecutionsListContainer)
 
 	// Create the Temporary container that should be shown
 	temporaryContainer := container.NewCenter(widget.NewLabel("Select a TestCase to get the Preview"))
 
-	testCasePreviewContainer = container.NewBorder(nil, nil, nil, nil, temporaryContainer)
+	testCaseExecutionPreviewContainer = container.NewBorder(nil, nil, nil, nil, temporaryContainer)
 
-	// Generate the container for the Preview, 'testCasePreviewContainer'
-	testCasePreviewContainerScroll = container.NewScroll(testCasePreviewContainer)
+	// Generate the container for the Preview, 'testCaseExecutionPreviewContainer'
+	testCaseExecutionPreviewContainerScroll = container.NewScroll(testCaseExecutionPreviewContainer)
 
-	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(testCasesListScrollContainer2, testCasePreviewContainerScroll)
+	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(testCasesListScrollContainer2, testCaseExecutionPreviewContainerScroll)
 	tempTestCaseListAndTestCasePreviewSplitContainer.Offset = 0.75
 
 	TestCaseListAndTestCasePreviewSplitContainer = tempTestCaseListAndTestCasePreviewSplitContainer
@@ -164,9 +167,9 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 	return tempTestCaseListAndTestCasePreviewSplitContainer
 }
 
-func GenerateTestCasePreviewContainer(
+func GenerateTestCaseExectionPreviewContainer(
 	testCaseUuid string,
-	testCasesModel *testCaseModel.TestCasesModelsStruct) {
+	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
 
 	var testCasePreviewTopContainer *fyne.Container
 	var testCasePreviewBottomContainer *fyne.Container
@@ -178,7 +181,7 @@ func GenerateTestCasePreviewContainer(
 	var tempTestCasePreviewStructureMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage
 
 	// Get Data for the Preview
-	tempTestCasePreviewStructureMessage = testCasesModel.TestCasesThatCanBeEditedByUserMap[testCaseUuid].TestCasePreview.TestCasePreview
+	tempTestCasePreviewStructureMessage = testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap[testCaseUuid].TestCasePreview.TestCasePreview
 
 	// Create the Top container
 	testCasePreviewTopContainer = container.New(layout.NewFormLayout())
@@ -393,12 +396,12 @@ func GenerateTestCasePreviewContainer(
 	tempTopHeaderLabel := widget.NewLabel("TestCase Preview")
 	tempTopHeaderLabel.TextStyle = fyne.TextStyle{Bold: true}
 
-	testCasePreviewContainer.Objects[0] = container.NewBorder(
+	testCaseExecutionPreviewContainer.Objects[0] = container.NewBorder(
 		container.NewVBox(container.NewCenter(tempTopHeaderLabel), testCasePreviewTopContainer, widget.NewSeparator()),
 		container.NewVBox(widget.NewSeparator(), testCasePreviewBottomContainer), nil, nil,
 		testCaseMainAreaForPreviewScrollContainer)
 
-	// Refresh the 'testCasePreviewContainer'
-	testCasePreviewContainer.Refresh()
+	// Refresh the 'testCaseExecutionPreviewContainer'
+	testCaseExecutionPreviewContainer.Refresh()
 
 }

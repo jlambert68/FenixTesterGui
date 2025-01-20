@@ -108,8 +108,8 @@ func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNu
 			tempSortableHeaderLabel.sortImage.Refresh()
 			tempSortableHeaderLabel.Refresh()
 
-			sort2DStringSlice(testCaseListTableTable, currentSortColumn, tempSortableHeaderLabel.latestSelectedSortOrder)
-			testCaseListTable.Refresh()
+			sort2DStringSlice(testCaseExecutionsListTableTable, currentSortColumn, tempSortableHeaderLabel.latestSelectedSortOrder)
+			testCaseExecutionsListTable.Refresh()
 
 		},
 		true,

@@ -12,6 +12,9 @@ import (
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testCase/testCaseUI"
+	"FenixTesterGui/testCaseExecutions/listTestCaseExecutionsModel"
+	"FenixTesterGui/testCaseExecutions/listTestCaseExecutionsUI"
+	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
 	"FenixTesterGui/testCaseSubscriptionHandler"
 	"FenixTesterGui/testCases/listTestCasesModel"
 	"FenixTesterGui/testCases/listTestCasesUI"
@@ -203,6 +206,17 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Load list with TestCases that the user can edit
 	listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(&uiServer.testCasesModel, time.Now().Add(-time.Hour*1000), time.Now().Add(-time.Hour*1000))
 
+	// Load list with TestCasesExecutions that can be viewed by used
+	var nullTimeStamp time.Time
+	nullTimeStamp = time.Date(1970, 1, 1, 0, 0, 0, 0, time.UTC)
+	listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
+		0,
+		true,
+		100,
+		nullTimeStamp,
+		nullTimeStamp,
+		true)
+
 	// Load Available Bonds
 	uiServer.commandAndRuleEngine.LoadAvailableBondsFromServer()
 
@@ -287,6 +301,11 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	var tempListTestCasesUI fyne.CanvasObject
 	tempListTestCasesUI = listTestCasesUI.GenerateListTestCasesUI(&uiServer.testCasesModel)
 
+	// Create the UI for List TestCaseExecutions-UI
+	var tempListTestCaseExecutionsUI fyne.CanvasObject
+	tempListTestCaseExecutionsUI = listTestCaseExecutionsUI.GenerateListTestCaseExecutionsUI(
+		&testCaseExecutionsModel.TestCaseExecutionsModel)
+
 	mySliderDataAsString := binding.NewString()
 
 	uiServer.fenixApp.Settings().Scale()
@@ -319,6 +338,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 		container.NewTabItem("Executions (Subscriptions)", subscriptionExecutionsUITab),
 		container.NewTabItem("Executions", executionsUITab),
 		container.NewTabItem("Detailed TestCaseExecutions", detailedTestCaseExecutionTab),
+		container.NewTabItem("TestCaseExecutions List", tempListTestCaseExecutionsUI),
 		container.NewTabItem("Config", configContainerGrid),
 	)
 

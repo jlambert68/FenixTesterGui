@@ -3,7 +3,7 @@ package listTestCaseExecutionsUI
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/soundEngine"
-	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -16,18 +16,18 @@ import (
 
 type clickableTableLabel struct {
 	widget.Label
-	onDoubleTap         func()
-	lastTapTime         time.Time
-	isClickable         bool
-	currentRow          int16
-	currentTestCaseUuid string
-	background          *canvas.Rectangle
-	testCasesModel      *testCaseModel.TestCasesModelsStruct
-	textInsteadOfLabel  *canvas.Text
+	onDoubleTap                 func()
+	lastTapTime                 time.Time
+	isClickable                 bool
+	currentRow                  int16
+	currentTestCaseExcutionUuid string
+	background                  *canvas.Rectangle
+	testCaseExecutionsModel     *testCaseExecutionsModel.TestCaseExecutionsModelStruct
+	textInsteadOfLabel          *canvas.Text
 }
 
 func newClickableTableLabel(text string, onDoubleTap func(), tempIsClickable bool,
-	testCasesModel *testCaseModel.TestCasesModelsStruct) *clickableTableLabel {
+	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) *clickableTableLabel {
 
 	l := &clickableTableLabel{
 		Label:       widget.Label{Text: text},
@@ -37,8 +37,8 @@ func newClickableTableLabel(text string, onDoubleTap func(), tempIsClickable boo
 		currentRow:  -1}
 
 	l.background = canvas.NewRectangle(color.Transparent)
-	l.testCasesModel = testCasesModel
-	l.currentTestCaseUuid = ""
+	l.testCaseExecutionsModel = testCaseExecutionsModel
+	l.currentTestCaseExcutionUuid = ""
 
 	l.ExtendBaseWidget(l)
 
@@ -82,9 +82,9 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 	l.lastTapTime = time.Now()
 
 	// Update TestCase Preview
-	GenerateTestCasePreviewContainer(l.currentTestCaseUuid, l.testCasesModel)
-	testCaseThatIsShownInPreview = l.currentTestCaseUuid
-	testCaseListTable.Refresh()
+	GenerateTestCaseExectionPreviewContainer(l.currentTestCaseExcutionUuid, l.testCaseExecutionsModel)
+	testCaseExecutionThatIsShownInPreview = l.currentTestCaseExcutionUuid
+	testCaseExecutionsListTable.Refresh()
 
 }
 
@@ -128,7 +128,7 @@ func (l *clickableTableLabel) MouseIn(*desktop.MouseEvent) {
 
 	l.TextStyle = fyne.TextStyle{Bold: true}
 	l.Refresh()
-	testCaseListTable.Refresh()
+	testCaseExecutionsListTable.Refresh()
 
 }
 func (l *clickableTableLabel) MouseMoved(*desktop.MouseEvent) {}
@@ -149,6 +149,6 @@ func (l *clickableTableLabel) MouseOut() {
 
 	l.TextStyle = fyne.TextStyle{Bold: false}
 	l.Refresh()
-	testCaseListTable.Refresh()
+	testCaseExecutionsListTable.Refresh()
 
 }

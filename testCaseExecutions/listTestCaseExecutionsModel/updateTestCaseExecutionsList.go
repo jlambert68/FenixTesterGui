@@ -20,37 +20,68 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 	loadAllDataFromDatabase bool) {
 
 	var listTestCaseExecutionsResponse *fenixExecutionServerGuiGrpcApi.ListTestCaseExecutionsResponse
-	listTestCaseExecutionsResponse = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.
-		SendListTestCaseExecutionsThatCanBeViewed(
-			latestUniqueTestCaseExecutionDatabaseRowId,
-			onlyRetrieveLimitedSizedBatch,
-			batchSize,
-			testCaseExecutionFromTimeStamp,
-			testCaseExecutionToTimeStamp)
 
-	if listTestCaseExecutionsResponse.GetAckNackResponse().AckNack == false {
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":    "320c6409-a68b-4cf0-adc1-aa65d8c51343",
-			"error": listTestCaseExecutionsResponse.GetAckNackResponse().Comments,
-		}).Warning("Problem to do gRPC-call to FenixGuiExecutionServer in 'LoadTestCaseExecutionsThatCanBeViewedByUser'")
+	if loadAllDataFromDatabase == false {
 
-		return
+		listTestCaseExecutionsResponse = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.
+			SendListTestCaseExecutionsThatCanBeViewed(
+				latestUniqueTestCaseExecutionDatabaseRowId,
+				onlyRetrieveLimitedSizedBatch,
+				batchSize,
+				testCaseExecutionFromTimeStamp,
+				testCaseExecutionToTimeStamp)
+
+		if listTestCaseExecutionsResponse.GetAckNackResponse().AckNack == false {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":    "320c6409-a68b-4cf0-adc1-aa65d8c51343",
+				"error": listTestCaseExecutionsResponse.GetAckNackResponse().Comments,
+			}).Warning("Problem to do gRPC-call to FenixGuiExecutionServer in 'LoadTestCaseExecutionsThatCanBeViewedByUser'")
+
+			return
+		}
+
+		// Store the slice with TestCases that a user can edit as a Map
+		storeTestCaseExecutionsThatCanBeViewedByUser(
+			listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
+			&testCaseExecutionsModel.TestCaseExecutionsModel)
+
+	} else {
+
+		listTestCaseExecutionsResponse = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.
+			SendListTestCaseExecutionsThatCanBeViewed(
+				latestUniqueTestCaseExecutionDatabaseRowId,
+				onlyRetrieveLimitedSizedBatch,
+				batchSize,
+				testCaseExecutionFromTimeStamp,
+				testCaseExecutionToTimeStamp)
+
+		if listTestCaseExecutionsResponse.GetAckNackResponse().AckNack == false {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":    "320c6409-a68b-4cf0-adc1-aa65d8c51343",
+				"error": listTestCaseExecutionsResponse.GetAckNackResponse().Comments,
+			}).Warning("Problem to do gRPC-call to FenixGuiExecutionServer in 'LoadTestCaseExecutionsThatCanBeViewedByUser'")
+
+			return
+		}
+
+		// Store the slice with TestCases that a user can edit as a Map
+		storeTestCaseExecutionsThatCanBeViewedByUser(
+			listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
+			&testCaseExecutionsModel.TestCaseExecutionsModel)
+
 	}
-
-	// Store the slice with TestCases that a user can edit as a Map
-	storeTestCaseExecutionsThatCanBeViewedByUser(
-		listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
-		&testCaseExecutionsModel.TestCaseExecutionsModel)
 
 	// Store the slice with TestCases
-	//testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = listTestCaseExecutionsResponse.GetTestCasesThatCanBeEditedByUser()
-	testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = nil
-	for _, tempTestCasesThatCanBeEditedByUser := range testCaseModeReference.TestCasesThatCanBeEditedByUserMap {
-		testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = append(
-			testCaseModeReference.TestCasesThatCanBeEditedByUserSlice, tempTestCasesThatCanBeEditedByUser)
-	}
+	/*
+		//testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = listTestCaseExecutionsResponse.GetTestCasesThatCanBeEditedByUser()
+		testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = nil
+		for _, tempTestCasesThatCanBeEditedByUser := range testCaseModeReference.TestCasesThatCanBeEditedByUserMap {
+			testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = append(
+				testCaseModeReference.TestCasesThatCanBeEditedByUserSlice, tempTestCasesThatCanBeEditedByUser)
+		}
 
-	xx
+
+	*/
 
 }
 
@@ -58,6 +89,8 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 func storeTestCaseExecutionsThatCanBeViewedByUser(
 	testCaseExecutionsList []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage,
 	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
+
+	dd
 
 	// Store the TestCaseExecutionsThatCanBeViewedByUser-list in the TestCaseModel
 	if testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap == nil {

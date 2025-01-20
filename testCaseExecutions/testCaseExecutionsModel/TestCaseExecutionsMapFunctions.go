@@ -9,7 +9,7 @@ var testCaseExecutionsMapMutex = &sync.RWMutex{}
 
 // ReadFromTestCaseExecutionsMap
 // Read from the TestCaseExecutions-Map
-func ReadFromTestCaseExecutionsMap(
+func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ReadFromTestCaseExecutionsMap(
 	testCaseExecutionsMapKey string) (
 	testCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage,
 	existInMap bool) {
@@ -33,7 +33,7 @@ func ReadFromTestCaseExecutionsMap(
 
 // AddToTestCaseExecutionsMap
 // Add to the TestCaseExecutions-Map
-func AddToTestCaseExecutionsMap(
+func (testCaseExecutionsModel TestCaseExecutionsModelStruct) AddToTestCaseExecutionsMap(
 	testCaseExecutionsMapKey string,
 	testCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage) {
 
@@ -57,7 +57,7 @@ func AddToTestCaseExecutionsMap(
 
 // DeleteFromTestCaseExecutionsMap
 // Delete from the TestCaseExecutions-Map
-func DeleteFromTestCaseExecutionsMap(
+func (testCaseExecutionsModel TestCaseExecutionsModelStruct) DeleteFromTestCaseExecutionsMap(
 	testCaseExecutionsMapKey string) {
 
 	// Lock Map for Writing

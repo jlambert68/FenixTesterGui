@@ -101,9 +101,7 @@ func storeTestCaseExecutionsThatCanBeViewedByUser(
 	// Store the TestCaseExecutionsThatCanBeViewedByUser as a map structure in TestCaseExecution-struct
 	for _, testCaseExecutions := range testCaseExecutionsList {
 
-		testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap[testCaseExecutions.GetTestCaseExecutionUuid()] =
-			testCaseExecutions
-
+		testCaseExecutionsModel.AddToTestCaseExecutionsMap(testCaseExecutions.GetTestCaseExecutionUuid(), testCaseExecutions)
 	}
 
 }

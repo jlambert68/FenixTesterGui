@@ -3,10 +3,8 @@ package listTestCaseExecutionsUI
 import (
 	sharedCode "FenixTesterGui/common_code"
 	detailedTestCaseExecutionsUI "FenixTesterGui/executions/detailedExecutionsUI"
-	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testCaseExecutions/listTestCaseExecutionsModel"
 	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
-	"FenixTesterGui/testCases/listTestCasesModel"
 	"bytes"
 	_ "embed"
 	"fmt"
@@ -22,7 +20,6 @@ import (
 	"image/png"
 	"log"
 	"strconv"
-	"time"
 )
 
 //go:embed resources/TIC-Horizontal_32x32.png
@@ -46,7 +43,9 @@ var sortImageDescendingAsByteArray []byte
 var sortImageDescendingAsImage image.Image
 
 // Create the UI used for list all TestCases that the User can edit
-func GenerateListTestCaseExecutionsUI(testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) (listTestCasesUI fyne.CanvasObject) {
+func GenerateListTestCaseExecutionsUI(
+	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) (
+	listTestCasesUI fyne.CanvasObject) {
 
 	//var testCaseTable *widget.Table
 
@@ -71,20 +70,25 @@ func GenerateListTestCaseExecutionsUI(testCaseExecutionsModel *testCaseExecution
 
 	var filterAndButtonsContainer *fyne.Container
 
-	// Define the function to be executed to load TestCaseExecutions from that Database that the user can edit
+	// Define the function to be executed to load TestCaseExecutions from that Database that the user can view
 	loadTestCaseExcutionsFromDataBaseFunction = func() {
 		fmt.Println("'loadTestCaseExecutionsFromDataBaseButton' was pressed")
-		listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(testCaseExecutionsModel
-		, time.Now().Add(-time.Hour*1000), time.Now().Add(-time.Hour*1000))
-		filterTestCaseExcutionsButtonFunction()
+		listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
+			testCaseExecutionsModel.LatestUniqueTestCaseExecutionDatabaseRowId,
+			true,
+			testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
+			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
+			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
+			true)
 	}
 
 	// Define the 'loadTestCaseExecutionsFromDataBaseButton'
-	loadTestCaseExecutionsFromDataBaseButton = widget.NewButton("Load TestCases from Database", loadTestCaseExcutionsFromDataBaseFunction)
+	loadTestCaseExecutionsFromDataBaseButton = widget.NewButton("Load TestCaseExecutions from Database",
+		loadTestCaseExcutionsFromDataBaseFunction)
 
 	// Define the function to be executed to filter TestCases that the user can edit
 	filterTestCaseExcutionsButtonFunction = func() {
-		fmt.Println("'filterTestCaseExcutionsButton' was pressed")
+		fmt.Println("'filterTestCaseExecutionsButton' was pressed")
 		loadTestCaseExecutionListTableTable(testCaseExecutionsModel)
 		calculateAndSetCorrectColumnWidths()
 		updateTestCaseExecutionsListTable(testCaseExecutionsModel)

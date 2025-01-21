@@ -206,15 +206,16 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Load list with TestCases that the user can edit
 	listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(&uiServer.testCasesModel, time.Now().Add(-time.Hour*1000), time.Now().Add(-time.Hour*1000))
 
+	// Initiate TestCaseExecutionModel
+	testCaseExecutionsModel.InitiateTestCaseExecutionModel()
+
 	// Load list with TestCasesExecutions that can be viewed by used
-	var nullTimeStamp time.Time
-	nullTimeStamp = time.Date(1970, 1, 1, 0, 0, 0, 0, time.UTC)
 	listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
 		0,
 		true,
-		100,
-		nullTimeStamp,
-		nullTimeStamp,
+		testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
+		testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
+		testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 		true)
 
 	// Load Available Bonds

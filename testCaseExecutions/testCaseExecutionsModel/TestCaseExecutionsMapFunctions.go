@@ -7,6 +7,23 @@ import (
 
 var testCaseExecutionsMapMutex = &sync.RWMutex{}
 
+// InitiateTestCaseExecutionsMap
+// Add to the TestCaseExecutions-Map
+func (testCaseExecutionsModel TestCaseExecutionsModelStruct) InitiateTestCaseExecutionsMap() {
+
+	// Lock Map for Writing
+	testCaseExecutionsMapMutex.Lock()
+
+	// Initiate map if it is not already done
+	if testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap == nil {
+		testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap = make(map[string]*fenixExecutionServerGuiGrpcApi.
+			TestCaseExecutionsListMessage)
+	}
+
+	//UnLock Map
+	testCaseExecutionsMapMutex.Unlock()
+}
+
 // ReadFromTestCaseExecutionsMap
 // Read from the TestCaseExecutions-Map
 func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ReadFromTestCaseExecutionsMap(

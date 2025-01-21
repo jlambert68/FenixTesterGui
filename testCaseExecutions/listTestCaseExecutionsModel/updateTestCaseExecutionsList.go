@@ -40,6 +40,12 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 			return
 		}
 
+		// Store information about latest row retrieved and if there are more rows
+		testCaseExecutionsModel.TestCaseExecutionsModel.
+			LatestUniqueTestCaseExecutionDatabaseRowId = listTestCaseExecutionsResponse.
+			GetLatestUniqueTestCaseExecutionDatabaseRowId()
+		testCaseExecutionsModel.TestCaseExecutionsModel.MoreRowsExists = listTestCaseExecutionsResponse.GetMoreRowsExists()
+
 		// Store the slice with TestCases that a user can edit as a Map
 		storeTestCaseExecutionsThatCanBeViewedByUser(
 			listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
@@ -47,6 +53,7 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 
 	} else {
 
+		// Load first batch
 		listTestCaseExecutionsResponse = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.
 			SendListTestCaseExecutionsThatCanBeViewed(
 				latestUniqueTestCaseExecutionDatabaseRowId,
@@ -64,24 +71,49 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 			return
 		}
 
+		// Store information about latest row retrieved and if there are more rows
+		testCaseExecutionsModel.TestCaseExecutionsModel.
+			LatestUniqueTestCaseExecutionDatabaseRowId = listTestCaseExecutionsResponse.
+			GetLatestUniqueTestCaseExecutionDatabaseRowId()
+		testCaseExecutionsModel.TestCaseExecutionsModel.MoreRowsExists = listTestCaseExecutionsResponse.GetMoreRowsExists()
+
 		// Store the slice with TestCases that a user can edit as a Map
 		storeTestCaseExecutionsThatCanBeViewedByUser(
 			listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
 			&testCaseExecutionsModel.TestCaseExecutionsModel)
 
+		// Load rest of the data as go-routine
+		go func() {
+			listTestCaseExecutionsResponse = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.
+				SendListTestCaseExecutionsThatCanBeViewed(
+					testCaseExecutionsModel.TestCaseExecutionsModel.LatestUniqueTestCaseExecutionDatabaseRowId,
+					false,
+					0,
+					testCaseExecutionFromTimeStamp,
+					testCaseExecutionToTimeStamp)
+
+			if listTestCaseExecutionsResponse.GetAckNackResponse().AckNack == false {
+				sharedCode.Logger.WithFields(logrus.Fields{
+					"ID":    "320c6409-a68b-4cf0-adc1-aa65d8c51343",
+					"error": listTestCaseExecutionsResponse.GetAckNackResponse().Comments,
+				}).Warning("Problem to do gRPC-call to FenixGuiExecutionServer in 'LoadTestCaseExecutionsThatCanBeViewedByUser'")
+
+				return
+			}
+
+			// Store information about latest row retrieved and if there are more rows
+			testCaseExecutionsModel.TestCaseExecutionsModel.
+				LatestUniqueTestCaseExecutionDatabaseRowId = listTestCaseExecutionsResponse.
+				GetLatestUniqueTestCaseExecutionDatabaseRowId()
+			testCaseExecutionsModel.TestCaseExecutionsModel.MoreRowsExists = listTestCaseExecutionsResponse.GetMoreRowsExists()
+
+			// Store the slice with TestCases that a user can edit as a Map
+			storeTestCaseExecutionsThatCanBeViewedByUser(
+				listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
+				&testCaseExecutionsModel.TestCaseExecutionsModel)
+		}()
+
 	}
-
-	// Store the slice with TestCases
-	/*
-		//testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = listTestCaseExecutionsResponse.GetTestCasesThatCanBeEditedByUser()
-		testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = nil
-		for _, tempTestCasesThatCanBeEditedByUser := range testCaseModeReference.TestCasesThatCanBeEditedByUserMap {
-			testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = append(
-				testCaseModeReference.TestCasesThatCanBeEditedByUserSlice, tempTestCasesThatCanBeEditedByUser)
-		}
-
-
-	*/
 
 }
 
@@ -90,12 +122,9 @@ func storeTestCaseExecutionsThatCanBeViewedByUser(
 	testCaseExecutionsList []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage,
 	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
 
-	dd
-
 	// Store the TestCaseExecutionsThatCanBeViewedByUser-list in the TestCaseModel
 	if testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap == nil {
-		testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap = make(map[string]*fenixExecutionServerGuiGrpcApi.
-			TestCaseExecutionsListMessage)
+		testCaseExecutionsModel.InitiateTestCaseExecutionsMap()
 	}
 
 	// Store the TestCaseExecutionsThatCanBeViewedByUser as a map structure in TestCaseExecution-struct

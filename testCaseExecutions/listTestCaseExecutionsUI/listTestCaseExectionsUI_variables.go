@@ -21,8 +21,9 @@ var numberOfTestCaseExecutionsAfterLocalFilters binding.String
 var numberOfTestCaseExecutionsInTheDatabaseSearch binding.String
 
 var testCaseExecutionsListTableHeader = []string{
-	"DomainName", "TestCaseName", "TestCaseUuid", "TestCaseVersion", "Latest TestCaseExecution Status",
-	"Latest TestCaseExecution TimeStamp", "Latest OK Finished TestCaseExecution TimeStamp", "Last Saved TimeStamp", "DomainUuid"}
+	"DomainName", "TestSuiteName", "TestCaseName", "TestCaseUuid", "TestCaseVersion", "Latest TestCaseExecution Status",
+	"TestCaseExecution Start TimeStamp", "TestCaseExecution Status Update TimeStamp", "TestCaseExecution Finished TimeStamp",
+	"DomainUuid", "TestSuiteUuid", "TestSuiteExecutionUuid"}
 
 // The number of visible columns in UI-table for TestCaseExecutions
 const numberColumnsInTestCaseExecutionsListUI int = 9

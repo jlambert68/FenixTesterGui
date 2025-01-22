@@ -344,69 +344,92 @@ func loadTestCaseExecutionListTableTable(testCaseExecutionsModel *testCaseExecut
 		tempRowslice = append(tempRowslice, domainNameForTable)
 
 		// Column 1:
+		// SuiteName
+		var suiteNameForTable string
+		suiteNameForTable = fmt.Sprintf("%s [%s]",
+			tempTestCaseExecution.GetTestSuiteName(),
+			tempTestCaseExecution.GetTestSuiteUuid()[0:8])
+
+		tempRowslice = append(tempRowslice, suiteNameForTable)
+
+		// Column 2:
 		// TestCaseName
 		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetTestCaseName())
 
-		// Column 2:
+		// Column 3:
 		// TestCaseUuid
 		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetTestCaseUuid())
 
-		// Column 3:
+		// Column 4:
 		// TestCaseVersion
 		tempRowslice = append(tempRowslice, strconv.Itoa(int(tempTestCaseExecution.GetTestCaseVersion())))
 
-		// Column 4:
-		// LatestTestCaseExecutionStatus
-		var tempLatestTestCaseExecutionStatus string
-
-		if tempTestCaseExecution.GetLatestTestCaseExecutionStatus() > 0 {
-
-			tempLatestTestCaseExecutionStatus = detailedExecutionsModel.ExecutionStatusColorMap[int32(tempTestCaseExecution.GetLatestTestCaseExecutionStatus())].ExecutionStatusName
-		} else {
-			tempLatestTestCaseExecutionStatus = "<no execution>"
-		}
-
-		tempRowslice = append(tempRowslice, tempLatestTestCaseExecutionStatus)
-
 		// Column 5:
-		// LatestTestCaseExecutionStatusInsertTimeStamp
-		var tempLatestTestCaseExecutionStatusInsertTimeStamp string
+		// LatestTestCaseExecutionStatus
+		var tempTestCaseExecutionStatus string
 
-		if tempTestCaseExecution.GetLatestTestCaseExecutionStatusInsertTimeStamp() != nil {
-			tempLatestTestCaseExecutionStatusInsertTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestCaseExecution.
-				GetLatestTestCaseExecutionStatusInsertTimeStamp())
+		if tempTestCaseExecution.GetTestCaseExecutionStatus() > 0 {
+
+			tempTestCaseExecutionStatus = detailedExecutionsModel.ExecutionStatusColorMap[int32(tempTestCaseExecution.GetTestCaseExecutionStatus())].ExecutionStatusName
 		} else {
-			tempLatestTestCaseExecutionStatusInsertTimeStamp = "<no execution>"
+			tempTestCaseExecutionStatus = "<no execution>"
 		}
-		tempRowslice = append(tempRowslice, tempLatestTestCaseExecutionStatusInsertTimeStamp)
+
+		tempRowslice = append(tempRowslice, tempTestCaseExecutionStatus)
 
 		// Column 6:
-		// LatestFinishedOkTestCaseExecutionStatusInsertTimeStamp
-		var tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp string
+		// TestCaseExecutionStatusStartTimeStamp
+		var tempTestCaseExecutionStatusStartTimeStamp string
 
-		if tempTestCaseExecution.GetLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp() != nil {
-			tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(
-				tempTestCaseExecution.GetLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp())
+		if tempTestCaseExecution.GetExecutionStartTimeStamp() != nil {
+			tempTestCaseExecutionStatusStartTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestCaseExecution.
+				GetExecutionStartTimeStamp())
 		} else {
-			tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp = "<no successful execution yet>"
+			tempTestCaseExecutionStatusStartTimeStamp = "<no execution>"
 		}
-		tempRowslice = append(tempRowslice, tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp)
+		tempRowslice = append(tempRowslice, tempTestCaseExecutionStatusStartTimeStamp)
+
+		// Column 7:
+		// TestCaseExecutionStatusUpdateTimeStamp
+		var tempTestCaseExecutionFinishTimeStamp string
+
+		if tempTestCaseExecution.GetExecutionStatusUpdateTimeStamp() != nil {
+			tempTestCaseExecutionFinishTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(
+				tempTestCaseExecution.GetExecutionStatusUpdateTimeStamp())
+		} else {
+			tempTestCaseExecutionFinishTimeStamp = "<no successful execution yet>"
+		}
+		tempRowslice = append(tempRowslice, tempTestCaseExecutionFinishTimeStamp)
 
 		// Column 8:
-		// LastSavedTimeStamp
-		var tempLastSavedTimeStamp string
+		// TestCaseExecutionStatusStopTimeStamp
+		var tempTestCaseExecutionStatusStopTimeStamp string
 
-		if tempTestCaseExecution.GetLastSavedTimeStamp() != nil {
-			tempLastSavedTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestCaseExecution.
-				GetLastSavedTimeStamp())
+		if tempTestCaseExecution.GetExecutionStartTimeStamp() != nil {
+			tempTestCaseExecutionStatusStopTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestCaseExecution.
+				GetExecutionStartTimeStamp())
 		} else {
-			tempLastSavedTimeStamp = "<This should not happen, due to it must have been saved!>"
+			tempTestCaseExecutionStatusStopTimeStamp = "<TestCase is not not finished>"
 		}
-		tempRowslice = append(tempRowslice, tempLastSavedTimeStamp)
+		tempRowslice = append(tempRowslice, tempTestCaseExecutionStatusStopTimeStamp)
 
-		// Column 8:
+		// Column 9:
 		// DomainUuid
-		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetDomainUuid())
+		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetDomainUUID())
+
+		// Add Row to slice of rows for the table
+		testCaseExecutionsListTableTable = append(testCaseExecutionsListTableTable, tempRowslice)
+
+		// Column 10:
+		// TestSuiteUuid
+		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetTestSuiteUuid())
+
+		// Add Row to slice of rows for the table
+		testCaseExecutionsListTableTable = append(testCaseExecutionsListTableTable, tempRowslice)
+
+		// Column 11:
+		// TestSuiteExecutionUuid
+		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetTestSuiteExecutionUuid())
 
 		// Add Row to slice of rows for the table
 		testCaseExecutionsListTableTable = append(testCaseExecutionsListTableTable, tempRowslice)

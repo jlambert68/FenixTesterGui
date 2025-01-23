@@ -152,8 +152,8 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 
 		clickable.onDoubleTap = func() {
 
-			// Open TestCase
-			openTestCase(clickable.currentTestCaseExcutionUuid, clickable.testCaseExecutionsModel)
+			// Open TestCaseExecution
+			//openTestCaseExecution(clickable.currentTestCaseExcutionUuid, clickable.testCaseExecutionsModel)
 
 		}
 

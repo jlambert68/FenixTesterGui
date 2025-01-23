@@ -15,7 +15,6 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
-	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"image"
 	"image/color"
 	"image/png"
@@ -179,7 +178,7 @@ func GenerateTestCaseExecutionPreviewContainer(
 	var testCasePreviewTopContainer *fyne.Container
 	var testCasePreviewBottomContainer *fyne.Container
 	//var testCasePreviewScrollContainer *container.Scroll
-	var testCaseMainAreaForPreviewContainer *fyne.Container
+	var testCaseExecutionMainAreaForPreviewContainer *fyne.Container
 
 	var err error
 
@@ -197,56 +196,66 @@ func GenerateTestCaseExecutionPreviewContainer(
 	testCasePreviewTopContainer.Add(tempTestCaseNameLabel)
 	testCasePreviewTopContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetTestCaseName()))
 
-	// Add TestCaseOwner Domain Top container
-	tempOwnerDomainLabel := widget.NewLabel("OwnerDomain:")
-	tempOwnerDomainLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCasePreviewTopContainer.Add(tempOwnerDomainLabel)
-	testCasePreviewTopContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetDomainThatOwnTheTestCase()))
+	/*
 
-	// Add Description Top container
-	tempTestCaseDescription := widget.NewLabel("Description:")
-	tempTestCaseDescription.TextStyle = fyne.TextStyle{Bold: true}
-	testCasePreviewTopContainer.Add(tempTestCaseDescription)
-	testCasePreviewTopContainer.Add(widget.NewRichTextWithText(tempTestCaseExecutionsListMessage.GetTestCaseDescription()))
+		// Add TestCaseOwner Domain Top container
+		tempOwnerDomainLabel := widget.NewLabel("OwnerDomain:")
+		tempOwnerDomainLabel.TextStyle = fyne.TextStyle{Bold: true}
+		testCasePreviewTopContainer.Add(tempOwnerDomainLabel)
+		testCasePreviewTopContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetDomainThatOwnTheTestCase()))
 
-	// Create the Bottom container
-	testCasePreviewBottomContainer = container.New(layout.NewFormLayout())
+		// Add Description Top container
+		tempTestCaseDescription := widget.NewLabel("Description:")
+		tempTestCaseDescription.TextStyle = fyne.TextStyle{Bold: true}
+		testCasePreviewTopContainer.Add(tempTestCaseDescription)
+		testCasePreviewTopContainer.Add(widget.NewRichTextWithText(tempTestCaseExecutionsListMessage.GetTestCaseDescription()))
 
-	// Add ComplexTextualDescription to Bottom container
-	tempComplexTextualDescriptionLabel := widget.NewLabel("ComplexTextualDescription:")
-	tempComplexTextualDescriptionLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCasePreviewBottomContainer.Add(tempComplexTextualDescriptionLabel)
-	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetComplexTextualDescription()))
+		// Create the Bottom container
+		testCasePreviewBottomContainer = container.New(layout.NewFormLayout())
 
-	// Add TestCaseVersion to Bottom container
-	tempTestCaseVersionLabel := widget.NewLabel("TestCaseVersion:")
-	tempTestCaseVersionLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCasePreviewBottomContainer.Add(tempTestCaseVersionLabel)
-	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetTestCaseVersion()))
+		// Add ComplexTextualDescription to Bottom container
+		tempComplexTextualDescriptionLabel := widget.NewLabel("ComplexTextualDescription:")
+		tempComplexTextualDescriptionLabel.TextStyle = fyne.TextStyle{Bold: true}
+		testCasePreviewBottomContainer.Add(tempComplexTextualDescriptionLabel)
+		testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetComplexTextualDescription()))
 
-	// Add LastSavedByUserOnComputer to Bottom container
-	tempLastSavedByUserOnComputerLabel := widget.NewLabel("Last saved by user (on computer)::")
-	tempLastSavedByUserOnComputerLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCasePreviewBottomContainer.Add(tempLastSavedByUserOnComputerLabel)
-	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetLastSavedByUserOnComputer()))
+
+	*/
+	// Add TestCaseExecutionVersion to Bottom container
+	tempTestCaseExecutionVersionLabel := widget.NewLabel("TestCaseExecutionVersion:")
+	tempTestCaseExecutionVersionLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testCasePreviewBottomContainer.Add(tempTestCaseExecutionVersionLabel)
+	testCasePreviewBottomContainer.Add(widget.NewLabel(string(tempTestCaseExecutionsListMessage.GetTestCaseExecutionVersion())))
+
+	// Add ExecutionStartTimeStamp to Bottom container
+	tempExecutionStartTimeStampLabel := widget.NewLabel("TestCase Execution Start TimeStamp:")
+	tempExecutionStartTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testCasePreviewBottomContainer.Add(tempExecutionStartTimeStampLabel)
+	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStartTimeStamp().String()))
+
+	// Add ExecutionStopTimeStamp to Bottom container
+	tempExecutionStopTimeStampLabel := widget.NewLabel("TestCase Execution Stop TimeStamp:")
+	tempExecutionStopTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testCasePreviewBottomContainer.Add(tempExecutionStopTimeStampLabel)
+	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStopTimeStamp().String()))
+
+	// Add ExecutionStatusUpdateTimeStamp to Bottom container
+	tempExecutionStatusUpdateTimeStampLabel := widget.NewLabel("TestCase Execution Status Update TimeStamp:")
+	tempExecutionStatusUpdateTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testCasePreviewBottomContainer.Add(tempExecutionStatusUpdateTimeStampLabel)
+	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStatusUpdateTimeStamp().String()))
 
 	// Add LastSavedByUserGCPAuthorization to Bottom container
-	tempLastSavedByUserGCPAuthorizationLabel := widget.NewLabel("Last saved by GCP authenticated user:")
+	tempLastSavedByUserGCPAuthorizationLabel := widget.NewLabel("TestCase Execution Stop TimeStamp:")
 	tempLastSavedByUserGCPAuthorizationLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCasePreviewBottomContainer.Add(tempLastSavedByUserGCPAuthorizationLabel)
-	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetLastSavedByUserGCPAuthorization()))
-
-	// Add LastSavedTimeStamp to Bottom container
-	tempLastSavedTimeStamp := widget.NewLabel("Last saved TimeStamp:")
-	tempLastSavedTimeStamp.TextStyle = fyne.TextStyle{Bold: true}
-	testCasePreviewBottomContainer.Add(tempLastSavedTimeStamp)
-	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetLastSavedTimeStamp()))
+	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStopTimeStamp().String()))
 
 	// Create the area used for TIC, TI and the attributes
-	testCaseMainAreaForPreviewContainer = container.NewVBox()
+	testCaseExecutionMainAreaForPreviewContainer = container.NewVBox()
 
 	// Loop the preview objects and to container
-	for _, previewObject := range tempTestCaseExecutionsListMessage.TestCaseStructureObjects {
+	for _, previewObject := range tempTestCaseExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects {
 
 		// Create the Indentation rectangle
 		var tempIndentationLevelRectangle *canvas.Rectangle
@@ -265,7 +274,7 @@ func GenerateTestCaseExecutionPreviewContainer(
 		// Decide what type of object
 		switch previewObject.TestCaseStructureObjectType {
 
-		case fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_TestInstructionContainer:
+		case fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage_TestInstructionContainer:
 
 			var serialOrParallelRectangleImage *canvas.Image
 
@@ -308,9 +317,9 @@ func GenerateTestCaseExecutionPreviewContainer(
 				tempIndentationLevelRectangle, serialOrParallelRectangleImage, tempTestInstructionContainerNameWidget)
 
 			// Add the TestInstructionContainerContainer to the main Area
-			testCaseMainAreaForPreviewContainer.Add(tempTestInstructionContainerContainer)
+			testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionContainerContainer)
 
-		case fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_TestInstruction:
+		case fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage_TestInstruction:
 
 			// Create the Color for the color rectangle
 			var rectangleColor color.Color
@@ -337,61 +346,65 @@ func GenerateTestCaseExecutionPreviewContainer(
 				tempIndentationLevelRectangle, testInstructionColorRectangle, tempTestInstructionNameWidget)
 
 			// Add the TestInstructionContainer to the main Area
-			testCaseMainAreaForPreviewContainer.Add(tempTestInstructionContainer)
+			testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionContainer)
 
-			// Attributes if there are any
-			if len(previewObject.GetTestInstructionAttributes()) > 0 {
+			/*
 
-				// Create the Indentation rectangle for the attributes
-				var tempIndentationLevelRectangleForAttributes *canvas.Rectangle
-				tempIndentationLevelRectangleForAttributes = canvas.NewRectangle(color.Transparent)
+				// Attributes if there are any
+				if len(previewObject.GetTestInstructionAttributes()) > 0 {
 
-				// Resize the Indentation rectangle
-				tempIndentationLevelRectangleForAttributes.SetMinSize(fyne.Size{
-					Width:  float32(10 * (previewObject.GetIndentationLevel() + 10)),
-					Height: 2,
-				})
-				tempIndentationLevelRectangleForAttributes.Resize(fyne.Size{
-					Width:  float32(10 * (previewObject.GetIndentationLevel() + 10)),
-					Height: 2,
-				})
+					// Create the Indentation rectangle for the attributes
+					var tempIndentationLevelRectangleForAttributes *canvas.Rectangle
+					tempIndentationLevelRectangleForAttributes = canvas.NewRectangle(color.Transparent)
 
-				// Create the container for the attributes
-				var testInstructionAttributesContainer *fyne.Container
-				testInstructionAttributesContainer = container.New(layout.NewFormLayout())
+					// Resize the Indentation rectangle
+					tempIndentationLevelRectangleForAttributes.SetMinSize(fyne.Size{
+						Width:  float32(10 * (previewObject.GetIndentationLevel() + 10)),
+						Height: 2,
+					})
+					tempIndentationLevelRectangleForAttributes.Resize(fyne.Size{
+						Width:  float32(10 * (previewObject.GetIndentationLevel() + 10)),
+						Height: 2,
+					})
 
-				// Loop attributes and add to container
-				for _, attribute := range previewObject.TestInstructionAttributes {
+					// Create the container for the attributes
+					var testInstructionAttributesContainer *fyne.Container
+					testInstructionAttributesContainer = container.New(layout.NewFormLayout())
 
-					// Create label for attribute
-					var attributeLabel *widget.Label
-					attributeLabel = widget.NewLabel(attribute.AttributeName)
+					// Loop attributes and add to container
+					for _, attribute := range previewObject.TestInstructionAttributes {
 
-					// Create value for attribute
-					var attributeValue *widget.Label
-					attributeValue = widget.NewLabel(attribute.AttributeValue)
+						// Create label for attribute
+						var attributeLabel *widget.Label
+						attributeLabel = widget.NewLabel(attribute.AttributeName)
 
-					// Add label and value ro the attribute container
-					testInstructionAttributesContainer.Add(attributeLabel)
-					testInstructionAttributesContainer.Add(attributeValue)
+						// Create value for attribute
+						var attributeValue *widget.Label
+						attributeValue = widget.NewLabel(attribute.AttributeValue)
 
+						// Add label and value ro the attribute container
+						testInstructionAttributesContainer.Add(attributeLabel)
+						testInstructionAttributesContainer.Add(attributeValue)
+
+					}
+
+					// Create the container containing the Attributes
+					var tempTestInstructionAttributesContainer *fyne.Container
+					tempTestInstructionAttributesContainer = container.NewHBox(
+						tempIndentationLevelRectangleForAttributes, testInstructionAttributesContainer)
+
+					// Add the TestInstructionContainerContainer to the main Area
+					testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionAttributesContainer)
 				}
 
-				// Create the container containing the Attributes
-				var tempTestInstructionAttributesContainer *fyne.Container
-				tempTestInstructionAttributesContainer = container.NewHBox(
-					tempIndentationLevelRectangleForAttributes, testInstructionAttributesContainer)
-
-				// Add the TestInstructionContainerContainer to the main Area
-				testCaseMainAreaForPreviewContainer.Add(tempTestInstructionAttributesContainer)
-			}
+			*/
 
 		default:
 			log.Fatalf("Unknown 'previewObject.TestCaseStructureObjectType' which never should happen; %s", previewObject.TestCaseStructureObjectType.String())
 		}
 	}
 
-	testCaseMainAreaForPreviewBorderContainer := container.NewBorder(nil, nil, nil, nil, testCaseMainAreaForPreviewContainer)
+	testCaseMainAreaForPreviewBorderContainer := container.NewBorder(nil, nil, nil, nil, testCaseExecutionMainAreaForPreviewContainer)
 	testCaseMainAreaForPreviewScrollContainer := container.NewScroll(testCaseMainAreaForPreviewBorderContainer)
 
 	// Create the container used for the TestCase, with TIC, TI and Attributes

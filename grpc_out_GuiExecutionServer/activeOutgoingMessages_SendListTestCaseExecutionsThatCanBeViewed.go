@@ -16,6 +16,8 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendListTestCaseExecutionsThatCa
 	latestUniqueTestCaseExecutionDatabaseRowId int32,
 	onlyRetrieveLimitedSizedBatch bool,
 	batchSize int32,
+	retrieveAllExecutionsForSpecificTestCaseUuid bool,
+	specificTestCaseUuid string,
 	testCaseExecutionFromTimeStamp time.Time,
 	testCaseExecutionToTimeStamp time.Time) (
 	listTestCaseExecutionsResponse *fenixExecutionServerGuiGrpcApi.ListTestCaseExecutionsResponse) {

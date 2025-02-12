@@ -307,6 +307,11 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	tempListTestCaseExecutionsUI = listTestCaseExecutionsUI.GenerateListTestCaseExecutionsUI(
 		&testCaseExecutionsModel.TestCaseExecutionsModel)
 
+	// Create the UI for List Detailed TestCaseExecutions-UI
+	//var detailedTestCaseExecutionsTab fyne.CanvasObject
+	//detailedTestCaseExecutionsTab = listTestCaseExecutionsUI.GenerateDetailedTestCaseExecutionsTabUI(
+	//	&testCaseExecutionsModel.TestCaseExecutionsModel)
+
 	mySliderDataAsString := binding.NewString()
 
 	uiServer.fenixApp.Settings().Scale()
@@ -331,14 +336,15 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	executionsUITab := executionsUIForExecutions.ExecutionsUIObject.GenerateBaseUITabForExecutions() //MySortTable() //CreateTableObject()
 
 	// Generate a test tab for Detailed TestCaseExecutions
-	detailedTestCaseExecutionTab := detailedTestCaseExecutionsUI.DetailedTestCaseExecutionsUIObject.GenerateBaseUITabForDetailedTestCaseExecutions()
+	detailedTestCaseExecutionSummaryTab := detailedTestCaseExecutionsUI.DetailedTestCaseExecutionsUIObject.GenerateBaseUITabForDetailedTestCaseExecutions()
 
 	tabs := container.NewAppTabs(
 		container.NewTabItem("Build TestCase", buildTestCasesUI),
 		container.NewTabItem("List TestCases", tempListTestCasesUI),
 		container.NewTabItem("Executions (Subscriptions)", subscriptionExecutionsUITab),
 		container.NewTabItem("Executions", executionsUITab),
-		container.NewTabItem("Detailed TestCaseExecutions", detailedTestCaseExecutionTab),
+		container.NewTabItem("Detailed TestCaseExecutions - short summary", detailedTestCaseExecutionSummaryTab),
+		//container.NewTabItem("Detailed TestCaseExecutions", detailedTestCaseExecutionsTab),
 		container.NewTabItem("TestCaseExecutions List", tempListTestCaseExecutionsUI),
 		container.NewTabItem("Config", configContainerGrid),
 	)

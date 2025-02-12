@@ -28,6 +28,8 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 				latestUniqueTestCaseExecutionDatabaseRowId,
 				onlyRetrieveLimitedSizedBatch,
 				batchSize,
+				false,
+				"",
 				testCaseExecutionFromTimeStamp,
 				testCaseExecutionToTimeStamp)
 
@@ -59,6 +61,8 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 				latestUniqueTestCaseExecutionDatabaseRowId,
 				onlyRetrieveLimitedSizedBatch,
 				batchSize,
+				false,
+				"",
 				testCaseExecutionFromTimeStamp,
 				testCaseExecutionToTimeStamp)
 
@@ -89,6 +93,8 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 					testCaseExecutionsModel.TestCaseExecutionsModel.LatestUniqueTestCaseExecutionDatabaseRowId,
 					false,
 					0,
+					false,
+					"",
 					testCaseExecutionFromTimeStamp,
 					testCaseExecutionToTimeStamp)
 

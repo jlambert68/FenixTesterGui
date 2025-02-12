@@ -2,6 +2,7 @@ package listTestCaseExecutionsUI
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/executions/detailedExecutionsModel"
 	detailedTestCaseExecutionsUI "FenixTesterGui/executions/detailedExecutionsUI"
 	"FenixTesterGui/testCaseExecutions/listTestCaseExecutionsModel"
 	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
@@ -80,6 +81,8 @@ func GenerateListTestCaseExecutionsUI(
 			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 			true)
+
+		filterTestCaseExcutionsButtonFunction()
 	}
 
 	// Define the 'loadTestCaseExecutionsFromDataBaseButton'
@@ -175,81 +178,95 @@ func GenerateTestCaseExecutionPreviewContainer(
 	testCaseExecutionUuid string,
 	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
 
-	var testCasePreviewTopContainer *fyne.Container
-	var testCasePreviewBottomContainer *fyne.Container
+	var testCaseExecutionPreviewTopContainer *fyne.Container
+	var testCaseExecutionPreviewBottomContainer *fyne.Container
 	//var testCasePreviewScrollContainer *container.Scroll
 	var testCaseExecutionMainAreaForPreviewContainer *fyne.Container
 
 	var err error
+	var existInMap bool
+	var foundValue bool
 
 	var tempTestCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+
+	// Verify that number Headers match number of columns, constant 'numberColumnsInTestCaseExecutionsListUI'
+	if len(testCaseExecutionsListTableHeader) != numberColumnsInTestCaseExecutionsListUI {
+		log.Fatalln(fmt.Sprintf("Number of elements in 'tempRowslice' missmatch contant 'numberColumnsInTestCaseExecutionsListUI'. %d vs %d. ID: %s",
+			testCaseExecutionsListTableHeader,
+			numberColumnsInTestCaseExecutionsListUI,
+			"c2b8a13c-ec20-46c2-adf9-965247732e07"))
+	}
 
 	// Get Data for the Preview
 	tempTestCaseExecutionsListMessage = testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap[testCaseExecutionUuid]
 
 	// Create the Top container
-	testCasePreviewTopContainer = container.New(layout.NewFormLayout())
+	testCaseExecutionPreviewTopContainer = container.New(layout.NewFormLayout())
 
 	// Add TestCaseName to Top container
 	tempTestCaseNameLabel := widget.NewLabel("TestCaseName:")
 	tempTestCaseNameLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCasePreviewTopContainer.Add(tempTestCaseNameLabel)
-	testCasePreviewTopContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetTestCaseName()))
+	testCaseExecutionPreviewTopContainer.Add(tempTestCaseNameLabel)
+	testCaseExecutionPreviewTopContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetTestCaseName()))
 
 	/*
 
 		// Add TestCaseOwner Domain Top container
 		tempOwnerDomainLabel := widget.NewLabel("OwnerDomain:")
 		tempOwnerDomainLabel.TextStyle = fyne.TextStyle{Bold: true}
-		testCasePreviewTopContainer.Add(tempOwnerDomainLabel)
-		testCasePreviewTopContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetDomainThatOwnTheTestCase()))
+		testCaseExecutionPreviewTopContainer.Add(tempOwnerDomainLabel)
+		testCaseExecutionPreviewTopContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetDomainThatOwnTheTestCase()))
 
 		// Add Description Top container
 		tempTestCaseDescription := widget.NewLabel("Description:")
 		tempTestCaseDescription.TextStyle = fyne.TextStyle{Bold: true}
-		testCasePreviewTopContainer.Add(tempTestCaseDescription)
-		testCasePreviewTopContainer.Add(widget.NewRichTextWithText(tempTestCaseExecutionsListMessage.GetTestCaseDescription()))
+		testCaseExecutionPreviewTopContainer.Add(tempTestCaseDescription)
+		testCaseExecutionPreviewTopContainer.Add(widget.NewRichTextWithText(tempTestCaseExecutionsListMessage.GetTestCaseDescription()))
 
 		// Create the Bottom container
-		testCasePreviewBottomContainer = container.New(layout.NewFormLayout())
+		testCaseExecutionPreviewBottomContainer = container.New(layout.NewFormLayout())
 
 		// Add ComplexTextualDescription to Bottom container
 		tempComplexTextualDescriptionLabel := widget.NewLabel("ComplexTextualDescription:")
 		tempComplexTextualDescriptionLabel.TextStyle = fyne.TextStyle{Bold: true}
-		testCasePreviewBottomContainer.Add(tempComplexTextualDescriptionLabel)
-		testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetComplexTextualDescription()))
+		testCaseExecutionPreviewBottomContainer.Add(tempComplexTextualDescriptionLabel)
+		testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetComplexTextualDescription()))
 
 
 	*/
+
+	// Create the Bottom container
+	testCaseExecutionPreviewBottomContainer = container.New(layout.NewFormLayout())
+
 	// Add TestCaseExecutionVersion to Bottom container
 	tempTestCaseExecutionVersionLabel := widget.NewLabel("TestCaseExecutionVersion:")
 	tempTestCaseExecutionVersionLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCasePreviewBottomContainer.Add(tempTestCaseExecutionVersionLabel)
-	testCasePreviewBottomContainer.Add(widget.NewLabel(string(tempTestCaseExecutionsListMessage.GetTestCaseExecutionVersion())))
+	testCaseExecutionPreviewBottomContainer.Add(tempTestCaseExecutionVersionLabel)
+	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(string(tempTestCaseExecutionsListMessage.GetTestCaseExecutionVersion())))
 
 	// Add ExecutionStartTimeStamp to Bottom container
 	tempExecutionStartTimeStampLabel := widget.NewLabel("TestCase Execution Start TimeStamp:")
 	tempExecutionStartTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCasePreviewBottomContainer.Add(tempExecutionStartTimeStampLabel)
-	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStartTimeStamp().String()))
+	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStartTimeStampLabel)
+	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStartTimeStamp().String()))
 
 	// Add ExecutionStopTimeStamp to Bottom container
 	tempExecutionStopTimeStampLabel := widget.NewLabel("TestCase Execution Stop TimeStamp:")
 	tempExecutionStopTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCasePreviewBottomContainer.Add(tempExecutionStopTimeStampLabel)
-	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStopTimeStamp().String()))
+	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStopTimeStampLabel)
+	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStopTimeStamp().String()))
 
 	// Add ExecutionStatusUpdateTimeStamp to Bottom container
 	tempExecutionStatusUpdateTimeStampLabel := widget.NewLabel("TestCase Execution Status Update TimeStamp:")
 	tempExecutionStatusUpdateTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCasePreviewBottomContainer.Add(tempExecutionStatusUpdateTimeStampLabel)
-	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStatusUpdateTimeStamp().String()))
+	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStatusUpdateTimeStampLabel)
+	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStatusUpdateTimeStamp().String()))
 
 	// Add LastSavedByUserGCPAuthorization to Bottom container
 	tempLastSavedByUserGCPAuthorizationLabel := widget.NewLabel("TestCase Execution Stop TimeStamp:")
 	tempLastSavedByUserGCPAuthorizationLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCasePreviewBottomContainer.Add(tempLastSavedByUserGCPAuthorizationLabel)
-	testCasePreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStopTimeStamp().String()))
+	testCaseExecutionPreviewBottomContainer.Add(tempLastSavedByUserGCPAuthorizationLabel)
+	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStopTimeStamp().String()))
 
 	// Create the area used for TIC, TI and the attributes
 	testCaseExecutionMainAreaForPreviewContainer = container.NewVBox()
@@ -269,6 +286,20 @@ func GenerateTestCaseExecutionPreviewContainer(
 		tempIndentationLevelRectangle.Resize(fyne.Size{
 			Width:  float32(10 * previewObject.GetIndentationLevel()),
 			Height: 2,
+		})
+
+		// Create the ExecutionStatus Rectangle
+		var tempExecutionStatusRectangle *canvas.Rectangle
+		tempExecutionStatusRectangle = canvas.NewRectangle(color.Transparent)
+
+		// Resize the ExecutionStatus rectangle
+		tempExecutionStatusRectangle.SetMinSize(fyne.Size{
+			Width:  testCaseExecutionStatusRectangleSize,
+			Height: testCaseExecutionStatusRectangleSize,
+		})
+		tempExecutionStatusRectangle.Resize(fyne.Size{
+			Width:  testCaseExecutionStatusRectangleSize,
+			Height: testCaseExecutionStatusRectangleSize,
 		})
 
 		// Decide what type of object
@@ -314,7 +345,10 @@ func GenerateTestCaseExecutionPreviewContainer(
 			// Create the container containing the TestInstructionContainer
 			var tempTestInstructionContainerContainer *fyne.Container
 			tempTestInstructionContainerContainer = container.NewHBox(
-				tempIndentationLevelRectangle, serialOrParallelRectangleImage, tempTestInstructionContainerNameWidget)
+				tempIndentationLevelRectangle,
+				tempExecutionStatusRectangle,
+				serialOrParallelRectangleImage,
+				tempTestInstructionContainerNameWidget)
 
 			// Add the TestInstructionContainerContainer to the main Area
 			testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionContainerContainer)
@@ -340,10 +374,76 @@ func GenerateTestCaseExecutionPreviewContainer(
 			var tempTestInstructionNameWidget *widget.Label
 			tempTestInstructionNameWidget = widget.NewLabel(previewObject.GetTestInstructionName())
 
+			// Set correct color on ExecutionStatus Rectangle
+			var statusId uint8
+			var statusBackgroundColor color.RGBA
+			var statusStrokeColor color.RGBA
+			var useStroke bool
+
+			// Extract TestInstructionExecution from TestInstruction
+			previewObject.GetTestInstructionUuid()
+			var tempTestCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+			tempTestCaseExecutionsListMessage, existInMap = testCaseExecutionsModel.
+				TestCaseExecutionsThatCanBeViewedByUserMap[testCaseExecutionThatIsShownInPreview]
+			if existInMap == false {
+				var id string
+				id = "7945551e-5e4d-41d3-8faf-54f1501daac9"
+				log.Fatalf(fmt.Sprintf("Couldn't find testCaseExecutionThatIsShownInPreview '%s' in TestCaseExecutionsThatCanBeViewedByUserMap. ID='%s'",
+					testCaseExecutionThatIsShownInPreview,
+					id))
+			}
+
+			var tempTestInstructionExecutionsStatusPreviewValues []*fenixExecutionServerGuiGrpcApi.
+				TestInstructionExecutionStatusPreviewValueMessage
+			tempTestInstructionExecutionsStatusPreviewValues = tempTestCaseExecutionsListMessage.
+				TestInstructionsExecutionStatusPreviewValues.GetTestInstructionExecutionStatusPreviewValues()
+
+			// Loop to find correct TestInstructionExecution
+			foundValue = false
+			var foundTestInstructionExecutionStatusPreviewValues *fenixExecutionServerGuiGrpcApi.
+				TestInstructionExecutionStatusPreviewValueMessage
+			for _, tempTestInstructionExecutionStatusPreviewValues := range tempTestInstructionExecutionsStatusPreviewValues {
+				if tempTestInstructionExecutionStatusPreviewValues.
+					GetMatureTestInstructionUuid() == previewObject.GetTestInstructionUuid() {
+					foundValue = true
+					foundTestInstructionExecutionStatusPreviewValues = tempTestInstructionExecutionStatusPreviewValues
+					break
+				}
+			}
+
+			if foundValue == false {
+				var id string
+				id = "e12c6be8-614c-4379-b482-165ff18dd68d"
+				log.Fatalf(fmt.Sprintf("Couldn't find TestInstruction '%s' in TestInstructionsExecution-data for TIE '%s'. ID='%s'",
+					previewObject.GetTestInstructionUuid,
+					testCaseExecutionThatIsShownInPreview,
+					id))
+			}
+
+			statusId = detailedExecutionsModel.ExecutionStatusColorNameToNumberMap[foundTestInstructionExecutionStatusPreviewValues.TestInstructionExecutionStatus.String()].ExecutionStatusNumber
+			statusBackgroundColor = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].BackgroundColor
+			tempExecutionStatusRectangle.FillColor = statusBackgroundColor
+
+			useStroke = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].UseStroke
+			if useStroke == true {
+				statusStrokeColor = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].StrokeColor
+				tempExecutionStatusRectangle.StrokeColor = statusStrokeColor
+			}
+
+			// When no background color
+			//if statusBackgroundColor.R+statusBackgroundColor.G+statusBackgroundColor.B+statusBackgroundColor.A == 0 {
+
+			//					clickable.Alignment = fyne.TextAlignCenter
+			//					clickable.textInsteadOfLabel.Hide()
+			//					clickable.Show()
+
 			// Create the container containing the TestInstruction
 			var tempTestInstructionContainer *fyne.Container
 			tempTestInstructionContainer = container.NewHBox(
-				tempIndentationLevelRectangle, testInstructionColorRectangle, tempTestInstructionNameWidget)
+				tempIndentationLevelRectangle,
+				tempExecutionStatusRectangle,
+				testInstructionColorRectangle,
+				tempTestInstructionNameWidget)
 
 			// Add the TestInstructionContainer to the main Area
 			testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionContainer)
@@ -415,8 +515,8 @@ func GenerateTestCaseExecutionPreviewContainer(
 	tempTopHeaderLabel.TextStyle = fyne.TextStyle{Bold: true}
 
 	testCaseExecutionPreviewContainer.Objects[0] = container.NewBorder(
-		container.NewVBox(container.NewCenter(tempTopHeaderLabel), testCasePreviewTopContainer, widget.NewSeparator()),
-		container.NewVBox(widget.NewSeparator(), testCasePreviewBottomContainer), nil, nil,
+		container.NewVBox(container.NewCenter(tempTopHeaderLabel), testCaseExecutionPreviewTopContainer, widget.NewSeparator()),
+		container.NewVBox(widget.NewSeparator(), testCaseExecutionPreviewBottomContainer), nil, nil,
 		testCaseMainAreaForPreviewScrollContainer)
 
 	// Refresh the 'testCaseExecutionPreviewContainer'

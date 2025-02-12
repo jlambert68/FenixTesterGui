@@ -14,6 +14,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"image/color"
 	"image/png"
+	"log"
 	"sort"
 	"strconv"
 )
@@ -354,15 +355,20 @@ func loadTestCaseExecutionListTableTable(testCaseExecutionsModel *testCaseExecut
 
 		// Column 2:
 		// TestCaseName
-		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetTestCaseName())
+		var testCaseNameTable string
+		testCaseNameTable = fmt.Sprintf("%s [%s]",
+			tempTestCaseExecution.GetTestCaseName(),
+			tempTestCaseExecution.GetTestCaseUuid()[0:8])
+
+		tempRowslice = append(tempRowslice, testCaseNameTable)
 
 		// Column 3:
-		// TestCaseUuid
-		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetTestCaseUuid())
-
-		// Column 4:
 		// TestCaseVersion
 		tempRowslice = append(tempRowslice, strconv.Itoa(int(tempTestCaseExecution.GetTestCaseVersion())))
+
+		// Column 4:
+		// TestCaseExecutionUuid
+		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetTestCaseExecutionUuid())
 
 		// Column 5:
 		// LatestTestCaseExecutionStatus
@@ -414,25 +420,31 @@ func loadTestCaseExecutionListTableTable(testCaseExecutionsModel *testCaseExecut
 		tempRowslice = append(tempRowslice, tempTestCaseExecutionStatusStopTimeStamp)
 
 		// Column 9:
+		// TestCaseUuid
+		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetTestCaseUuid())
+
+		// Column 10:
 		// DomainUuid
 		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetDomainUUID())
 
-		// Add Row to slice of rows for the table
-		testCaseExecutionsListTableTable = append(testCaseExecutionsListTableTable, tempRowslice)
-
-		// Column 10:
+		// Column 11:
 		// TestSuiteUuid
 		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetTestSuiteUuid())
 
-		// Add Row to slice of rows for the table
-		testCaseExecutionsListTableTable = append(testCaseExecutionsListTableTable, tempRowslice)
-
-		// Column 11:
+		// Column 12:
 		// TestSuiteExecutionUuid
 		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetTestSuiteExecutionUuid())
 
 		// Add Row to slice of rows for the table
 		testCaseExecutionsListTableTable = append(testCaseExecutionsListTableTable, tempRowslice)
+
+		// Verify number columns match constant 'numberColumnsInTestCaseExecutionsListUI'
+		if len(tempRowslice) != numberColumnsInTestCaseExecutionsListUI {
+			log.Fatalln(fmt.Sprintf("Number of elements in 'tempRowslice' missmatch contant 'numberColumnsInTestCaseExecutionsListUI'. %d vs %d. ID: %s",
+				tempRowslice,
+				numberColumnsInTestCaseExecutionsListUI,
+				"0e3edfa7-52b8-4fcc-8243-51494463c641"))
+		}
 
 	}
 

@@ -21,18 +21,18 @@ var numberOfTestCaseExecutionsAfterLocalFilters binding.String
 var numberOfTestCaseExecutionsInTheDatabaseSearch binding.String
 
 var testCaseExecutionsListTableHeader = []string{
-	"DomainName", "TestSuiteName", "TestCaseName", "TestCaseUuid", "TestCaseVersion", "Latest TestCaseExecution Status",
+	"DomainName", "TestSuiteName", "TestCaseName", "TestCaseVersion", "TestCaseExecutionUuid", "Latest TestCaseExecution Status",
 	"TestCaseExecution Start TimeStamp", "TestCaseExecution Status Update TimeStamp", "TestCaseExecution Finished TimeStamp",
-	"DomainUuid", "TestSuiteUuid", "TestSuiteExecutionUuid"}
+	"TestCaseUuid", "DomainUuid", "TestSuiteUuid", "TestSuiteExecutionUuid"}
 
 // The number of visible columns in UI-table for TestCaseExecutions
-const numberColumnsInTestCaseExecutionsListUI int = 9
+const numberColumnsInTestCaseExecutionsListUI int = 13
 
 // Keeps track of the in which column the TestCaseExecutionUUID exist in the data source for the UI-table
-const testCaseExecutionUuidColumnNumber uint8 = 2
+const testCaseExecutionUuidColumnNumber uint8 = 4
 
 // Keeps track of the in which column the "Latest TestCaseExecution Status" exist in the data source for the UI-table
-const latestTestCaseExecutionStatus uint8 = 4
+const latestTestCaseExecutionStatus uint8 = 5
 
 // Keeps track of the in which column the ""Latest TestCaseExecution TimeStamp"" exist in the data source for the UI-table
 const latestTestCaseExecutionTimeStamp uint8 = 5
@@ -48,6 +48,9 @@ var currentRowThatMouseIsHoveringAboveMutex sync.Mutex
 
 // The size of the rectangles used for TestInstructionContainers-processing type and the color of the TestInstruction
 const testCaseNodeRectangleSize = 40
+
+// The size of the rectangles used for indicate status of a TestInstructionExecution
+const testCaseExecutionStatusRectangleSize = 30
 
 // The TestCase Preview-container
 var testCaseExecutionPreviewContainerScroll *container.Scroll

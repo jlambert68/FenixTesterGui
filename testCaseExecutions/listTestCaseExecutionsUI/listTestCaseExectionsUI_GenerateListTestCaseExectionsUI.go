@@ -265,8 +265,9 @@ func GenerateTestCaseExecutionPreviewContainer(
 	testCaseExecutionPreviewTopContainer.Add(tempTestCaseExecutionStatusLabel)
 
 	var testCaseNameHBoxContainer *fyne.Container
-	testCaseNameHBoxContainer = container.NewHBox()
+	testCaseNameHBoxContainer = container.NewStack()
 	testCaseNameHBoxContainer.Add(tempTestCaseExecutionStatusRectangle)
+	testCaseNameHBoxContainer.Add(canvas.NewText(executionStatusColorMapObjectForTestCaseExecution.ExecutionStatusName, color.Black))
 	testCaseExecutionPreviewTopContainer.Add(testCaseNameHBoxContainer)
 
 	// Add TestCaseOwner Domain Top container

@@ -203,20 +203,89 @@ func GenerateTestCaseExecutionPreviewContainer(
 	// Create the Top container
 	testCaseExecutionPreviewTopContainer = container.New(layout.NewFormLayout())
 
+	// Create the ExecutionStatus Rectangle for TestCaseExecution-status
+	var tempTestCaseExecutionStatusRectangle *canvas.Rectangle
+	tempTestCaseExecutionStatusRectangle = canvas.NewRectangle(color.Transparent)
+
+	// Resize the ExecutionStatus rectangle
+	tempTestCaseExecutionStatusRectangle.SetMinSize(fyne.Size{
+		Width:  testCaseExecutionStatusRectangleWidth,
+		Height: testCaseExecutionStatusRectangleHight,
+	})
+	tempTestCaseExecutionStatusRectangle.Resize(fyne.Size{
+		Width:  testCaseExecutionStatusRectangleWidth,
+		Height: testCaseExecutionStatusRectangleHight,
+	})
+
+	// Set correct color on ExecutionStatus Rectangle
+	var statusId uint8
+
+	// Extract TestCaseExecution-status
+	var tempTestCaseExecutionStatusEnum string
+	tempTestCaseExecutionStatusEnum = tempTestCaseExecutionsListMessage.GetTestCaseExecutionStatus().String()[4:]
+
+	statusId = detailedExecutionsModel.
+		ExecutionStatusColorNameToNumberMap[tempTestCaseExecutionStatusEnum].ExecutionStatusNumber
+
+	var executionStatusColorMapObjectForTestCaseExecution detailedExecutionsModel.ExecutionStatusColorMapStruct
+	executionStatusColorMapObjectForTestCaseExecution, existInMap = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)]
+	if existInMap == false {
+		// No matching Status color exist due to that TestInstruction exists in ExecutionQueue
+		// 'INITIATED = 1'
+		executionStatusColorMapObjectForTestCaseExecution, _ = detailedExecutionsModel.ExecutionStatusColorMap[1]
+		/*
+			tempTestCaseExecutionStatusRectangle.StrokeWidth = 2
+			tempTestCaseExecutionStatusRectangle.StrokeColor = color.NRGBA{
+				R: 0xFF,
+				G: 0x00,
+				B: 0x00,
+				A: 0xFF,
+			}
+		*/
+
+	} else {
+		// Status color found
+		tempTestCaseExecutionStatusRectangle.FillColor = executionStatusColorMapObjectForTestCaseExecution.BackgroundColor
+
+		if executionStatusColorMapObjectForTestCaseExecution.UseStroke == true {
+			tempTestCaseExecutionStatusRectangle.StrokeWidth = 2
+			tempTestCaseExecutionStatusRectangle.StrokeColor = executionStatusColorMapObjectForTestCaseExecution.StrokeColor
+		}
+	}
+
 	// Add TestCaseName to Top container
 	tempTestCaseNameLabel := widget.NewLabel("TestCaseName:")
 	tempTestCaseNameLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewTopContainer.Add(tempTestCaseNameLabel)
 	testCaseExecutionPreviewTopContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetTestCaseName()))
 
+	// Add TestCaseExecutionStatus
+	tempTestCaseExecutionStatusLabel := widget.NewLabel("TestCaseExecution-status:")
+	tempTestCaseExecutionStatusLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testCaseExecutionPreviewTopContainer.Add(tempTestCaseExecutionStatusLabel)
+
+	var testCaseNameHBoxContainer *fyne.Container
+	testCaseNameHBoxContainer = container.NewHBox()
+	testCaseNameHBoxContainer.Add(tempTestCaseExecutionStatusRectangle)
+	testCaseExecutionPreviewTopContainer.Add(testCaseNameHBoxContainer)
+
+	// Add TestCaseOwner Domain Top container
+	tempOwnerDomainLabel := widget.NewLabel("OwnerDomain:")
+	tempOwnerDomainLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testCaseExecutionPreviewTopContainer.Add(tempOwnerDomainLabel)
+	testCaseExecutionPreviewTopContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetTestCasePreview().GetDomainThatOwnTheTestCase()))
+
+	// Add emtpy row
+	testCaseExecutionPreviewTopContainer.Add(widget.NewLabel(""))
+	testCaseExecutionPreviewTopContainer.Add(widget.NewLabel(""))
+
+	// Add TestCase
+	tempTestCaseLabel := widget.NewLabel("TestCase with execution status:")
+	tempTestCaseLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testCaseExecutionPreviewTopContainer.Add(tempTestCaseLabel)
+	testCaseExecutionPreviewTopContainer.Add(widget.NewLabel(""))
+
 	/*
-
-		// Add TestCaseOwner Domain Top container
-		tempOwnerDomainLabel := widget.NewLabel("OwnerDomain:")
-		tempOwnerDomainLabel.TextStyle = fyne.TextStyle{Bold: true}
-		testCaseExecutionPreviewTopContainer.Add(tempOwnerDomainLabel)
-		testCaseExecutionPreviewTopContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetDomainThatOwnTheTestCase()))
-
 		// Add Description Top container
 		tempTestCaseDescription := widget.NewLabel("Description:")
 		tempTestCaseDescription.TextStyle = fyne.TextStyle{Bold: true}
@@ -242,31 +311,31 @@ func GenerateTestCaseExecutionPreviewContainer(
 	tempTestCaseExecutionVersionLabel := widget.NewLabel("TestCaseExecutionVersion:")
 	tempTestCaseExecutionVersionLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewBottomContainer.Add(tempTestCaseExecutionVersionLabel)
-	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(string(tempTestCaseExecutionsListMessage.GetTestCaseExecutionVersion())))
+	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(strconv.Itoa(int(tempTestCaseExecutionsListMessage.GetTestCaseExecutionVersion()))))
 
 	// Add ExecutionStartTimeStamp to Bottom container
 	tempExecutionStartTimeStampLabel := widget.NewLabel("TestCase Execution Start TimeStamp:")
 	tempExecutionStartTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStartTimeStampLabel)
-	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStartTimeStamp().String()))
+	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStartTimeStamp().AsTime().String()))
 
 	// Add ExecutionStopTimeStamp to Bottom container
 	tempExecutionStopTimeStampLabel := widget.NewLabel("TestCase Execution Stop TimeStamp:")
 	tempExecutionStopTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStopTimeStampLabel)
-	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStopTimeStamp().String()))
+	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStopTimeStamp().AsTime().String()))
 
 	// Add ExecutionStatusUpdateTimeStamp to Bottom container
 	tempExecutionStatusUpdateTimeStampLabel := widget.NewLabel("TestCase Execution Status Update TimeStamp:")
 	tempExecutionStatusUpdateTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStatusUpdateTimeStampLabel)
-	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStatusUpdateTimeStamp().String()))
+	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStatusUpdateTimeStamp().AsTime().String()))
 
 	// Add LastSavedByUserGCPAuthorization to Bottom container
 	tempLastSavedByUserGCPAuthorizationLabel := widget.NewLabel("TestCase Execution Stop TimeStamp:")
 	tempLastSavedByUserGCPAuthorizationLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewBottomContainer.Add(tempLastSavedByUserGCPAuthorizationLabel)
-	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStopTimeStamp().String()))
+	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStopTimeStamp().AsTime().String()))
 
 	// Create the area used for TIC, TI and the attributes
 	testCaseExecutionMainAreaForPreviewContainer = container.NewVBox()
@@ -294,12 +363,12 @@ func GenerateTestCaseExecutionPreviewContainer(
 
 		// Resize the ExecutionStatus rectangle
 		tempExecutionStatusRectangle.SetMinSize(fyne.Size{
-			Width:  testCaseExecutionStatusRectangleSize,
-			Height: testCaseExecutionStatusRectangleSize,
+			Width:  testCaseExecutionStatusRectangleWidth,
+			Height: testCaseExecutionStatusRectangleHight,
 		})
 		tempExecutionStatusRectangle.Resize(fyne.Size{
-			Width:  testCaseExecutionStatusRectangleSize,
-			Height: testCaseExecutionStatusRectangleSize,
+			Width:  testCaseExecutionStatusRectangleWidth,
+			Height: testCaseExecutionStatusRectangleHight,
 		})
 
 		// Decide what type of object
@@ -345,8 +414,8 @@ func GenerateTestCaseExecutionPreviewContainer(
 			// Create the container containing the TestInstructionContainer
 			var tempTestInstructionContainerContainer *fyne.Container
 			tempTestInstructionContainerContainer = container.NewHBox(
-				tempIndentationLevelRectangle,
 				tempExecutionStatusRectangle,
+				tempIndentationLevelRectangle,
 				serialOrParallelRectangleImage,
 				tempTestInstructionContainerNameWidget)
 
@@ -412,22 +481,55 @@ func GenerateTestCaseExecutionPreviewContainer(
 			}
 
 			if foundValue == false {
-				var id string
-				id = "e12c6be8-614c-4379-b482-165ff18dd68d"
-				log.Fatalf(fmt.Sprintf("Couldn't find TestInstruction '%s' in TestInstructionsExecution-data for TIE '%s'. ID='%s'",
-					previewObject.GetTestInstructionUuid,
-					testCaseExecutionThatIsShownInPreview,
-					id))
-			}
 
-			statusId = detailedExecutionsModel.ExecutionStatusColorNameToNumberMap[foundTestInstructionExecutionStatusPreviewValues.TestInstructionExecutionStatus.String()].ExecutionStatusNumber
-			statusBackgroundColor = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].BackgroundColor
-			tempExecutionStatusRectangle.FillColor = statusBackgroundColor
+				// No matching Status color exist due to that TestInstruction exists in ExecutionQueue
+				// 'INITIATED = 1'
 
-			useStroke = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].UseStroke
-			if useStroke == true {
-				statusStrokeColor = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].StrokeColor
-				tempExecutionStatusRectangle.StrokeColor = statusStrokeColor
+				statusBackgroundColor = detailedExecutionsModel.ExecutionStatusColorMap[1].BackgroundColor
+				tempExecutionStatusRectangle.FillColor = statusBackgroundColor
+
+				useStroke = detailedExecutionsModel.ExecutionStatusColorMap[1].UseStroke
+				if useStroke == true {
+					statusStrokeColor = detailedExecutionsModel.ExecutionStatusColorMap[1].StrokeColor
+					tempExecutionStatusRectangle.StrokeColor = statusStrokeColor
+					tempExecutionStatusRectangle.StrokeWidth = 2
+				}
+				/*
+
+
+					// No TestInstructionExecution could be found, set Empty red box to indicate
+					tempExecutionStatusRectangle.StrokeColor = color.NRGBA{
+						R: 0xFF,
+						G: 0x00,
+						B: 0x00,
+						A: 0xFF,
+					}
+					tempExecutionStatusRectangle.StrokeWidth = 2
+
+				*/
+
+				/*
+					var id string
+					id = "e12c6be8-614c-4379-b482-165ff18dd68d"
+					log.Fatalf(fmt.Sprintf("Couldn't find TestInstruction '%s' in TestInstructionsExecution-data for TIE '%s'. ID='%s'",
+						previewObject.GetTestInstructionUuid,
+						testCaseExecutionThatIsShownInPreview,
+						id))
+				*/
+			} else {
+
+				statusId = detailedExecutionsModel.
+					ExecutionStatusColorNameToNumberMap[foundTestInstructionExecutionStatusPreviewValues.
+					TestInstructionExecutionStatus.String()[4:]].ExecutionStatusNumber
+				statusBackgroundColor = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].BackgroundColor
+				tempExecutionStatusRectangle.FillColor = statusBackgroundColor
+
+				useStroke = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].UseStroke
+				if useStroke == true {
+					statusStrokeColor = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].StrokeColor
+					tempExecutionStatusRectangle.StrokeColor = statusStrokeColor
+					tempExecutionStatusRectangle.StrokeWidth = 2
+				}
 			}
 
 			// When no background color
@@ -440,8 +542,8 @@ func GenerateTestCaseExecutionPreviewContainer(
 			// Create the container containing the TestInstruction
 			var tempTestInstructionContainer *fyne.Container
 			tempTestInstructionContainer = container.NewHBox(
-				tempIndentationLevelRectangle,
 				tempExecutionStatusRectangle,
+				tempIndentationLevelRectangle,
 				testInstructionColorRectangle,
 				tempTestInstructionNameWidget)
 

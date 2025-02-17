@@ -30,6 +30,23 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendListTestCaseExecutionsThatCa
 		"id": "24dffe32-ffa2-492e-8777-daf15a961ed7",
 	}).Debug("Outgoing 'grpcOut - SendListTestCaseExecutionsThatCanBeViewed'")
 
+	/*
+		ackNackResponse := &fenixExecutionServerGuiGrpcApi.AckNackResponse{
+			AckNack:    true,
+			Comments:   "",
+			ErrorCodes: nil,
+			ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
+				GetHighestFenixGuiExecutionServerProtoFileVersion()),
+		}
+
+		listTestCaseExecutionsResponse = &fenixExecutionServerGuiGrpcApi.ListTestCaseExecutionsResponse{
+			AckNackResponse:                            ackNackResponse,
+			TestCaseExecutionsList:                     nil,
+			LatestUniqueTestCaseExecutionDatabaseRowId: 0,
+			MoreRowsExists:                             false,
+		}
+		return listTestCaseExecutionsResponse
+	*/
 	var ctx context.Context
 	var returnMessageAckNack bool
 	var returnMessageString string

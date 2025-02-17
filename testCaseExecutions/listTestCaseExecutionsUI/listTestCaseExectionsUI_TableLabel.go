@@ -82,8 +82,8 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 	l.lastTapTime = time.Now()
 
 	// Update TestCase Preview
-	GenerateTestCaseExecutionPreviewContainer(l.currentTestCaseExcutionUuid, l.testCaseExecutionsModel)
 	testCaseExecutionThatIsShownInPreview = l.currentTestCaseExcutionUuid
+	GenerateTestCaseExecutionPreviewContainer(l.currentTestCaseExcutionUuid, l.testCaseExecutionsModel)
 	testCaseExecutionsListTable.Refresh()
 
 }

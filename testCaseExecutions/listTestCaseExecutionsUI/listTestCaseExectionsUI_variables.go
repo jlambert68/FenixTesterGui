@@ -50,7 +50,8 @@ var currentRowThatMouseIsHoveringAboveMutex sync.Mutex
 const testCaseNodeRectangleSize = 40
 
 // The size of the rectangles used for indicate status of a TestInstructionExecution
-const testCaseExecutionStatusRectangleSize = 30
+const testCaseExecutionStatusRectangleHight = 30
+const testCaseExecutionStatusRectangleWidth = 25
 
 // The TestCase Preview-container
 var testCaseExecutionPreviewContainerScroll *container.Scroll

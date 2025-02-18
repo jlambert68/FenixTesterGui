@@ -16,14 +16,16 @@ import (
 
 type clickableTableLabel struct {
 	widget.Label
-	onDoubleTap                 func()
-	lastTapTime                 time.Time
-	isClickable                 bool
-	currentRow                  int16
-	currentTestCaseExcutionUuid string
-	background                  *canvas.Rectangle
-	testCaseExecutionsModel     *testCaseExecutionsModel.TestCaseExecutionsModelStruct
-	textInsteadOfLabel          *canvas.Text
+	onDoubleTap                  func()
+	lastTapTime                  time.Time
+	isClickable                  bool
+	currentRow                   int16
+	currentTestCaseExecutionUuid string
+	currentTestCaseUuid          string
+	currentTestCaseName          string
+	background                   *canvas.Rectangle
+	testCaseExecutionsModel      *testCaseExecutionsModel.TestCaseExecutionsModelStruct
+	textInsteadOfLabel           *canvas.Text
 }
 
 func newClickableTableLabel(text string, onDoubleTap func(), tempIsClickable bool,
@@ -38,7 +40,9 @@ func newClickableTableLabel(text string, onDoubleTap func(), tempIsClickable boo
 
 	l.background = canvas.NewRectangle(color.Transparent)
 	l.testCaseExecutionsModel = testCaseExecutionsModel
-	l.currentTestCaseExcutionUuid = ""
+	l.currentTestCaseExecutionUuid = ""
+	l.currentTestCaseUuid = ""
+	l.currentTestCaseName = ""
 
 	l.ExtendBaseWidget(l)
 
@@ -82,9 +86,15 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 	l.lastTapTime = time.Now()
 
 	// Update TestCase Preview
-	testCaseExecutionThatIsShownInPreview = l.currentTestCaseExcutionUuid
-	GenerateTestCaseExecutionPreviewContainer(l.currentTestCaseExcutionUuid, l.testCaseExecutionsModel)
+	testCaseExecutionThatIsShownInPreview = l.currentTestCaseExecutionUuid
+	GenerateTestCaseExecutionPreviewContainer(l.currentTestCaseExecutionUuid, l.testCaseExecutionsModel)
 	testCaseExecutionsListTable.Refresh()
+
+	// Update 'loadAllTestCaseExecutionsForOneTestCaseButton' with correct text
+	loadAllTestCaseExecutionsForOneTestCaseButtonReference.
+		Text = loadAllTestCaseExecutionsForOneTestCaseButtonTextPart1 +
+		l.currentTestCaseName
+	loadAllTestCaseExecutionsForOneTestCaseButtonReference.Refresh()
 
 }
 

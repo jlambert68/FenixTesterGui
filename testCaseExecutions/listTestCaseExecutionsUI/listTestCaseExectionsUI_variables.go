@@ -25,11 +25,23 @@ var testCaseExecutionsListTableHeader = []string{
 	"TestCaseExecution Start TimeStamp", "TestCaseExecution Status Update TimeStamp", "TestCaseExecution Finished TimeStamp",
 	"TestCaseUuid", "DomainUuid", "TestSuiteUuid", "TestSuiteExecutionUuid"}
 
+const loadAllTestCaseExecutionsForOneTestCaseButtonTextPart1 = "Load all executions for TestCase: "
+
+var loadAllTestCaseExecutionsForOneTestCaseButtonText string
+
+var loadAllTestCaseExecutionsForOneTestCaseButtonReference *widget.Button
+
 // The number of visible columns in UI-table for TestCaseExecutions
 const numberColumnsInTestCaseExecutionsListUI int = 13
 
 // Keeps track of the in which column the TestCaseExecutionUUID exist in the data source for the UI-table
 const testCaseExecutionUuidColumnNumber uint8 = 4
+
+// Keeps track of the in which column the TestCaseUUID exist in the data source for the UI-table
+const testCaseUuidColumnNumber uint8 = 9
+
+// Keeps track of the in which column the TestCaseName exist in the data source for the UI-table
+const testCaseNameColumnNumber uint8 = 2
 
 // Keeps track of the in which column the "Latest TestCaseExecution Status" exist in the data source for the UI-table
 const latestTestCaseExecutionStatus uint8 = 5

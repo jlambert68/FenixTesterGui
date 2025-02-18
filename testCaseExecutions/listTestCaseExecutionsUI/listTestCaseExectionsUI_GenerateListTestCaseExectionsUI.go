@@ -64,6 +64,8 @@ func GenerateListTestCaseExecutionsUI(
 	var filterTestCaseExcutionsButtonFunction func()
 	var clearFiltersButton *widget.Button
 	var clearFiltersButtonFunction func()
+	var loadAllTestCaseExecutionsForOneTestCaseButton *widget.Button
+	var loadAllTestCaseExecutionsForOneTestCaseButtonFunction func()
 	var buttonsContainer *fyne.Container
 
 	var numberOfTestCaseExecutionsAfterLocalFilterLabel *widget.Label
@@ -120,11 +122,43 @@ func GenerateListTestCaseExecutionsUI(
 		fmt.Println("'clearFiltersButtonFunction' was pressed")
 	}
 
-	// Define the 'filterTestCaseExcutionsButton'
+	// Define the 'clearFiltersButton'
 	clearFiltersButton = widget.NewButton("Clear all search filters", clearFiltersButtonFunction)
 
+	// Set initial button text for 'loadAllTestCaseExecutionsForOneTestCaseButton'
+	loadAllTestCaseExecutionsForOneTestCaseButtonText = loadAllTestCaseExecutionsForOneTestCaseButtonTextPart1 + "_"
+
+	// Define the function to be executed to load all TestCaseExecutions for a specific TestCase. Executions are shown in list
+	loadAllTestCaseExecutionsForOneTestCaseButtonFunction = func() {
+
+		fmt.Println("'loadAllTestCaseExecutionsForOneTestCaseButton' was pressed")
+		/*
+			listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
+				testCaseExecutionsModel.LatestUniqueTestCaseExecutionDatabaseRowId,
+				true,
+				testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
+				testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
+				testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
+				true)
+
+			filterTestCaseExcutionsButtonFunction()
+
+		*/
+	}
+
+	// Define the 'loadAllTestCaseExecutionsForOneTestCaseButton'
+	loadAllTestCaseExecutionsForOneTestCaseButton = widget.NewButton(loadAllTestCaseExecutionsForOneTestCaseButtonText,
+		loadAllTestCaseExecutionsForOneTestCaseButtonFunction)
+
+	// Store reference to button
+	loadAllTestCaseExecutionsForOneTestCaseButtonReference = loadAllTestCaseExecutionsForOneTestCaseButton
+
 	// Add the buttons to the buttonsContainer
-	buttonsContainer = container.NewHBox(loadTestCaseExecutionsFromDataBaseButton, filterTestCaseExcutionsButton, clearFiltersButton)
+	buttonsContainer = container.NewHBox(
+		loadTestCaseExecutionsFromDataBaseButton,
+		filterTestCaseExcutionsButton,
+		clearFiltersButton,
+		loadAllTestCaseExecutionsForOneTestCaseButton)
 
 	// Add objects to the 'filterAndButtonsContainer'
 	filterAndButtonsContainer = container.NewVBox(buttonsContainer)
@@ -264,11 +298,21 @@ func GenerateTestCaseExecutionPreviewContainer(
 	tempTestCaseExecutionStatusLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewTopContainer.Add(tempTestCaseExecutionStatusLabel)
 
-	var testCaseNameHBoxContainer *fyne.Container
-	testCaseNameHBoxContainer = container.NewStack()
-	testCaseNameHBoxContainer.Add(tempTestCaseExecutionStatusRectangle)
-	testCaseNameHBoxContainer.Add(canvas.NewText(executionStatusColorMapObjectForTestCaseExecution.ExecutionStatusName, color.Black))
-	testCaseExecutionPreviewTopContainer.Add(testCaseNameHBoxContainer)
+	var testCaseExecutionStatusStackContainer *fyne.Container
+	var testCaseExecutionStatusHBoxContainer *fyne.Container
+	var testCaseExecutionStatusOuterHBoxContainer *fyne.Container
+	testCaseExecutionStatusStackContainer = container.NewStack()
+	testCaseExecutionStatusHBoxContainer = container.NewHBox(
+		widget.NewLabel(" "),
+		canvas.NewText(executionStatusColorMapObjectForTestCaseExecution.ExecutionStatusName, color.Black),
+		widget.NewLabel(" "))
+	testCaseExecutionStatusStackContainer.Add(tempTestCaseExecutionStatusRectangle)
+	testCaseExecutionStatusStackContainer.Add(testCaseExecutionStatusHBoxContainer)
+	testCaseExecutionStatusOuterHBoxContainer = container.NewHBox(
+		testCaseExecutionStatusStackContainer,
+		layout.NewSpacer())
+
+	testCaseExecutionPreviewTopContainer.Add(testCaseExecutionStatusOuterHBoxContainer)
 
 	// Add TestCaseOwner Domain Top container
 	tempOwnerDomainLabel := widget.NewLabel("OwnerDomain:")

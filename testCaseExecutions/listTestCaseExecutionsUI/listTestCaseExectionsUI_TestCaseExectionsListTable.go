@@ -149,12 +149,14 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 		clickable.SetText(testCaseExecutionsListTableTable[id.Row][id.Col])
 		clickable.isClickable = true
 		clickable.currentRow = int16(id.Row)
-		clickable.currentTestCaseExcutionUuid = testCaseExecutionsListTableTable[id.Row][testCaseExecutionUuidColumnNumber]
+		clickable.currentTestCaseExecutionUuid = testCaseExecutionsListTableTable[id.Row][testCaseExecutionUuidColumnNumber]
+		clickable.currentTestCaseUuid = testCaseExecutionsListTableTable[id.Row][testCaseUuidColumnNumber]
+		clickable.currentTestCaseName = testCaseExecutionsListTableTable[id.Row][testCaseNameColumnNumber]
 
 		clickable.onDoubleTap = func() {
 
 			// Open TestCaseExecution
-			//openTestCaseExecution(clickable.currentTestCaseExcutionUuid, clickable.testCaseExecutionsModel)
+			//openTestCaseExecution(clickable.currentTestCaseExecutionUuid, clickable.testCaseExecutionsModel)
 
 		}
 
@@ -187,7 +189,7 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 		} else {
 
 			// If this row is the one that is shown in TestCase preview window
-			if clickable.currentTestCaseExcutionUuid == testCaseExecutionThatIsShownInPreview {
+			if clickable.currentTestCaseExecutionUuid == testCaseExecutionThatIsShownInPreview {
 
 				clickable.TextStyle = fyne.TextStyle{Bold: false}
 				rectangle.FillColor = color.RGBA{

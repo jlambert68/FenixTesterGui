@@ -96,6 +96,9 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 		l.currentTestCaseName
 	loadAllTestCaseExecutionsForOneTestCaseButtonReference.Refresh()
 
+	// Save TestCaseUuid for TestCaseExecution shown in preview
+	testCaseUuidForTestCaseExecutionThatIsShownInPreview = l.currentTestCaseUuid
+
 }
 
 // TappedSecondary

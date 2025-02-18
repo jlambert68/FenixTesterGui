@@ -75,6 +75,9 @@ var TestCaseExecutionListAndTestCaseExecutionPreviewSplitContainer *container.Sp
 // The TestCaseExecutions that is shown in Preview
 var testCaseExecutionThatIsShownInPreview string
 
+// The TestCaseUuid for TestCaseExecutions that is shown in Preview
+var testCaseUuidForTestCaseExecutionThatIsShownInPreview string
+
 // SortingDirectionType
 // Define type for Sorting Direction
 type SortingDirectionType uint8

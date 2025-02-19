@@ -4,6 +4,7 @@ import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/detailedExecutionsModel"
 	detailedTestCaseExecutionsUI "FenixTesterGui/executions/detailedExecutionsUI"
+	"FenixTesterGui/soundEngine"
 	"FenixTesterGui/testCaseExecutions/listTestCaseExecutionsModel"
 	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
 	"bytes"
@@ -80,6 +81,8 @@ func GenerateListTestCaseExecutionsUI(
 			testCaseExecutionsModel.LatestUniqueTestCaseExecutionDatabaseRowId,
 			true,
 			testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
+			false,
+			"",
 			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 			true)
@@ -131,19 +134,35 @@ func GenerateListTestCaseExecutionsUI(
 	// Define the function to be executed to load all TestCaseExecutions for a specific TestCase. Executions are shown in list
 	loadAllTestCaseExecutionsForOneTestCaseButtonFunction = func() {
 
+		// When no TestCaseExecution is selected then inform the user
+		if len(testCaseExecutionThatIsShownInPreview) == 0 {
+
+			// Trigger System Notification sound
+			soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
+
+			fyne.CurrentApp().SendNotification(&fyne.Notification{
+				Title:   "Load TestCaseExecutions",
+				Content: "Select a TestCaseExecution before loading alla executions for the TestCase",
+			})
+
+			return
+
+		}
+
 		fmt.Println("'loadAllTestCaseExecutionsForOneTestCaseButton' was pressed")
-		/*
-			listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
-				testCaseExecutionsModel.LatestUniqueTestCaseExecutionDatabaseRowId,
-				true,
-				testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
-				testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
-				testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
-				true)
 
-			filterTestCaseExcutionsButtonFunction()
+		listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
+			testCaseExecutionsModel.LatestUniqueTestCaseExecutionDatabaseRowId,
+			true,
+			testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
+			true,
+			testCaseUuidForTestCaseExecutionThatIsShownInPreview,
+			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
+			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
+			true)
 
-		*/
+		filterTestCaseExcutionsButtonFunction()
+
 	}
 
 	// Define the 'loadAllTestCaseExecutionsForOneTestCaseButton'
@@ -210,7 +229,7 @@ func GenerateListTestCaseExecutionsUI(
 
 func GenerateTestCaseExecutionPreviewContainer(
 	testCaseExecutionUuid string,
-	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
+	testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
 
 	var testCaseExecutionPreviewTopContainer *fyne.Container
 	var testCaseExecutionPreviewBottomContainer *fyne.Container
@@ -232,7 +251,8 @@ func GenerateTestCaseExecutionPreviewContainer(
 	}
 
 	// Get Data for the Preview
-	tempTestCaseExecutionsListMessage = testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap[testCaseExecutionUuid]
+	tempTestCaseExecutionsListMessage = testCaseExecutionsModelRef.
+		TestCaseExecutionsThatCanBeViewedByUserMap[testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionUuid)]
 
 	// Create the Top container
 	testCaseExecutionPreviewTopContainer = container.New(layout.NewFormLayout())
@@ -497,8 +517,9 @@ func GenerateTestCaseExecutionPreviewContainer(
 			// Extract TestInstructionExecution from TestInstruction
 			previewObject.GetTestInstructionUuid()
 			var tempTestCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
-			tempTestCaseExecutionsListMessage, existInMap = testCaseExecutionsModel.
-				TestCaseExecutionsThatCanBeViewedByUserMap[testCaseExecutionThatIsShownInPreview]
+			tempTestCaseExecutionsListMessage, existInMap = testCaseExecutionsModelRef.
+				TestCaseExecutionsThatCanBeViewedByUserMap[testCaseExecutionsModel.
+				TestCaseExecutionUuidType(testCaseExecutionThatIsShownInPreview)]
 			if existInMap == false {
 				var id string
 				id = "7945551e-5e4d-41d3-8faf-54f1501daac9"

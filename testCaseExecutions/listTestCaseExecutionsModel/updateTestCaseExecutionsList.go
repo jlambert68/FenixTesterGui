@@ -15,21 +15,35 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 	latestUniqueTestCaseExecutionDatabaseRowId int32,
 	onlyRetrieveLimitedSizedBatch bool,
 	batchSize int32,
+	retrieveAllExecutionsForSpecificTestCaseUuid bool,
+	specificTestCaseUuid string,
 	testCaseExecutionFromTimeStamp time.Time,
 	testCaseExecutionToTimeStamp time.Time,
 	loadAllDataFromDatabase bool) {
 
+	// Secure that the user has picked a TestCaseExecution in the list before loading all executions for that TestCase
+	if retrieveAllExecutionsForSpecificTestCaseUuid == true && len(specificTestCaseUuid) == 0 {
+
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"ID": "ab8b70f7-9a0d-4e37-b2c8-aca1199a289d",
+			"retrieveAllExecutionsForSpecificTestCaseUuid": retrieveAllExecutionsForSpecificTestCaseUuid,
+			"specificTestCaseUuid":                         specificTestCaseUuid,
+		}).Fatal("'specificTestCaseUuid' must have a value")
+
+		return
+	}
+
 	var listTestCaseExecutionsResponse *fenixExecutionServerGuiGrpcApi.ListTestCaseExecutionsResponse
 
 	if loadAllDataFromDatabase == false {
-
+		// Only load one batch of data from the database
 		listTestCaseExecutionsResponse = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.
 			SendListTestCaseExecutionsThatCanBeViewed(
 				latestUniqueTestCaseExecutionDatabaseRowId,
 				onlyRetrieveLimitedSizedBatch,
 				batchSize,
-				false,
-				"",
+				retrieveAllExecutionsForSpecificTestCaseUuid,
+				specificTestCaseUuid,
 				testCaseExecutionFromTimeStamp,
 				testCaseExecutionToTimeStamp)
 
@@ -48,12 +62,19 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 			GetLatestUniqueTestCaseExecutionDatabaseRowId()
 		testCaseExecutionsModel.TestCaseExecutionsModel.MoreRowsExists = listTestCaseExecutionsResponse.GetMoreRowsExists()
 
-		// Store the slice with TestCases that a user can edit as a Map
-		storeTestCaseExecutionsThatCanBeViewedByUser(
-			listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
-			&testCaseExecutionsModel.TestCaseExecutionsModel)
+		// Store the TestCaseExecutions in the Map
+		if retrieveAllExecutionsForSpecificTestCaseUuid == true {
+			storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser(
+				listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
+				&testCaseExecutionsModel.TestCaseExecutionsModel)
+		} else {
+			storeTestCaseExecutionsThatCanBeViewedByUser(
+				listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
+				&testCaseExecutionsModel.TestCaseExecutionsModel)
+		}
 
 	} else {
+		// Load all data
 
 		// Load first batch
 		listTestCaseExecutionsResponse = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.
@@ -61,8 +82,8 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 				latestUniqueTestCaseExecutionDatabaseRowId,
 				onlyRetrieveLimitedSizedBatch,
 				batchSize,
-				false,
-				"",
+				retrieveAllExecutionsForSpecificTestCaseUuid,
+				specificTestCaseUuid,
 				testCaseExecutionFromTimeStamp,
 				testCaseExecutionToTimeStamp)
 
@@ -81,10 +102,16 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 			GetLatestUniqueTestCaseExecutionDatabaseRowId()
 		testCaseExecutionsModel.TestCaseExecutionsModel.MoreRowsExists = listTestCaseExecutionsResponse.GetMoreRowsExists()
 
-		// Store the slice with TestCases that a user can edit as a Map
-		storeTestCaseExecutionsThatCanBeViewedByUser(
-			listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
-			&testCaseExecutionsModel.TestCaseExecutionsModel)
+		// Store the TestCaseExecutions in the Map
+		if retrieveAllExecutionsForSpecificTestCaseUuid == true {
+			storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser(
+				listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
+				&testCaseExecutionsModel.TestCaseExecutionsModel)
+		} else {
+			storeTestCaseExecutionsThatCanBeViewedByUser(
+				listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
+				&testCaseExecutionsModel.TestCaseExecutionsModel)
+		}
 
 		// Load rest of the data as go-routine
 		go func() {
@@ -93,8 +120,8 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 					testCaseExecutionsModel.TestCaseExecutionsModel.LatestUniqueTestCaseExecutionDatabaseRowId,
 					false,
 					0,
-					false,
-					"",
+					retrieveAllExecutionsForSpecificTestCaseUuid,
+					specificTestCaseUuid,
 					testCaseExecutionFromTimeStamp,
 					testCaseExecutionToTimeStamp)
 
@@ -113,10 +140,17 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 				GetLatestUniqueTestCaseExecutionDatabaseRowId()
 			testCaseExecutionsModel.TestCaseExecutionsModel.MoreRowsExists = listTestCaseExecutionsResponse.GetMoreRowsExists()
 
-			// Store the slice with TestCases that a user can edit as a Map
-			storeTestCaseExecutionsThatCanBeViewedByUser(
-				listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
-				&testCaseExecutionsModel.TestCaseExecutionsModel)
+			// Store the TestCaseExecutions in the Map
+			if retrieveAllExecutionsForSpecificTestCaseUuid == true {
+				storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser(
+					listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
+					&testCaseExecutionsModel.TestCaseExecutionsModel)
+			} else {
+				storeTestCaseExecutionsThatCanBeViewedByUser(
+					listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
+					&testCaseExecutionsModel.TestCaseExecutionsModel)
+			}
+
 		}()
 
 	}
@@ -126,17 +160,34 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 // Store TestCaseExecutions That Can Be Viewed By User
 func storeTestCaseExecutionsThatCanBeViewedByUser(
 	testCaseExecutionsList []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage,
-	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
-
-	// Store the TestCaseExecutionsThatCanBeViewedByUser-list in the TestCaseModel
-	if testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap == nil {
-		testCaseExecutionsModel.InitiateTestCaseExecutionsMap()
-	}
+	testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
 
 	// Store the TestCaseExecutionsThatCanBeViewedByUser as a map structure in TestCaseExecution-struct
 	for _, testCaseExecutions := range testCaseExecutionsList {
 
-		testCaseExecutionsModel.AddToTestCaseExecutionsMap(testCaseExecutions.GetTestCaseExecutionUuid(), testCaseExecutions)
+		testCaseExecutionsModelRef.AddToTestCaseExecutionsMap(
+			testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutions.GetTestCaseExecutionUuid()),
+			testCaseExecutions)
+	}
+
+}
+
+// Store All TestCaseExecutions for one TestCase, That Can Be Viewed By User
+func storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser(
+	testCaseExecutionsList []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage,
+	testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
+
+	var testCaseUuid string
+
+	// Store the TestCaseExecutionsThatCanBeViewedByUser as a map structure in TestCaseExecution-struct
+	for _, testCaseExecutions := range testCaseExecutionsList {
+
+		// Extract the TestCase that all executions should be stored under
+		testCaseUuid =
+
+			testCaseExecutionsModelRef.AddToAllTestCaseExecutionsForOneTestCaseMap(
+				testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutions.GetTestCaseExecutionUuid()),
+				testCaseExecutions)
 	}
 
 }

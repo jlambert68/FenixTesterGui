@@ -214,6 +214,8 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 		0,
 		true,
 		testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
+		false,
+		"",
 		testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 		testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 		true)

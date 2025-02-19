@@ -29,7 +29,6 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendListTestCaseExecutionsThatCa
 	defer sharedCode.Logger.WithFields(logrus.Fields{
 		"id": "24dffe32-ffa2-492e-8777-daf15a961ed7",
 	}).Debug("Outgoing 'grpcOut - SendListTestCaseExecutionsThatCanBeViewed'")
-
 	/*
 		ackNackResponse := &fenixExecutionServerGuiGrpcApi.AckNackResponse{
 			AckNack:    true,
@@ -46,6 +45,8 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendListTestCaseExecutionsThatCa
 			MoreRowsExists:                             false,
 		}
 		return listTestCaseExecutionsResponse
+
+
 	*/
 	var ctx context.Context
 	var returnMessageAckNack bool

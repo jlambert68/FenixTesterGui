@@ -11,6 +11,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"image/color"
 	"image/png"
@@ -22,11 +23,11 @@ import (
 // RemoveTestCaseExecutionFromList
 // Remove a TestCaseExecution from the List
 func RemoveTestCaseExecutionFromList(testCaseExecutionUuidToBeRemoved string,
-	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
+	testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
 
-	// Delete TestCase from 'TestCasesThatCanBeEditedByUserMap'
-	delete(testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap,
-		testCaseExecutionUuidToBeRemoved)
+	// Delete TestCaseExecution from 'testCaseExecutionsThatCanBeViewedByUserMap'
+	testCaseExecutionsModelRef.DeleteFromTestCaseExecutionsMap(
+		testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionUuidToBeRemoved))
 
 	// Delete TestCase from 'TestCasesThatCanBeEditedByUserSlice'
 	/*
@@ -47,9 +48,9 @@ func RemoveTestCaseExecutionFromList(testCaseExecutionUuidToBeRemoved string,
 	*/
 
 	// Update table-list and update Table
-	loadTestCaseExecutionListTableTable(testCaseExecutionsModel)
+	loadTestCaseExecutionListTableTable(testCaseExecutionsModelRef)
 	calculateAndSetCorrectColumnWidths()
-	updateTestCaseExecutionsListTable(testCaseExecutionsModel)
+	updateTestCaseExecutionsListTable(testCaseExecutionsModelRef)
 
 }
 
@@ -325,15 +326,19 @@ func calculateAndSetCorrectColumnWidths() {
 
 }
 
-func loadTestCaseExecutionListTableTable(testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
+func loadTestCaseExecutionListTableTable(testCaseExecutionsModelObject *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
 
 	testCaseExecutionsListTableTable = nil
 
-	// Loop all TestCases and add to '[][]string'-object for the Table
-	for _, tempTestCaseExecution := range testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap {
+	// Get all TestCaseExecutions form 'TestCaseExecutionsThatCanBeViewedByUserMap'
+	var testCaseExecutionsListMessage *[]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+	testCaseExecutionsListMessage = testCaseExecutionsModelObject.ReadAllFromTestCaseExecutionsMap()
+
+	// Loop all TestCaseExecutions and add to '[][]string'-object for the Table
+	for _, tempTestCaseExecution := range *testCaseExecutionsListMessage {
 
 		// Create temporary Row-object for the table
-		var tempRowslice []string
+		var tempRowSlice []string
 
 		// Populate the temporary Row-object
 
@@ -344,7 +349,7 @@ func loadTestCaseExecutionListTableTable(testCaseExecutionsModel *testCaseExecut
 			tempTestCaseExecution.GetDomainName(),
 			tempTestCaseExecution.GetDomainUUID()[0:8])
 
-		tempRowslice = append(tempRowslice, domainNameForTable)
+		tempRowSlice = append(tempRowSlice, domainNameForTable)
 
 		// Column 1:
 		// SuiteName
@@ -353,7 +358,7 @@ func loadTestCaseExecutionListTableTable(testCaseExecutionsModel *testCaseExecut
 			tempTestCaseExecution.GetTestSuiteName(),
 			tempTestCaseExecution.GetTestSuiteUuid()[0:8])
 
-		tempRowslice = append(tempRowslice, suiteNameForTable)
+		tempRowSlice = append(tempRowSlice, suiteNameForTable)
 
 		// Column 2:
 		// TestCaseName
@@ -362,15 +367,15 @@ func loadTestCaseExecutionListTableTable(testCaseExecutionsModel *testCaseExecut
 			tempTestCaseExecution.GetTestCaseName(),
 			tempTestCaseExecution.GetTestCaseUuid()[0:8])
 
-		tempRowslice = append(tempRowslice, testCaseNameTable)
+		tempRowSlice = append(tempRowSlice, testCaseNameTable)
 
 		// Column 3:
 		// TestCaseVersion
-		tempRowslice = append(tempRowslice, strconv.Itoa(int(tempTestCaseExecution.GetTestCaseVersion())))
+		tempRowSlice = append(tempRowSlice, strconv.Itoa(int(tempTestCaseExecution.GetTestCaseVersion())))
 
 		// Column 4:
 		// TestCaseExecutionUuid
-		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetTestCaseExecutionUuid())
+		tempRowSlice = append(tempRowSlice, tempTestCaseExecution.GetTestCaseExecutionUuid())
 
 		// Column 5:
 		// LatestTestCaseExecutionStatus
@@ -383,7 +388,7 @@ func loadTestCaseExecutionListTableTable(testCaseExecutionsModel *testCaseExecut
 			tempTestCaseExecutionStatus = "<no execution>"
 		}
 
-		tempRowslice = append(tempRowslice, tempTestCaseExecutionStatus)
+		tempRowSlice = append(tempRowSlice, tempTestCaseExecutionStatus)
 
 		// Column 6:
 		// TestCaseExecutionStatusStartTimeStamp
@@ -395,7 +400,7 @@ func loadTestCaseExecutionListTableTable(testCaseExecutionsModel *testCaseExecut
 		} else {
 			tempTestCaseExecutionStatusStartTimeStamp = "<no execution>"
 		}
-		tempRowslice = append(tempRowslice, tempTestCaseExecutionStatusStartTimeStamp)
+		tempRowSlice = append(tempRowSlice, tempTestCaseExecutionStatusStartTimeStamp)
 
 		// Column 7:
 		// TestCaseExecutionStatusUpdateTimeStamp
@@ -407,7 +412,7 @@ func loadTestCaseExecutionListTableTable(testCaseExecutionsModel *testCaseExecut
 		} else {
 			tempTestCaseExecutionFinishTimeStamp = "<no successful execution yet>"
 		}
-		tempRowslice = append(tempRowslice, tempTestCaseExecutionFinishTimeStamp)
+		tempRowSlice = append(tempRowSlice, tempTestCaseExecutionFinishTimeStamp)
 
 		// Column 8:
 		// TestCaseExecutionStatusStopTimeStamp
@@ -419,31 +424,31 @@ func loadTestCaseExecutionListTableTable(testCaseExecutionsModel *testCaseExecut
 		} else {
 			tempTestCaseExecutionStatusStopTimeStamp = "<TestCase is not not finished>"
 		}
-		tempRowslice = append(tempRowslice, tempTestCaseExecutionStatusStopTimeStamp)
+		tempRowSlice = append(tempRowSlice, tempTestCaseExecutionStatusStopTimeStamp)
 
 		// Column 9:
 		// TestCaseUuid
-		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetTestCaseUuid())
+		tempRowSlice = append(tempRowSlice, tempTestCaseExecution.GetTestCaseUuid())
 
 		// Column 10:
 		// DomainUuid
-		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetDomainUUID())
+		tempRowSlice = append(tempRowSlice, tempTestCaseExecution.GetDomainUUID())
 
 		// Column 11:
 		// TestSuiteUuid
-		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetTestSuiteUuid())
+		tempRowSlice = append(tempRowSlice, tempTestCaseExecution.GetTestSuiteUuid())
 
 		// Column 12:
 		// TestSuiteExecutionUuid
-		tempRowslice = append(tempRowslice, tempTestCaseExecution.GetTestSuiteExecutionUuid())
+		tempRowSlice = append(tempRowSlice, tempTestCaseExecution.GetTestSuiteExecutionUuid())
 
 		// Add Row to slice of rows for the table
-		testCaseExecutionsListTableTable = append(testCaseExecutionsListTableTable, tempRowslice)
+		testCaseExecutionsListTableTable = append(testCaseExecutionsListTableTable, tempRowSlice)
 
 		// Verify number columns match constant 'numberColumnsInTestCaseExecutionsListUI'
-		if len(tempRowslice) != numberColumnsInTestCaseExecutionsListUI {
-			log.Fatalln(fmt.Sprintf("Number of elements in 'tempRowslice' missmatch contant 'numberColumnsInTestCaseExecutionsListUI'. %d vs %d. ID: %s",
-				tempRowslice,
+		if len(tempRowSlice) != numberColumnsInTestCaseExecutionsListUI {
+			log.Fatalln(fmt.Sprintf("Number of elements in 'tempRowSlice' missmatch contant 'numberColumnsInTestCaseExecutionsListUI'. %d vs %d. ID: %s",
+				tempRowSlice,
 				numberColumnsInTestCaseExecutionsListUI,
 				"0e3edfa7-52b8-4fcc-8243-51494463c641"))
 		}
@@ -451,8 +456,8 @@ func loadTestCaseExecutionListTableTable(testCaseExecutionsModel *testCaseExecut
 	}
 
 	// Do an initial sort 'testCaseExecutionsListTableTable' descending on 'LastSavedTimeStamp'
-	if testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap != nil &&
-		len(testCaseExecutionsModel.TestCaseExecutionsThatCanBeViewedByUserMap) > 0 {
+	if testCaseExecutionsModelObject.TestCaseExecutionsThatCanBeViewedByUserMap != nil &&
+		len(testCaseExecutionsModelObject.TestCaseExecutionsThatCanBeViewedByUserMap) > 0 {
 
 		currentSortColumn = initialColumnToSortOn
 		sort2DStringSlice(testCaseExecutionsListTableTable, initialColumnToSortOn, initialSortDirectionForInitialColumnToSortOn)

@@ -17,10 +17,21 @@ var NullTimeStampForTestCaseExecutionsSearch time.Time = time.Date(1970, 1, 1, 0
 // Holding all data around Executions
 var TestCaseExecutionsModel TestCaseExecutionsModelStruct
 
+// TestCaseExecutionUuidType
+// The type for key of the 'TestCaseExecutionsThatCanBeViewedByUserMap'
+type TestCaseExecutionUuidType string
+
+// AllTestCaseExecutionsForOneTestCaseUuidType
+// The type for key of the 'AllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUserMap'
+type AllTestCaseExecutionsForAllTestCasesUuidType string
+
+type AllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUserMapType map[TestCaseExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+
 // TestCaseExecutionsModelStruct
 // Type for holding all data around Executions
 type TestCaseExecutionsModelStruct struct {
-	TestCaseExecutionsThatCanBeViewedByUserMap map[string]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+	testCaseExecutionsThatCanBeViewedByUserMap                   map[TestCaseExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+	AllTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap map[AllTestCaseExecutionsForAllTestCasesUuidType]*AllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUserMapType
 	//TestCaseExecutionsThatCanBeViewedByUserSlice []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
 	LatestUniqueTestCaseExecutionDatabaseRowId int32
 	MoreRowsExists                             bool

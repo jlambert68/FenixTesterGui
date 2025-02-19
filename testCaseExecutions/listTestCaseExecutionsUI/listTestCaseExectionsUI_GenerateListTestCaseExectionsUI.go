@@ -97,7 +97,10 @@ func GenerateListTestCaseExecutionsUI(
 	// Define the function to be executed to filter TestCases that the user can edit
 	filterTestCaseExcutionsButtonFunction = func() {
 		fmt.Println("'filterTestCaseExecutionsButton' was pressed")
-		loadTestCaseExecutionListTableTable(testCaseExecutionsModel)
+		loadTestCaseExecutionListTableTable(
+			testCaseExecutionsModel,
+			false,
+			"")
 		calculateAndSetCorrectColumnWidths()
 		updateTestCaseExecutionsListTable(testCaseExecutionsModel)
 
@@ -161,7 +164,12 @@ func GenerateListTestCaseExecutionsUI(
 			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 			true)
 
-		filterTestCaseExcutionsButtonFunction()
+		loadTestCaseExecutionListTableTable(
+			testCaseExecutionsModel,
+			true,
+			testCaseUuidForTestCaseExecutionThatIsShownInPreview)
+		calculateAndSetCorrectColumnWidths()
+		updateTestCaseExecutionsListTable(testCaseExecutionsModel)
 
 	}
 
@@ -240,8 +248,6 @@ func GenerateTestCaseExecutionPreviewContainer(
 	var existInMap bool
 	var foundValue bool
 
-	var tempTestCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
-
 	// Verify that number Headers match number of columns, constant 'numberColumnsInTestCaseExecutionsListUI'
 	if len(testCaseExecutionsListTableHeader) != numberColumnsInTestCaseExecutionsListUI {
 		log.Fatalln(fmt.Sprintf("Number of elements in 'tempRowslice' missmatch contant 'numberColumnsInTestCaseExecutionsListUI'. %d vs %d. ID: %s",
@@ -251,8 +257,8 @@ func GenerateTestCaseExecutionPreviewContainer(
 	}
 
 	// Get Data for the Preview
-	tempTestCaseExecutionsListMessage = testCaseExecutionsModelRef.
-		TestCaseExecutionsThatCanBeViewedByUserMap[testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionUuid)]
+	var tempTestCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+	tempTestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.ReadFromTestCaseExecutionsMap(testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionUuid))
 
 	// Create the Top container
 	testCaseExecutionPreviewTopContainer = container.New(layout.NewFormLayout())
@@ -515,11 +521,11 @@ func GenerateTestCaseExecutionPreviewContainer(
 			var useStroke bool
 
 			// Extract TestInstructionExecution from TestInstruction
-			previewObject.GetTestInstructionUuid()
-			var tempTestCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
-			tempTestCaseExecutionsListMessage, existInMap = testCaseExecutionsModelRef.
-				TestCaseExecutionsThatCanBeViewedByUserMap[testCaseExecutionsModel.
-				TestCaseExecutionUuidType(testCaseExecutionThatIsShownInPreview)]
+			var temp2TestCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+			temp2TestCaseExecutionsListMessage, existInMap = testCaseExecutionsModelRef.
+				ReadFromTestCaseExecutionsMap(testCaseExecutionsModel.TestCaseExecutionUuidType(
+					testCaseExecutionThatIsShownInPreview))
+
 			if existInMap == false {
 				var id string
 				id = "7945551e-5e4d-41d3-8faf-54f1501daac9"
@@ -530,7 +536,7 @@ func GenerateTestCaseExecutionPreviewContainer(
 
 			var tempTestInstructionExecutionsStatusPreviewValues []*fenixExecutionServerGuiGrpcApi.
 				TestInstructionExecutionStatusPreviewValueMessage
-			tempTestInstructionExecutionsStatusPreviewValues = tempTestCaseExecutionsListMessage.
+			tempTestInstructionExecutionsStatusPreviewValues = temp2TestCaseExecutionsListMessage.
 				TestInstructionsExecutionStatusPreviewValues.GetTestInstructionExecutionStatusPreviewValues()
 
 			// Loop to find correct TestInstructionExecution

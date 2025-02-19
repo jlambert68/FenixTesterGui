@@ -178,16 +178,21 @@ func storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser(
 	testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
 
 	var testCaseUuid string
+	var testCaseExecutionUuid string
 
 	// Store the TestCaseExecutionsThatCanBeViewedByUser as a map structure in TestCaseExecution-struct
-	for _, testCaseExecutions := range testCaseExecutionsList {
+	for _, testCaseExecution := range testCaseExecutionsList {
 
-		// Extract the TestCase that all executions should be stored under
-		testCaseUuid =
+		// Extract keys
+		testCaseUuid = testCaseExecution.GetTestCaseUuid()
+		testCaseExecutionUuid = testCaseExecution.GetTestCaseExecutionUuid()
 
-			testCaseExecutionsModelRef.AddToAllTestCaseExecutionsForOneTestCaseMap(
-				testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutions.GetTestCaseExecutionUuid()),
-				testCaseExecutions)
+		// Store the TestCaseExecution
+		testCaseExecutionsModelRef.AddToAllTestCaseExecutionsForOneTestCaseMap(
+			testCaseExecutionsModel.TestCaseUuidType(testCaseUuid),
+			testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionUuid),
+			testCaseExecution)
+
 	}
 
 }

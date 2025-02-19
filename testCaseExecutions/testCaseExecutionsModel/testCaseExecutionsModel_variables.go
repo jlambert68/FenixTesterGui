@@ -21,9 +21,9 @@ var TestCaseExecutionsModel TestCaseExecutionsModelStruct
 // The type for key of the 'TestCaseExecutionsThatCanBeViewedByUserMap'
 type TestCaseExecutionUuidType string
 
-// AllTestCaseExecutionsForOneTestCaseUuidType
+// TestCaseUuidType
 // The type for key of the 'AllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUserMap'
-type AllTestCaseExecutionsForAllTestCasesUuidType string
+type TestCaseUuidType string
 
 type AllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUserMapType map[TestCaseExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
 
@@ -31,7 +31,7 @@ type AllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUserMapType map[TestCas
 // Type for holding all data around Executions
 type TestCaseExecutionsModelStruct struct {
 	testCaseExecutionsThatCanBeViewedByUserMap                   map[TestCaseExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
-	AllTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap map[AllTestCaseExecutionsForAllTestCasesUuidType]*AllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUserMapType
+	allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap map[TestCaseUuidType]*AllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUserMapType
 	//TestCaseExecutionsThatCanBeViewedByUserSlice []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
 	LatestUniqueTestCaseExecutionDatabaseRowId int32
 	MoreRowsExists                             bool

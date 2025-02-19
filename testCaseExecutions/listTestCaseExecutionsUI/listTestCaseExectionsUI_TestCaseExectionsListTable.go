@@ -31,27 +31,27 @@ func RemoveTestCaseExecutionFromList(testCaseExecutionUuidToBeRemoved string,
 
 	// Delete TestCase from 'TestCasesThatCanBeEditedByUserSlice'
 	/*
-		for index, tempTestCasesThatCanBeEditedByUser := range testCasesModel.TestCasesThatCanBeEditedByUserSlice {
+			for index, tempTestCasesThatCanBeEditedByUser := range testCasesModel.TestCasesThatCanBeEditedByUserSlice {
 
-			// Is this the TestCase to be removed from slice
-			if tempTestCasesThatCanBeEditedByUser.TestCaseUuid == testCaseExecutionUuidToBeRemoved {
+				// Is this the TestCase to be removed from slice
+				if tempTestCasesThatCanBeEditedByUser.TestCaseUuid == testCaseExecutionUuidToBeRemoved {
 
-				// Remove TestCase at index
-				testCasesModel.TestCasesThatCanBeEditedByUserSlice = append(
-					testCasesModel.TestCasesThatCanBeEditedByUserSlice[:index],
-					testCasesModel.TestCasesThatCanBeEditedByUserSlice[index+1:]...)
+					// Remove TestCase at index
+					testCasesModel.TestCasesThatCanBeEditedByUserSlice = append(
+						testCasesModel.TestCasesThatCanBeEditedByUserSlice[:index],
+						testCasesModel.TestCasesThatCanBeEditedByUserSlice[index+1:]...)
 
-				break
+					break
+				}
+
 			}
 
-		}
+
+		// Update table-list and update Table
+		loadTestCaseExecutionListTableTable(testCaseExecutionsModelRef)
+		calculateAndSetCorrectColumnWidths()
+		updateTestCaseExecutionsListTable(testCaseExecutionsModelRef)
 	*/
-
-	// Update table-list and update Table
-	loadTestCaseExecutionListTableTable(testCaseExecutionsModelRef)
-	calculateAndSetCorrectColumnWidths()
-	updateTestCaseExecutionsListTable(testCaseExecutionsModelRef)
-
 }
 
 // Create the UI-list that holds the list of TestCases that the user can edit
@@ -326,13 +326,25 @@ func calculateAndSetCorrectColumnWidths() {
 
 }
 
-func loadTestCaseExecutionListTableTable(testCaseExecutionsModelObject *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
+func loadTestCaseExecutionListTableTable(
+	testCaseExecutionsModelObject *testCaseExecutionsModel.TestCaseExecutionsModelStruct,
+	retrieveAllExecutionsForSpecificTestCaseUuid bool,
+	specificTestCaseUuid string) {
 
 	testCaseExecutionsListTableTable = nil
 
-	// Get all TestCaseExecutions form 'TestCaseExecutionsThatCanBeViewedByUserMap'
+	// Get all TestCaseExecutions form 'testCaseExecutionsThatCanBeViewedByUserMap' or from 'allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap'
 	var testCaseExecutionsListMessage *[]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
-	testCaseExecutionsListMessage = testCaseExecutionsModelObject.ReadAllFromTestCaseExecutionsMap()
+	if retrieveAllExecutionsForSpecificTestCaseUuid == false {
+
+		// Retrieve latest TestExecutions
+		testCaseExecutionsListMessage = testCaseExecutionsModelObject.ReadAllFromTestCaseExecutionsMap()
+	} else {
+
+		// Retrieve all TestCaseExecutions for one TestCase
+		testCaseExecutionsListMessage, _ = testCaseExecutionsModelObject.
+			ReadAllFromAllTestCaseExecutionsForOneTestCaseMap(testCaseExecutionsModel.TestCaseUuidType(specificTestCaseUuid))
+	}
 
 	// Loop all TestCaseExecutions and add to '[][]string'-object for the Table
 	for _, tempTestCaseExecution := range *testCaseExecutionsListMessage {
@@ -456,8 +468,7 @@ func loadTestCaseExecutionListTableTable(testCaseExecutionsModelObject *testCase
 	}
 
 	// Do an initial sort 'testCaseExecutionsListTableTable' descending on 'LastSavedTimeStamp'
-	if testCaseExecutionsModelObject.TestCaseExecutionsThatCanBeViewedByUserMap != nil &&
-		len(testCaseExecutionsModelObject.TestCaseExecutionsThatCanBeViewedByUserMap) > 0 {
+	if testCaseExecutionsListMessage != nil && len(*testCaseExecutionsListMessage) > 0 {
 
 		currentSortColumn = initialColumnToSortOn
 		sort2DStringSlice(testCaseExecutionsListTableTable, initialColumnToSortOn, initialSortDirectionForInitialColumnToSortOn)

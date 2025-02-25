@@ -78,6 +78,24 @@ var testCaseExecutionThatIsShownInPreview string
 // The TestCaseUuid for TestCaseExecutions that is shown in Preview
 var testCaseUuidForTestCaseExecutionThatIsShownInPreview string
 
+// CurrenExecutionListType
+// The type that defines if TestCasesExecutions in the GUI-list comes from
+// "One Execution per TestCase" or "All Executions for one TestCase"
+type CurrenExecutionListType uint8
+
+// The constants that defines if TestCasesExecutions in the GUI-list comes from
+// "One Execution per TestCase" or "All Executions for one TestCase"
+const (
+	NotDefined CurrenExecutionListType = iota
+	OneExecutionPerTestCase
+	AllExecutionsForOneTestCase
+)
+
+// ExecutionsInGuiIsOfType
+// The variable that keeps track on if TestCasesExecutions in the GUI-list comes from
+// "One Execution per TestCase" or "All Executions for one TestCase"
+var ExecutionsInGuiIsOfType CurrenExecutionListType
+
 // SortingDirectionType
 // Define type for Sorting Direction
 type SortingDirectionType uint8

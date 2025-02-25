@@ -77,8 +77,12 @@ func GenerateListTestCaseExecutionsUI(
 	// Define the function to be executed to load TestCaseExecutions from that Database that the user can view
 	loadTestCaseExcutionsFromDataBaseFunction = func() {
 		fmt.Println("'loadTestCaseExecutionsFromDataBaseButton' was pressed")
+
+		// Specify from were Executions in the GUI comes from
+		ExecutionsInGuiIsOfType = OneExecutionPerTestCase
+
 		listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
-			testCaseExecutionsModel.LatestUniqueTestCaseExecutionDatabaseRowId,
+			testCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.LatestUniqueTestCaseExecutionDatabaseRowId,
 			true,
 			testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
 			false,
@@ -154,8 +158,11 @@ func GenerateListTestCaseExecutionsUI(
 
 		fmt.Println("'loadAllTestCaseExecutionsForOneTestCaseButton' was pressed")
 
+		// Specify from were Executions in the GUI comes from
+		ExecutionsInGuiIsOfType = AllExecutionsForOneTestCase
+
 		listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
-			testCaseExecutionsModel.LatestUniqueTestCaseExecutionDatabaseRowId,
+			testCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.LatestUniqueTestCaseExecutionDatabaseRowId,
 			true,
 			testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
 			true,
@@ -258,7 +265,24 @@ func GenerateTestCaseExecutionPreviewContainer(
 
 	// Get Data for the Preview
 	var tempTestCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
-	tempTestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.ReadFromTestCaseExecutionsMap(testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionUuid))
+
+	// Can preview be found in Map for "One TestCaseExecution per TestCase" or "All TestCaseExecutions per TestCase"
+	switch ExecutionsInGuiIsOfType {
+
+	case AllExecutionsForOneTestCase:
+		tempTestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.GetSpecificTestCaseExecutionForOneTestCaseUuid(
+			testCaseExecutionsModel.TestCaseUuidType(testCaseUuidForTestCaseExecutionThatIsShownInPreview),
+			testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionThatIsShownInPreview))
+
+	case OneExecutionPerTestCase:
+		tempTestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.ReadFromTestCaseExecutionsMap(
+			testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionUuid))
+
+	case NotDefined:
+
+		tempTestCaseExecutionsListMessage = &fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage{}
+
+	}
 
 	// Create the Top container
 	testCaseExecutionPreviewTopContainer = container.New(layout.NewFormLayout())
@@ -411,270 +435,278 @@ func GenerateTestCaseExecutionPreviewContainer(
 	// Create the area used for TIC, TI and the attributes
 	testCaseExecutionMainAreaForPreviewContainer = container.NewVBox()
 
-	// Loop the preview objects and to container
-	for _, previewObject := range tempTestCaseExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects {
+	// Check if there is TestCase Preview information
+	if tempTestCaseExecutionsListMessage.GetTestCasePreview() == nil {
 
-		// Create the Indentation rectangle
-		var tempIndentationLevelRectangle *canvas.Rectangle
-		tempIndentationLevelRectangle = canvas.NewRectangle(color.Transparent)
+		testCaseExecutionMainAreaForPreviewContainer.Add(widget.NewLabel("No Preview information found in database!"))
 
-		// Resize the Indentation rectangle
-		tempIndentationLevelRectangle.SetMinSize(fyne.Size{
-			Width:  float32(10 * previewObject.GetIndentationLevel()),
-			Height: 2,
-		})
-		tempIndentationLevelRectangle.Resize(fyne.Size{
-			Width:  float32(10 * previewObject.GetIndentationLevel()),
-			Height: 2,
-		})
+	} else {
 
-		// Create the ExecutionStatus Rectangle
-		var tempExecutionStatusRectangle *canvas.Rectangle
-		tempExecutionStatusRectangle = canvas.NewRectangle(color.Transparent)
+		// Loop the preview objects and to container
+		for _, previewObject := range tempTestCaseExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects {
 
-		// Resize the ExecutionStatus rectangle
-		tempExecutionStatusRectangle.SetMinSize(fyne.Size{
-			Width:  testCaseExecutionStatusRectangleWidth,
-			Height: testCaseExecutionStatusRectangleHight,
-		})
-		tempExecutionStatusRectangle.Resize(fyne.Size{
-			Width:  testCaseExecutionStatusRectangleWidth,
-			Height: testCaseExecutionStatusRectangleHight,
-		})
+			// Create the Indentation rectangle
+			var tempIndentationLevelRectangle *canvas.Rectangle
+			tempIndentationLevelRectangle = canvas.NewRectangle(color.Transparent)
 
-		// Decide what type of object
-		switch previewObject.TestCaseStructureObjectType {
+			// Resize the Indentation rectangle
+			tempIndentationLevelRectangle.SetMinSize(fyne.Size{
+				Width:  float32(10 * previewObject.GetIndentationLevel()),
+				Height: 2,
+			})
+			tempIndentationLevelRectangle.Resize(fyne.Size{
+				Width:  float32(10 * previewObject.GetIndentationLevel()),
+				Height: 2,
+			})
 
-		case fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage_TestInstructionContainer:
+			// Create the ExecutionStatus Rectangle
+			var tempExecutionStatusRectangle *canvas.Rectangle
+			tempExecutionStatusRectangle = canvas.NewRectangle(color.Transparent)
 
-			var serialOrParallelRectangleImage *canvas.Image
+			// Resize the ExecutionStatus rectangle
+			tempExecutionStatusRectangle.SetMinSize(fyne.Size{
+				Width:  testCaseExecutionStatusRectangleWidth,
+				Height: testCaseExecutionStatusRectangleHight,
+			})
+			tempExecutionStatusRectangle.Resize(fyne.Size{
+				Width:  testCaseExecutionStatusRectangleWidth,
+				Height: testCaseExecutionStatusRectangleHight,
+			})
 
-			// Create graphics that show if TestInstruction is serial or parallel processed
-			if previewObject.TestInstructionIsSerialProcessed == true {
+			// Decide what type of object
+			switch previewObject.TestCaseStructureObjectType {
 
-				// Convert the byte slice into an image.Image object
-				if imageData_tic_serialImage == nil {
-					imageData_tic_serialImage, err = png.Decode(bytes.NewReader(tic_serialImage))
-					if err != nil {
-						log.Fatalf("Failed to decode image: %v", err)
+			case fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage_TestInstructionContainer:
+
+				var serialOrParallelRectangleImage *canvas.Image
+
+				// Create graphics that show if TestInstruction is serial or parallel processed
+				if previewObject.TestInstructionIsSerialProcessed == true {
+
+					// Convert the byte slice into an image.Image object
+					if imageData_tic_serialImage == nil {
+						imageData_tic_serialImage, err = png.Decode(bytes.NewReader(tic_serialImage))
+						if err != nil {
+							log.Fatalf("Failed to decode image: %v", err)
+						}
 					}
-				}
 
-				serialOrParallelRectangleImage = canvas.NewImageFromImage(imageData_tic_serialImage)
-				serialOrParallelRectangleImage.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize-4), float32(testCaseNodeRectangleSize-4)))
-				serialOrParallelRectangleImage.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize-4), float32(testCaseNodeRectangleSize-4)))
+					serialOrParallelRectangleImage = canvas.NewImageFromImage(imageData_tic_serialImage)
+					serialOrParallelRectangleImage.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize-4), float32(testCaseNodeRectangleSize-4)))
+					serialOrParallelRectangleImage.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize-4), float32(testCaseNodeRectangleSize-4)))
 
-			} else {
-				// Convert the byte slice into an image.Image object
-				if imageData_tic_parallellImage == nil {
-					imageData_tic_parallellImage, err = png.Decode(bytes.NewReader(tic_parallellImage))
-					if err != nil {
-						log.Fatalf("Failed to decode image: %v", err)
+				} else {
+					// Convert the byte slice into an image.Image object
+					if imageData_tic_parallellImage == nil {
+						imageData_tic_parallellImage, err = png.Decode(bytes.NewReader(tic_parallellImage))
+						if err != nil {
+							log.Fatalf("Failed to decode image: %v", err)
+						}
 					}
+					serialOrParallelRectangleImage = canvas.NewImageFromImage(imageData_tic_parallellImage)
+					serialOrParallelRectangleImage.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize-4), float32(testCaseNodeRectangleSize-4)))
+					serialOrParallelRectangleImage.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize-4), float32(testCaseNodeRectangleSize-4)))
+
 				}
-				serialOrParallelRectangleImage = canvas.NewImageFromImage(imageData_tic_parallellImage)
-				serialOrParallelRectangleImage.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize-4), float32(testCaseNodeRectangleSize-4)))
-				serialOrParallelRectangleImage.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize-4), float32(testCaseNodeRectangleSize-4)))
 
-			}
+				// Create the Name for the TestInstructionContainer
+				var tempTestInstructionContainerNameWidget *widget.Label
+				tempTestInstructionContainerNameWidget = widget.NewLabel(previewObject.GetTestInstructionContainerName())
 
-			// Create the Name for the TestInstructionContainer
-			var tempTestInstructionContainerNameWidget *widget.Label
-			tempTestInstructionContainerNameWidget = widget.NewLabel(previewObject.GetTestInstructionContainerName())
+				// Create the container containing the TestInstructionContainer
+				var tempTestInstructionContainerContainer *fyne.Container
+				tempTestInstructionContainerContainer = container.NewHBox(
+					tempExecutionStatusRectangle,
+					tempIndentationLevelRectangle,
+					serialOrParallelRectangleImage,
+					tempTestInstructionContainerNameWidget)
 
-			// Create the container containing the TestInstructionContainer
-			var tempTestInstructionContainerContainer *fyne.Container
-			tempTestInstructionContainerContainer = container.NewHBox(
-				tempExecutionStatusRectangle,
-				tempIndentationLevelRectangle,
-				serialOrParallelRectangleImage,
-				tempTestInstructionContainerNameWidget)
+				// Add the TestInstructionContainerContainer to the main Area
+				testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionContainerContainer)
 
-			// Add the TestInstructionContainerContainer to the main Area
-			testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionContainerContainer)
+			case fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage_TestInstruction:
 
-		case fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage_TestInstruction:
-
-			// Create the Color for the color rectangle
-			var rectangleColor color.Color
-			rectangleColor, err = sharedCode.ConvertRGBAHexStringIntoRGBAColor(previewObject.TestInstructionColor)
-			if err != nil {
-				log.Fatalf("Failed to convert hex-color-string '%s' into 'color'. err='%s'", previewObject.TestInstructionColor, err.Error())
-			}
-
-			// Create color rectangle for TestInstruction
-			var testInstructionColorRectangle *canvas.Rectangle
-			testInstructionColorRectangle = canvas.NewRectangle(rectangleColor)
-
-			// Set the size of the color rectangle
-			testInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize-14), float32(testCaseNodeRectangleSize-14)))
-			testInstructionColorRectangle.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize-14), float32(testCaseNodeRectangleSize-14)))
-
-			// Create the Name for the TestInstruction
-			var tempTestInstructionNameWidget *widget.Label
-			tempTestInstructionNameWidget = widget.NewLabel(previewObject.GetTestInstructionName())
-
-			// Set correct color on ExecutionStatus Rectangle
-			var statusId uint8
-			var statusBackgroundColor color.RGBA
-			var statusStrokeColor color.RGBA
-			var useStroke bool
-
-			// Extract TestInstructionExecution from TestInstruction
-			var temp2TestCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
-			temp2TestCaseExecutionsListMessage, existInMap = testCaseExecutionsModelRef.
-				ReadFromTestCaseExecutionsMap(testCaseExecutionsModel.TestCaseExecutionUuidType(
-					testCaseExecutionThatIsShownInPreview))
-
-			if existInMap == false {
-				var id string
-				id = "7945551e-5e4d-41d3-8faf-54f1501daac9"
-				log.Fatalf(fmt.Sprintf("Couldn't find testCaseExecutionThatIsShownInPreview '%s' in TestCaseExecutionsThatCanBeViewedByUserMap. ID='%s'",
-					testCaseExecutionThatIsShownInPreview,
-					id))
-			}
-
-			var tempTestInstructionExecutionsStatusPreviewValues []*fenixExecutionServerGuiGrpcApi.
-				TestInstructionExecutionStatusPreviewValueMessage
-			tempTestInstructionExecutionsStatusPreviewValues = temp2TestCaseExecutionsListMessage.
-				TestInstructionsExecutionStatusPreviewValues.GetTestInstructionExecutionStatusPreviewValues()
-
-			// Loop to find correct TestInstructionExecution
-			foundValue = false
-			var foundTestInstructionExecutionStatusPreviewValues *fenixExecutionServerGuiGrpcApi.
-				TestInstructionExecutionStatusPreviewValueMessage
-			for _, tempTestInstructionExecutionStatusPreviewValues := range tempTestInstructionExecutionsStatusPreviewValues {
-				if tempTestInstructionExecutionStatusPreviewValues.
-					GetMatureTestInstructionUuid() == previewObject.GetTestInstructionUuid() {
-					foundValue = true
-					foundTestInstructionExecutionStatusPreviewValues = tempTestInstructionExecutionStatusPreviewValues
-					break
+				// Create the Color for the color rectangle
+				var rectangleColor color.Color
+				rectangleColor, err = sharedCode.ConvertRGBAHexStringIntoRGBAColor(previewObject.TestInstructionColor)
+				if err != nil {
+					log.Fatalf("Failed to convert hex-color-string '%s' into 'color'. err='%s'", previewObject.TestInstructionColor, err.Error())
 				}
-			}
 
-			if foundValue == false {
+				// Create color rectangle for TestInstruction
+				var testInstructionColorRectangle *canvas.Rectangle
+				testInstructionColorRectangle = canvas.NewRectangle(rectangleColor)
 
-				// No matching Status color exist due to that TestInstruction exists in ExecutionQueue
-				// 'INITIATED = 1'
+				// Set the size of the color rectangle
+				testInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize-14), float32(testCaseNodeRectangleSize-14)))
+				testInstructionColorRectangle.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize-14), float32(testCaseNodeRectangleSize-14)))
 
-				statusBackgroundColor = detailedExecutionsModel.ExecutionStatusColorMap[1].BackgroundColor
-				tempExecutionStatusRectangle.FillColor = statusBackgroundColor
+				// Create the Name for the TestInstruction
+				var tempTestInstructionNameWidget *widget.Label
+				tempTestInstructionNameWidget = widget.NewLabel(previewObject.GetTestInstructionName())
 
-				useStroke = detailedExecutionsModel.ExecutionStatusColorMap[1].UseStroke
-				if useStroke == true {
-					statusStrokeColor = detailedExecutionsModel.ExecutionStatusColorMap[1].StrokeColor
-					tempExecutionStatusRectangle.StrokeColor = statusStrokeColor
-					tempExecutionStatusRectangle.StrokeWidth = 2
-				}
-				/*
+				// Set correct color on ExecutionStatus Rectangle
+				var statusId uint8
+				var statusBackgroundColor color.RGBA
+				var statusStrokeColor color.RGBA
+				var useStroke bool
 
+				// Extract TestInstructionExecution from TestInstruction
+				var temp2TestCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+				temp2TestCaseExecutionsListMessage, existInMap = testCaseExecutionsModelRef.
+					ReadFromTestCaseExecutionsMap(testCaseExecutionsModel.TestCaseExecutionUuidType(
+						testCaseExecutionThatIsShownInPreview))
 
-					// No TestInstructionExecution could be found, set Empty red box to indicate
-					tempExecutionStatusRectangle.StrokeColor = color.NRGBA{
-						R: 0xFF,
-						G: 0x00,
-						B: 0x00,
-						A: 0xFF,
-					}
-					tempExecutionStatusRectangle.StrokeWidth = 2
-
-				*/
-
-				/*
+				if existInMap == false {
 					var id string
-					id = "e12c6be8-614c-4379-b482-165ff18dd68d"
-					log.Fatalf(fmt.Sprintf("Couldn't find TestInstruction '%s' in TestInstructionsExecution-data for TIE '%s'. ID='%s'",
-						previewObject.GetTestInstructionUuid,
+					id = "7945551e-5e4d-41d3-8faf-54f1501daac9"
+					log.Fatalf(fmt.Sprintf("Couldn't find testCaseExecutionThatIsShownInPreview '%s' in TestCaseExecutionsThatCanBeViewedByUserMap. ID='%s'",
 						testCaseExecutionThatIsShownInPreview,
 						id))
-				*/
-			} else {
-
-				statusId = detailedExecutionsModel.
-					ExecutionStatusColorNameToNumberMap[foundTestInstructionExecutionStatusPreviewValues.
-					TestInstructionExecutionStatus.String()[4:]].ExecutionStatusNumber
-				statusBackgroundColor = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].BackgroundColor
-				tempExecutionStatusRectangle.FillColor = statusBackgroundColor
-
-				useStroke = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].UseStroke
-				if useStroke == true {
-					statusStrokeColor = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].StrokeColor
-					tempExecutionStatusRectangle.StrokeColor = statusStrokeColor
-					tempExecutionStatusRectangle.StrokeWidth = 2
 				}
-			}
 
-			// When no background color
-			//if statusBackgroundColor.R+statusBackgroundColor.G+statusBackgroundColor.B+statusBackgroundColor.A == 0 {
+				var tempTestInstructionExecutionsStatusPreviewValues []*fenixExecutionServerGuiGrpcApi.
+					TestInstructionExecutionStatusPreviewValueMessage
+				tempTestInstructionExecutionsStatusPreviewValues = temp2TestCaseExecutionsListMessage.
+					TestInstructionsExecutionStatusPreviewValues.GetTestInstructionExecutionStatusPreviewValues()
 
-			//					clickable.Alignment = fyne.TextAlignCenter
-			//					clickable.textInsteadOfLabel.Hide()
-			//					clickable.Show()
+				// Loop to find correct TestInstructionExecution
+				foundValue = false
+				var foundTestInstructionExecutionStatusPreviewValues *fenixExecutionServerGuiGrpcApi.
+					TestInstructionExecutionStatusPreviewValueMessage
+				for _, tempTestInstructionExecutionStatusPreviewValues := range tempTestInstructionExecutionsStatusPreviewValues {
+					if tempTestInstructionExecutionStatusPreviewValues.
+						GetMatureTestInstructionUuid() == previewObject.GetTestInstructionUuid() {
+						foundValue = true
+						foundTestInstructionExecutionStatusPreviewValues = tempTestInstructionExecutionStatusPreviewValues
+						break
+					}
+				}
 
-			// Create the container containing the TestInstruction
-			var tempTestInstructionContainer *fyne.Container
-			tempTestInstructionContainer = container.NewHBox(
-				tempExecutionStatusRectangle,
-				tempIndentationLevelRectangle,
-				testInstructionColorRectangle,
-				tempTestInstructionNameWidget)
+				if foundValue == false {
 
-			// Add the TestInstructionContainer to the main Area
-			testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionContainer)
+					// No matching Status color exist due to that TestInstruction exists in ExecutionQueue
+					// 'INITIATED = 1'
 
-			/*
+					statusBackgroundColor = detailedExecutionsModel.ExecutionStatusColorMap[1].BackgroundColor
+					tempExecutionStatusRectangle.FillColor = statusBackgroundColor
 
-				// Attributes if there are any
-				if len(previewObject.GetTestInstructionAttributes()) > 0 {
+					useStroke = detailedExecutionsModel.ExecutionStatusColorMap[1].UseStroke
+					if useStroke == true {
+						statusStrokeColor = detailedExecutionsModel.ExecutionStatusColorMap[1].StrokeColor
+						tempExecutionStatusRectangle.StrokeColor = statusStrokeColor
+						tempExecutionStatusRectangle.StrokeWidth = 2
+					}
+					/*
 
-					// Create the Indentation rectangle for the attributes
-					var tempIndentationLevelRectangleForAttributes *canvas.Rectangle
-					tempIndentationLevelRectangleForAttributes = canvas.NewRectangle(color.Transparent)
 
-					// Resize the Indentation rectangle
-					tempIndentationLevelRectangleForAttributes.SetMinSize(fyne.Size{
-						Width:  float32(10 * (previewObject.GetIndentationLevel() + 10)),
-						Height: 2,
-					})
-					tempIndentationLevelRectangleForAttributes.Resize(fyne.Size{
-						Width:  float32(10 * (previewObject.GetIndentationLevel() + 10)),
-						Height: 2,
-					})
+						// No TestInstructionExecution could be found, set Empty red box to indicate
+						tempExecutionStatusRectangle.StrokeColor = color.NRGBA{
+							R: 0xFF,
+							G: 0x00,
+							B: 0x00,
+							A: 0xFF,
+						}
+						tempExecutionStatusRectangle.StrokeWidth = 2
 
-					// Create the container for the attributes
-					var testInstructionAttributesContainer *fyne.Container
-					testInstructionAttributesContainer = container.New(layout.NewFormLayout())
+					*/
 
-					// Loop attributes and add to container
-					for _, attribute := range previewObject.TestInstructionAttributes {
+					/*
+						var id string
+						id = "e12c6be8-614c-4379-b482-165ff18dd68d"
+						log.Fatalf(fmt.Sprintf("Couldn't find TestInstruction '%s' in TestInstructionsExecution-data for TIE '%s'. ID='%s'",
+							previewObject.GetTestInstructionUuid,
+							testCaseExecutionThatIsShownInPreview,
+							id))
+					*/
+				} else {
 
-						// Create label for attribute
-						var attributeLabel *widget.Label
-						attributeLabel = widget.NewLabel(attribute.AttributeName)
+					statusId = detailedExecutionsModel.
+						ExecutionStatusColorNameToNumberMap[foundTestInstructionExecutionStatusPreviewValues.
+						TestInstructionExecutionStatus.String()[4:]].ExecutionStatusNumber
+					statusBackgroundColor = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].BackgroundColor
+					tempExecutionStatusRectangle.FillColor = statusBackgroundColor
 
-						// Create value for attribute
-						var attributeValue *widget.Label
-						attributeValue = widget.NewLabel(attribute.AttributeValue)
+					useStroke = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].UseStroke
+					if useStroke == true {
+						statusStrokeColor = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].StrokeColor
+						tempExecutionStatusRectangle.StrokeColor = statusStrokeColor
+						tempExecutionStatusRectangle.StrokeWidth = 2
+					}
+				}
 
-						// Add label and value ro the attribute container
-						testInstructionAttributesContainer.Add(attributeLabel)
-						testInstructionAttributesContainer.Add(attributeValue)
+				// When no background color
+				//if statusBackgroundColor.R+statusBackgroundColor.G+statusBackgroundColor.B+statusBackgroundColor.A == 0 {
 
+				//					clickable.Alignment = fyne.TextAlignCenter
+				//					clickable.textInsteadOfLabel.Hide()
+				//					clickable.Show()
+
+				// Create the container containing the TestInstruction
+				var tempTestInstructionContainer *fyne.Container
+				tempTestInstructionContainer = container.NewHBox(
+					tempExecutionStatusRectangle,
+					tempIndentationLevelRectangle,
+					testInstructionColorRectangle,
+					tempTestInstructionNameWidget)
+
+				// Add the TestInstructionContainer to the main Area
+				testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionContainer)
+
+				/*
+
+					// Attributes if there are any
+					if len(previewObject.GetTestInstructionAttributes()) > 0 {
+
+						// Create the Indentation rectangle for the attributes
+						var tempIndentationLevelRectangleForAttributes *canvas.Rectangle
+						tempIndentationLevelRectangleForAttributes = canvas.NewRectangle(color.Transparent)
+
+						// Resize the Indentation rectangle
+						tempIndentationLevelRectangleForAttributes.SetMinSize(fyne.Size{
+							Width:  float32(10 * (previewObject.GetIndentationLevel() + 10)),
+							Height: 2,
+						})
+						tempIndentationLevelRectangleForAttributes.Resize(fyne.Size{
+							Width:  float32(10 * (previewObject.GetIndentationLevel() + 10)),
+							Height: 2,
+						})
+
+						// Create the container for the attributes
+						var testInstructionAttributesContainer *fyne.Container
+						testInstructionAttributesContainer = container.New(layout.NewFormLayout())
+
+						// Loop attributes and add to container
+						for _, attribute := range previewObject.TestInstructionAttributes {
+
+							// Create label for attribute
+							var attributeLabel *widget.Label
+							attributeLabel = widget.NewLabel(attribute.AttributeName)
+
+							// Create value for attribute
+							var attributeValue *widget.Label
+							attributeValue = widget.NewLabel(attribute.AttributeValue)
+
+							// Add label and value ro the attribute container
+							testInstructionAttributesContainer.Add(attributeLabel)
+							testInstructionAttributesContainer.Add(attributeValue)
+
+						}
+
+						// Create the container containing the Attributes
+						var tempTestInstructionAttributesContainer *fyne.Container
+						tempTestInstructionAttributesContainer = container.NewHBox(
+							tempIndentationLevelRectangleForAttributes, testInstructionAttributesContainer)
+
+						// Add the TestInstructionContainerContainer to the main Area
+						testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionAttributesContainer)
 					}
 
-					// Create the container containing the Attributes
-					var tempTestInstructionAttributesContainer *fyne.Container
-					tempTestInstructionAttributesContainer = container.NewHBox(
-						tempIndentationLevelRectangleForAttributes, testInstructionAttributesContainer)
+				*/
 
-					// Add the TestInstructionContainerContainer to the main Area
-					testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionAttributesContainer)
-				}
-
-			*/
-
-		default:
-			log.Fatalf("Unknown 'previewObject.TestCaseStructureObjectType' which never should happen; %s", previewObject.TestCaseStructureObjectType.String())
+			default:
+				log.Fatalf("Unknown 'previewObject.TestCaseStructureObjectType' which never should happen; %s", previewObject.TestCaseStructureObjectType.String())
+			}
 		}
 	}
 

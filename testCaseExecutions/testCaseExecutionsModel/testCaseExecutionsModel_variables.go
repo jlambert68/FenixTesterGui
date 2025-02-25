@@ -21,21 +21,30 @@ var TestCaseExecutionsModel TestCaseExecutionsModelStruct
 // The type for key of the 'TestCaseExecutionsThatCanBeViewedByUserMap'
 type TestCaseExecutionUuidType string
 
+type latestTestCaseExecutionForEachTestCaseUuidStruct struct {
+	latestTestCaseExecutionForEachTestCaseUuidMap map[TestCaseExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+	LatestUniqueTestCaseExecutionDatabaseRowId    int32
+	MoreRowsExists                                bool
+}
+
 // TestCaseUuidType
 // The type for key of the 'AllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUserMap'
 type TestCaseUuidType string
 
 type AllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUserMapType map[TestCaseExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
 
+type allTestCaseExecutionsForOneTestCaseUuidStruct struct {
+	allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap map[TestCaseExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+	latestUniqueTestCaseExecutionDatabaseRowId                   int32
+	moreRowsExists                                               bool
+}
+
 // TestCaseExecutionsModelStruct
 // Type for holding all data around Executions
 type TestCaseExecutionsModelStruct struct {
-	testCaseExecutionsThatCanBeViewedByUserMap                   map[TestCaseExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
-	allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap map[TestCaseUuidType]*AllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUserMapType
-	//TestCaseExecutionsThatCanBeViewedByUserSlice []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
-	LatestUniqueTestCaseExecutionDatabaseRowId int32
-	MoreRowsExists                             bool
-	CurrentActiveTestCaseExecutionUuid         string
-	StandardTestCaseExecutionsBatchSize        int32 // The number if rows to be retrieved in one batch
-	NullTimeStampForTestCaseExecutionsSearch   time.Time
+	LatestTestCaseExecutionForEachTestCaseUuid                   latestTestCaseExecutionForEachTestCaseUuidStruct
+	AllTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap map[TestCaseUuidType]*allTestCaseExecutionsForOneTestCaseUuidStruct
+
+	StandardTestCaseExecutionsBatchSize      int32 // The number if rows to be retrieved in one batch
+	NullTimeStampForTestCaseExecutionsSearch time.Time
 }

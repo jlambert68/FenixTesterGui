@@ -34,7 +34,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	var currentTestCase testCaseModel.TestCaseModelStruct
 
 	// Initiate Lua-script-Engine. TODO For now only Fenix-Placeholders are supported
-	luaEngine.InitiateLuaScriptEngine([][]byte{})
+	luaEngine.InitiateLuaScriptEngine([]luaEngine.LuaScriptsStruct{})
 
 	currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
 	if existInMap == false {

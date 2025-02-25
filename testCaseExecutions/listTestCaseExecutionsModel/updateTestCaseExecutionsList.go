@@ -56,21 +56,21 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 			return
 		}
 
-		// Store information about latest row retrieved and if there are more rows
-		testCaseExecutionsModel.TestCaseExecutionsModel.
-			LatestUniqueTestCaseExecutionDatabaseRowId = listTestCaseExecutionsResponse.
-			GetLatestUniqueTestCaseExecutionDatabaseRowId()
-		testCaseExecutionsModel.TestCaseExecutionsModel.MoreRowsExists = listTestCaseExecutionsResponse.GetMoreRowsExists()
-
 		// Store the TestCaseExecutions in the Map
 		if retrieveAllExecutionsForSpecificTestCaseUuid == true {
 			storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser(
 				listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
-				&testCaseExecutionsModel.TestCaseExecutionsModel)
+				&testCaseExecutionsModel.TestCaseExecutionsModel,
+				listTestCaseExecutionsResponse.
+					GetLatestUniqueTestCaseExecutionDatabaseRowId(),
+				listTestCaseExecutionsResponse.GetMoreRowsExists())
 		} else {
-			storeTestCaseExecutionsThatCanBeViewedByUser(
+			storeOneTestCaseExecutionPerTestCaseThatCanBeViewedByUser(
 				listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
-				&testCaseExecutionsModel.TestCaseExecutionsModel)
+				&testCaseExecutionsModel.TestCaseExecutionsModel,
+				listTestCaseExecutionsResponse.
+					GetLatestUniqueTestCaseExecutionDatabaseRowId(),
+				listTestCaseExecutionsResponse.GetMoreRowsExists())
 		}
 
 	} else {
@@ -96,28 +96,29 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 			return
 		}
 
-		// Store information about latest row retrieved and if there are more rows
-		testCaseExecutionsModel.TestCaseExecutionsModel.
-			LatestUniqueTestCaseExecutionDatabaseRowId = listTestCaseExecutionsResponse.
-			GetLatestUniqueTestCaseExecutionDatabaseRowId()
-		testCaseExecutionsModel.TestCaseExecutionsModel.MoreRowsExists = listTestCaseExecutionsResponse.GetMoreRowsExists()
-
 		// Store the TestCaseExecutions in the Map
 		if retrieveAllExecutionsForSpecificTestCaseUuid == true {
 			storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser(
 				listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
-				&testCaseExecutionsModel.TestCaseExecutionsModel)
+				&testCaseExecutionsModel.TestCaseExecutionsModel,
+				listTestCaseExecutionsResponse.
+					GetLatestUniqueTestCaseExecutionDatabaseRowId(),
+				listTestCaseExecutionsResponse.GetMoreRowsExists())
 		} else {
-			storeTestCaseExecutionsThatCanBeViewedByUser(
+			storeOneTestCaseExecutionPerTestCaseThatCanBeViewedByUser(
 				listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
-				&testCaseExecutionsModel.TestCaseExecutionsModel)
+				&testCaseExecutionsModel.TestCaseExecutionsModel,
+				listTestCaseExecutionsResponse.
+					GetLatestUniqueTestCaseExecutionDatabaseRowId(),
+				listTestCaseExecutionsResponse.GetMoreRowsExists())
 		}
 
 		// Load rest of the data as go-routine
 		go func() {
 			listTestCaseExecutionsResponse = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.
 				SendListTestCaseExecutionsThatCanBeViewed(
-					testCaseExecutionsModel.TestCaseExecutionsModel.LatestUniqueTestCaseExecutionDatabaseRowId,
+					testCaseExecutionsModel.TestCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.
+						LatestUniqueTestCaseExecutionDatabaseRowId,
 					false,
 					0,
 					retrieveAllExecutionsForSpecificTestCaseUuid,
@@ -134,21 +135,21 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 				return
 			}
 
-			// Store information about latest row retrieved and if there are more rows
-			testCaseExecutionsModel.TestCaseExecutionsModel.
-				LatestUniqueTestCaseExecutionDatabaseRowId = listTestCaseExecutionsResponse.
-				GetLatestUniqueTestCaseExecutionDatabaseRowId()
-			testCaseExecutionsModel.TestCaseExecutionsModel.MoreRowsExists = listTestCaseExecutionsResponse.GetMoreRowsExists()
-
 			// Store the TestCaseExecutions in the Map
 			if retrieveAllExecutionsForSpecificTestCaseUuid == true {
 				storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser(
 					listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
-					&testCaseExecutionsModel.TestCaseExecutionsModel)
+					&testCaseExecutionsModel.TestCaseExecutionsModel,
+					listTestCaseExecutionsResponse.
+						GetLatestUniqueTestCaseExecutionDatabaseRowId(),
+					listTestCaseExecutionsResponse.GetMoreRowsExists())
 			} else {
-				storeTestCaseExecutionsThatCanBeViewedByUser(
+				storeOneTestCaseExecutionPerTestCaseThatCanBeViewedByUser(
 					listTestCaseExecutionsResponse.GetTestCaseExecutionsList(),
-					&testCaseExecutionsModel.TestCaseExecutionsModel)
+					&testCaseExecutionsModel.TestCaseExecutionsModel,
+					listTestCaseExecutionsResponse.
+						GetLatestUniqueTestCaseExecutionDatabaseRowId(),
+					listTestCaseExecutionsResponse.GetMoreRowsExists())
 			}
 
 		}()
@@ -158,9 +159,17 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 }
 
 // Store TestCaseExecutions That Can Be Viewed By User
-func storeTestCaseExecutionsThatCanBeViewedByUser(
+func storeOneTestCaseExecutionPerTestCaseThatCanBeViewedByUser(
 	testCaseExecutionsList []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage,
-	testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
+	testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct,
+	latestUniqueTestCaseExecutionDatabaseRowId int32,
+	moreRowsExists bool) {
+
+	// Store information about latest row retrieved and if there are more rows
+	testCaseExecutionsModel.TestCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.
+		LatestUniqueTestCaseExecutionDatabaseRowId = latestUniqueTestCaseExecutionDatabaseRowId
+	testCaseExecutionsModel.TestCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.
+		MoreRowsExists = moreRowsExists
 
 	// Store the TestCaseExecutionsThatCanBeViewedByUser as a map structure in TestCaseExecution-struct
 	for _, testCaseExecutions := range testCaseExecutionsList {
@@ -175,7 +184,9 @@ func storeTestCaseExecutionsThatCanBeViewedByUser(
 // Store All TestCaseExecutions for one TestCase, That Can Be Viewed By User
 func storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser(
 	testCaseExecutionsList []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage,
-	testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
+	testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct,
+	latestUniqueTestCaseExecutionDatabaseRowId int32,
+	moreRowsExists bool) {
 
 	var testCaseUuid string
 	var testCaseExecutionUuid string
@@ -188,10 +199,13 @@ func storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser(
 		testCaseExecutionUuid = testCaseExecution.GetTestCaseExecutionUuid()
 
 		// Store the TestCaseExecution
-		testCaseExecutionsModelRef.AddToAllTestCaseExecutionsForOneTestCaseMap(
+		testCaseExecutionsModel.AddTestCaseExecutionsForOneTestCaseUuid(
+			testCaseExecutionsModelRef,
 			testCaseExecutionsModel.TestCaseUuidType(testCaseUuid),
 			testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionUuid),
-			testCaseExecution)
+			testCaseExecution,
+			latestUniqueTestCaseExecutionDatabaseRowId,
+			moreRowsExists)
 
 	}
 

@@ -342,8 +342,9 @@ func loadTestCaseExecutionListTableTable(
 	} else {
 
 		// Retrieve all TestCaseExecutions for one TestCase
+
 		testCaseExecutionsListMessage, _ = testCaseExecutionsModelObject.
-			ReadAllFromAllTestCaseExecutionsForOneTestCaseMap(testCaseExecutionsModel.TestCaseUuidType(specificTestCaseUuid))
+			GetAllTestCaseExecutionsForOneTestCaseUuid(testCaseExecutionsModel.TestCaseUuidType(specificTestCaseUuid))
 	}
 
 	// Loop all TestCaseExecutions and add to '[][]string'-object for the Table

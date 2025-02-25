@@ -15,8 +15,10 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) InitiateTestCaseExe
 	testCaseExecutionsMapMutex.Lock()
 
 	// Initiate map if it is not already done
-	if testCaseExecutionsModel.testCaseExecutionsThatCanBeViewedByUserMap == nil {
-		testCaseExecutionsModel.testCaseExecutionsThatCanBeViewedByUserMap = make(map[TestCaseExecutionUuidType]*fenixExecutionServerGuiGrpcApi.
+	if testCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.
+		latestTestCaseExecutionForEachTestCaseUuidMap == nil {
+		testCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.
+			latestTestCaseExecutionForEachTestCaseUuidMap = make(map[TestCaseExecutionUuidType]*fenixExecutionServerGuiGrpcApi.
 			TestCaseExecutionsListMessage)
 	}
 
@@ -35,13 +37,14 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ReadFromTestCaseExe
 	testCaseExecutionsMapMutex.RLock()
 
 	// Check if Map i nil
-	if TestCaseExecutionsModel.testCaseExecutionsThatCanBeViewedByUserMap == nil {
+	if TestCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.
+		latestTestCaseExecutionForEachTestCaseUuidMap == nil {
 		return nil, false
 	}
 
 	// Read Map
-	testCaseExecutionsListMessage, existInMap = TestCaseExecutionsModel.
-		testCaseExecutionsThatCanBeViewedByUserMap[testCaseExecutionsMapKey]
+	testCaseExecutionsListMessage, existInMap = TestCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.
+		latestTestCaseExecutionForEachTestCaseUuidMap[testCaseExecutionsMapKey]
 
 	//UnLock Map
 	testCaseExecutionsMapMutex.RUnlock()
@@ -58,14 +61,16 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ReadAllFromTestCase
 	testCaseExecutionsMapMutex.RLock()
 
 	// Check if Map i nil
-	if TestCaseExecutionsModel.testCaseExecutionsThatCanBeViewedByUserMap == nil {
+	if TestCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.
+		latestTestCaseExecutionForEachTestCaseUuidMap == nil {
 		return nil
 	}
 
 	var tempTestCaseExecutionsListMessage []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
 
 	// Loop all items in map and add to response slice
-	for _, testCaseExecutionListMessage := range TestCaseExecutionsModel.testCaseExecutionsThatCanBeViewedByUserMap {
+	for _, testCaseExecutionListMessage := range TestCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.
+		latestTestCaseExecutionForEachTestCaseUuidMap {
 		tempTestCaseExecutionsListMessage = append(tempTestCaseExecutionsListMessage, testCaseExecutionListMessage)
 	}
 
@@ -85,15 +90,17 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) AddToTestCaseExecut
 	testCaseExecutionsMapMutex.Lock()
 
 	// Check if Map i nil
-	if TestCaseExecutionsModel.testCaseExecutionsThatCanBeViewedByUserMap == nil {
+	if TestCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.
+		latestTestCaseExecutionForEachTestCaseUuidMap == nil {
 
-		TestCaseExecutionsModel.testCaseExecutionsThatCanBeViewedByUserMap = make(
+		TestCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.
+			latestTestCaseExecutionForEachTestCaseUuidMap = make(
 			map[TestCaseExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage)
 	}
 
 	// Save to TestCaseExecutions-Map
-	TestCaseExecutionsModel.
-		testCaseExecutionsThatCanBeViewedByUserMap[testCaseExecutionsMapKey] = testCaseExecutionsListMessage
+	TestCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.
+		latestTestCaseExecutionForEachTestCaseUuidMap[testCaseExecutionsMapKey] = testCaseExecutionsListMessage
 
 	//UnLock Map
 	testCaseExecutionsMapMutex.Unlock()
@@ -109,16 +116,18 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) DeleteFromTestCaseE
 	testCaseExecutionsMapMutex.Lock()
 
 	// Check if Map i nil
-	if TestCaseExecutionsModel.testCaseExecutionsThatCanBeViewedByUserMap == nil {
+	if TestCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.latestTestCaseExecutionForEachTestCaseUuidMap == nil {
 
-		TestCaseExecutionsModel.testCaseExecutionsThatCanBeViewedByUserMap = make(
+		TestCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.
+			latestTestCaseExecutionForEachTestCaseUuidMap = make(
 			map[TestCaseExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage)
 
 		return
 	}
 
 	// Save to TestCaseExecutions-Map
-	delete(TestCaseExecutionsModel.testCaseExecutionsThatCanBeViewedByUserMap,
+	delete(TestCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.
+		latestTestCaseExecutionForEachTestCaseUuidMap,
 		testCaseExecutionsMapKey)
 
 	//UnLock Map

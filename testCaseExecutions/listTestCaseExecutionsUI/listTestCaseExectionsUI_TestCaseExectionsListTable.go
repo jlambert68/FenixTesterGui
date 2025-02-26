@@ -274,6 +274,11 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 		tempSortableHeaderLabel.columnNumber = id.Col
 		tempSortableHeaderLabel.sortImage.headerColumnNumber = id.Col
 
+		// If this Header is 'latestTestCaseExecutionTimeStampColumnNumber' then save reference to it
+		if id.Col == int(latestTestCaseExecutionTimeStampColumnNumber) {
+			sortableHeaderReference = tempSortableHeaderLabel
+		}
+
 		//tempSortableHeaderLabel.latestSelectedSortOrder = SortingDirectionAscending
 		//tempSortableHeaderLabel.updateColumnNumberFunction()
 

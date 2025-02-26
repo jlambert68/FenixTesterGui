@@ -47,10 +47,16 @@ const testCaseNameColumnNumber uint8 = 2
 const latestTestCaseExecutionStatus uint8 = 5
 
 // Keeps track of the in which column the ""Latest TestCaseExecution TimeStamp"" exist in the data source for the UI-table
-const latestTestCaseExecutionTimeStamp uint8 = 5
+const latestTestCaseExecutionTimeStamp uint8 = 6
 
 // Keeps track of the in which column the ""Latest TestCaseExecution TimeStamp"" exist in the data source for the UI-table
 const latestOkFinishedTestCaseExecutionTimeStamp uint8 = 6
+
+// Keeps track of the in which column the ""Latest TestCaseExecution TimeStamp"" exist in the data source for the UI-table
+const latestTestCaseExecutionTimeStampColumnNumber uint8 = 6
+
+// Reference to Header for column for "Latest TestCaseExecution TimeStamp"
+var sortableHeaderReference *sortableHeaderLabelStruct
 
 // The row that the mouse is currently hovering above. Used for highlight that row in the UI-Table
 var currentRowThatMouseIsHoveringAbove int16 = -1

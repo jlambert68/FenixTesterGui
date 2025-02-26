@@ -119,9 +119,13 @@ func GenerateListTestCaseExecutionsUI(
 				"")
 			calculateAndSetCorrectColumnWidths()
 			updateTestCaseExecutionsListTable(testCaseExecutionsModel)
+
+			sortableHeaderReference.sortImage.onTapped()
 		}()
 
 		filterTestCaseExcutionsButtonFunction()
+
+		sortableHeaderReference.sortImage.onTapped()
 	}
 
 	// Define the 'loadTestCaseExecutionsFromDataBaseButton'

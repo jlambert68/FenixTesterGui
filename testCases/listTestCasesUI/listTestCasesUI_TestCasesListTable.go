@@ -169,7 +169,7 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 			// Special handling for certain Columns for Status color and Timestamps
 			switch uint8(id.Col) {
 
-			case latestTestCaseExecutionStatus:
+			case latestTestCaseExecutionStatusColumnNumber:
 
 				clickable.textInsteadOfLabel.Text = clickable.Text
 				clickable.Text = ""
@@ -208,7 +208,7 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 			// Special handling for certain Columns for Status color and Timestamps
 			switch uint8(id.Col) {
 
-			case latestTestCaseExecutionStatus:
+			case latestTestCaseExecutionStatusColumnNumber:
 				var statusId uint8
 				var statusBackgroundColor color.RGBA
 				var statusStrokeColor color.RGBA
@@ -259,6 +259,11 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 		// Set Column number
 		tempSortableHeaderLabel.columnNumber = id.Col
 		tempSortableHeaderLabel.sortImage.headerColumnNumber = id.Col
+
+		// If this Header is 'latestTestCaseExecutionTimeStampColumnNumber' then save reference to it
+		if id.Col == int(latestTestCaseExecutionTimeStampColumnNumber) {
+			sortableHeaderReference = tempSortableHeaderLabel
+		}
 
 		//tempSortableHeaderLabel.latestSelectedSortOrder = SortingDirectionAscending
 		//tempSortableHeaderLabel.updateColumnNumberFunction()

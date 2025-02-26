@@ -209,6 +209,10 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Initiate TestCaseExecutionModel
 	testCaseExecutionsModel.InitiateTestCaseExecutionModel()
 
+	// Channel used to trigger update of Gui
+	var updateGuiChannel chan bool
+	updateGuiChannel = make(chan bool)
+
 	// Load list with TestCasesExecutions that can be viewed by used
 	listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
 		0,
@@ -218,7 +222,12 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 		"",
 		testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 		testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
-		true)
+		true,
+		&updateGuiChannel)
+
+	go func() {
+		<-updateGuiChannel
+	}()
 
 	// Load Available Bonds
 	uiServer.commandAndRuleEngine.LoadAvailableBondsFromServer()

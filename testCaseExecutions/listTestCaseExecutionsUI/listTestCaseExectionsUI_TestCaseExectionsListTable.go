@@ -138,7 +138,7 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 	updateTestCaseExecutionsListTableMutex.Lock()
 
 	// UnLock function
-	defer updateTestCaseExecutionsListTableMutex.RUnlock()
+	defer updateTestCaseExecutionsListTableMutex.Unlock()
 
 	testCaseExecutionsListTable.Length = func() (int, int) {
 		return len(testCaseExecutionsListTableTable), numberColumnsInTestCaseExecutionsListUI
@@ -335,10 +335,18 @@ func calculateAndSetCorrectColumnWidths() {
 
 }
 
+var loadTestCaseExecutionListTableTableMutex = &sync.RWMutex{}
+
 func loadTestCaseExecutionListTableTable(
 	testCaseExecutionsModelObject *testCaseExecutionsModel.TestCaseExecutionsModelStruct,
 	retrieveAllExecutionsForSpecificTestCaseUuid bool,
 	specificTestCaseUuid string) {
+
+	// Lock function
+	loadTestCaseExecutionListTableTableMutex.Lock()
+
+	// Unlock function
+	defer loadTestCaseExecutionListTableTableMutex.Unlock()
 
 	testCaseExecutionsListTableTable = nil
 

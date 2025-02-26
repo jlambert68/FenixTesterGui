@@ -113,8 +113,12 @@ func GenerateListTestCaseExecutionsUI(
 			<-updateGuiChannel
 
 			// Update the GUI
-			updateTestCaseExecutionsListTable(testCaseExecutionsModel)
+			loadTestCaseExecutionListTableTable(
+				testCaseExecutionsModel,
+				false,
+				"")
 			calculateAndSetCorrectColumnWidths()
+			updateTestCaseExecutionsListTable(testCaseExecutionsModel)
 		}()
 
 		filterTestCaseExcutionsButtonFunction()
@@ -217,8 +221,13 @@ func GenerateListTestCaseExecutionsUI(
 			<-updateGuiChannel
 
 			// Update the GUI
-			updateTestCaseExecutionsListTable(testCaseExecutionsModel)
+			loadTestCaseExecutionListTableTable(
+				testCaseExecutionsModel,
+				true,
+				selectedTestCaseExecutionObjected.testCaseUuidForTestCaseExecutionThatIsShownInPreview)
 			calculateAndSetCorrectColumnWidths()
+			updateTestCaseExecutionsListTable(testCaseExecutionsModel)
+
 		}()
 
 		loadTestCaseExecutionListTableTable(

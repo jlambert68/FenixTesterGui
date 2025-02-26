@@ -74,12 +74,26 @@ func GenerateListTestCaseExecutionsUI(
 
 	var filterAndButtonsContainer *fyne.Container
 
+	// Initiate 'selectedTestCaseExecutionObjected' used for keep track of source of executions and what row is selected
+	selectedTestCaseExecutionObjected = selectedTestCaseExecutionStruct{}
+
 	// Define the function to be executed to load TestCaseExecutions from that Database that the user can view
 	loadTestCaseExcutionsFromDataBaseFunction = func() {
 		fmt.Println("'loadTestCaseExecutionsFromDataBaseButton' was pressed")
 
+		// If previously data set is of other kind then 'OneExecutionPerTestCase' then no selection should be made
+		if selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType != OneExecutionPerTestCase {
+			//selectedTestCaseExecutionObjected.isAnyRowSelected = false
+			ClearTestCaseExecutionPreviewContainer()
+
+		}
+
 		// Specify from were Executions in the GUI comes from
-		ExecutionsInGuiIsOfType = OneExecutionPerTestCase
+		selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType = OneExecutionPerTestCase
+
+		// Channel used to trigger update of Gui
+		var updateGuiChannel chan bool
+		updateGuiChannel = make(chan bool)
 
 		listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
 			testCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.LatestUniqueTestCaseExecutionDatabaseRowId,
@@ -89,7 +103,19 @@ func GenerateListTestCaseExecutionsUI(
 			"",
 			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
-			true)
+			true,
+			&updateGuiChannel)
+
+		// Update the UI with the new data
+		go func() {
+
+			// Wait for trigger to update GUI
+			<-updateGuiChannel
+
+			// Update the GUI
+			updateTestCaseExecutionsListTable(testCaseExecutionsModel)
+			calculateAndSetCorrectColumnWidths()
+		}()
 
 		filterTestCaseExcutionsButtonFunction()
 	}
@@ -142,7 +168,8 @@ func GenerateListTestCaseExecutionsUI(
 	loadAllTestCaseExecutionsForOneTestCaseButtonFunction = func() {
 
 		// When no TestCaseExecution is selected then inform the user
-		if len(testCaseExecutionThatIsShownInPreview) == 0 {
+		if len(selectedTestCaseExecutionObjected.testCaseExecutionThatIsShownInPreview) == 0 ||
+			selectedTestCaseExecutionObjected.isAnyRowSelected == false {
 
 			// Trigger System Notification sound
 			soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
@@ -158,23 +185,46 @@ func GenerateListTestCaseExecutionsUI(
 
 		fmt.Println("'loadAllTestCaseExecutionsForOneTestCaseButton' was pressed")
 
+		// If previously data set is of other kind then 'AllExecutionsForOneTestCase' then no selection should be made
+		if selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType != AllExecutionsForOneTestCase {
+			selectedTestCaseExecutionObjected.isAnyRowSelected = false
+			ClearTestCaseExecutionPreviewContainer()
+			loadAllTestCaseExecutionsForOneTestCaseButtonReference.Disable()
+		}
+
 		// Specify from were Executions in the GUI comes from
-		ExecutionsInGuiIsOfType = AllExecutionsForOneTestCase
+		selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType = AllExecutionsForOneTestCase
+
+		// Channel used to trigger update of Gui
+		var updateGuiChannel chan bool
+		updateGuiChannel = make(chan bool)
 
 		listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
 			testCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.LatestUniqueTestCaseExecutionDatabaseRowId,
 			true,
 			testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
 			true,
-			testCaseUuidForTestCaseExecutionThatIsShownInPreview,
+			selectedTestCaseExecutionObjected.testCaseUuidForTestCaseExecutionThatIsShownInPreview,
 			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
-			true)
+			true,
+			&updateGuiChannel)
+
+		// Update the UI with the new data
+		go func() {
+
+			// Wait for trigger to update GUI
+			<-updateGuiChannel
+
+			// Update the GUI
+			updateTestCaseExecutionsListTable(testCaseExecutionsModel)
+			calculateAndSetCorrectColumnWidths()
+		}()
 
 		loadTestCaseExecutionListTableTable(
 			testCaseExecutionsModel,
 			true,
-			testCaseUuidForTestCaseExecutionThatIsShownInPreview)
+			selectedTestCaseExecutionObjected.testCaseUuidForTestCaseExecutionThatIsShownInPreview)
 		calculateAndSetCorrectColumnWidths()
 		updateTestCaseExecutionsListTable(testCaseExecutionsModel)
 
@@ -227,7 +277,7 @@ func GenerateListTestCaseExecutionsUI(
 	testCasesListScrollContainer2 := container.NewScroll(testCaseExecutionsListContainer)
 
 	// Create the Temporary container that should be shown
-	temporaryContainer := container.NewCenter(widget.NewLabel("Select a TestCase to get the Preview"))
+	temporaryContainer := container.NewCenter(widget.NewLabel("Select a TestCaseExecution to get the Preview"))
 
 	testCaseExecutionPreviewContainer = container.NewBorder(nil, nil, nil, nil, temporaryContainer)
 
@@ -267,12 +317,12 @@ func GenerateTestCaseExecutionPreviewContainer(
 	var tempTestCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
 
 	// Can preview be found in Map for "One TestCaseExecution per TestCase" or "All TestCaseExecutions per TestCase"
-	switch ExecutionsInGuiIsOfType {
+	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
 
 	case AllExecutionsForOneTestCase:
 		tempTestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.GetSpecificTestCaseExecutionForOneTestCaseUuid(
-			testCaseExecutionsModel.TestCaseUuidType(testCaseUuidForTestCaseExecutionThatIsShownInPreview),
-			testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionThatIsShownInPreview))
+			testCaseExecutionsModel.TestCaseUuidType(selectedTestCaseExecutionObjected.testCaseUuidForTestCaseExecutionThatIsShownInPreview),
+			testCaseExecutionsModel.TestCaseExecutionUuidType(selectedTestCaseExecutionObjected.testCaseExecutionThatIsShownInPreview))
 
 	case OneExecutionPerTestCase:
 		tempTestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.ReadFromTestCaseExecutionsMap(
@@ -294,11 +344,11 @@ func GenerateTestCaseExecutionPreviewContainer(
 	// Resize the ExecutionStatus rectangle
 	tempTestCaseExecutionStatusRectangle.SetMinSize(fyne.Size{
 		Width:  testCaseExecutionStatusRectangleWidth,
-		Height: testCaseExecutionStatusRectangleHight,
+		Height: testCaseExecutionStatusRectangleHeight,
 	})
 	tempTestCaseExecutionStatusRectangle.Resize(fyne.Size{
 		Width:  testCaseExecutionStatusRectangleWidth,
-		Height: testCaseExecutionStatusRectangleHight,
+		Height: testCaseExecutionStatusRectangleHeight,
 	})
 
 	// Set correct color on ExecutionStatus Rectangle
@@ -466,11 +516,11 @@ func GenerateTestCaseExecutionPreviewContainer(
 			// Resize the ExecutionStatus rectangle
 			tempExecutionStatusRectangle.SetMinSize(fyne.Size{
 				Width:  testCaseExecutionStatusRectangleWidth,
-				Height: testCaseExecutionStatusRectangleHight,
+				Height: testCaseExecutionStatusRectangleHeight,
 			})
 			tempExecutionStatusRectangle.Resize(fyne.Size{
 				Width:  testCaseExecutionStatusRectangleWidth,
-				Height: testCaseExecutionStatusRectangleHight,
+				Height: testCaseExecutionStatusRectangleHeight,
 			})
 
 			// Decide what type of object
@@ -553,15 +603,29 @@ func GenerateTestCaseExecutionPreviewContainer(
 
 				// Extract TestInstructionExecution from TestInstruction
 				var temp2TestCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
-				temp2TestCaseExecutionsListMessage, existInMap = testCaseExecutionsModelRef.
-					ReadFromTestCaseExecutionsMap(testCaseExecutionsModel.TestCaseExecutionUuidType(
-						testCaseExecutionThatIsShownInPreview))
+				// Can preview be found in Map for "One TestCaseExecution per TestCase" or "All TestCaseExecutions per TestCase"
+				switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+
+				case AllExecutionsForOneTestCase:
+					temp2TestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.GetSpecificTestCaseExecutionForOneTestCaseUuid(
+						testCaseExecutionsModel.TestCaseUuidType(selectedTestCaseExecutionObjected.testCaseUuidForTestCaseExecutionThatIsShownInPreview),
+						testCaseExecutionsModel.TestCaseExecutionUuidType(selectedTestCaseExecutionObjected.testCaseExecutionThatIsShownInPreview))
+
+				case OneExecutionPerTestCase:
+					temp2TestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.ReadFromTestCaseExecutionsMap(
+						testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionUuid))
+
+				case NotDefined:
+
+					temp2TestCaseExecutionsListMessage = &fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage{}
+
+				}
 
 				if existInMap == false {
 					var id string
 					id = "7945551e-5e4d-41d3-8faf-54f1501daac9"
 					log.Fatalf(fmt.Sprintf("Couldn't find testCaseExecutionThatIsShownInPreview '%s' in TestCaseExecutionsThatCanBeViewedByUserMap. ID='%s'",
-						testCaseExecutionThatIsShownInPreview,
+						selectedTestCaseExecutionObjected.testCaseExecutionThatIsShownInPreview,
 						id))
 				}
 
@@ -720,12 +784,27 @@ func GenerateTestCaseExecutionPreviewContainer(
 	tempTopHeaderLabel := widget.NewLabel("TestCase Preview")
 	tempTopHeaderLabel.TextStyle = fyne.TextStyle{Bold: true}
 
-	testCaseExecutionPreviewContainer.Objects[0] = container.NewBorder(
-		container.NewVBox(container.NewCenter(tempTopHeaderLabel), testCaseExecutionPreviewTopContainer, widget.NewSeparator()),
-		container.NewVBox(widget.NewSeparator(), testCaseExecutionPreviewBottomContainer), nil, nil,
-		testCaseMainAreaForPreviewScrollContainer)
+	if selectedTestCaseExecutionObjected.isAnyRowSelected == true {
+
+		// A row is selected and Preview should be shown
+
+		testCaseExecutionPreviewContainer.Objects[0] = container.NewBorder(
+			container.NewVBox(container.NewCenter(tempTopHeaderLabel), testCaseExecutionPreviewTopContainer, widget.NewSeparator()),
+			container.NewVBox(widget.NewSeparator(), testCaseExecutionPreviewBottomContainer), nil, nil,
+			testCaseMainAreaForPreviewScrollContainer)
+	} else {
+
+		// No row is selected and only an info text should be shown
+		testCaseExecutionPreviewContainer.Objects[0] = container.NewCenter(widget.NewLabel("Select a TestCaseExecution to get the Preview"))
+	}
 
 	// Refresh the 'testCaseExecutionPreviewContainer'
 	testCaseExecutionPreviewContainer.Refresh()
 
+}
+
+// ClearTestCaseExecutionPreviewContainer
+// Clears the preview area for the TestCaseExecution
+func ClearTestCaseExecutionPreviewContainer() {
+	testCaseExecutionPreviewContainer.Objects[0] = container.NewCenter(widget.NewLabel("Select a TestCaseExecution to get the Preview"))
 }

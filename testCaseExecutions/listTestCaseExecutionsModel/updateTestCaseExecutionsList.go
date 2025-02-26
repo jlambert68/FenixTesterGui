@@ -19,7 +19,8 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 	specificTestCaseUuid string,
 	testCaseExecutionFromTimeStamp time.Time,
 	testCaseExecutionToTimeStamp time.Time,
-	loadAllDataFromDatabase bool) {
+	loadAllDataFromDatabase bool,
+	updateGuiChannel *chan bool) {
 
 	// Secure that the user has picked a TestCaseExecution in the list before loading all executions for that TestCase
 	if retrieveAllExecutionsForSpecificTestCaseUuid == true && len(specificTestCaseUuid) == 0 {
@@ -114,7 +115,7 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 		}
 
 		// Load rest of the data as go-routine
-		go func() {
+		go func(updateGuiChannel *chan bool) {
 			listTestCaseExecutionsResponse = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.
 				SendListTestCaseExecutionsThatCanBeViewed(
 					testCaseExecutionsModel.TestCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.
@@ -152,7 +153,9 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 					listTestCaseExecutionsResponse.GetMoreRowsExists())
 			}
 
-		}()
+			*updateGuiChannel <- true
+
+		}(updateGuiChannel)
 
 	}
 

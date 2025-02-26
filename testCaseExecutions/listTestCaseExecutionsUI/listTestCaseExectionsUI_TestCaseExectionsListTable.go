@@ -18,6 +18,7 @@ import (
 	"log"
 	"sort"
 	"strconv"
+	"sync"
 )
 
 // RemoveTestCaseExecutionFromList
@@ -128,8 +129,16 @@ func generateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecut
 
 }
 
+var updateTestCaseExecutionsListTableMutex = &sync.RWMutex{}
+
 // Update the Table
 func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
+
+	// Lock function
+	updateTestCaseExecutionsListTableMutex.Lock()
+
+	// UnLock function
+	defer updateTestCaseExecutionsListTableMutex.RUnlock()
 
 	testCaseExecutionsListTable.Length = func() (int, int) {
 		return len(testCaseExecutionsListTableTable), numberColumnsInTestCaseExecutionsListUI
@@ -190,7 +199,7 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 		} else {
 
 			// If this row is the one that is shown in TestCase preview window
-			if clickable.currentTestCaseExecutionUuid == testCaseExecutionThatIsShownInPreview {
+			if clickable.currentTestCaseExecutionUuid == selectedTestCaseExecutionObjected.testCaseExecutionThatIsShownInPreview {
 
 				clickable.TextStyle = fyne.TextStyle{Bold: false}
 				rectangle.FillColor = color.RGBA{

@@ -62,21 +62,43 @@ var currentRowThatMouseIsHoveringAboveMutex sync.Mutex
 const testCaseNodeRectangleSize = 40
 
 // The size of the rectangles used for indicate status of a TestInstructionExecution
-const testCaseExecutionStatusRectangleHight = 30
+const testCaseExecutionStatusRectangleHeight = 30
 const testCaseExecutionStatusRectangleWidth = 25
 
 // The TestCase Preview-container
 var testCaseExecutionPreviewContainerScroll *container.Scroll
 var testCaseExecutionPreviewContainer *fyne.Container
 
+// TestCaseExecutionListAndTestCaseExecutionPreviewSplitContainer
 // The Split container have both the TestCaseExecutions-list and the Preview-container in it
 var TestCaseExecutionListAndTestCaseExecutionPreviewSplitContainer *container.Split
 
-// The TestCaseExecutions that is shown in Preview
-var testCaseExecutionThatIsShownInPreview string
+// Object for keeping if a row is selected and which TestCase/Execution that should be shown
+var selectedTestCaseExecutionObjected selectedTestCaseExecutionStruct
 
-// The TestCaseUuid for TestCaseExecutions that is shown in Preview
-var testCaseUuidForTestCaseExecutionThatIsShownInPreview string
+// Struct for keeping if a row is selected and which TestCase/Execution that should be shown
+type selectedTestCaseExecutionStruct struct {
+
+	// Is a row selected or not
+	isAnyRowSelected bool
+
+	// The TestCaseExecutions that is shown in Preview
+	testCaseExecutionThatIsShownInPreview string
+
+	// The TestCaseUuid for TestCaseExecutions that is shown in Preview
+	testCaseUuidForTestCaseExecutionThatIsShownInPreview string
+
+	// ExecutionsInGuiIsOfType
+	// The variable that keeps track on if TestCasesExecutions in the GUI-list comes from
+	// "One Execution per TestCase" or "All Executions for one TestCase"
+	ExecutionsInGuiIsOfType CurrenExecutionListType
+
+	// The last TestCaseExecution that was picked when we are in 'OneExecutionPerTestCase'
+	lastSelectedTestCaseExecutionForOneExecutionPerTestCase string
+
+	// The last TestCaseExecution that was picked when we are in 'AllExecutionsForOneTestCase'
+	lastSelectedTestCaseExecutionForAllExecutionsForOneTestCase string
+}
 
 // CurrenExecutionListType
 // The type that defines if TestCasesExecutions in the GUI-list comes from
@@ -90,11 +112,6 @@ const (
 	OneExecutionPerTestCase
 	AllExecutionsForOneTestCase
 )
-
-// ExecutionsInGuiIsOfType
-// The variable that keeps track on if TestCasesExecutions in the GUI-list comes from
-// "One Execution per TestCase" or "All Executions for one TestCase"
-var ExecutionsInGuiIsOfType CurrenExecutionListType
 
 // SortingDirectionType
 // Define type for Sorting Direction

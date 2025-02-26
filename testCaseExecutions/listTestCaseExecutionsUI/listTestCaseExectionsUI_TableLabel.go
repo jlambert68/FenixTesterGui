@@ -86,18 +86,22 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 	l.lastTapTime = time.Now()
 
 	// Update TestCase Preview
-	testCaseExecutionThatIsShownInPreview = l.currentTestCaseExecutionUuid
+	selectedTestCaseExecutionObjected.isAnyRowSelected = true
+	selectedTestCaseExecutionObjected.testCaseExecutionThatIsShownInPreview = l.currentTestCaseExecutionUuid
 	GenerateTestCaseExecutionPreviewContainer(l.currentTestCaseExecutionUuid, l.testCaseExecutionsModel)
 	testCaseExecutionsListTable.Refresh()
 
-	// Update 'loadAllTestCaseExecutionsForOneTestCaseButton' with correct text
-	loadAllTestCaseExecutionsForOneTestCaseButtonReference.
-		Text = loadAllTestCaseExecutionsForOneTestCaseButtonTextPart1 +
-		l.currentTestCaseName
-	loadAllTestCaseExecutionsForOneTestCaseButtonReference.Refresh()
+	// Update 'loadAllTestCaseExecutionsForOneTestCaseButton' with correct text, if we are in 'OneExecutionPerTestCase'
+	if selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType == OneExecutionPerTestCase {
+		loadAllTestCaseExecutionsForOneTestCaseButtonReference.
+			Text = loadAllTestCaseExecutionsForOneTestCaseButtonTextPart1 +
+			l.currentTestCaseName
+		loadAllTestCaseExecutionsForOneTestCaseButtonReference.Enable()
+		loadAllTestCaseExecutionsForOneTestCaseButtonReference.Refresh()
 
-	// Save TestCaseUuid for TestCaseExecution shown in preview
-	testCaseUuidForTestCaseExecutionThatIsShownInPreview = l.currentTestCaseUuid
+		// Save TestCaseUuid for TestCaseExecution shown in preview
+		selectedTestCaseExecutionObjected.testCaseUuidForTestCaseExecutionThatIsShownInPreview = l.currentTestCaseUuid
+	}
 
 }
 

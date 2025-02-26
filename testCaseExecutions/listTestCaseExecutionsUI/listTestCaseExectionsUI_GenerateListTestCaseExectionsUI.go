@@ -36,11 +36,11 @@ var imageData_tic_serialImage image.Image
 var sortUnspecifiedImageAsByteArray []byte
 var sortImageUnspecifiedAsImage image.Image
 
-//go:embed resources/sort-up-ascending_cropped_32x51.png
+//go:embed resources/sort-down-descending_cropped_32x51.png
 var sortImageAscendingAsByteArray []byte
 var sortImageAscendingAsImage image.Image
 
-//go:embed resources/sort-down-descending_cropped_32x51.png
+//go:embed resources/sort-up-ascending_cropped_32x51.png
 var sortImageDescendingAsByteArray []byte
 var sortImageDescendingAsImage image.Image
 

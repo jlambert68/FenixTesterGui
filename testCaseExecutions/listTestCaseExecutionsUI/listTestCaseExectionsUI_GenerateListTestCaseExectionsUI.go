@@ -88,6 +88,12 @@ func GenerateListTestCaseExecutionsUI(
 
 		}
 
+		// Get number of TestCase retrieved from Database before and after loading more data
+		var beforeNumberOfRowsRetrievedFromDatabase int
+		var afterNumberOfRowsRetrievedFromDatabase int
+		beforeNumberOfRowsRetrievedFromDatabase = testCaseExecutionsModel.
+			GetNumberOfTestCaseExecutionsRetrievedFromDatabase()
+
 		// Specify from were Executions in the GUI comes from
 		selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType = OneExecutionPerTestCase
 
@@ -121,20 +127,30 @@ func GenerateListTestCaseExecutionsUI(
 			updateTestCaseExecutionsListTable(testCaseExecutionsModel)
 
 			sortableHeaderReference.sortImage.onTapped()
+
+			// Get number of TestCase retrieved from Database after loading more data
+			afterNumberOfRowsRetrievedFromDatabase = testCaseExecutionsModel.
+				GetNumberOfTestCaseExecutionsRetrievedFromDatabase()
+
+			// If they are different then sort the table
+			if beforeNumberOfRowsRetrievedFromDatabase != afterNumberOfRowsRetrievedFromDatabase {
+				sortableHeaderReference.sortImage.onTapped()
+			}
+
 		}()
 
 		filterTestCaseExcutionsButtonFunction()
 
-		sortableHeaderReference.sortImage.onTapped()
 	}
 
 	// Define the 'loadTestCaseExecutionsFromDataBaseButton'
-	loadTestCaseExecutionsFromDataBaseButton = widget.NewButton("Load TestCaseExecutions from Database",
+	loadTestCaseExecutionsFromDataBaseButton = widget.NewButton("Load one TestCaseExecution per TestCase",
 		loadTestCaseExcutionsFromDataBaseFunction)
 
 	// Define the function to be executed to filter TestCases that the user can edit
 	filterTestCaseExcutionsButtonFunction = func() {
-		fmt.Println("'filterTestCaseExecutionsButton' was pressed")
+		fmt.Println("'loadTestCaseExecutionsFromDataBaseButton' was pressed")
+
 		loadTestCaseExecutionListTableTable(
 			testCaseExecutionsModel,
 			false,
@@ -176,8 +192,10 @@ func GenerateListTestCaseExecutionsUI(
 	loadAllTestCaseExecutionsForOneTestCaseButtonFunction = func() {
 
 		// When no TestCaseExecution is selected then inform the user
-		if len(selectedTestCaseExecutionObjected.testCaseExecutionThatIsShownInPreview) == 0 ||
-			selectedTestCaseExecutionObjected.isAnyRowSelected == false {
+		if len(selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+			testCaseExecutionThatIsShownInPreview) == 0 ||
+			selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+				isAnyRowSelected == false {
 
 			// Trigger System Notification sound
 			soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
@@ -195,7 +213,8 @@ func GenerateListTestCaseExecutionsUI(
 
 		// If previously data set is of other kind then 'AllExecutionsForOneTestCase' then no selection should be made
 		if selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType != AllExecutionsForOneTestCase {
-			selectedTestCaseExecutionObjected.isAnyRowSelected = false
+			selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+				isAnyRowSelected = false
 			ClearTestCaseExecutionPreviewContainer()
 			loadAllTestCaseExecutionsForOneTestCaseButtonReference.Disable()
 		}
@@ -212,7 +231,8 @@ func GenerateListTestCaseExecutionsUI(
 			true,
 			testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
 			true,
-			selectedTestCaseExecutionObjected.testCaseUuidForTestCaseExecutionThatIsShownInPreview,
+			selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+				testCaseUuidForTestCaseExecutionThatIsShownInPreview,
 			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 			true,
@@ -228,7 +248,9 @@ func GenerateListTestCaseExecutionsUI(
 			loadTestCaseExecutionListTableTable(
 				testCaseExecutionsModel,
 				true,
-				selectedTestCaseExecutionObjected.testCaseUuidForTestCaseExecutionThatIsShownInPreview)
+				selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+					testCaseUuidForTestCaseExecutionThatIsShownInPreview)
+
 			calculateAndSetCorrectColumnWidths()
 			updateTestCaseExecutionsListTable(testCaseExecutionsModel)
 
@@ -237,7 +259,8 @@ func GenerateListTestCaseExecutionsUI(
 		loadTestCaseExecutionListTableTable(
 			testCaseExecutionsModel,
 			true,
-			selectedTestCaseExecutionObjected.testCaseUuidForTestCaseExecutionThatIsShownInPreview)
+			selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+				testCaseUuidForTestCaseExecutionThatIsShownInPreview)
 		calculateAndSetCorrectColumnWidths()
 		updateTestCaseExecutionsListTable(testCaseExecutionsModel)
 
@@ -334,8 +357,10 @@ func GenerateTestCaseExecutionPreviewContainer(
 
 	case AllExecutionsForOneTestCase:
 		tempTestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.GetSpecificTestCaseExecutionForOneTestCaseUuid(
-			testCaseExecutionsModel.TestCaseUuidType(selectedTestCaseExecutionObjected.testCaseUuidForTestCaseExecutionThatIsShownInPreview),
-			testCaseExecutionsModel.TestCaseExecutionUuidType(selectedTestCaseExecutionObjected.testCaseExecutionThatIsShownInPreview))
+			testCaseExecutionsModel.TestCaseUuidType(selectedTestCaseExecutionObjected.
+				allExecutionsFoOneTestCaseListObject.testCaseUuidForTestCaseExecutionThatIsShownInPreview),
+			testCaseExecutionsModel.TestCaseExecutionUuidType(selectedTestCaseExecutionObjected.
+				allExecutionsFoOneTestCaseListObject.testCaseExecutionThatIsShownInPreview))
 
 	case OneExecutionPerTestCase:
 		tempTestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.ReadFromTestCaseExecutionsMap(
@@ -469,31 +494,36 @@ func GenerateTestCaseExecutionPreviewContainer(
 	tempTestCaseExecutionVersionLabel := widget.NewLabel("TestCaseExecutionVersion:")
 	tempTestCaseExecutionVersionLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewBottomContainer.Add(tempTestCaseExecutionVersionLabel)
-	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(strconv.Itoa(int(tempTestCaseExecutionsListMessage.GetTestCaseExecutionVersion()))))
+	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(strconv.Itoa(int(tempTestCaseExecutionsListMessage.
+		GetTestCaseExecutionVersion()))))
 
 	// Add ExecutionStartTimeStamp to Bottom container
 	tempExecutionStartTimeStampLabel := widget.NewLabel("TestCase Execution Start TimeStamp:")
 	tempExecutionStartTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStartTimeStampLabel)
-	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStartTimeStamp().AsTime().String()))
+	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.
+		GetExecutionStartTimeStamp().AsTime().String()))
 
 	// Add ExecutionStopTimeStamp to Bottom container
 	tempExecutionStopTimeStampLabel := widget.NewLabel("TestCase Execution Stop TimeStamp:")
 	tempExecutionStopTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStopTimeStampLabel)
-	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStopTimeStamp().AsTime().String()))
+	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.
+		GetExecutionStopTimeStamp().AsTime().String()))
 
 	// Add ExecutionStatusUpdateTimeStamp to Bottom container
 	tempExecutionStatusUpdateTimeStampLabel := widget.NewLabel("TestCase Execution Status Update TimeStamp:")
 	tempExecutionStatusUpdateTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStatusUpdateTimeStampLabel)
-	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStatusUpdateTimeStamp().AsTime().String()))
+	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.
+		GetExecutionStatusUpdateTimeStamp().AsTime().String()))
 
 	// Add LastSavedByUserGCPAuthorization to Bottom container
 	tempLastSavedByUserGCPAuthorizationLabel := widget.NewLabel("TestCase Execution Stop TimeStamp:")
 	tempLastSavedByUserGCPAuthorizationLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewBottomContainer.Add(tempLastSavedByUserGCPAuthorizationLabel)
-	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetExecutionStopTimeStamp().AsTime().String()))
+	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.
+		GetExecutionStopTimeStamp().AsTime().String()))
 
 	// Create the area used for TIC, TI and the attributes
 	testCaseExecutionMainAreaForPreviewContainer = container.NewVBox()
@@ -555,8 +585,10 @@ func GenerateTestCaseExecutionPreviewContainer(
 					}
 
 					serialOrParallelRectangleImage = canvas.NewImageFromImage(imageData_tic_serialImage)
-					serialOrParallelRectangleImage.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize-4), float32(testCaseNodeRectangleSize-4)))
-					serialOrParallelRectangleImage.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize-4), float32(testCaseNodeRectangleSize-4)))
+					serialOrParallelRectangleImage.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize-4),
+						float32(testCaseNodeRectangleSize-4)))
+					serialOrParallelRectangleImage.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize-4),
+						float32(testCaseNodeRectangleSize-4)))
 
 				} else {
 					// Convert the byte slice into an image.Image object
@@ -567,8 +599,10 @@ func GenerateTestCaseExecutionPreviewContainer(
 						}
 					}
 					serialOrParallelRectangleImage = canvas.NewImageFromImage(imageData_tic_parallellImage)
-					serialOrParallelRectangleImage.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize-4), float32(testCaseNodeRectangleSize-4)))
-					serialOrParallelRectangleImage.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize-4), float32(testCaseNodeRectangleSize-4)))
+					serialOrParallelRectangleImage.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize-4),
+						float32(testCaseNodeRectangleSize-4)))
+					serialOrParallelRectangleImage.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize-4),
+						float32(testCaseNodeRectangleSize-4)))
 
 				}
 
@@ -601,8 +635,10 @@ func GenerateTestCaseExecutionPreviewContainer(
 				testInstructionColorRectangle = canvas.NewRectangle(rectangleColor)
 
 				// Set the size of the color rectangle
-				testInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize-14), float32(testCaseNodeRectangleSize-14)))
-				testInstructionColorRectangle.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize-14), float32(testCaseNodeRectangleSize-14)))
+				testInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize-14),
+					float32(testCaseNodeRectangleSize-14)))
+				testInstructionColorRectangle.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize-14),
+					float32(testCaseNodeRectangleSize-14)))
 
 				// Create the Name for the TestInstruction
 				var tempTestInstructionNameWidget *widget.Label
@@ -621,8 +657,10 @@ func GenerateTestCaseExecutionPreviewContainer(
 
 				case AllExecutionsForOneTestCase:
 					temp2TestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.GetSpecificTestCaseExecutionForOneTestCaseUuid(
-						testCaseExecutionsModel.TestCaseUuidType(selectedTestCaseExecutionObjected.testCaseUuidForTestCaseExecutionThatIsShownInPreview),
-						testCaseExecutionsModel.TestCaseExecutionUuidType(selectedTestCaseExecutionObjected.testCaseExecutionThatIsShownInPreview))
+						testCaseExecutionsModel.TestCaseUuidType(selectedTestCaseExecutionObjected.
+							allExecutionsFoOneTestCaseListObject.testCaseUuidForTestCaseExecutionThatIsShownInPreview),
+						testCaseExecutionsModel.TestCaseExecutionUuidType(selectedTestCaseExecutionObjected.
+							allExecutionsFoOneTestCaseListObject.testCaseExecutionThatIsShownInPreview))
 
 				case OneExecutionPerTestCase:
 					temp2TestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.ReadFromTestCaseExecutionsMap(
@@ -637,8 +675,10 @@ func GenerateTestCaseExecutionPreviewContainer(
 				if existInMap == false {
 					var id string
 					id = "7945551e-5e4d-41d3-8faf-54f1501daac9"
-					log.Fatalf(fmt.Sprintf("Couldn't find testCaseExecutionThatIsShownInPreview '%s' in TestCaseExecutionsThatCanBeViewedByUserMap. ID='%s'",
-						selectedTestCaseExecutionObjected.testCaseExecutionThatIsShownInPreview,
+					log.Fatalf(fmt.Sprintf("Couldn't find testCaseExecutionThatIsShownInPreview '%s' in "+
+						"TestCaseExecutionsThatCanBeViewedByUserMap. ID='%s'",
+						selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+							testCaseExecutionThatIsShownInPreview,
 						id))
 				}
 
@@ -797,7 +837,21 @@ func GenerateTestCaseExecutionPreviewContainer(
 	tempTopHeaderLabel := widget.NewLabel("TestCase Preview")
 	tempTopHeaderLabel.TextStyle = fyne.TextStyle{Bold: true}
 
-	if selectedTestCaseExecutionObjected.isAnyRowSelected == true {
+	// Extract if row is selected or not
+	var tempRowIsSelected bool
+	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+
+	case AllExecutionsForOneTestCase:
+		tempRowIsSelected = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.isAnyRowSelected
+
+	case OneExecutionPerTestCase:
+		tempRowIsSelected = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.isAnyRowSelected
+
+	case NotDefined:
+
+	}
+
+	if tempRowIsSelected == true {
 
 		// A row is selected and Preview should be shown
 

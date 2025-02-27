@@ -85,9 +85,32 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 
 	l.lastTapTime = time.Now()
 
+	// Decide mode 'AllExecutionsForOneTestCase' or 'OneExecutionPerTestCase'
+	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+
+	case AllExecutionsForOneTestCase:
+		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.isAnyRowSelected = true
+		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+			testCaseExecutionThatIsShownInPreview = l.currentTestCaseExecutionUuid
+
+		// Save TestCaseUuid for TestCaseExecution shown in preview
+		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+			testCaseUuidForTestCaseExecutionThatIsShownInPreview = l.currentTestCaseUuid
+
+	case OneExecutionPerTestCase:
+		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.isAnyRowSelected = true
+		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+			testCaseExecutionThatIsShownInPreview = l.currentTestCaseExecutionUuid
+
+		// Save TestCaseUuid for TestCaseExecution shown in preview
+		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+			testCaseUuidForTestCaseExecutionThatIsShownInPreview = l.currentTestCaseUuid
+
+	case NotDefined:
+
+	}
+
 	// Update TestCase Preview
-	selectedTestCaseExecutionObjected.isAnyRowSelected = true
-	selectedTestCaseExecutionObjected.testCaseExecutionThatIsShownInPreview = l.currentTestCaseExecutionUuid
 	GenerateTestCaseExecutionPreviewContainer(l.currentTestCaseExecutionUuid, l.testCaseExecutionsModel)
 	testCaseExecutionsListTable.Refresh()
 
@@ -99,8 +122,6 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 		loadAllTestCaseExecutionsForOneTestCaseButtonReference.Enable()
 		loadAllTestCaseExecutionsForOneTestCaseButtonReference.Refresh()
 
-		// Save TestCaseUuid for TestCaseExecution shown in preview
-		selectedTestCaseExecutionObjected.testCaseUuidForTestCaseExecutionThatIsShownInPreview = l.currentTestCaseUuid
 	}
 
 }

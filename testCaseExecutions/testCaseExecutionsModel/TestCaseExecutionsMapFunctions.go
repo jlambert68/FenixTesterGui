@@ -80,6 +80,22 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ReadAllFromTestCase
 	return &tempTestCaseExecutionsListMessage
 }
 
+// GetNumberOfTestCaseExecutionsRetrievedFromDatabase
+// Read all from the TestCaseExecutions-Map
+func (testCaseExecutionsModel TestCaseExecutionsModelStruct) GetNumberOfTestCaseExecutionsRetrievedFromDatabase() (
+	numberOfTestCaseExecutionsRetrievedFromDatabase int) {
+
+	var testCaseExecutionsListMessage *[]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+
+	// Get all data retrieved and get hwo many they are
+	testCaseExecutionsListMessage = testCaseExecutionsModel.ReadAllFromTestCaseExecutionsMap()
+
+	numberOfTestCaseExecutionsRetrievedFromDatabase = len(*testCaseExecutionsListMessage)
+
+	return numberOfTestCaseExecutionsRetrievedFromDatabase
+
+}
+
 // AddToTestCaseExecutionsMap
 // Add to the TestCaseExecutions-Map
 func (testCaseExecutionsModel TestCaseExecutionsModelStruct) AddToTestCaseExecutionsMap(

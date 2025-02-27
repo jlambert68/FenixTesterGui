@@ -79,31 +79,54 @@ var testCaseExecutionPreviewContainer *fyne.Container
 // The Split container have both the TestCaseExecutions-list and the Preview-container in it
 var TestCaseExecutionListAndTestCaseExecutionPreviewSplitContainer *container.Split
 
+// Struct for holding all data for the Execution-list when data belongs  "One Execution per TestCase"
+type oneExecutionPerTestCaseListObjectStruct struct {
+
+	// The last TestCaseExecution that was picked when we are in "One Execution per TestCase"
+	lastSelectedTestCaseExecutionForOneExecutionPerTestCase string
+
+	// The TestCaseUuid for TestCaseExecutions that is shown in Preview
+	testCaseUuidForTestCaseExecutionThatIsShownInPreview string
+
+	// The TestCaseExecutions that is shown in Preview
+	testCaseExecutionThatIsShownInPreview string
+
+	// Is a row selected or not
+	isAnyRowSelected bool
+}
+
+// Struct for holding all data for the Execution-list when data belongs "All Executions for one TestCase"
+type allExecutionsFoOneTestCaseListObjectStruct struct {
+
+	// The last TestCaseExecution that was picked when we are in "All Executions for one TestCase"
+	lastSelectedTestCaseExecutionForAllExecutionsForOneTestCase string
+
+	// The TestCaseUuid for TestCaseExecutions that is shown in Preview
+	testCaseUuidForTestCaseExecutionThatIsShownInPreview string
+
+	// The TestCaseExecutions that is shown in Preview
+	testCaseExecutionThatIsShownInPreview string
+
+	// Is a row selected or not
+	isAnyRowSelected bool
+}
+
 // Object for keeping if a row is selected and which TestCase/Execution that should be shown
 var selectedTestCaseExecutionObjected selectedTestCaseExecutionStruct
 
 // Struct for keeping if a row is selected and which TestCase/Execution that should be shown
 type selectedTestCaseExecutionStruct struct {
 
-	// Is a row selected or not
-	isAnyRowSelected bool
+	// Hold all data for the Execution-list when data belongs 'One Execution per TestCase'
+	oneExecutionPerTestCaseListObject oneExecutionPerTestCaseListObjectStruct
 
-	// The TestCaseExecutions that is shown in Preview
-	testCaseExecutionThatIsShownInPreview string
-
-	// The TestCaseUuid for TestCaseExecutions that is shown in Preview
-	testCaseUuidForTestCaseExecutionThatIsShownInPreview string
+	// Hold all data for the Execution-list when data belongs "All Executions for one TestCase"
+	allExecutionsFoOneTestCaseListObject allExecutionsFoOneTestCaseListObjectStruct
 
 	// ExecutionsInGuiIsOfType
 	// The variable that keeps track on if TestCasesExecutions in the GUI-list comes from
 	// "One Execution per TestCase" or "All Executions for one TestCase"
 	ExecutionsInGuiIsOfType CurrenExecutionListType
-
-	// The last TestCaseExecution that was picked when we are in 'OneExecutionPerTestCase'
-	lastSelectedTestCaseExecutionForOneExecutionPerTestCase string
-
-	// The last TestCaseExecution that was picked when we are in 'AllExecutionsForOneTestCase'
-	lastSelectedTestCaseExecutionForAllExecutionsForOneTestCase string
 }
 
 // CurrenExecutionListType
@@ -135,7 +158,7 @@ const (
 	initialColumnToSortOn                        int                  = 7
 )
 
-// The current column that the TestCase-list is sorted on
+// The current column that the TestCaseExecutions-list is sorted on
 var currentSortColumn int = -1
 
 // The previous column that the TestCaseExecution-list was sorted on

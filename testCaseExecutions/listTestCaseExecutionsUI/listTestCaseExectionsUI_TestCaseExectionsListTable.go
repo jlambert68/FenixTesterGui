@@ -198,8 +198,24 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 
 		} else {
 
+			// Extract if this row is the one that is shown in TestCase preview window
+			var tempRowIsSelected bool
+			switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+
+			case AllExecutionsForOneTestCase:
+				tempRowIsSelected = clickable.currentTestCaseExecutionUuid == selectedTestCaseExecutionObjected.
+					allExecutionsFoOneTestCaseListObject.testCaseExecutionThatIsShownInPreview
+
+			case OneExecutionPerTestCase:
+				tempRowIsSelected = clickable.currentTestCaseExecutionUuid == selectedTestCaseExecutionObjected.
+					oneExecutionPerTestCaseListObject.testCaseExecutionThatIsShownInPreview
+
+			case NotDefined:
+
+			}
+
 			// If this row is the one that is shown in TestCase preview window
-			if clickable.currentTestCaseExecutionUuid == selectedTestCaseExecutionObjected.testCaseExecutionThatIsShownInPreview {
+			if tempRowIsSelected {
 
 				clickable.TextStyle = fyne.TextStyle{Bold: false}
 				rectangle.FillColor = color.RGBA{

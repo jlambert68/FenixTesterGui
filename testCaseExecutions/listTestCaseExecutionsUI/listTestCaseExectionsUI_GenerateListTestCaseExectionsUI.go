@@ -75,7 +75,31 @@ func GenerateListTestCaseExecutionsUI(
 	var filterAndButtonsContainer *fyne.Container
 
 	// Initiate 'selectedTestCaseExecutionObjected' used for keep track of source of executions and what row is selected
-	selectedTestCaseExecutionObjected = selectedTestCaseExecutionStruct{}
+	selectedTestCaseExecutionObjected = selectedTestCaseExecutionStruct{
+		oneExecutionPerTestCaseListObject: oneExecutionPerTestCaseListObjectStruct{
+			lastSelectedTestCaseExecutionForOneExecutionPerTestCase: "",
+			testCaseUuidForTestCaseExecutionThatIsShownInPreview:    "",
+			testCaseExecutionThatIsShownInPreview:                   "",
+			isAnyRowSelected:                                        false,
+			currentSortColumn:                                       0,
+			previousSortColumn:                                      0,
+			currentHeader:                                           nil,
+			previousHeader:                                          nil,
+			currentSortColumnsSortDirection:                         0,
+		},
+		allExecutionsFoOneTestCaseListObject: allExecutionsFoOneTestCaseListObjectStruct{
+			lastSelectedTestCaseExecutionForAllExecutionsForOneTestCase: "",
+			testCaseUuidForTestCaseExecutionThatIsShownInPreview:        "",
+			testCaseExecutionThatIsShownInPreview:                       "",
+			isAnyRowSelected:                                            false,
+			currentSortColumn:                                           0,
+			previousSortColumn:                                          0,
+			currentHeader:                                               nil,
+			previousHeader:                                              nil,
+			currentSortColumnsSortDirection:                             0,
+		},
+		ExecutionsInGuiIsOfType: 0,
+	}
 
 	// Define the function to be executed to load TestCaseExecutions from that Database that the user can view
 	loadTestCaseExcutionsFromDataBaseFunction = func() {

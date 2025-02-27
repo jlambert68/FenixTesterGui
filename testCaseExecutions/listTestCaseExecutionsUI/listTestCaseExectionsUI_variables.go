@@ -93,6 +93,19 @@ type oneExecutionPerTestCaseListObjectStruct struct {
 
 	// Is a row selected or not
 	isAnyRowSelected bool
+
+	// The current column that the TestCaseExecutions-list is sorted on
+	currentSortColumn int
+
+	// The previous column that the TestCaseExecution-list was sorted on
+	previousSortColumn int
+
+	currentHeader *sortableHeaderLabelStruct
+
+	previousHeader *sortableHeaderLabelStruct
+
+	// The current Columns SortDirect
+	currentSortColumnsSortDirection SortingDirectionType
 }
 
 // Struct for holding all data for the Execution-list when data belongs "All Executions for one TestCase"
@@ -109,6 +122,19 @@ type allExecutionsFoOneTestCaseListObjectStruct struct {
 
 	// Is a row selected or not
 	isAnyRowSelected bool
+
+	// The current column that the TestCaseExecutions-list is sorted on
+	currentSortColumn int
+
+	// The previous column that the TestCaseExecution-list was sorted on
+	previousSortColumn int
+
+	currentHeader *sortableHeaderLabelStruct
+
+	previousHeader *sortableHeaderLabelStruct
+
+	// The current Columns SortDirect
+	currentSortColumnsSortDirection SortingDirectionType
 }
 
 // Object for keeping if a row is selected and which TestCase/Execution that should be shown
@@ -157,16 +183,3 @@ const (
 	initialSortDirectionForInitialColumnToSortOn SortingDirectionType = SortingDirectionDescending
 	initialColumnToSortOn                        int                  = 7
 )
-
-// The current column that the TestCaseExecutions-list is sorted on
-var currentSortColumn int = -1
-
-// The previous column that the TestCaseExecution-list was sorted on
-var previousSortColumn int
-
-var currentHeader *sortableHeaderLabelStruct
-
-var previousHeader *sortableHeaderLabelStruct
-
-// The current Columns SortDirect
-var currentSortColumnsSortDirection SortingDirectionType

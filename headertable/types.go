@@ -42,11 +42,11 @@ func LoadFromFlashingTableCellsReferenceMap(
 	// Lock Map for Reading
 	tableOptsReference.FlashingTableCellsReferenceMapMutex.RLock()
 
+	//UnLock Map
+	defer tableOptsReference.FlashingTableCellsReferenceMapMutex.RUnlock()
+
 	// Read Map
 	flashingTableCellReference, existInMap = tableOptsReference.FlashingTableCellsReferenceMap[flashingTableCellsReferenceMapKey]
-
-	//UnLock Map
-	tableOptsReference.FlashingTableCellsReferenceMapMutex.RUnlock()
 
 	return flashingTableCellReference, existInMap
 }
@@ -60,10 +60,10 @@ func SaveToFlashingTableCellsReferenceMap(
 	// Lock Map for Writing
 	tableOptsReference.FlashingTableCellsReferenceMapMutex.Lock()
 
+	//UnLock Map
+	defer tableOptsReference.FlashingTableCellsReferenceMapMutex.Unlock()
+
 	// Save to Map
 	tableOptsReference.FlashingTableCellsReferenceMap[flashingTableCellsReferenceMapKey] = flashingTableCellReference
-
-	//UnLock Map
-	tableOptsReference.FlashingTableCellsReferenceMapMutex.Unlock()
 
 }

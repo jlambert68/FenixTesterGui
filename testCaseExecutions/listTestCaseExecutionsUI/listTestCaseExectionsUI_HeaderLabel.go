@@ -34,6 +34,37 @@ func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNu
 		func() {
 			fmt.Println("SortIcon was Clicked!!!", tempSortableHeaderLabel.columnNumber)
 
+			// Which list in shown in GUI; "One TestCaseExecution per TestCase" or "All TestCaseExecutions per TestCase"
+			var currentSortColumn int
+			var previousSortColumn int
+			var currentHeader *sortableHeaderLabelStruct
+			var previousHeader *sortableHeaderLabelStruct
+			switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+
+			case AllExecutionsForOneTestCase:
+				currentSortColumn = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+					currentSortColumn
+				previousSortColumn = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+					previousSortColumn
+				currentHeader = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+					currentHeader
+				previousHeader = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+					previousHeader
+
+			case OneExecutionPerTestCase:
+				currentSortColumn = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+					currentSortColumn
+				previousSortColumn = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+					previousSortColumn
+				currentHeader = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+					currentHeader
+				previousHeader = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+					previousHeader
+
+			case NotDefined:
+
+			}
+
 			// Check if there is a new that the table should be sorted on
 			if currentSortColumn != tempSortableHeaderLabel.columnNumber {
 
@@ -110,6 +141,33 @@ func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNu
 
 			sort2DStringSlice(testCaseExecutionsListTableTable, currentSortColumn, tempSortableHeaderLabel.latestSelectedSortOrder)
 			testCaseExecutionsListTable.Refresh()
+
+			// Move back Header and Sort column information
+			switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+
+			case AllExecutionsForOneTestCase:
+				selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+					currentSortColumn = currentSortColumn
+				selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+					previousSortColumn = previousSortColumn
+				selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+					currentHeader = currentHeader
+				selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+					previousHeader = previousHeader
+
+			case OneExecutionPerTestCase:
+				selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+					currentSortColumn = currentSortColumn
+				selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+					previousSortColumn = previousSortColumn
+				selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+					currentHeader = currentHeader
+				selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+					previousHeader = previousHeader
+
+			case NotDefined:
+
+			}
 
 		},
 		true,

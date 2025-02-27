@@ -509,7 +509,20 @@ func loadTestCaseExecutionListTableTable(
 	// Do an initial sort 'testCaseExecutionsListTableTable' descending on 'LastSavedTimeStamp'
 	if testCaseExecutionsListMessage != nil && len(*testCaseExecutionsListMessage) > 0 {
 
-		currentSortColumn = initialColumnToSortOn
+		switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+
+		case AllExecutionsForOneTestCase:
+			selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+				currentSortColumn = initialColumnToSortOn
+
+		case OneExecutionPerTestCase:
+			selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+				currentSortColumn = initialColumnToSortOn
+
+		case NotDefined:
+
+		}
+
 		sort2DStringSlice(testCaseExecutionsListTableTable, initialColumnToSortOn, initialSortDirectionForInitialColumnToSortOn)
 
 	}

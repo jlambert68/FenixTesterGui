@@ -70,9 +70,12 @@ func GenerateListTestCaseExecutionsUI(
 	var buttonsContainer *fyne.Container
 
 	var numberOfTestCaseExecutionsAfterLocalFilterLabel *widget.Label
-	var numberOfTestCaseExcutionsRetrievedFromDatabaseLabel *widget.Label
+	var numberOfTestCaseExecutionsRetrievedFromDatabaseLabel *widget.Label
 
 	var filterAndButtonsContainer *fyne.Container
+
+	// Initiate map for Header-references
+	testCaseExecutionsListTableHeadersMapRef = make(map[int]*sortableHeaderLabelStruct)
 
 	// Initiate 'selectedTestCaseExecutionObjected' used for keep track of source of executions and what row is selected
 	selectedTestCaseExecutionObjected = selectedTestCaseExecutionStruct{
@@ -150,15 +153,15 @@ func GenerateListTestCaseExecutionsUI(
 			calculateAndSetCorrectColumnWidths()
 			updateTestCaseExecutionsListTable(testCaseExecutionsModel)
 
-			sortableHeaderReference.sortImage.onTapped()
-
 			// Get number of TestCase retrieved from Database after loading more data
 			afterNumberOfRowsRetrievedFromDatabase = testCaseExecutionsModel.
 				GetNumberOfTestCaseExecutionsRetrievedFromDatabase()
 
 			// If they are different then sort the table
 			if beforeNumberOfRowsRetrievedFromDatabase != afterNumberOfRowsRetrievedFromDatabase {
-				sortableHeaderReference.sortImage.onTapped()
+				//sortableHeaderReference.sortImage.onTapped()
+				testCaseExecutionsListTableHeadersMapRef[int(latestTestCaseExecutionTimeStampColumnNumber)].sortImage.onTapped()
+
 			}
 
 		}()
@@ -173,7 +176,7 @@ func GenerateListTestCaseExecutionsUI(
 
 	// Define the function to be executed to filter TestCases that the user can edit
 	filterTestCaseExcutionsButtonFunction = func() {
-		fmt.Println("'loadTestCaseExecutionsFromDataBaseButton' was pressed")
+		fmt.Println("'filterTestCaseExcutionButton' was pressed")
 
 		loadTestCaseExecutionListTableTable(
 			testCaseExecutionsModel,
@@ -325,10 +328,10 @@ func GenerateListTestCaseExecutionsUI(
 	// Create the label used for showing number of TestCases retrieved from the Database
 	numberOfTestCaseExecutionsInTheDatabaseSearch = binding.NewString()
 	_ = numberOfTestCaseExecutionsInTheDatabaseSearch.Set("No TestCases retrieved from the Database")
-	numberOfTestCaseExcutionsRetrievedFromDatabaseLabel = widget.NewLabelWithData(numberOfTestCaseExecutionsInTheDatabaseSearch)
+	numberOfTestCaseExecutionsRetrievedFromDatabaseLabel = widget.NewLabelWithData(numberOfTestCaseExecutionsInTheDatabaseSearch)
 
 	// Initiate 'statisticsContainer'
-	statisticsContainer = container.NewHBox(numberOfTestCaseExecutionsAfterLocalFilterLabel, numberOfTestCaseExcutionsRetrievedFromDatabaseLabel)
+	statisticsContainer = container.NewHBox(numberOfTestCaseExecutionsAfterLocalFilterLabel, numberOfTestCaseExecutionsRetrievedFromDatabaseLabel)
 
 	statisticsAndColorPaletteContainer = container.NewVBox(executionColorPaletteContainer, statisticsContainer)
 

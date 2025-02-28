@@ -11,6 +11,8 @@ import (
 // The UI-table for the List with TestCaseExecutions
 var testCaseExecutionsListTable *widget.Table
 
+var testCaseExecutionsListTableHeadersMapRef map[int]*sortableHeaderLabelStruct
+
 // The data source used to produce the UI-table for the List with TestCaseExecutions
 var testCaseExecutionsListTableTable [][]string
 
@@ -56,7 +58,7 @@ const latestOkFinishedTestCaseExecutionTimeStamp uint8 = 6
 const latestTestCaseExecutionTimeStampColumnNumber uint8 = 6
 
 // Reference to Header for column for "Latest TestCaseExecution TimeStamp"
-var sortableHeaderReference *sortableHeaderLabelStruct
+//var sortableHeaderReference *sortableHeaderLabelStruct
 
 // The row that the mouse is currently hovering above. Used for highlight that row in the UI-Table
 var currentRowThatMouseIsHoveringAbove int16 = -1

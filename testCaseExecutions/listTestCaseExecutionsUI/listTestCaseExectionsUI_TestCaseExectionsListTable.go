@@ -291,9 +291,12 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 		tempSortableHeaderLabel.sortImage.headerColumnNumber = id.Col
 
 		// If this Header is 'latestTestCaseExecutionTimeStampColumnNumber' then save reference to it
-		if id.Col == int(latestTestCaseExecutionTimeStampColumnNumber) {
-			sortableHeaderReference = tempSortableHeaderLabel
-		}
+		//if id.Col == int(latestTestCaseExecutionTimeStampColumnNumber) {
+		//	sortableHeaderReference = tempSortableHeaderLabel
+		//}
+
+		// Save a reference to the Header in the Header-map
+		testCaseExecutionsListTableHeadersMapRef[id.Col] = tempSortableHeaderLabel
 
 		//tempSortableHeaderLabel.latestSelectedSortOrder = SortingDirectionAscending
 		//tempSortableHeaderLabel.updateColumnNumberFunction()
@@ -526,6 +529,70 @@ func loadTestCaseExecutionListTableTable(
 		sort2DStringSlice(testCaseExecutionsListTableTable, initialColumnToSortOn, initialSortDirectionForInitialColumnToSortOn)
 
 	}
+
+}
+
+// Sort the matrix for GUI table, update the Gui and Set correct Sort-icon for sorted Header
+func sortGuiTableOnColumn(columnNumber uint8, sortDirection SortingDirectionType) {
+
+	// Sort matrix
+	sort2DStringSlice(testCaseExecutionsListTableTable, int(columnNumber), sortDirection)
+
+	// Update the Gui table with the newly sorted data
+	// Update the GUI
+	loadTestCaseExecutionListTableTable(
+		&testCaseExecutionsModel.TestCaseExecutionsModel,
+		true,
+		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+			testCaseUuidForTestCaseExecutionThatIsShownInPreview)
+
+	calculateAndSetCorrectColumnWidths()
+	updateTestCaseExecutionsListTable(&testCaseExecutionsModel.TestCaseExecutionsModel)
+
+	// Set correct sorting for the header
+	testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.latestSelectedSortOrder = sortDirection
+
+	// Hide all images first
+	testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.unspecifiedImageContainer.Hide()
+	testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.ascendingImageContainer.Hide()
+	testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.descendingImageContainer.Hide()
+
+	// Show the appropriate image
+	if testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.isSortable {
+
+		switch testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.latestSelectedSortOrder {
+
+		case SortingDirectionUnSpecified:
+			testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.unspecifiedImageContainer.Show()
+
+		case SortingDirectionAscending:
+			testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.ascendingImageContainer.Show()
+
+		case SortingDirectionDescending:
+			testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.descendingImageContainer.Show()
+
+		default:
+			// Handle unexpected cases
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"Id":            "0eb8808b-6314-4160-b923-1e2ec5e4b4f2",
+				"sortDirection": sortDirection,
+			}).Fatalln("Unhandled 'sortDirection'")
+		}
+
+	} else {
+		// Handle unexpected cases
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"Id":           "7e0d2caf-c57b-45a1-8031-d71755338e94",
+			"columnNumber": columnNumber,
+		}).Error("Column is not sortable")
+
+	}
+}
+
+// Sort the matrix, ascending, for GUI table, update the Gui for 'latestTestCaseExecutionTimeStampColumnNumber'
+func sortGuiTableAscendingOnTestTestCaseExecutionTimeStamp() {
+
+	sortGuiTableOnColumn(latestTestCaseExecutionTimeStampColumnNumber, SortingDirectionAscending)
 
 }
 

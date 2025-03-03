@@ -549,6 +549,44 @@ func sortGuiTableOnColumn(columnNumber uint8, sortDirection SortingDirectionType
 	calculateAndSetCorrectColumnWidths()
 	updateTestCaseExecutionsListTable(&testCaseExecutionsModel.TestCaseExecutionsModel)
 
+	// Set current sorted column
+	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+	case OneExecutionPerTestCase:
+		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+			previousSortColumn = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumn
+		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumn = int(columnNumber)
+		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+			previousHeader = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentHeader
+		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+			currentHeader = testCaseExecutionsListTableHeadersMapRef[int(columnNumber)]
+
+	case AllExecutionsForOneTestCase:
+
+		for _, testCaseExecutionsListTableHeaderRef := range testCaseExecutionsListTableHeadersMapRef {
+			testCaseExecutionsListTableHeaderRef.sortImage.unspecifiedImageContainer.Hide()
+			testCaseExecutionsListTableHeaderRef.sortImage.ascendingImageContainer.Hide()
+			testCaseExecutionsListTableHeaderRef.sortImage.descendingImageContainer.Hide()
+
+			testCaseExecutionsListTableHeaderRef.sortImage.latestSelectedSortOrder = SortingDirectionUnSpecified
+
+		}
+
+		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.previousSortColumn = -1
+		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.currentSortColumn = int(columnNumber)
+
+		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.previousHeader = nil
+		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+			currentHeader = testCaseExecutionsListTableHeadersMapRef[int(columnNumber)]
+
+	default:
+		// Handle unexpected cases
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"Id": "8fd5ae9a-9cfe-42d9-91c1-6b7c084cbc90",
+			"selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType": selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType,
+		}).Fatalln("Unhandled 'selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType'")
+
+	}
+
 	// Set correct sorting for the header
 	testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.latestSelectedSortOrder = sortDirection
 
@@ -587,6 +625,10 @@ func sortGuiTableOnColumn(columnNumber uint8, sortDirection SortingDirectionType
 		}).Error("Column is not sortable")
 
 	}
+
+	// Refresh table
+	testCaseExecutionsListTable.Refresh()
+
 }
 
 // Sort the matrix, ascending, for GUI table, update the Gui for 'latestTestCaseExecutionTimeStampColumnNumber'
@@ -612,7 +654,7 @@ func sort2DStringSlice(data [][]string, columnToSortOn int, sortingDirection Sor
 		// Handle sorting direction
 		switch sortingDirection {
 
-		case SortingDirectionAscending:
+		case SortingDirectionDescending:
 
 			if err1 == nil && err2 == nil {
 				return num1 < num2
@@ -621,7 +663,7 @@ func sort2DStringSlice(data [][]string, columnToSortOn int, sortingDirection Sor
 			// Default to string comparison if not numbers.
 			return data[i][columnToSortOn] < data[j][columnToSortOn]
 
-		case SortingDirectionDescending:
+		case SortingDirectionAscending:
 
 			if err1 == nil && err2 == nil {
 				return num1 > num2

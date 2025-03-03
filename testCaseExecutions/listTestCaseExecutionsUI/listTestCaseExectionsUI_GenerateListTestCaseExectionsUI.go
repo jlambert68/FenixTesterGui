@@ -250,8 +250,10 @@ func GenerateListTestCaseExecutionsUI(
 		selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType = AllExecutionsForOneTestCase
 
 		// Channel used to trigger update of Gui
-		var updateGuiChannel chan bool
-		updateGuiChannel = make(chan bool)
+		var updateGuiChannelStep1 chan bool
+		var updateGuiChannelStep2 chan bool
+		updateGuiChannelStep1 = make(chan bool)
+		updateGuiChannelStep2 = make(chan bool)
 
 		listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
 			testCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.LatestUniqueTestCaseExecutionDatabaseRowId,
@@ -263,33 +265,23 @@ func GenerateListTestCaseExecutionsUI(
 			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 			true,
-			&updateGuiChannel)
+			&updateGuiChannelStep1)
 
 		// Update the UI with the new data
 		go func() {
 
 			// Wait for trigger to update GUI
-			<-updateGuiChannel
+			<-updateGuiChannelStep1
+			<-updateGuiChannelStep2
 
 			// Update the GUI
-			loadTestCaseExecutionListTableTable(
-				testCaseExecutionsModel,
-				true,
-				selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-					testCaseUuidForTestCaseExecutionThatIsShownInPreview)
-
-			calculateAndSetCorrectColumnWidths()
-			updateTestCaseExecutionsListTable(testCaseExecutionsModel)
+			sortGuiTableAscendingOnTestTestCaseExecutionTimeStamp()
 
 		}()
 
-		loadTestCaseExecutionListTableTable(
-			testCaseExecutionsModel,
-			true,
-			selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-				testCaseUuidForTestCaseExecutionThatIsShownInPreview)
-		calculateAndSetCorrectColumnWidths()
-		updateTestCaseExecutionsListTable(testCaseExecutionsModel)
+		// Update the GUI
+		sortGuiTableAscendingOnTestTestCaseExecutionTimeStamp()
+		updateGuiChannelStep2 <- true
 
 	}
 

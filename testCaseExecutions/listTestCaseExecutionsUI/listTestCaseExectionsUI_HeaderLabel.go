@@ -1,12 +1,10 @@
 package listTestCaseExecutionsUI
 
 import (
-	sharedCode "FenixTesterGui/common_code"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-	"github.com/sirupsen/logrus"
 )
 
 // Defenition of a Header label
@@ -34,141 +32,146 @@ func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNu
 		func() {
 			fmt.Println("SortIcon was Clicked!!!", tempSortableHeaderLabel.columnNumber)
 
-			// Which list in shown in GUI; "One TestCaseExecution per TestCase" or "All TestCaseExecutions per TestCase"
-			var currentSortColumn int
-			var previousSortColumn int
-			var currentHeader *sortableHeaderLabelStruct
-			var previousHeader *sortableHeaderLabelStruct
-			switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+			SortOrReverseSortGuiTable(uint8(tempSortableHeaderLabel.columnNumber))
 
-			case AllExecutionsForOneTestCase:
-				currentSortColumn = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
-					currentSortColumn
-				previousSortColumn = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
-					previousSortColumn
-				currentHeader = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
-					currentHeader
-				previousHeader = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
-					previousHeader
+			/*
+				// Which list in shown in GUI; "One TestCaseExecution per TestCase" or "All TestCaseExecutions per TestCase"
+				var currentSortColumn int
+				var previousSortColumn int
+				var currentHeader *sortableHeaderLabelStruct
+				var previousHeader *sortableHeaderLabelStruct
+				switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
 
-			case OneExecutionPerTestCase:
-				currentSortColumn = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-					currentSortColumn
-				previousSortColumn = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-					previousSortColumn
-				currentHeader = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-					currentHeader
-				previousHeader = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-					previousHeader
+				case AllExecutionsForOneTestCase:
+					currentSortColumn = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+						currentSortColumn
+					previousSortColumn = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+						previousSortColumn
+					currentHeader = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+						currentHeader
+					previousHeader = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+						previousHeader
 
-			case NotDefined:
+				case OneExecutionPerTestCase:
+					currentSortColumn = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+						currentSortColumn
+					previousSortColumn = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+						previousSortColumn
+					currentHeader = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+						currentHeader
+					previousHeader = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+						previousHeader
 
-			}
-
-			// Check if there is a new that the table should be sorted on
-			if currentSortColumn != tempSortableHeaderLabel.columnNumber {
-
-				// New column to sort on
-				previousSortColumn = currentSortColumn
-				currentSortColumn = tempSortableHeaderLabel.columnNumber
-
-				if currentHeader != nil {
-					previousHeader = currentHeader
-
-					// Reset the previous header's sort order to Unspecified
-					previousHeader.latestSelectedSortOrder = SortingDirectionUnSpecified
-					previousHeader.sortImage.latestSelectedSortOrder = SortingDirectionUnSpecified
-
-					// Refresh the previous header's sort image and widget
-					previousHeader.sortImage.Refresh()
-					previousHeader.Refresh()
-
-					//previousHeader.sortImage.unspecifiedImageContainer.Show()
-					//previousHeader.sortImage.ascendingImageContainer.Hide()
-					//previousHeader.sortImage.descendingImageContainer.Hide()
-					//previousHeader.sortImage.Refresh()
+				case NotDefined:
 
 				}
-				currentHeader = tempSortableHeaderLabel
 
-				// New column so use the previous  sort-direction if that existed
-				switch tempSortableHeaderLabel.latestSelectedSortOrder {
+				// Check if there is a new column that the table should be sorted on
+				if currentSortColumn != tempSortableHeaderLabel.columnNumber {
 
-				case SortingDirectionUnSpecified:
-					tempSortableHeaderLabel.latestSelectedSortOrder = SortingDirectionAscending
+					// New column to sort on
+					previousSortColumn = currentSortColumn
+					currentSortColumn = tempSortableHeaderLabel.columnNumber
 
-				case SortingDirectionAscending:
-					// Do nothing
+					if currentHeader != nil {
+						previousHeader = currentHeader
 
-				case SortingDirectionDescending:
-					// Do nothing
+						// Reset the previous header's sort order to Unspecified
+						previousHeader.latestSelectedSortOrder = SortingDirectionUnSpecified
+						previousHeader.sortImage.latestSelectedSortOrder = SortingDirectionUnSpecified
 
-				default:
-					sharedCode.Logger.WithFields(logrus.Fields{
-						"Id": "f6c3f4ec-91c3-4b2a-bdab-0aef96453a2a",
-						"tempSortableHeaderLabel.latestSelectedSortOrder": tempSortableHeaderLabel.latestSelectedSortOrder,
-						"ColumnNumber": tempSortableHeaderLabel.columnNumber,
-					}).Fatalln("Unhandled SortOrder")
+						// Refresh the previous header's sort image and widget
+						previousHeader.sortImage.Refresh()
+						previousHeader.Refresh()
+
+						//previousHeader.sortImage.unspecifiedImageContainer.Show()
+						//previousHeader.sortImage.ascendingImageContainer.Hide()
+						//previousHeader.sortImage.descendingImageContainer.Hide()
+						//previousHeader.sortImage.Refresh()
+
+					}
+					currentHeader = tempSortableHeaderLabel
+
+					// New column so use the previous  sort-direction if that existed
+					switch tempSortableHeaderLabel.latestSelectedSortOrder {
+
+					case SortingDirectionUnSpecified:
+						tempSortableHeaderLabel.latestSelectedSortOrder = SortingDirectionAscending
+
+					case SortingDirectionAscending:
+						// Do nothing
+
+					case SortingDirectionDescending:
+						// Do nothing
+
+					default:
+						sharedCode.Logger.WithFields(logrus.Fields{
+							"Id": "f6c3f4ec-91c3-4b2a-bdab-0aef96453a2a",
+							"tempSortableHeaderLabel.latestSelectedSortOrder": tempSortableHeaderLabel.latestSelectedSortOrder,
+							"ColumnNumber": tempSortableHeaderLabel.columnNumber,
+						}).Fatalln("Unhandled SortOrder")
+					}
+
+				} else {
+
+					// Same column so switch sort-direction
+					switch tempSortableHeaderLabel.latestSelectedSortOrder {
+
+					case SortingDirectionUnSpecified:
+						tempSortableHeaderLabel.latestSelectedSortOrder = SortingDirectionAscending
+
+					case SortingDirectionAscending:
+						tempSortableHeaderLabel.latestSelectedSortOrder = SortingDirectionDescending
+
+					case SortingDirectionDescending:
+						tempSortableHeaderLabel.latestSelectedSortOrder = SortingDirectionAscending
+
+					default:
+						sharedCode.Logger.WithFields(logrus.Fields{
+							"Id": "f6c3f4ec-91c3-4b2a-bdab-0aef96453a2a",
+							"tempSortableHeaderLabel.latestSelectedSortOrder": tempSortableHeaderLabel.latestSelectedSortOrder,
+							"ColumnNumber": tempSortableHeaderLabel.columnNumber,
+						}).Fatalln("Unhandled SortOrder")
+					}
 				}
 
-			} else {
+				// Update the current header's sort image
+				tempSortableHeaderLabel.sortImage.latestSelectedSortOrder = tempSortableHeaderLabel.latestSelectedSortOrder
+				tempSortableHeaderLabel.sortImage.Refresh()
+				tempSortableHeaderLabel.Refresh()
 
-				// Same column so switch sort-direction
-				switch tempSortableHeaderLabel.latestSelectedSortOrder {
+				sort2DStringSlice(testCaseExecutionsListTableTable, currentSortColumn, tempSortableHeaderLabel.latestSelectedSortOrder)
+				testCaseExecutionsListTable.Refresh()
 
-				case SortingDirectionUnSpecified:
-					tempSortableHeaderLabel.latestSelectedSortOrder = SortingDirectionAscending
+				// Move back Header and Sort column information
+				switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
 
-				case SortingDirectionAscending:
-					tempSortableHeaderLabel.latestSelectedSortOrder = SortingDirectionDescending
+				case AllExecutionsForOneTestCase:
+					selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+						currentSortColumn = currentSortColumn
+					selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+						previousSortColumn = previousSortColumn
+					selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+						currentHeader = currentHeader
+					selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+						previousHeader = previousHeader
 
-				case SortingDirectionDescending:
-					tempSortableHeaderLabel.latestSelectedSortOrder = SortingDirectionAscending
+				case OneExecutionPerTestCase:
+					selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+						currentSortColumn = currentSortColumn
+					selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+						previousSortColumn = previousSortColumn
+					selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+						currentHeader = currentHeader
+					selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+						previousHeader = previousHeader
 
-				default:
-					sharedCode.Logger.WithFields(logrus.Fields{
-						"Id": "f6c3f4ec-91c3-4b2a-bdab-0aef96453a2a",
-						"tempSortableHeaderLabel.latestSelectedSortOrder": tempSortableHeaderLabel.latestSelectedSortOrder,
-						"ColumnNumber": tempSortableHeaderLabel.columnNumber,
-					}).Fatalln("Unhandled SortOrder")
+				case NotDefined:
+
 				}
-			}
 
-			// Update the current header's sort image
-			tempSortableHeaderLabel.sortImage.latestSelectedSortOrder = tempSortableHeaderLabel.latestSelectedSortOrder
-			tempSortableHeaderLabel.sortImage.Refresh()
-			tempSortableHeaderLabel.Refresh()
 
-			sort2DStringSlice(testCaseExecutionsListTableTable, currentSortColumn, tempSortableHeaderLabel.latestSelectedSortOrder)
-			testCaseExecutionsListTable.Refresh()
-
-			// Move back Header and Sort column information
-			switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
-
-			case AllExecutionsForOneTestCase:
-				selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
-					currentSortColumn = currentSortColumn
-				selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
-					previousSortColumn = previousSortColumn
-				selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
-					currentHeader = currentHeader
-				selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
-					previousHeader = previousHeader
-
-			case OneExecutionPerTestCase:
-				selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-					currentSortColumn = currentSortColumn
-				selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-					previousSortColumn = previousSortColumn
-				selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-					currentHeader = currentHeader
-				selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-					previousHeader = previousHeader
-
-			case NotDefined:
-
-			}
-
+			*/
 		},
 		true,
 		tempColumnNumber)

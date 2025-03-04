@@ -206,9 +206,30 @@ func (r *clickableSortImage) updateImageVisibility() {
 	r.ascendingImageContainer.Hide()
 	r.descendingImageContainer.Hide()
 
+	var currentSortedColumn int
+	var currentsortingDirection SortingDirectionType
+	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+
+	case AllExecutionsForOneTestCase:
+		currentSortedColumn = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+			currentSortColumn
+		currentsortingDirection = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+			currentSortColumnsSortDirection
+
+	case OneExecutionPerTestCase:
+		currentSortedColumn = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+			currentSortColumn
+		currentsortingDirection = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+			currentSortColumnsSortDirection
+
+	case NotDefined:
+		currentSortedColumn = -1
+
+	}
+
 	// Show the appropriate image
-	if r.isSortable {
-		switch r.latestSelectedSortOrder {
+	if r.isSortable && r.headerColumnNumber == currentSortedColumn && currentSortedColumn > 0 {
+		switch currentsortingDirection {
 		case SortingDirectionUnSpecified:
 			r.unspecifiedImageContainer.Show()
 		case SortingDirectionAscending:
@@ -218,7 +239,11 @@ func (r *clickableSortImage) updateImageVisibility() {
 		default:
 			// Handle unexpected cases
 		}
+	} else {
+		r.unspecifiedImageContainer.Show()
 	}
+
+	//r.Refresh()
 }
 
 func (r *clickableSortImage) CreateRenderer() fyne.WidgetRenderer {

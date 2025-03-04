@@ -60,7 +60,7 @@ func GenerateListTestCaseExecutionsUI(
 	var statisticsAndColorPaletteContainer *fyne.Container
 
 	var loadTestCaseExecutionsFromDataBaseButton *widget.Button
-	var loadTestCaseExcutionsFromDataBaseFunction func()
+	var loadOneTestCaseExecutionPerTestCaseFromDataBaseFunction func()
 	var filterTestCaseExcutionsButton *widget.Button
 	var filterTestCaseExcutionsButtonFunction func()
 	var clearFiltersButton *widget.Button
@@ -105,28 +105,32 @@ func GenerateListTestCaseExecutionsUI(
 	}
 
 	// Define the function to be executed to load TestCaseExecutions from that Database that the user can view
-	loadTestCaseExcutionsFromDataBaseFunction = func() {
-		fmt.Println("'loadTestCaseExecutionsFromDataBaseButton' was pressed")
+	// Only loads one TestCaseExecution per TestCase
+	loadOneTestCaseExecutionPerTestCaseFromDataBaseFunction = func() {
+		fmt.Println("'loadOneTestCaseExecutionPerTestCaseFromDataBaseFunction' was pressed")
 
 		// If previously data set is of other kind then 'OneExecutionPerTestCase' then no selection should be made
 		if selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType != OneExecutionPerTestCase {
 			//selectedTestCaseExecutionObjected.isAnyRowSelected = false
 			ClearTestCaseExecutionPreviewContainer()
+			loadAllTestCaseExecutionsForOneTestCaseButtonReference.Disable()
 
 		}
 
 		// Get number of TestCase retrieved from Database before and after loading more data
-		var beforeNumberOfRowsRetrievedFromDatabase int
-		var afterNumberOfRowsRetrievedFromDatabase int
-		beforeNumberOfRowsRetrievedFromDatabase = testCaseExecutionsModel.
-			GetNumberOfTestCaseExecutionsRetrievedFromDatabase()
+		//var beforeNumberOfRowsRetrievedFromDatabase int
+		//var afterNumberOfRowsRetrievedFromDatabase int
+		//beforeNumberOfRowsRetrievedFromDatabase = testCaseExecutionsModel.
+		//	GetNumberOfTestCaseExecutionsRetrievedFromDatabase()
 
 		// Specify from were Executions in the GUI comes from
 		selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType = OneExecutionPerTestCase
 
 		// Channel used to trigger update of Gui
-		var updateGuiChannel chan bool
-		updateGuiChannel = make(chan bool)
+		var updateGuiChannelStep1 chan bool
+		var updateGuiChannelStep2 chan bool
+		updateGuiChannelStep1 = make(chan bool)
+		updateGuiChannelStep2 = make(chan bool)
 
 		listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
 			testCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.LatestUniqueTestCaseExecutionDatabaseRowId,
@@ -137,42 +141,41 @@ func GenerateListTestCaseExecutionsUI(
 			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 			true,
-			&updateGuiChannel)
+			&updateGuiChannelStep1)
 
 		// Update the UI with the new data
 		go func() {
 
 			// Wait for trigger to update GUI
-			<-updateGuiChannel
+			<-updateGuiChannelStep1
+			<-updateGuiChannelStep2
 
 			// Update the GUI
-			loadTestCaseExecutionListTableTable(
-				testCaseExecutionsModel,
-				false,
-				"")
-			calculateAndSetCorrectColumnWidths()
-			updateTestCaseExecutionsListTable(testCaseExecutionsModel)
+			SortGuiTableOnCurrentColumnAndSorting()
+			/*
+				// Get number of TestCase retrieved from Database after loading more data
+				afterNumberOfRowsRetrievedFromDatabase = testCaseExecutionsModel.
+					GetNumberOfTestCaseExecutionsRetrievedFromDatabase()
 
-			// Get number of TestCase retrieved from Database after loading more data
-			afterNumberOfRowsRetrievedFromDatabase = testCaseExecutionsModel.
-				GetNumberOfTestCaseExecutionsRetrievedFromDatabase()
+				// If they are different then sort the table
+				if beforeNumberOfRowsRetrievedFromDatabase != afterNumberOfRowsRetrievedFromDatabase {
+					//sortableHeaderReference.sortImage.onTapped()
+					testCaseExecutionsListTableHeadersMapRef[int(latestTestCaseExecutionTimeStampColumnNumber)].sortImage.onTapped()
 
-			// If they are different then sort the table
-			if beforeNumberOfRowsRetrievedFromDatabase != afterNumberOfRowsRetrievedFromDatabase {
-				//sortableHeaderReference.sortImage.onTapped()
-				testCaseExecutionsListTableHeadersMapRef[int(latestTestCaseExecutionTimeStampColumnNumber)].sortImage.onTapped()
+				}
 
-			}
+			*/
 
 		}()
 
-		filterTestCaseExcutionsButtonFunction()
+		updateGuiChannelStep2 <- true
+		//filterTestCaseExcutionsButtonFunction()
 
 	}
 
 	// Define the 'loadTestCaseExecutionsFromDataBaseButton'
 	loadTestCaseExecutionsFromDataBaseButton = widget.NewButton("Load one TestCaseExecution per TestCase",
-		loadTestCaseExcutionsFromDataBaseFunction)
+		loadOneTestCaseExecutionPerTestCaseFromDataBaseFunction)
 
 	// Define the function to be executed to filter TestCases that the user can edit
 	filterTestCaseExcutionsButtonFunction = func() {
@@ -275,12 +278,12 @@ func GenerateListTestCaseExecutionsUI(
 			<-updateGuiChannelStep2
 
 			// Update the GUI
-			sortGuiTableAscendingOnTestTestCaseExecutionTimeStamp()
+			sortGuiTableAscendingOnTestCaseExecutionTimeStamp()
 
 		}()
 
 		// Update the GUI
-		sortGuiTableAscendingOnTestTestCaseExecutionTimeStamp()
+		sortGuiTableAscendingOnTestCaseExecutionTimeStamp()
 		updateGuiChannelStep2 <- true
 
 	}
@@ -288,6 +291,9 @@ func GenerateListTestCaseExecutionsUI(
 	// Define the 'loadAllTestCaseExecutionsForOneTestCaseButton'
 	loadAllTestCaseExecutionsForOneTestCaseButton = widget.NewButton(loadAllTestCaseExecutionsForOneTestCaseButtonText,
 		loadAllTestCaseExecutionsForOneTestCaseButtonFunction)
+
+	// Disable button from the beginning
+	loadAllTestCaseExecutionsForOneTestCaseButton.Disable()
 
 	// Store reference to button
 	loadAllTestCaseExecutionsForOneTestCaseButtonReference = loadAllTestCaseExecutionsForOneTestCaseButton

@@ -376,7 +376,7 @@ func loadTestCaseExecutionListTableTable(
 
 	// Get all TestCaseExecutions form 'testCaseExecutionsThatCanBeViewedByUserMap' or from 'allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap'
 	var testCaseExecutionsListMessage *[]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
-	if retrieveAllExecutionsForSpecificTestCaseUuid == false {
+	if selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType == OneExecutionPerTestCase {
 
 		// Retrieve latest TestExecutions
 		testCaseExecutionsListMessage = testCaseExecutionsModelObject.ReadAllFromTestCaseExecutionsMap()
@@ -560,6 +560,9 @@ func sortGuiTableOnColumn(columnNumber uint8, sortDirection SortingDirectionType
 		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
 			currentHeader = testCaseExecutionsListTableHeadersMapRef[int(columnNumber)]
 
+		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+			currentSortColumnsSortDirection = sortDirection
+
 	case AllExecutionsForOneTestCase:
 
 		for _, testCaseExecutionsListTableHeaderRef := range testCaseExecutionsListTableHeadersMapRef {
@@ -635,7 +638,7 @@ func sortGuiTableOnColumn(columnNumber uint8, sortDirection SortingDirectionType
 }
 
 // Sort the matrix, ascending, for GUI table, update the Gui for 'latestTestCaseExecutionTimeStampColumnNumber'
-func sortGuiTableAscendingOnTestTestCaseExecutionTimeStamp() {
+func sortGuiTableAscendingOnTestCaseExecutionTimeStamp() {
 
 	sortGuiTableOnColumn(latestTestCaseExecutionTimeStampColumnNumber, SortingDirectionAscending)
 
@@ -705,6 +708,51 @@ func SortOrReverseSortGuiTable(sortInThisColumn uint8) {
 		// Handle unexpected cases
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"Id": "8fd5ae9a-9cfe-42d9-91c1-6b7c084cbc90",
+			"selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType": selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType,
+		}).Fatalln("Unhandled 'selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType'")
+	}
+
+}
+
+// Sort the matrix, for GUI table, update the Gui. Use current table sorting and column, if exist
+func SortGuiTableOnCurrentColumnAndSorting() {
+
+	// Which TestCaseExecutions table is shown
+	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+	case OneExecutionPerTestCase:
+
+		// Sort table on current column and sort order, if exist
+		switch selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumnsSortDirection {
+		case SortingDirectionAscending, SortingDirectionDescending:
+			// Set on current column and use current sort direction
+			sortGuiTableOnColumn(
+				uint8(selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumn),
+				selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumnsSortDirection)
+
+		case SortingDirectionUnSpecified:
+			// Unspecified sort order, then sort on TestCaseExecutionTimeStamp
+			sortGuiTableAscendingOnTestCaseExecutionTimeStamp()
+		}
+
+	case AllExecutionsForOneTestCase:
+
+		// Sort table on current column and sort order, if exist
+		switch selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.currentSortColumnsSortDirection {
+		case SortingDirectionAscending, SortingDirectionDescending:
+			// Set on current column and use current sort direction
+			sortGuiTableOnColumn(
+				uint8(selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.currentSortColumn),
+				selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumnsSortDirection)
+
+		case SortingDirectionUnSpecified:
+			// Unspecified sort order, then sort on TestCaseExecutionTimeStamp
+			sortGuiTableAscendingOnTestCaseExecutionTimeStamp()
+		}
+
+	default:
+		// Handle unexpected cases
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"Id": "9d0e08e7-c547-42e6-ae7c-ee80601b24b5",
 			"selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType": selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType,
 		}).Fatalln("Unhandled 'selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType'")
 	}

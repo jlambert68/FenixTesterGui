@@ -214,13 +214,21 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 				len(currentTestCase.TestData.SelectedTestDataPoint) == 0 ||
 				len(currentTestCase.TestData.SelectedTestDataPointRowSummary) == 0) {
 
+			var syncChannel chan bool
+			syncChannel = make(chan bool, 1)
+
 			dialog.NewConfirm("Confirmation", "There are TestData to chose from, "+
 				"but no TestData was selected for the TestCase."+
 				"\n\nWould you like to execute the TestCase WITHOUT TestData?", func(response bool) {
 
 				executeWithOutTestData = response
 
+				syncChannel <- true
+
 			}, *sharedCode.FenixMasterWindowPtr).Show()
+
+			// Wait for user action
+			<-syncChannel
 
 			// User wants to add testdata
 			if executeWithOutTestData == false {

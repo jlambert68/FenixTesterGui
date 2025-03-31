@@ -483,7 +483,7 @@ func GenerateTestCaseExecutionPreviewContainer(
 	testCaseExecutionPreviewTopContainer.Add(tempOwnerDomainLabel)
 	testCaseExecutionPreviewTopContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetTestCasePreview().GetDomainThatOwnTheTestCase()))
 
-	// Add emtpy row
+	// Add empty row
 	testCaseExecutionPreviewTopContainer.Add(widget.NewLabel(""))
 	testCaseExecutionPreviewTopContainer.Add(widget.NewLabel(""))
 
@@ -666,8 +666,13 @@ func GenerateTestCaseExecutionPreviewContainer(
 					float32(testCaseNodeRectangleSize-14)))
 
 				// Create the Name for the TestInstruction
-				var tempTestInstructionNameWidget *widget.Label
-				tempTestInstructionNameWidget = widget.NewLabel(previewObject.GetTestInstructionName())
+				//var tempTestInstructionNameWidget *widget.Label
+				//tempTestInstructionNameWidget = widget.NewLabel(previewObject.GetTestInstructionName())
+				var tempTestInstructionNameWidget *clickableTestInstructionNameLabelInPreviewStruct
+				tempTestInstructionNameWidget = newClickableTestInstructionNameLabelInPreview(
+					previewObject.GetTestInstructionName(),
+					nil,
+					nil)
 
 				// Set correct color on ExecutionStatus Rectangle
 				var statusId uint8

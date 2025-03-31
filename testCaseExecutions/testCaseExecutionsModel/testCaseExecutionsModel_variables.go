@@ -2,6 +2,7 @@ package testCaseExecutionsModel
 
 import (
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
+	"sync"
 	"time"
 )
 
@@ -39,11 +40,20 @@ type allTestCaseExecutionsForOneTestCaseUuidStruct struct {
 	moreRowsExists                                               bool
 }
 
+type DetailedTestCaseExecutionMapKeyType string // TestCaseExecutionUuid + TestCaseExecutionVersion
+
+type DetailedTestCaseExecutionsMapObjectStruct struct {
+	DetailedTestCaseExecution     *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage
+	WaitingForDatabaseUpdate      bool
+	WaitingForDatabaseUpdateMutex *sync.RWMutex
+}
+
 // TestCaseExecutionsModelStruct
 // Type for holding all data around Executions
 type TestCaseExecutionsModelStruct struct {
 	LatestTestCaseExecutionForEachTestCaseUuid                   latestTestCaseExecutionForEachTestCaseUuidStruct
 	AllTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap map[TestCaseUuidType]*allTestCaseExecutionsForOneTestCaseUuidStruct
+	DetailedTestCaseExecutionsObjectsMapPtr                      *map[DetailedTestCaseExecutionMapKeyType]*DetailedTestCaseExecutionsMapObjectStruct
 
 	StandardTestCaseExecutionsBatchSize      int32 // The number if rows to be retrieved in one batch
 	NullTimeStampForTestCaseExecutionsSearch time.Time

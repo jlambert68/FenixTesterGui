@@ -207,19 +207,19 @@ func (r *clickableSortImage) updateImageVisibility() {
 	r.descendingImageContainer.Hide()
 
 	var currentSortedColumn int
-	var currentsortingDirection SortingDirectionType
+	var currentSortingDirection SortingDirectionType
 	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
 
 	case AllExecutionsForOneTestCase:
 		currentSortedColumn = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
 			currentSortColumn
-		currentsortingDirection = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+		currentSortingDirection = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
 			currentSortColumnsSortDirection
 
 	case OneExecutionPerTestCase:
 		currentSortedColumn = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
 			currentSortColumn
-		currentsortingDirection = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+		currentSortingDirection = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
 			currentSortColumnsSortDirection
 
 	case NotDefined:
@@ -229,7 +229,7 @@ func (r *clickableSortImage) updateImageVisibility() {
 
 	// Show the appropriate image
 	if r.isSortable && r.headerColumnNumber == currentSortedColumn && currentSortedColumn > 0 {
-		switch currentsortingDirection {
+		switch currentSortingDirection {
 		case SortingDirectionUnSpecified:
 			r.unspecifiedImageContainer.Show()
 		case SortingDirectionAscending:

@@ -16,16 +16,17 @@ import (
 
 type clickableTableLabel struct {
 	widget.Label
-	onDoubleTap                  func()
-	lastTapTime                  time.Time
-	isClickable                  bool
-	currentRow                   int16
-	currentTestCaseExecutionUuid string
-	currentTestCaseUuid          string
-	currentTestCaseName          string
-	background                   *canvas.Rectangle
-	testCaseExecutionsModel      *testCaseExecutionsModel.TestCaseExecutionsModelStruct
-	textInsteadOfLabel           *canvas.Text
+	onDoubleTap                     func()
+	lastTapTime                     time.Time
+	isClickable                     bool
+	currentRow                      int16
+	currentTestCaseExecutionUuid    string
+	currentTestCaseExecutionVersion uint32
+	currentTestCaseUuid             string
+	currentTestCaseName             string
+	background                      *canvas.Rectangle
+	testCaseExecutionsModel         *testCaseExecutionsModel.TestCaseExecutionsModelStruct
+	textInsteadOfLabel              *canvas.Text
 }
 
 func newClickableTableLabel(text string, onDoubleTap func(), tempIsClickable bool,
@@ -41,6 +42,7 @@ func newClickableTableLabel(text string, onDoubleTap func(), tempIsClickable boo
 	l.background = canvas.NewRectangle(color.Transparent)
 	l.testCaseExecutionsModel = testCaseExecutionsModel
 	l.currentTestCaseExecutionUuid = ""
+	l.currentTestCaseExecutionVersion = 0
 	l.currentTestCaseUuid = ""
 	l.currentTestCaseName = ""
 
@@ -91,7 +93,9 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 	case AllExecutionsForOneTestCase:
 		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.isAnyRowSelected = true
 		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
-			testCaseExecutionThatIsShownInPreview = l.currentTestCaseExecutionUuid
+			testCaseExecutionUuidThatIsShownInPreview = l.currentTestCaseExecutionUuid
+		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+			testCaseExecutionVersionThatIsShownInPreview = l.currentTestCaseExecutionVersion
 
 		// Save TestCaseUuid for TestCaseExecution shown in preview
 		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
@@ -100,7 +104,9 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 	case OneExecutionPerTestCase:
 		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.isAnyRowSelected = true
 		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-			testCaseExecutionThatIsShownInPreview = l.currentTestCaseExecutionUuid
+			testCaseExecutionUuidThatIsShownInPreview = l.currentTestCaseExecutionUuid
+		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+			testCaseExecutionVersionThatIsShownInPreview = l.currentTestCaseExecutionVersion
 
 		// Save TestCaseUuid for TestCaseExecution shown in preview
 		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.

@@ -39,6 +39,8 @@ const numberColumnsInTestCaseExecutionsListUI int = 13
 // Keeps track of the in which column the TestCaseExecutionUUID exist in the data source for the UI-table
 const testCaseExecutionUuidColumnNumber uint8 = 4
 
+// const testCaseExecutionVersionColumnNumber uint8 = xxx
+
 // Keeps track of the in which column the TestCaseUUID exist in the data source for the UI-table
 const testCaseUuidColumnNumber uint8 = 9
 
@@ -91,7 +93,10 @@ type oneExecutionPerTestCaseListObjectStruct struct {
 	testCaseUuidForTestCaseExecutionThatIsShownInPreview string
 
 	// The TestCaseExecutions that is shown in Preview
-	testCaseExecutionThatIsShownInPreview string
+	testCaseExecutionUuidThatIsShownInPreview string
+
+	// The TestCaseExecutionVersion that is shown in Preview
+	testCaseExecutionVersionThatIsShownInPreview uint32
 
 	// Is a row selected or not
 	isAnyRowSelected bool
@@ -119,8 +124,11 @@ type allExecutionsFoOneTestCaseListObjectStruct struct {
 	// The TestCaseUuid for TestCaseExecutions that is shown in Preview
 	testCaseUuidForTestCaseExecutionThatIsShownInPreview string
 
-	// The TestCaseExecutions that is shown in Preview
-	testCaseExecutionThatIsShownInPreview string
+	// The TestCaseExecutionUuid that is shown in Preview
+	testCaseExecutionUuidThatIsShownInPreview string
+
+	// The TestCaseExecutionVersion that is shown in Preview
+	testCaseExecutionVersionThatIsShownInPreview uint32
 
 	// Is a row selected or not
 	isAnyRowSelected bool

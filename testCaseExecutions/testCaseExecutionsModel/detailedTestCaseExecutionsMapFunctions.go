@@ -169,8 +169,9 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) AddToDetailedTestCa
 	// Set that refresh of DetailedTestCaseExecution is ongoing
 	if existInMap == true {
 		// Already exist,so use that object by Get the TestCaseExecutionObject from pointer
-		tempDetailedTestCaseExecutionsMapObject = *tempDetailedTestCaseExecutionsMapObjectPtr
-		tempDetailedTestCaseExecutionsMapObject.DetailedTestCaseExecution = detailedTestCaseExecution
+		tempDetailedTestCaseExecutionsMapObjectPtr.DetailedTestCaseExecution = detailedTestCaseExecution
+		//tempDetailedTestCaseExecutionsMapObject = *tempDetailedTestCaseExecutionsMapObjectPtr
+		//tempDetailedTestCaseExecutionsMapObject.DetailedTestCaseExecution = detailedTestCaseExecution
 
 	} else {
 		// Object doesn't exist so create a new object and store in map

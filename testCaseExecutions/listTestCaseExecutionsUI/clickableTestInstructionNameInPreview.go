@@ -1,9 +1,12 @@
 package listTestCaseExecutionsUI
 
 import (
+	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
+	"github.com/sirupsen/logrus"
 )
 
 // Definition of a clickable TestInstructionName label used in the TestCaseExecution-Preview
@@ -41,6 +44,36 @@ func (c *clickableTestInstructionNameLabelInPreviewStruct) CreateRenderer() fyne
 func (c *clickableTestInstructionNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 
 	fmt.Println("LeftClicked")
+
+	var testCaseExecutionUuid string
+	var testCaseExecutionVersion uint32
+
+	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+
+	case OneExecutionPerTestCase:
+		testCaseExecutionUuid = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+			testCaseExecutionUuidThatIsShownInPreview
+		testCaseExecutionVersion = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+			testCaseExecutionVersionThatIsShownInPreview
+
+	case AllExecutionsForOneTestCase:
+		testCaseExecutionUuid = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+			testCaseExecutionUuidThatIsShownInPreview
+		testCaseExecutionVersion = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+			testCaseExecutionVersionThatIsShownInPreview
+
+	default:
+
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"id": "3f371409-aa81-4c8e-a63f-361f3870cd58",
+			"selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType": selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType,
+		}).Error("Unhandled 'selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType', should not happen")
+
+		return
+
+	}
+
+	testCaseExecutionsModel.LoadDetailedTestCaseExecutionFromDatabase(testCaseExecutionUuid, testCaseExecutionVersion)
 
 	if c.LeftClicked != nil {
 

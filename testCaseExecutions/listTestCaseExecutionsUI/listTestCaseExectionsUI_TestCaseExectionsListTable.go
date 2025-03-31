@@ -160,6 +160,7 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 		clickable.isClickable = true
 		clickable.currentRow = int16(id.Row)
 		clickable.currentTestCaseExecutionUuid = testCaseExecutionsListTableTable[id.Row][testCaseExecutionUuidColumnNumber]
+		clickable.currentTestCaseExecutionVersion = 1 //TODO HArdcoded  for now testCaseExecutionsListTableTable[id.Row][testCaseExecutionVersionColumnNumber]
 		clickable.currentTestCaseUuid = testCaseExecutionsListTableTable[id.Row][testCaseUuidColumnNumber]
 		clickable.currentTestCaseName = testCaseExecutionsListTableTable[id.Row][testCaseNameColumnNumber]
 
@@ -204,11 +205,11 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 
 			case AllExecutionsForOneTestCase:
 				tempRowIsSelected = clickable.currentTestCaseExecutionUuid == selectedTestCaseExecutionObjected.
-					allExecutionsFoOneTestCaseListObject.testCaseExecutionThatIsShownInPreview
+					allExecutionsFoOneTestCaseListObject.testCaseExecutionUuidThatIsShownInPreview
 
 			case OneExecutionPerTestCase:
 				tempRowIsSelected = clickable.currentTestCaseExecutionUuid == selectedTestCaseExecutionObjected.
-					oneExecutionPerTestCaseListObject.testCaseExecutionThatIsShownInPreview
+					oneExecutionPerTestCaseListObject.testCaseExecutionUuidThatIsShownInPreview
 
 			case NotDefined:
 

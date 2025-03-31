@@ -82,24 +82,26 @@ func GenerateListTestCaseExecutionsUI(
 		oneExecutionPerTestCaseListObject: oneExecutionPerTestCaseListObjectStruct{
 			lastSelectedTestCaseExecutionForOneExecutionPerTestCase: "",
 			testCaseUuidForTestCaseExecutionThatIsShownInPreview:    "",
-			testCaseExecutionThatIsShownInPreview:                   "",
-			isAnyRowSelected:                                        false,
-			currentSortColumn:                                       0,
-			previousSortColumn:                                      0,
-			currentHeader:                                           nil,
-			previousHeader:                                          nil,
-			currentSortColumnsSortDirection:                         0,
+			testCaseExecutionUuidThatIsShownInPreview:               "",
+			testCaseExecutionVersionThatIsShownInPreview:            0,
+			isAnyRowSelected:                false,
+			currentSortColumn:               0,
+			previousSortColumn:              0,
+			currentHeader:                   nil,
+			previousHeader:                  nil,
+			currentSortColumnsSortDirection: 0,
 		},
 		allExecutionsFoOneTestCaseListObject: allExecutionsFoOneTestCaseListObjectStruct{
 			lastSelectedTestCaseExecutionForAllExecutionsForOneTestCase: "",
 			testCaseUuidForTestCaseExecutionThatIsShownInPreview:        "",
-			testCaseExecutionThatIsShownInPreview:                       "",
-			isAnyRowSelected:                                            false,
-			currentSortColumn:                                           0,
-			previousSortColumn:                                          0,
-			currentHeader:                                               nil,
-			previousHeader:                                              nil,
-			currentSortColumnsSortDirection:                             0,
+			testCaseExecutionUuidThatIsShownInPreview:                   "",
+			testCaseExecutionVersionThatIsShownInPreview:                0,
+			isAnyRowSelected:                false,
+			currentSortColumn:               0,
+			previousSortColumn:              0,
+			currentHeader:                   nil,
+			previousHeader:                  nil,
+			currentSortColumnsSortDirection: 0,
 		},
 		ExecutionsInGuiIsOfType: 0,
 	}
@@ -223,7 +225,7 @@ func GenerateListTestCaseExecutionsUI(
 
 		// When no TestCaseExecution is selected then inform the user
 		if len(selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-			testCaseExecutionThatIsShownInPreview) == 0 ||
+			testCaseExecutionUuidThatIsShownInPreview) == 0 ||
 			selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
 				isAnyRowSelected == false {
 
@@ -385,7 +387,7 @@ func GenerateTestCaseExecutionPreviewContainer(
 			testCaseExecutionsModel.TestCaseUuidType(selectedTestCaseExecutionObjected.
 				allExecutionsFoOneTestCaseListObject.testCaseUuidForTestCaseExecutionThatIsShownInPreview),
 			testCaseExecutionsModel.TestCaseExecutionUuidType(selectedTestCaseExecutionObjected.
-				allExecutionsFoOneTestCaseListObject.testCaseExecutionThatIsShownInPreview))
+				allExecutionsFoOneTestCaseListObject.testCaseExecutionUuidThatIsShownInPreview))
 
 	case OneExecutionPerTestCase:
 		tempTestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.ReadFromTestCaseExecutionsMap(
@@ -690,7 +692,7 @@ func GenerateTestCaseExecutionPreviewContainer(
 						testCaseExecutionsModel.TestCaseUuidType(selectedTestCaseExecutionObjected.
 							allExecutionsFoOneTestCaseListObject.testCaseUuidForTestCaseExecutionThatIsShownInPreview),
 						testCaseExecutionsModel.TestCaseExecutionUuidType(selectedTestCaseExecutionObjected.
-							allExecutionsFoOneTestCaseListObject.testCaseExecutionThatIsShownInPreview))
+							allExecutionsFoOneTestCaseListObject.testCaseExecutionUuidThatIsShownInPreview))
 
 				case OneExecutionPerTestCase:
 					temp2TestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.ReadFromTestCaseExecutionsMap(
@@ -705,10 +707,10 @@ func GenerateTestCaseExecutionPreviewContainer(
 				if existInMap == false {
 					var id string
 					id = "7945551e-5e4d-41d3-8faf-54f1501daac9"
-					log.Fatalf(fmt.Sprintf("Couldn't find testCaseExecutionThatIsShownInPreview '%s' in "+
+					log.Fatalf(fmt.Sprintf("Couldn't find testCaseExecutionUuidThatIsShownInPreview '%s' in "+
 						"TestCaseExecutionsThatCanBeViewedByUserMap. ID='%s'",
 						selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-							testCaseExecutionThatIsShownInPreview,
+							testCaseExecutionUuidThatIsShownInPreview,
 						id))
 				}
 
@@ -763,7 +765,7 @@ func GenerateTestCaseExecutionPreviewContainer(
 						id = "e12c6be8-614c-4379-b482-165ff18dd68d"
 						log.Fatalf(fmt.Sprintf("Couldn't find TestInstruction '%s' in TestInstructionsExecution-data for TIE '%s'. ID='%s'",
 							previewObject.GetTestInstructionUuid,
-							testCaseExecutionThatIsShownInPreview,
+							testCaseExecutionUuidThatIsShownInPreview,
 							id))
 					*/
 				} else {

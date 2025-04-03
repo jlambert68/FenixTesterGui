@@ -1,17 +1,17 @@
 package listTestCaseExecutionsUI
 
 import (
-	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
-	"github.com/sirupsen/logrus"
 )
 
 // Definition of a clickable TestInstructionName label used in the TestCaseExecution-Preview
 type clickableTestInstructionNameLabelInPreviewStruct struct {
 	widget.Label
+	TestInstructionExecutionKey testCaseExecutionsModel.
+					TestInstructionExecutionAttributesContainerMapKeyType
 	LeftClicked  func()
 	RightClicked func()
 }
@@ -19,14 +19,17 @@ type clickableTestInstructionNameLabelInPreviewStruct struct {
 // Used for creating a new TestInstructionName label
 func newClickableTestInstructionNameLabelInPreview(
 	testInstructionName string,
+	testInstructionExecutionKey testCaseExecutionsModel.
+		TestInstructionExecutionAttributesContainerMapKeyType,
 	leftClicked func(),
 	rightClicked func(),
 ) *clickableTestInstructionNameLabelInPreviewStruct {
 
 	clickableTestInstructionNameLabelInPreview := &clickableTestInstructionNameLabelInPreviewStruct{
-		Label:        widget.Label{Text: testInstructionName},
-		LeftClicked:  leftClicked,
-		RightClicked: rightClicked,
+		Label:                       widget.Label{Text: testInstructionName},
+		TestInstructionExecutionKey: testInstructionExecutionKey,
+		LeftClicked:                 leftClicked,
+		RightClicked:                rightClicked,
 	}
 
 	clickableTestInstructionNameLabelInPreview.ExtendBaseWidget(clickableTestInstructionNameLabelInPreview)
@@ -45,35 +48,28 @@ func (c *clickableTestInstructionNameLabelInPreviewStruct) Tapped(*fyne.PointEve
 
 	fmt.Println("LeftClicked")
 
-	var testCaseExecutionUuid string
-	var testCaseExecutionVersion uint32
+	var existInMap bool
+	var attributesContainerPtr *fyne.Container
+	var testCaseExecutionAttributesForPreviewMap map[testCaseExecutionsModel.TestInstructionExecutionAttributesContainerMapKeyType]*fyne.Container
+	testCaseExecutionAttributesForPreviewMap = *testCaseExecutionAttributesForPreviewMapPtr
+	attributesContainerPtr, existInMap = testCaseExecutionAttributesForPreviewMap[testCaseExecutionsModel.
+		TestInstructionExecutionAttributesContainerMapKeyType(c.TestInstructionExecutionKey)]
 
-	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
-
-	case OneExecutionPerTestCase:
-		testCaseExecutionUuid = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-			testCaseExecutionUuidThatIsShownInPreview
-		testCaseExecutionVersion = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-			testCaseExecutionVersionThatIsShownInPreview
-
-	case AllExecutionsForOneTestCase:
-		testCaseExecutionUuid = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
-			testCaseExecutionUuidThatIsShownInPreview
-		testCaseExecutionVersion = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
-			testCaseExecutionVersionThatIsShownInPreview
-
-	default:
-
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"id": "3f371409-aa81-4c8e-a63f-361f3870cd58",
-			"selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType": selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType,
-		}).Error("Unhandled 'selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType', should not happen")
-
+	if existInMap == false {
+		fmt.Println("existInMap:", existInMap)
 		return
-
 	}
 
-	testCaseExecutionsModel.LoadDetailedTestCaseExecutionFromDatabase(testCaseExecutionUuid, testCaseExecutionVersion)
+	switch attributesContainerPtr.Visible() {
+	case true:
+		attributesContainerPtr.Hide()
+
+	case false:
+		attributesContainerPtr.Show()
+	}
+
+	testCaseExecutionPreviewContainerScroll.Refresh()
+	attributesContainerPtr.Refresh()
 
 	if c.LeftClicked != nil {
 

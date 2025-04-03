@@ -8,6 +8,8 @@ import (
 	"strconv"
 )
 
+// LoadDetailedTestCaseExecutionFromDatabase
+// Load all Detailed TestCaseExecution-data for specific execution
 func LoadDetailedTestCaseExecutionFromDatabase(testCaseExecutionUuid string, testCaseExecutionVersion uint32) {
 
 	// Create DetailedTestCaseExecutionMapKey
@@ -55,6 +57,17 @@ func LoadDetailedTestCaseExecutionFromDatabase(testCaseExecutionUuid string, tes
 			"id": "2e6879c4-11e9-44e7-864f-8f6787ff8b90",
 		}).Warning("Nothing to store in 'DetailedTestCaseExecutionsMap', should not happen")
 
+		// Clear the flag there is an ongoing refresh of the DetailedTestCaseExecution-data
+		defer TestCaseExecutionsModel.ClearFlagRefreshOngoingOfDetailedTestCaseExecution(detailedTestCaseExecutionMapKey)
+
+		return
+
 	}
+
+	// Clear the flag there is an ongoing refresh of the DetailedTestCaseExecution-data
+	TestCaseExecutionsModel.ClearFlagRefreshOngoingOfDetailedTestCaseExecution(detailedTestCaseExecutionMapKey)
+
+	// Extracts all LogPost-messages from a TestCaseExecution and store them in a map per TestInstructionExecutionKey
+	_ = TestCaseExecutionsModel.ExtractAndStoreLogPostsAndValuesFromDetailedTestCaseExecution(detailedTestCaseExecutionMapKey)
 
 }

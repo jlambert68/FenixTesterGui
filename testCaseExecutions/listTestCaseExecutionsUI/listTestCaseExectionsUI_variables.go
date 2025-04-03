@@ -1,6 +1,7 @@
 package listTestCaseExecutionsUI
 
 import (
+	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
@@ -78,6 +79,7 @@ const testCaseExecutionStatusRectangleWidth = 25
 // The TestCase Preview-container
 var testCaseExecutionPreviewContainerScroll *container.Scroll
 var testCaseExecutionPreviewContainer *fyne.Container
+var testCaseExecutionAttributesForPreviewMapPtr *map[testCaseExecutionsModel.TestInstructionExecutionAttributesContainerMapKeyType]*fyne.Container
 
 // TestCaseExecutionListAndTestCaseExecutionPreviewSplitContainer
 // The Split container have both the TestCaseExecutions-list and the Preview-container in it

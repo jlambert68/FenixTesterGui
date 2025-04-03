@@ -10,6 +10,7 @@ import (
 	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"github.com/sirupsen/logrus"
 	"image/color"
 	"time"
 )
@@ -87,26 +88,44 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 
 	l.lastTapTime = time.Now()
 
+	// Raw data for DetailedTestCaseExecutionMapKey
+	var testCaseExecutionUuid string
+	var testCaseExecutionVersion uint32
+
 	// Decide mode 'AllExecutionsForOneTestCase' or 'OneExecutionPerTestCase'
 	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
 
 	case AllExecutionsForOneTestCase:
+
+		// Save TestCaseExecutionUuid for TestCaseExecution shown in preview
 		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.isAnyRowSelected = true
 		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
 			testCaseExecutionUuidThatIsShownInPreview = l.currentTestCaseExecutionUuid
 		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
 			testCaseExecutionVersionThatIsShownInPreview = l.currentTestCaseExecutionVersion
 
+		testCaseExecutionUuid = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+			testCaseExecutionUuidThatIsShownInPreview
+		testCaseExecutionVersion = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+			testCaseExecutionVersionThatIsShownInPreview
+
 		// Save TestCaseUuid for TestCaseExecution shown in preview
 		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
 			testCaseUuidForTestCaseExecutionThatIsShownInPreview = l.currentTestCaseUuid
 
 	case OneExecutionPerTestCase:
+
+		// Save TestCaseExecutionUuid for TestCaseExecution shown in preview
 		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.isAnyRowSelected = true
 		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
 			testCaseExecutionUuidThatIsShownInPreview = l.currentTestCaseExecutionUuid
 		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
 			testCaseExecutionVersionThatIsShownInPreview = l.currentTestCaseExecutionVersion
+
+		testCaseExecutionUuid = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+			testCaseExecutionUuidThatIsShownInPreview
+		testCaseExecutionVersion = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+			testCaseExecutionVersionThatIsShownInPreview
 
 		// Save TestCaseUuid for TestCaseExecution shown in preview
 		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
@@ -114,9 +133,17 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 
 	case NotDefined:
 
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"id": "bdf5a9dd-9f02-4592-b0db-3e23bf587692",
+			"selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType": selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType,
+		}).Error("Unhandled 'selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType', should not happen")
+
+		return
+
 	}
 
-	// Load Detailed TestCaseExecution
+	// Load Detailed TestCaseExecution from Database
+	testCaseExecutionsModel.LoadDetailedTestCaseExecutionFromDatabase(testCaseExecutionUuid, testCaseExecutionVersion)
 
 	// Update TestCase Preview
 	GenerateTestCaseExecutionPreviewContainer(l.currentTestCaseExecutionUuid, l.testCaseExecutionsModel)

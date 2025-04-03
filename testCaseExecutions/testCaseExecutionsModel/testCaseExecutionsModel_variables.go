@@ -42,10 +42,15 @@ type allTestCaseExecutionsForOneTestCaseUuidStruct struct {
 
 type DetailedTestCaseExecutionMapKeyType string // TestCaseExecutionUuid + TestCaseExecutionVersion
 
+type TestInstructionExecutionLogPostMapKeyType string // TestInstructionExecutionUuid + TestInstructionExecutionVersion
+
+type TestInstructionExecutionAttributesContainerMapKeyType string // TestInstructionExecutionUuid + TestInstructionExecutionVersion
+
 type DetailedTestCaseExecutionsMapObjectStruct struct {
-	DetailedTestCaseExecution     *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage
-	WaitingForDatabaseUpdate      bool
-	WaitingForDatabaseUpdateMutex *sync.RWMutex
+	DetailedTestCaseExecution             *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage
+	TestInstructionExecutionLogPostMapPtr *map[TestInstructionExecutionLogPostMapKeyType]*[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage
+	WaitingForDatabaseUpdate              bool
+	WaitingForDatabaseUpdateMutex         *sync.RWMutex
 }
 
 // TestCaseExecutionsModelStruct

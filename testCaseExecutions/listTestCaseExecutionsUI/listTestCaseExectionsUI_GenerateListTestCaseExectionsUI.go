@@ -368,6 +368,11 @@ func GenerateTestCaseExecutionPreviewContainer(
 	var existInMap bool
 	var foundValue bool
 
+	// Clear out 'testCaseExecutionAttributesForPreviewMapPtr'
+	var testCaseExecutionAttributesForPreviewMap map[testCaseExecutionsModel.TestInstructionExecutionAttributesContainerMapKeyType]*fyne.Container
+	testCaseExecutionAttributesForPreviewMap = make(map[testCaseExecutionsModel.TestInstructionExecutionAttributesContainerMapKeyType]*fyne.Container)
+	testCaseExecutionAttributesForPreviewMapPtr = &testCaseExecutionAttributesForPreviewMap
+
 	// Verify that number Headers match number of columns, constant 'numberColumnsInTestCaseExecutionsListUI'
 	if len(testCaseExecutionsListTableHeader) != numberColumnsInTestCaseExecutionsListUI {
 		log.Fatalln(fmt.Sprintf("Number of elements in 'tempRowslice' missmatch contant 'numberColumnsInTestCaseExecutionsListUI'. %d vs %d. ID: %s",
@@ -667,12 +672,20 @@ func GenerateTestCaseExecutionPreviewContainer(
 				testInstructionColorRectangle.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize-14),
 					float32(testCaseNodeRectangleSize-14)))
 
+				// Create Map-key; TestInstructionExecutionAttributesContainerMapKeyType
+				var testInstructionExecutionAttributesContainerMapKey testCaseExecutionsModel.
+					TestInstructionExecutionAttributesContainerMapKeyType
+				testInstructionExecutionAttributesContainerMapKey = testCaseExecutionsModel.
+					TestInstructionExecutionAttributesContainerMapKeyType(previewObject.GetTestInstructionUuid() +
+						strconv.Itoa(int(1)))
+
 				// Create the Name for the TestInstruction
 				//var tempTestInstructionNameWidget *widget.Label
 				//tempTestInstructionNameWidget = widget.NewLabel(previewObject.GetTestInstructionName())
 				var tempTestInstructionNameWidget *clickableTestInstructionNameLabelInPreviewStruct
 				tempTestInstructionNameWidget = newClickableTestInstructionNameLabelInPreview(
 					previewObject.GetTestInstructionName(),
+					testInstructionExecutionAttributesContainerMapKey,
 					nil,
 					nil)
 
@@ -802,56 +815,65 @@ func GenerateTestCaseExecutionPreviewContainer(
 				// Add the TestInstructionContainer to the main Area
 				testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionContainer)
 
-				/*
+				// Add Attributes if there are any
+				if len(previewObject.GetTestInstructionAttributes()) > 0 {
 
-					// Attributes if there are any
-					if len(previewObject.GetTestInstructionAttributes()) > 0 {
+					// Create the Indentation rectangle for the attributes
+					var tempIndentationLevelRectangleForAttributes *canvas.Rectangle
+					tempIndentationLevelRectangleForAttributes = canvas.NewRectangle(color.Transparent)
 
-						// Create the Indentation rectangle for the attributes
-						var tempIndentationLevelRectangleForAttributes *canvas.Rectangle
-						tempIndentationLevelRectangleForAttributes = canvas.NewRectangle(color.Transparent)
+					// Resize the Indentation rectangle
+					tempIndentationLevelRectangleForAttributes.SetMinSize(fyne.Size{
+						Width:  float32(10 * (previewObject.GetIndentationLevel() + 10)),
+						Height: 2,
+					})
+					tempIndentationLevelRectangleForAttributes.Resize(fyne.Size{
+						Width:  float32(10 * (previewObject.GetIndentationLevel() + 10)),
+						Height: 2,
+					})
 
-						// Resize the Indentation rectangle
-						tempIndentationLevelRectangleForAttributes.SetMinSize(fyne.Size{
-							Width:  float32(10 * (previewObject.GetIndentationLevel() + 10)),
-							Height: 2,
-						})
-						tempIndentationLevelRectangleForAttributes.Resize(fyne.Size{
-							Width:  float32(10 * (previewObject.GetIndentationLevel() + 10)),
-							Height: 2,
-						})
+					// Create the container for the attributes
+					var testInstructionAttributesContainer *fyne.Container
+					testInstructionAttributesContainer = container.New(layout.NewFormLayout())
 
-						// Create the container for the attributes
-						var testInstructionAttributesContainer *fyne.Container
-						testInstructionAttributesContainer = container.New(layout.NewFormLayout())
+					// Loop attributes and add to container
+					for _, attribute := range previewObject.TestInstructionAttributes {
 
-						// Loop attributes and add to container
-						for _, attribute := range previewObject.TestInstructionAttributes {
+						// Create label for attribute
+						var attributeLabel *widget.Label
+						attributeLabel = widget.NewLabel(attribute.AttributeName)
 
-							// Create label for attribute
-							var attributeLabel *widget.Label
-							attributeLabel = widget.NewLabel(attribute.AttributeName)
+						// Create value for attribute
+						var attributeValue *widget.Label
+						attributeValue = widget.NewLabel(attribute.AttributeValue)
 
-							// Create value for attribute
-							var attributeValue *widget.Label
-							attributeValue = widget.NewLabel(attribute.AttributeValue)
+						// Add label and value ro the attribute container
+						testInstructionAttributesContainer.Add(attributeLabel)
+						testInstructionAttributesContainer.Add(attributeValue)
 
-							// Add label and value ro the attribute container
-							testInstructionAttributesContainer.Add(attributeLabel)
-							testInstructionAttributesContainer.Add(attributeValue)
-
-						}
-
-						// Create the container containing the Attributes
-						var tempTestInstructionAttributesContainer *fyne.Container
-						tempTestInstructionAttributesContainer = container.NewHBox(
-							tempIndentationLevelRectangleForAttributes, testInstructionAttributesContainer)
-
-						// Add the TestInstructionContainerContainer to the main Area
-						testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionAttributesContainer)
 					}
 
-				*/
+					// Create the container containing the Attributes
+					var tempTestInstructionAttributesContainer *fyne.Container
+					tempTestInstructionAttributesContainer = container.NewHBox(
+						tempIndentationLevelRectangleForAttributes, testInstructionAttributesContainer)
+
+					// Make attributes container invisible
+					tempTestInstructionAttributesContainer.Hide()
+
+					// Create Map-key; TestInstructionExecutionAttributesContainerMapKeyType
+					var testInstructionExecutionAttributesContainerMapKey testCaseExecutionsModel.
+						TestInstructionExecutionAttributesContainerMapKeyType
+					testInstructionExecutionAttributesContainerMapKey = testCaseExecutionsModel.
+						TestInstructionExecutionAttributesContainerMapKeyType(previewObject.GetTestInstructionUuid() +
+							strconv.Itoa(int(1)))
+
+					// Add attributes container to attributes-container-map
+					testCaseExecutionAttributesForPreviewMap[testInstructionExecutionAttributesContainerMapKey] = tempTestInstructionAttributesContainer
+
+					// Add the TestInstructionContainerContainer to the main Area
+					testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionAttributesContainer)
+				}
 
 			default:
 				log.Fatalf("Unknown 'previewObject.TestCaseStructureObjectType' which never should happen; %s", previewObject.TestCaseStructureObjectType.String())
@@ -896,6 +918,9 @@ func GenerateTestCaseExecutionPreviewContainer(
 		// No row is selected and only an info text should be shown
 		testCaseExecutionPreviewContainer.Objects[0] = container.NewCenter(widget.NewLabel("Select a TestCaseExecution to get the Preview"))
 	}
+
+	// Add attributes container to attributes-container-map-ptr
+	testCaseExecutionAttributesForPreviewMapPtr = &testCaseExecutionAttributesForPreviewMap
 
 	// Refresh the 'testCaseExecutionPreviewContainer'
 	testCaseExecutionPreviewContainer.Refresh()

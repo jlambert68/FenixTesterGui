@@ -79,7 +79,20 @@ const testCaseExecutionStatusRectangleWidth = 25
 // The TestCase Preview-container
 var testCaseExecutionPreviewContainerScroll *container.Scroll
 var testCaseExecutionPreviewContainer *fyne.Container
-var testCaseExecutionAttributesForPreviewMapPtr *map[testCaseExecutionsModel.TestInstructionExecutionAttributesContainerMapKeyType]*fyne.Container
+
+// Mutex for Attributes-map below
+var testCaseExecutionAttributesForPreviewMapMutex = &sync.Mutex{}
+
+// Struct holding all attribute-containers for one TestInstructionsExecution and a list with Objects (TI or TIC)
+// that is placed below this TestInstruction in indentation level
+type testCaseExecutionAttributesForPreviewStruct struct {
+	attributesContainerShouldBeVisible          bool
+	testInstructionExecutionAttributesContainer *fyne.Container
+	childObjectsWithAttributes                  []testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType
+}
+
+// The map holding all TestInstructions and their Attributes-containers
+var testCaseExecutionAttributesForPreviewMapPtr *map[testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType]*testCaseExecutionAttributesForPreviewStruct
 
 // TestCaseExecutionListAndTestCaseExecutionPreviewSplitContainer
 // The Split container have both the TestCaseExecutions-list and the Preview-container in it

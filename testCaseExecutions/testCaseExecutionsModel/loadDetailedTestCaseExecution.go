@@ -67,7 +67,7 @@ func LoadDetailedTestCaseExecutionFromDatabase(testCaseExecutionUuid string, tes
 	// Clear the flag there is an ongoing refresh of the DetailedTestCaseExecution-data
 	TestCaseExecutionsModel.ClearFlagRefreshOngoingOfDetailedTestCaseExecution(detailedTestCaseExecutionMapKey)
 
-	// Extracts all LogPost-messages from a TestCaseExecution and store them in a map per TestInstructionExecutionKey
+	// Extracts all LogPost-messages from a TestCaseExecution and store them in a map per TInTICExecutionKey
 	_ = TestCaseExecutionsModel.ExtractAndStoreLogPostsAndValuesFromDetailedTestCaseExecution(detailedTestCaseExecutionMapKey)
 
 }

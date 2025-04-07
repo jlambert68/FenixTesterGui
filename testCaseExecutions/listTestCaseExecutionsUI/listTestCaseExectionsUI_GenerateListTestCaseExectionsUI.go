@@ -17,6 +17,7 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
+	"github.com/sirupsen/logrus"
 	"image"
 	"image/color"
 	"image/png"
@@ -368,9 +369,16 @@ func GenerateTestCaseExecutionPreviewContainer(
 	var existInMap bool
 	var foundValue bool
 
+	// Lock Map
+	testCaseExecutionAttributesForPreviewMapMutex.Lock()
+
+	// Unlock map
+	defer testCaseExecutionAttributesForPreviewMapMutex.Unlock()
+
 	// Clear out 'testCaseExecutionAttributesForPreviewMapPtr'
-	var testCaseExecutionAttributesForPreviewMap map[testCaseExecutionsModel.TestInstructionExecutionAttributesContainerMapKeyType]*fyne.Container
-	testCaseExecutionAttributesForPreviewMap = make(map[testCaseExecutionsModel.TestInstructionExecutionAttributesContainerMapKeyType]*fyne.Container)
+	var testCaseExecutionAttributesForPreviewMap map[testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType]*testCaseExecutionAttributesForPreviewStruct
+	testCaseExecutionAttributesForPreviewMap = make(map[testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType]*testCaseExecutionAttributesForPreviewStruct)
+
 	testCaseExecutionAttributesForPreviewMapPtr = &testCaseExecutionAttributesForPreviewMap
 
 	// Verify that number Headers match number of columns, constant 'numberColumnsInTestCaseExecutionsListUI'
@@ -568,7 +576,7 @@ func GenerateTestCaseExecutionPreviewContainer(
 	} else {
 
 		// Loop the preview objects and to container
-		for _, previewObject := range tempTestCaseExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects {
+		for previewObjectIndex, previewObject := range tempTestCaseExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects {
 
 			// Create the Indentation rectangle
 			var tempIndentationLevelRectangle *canvas.Rectangle
@@ -638,9 +646,21 @@ func GenerateTestCaseExecutionPreviewContainer(
 
 				}
 
+				// Create Map-key; TCEoTICoTIEAttributesContainerMapKeyType
+				var tempTIEAttributesContainerMapKey testCaseExecutionsModel.
+					TCEoTICoTIEAttributesContainerMapKeyType
+				tempTIEAttributesContainerMapKey = testCaseExecutionsModel.
+					TCEoTICoTIEAttributesContainerMapKeyType(previewObject.GetTestInstructionContainerUuid())
+
 				// Create the Name for the TestInstructionContainer
-				var tempTestInstructionContainerNameWidget *widget.Label
-				tempTestInstructionContainerNameWidget = widget.NewLabel(previewObject.GetTestInstructionContainerName())
+				// var tempTestInstructionContainerNameWidget *widget.Label
+				//tempTestInstructionContainerNameWidget = widget.NewLabel(previewObject.GetTestInstructionContainerName())
+				var tempTestInstructionContainerNameWidget *clickableTInTICNameLabelInPreviewStruct
+				tempTestInstructionContainerNameWidget = newClickableTestInstructionNameLabelInPreview(
+					previewObject.GetTestInstructionContainerName(),
+					tempTIEAttributesContainerMapKey,
+					nil,
+					nil)
 
 				// Create the container containing the TestInstructionContainer
 				var tempTestInstructionContainerContainer *fyne.Container
@@ -652,6 +672,67 @@ func GenerateTestCaseExecutionPreviewContainer(
 
 				// Add the TestInstructionContainerContainer to the main Area
 				testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionContainerContainer)
+
+				// Create testCaseExecutionAttributesForPreview-object to be placed in the map
+				var tempTestCaseExecutionAttributesForPreview testCaseExecutionAttributesForPreviewStruct
+
+				// Create testCaseExecutionAttributesForPreview-object to be placed in the map
+				tempTestCaseExecutionAttributesForPreview = testCaseExecutionAttributesForPreviewStruct{
+					attributesContainerShouldBeVisible:          false,
+					testInstructionExecutionAttributesContainer: nil,
+					childObjectsWithAttributes:                  nil,
+				}
+
+				// Create Map-key; TCEoTICoTIEAttributesContainerMapKeyType
+				var testInstructionContainerExecutionAttributesContainerMapKey testCaseExecutionsModel.
+					TCEoTICoTIEAttributesContainerMapKeyType
+				testInstructionContainerExecutionAttributesContainerMapKey = testCaseExecutionsModel.
+					TCEoTICoTIEAttributesContainerMapKeyType(previewObject.GetTestInstructionContainerUuid())
+
+				// Loop rest of PreView-Objects up until we get back to same 'previewObject.IndentationLevel' and add all references to all TestInstructionAttributes-map
+				if previewObjectIndex+1 < len(tempTestCaseExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects) {
+
+					var tempChildObjectsWithAttributes []testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType
+
+					for counter := previewObjectIndex + 1; counter < len(tempTestCaseExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects); counter++ {
+
+						// Check if IndentationLevel for next object is same ur higher than current AttributeObjects IndentationLevel
+						if tempTestCaseExecutionsListMessage.GetTestCasePreview().
+							TestCaseStructureObjects[counter].IndentationLevel > previewObject.IndentationLevel {
+
+							// Add Object to slice of object within this TestInstructionExecution-container-object
+							switch tempTestCaseExecutionsListMessage.GetTestCasePreview().
+								TestCaseStructureObjects[counter].GetTestCaseStructureObjectType() {
+
+							case fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage_TestInstructionContainer:
+								tempChildObjectsWithAttributes = append(tempChildObjectsWithAttributes,
+									testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType(
+										tempTestCaseExecutionsListMessage.GetTestCasePreview().
+											TestCaseStructureObjects[counter].GetTestInstructionContainerUuid()))
+
+							case fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage_TestInstruction:
+								tempChildObjectsWithAttributes = append(tempChildObjectsWithAttributes,
+									testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType(
+										tempTestCaseExecutionsListMessage.GetTestCasePreview().
+											TestCaseStructureObjects[counter].GetTestInstructionUuid()))
+
+							default:
+								sharedCode.Logger.WithFields(logrus.Fields{
+									"id": "5607884d-8884-48b0-8636-2ad3ca7046f9",
+									"GetTestCaseStructureObjectType": tempTestCaseExecutionsListMessage.GetTestCasePreview().
+										TestCaseStructureObjects[counter].GetTestCaseStructureObjectType(),
+								}).Error("Unknown 'GetTestCaseStructureObjectType'")
+
+							}
+						}
+					}
+
+					// Add objects with higher, or equal, Indentation-level to map-object
+					tempTestCaseExecutionAttributesForPreview.childObjectsWithAttributes = tempChildObjectsWithAttributes
+
+					// Add attributes-container struct to attributes-container-map
+					testCaseExecutionAttributesForPreviewMap[testInstructionContainerExecutionAttributesContainerMapKey] = &tempTestCaseExecutionAttributesForPreview
+				}
 
 			case fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage_TestInstruction:
 
@@ -672,20 +753,19 @@ func GenerateTestCaseExecutionPreviewContainer(
 				testInstructionColorRectangle.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize-14),
 					float32(testCaseNodeRectangleSize-14)))
 
-				// Create Map-key; TestInstructionExecutionAttributesContainerMapKeyType
-				var testInstructionExecutionAttributesContainerMapKey testCaseExecutionsModel.
-					TestInstructionExecutionAttributesContainerMapKeyType
-				testInstructionExecutionAttributesContainerMapKey = testCaseExecutionsModel.
-					TestInstructionExecutionAttributesContainerMapKeyType(previewObject.GetTestInstructionUuid() +
-						strconv.Itoa(int(1)))
+				// Create Map-key; TCEoTICoTIEAttributesContainerMapKeyType
+				var tempTIEAttributesContainerMapKey testCaseExecutionsModel.
+					TCEoTICoTIEAttributesContainerMapKeyType
+				tempTIEAttributesContainerMapKey = testCaseExecutionsModel.
+					TCEoTICoTIEAttributesContainerMapKeyType(previewObject.GetTestInstructionUuid())
 
 				// Create the Name for the TestInstruction
 				//var tempTestInstructionNameWidget *widget.Label
 				//tempTestInstructionNameWidget = widget.NewLabel(previewObject.GetTestInstructionName())
-				var tempTestInstructionNameWidget *clickableTestInstructionNameLabelInPreviewStruct
+				var tempTestInstructionNameWidget *clickableTInTICNameLabelInPreviewStruct
 				tempTestInstructionNameWidget = newClickableTestInstructionNameLabelInPreview(
 					previewObject.GetTestInstructionName(),
-					testInstructionExecutionAttributesContainerMapKey,
+					tempTIEAttributesContainerMapKey,
 					nil,
 					nil)
 
@@ -815,6 +895,22 @@ func GenerateTestCaseExecutionPreviewContainer(
 				// Add the TestInstructionContainer to the main Area
 				testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionContainer)
 
+				// Create testCaseExecutionAttributesForPreview-object to be placed in the map
+				var tempTestCaseExecutionAttributesForPreview testCaseExecutionAttributesForPreviewStruct
+
+				// Create testCaseExecutionAttributesForPreview-object to be placed in the map
+				tempTestCaseExecutionAttributesForPreview = testCaseExecutionAttributesForPreviewStruct{
+					attributesContainerShouldBeVisible:          false,
+					testInstructionExecutionAttributesContainer: nil,
+					childObjectsWithAttributes:                  nil,
+				}
+
+				// Create Map-key; TCEoTICoTIEAttributesContainerMapKeyType
+				var testInstructionExecutionAttributesContainerMapKey testCaseExecutionsModel.
+					TCEoTICoTIEAttributesContainerMapKeyType
+				testInstructionExecutionAttributesContainerMapKey = testCaseExecutionsModel.
+					TCEoTICoTIEAttributesContainerMapKeyType(previewObject.GetTestInstructionUuid())
+
 				// Add Attributes if there are any
 				if len(previewObject.GetTestInstructionAttributes()) > 0 {
 
@@ -861,18 +957,60 @@ func GenerateTestCaseExecutionPreviewContainer(
 					// Make attributes container invisible
 					tempTestInstructionAttributesContainer.Hide()
 
-					// Create Map-key; TestInstructionExecutionAttributesContainerMapKeyType
-					var testInstructionExecutionAttributesContainerMapKey testCaseExecutionsModel.
-						TestInstructionExecutionAttributesContainerMapKeyType
-					testInstructionExecutionAttributesContainerMapKey = testCaseExecutionsModel.
-						TestInstructionExecutionAttributesContainerMapKeyType(previewObject.GetTestInstructionUuid() +
-							strconv.Itoa(int(1)))
-
-					// Add attributes container to attributes-container-map
-					testCaseExecutionAttributesForPreviewMap[testInstructionExecutionAttributesContainerMapKey] = tempTestInstructionAttributesContainer
+					// Create testCaseExecutionAttributesForPreview-object to be placed in the map
+					tempTestCaseExecutionAttributesForPreview = testCaseExecutionAttributesForPreviewStruct{
+						attributesContainerShouldBeVisible:          false,
+						testInstructionExecutionAttributesContainer: tempTestInstructionAttributesContainer,
+						childObjectsWithAttributes:                  nil,
+					}
 
 					// Add the TestInstructionContainerContainer to the main Area
 					testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionAttributesContainer)
+				}
+
+				// Loop rest of PreView-Objects up until we get back to same 'previewObject.IndentationLevel' and add all references to all TestInstructionAttributes-map
+				if previewObjectIndex < len(tempTestCaseExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects) {
+
+					var tempChildObjectsWithAttributes []testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType
+
+					for counter := previewObjectIndex + 1; counter < len(tempTestCaseExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects); counter++ {
+
+						// Check if IndentationLevel for next object is same ur higher than current AttributeObjects IndentationLevel
+						if tempTestCaseExecutionsListMessage.GetTestCasePreview().
+							TestCaseStructureObjects[counter].IndentationLevel > previewObject.IndentationLevel {
+
+							// Add Object to slice of object within this TestInstructionExecution-container-object
+							switch tempTestCaseExecutionsListMessage.GetTestCasePreview().
+								TestCaseStructureObjects[counter].GetTestCaseStructureObjectType() {
+
+							case fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage_TestInstructionContainer:
+								tempChildObjectsWithAttributes = append(tempChildObjectsWithAttributes,
+									testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType(
+										tempTestCaseExecutionsListMessage.GetTestCasePreview().
+											TestCaseStructureObjects[counter].GetTestInstructionContainerUuid()))
+
+							case fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage_TestInstruction:
+								tempChildObjectsWithAttributes = append(tempChildObjectsWithAttributes,
+									testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType(
+										tempTestCaseExecutionsListMessage.GetTestCasePreview().
+											TestCaseStructureObjects[counter].GetTestInstructionUuid()))
+
+							default:
+								sharedCode.Logger.WithFields(logrus.Fields{
+									"id": "5607884d-8884-48b0-8636-2ad3ca7046f9",
+									"GetTestCaseStructureObjectType": tempTestCaseExecutionsListMessage.GetTestCasePreview().
+										TestCaseStructureObjects[counter].GetTestCaseStructureObjectType(),
+								}).Error("Unknown 'GetTestCaseStructureObjectType'")
+
+							}
+						}
+					}
+
+					// Add objects with higher, or equal, Indentation-level to map-object
+					tempTestCaseExecutionAttributesForPreview.childObjectsWithAttributes = tempChildObjectsWithAttributes
+
+					// Add attributes-container struct to attributes-container-map
+					testCaseExecutionAttributesForPreviewMap[testInstructionExecutionAttributesContainerMapKey] = &tempTestCaseExecutionAttributesForPreview
 				}
 
 			default:

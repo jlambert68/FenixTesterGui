@@ -44,7 +44,7 @@ type DetailedTestCaseExecutionMapKeyType string // TestCaseExecutionUuid + TestC
 
 type TestInstructionExecutionLogPostMapKeyType string // TestInstructionExecutionUuid + TestInstructionExecutionVersion
 
-type TestInstructionExecutionAttributesContainerMapKeyType string // TestInstructionExecutionUuid + TestInstructionExecutionVersion
+type TCEoTICoTIEAttributesContainerMapKeyType string // TestInstructionExecutionUuid || TestInstructionContainerUuid || TestCaseExecutionUuid
 
 type DetailedTestCaseExecutionsMapObjectStruct struct {
 	DetailedTestCaseExecution             *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage

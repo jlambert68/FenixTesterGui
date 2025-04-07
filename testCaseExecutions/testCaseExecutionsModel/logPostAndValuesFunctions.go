@@ -109,7 +109,7 @@ func sortLogPostsByTimestamp(logPostAndValuesMessagesPtr *[]*fenixExecutionServe
 }
 
 // ExtractAndStoreLogPostsAndValuesFromDetailedTestCaseExecution
-// Extracts all LogPost-messages from a TestCaseExecution and store them in a map per TestInstructionExecutionKey.
+// Extracts all LogPost-messages from a TestCaseExecution and store them in a map per TInTICExecutionKey.
 func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ExtractAndStoreLogPostsAndValuesFromDetailedTestCaseExecution(
 	detailedTestCaseExecutionMapKey DetailedTestCaseExecutionMapKeyType) (
 	err error) {

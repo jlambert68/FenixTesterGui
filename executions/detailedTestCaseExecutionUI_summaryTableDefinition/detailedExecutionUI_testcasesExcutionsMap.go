@@ -48,8 +48,8 @@ type TestCaseExecutionsDetailsStruct struct {
 	TestCaseExecutionsBaseInformation *TestCaseExecutionsBaseInformationStruct
 
 	// A map holding all TestInstructions with their execution statuses.
-	// map[TestInstructionExecutionKey]*TestInstructionExecutionsBaseInformationStruct
-	// TestInstructionExecutionKey = TestInstructionExecutionUuid + TestInstructionExecutionVersion
+	// map[TInTICExecutionKey]*TestInstructionExecutionsBaseInformationStruct
+	// TInTICExecutionKey = TestInstructionExecutionUuid + TestInstructionExecutionVersion
 	TestInstructionExecutionsStatusMap map[string]*TestInstructionExecutionsBaseInformationStruct
 
 	// The slice of all TestInstructionExecution, for one TestCaseExecution, and their current status. The order is the same as it is presented on screen

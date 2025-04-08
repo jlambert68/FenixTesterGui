@@ -9,6 +9,14 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+const (
+	notDefined labelTypeType = iota
+	labelIsTestInstruction
+	labelIsTestInstructionContainer
+)
+
+type labelTypeType uint8
+
 // Definition of a clickable TestInstructionName or TestInstructionContainer Name label used in the TestCaseExecution-Preview
 type clickableTInTICNameLabelInPreviewStruct struct {
 	widget.Label
@@ -16,6 +24,7 @@ type clickableTInTICNameLabelInPreviewStruct struct {
 				TCEoTICoTIEAttributesContainerMapKeyType
 	LeftClicked  func()
 	RightClicked func()
+	LabelType    labelTypeType
 }
 
 // Used for creating a new TestInstructionName label
@@ -25,6 +34,7 @@ func newClickableTestInstructionNameLabelInPreview(
 		TCEoTICoTIEAttributesContainerMapKeyType,
 	leftClicked func(),
 	rightClicked func(),
+	labelType labelTypeType,
 ) *clickableTInTICNameLabelInPreviewStruct {
 
 	clickableTInTICNameLabelInPreview := &clickableTInTICNameLabelInPreviewStruct{
@@ -32,6 +42,7 @@ func newClickableTestInstructionNameLabelInPreview(
 		TInTICExecutionKey: tInTICExecutionKey,
 		LeftClicked:        leftClicked,
 		RightClicked:       rightClicked,
+		LabelType:          labelType,
 	}
 
 	clickableTInTICNameLabelInPreview.ExtendBaseWidget(clickableTInTICNameLabelInPreview)
@@ -62,7 +73,13 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 	testCaseExecutionAttributesForPreviewObjectPtr, existInMap = testCaseExecutionAttributesForPreviewMap[c.TInTICExecutionKey]
 
 	if existInMap == false {
-		fmt.Println("existInMap:", existInMap)
+
+		// Should never happen
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"ID":                   "765dd5e9-0f00-4494-8128-33c986c5b13d",
+			"c.TInTICExecutionKey": c.TInTICExecutionKey,
+		}).Error("Couldn't find object in  for 'testCaseExecutionAttributesForPreviewMap', should never happen")
+
 		testCaseExecutionAttributesForPreviewMapMutex.Unlock()
 		return
 	}
@@ -101,8 +118,9 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 			}
 
 			childTestCaseExecutionAttributesForPreviewObjectPtr.attributesContainerShouldBeVisible = false
-			childTestCaseExecutionAttributesForPreviewObjectPtr.testInstructionExecutionAttributesContainer.Hide()
-
+			if childTestCaseExecutionAttributesForPreviewObjectPtr.testInstructionExecutionAttributesContainer != nil {
+				childTestCaseExecutionAttributesForPreviewObjectPtr.testInstructionExecutionAttributesContainer.Hide()
+			}
 		}
 
 	// Show attributes
@@ -135,7 +153,7 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 			}
 
 			childTestCaseExecutionAttributesForPreviewObjectPtr.attributesContainerShouldBeVisible = true
-			if testCaseExecutionAttributesForPreviewObjectPtr.testInstructionExecutionAttributesContainer != nil {
+			if childTestCaseExecutionAttributesForPreviewObjectPtr.testInstructionExecutionAttributesContainer != nil {
 				childTestCaseExecutionAttributesForPreviewObjectPtr.testInstructionExecutionAttributesContainer.Show()
 			}
 

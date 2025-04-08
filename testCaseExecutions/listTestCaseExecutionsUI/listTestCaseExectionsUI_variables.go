@@ -86,6 +86,7 @@ var testCaseExecutionAttributesForPreviewMapMutex = &sync.Mutex{}
 // Struct holding all attribute-containers for one TestInstructionsExecution and a list with Objects (TI or TIC)
 // that is placed below this TestInstruction in indentation level
 type testCaseExecutionAttributesForPreviewStruct struct {
+	LabelType                                   labelTypeType
 	attributesContainerShouldBeVisible          bool
 	testInstructionExecutionAttributesContainer *fyne.Container
 	childObjectsWithAttributes                  []testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType

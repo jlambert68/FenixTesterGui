@@ -660,7 +660,8 @@ func GenerateTestCaseExecutionPreviewContainer(
 					previewObject.GetTestInstructionContainerName(),
 					tempTIEAttributesContainerMapKey,
 					nil,
-					nil)
+					nil,
+					labelIsTestInstructionContainer)
 
 				// Create the container containing the TestInstructionContainer
 				var tempTestInstructionContainerContainer *fyne.Container
@@ -678,6 +679,7 @@ func GenerateTestCaseExecutionPreviewContainer(
 
 				// Create testCaseExecutionAttributesForPreview-object to be placed in the map
 				tempTestCaseExecutionAttributesForPreview = testCaseExecutionAttributesForPreviewStruct{
+					LabelType:                                   labelIsTestInstructionContainer,
 					attributesContainerShouldBeVisible:          false,
 					testInstructionExecutionAttributesContainer: nil,
 					childObjectsWithAttributes:                  nil,
@@ -689,12 +691,15 @@ func GenerateTestCaseExecutionPreviewContainer(
 				testInstructionContainerExecutionAttributesContainerMapKey = testCaseExecutionsModel.
 					TCEoTICoTIEAttributesContainerMapKeyType(previewObject.GetTestInstructionContainerUuid())
 
-				// Loop rest of PreView-Objects up until we get back to same 'previewObject.IndentationLevel' and add all references to all TestInstructionAttributes-map
+				// Loop rest of PreView-Objects up until we get back to same 'previewObject.IndentationLevel'
+				// and add all references to all TestInstructionAttributes-map
+				// Do this if we are not at the end of the slice
 				if previewObjectIndex+1 < len(tempTestCaseExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects) {
 
 					var tempChildObjectsWithAttributes []testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType
 
-					for counter := previewObjectIndex + 1; counter < len(tempTestCaseExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects); counter++ {
+					for counter := previewObjectIndex + 1; counter < len(tempTestCaseExecutionsListMessage.
+						GetTestCasePreview().TestCaseStructureObjects); counter++ {
 
 						// Check if IndentationLevel for next object is same ur higher than current AttributeObjects IndentationLevel
 						if tempTestCaseExecutionsListMessage.GetTestCasePreview().
@@ -724,6 +729,9 @@ func GenerateTestCaseExecutionPreviewContainer(
 								}).Error("Unknown 'GetTestCaseStructureObjectType'")
 
 							}
+						} else {
+							// Indentationlevel back on start IndentationLevel, so break loop
+							break
 						}
 					}
 
@@ -767,7 +775,8 @@ func GenerateTestCaseExecutionPreviewContainer(
 					previewObject.GetTestInstructionName(),
 					tempTIEAttributesContainerMapKey,
 					nil,
-					nil)
+					nil,
+					labelIsTestInstruction)
 
 				// Set correct color on ExecutionStatus Rectangle
 				var statusId uint8
@@ -900,6 +909,7 @@ func GenerateTestCaseExecutionPreviewContainer(
 
 				// Create testCaseExecutionAttributesForPreview-object to be placed in the map
 				tempTestCaseExecutionAttributesForPreview = testCaseExecutionAttributesForPreviewStruct{
+					LabelType:                                   notDefined,
 					attributesContainerShouldBeVisible:          false,
 					testInstructionExecutionAttributesContainer: nil,
 					childObjectsWithAttributes:                  nil,
@@ -959,6 +969,7 @@ func GenerateTestCaseExecutionPreviewContainer(
 
 					// Create testCaseExecutionAttributesForPreview-object to be placed in the map
 					tempTestCaseExecutionAttributesForPreview = testCaseExecutionAttributesForPreviewStruct{
+						LabelType:                                   labelIsTestInstruction,
 						attributesContainerShouldBeVisible:          false,
 						testInstructionExecutionAttributesContainer: tempTestInstructionAttributesContainer,
 						childObjectsWithAttributes:                  nil,

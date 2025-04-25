@@ -76,9 +76,17 @@ const testCaseNodeRectangleSize = 40
 const testCaseExecutionStatusRectangleHeight = 30
 const testCaseExecutionStatusRectangleWidth = 25
 
+// The size of the rectangles used for log-status in execution log
+const logStatusRectangleHeight = 25
+const logStatusRectangleWidth = 25
+
 // The TestCase Preview-container
 var testCaseExecutionPreviewContainerScroll *container.Scroll
 var testCaseExecutionPreviewContainer *fyne.Container
+var testInstructionsExecutionLogContainerScroll *container.Scroll
+var testInstructionsExecutionLogContainer *fyne.Container
+
+//var tempTestCasePreviewTestInstructionExecutionLogSplitContainer
 
 // Mutex for Attributes-map below
 var testCaseExecutionAttributesForPreviewMapMutex = &sync.Mutex{}

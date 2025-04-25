@@ -53,6 +53,7 @@ func GenerateListTestCaseExecutionsUI(
 	//var testCaseTable *widget.Table
 
 	var tempTestCaseListAndTestCasePreviewSplitContainer *container.Split
+	var tempTestCasePreviewTestInstructionExecutionLogSplitContainer *container.Split
 
 	var testCaseExecutionsListContainer *fyne.Container
 	var testCaseExecutionsListScrollContainer *container.Scroll
@@ -348,7 +349,23 @@ func GenerateListTestCaseExecutionsUI(
 	// Generate the container for the Preview, 'testCaseExecutionPreviewContainer'
 	testCaseExecutionPreviewContainerScroll = container.NewScroll(testCaseExecutionPreviewContainer)
 
-	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(testCasesListScrollContainer2, testCaseExecutionPreviewContainerScroll)
+	// Create the temporary container for the logs
+	tempTestInstructionsExecutionLogContainer := container.NewCenter(
+		widget.NewLabel("Select a TestInstructionExecution or a TesInstructionContainer to get the Logs"))
+
+	// Add the temporary container to the Border container for the logs
+	testInstructionsExecutionLogContainer = container.NewBorder(nil, nil, nil, nil, tempTestInstructionsExecutionLogContainer)
+
+	// Generate the scroll-container used for Execution-logs
+	testInstructionsExecutionLogContainerScroll = container.NewScroll(testInstructionsExecutionLogContainer)
+
+	// Generate the split-container holding both the Execution-preview and the execution-logs
+	tempTestCasePreviewTestInstructionExecutionLogSplitContainer = container.NewHSplit(
+		testCaseExecutionPreviewContainerScroll, testInstructionsExecutionLogContainerScroll)
+	tempTestCasePreviewTestInstructionExecutionLogSplitContainer.Offset = 0.75
+
+	// Generate the split-container holding the TestCaseExecution-list and the Execution-Preview
+	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(testCasesListScrollContainer2, tempTestCasePreviewTestInstructionExecutionLogSplitContainer)
 	tempTestCaseListAndTestCasePreviewSplitContainer.Offset = 0.75
 
 	TestCaseExecutionListAndTestCaseExecutionPreviewSplitContainer = tempTestCaseListAndTestCasePreviewSplitContainer
@@ -358,6 +375,7 @@ func GenerateListTestCaseExecutionsUI(
 
 func GenerateTestCaseExecutionPreviewContainer(
 	testCaseExecutionUuid string,
+	testCaseExecutionVersion uint32,
 	testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
 
 	var testCaseExecutionPreviewTopContainer *fyne.Container
@@ -658,6 +676,8 @@ func GenerateTestCaseExecutionPreviewContainer(
 				var tempTestInstructionContainerNameWidget *clickableTInTICNameLabelInPreviewStruct
 				tempTestInstructionContainerNameWidget = newClickableTestInstructionNameLabelInPreview(
 					previewObject.GetTestInstructionContainerName(),
+					testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType(testCaseExecutionUuid+
+						strconv.Itoa(int(testCaseExecutionVersion))),
 					tempTIEAttributesContainerMapKey,
 					nil,
 					nil,
@@ -773,6 +793,8 @@ func GenerateTestCaseExecutionPreviewContainer(
 				var tempTestInstructionNameWidget *clickableTInTICNameLabelInPreviewStruct
 				tempTestInstructionNameWidget = newClickableTestInstructionNameLabelInPreview(
 					previewObject.GetTestInstructionName(),
+					testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType(testCaseExecutionUuid+
+						strconv.Itoa(int(testCaseExecutionVersion))),
 					tempTIEAttributesContainerMapKey,
 					nil,
 					nil,
@@ -1058,14 +1080,32 @@ func GenerateTestCaseExecutionPreviewContainer(
 
 		// A row is selected and Preview should be shown
 
+		/*container.NewHSplit(container.NewBorder(
+		container.NewVBox(container.NewCenter(tempTopHeaderLabel), testCaseExecutionPreviewTopContainer, widget.NewSeparator()),
+		container.NewVBox(widget.NewSeparator(), testCaseExecutionPreviewBottomContainer), nil, nil,
+		testCaseMainAreaForPreviewScrollContainer))
+
+
+		*/
+
+		// Create the new Execution-Preview
 		testCaseExecutionPreviewContainer.Objects[0] = container.NewBorder(
 			container.NewVBox(container.NewCenter(tempTopHeaderLabel), testCaseExecutionPreviewTopContainer, widget.NewSeparator()),
 			container.NewVBox(widget.NewSeparator(), testCaseExecutionPreviewBottomContainer), nil, nil,
 			testCaseMainAreaForPreviewScrollContainer)
+
+		// Create a new temporary container for the logs
+		testInstructionsExecutionLogContainer.Objects[0] = container.NewCenter(
+			widget.NewLabel("Select a TestInstructionExecution or a TesInstructionContainer to get the Logs"))
+
 	} else {
 
 		// No row is selected and only an info text should be shown
 		testCaseExecutionPreviewContainer.Objects[0] = container.NewCenter(widget.NewLabel("Select a TestCaseExecution to get the Preview"))
+
+		// Create a new temporary container for the logs
+		testInstructionsExecutionLogContainer.Objects[0] = container.NewCenter(
+			widget.NewLabel("Select a TestInstructionExecution or a TesInstructionContainer to get the Logs"))
 	}
 
 	// Add attributes container to attributes-container-map-ptr

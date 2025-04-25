@@ -206,3 +206,74 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) DeleteFromTestCaseE
 		testCaseExecutionsMapKey)
 
 }
+
+// GetTestInstructionExecutionUuidFromTestInstructionUuid
+// Read from the TestCaseExecutions-Map and get the TestInstructionExecutionUuid + Version (mpKey) based on TestInstructionUuid
+func (testCaseExecutionsModel TestCaseExecutionsModelStruct) GetTestInstructionExecutionUuidFromTestInstructionUuid(
+	testCaseExecutionsMapKey TestCaseExecutionUuidType,
+	testInstructionUuid RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType) (
+	testInstructionExecutionUuid TestInstructionExecutionUuidType,
+	existInMap bool) {
+
+	sharedCode.Logger.WithFields(logrus.Fields{
+		"id": "0c34753b-cb62-401c-9c79-afb300b4939e",
+	}).Debug("Incoming - 'ReadFromTestCaseExecutionsMap'")
+
+	defer sharedCode.Logger.WithFields(logrus.Fields{
+		"id": "da469a24-48a0-455d-8da1-540f277c1373",
+	}).Debug("Outgoing - 'ReadFromTestCaseExecutionsMap'")
+
+	// Lock Map for Reading
+	//testCaseExecutionsMapMutex.RLock()
+
+	//UnLock Map
+	//defer testCaseExecutionsMapMutex.RUnlock()
+
+	// Check if Map i nil
+	if TestCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.
+		latestTestCaseExecutionForEachTestCaseUuidMap == nil {
+		return "", false
+	}
+
+	// Read Map
+	var tempDetailedTestCaseExecutionsObjectsMapPtr *map[DetailedTestCaseExecutionMapKeyType]*DetailedTestCaseExecutionsMapObjectStruct
+	var tempDetailedTestCaseExecutionsObjectsMap map[DetailedTestCaseExecutionMapKeyType]*DetailedTestCaseExecutionsMapObjectStruct
+	tempDetailedTestCaseExecutionsObjectsMapPtr = TestCaseExecutionsModel.DetailedTestCaseExecutionsObjectsMapPtr
+	tempDetailedTestCaseExecutionsObjectsMap = *tempDetailedTestCaseExecutionsObjectsMapPtr
+
+	var tempdetailedTestCaseExecutionsMapObjectPtr *DetailedTestCaseExecutionsMapObjectStruct
+	var tempdetailedTestCaseExecutionsMapObject DetailedTestCaseExecutionsMapObjectStruct
+	tempdetailedTestCaseExecutionsMapObjectPtr, existInMap = tempDetailedTestCaseExecutionsObjectsMap[DetailedTestCaseExecutionMapKeyType(testCaseExecutionsMapKey)]
+	if existInMap == false {
+
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"id":                       "8fb40f4d-dad9-49e8-8d97-01c0fa2dde6c",
+			"testCaseExecutionsMapKey": testCaseExecutionsMapKey,
+		}).Error("Should never happen - 'testCaseExecutionsMapKey' could not be found in 'DetailedTestCaseExecutionsObjectsMap")
+
+		return "", false
+	}
+
+	tempdetailedTestCaseExecutionsMapObject = *tempdetailedTestCaseExecutionsMapObjectPtr
+
+	// Extract map with relation between TestInstruction and TestInstructionExecution for TestCaseExecution
+	var tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr *map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
+	var tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
+
+	tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr = tempdetailedTestCaseExecutionsMapObject.RelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr
+	tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap = *tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr
+
+	testInstructionExecutionUuid, existInMap = tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap[testInstructionUuid]
+	if existInMap == false {
+
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"id":                       "d49656ad-fed7-4c1c-a667-c191ab11dcda",
+			"testInstructionUuid":      testInstructionUuid,
+			"testCaseExecutionsMapKey": testCaseExecutionsMapKey,
+		}).Error("Should never happen - 'testInstructionUuid' could not be found in 'RelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap")
+
+		return "", false
+	}
+
+	return testInstructionExecutionUuid, existInMap
+}

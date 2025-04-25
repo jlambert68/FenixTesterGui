@@ -70,4 +70,7 @@ func LoadDetailedTestCaseExecutionFromDatabase(testCaseExecutionUuid string, tes
 	// Extracts all LogPost-messages from a TestCaseExecution and store them in a map per TInTICExecutionKey
 	_ = TestCaseExecutionsModel.ExtractAndStoreLogPostsAndValuesFromDetailedTestCaseExecution(detailedTestCaseExecutionMapKey)
 
+	// Extract relation between TestInstructionUuid and TestCaseExecutionUuid
+	//_ = TestCaseExecutionsModel.ExtractAndStoreRelationBetweenTestInstructionUuidAndTestCaseExecutionUuid(detailedTestCaseExecutionMapKey)
+
 }

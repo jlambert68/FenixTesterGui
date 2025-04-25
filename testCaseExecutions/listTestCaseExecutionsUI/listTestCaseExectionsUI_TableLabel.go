@@ -72,6 +72,8 @@ func newClickableTableLabel(text string, onDoubleTap func(), tempIsClickable boo
 }
 
 func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
+
+	// Only execute 'clicks', if it is allowed
 	if l.isClickable == false {
 		return
 	}
@@ -146,7 +148,10 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 	testCaseExecutionsModel.LoadDetailedTestCaseExecutionFromDatabase(testCaseExecutionUuid, testCaseExecutionVersion)
 
 	// Update TestCase Preview
-	GenerateTestCaseExecutionPreviewContainer(l.currentTestCaseExecutionUuid, l.testCaseExecutionsModel)
+	GenerateTestCaseExecutionPreviewContainer(
+		l.currentTestCaseExecutionUuid,
+		l.currentTestCaseExecutionVersion,
+		l.testCaseExecutionsModel)
 	testCaseExecutionsListTable.Refresh()
 
 	// Update 'loadAllTestCaseExecutionsForOneTestCaseButton' with correct text, if we are in 'OneExecutionPerTestCase'

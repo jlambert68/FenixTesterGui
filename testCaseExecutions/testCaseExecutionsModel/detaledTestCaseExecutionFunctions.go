@@ -1,0 +1,90 @@
+package testCaseExecutionsModel
+
+import (
+	sharedCode "FenixTesterGui/common_code"
+	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
+	"github.com/sirupsen/logrus"
+	"strconv"
+)
+
+// ExtractAndStoreRelationBetweenTestInstructionUuidAndTestCaseExecutionUuid
+// Extract relation between TestInstructionUuid and TestCaseExecutionUuid
+func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ExtractAndStoreRelationBetweenTestInstructionUuidAndTestCaseExecutionUuid(
+	detailedTestCaseExecutionMapKey DetailedTestCaseExecutionMapKeyType) (
+	err error) {
+
+	sharedCode.Logger.WithFields(logrus.Fields{
+		"id": "b418d1a1-86cf-4c6e-9b71-75a40f0f2362",
+	}).Debug("Incoming - 'ExtractAndStoreRelationBetweenTestInstructionUuidAndTestCaseExecutionUuid'")
+
+	defer sharedCode.Logger.WithFields(logrus.Fields{
+		"id": "ad2d0d12-05e2-4fa6-8e39-34327ed7eb98",
+	}).Debug("Outgoing - 'ExtractAndStoreRelationBetweenTestInstructionUuidAndTestCaseExecutionUuid'")
+
+	// Extract the raw detailedTestCaseExecution-message
+	var detailedTestCaseExecution *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage
+	var existInMap bool
+	detailedTestCaseExecution, existInMap = testCaseExecutionsModel.
+		ReadFromDetailedTestCaseExecutionsMap(detailedTestCaseExecutionMapKey)
+
+	// Lock Map for Writing
+	detailedTestCaseExecutionsMapMutex.Lock()
+
+	//UnLock Map
+	defer detailedTestCaseExecutionsMapMutex.Unlock()
+
+	if existInMap == false {
+
+		return err
+	}
+
+	// Extract map with DetailedTestCaseExecutionsMapObjects
+	var detailedTestCaseExecutionsObjectsMapPtr *map[DetailedTestCaseExecutionMapKeyType]*DetailedTestCaseExecutionsMapObjectStruct
+	var detailedTestCaseExecutionsObjectsMap map[DetailedTestCaseExecutionMapKeyType]*DetailedTestCaseExecutionsMapObjectStruct
+
+	detailedTestCaseExecutionsObjectsMapPtr = testCaseExecutionsModel.DetailedTestCaseExecutionsObjectsMapPtr
+	detailedTestCaseExecutionsObjectsMap = *detailedTestCaseExecutionsObjectsMapPtr
+
+	// Extract specificDetailedTestCaseExecutionsMapObject
+	var detailedTestCaseExecutionsMapObjectPtr *DetailedTestCaseExecutionsMapObjectStruct
+	detailedTestCaseExecutionsMapObjectPtr, existInMap = detailedTestCaseExecutionsObjectsMap[detailedTestCaseExecutionMapKey]
+
+	if existInMap == false {
+		return err
+	}
+
+	// Always reInitialized RelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr
+	var tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
+	//var tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr *map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
+	tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap = make(map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType)
+
+	detailedTestCaseExecutionsMapObjectPtr.RelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr = &tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap
+
+	/*
+		// Get the RelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap
+		var relationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr *map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
+		var relationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
+		relationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr = detailedTestCaseExecutionsMapObject.RelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr
+		relationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap = *relationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr
+
+
+	*/
+	// Loop all TestInstructionExecutions and extract relation between TestInstruction and TestInstructionExecution
+	for _, testInstructionExecution := range detailedTestCaseExecution.TestInstructionExecutions {
+
+		// Generate the relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey
+		var relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType
+		relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey = RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType(
+			testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionUuid)
+		var testInstructionExecutionUuid TestInstructionExecutionUuidType
+		testInstructionExecutionUuid = TestInstructionExecutionUuidType(testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionExecutionUuid +
+			strconv.Itoa(int(testInstructionExecution.GetTestInstructionExecutionBasicInformation().GetTestInstructionExecutionVersion())))
+
+		tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap[relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey] = testInstructionExecutionUuid
+
+	}
+
+	detailedTestCaseExecutionsMapObjectPtr.RelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr = &tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap
+
+	return err
+}

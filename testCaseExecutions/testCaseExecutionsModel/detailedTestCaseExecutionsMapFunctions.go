@@ -2,6 +2,7 @@ package testCaseExecutionsModel
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"fmt"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"sync"
@@ -59,6 +60,7 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ReadFromDetailedTes
 
 				// Object locked so unlock Map and the lock on to the object
 				detailedTestCaseExecutionsMapMutex.Unlock()
+				fmt.Println("tempDetailedTestCaseExecutionsMapObject.WaitingForDatabaseUpdateMutex.Lock() - 01")
 				tempDetailedTestCaseExecutionsMapObject.WaitingForDatabaseUpdateMutex.Lock()
 
 				// Lock Map when DetailedTestCaseExecution object has been released
@@ -71,6 +73,7 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ReadFromDetailedTes
 
 				// Unlock locked object
 				defer tempDetailedTestCaseExecutionsMapObject.WaitingForDatabaseUpdateMutex.Unlock()
+				defer fmt.Println("tempDetailedTestCaseExecutionsMapObject.WaitingForDatabaseUpdateMutex.Lock() - 03")
 			}
 
 			//return object
@@ -284,6 +287,7 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) SetFlagRefreshOngoi
 
 		// Already exist,so use that object by Get the TestCaseExecutionObject from pointer
 		tempDetailedTestCaseExecutionsMapObject.WaitingForDatabaseUpdate = true
+		fmt.Println("tempDetailedTestCaseExecutionsMapObject.WaitingForDatabaseUpdateMutex.Lock() - 02")
 		tempDetailedTestCaseExecutionsMapObject.WaitingForDatabaseUpdateMutex.Lock()
 
 	} else {
@@ -294,6 +298,7 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) SetFlagRefreshOngoi
 			WaitingForDatabaseUpdateMutex: &sync.RWMutex{},
 		}
 
+		fmt.Println("tempDetailedTestCaseExecutionsMapObject.WaitingForDatabaseUpdateMutex.Lock() - 03")
 		tempDetailedTestCaseExecutionsMapObject.WaitingForDatabaseUpdateMutex.Lock()
 
 		tempDetailedTestCaseExecutionsObjectsMap[detailedTestCaseExecutionMapKey] = &tempDetailedTestCaseExecutionsMapObject
@@ -349,6 +354,7 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ClearFlagRefreshOng
 
 		// Already exist,so use that object by Get the TestCaseExecutionObject from pointer
 		tempDetailedTestCaseExecutionsMapObject.WaitingForDatabaseUpdate = false
+		fmt.Println("tempDetailedTestCaseExecutionsMapObject.WaitingForDatabaseUpdateMutex.UnLock() - 01")
 		tempDetailedTestCaseExecutionsMapObject.WaitingForDatabaseUpdateMutex.Unlock()
 	} else {
 		// Object doesn't exist so create a new object and store in map
@@ -358,6 +364,7 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ClearFlagRefreshOng
 			WaitingForDatabaseUpdateMutex: &sync.RWMutex{},
 		}
 
+		fmt.Println("tempDetailedTestCaseExecutionsMapObject.WaitingForDatabaseUpdateMutex.Lock() - 02")
 		tempDetailedTestCaseExecutionsMapObject.WaitingForDatabaseUpdateMutex.Unlock()
 
 		tempDetailedTestCaseExecutionsObjectsMap[detailedTestCaseExecutionMapKey] = &tempDetailedTestCaseExecutionsMapObject

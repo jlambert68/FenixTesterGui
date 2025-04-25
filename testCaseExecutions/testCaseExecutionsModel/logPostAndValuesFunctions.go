@@ -12,7 +12,7 @@ import (
 // List all LogPosts and Values for supplied TestInstructionExecutions. Log-posts are sorted on Logging DateTime
 func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ListLogPostsAndValuesForTestInstructionExecutions(
 	detailedTestCaseExecutionMapKey DetailedTestCaseExecutionMapKeyType,
-	testInstructionExecutionLogPostMapKeys []TestInstructionExecutionLogPostMapKeyType) (
+	testInstructionLogPostMapKeys []TestInstructionExecutionLogPostMapKeyType) (
 	logPostAndValuesMessagesPtr *[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{
@@ -27,10 +27,10 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ListLogPostsAndValu
 	if len(detailedTestCaseExecutionMapKey) == 0 {
 		return
 	}
-	if len(*logPostAndValuesMessagesPtr) == 0 {
-		return
-	}
-	for _, tempTestInstructionExecutionLogPostMapKey := range testInstructionExecutionLogPostMapKeys {
+	//if logPostAndValuesMessagesPtr == nil || len(*logPostAndValuesMessagesPtr) == 0 {
+	//	return
+	//}
+	for _, tempTestInstructionExecutionLogPostMapKey := range testInstructionLogPostMapKeys {
 		if len(tempTestInstructionExecutionLogPostMapKey) == 0 {
 			return
 		}
@@ -55,12 +55,13 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ListLogPostsAndValu
 	var detailedTestCaseExecutionsMapObjectPtr *DetailedTestCaseExecutionsMapObjectStruct
 	var detailedTestCaseExecutionsMapObject DetailedTestCaseExecutionsMapObjectStruct
 	detailedTestCaseExecutionsMapObjectPtr, existInMap = detailedTestCaseExecutionsObjectsMap[detailedTestCaseExecutionMapKey]
-	detailedTestCaseExecutionsMapObject = *detailedTestCaseExecutionsMapObjectPtr
 
 	// If it isn't initialized then exist
 	if existInMap == false {
 		return
 	}
+
+	detailedTestCaseExecutionsMapObject = *detailedTestCaseExecutionsMapObjectPtr
 
 	// Check if TestInstructionNExecutionMap is nil, then exist
 	if detailedTestCaseExecutionsMapObjectPtr.TestInstructionExecutionLogPostMapPtr == nil {
@@ -75,11 +76,26 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ListLogPostsAndValu
 
 	// Get logPost from Map by loop the Map-keys and add the final result slice
 	var logPostAndValuesMessages []*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage
-	for _, tempTestInstructionExecutionLogPostMapKey := range testInstructionExecutionLogPostMapKeys {
+	var tempTestInstructionExecutionLogPostKey TestInstructionExecutionUuidType
+	for _, tempTestInstructionLogPostMapKey := range testInstructionLogPostMapKeys {
+
+		// Convert to TestInstructionExecutionLogPostKey
+		tempTestInstructionExecutionLogPostKey, existInMap = testCaseExecutionsModel.
+			GetTestInstructionExecutionUuidFromTestInstructionUuid(
+				TestCaseExecutionUuidType(detailedTestCaseExecutionMapKey),
+				RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType(tempTestInstructionLogPostMapKey))
+
+		if existInMap == false {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"id": "6859a4fb-33b2-47f7-9de0-0a26c2f73b1f",
+			}).Debug("Should never happen - Couldn't get tempTestInstructionExecutionLogPostKey from TestInstructionUuid")
+
+			return nil
+		}
 
 		// Get LogPosts for this Key
 		var templogPostAndValuesMessagesPtr *[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage
-		templogPostAndValuesMessagesPtr, existInMap = testInstructionExecutionLogPostMap[tempTestInstructionExecutionLogPostMapKey]
+		templogPostAndValuesMessagesPtr, existInMap = testInstructionExecutionLogPostMap[TestInstructionExecutionLogPostMapKeyType(tempTestInstructionExecutionLogPostKey)]
 		if existInMap == true {
 			// Add the logPosts to the logPost-slice
 			logPostAndValuesMessages = append(logPostAndValuesMessages, *templogPostAndValuesMessagesPtr...)
@@ -156,6 +172,13 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ExtractAndStoreLogP
 		return err
 	}
 
+	// Always reInitialized RelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr
+	var tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
+	//var tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr *map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
+	tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap = make(map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType)
+
+	detailedTestCaseExecutionsMapObjectPtr.RelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr = &tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap
+
 	// Always reInitialized TestInstructionExecutionLogPostMapPtr
 	var tempTestInstructionExecutionLogPostMap map[TestInstructionExecutionLogPostMapKeyType]*[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage
 	tempTestInstructionExecutionLogPostMap = make(map[TestInstructionExecutionLogPostMapKeyType]*[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage)
@@ -192,7 +215,19 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ExtractAndStoreLogP
 			*logPostAndValuesMessageSlicePtr = append(*logPostAndValuesMessageSlicePtr, testInstructionExecution.ExecutionLogPostsAndValues...)
 		}
 
+		// Generate the relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey
+		var relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType
+		relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey = RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType(
+			testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionUuid)
+		var testInstructionExecutionUuid TestInstructionExecutionUuidType
+		testInstructionExecutionUuid = TestInstructionExecutionUuidType(testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionExecutionUuid +
+			strconv.Itoa(int(testInstructionExecution.GetTestInstructionExecutionBasicInformation().GetTestInstructionExecutionVersion())))
+
+		tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap[relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey] = testInstructionExecutionUuid
+
 	}
+
+	detailedTestCaseExecutionsMapObjectPtr.RelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr = &tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap
 
 	return err
 }

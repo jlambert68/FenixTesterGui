@@ -86,11 +86,14 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ListLogPostsAndValu
 				RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType(tempTestInstructionLogPostMapKey))
 
 		if existInMap == false {
-			sharedCode.Logger.WithFields(logrus.Fields{
-				"id": "6859a4fb-33b2-47f7-9de0-0a26c2f73b1f",
-			}).Debug("Should never happen - Couldn't get tempTestInstructionExecutionLogPostKey from TestInstructionUuid")
+			// TestInstructionContainer or that there are not attributes
 
-			return nil
+			continue
+			//sharedCode.Logger.WithFields(logrus.Fields{
+			//	"id": "6859a4fb-33b2-47f7-9de0-0a26c2f73b1f",
+			//}).Debug("Should never happen - Couldn't get tempTestInstructionExecutionLogPostKey from TestInstructionUuid")
+
+			//return nil
 		}
 
 		// Get LogPosts for this Key
@@ -172,18 +175,24 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ExtractAndStoreLogP
 		return err
 	}
 
-	// Always reInitialized RelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr
+	// Always reInitialized RelationBetweenTestInstructionUuidAndTestInstructionExecutionUuidMapPtr
 	var tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
 	//var tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr *map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
 	tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap = make(map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType)
 
-	detailedTestCaseExecutionsMapObjectPtr.RelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr = &tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap
+	detailedTestCaseExecutionsMapObjectPtr.RelationBetweenTestInstructionUuidAndTestInstructionExecutionUuidMapPtr = &tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap
 
 	// Always reInitialized TestInstructionExecutionLogPostMapPtr
 	var tempTestInstructionExecutionLogPostMap map[TestInstructionExecutionLogPostMapKeyType]*[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage
 	tempTestInstructionExecutionLogPostMap = make(map[TestInstructionExecutionLogPostMapKeyType]*[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage)
 	detailedTestCaseExecutionsMapObjectPtr.TestInstructionExecutionLogPostMapPtr = &tempTestInstructionExecutionLogPostMap
 	detailedTestCaseExecutionsMapObject = *detailedTestCaseExecutionsMapObjectPtr
+
+	// Always reInitialized RelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMapPtr
+	var tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap map[TestInstructionExecutionUuidType]RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct
+	tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap = make(map[TestInstructionExecutionUuidType]RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct)
+
+	detailedTestCaseExecutionsMapObjectPtr.RelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMapPtr = &tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap
 
 	// Get the LogPostMap
 	var testInstructionExecutionLogPostMapPtr *map[TestInstructionExecutionLogPostMapKeyType]*[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage
@@ -225,9 +234,15 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ExtractAndStoreLogP
 
 		tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap[relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey] = testInstructionExecutionUuid
 
+		tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap[testInstructionExecutionUuid] = RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct{
+			TestInstructionUuid: relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey,
+			TestInstructionName: testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionName +
+				" [" + string(relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey[:8]) + "]"}
+
 	}
 
-	detailedTestCaseExecutionsMapObjectPtr.RelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr = &tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap
+	detailedTestCaseExecutionsMapObjectPtr.RelationBetweenTestInstructionUuidAndTestInstructionExecutionUuidMapPtr = &tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap
+	detailedTestCaseExecutionsMapObjectPtr.RelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMapPtr = &tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap
 
 	return err
 }

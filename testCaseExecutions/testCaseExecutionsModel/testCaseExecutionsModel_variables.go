@@ -48,12 +48,18 @@ type TCEoTICoTIEAttributesContainerMapKeyType string // TestInstructionExecution
 
 type RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType string // TestInstructionUuid
 
+type RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct struct {
+	TestInstructionUuid RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType
+	TestInstructionName string
+}
+
 type TestInstructionExecutionUuidType string // TestInstructionExecutionUuidT
 
 type DetailedTestCaseExecutionsMapObjectStruct struct {
 	DetailedTestCaseExecution                                               *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage
 	TestInstructionExecutionLogPostMapPtr                                   *map[TestInstructionExecutionLogPostMapKeyType]*[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage
-	RelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr *map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
+	RelationBetweenTestInstructionUuidAndTestInstructionExecutionUuidMapPtr *map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
+	RelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMapPtr *map[TestInstructionExecutionUuidType]RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct
 
 	WaitingForDatabaseUpdate      bool
 	WaitingForDatabaseUpdateMutex *sync.RWMutex

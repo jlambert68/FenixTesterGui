@@ -699,8 +699,9 @@ func GenerateTestCaseExecutionPreviewContainer(
 
 				// Create testCaseExecutionAttributesForPreview-object to be placed in the map
 				tempTestCaseExecutionAttributesForPreview = testCaseExecutionAttributesForPreviewStruct{
-					LabelType:                                   labelIsTestInstructionContainer,
-					attributesContainerShouldBeVisible:          false,
+					LabelType:                          labelIsTestInstructionContainer,
+					LabelText:                          previewObject.GetTestInstructionContainerName(),
+					attributesContainerShouldBeVisible: false,
 					testInstructionExecutionAttributesContainer: nil,
 					childObjectsWithAttributes:                  nil,
 				}
@@ -931,8 +932,9 @@ func GenerateTestCaseExecutionPreviewContainer(
 
 				// Create testCaseExecutionAttributesForPreview-object to be placed in the map
 				tempTestCaseExecutionAttributesForPreview = testCaseExecutionAttributesForPreviewStruct{
-					LabelType:                                   notDefined,
-					attributesContainerShouldBeVisible:          false,
+					LabelType:                          notDefined,
+					LabelText:                          "",
+					attributesContainerShouldBeVisible: false,
 					testInstructionExecutionAttributesContainer: nil,
 					childObjectsWithAttributes:                  nil,
 				}
@@ -991,8 +993,9 @@ func GenerateTestCaseExecutionPreviewContainer(
 
 					// Create testCaseExecutionAttributesForPreview-object to be placed in the map
 					tempTestCaseExecutionAttributesForPreview = testCaseExecutionAttributesForPreviewStruct{
-						LabelType:                                   labelIsTestInstruction,
-						attributesContainerShouldBeVisible:          false,
+						LabelType:                          labelIsTestInstruction,
+						LabelText:                          previewObject.GetTestInstructionName(),
+						attributesContainerShouldBeVisible: false,
 						testInstructionExecutionAttributesContainer: tempTestInstructionAttributesContainer,
 						childObjectsWithAttributes:                  nil,
 					}

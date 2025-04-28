@@ -95,6 +95,7 @@ var testCaseExecutionAttributesForPreviewMapMutex = &sync.Mutex{}
 // that is placed below this TestInstruction in indentation level
 type testCaseExecutionAttributesForPreviewStruct struct {
 	LabelType                                   labelTypeType
+	LabelText                                   string
 	attributesContainerShouldBeVisible          bool
 	testInstructionExecutionAttributesContainer *fyne.Container
 	childObjectsWithAttributes                  []testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType

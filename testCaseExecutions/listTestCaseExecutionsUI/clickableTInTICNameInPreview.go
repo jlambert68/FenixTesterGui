@@ -101,8 +101,8 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 	}
 
 	// Add this TI or TIC execution-key to slice of execution key to extract log-post data for
-	testInstructionExecutionLogPostMapKeys = append(testInstructionExecutionLogPostMapKeys,
-		testCaseExecutionsModel.TestInstructionExecutionLogPostMapKeyType(c.TInTICExecutionKey))
+	//testInstructionExecutionLogPostMapKeys = append(testInstructionExecutionLogPostMapKeys,
+	//	testCaseExecutionsModel.TestInstructionExecutionLogPostMapKeyType(c.TInTICExecutionKey))
 
 	attributesContainerPtr = testCaseExecutionAttributesForPreviewObjectPtr.testInstructionExecutionAttributesContainer
 
@@ -178,8 +178,8 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 			}
 
 			// Add this TI or TIC execution-key to slice of execution key to extract log-post data for
-			testInstructionExecutionLogPostMapKeys = append(testInstructionExecutionLogPostMapKeys,
-				testCaseExecutionsModel.TestInstructionExecutionLogPostMapKeyType(childObjectKey))
+			//testInstructionExecutionLogPostMapKeys = append(testInstructionExecutionLogPostMapKeys,
+			//	testCaseExecutionsModel.TestInstructionExecutionLogPostMapKeyType(childObjectKey))
 
 		}
 
@@ -191,6 +191,18 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 		attributesContainerPtr.Refresh()
 	}
 
+	// Loop TI and TIC and check if they are expanded or not, and add to slice for objects to get ExecutionLog data from
+	for tempChildObjectKey, tempChildTestCaseExecutionAttributesForPreviewObjectPtr := range testCaseExecutionAttributesForPreviewMap {
+
+		// If TI or TIC is visible/expanded then add to slice
+		if tempChildTestCaseExecutionAttributesForPreviewObjectPtr.attributesContainerShouldBeVisible == true &&
+			tempChildTestCaseExecutionAttributesForPreviewObjectPtr.LabelType == labelIsTestInstruction {
+			// Add this TI execution-key to slice of execution key to extract log-post data for
+			testInstructionExecutionLogPostMapKeys = append(testInstructionExecutionLogPostMapKeys,
+				testCaseExecutionsModel.TestInstructionExecutionLogPostMapKeyType(tempChildObjectKey))
+		}
+	}
+
 	// Extract log-data from clicked object and its children
 	var logPostAndValuesMessagesPtr *[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage
 	logPostAndValuesMessagesPtr = testCaseExecutionsModel.TestCaseExecutionsModel.
@@ -198,7 +210,7 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 			c.TCExecutionKey,
 			testInstructionExecutionLogPostMapKeys)
 
-	if logPostAndValuesMessagesPtr != nil {
+	if logPostAndValuesMessagesPtr != nil && len(*logPostAndValuesMessagesPtr) > 0 {
 
 		// Variables for extracted data from log-post-message
 		var logpostStatus fenixExecutionServerGuiGrpcApi.LogPostStatusEnum
@@ -206,8 +218,11 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 		var logPostTimeStamp time.Time
 		var logPostTimeStampAsText string
 		var testInstructionExecutionUuid string
+		var testInstructionExecutionMapKey string
 		var testInstructionExecutionVersion int32
 		var logPostText string
+		//var testInstructionUuid testCaseExecutionsModel.RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType,
+		var testInstructionNameForLog string
 		var foundVersusExpectedValue []*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage_FoundVersusExpectedValueMessage
 
 		// Variables for the log-post-container
@@ -222,7 +237,8 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 			var logMessageRichText *widget.RichText
 
 			var timStampAndStatusContainer *fyne.Container
-			var logMessageContainerScroll *container.Scroll
+			//var logMessageContainerScroll *container.Scroll
+			var logMessageBorderContainer *fyne.Container
 
 			timStampAndStatusContainer = container.New(layout.NewHBoxLayout())
 
@@ -239,6 +255,16 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 			testInstructionExecutionVersion = logPostAndValuesMessage.GetTestInstructionExecutionVersion()
 			logPostText = logPostAndValuesMessage.GetLogPostText()
 			foundVersusExpectedValue = logPostAndValuesMessage.GetFoundVersusExpectedValue()
+			testInstructionExecutionMapKey = fmt.Sprintf("%s%d", testInstructionExecutionUuid, testInstructionExecutionVersion)
+			_, testInstructionNameForLog, existInMap =
+				testCaseExecutionsModel.TestCaseExecutionsModel.GetTestInstructionFromTestInstructionExecutionUuid(
+					testCaseExecutionsModel.TestCaseExecutionUuidType(c.TCExecutionKey),
+					testCaseExecutionsModel.TestInstructionExecutionUuidType(testInstructionExecutionMapKey),
+					true)
+
+			if existInMap == false {
+				testInstructionNameForLog = "couldn't find test instruction"
+			}
 
 			/*
 				richText := widget.NewRichText(
@@ -363,8 +389,9 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 			timStampAndStatusContainer.Add(logStatusRectangle)
 
 			// Format message information using Markdown syntax
-			logMessageStringBuilder.WriteString(fmt.Sprintf("%s(%d)", testInstructionExecutionUuid, testInstructionExecutionVersion))
-			logMessageStringBuilder.WriteString(fmt.Sprintf("\n%s", logPostText))
+			logMessageStringBuilder.WriteString(fmt.Sprintf("**%s**\n\n", testInstructionNameForLog))
+			logMessageStringBuilder.WriteString(fmt.Sprintf("TestInstructionExecution: %s(%d)\n\n", testInstructionExecutionUuid, testInstructionExecutionVersion))
+			logMessageStringBuilder.WriteString(fmt.Sprintf("%s", logPostText))
 
 			// Add Found vs Expected values, if exist
 			if len(foundVersusExpectedValue) > 0 {
@@ -374,14 +401,19 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 				var expectedValue string
 
 				// Loop all found vs expected value pars
+				if len(foundVersusExpectedValue) > 0 {
+					logMessageStringBuilder.WriteString("\n\n")
+				}
 				for _, foundVersusExpectedValueMessage := range foundVersusExpectedValue {
 
 					foundValue = foundVersusExpectedValueMessage.GetFoundValue()
 					expectedValue = foundVersusExpectedValueMessage.GetExpectedValue()
 					headerFoundVsExpectedValue = foundVersusExpectedValueMessage.GetName()
 
-					logMessageStringBuilder.WriteString(fmt.Sprintf("\n\n**bold %s:**", headerFoundVsExpectedValue))
-					logMessageStringBuilder.WriteString(fmt.Sprintf("\nFound: *italic %s*\nExpected: *italic %s*", foundValue, expectedValue))
+					logMessageStringBuilder.WriteString("\n\n")
+					logMessageStringBuilder.WriteString(fmt.Sprintf("**%s:**\n\n", headerFoundVsExpectedValue))
+					logMessageStringBuilder.WriteString(fmt.Sprintf("Found: *%s*\n\n", foundValue))
+					logMessageStringBuilder.WriteString(fmt.Sprintf("Expected: *%s*", expectedValue))
 				}
 
 			}
@@ -390,13 +422,15 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 			logMessageRichText = widget.NewRichTextFromMarkdown(logMessageStringBuilder.String())
 
 			// Put Log-message-richText into a scrollable container
-			logMessageContainerScroll = container.NewScroll(logMessageRichText)
+			//logMessageContainerScroll = container.NewScroll(
+			//	container.NewBorder(nil, nil, nil, nil, logMessageRichText))
+			logMessageBorderContainer = container.NewBorder(nil, nil, nil, nil, logMessageRichText)
 
 			// Add 'timStampAndStatusContainer' to 'logPostFormContainer'
 			logPostFormContainer.Add(timStampAndStatusContainer)
 
 			// Add 'logMessageContainerScroll' to 'logPostFormContainer'
-			logPostFormContainer.Add(logMessageContainerScroll)
+			logPostFormContainer.Add(logMessageBorderContainer)
 
 			// Add the updated Scroll container to the Border container for the logs
 			testInstructionsExecutionLogContainer.Objects[0] = container.NewBorder(nil, nil, nil, nil, logPostFormContainer)
@@ -405,6 +439,14 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 			testInstructionsExecutionLogContainer.Refresh()
 
 		}
+	} else {
+
+		// Create a new temporary container for the logs
+		testInstructionsExecutionLogContainer.Objects[0] = container.NewCenter(
+			widget.NewLabel("Select a TestInstructionExecution or a TesInstructionContainer to get the Logs"))
+
+		// Update GUI for logs
+		testInstructionsExecutionLogContainer.Refresh()
 	}
 
 	testCaseExecutionAttributesForPreviewMapMutex.Unlock()

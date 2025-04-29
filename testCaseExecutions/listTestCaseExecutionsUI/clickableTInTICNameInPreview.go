@@ -236,10 +236,12 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 			var timStampAndStatusRichText *widget.RichText
 			var logMessageRichText *widget.RichText
 
+			//var timStampAndTextStatusContainer *fyne.Container
 			var timStampAndStatusContainer *fyne.Container
 			//var logMessageContainerScroll *container.Scroll
 			var logMessageBorderContainer *fyne.Container
 
+			//timStampAndTextStatusContainer =  container.New(layout.NewVBoxLayout())
 			timStampAndStatusContainer = container.New(layout.NewHBoxLayout())
 
 			// Build a markdown-formatted string dynamically
@@ -289,7 +291,7 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 				)
 			*/
 			// Format TimeStamp information using Markdown syntax
-			timeStampStringBuilder.WriteString(fmt.Sprintf("%s - %s", logPostTimeStampAsText, logpostStatusAsText))
+			timeStampStringBuilder.WriteString(fmt.Sprintf("%s\n\n%s", logPostTimeStampAsText, logpostStatusAsText))
 
 			// Create RichText widget from the generated markdown content for TimeStamp and Status
 			timStampAndStatusRichText = widget.NewRichTextFromMarkdown(timeStampStringBuilder.String())
@@ -330,12 +332,7 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 					B: 0x00,
 					A: 0xFF,
 				}
-				logStatusRectangle.FillColor = color.RGBA{
-					R: 0xFF,
-					G: 0xFF,
-					B: 0x00,
-					A: 0xFF,
-				}
+				logStatusRectangle.FillColor = color.Transparent
 
 			case fenixExecutionServerGuiGrpcApi.LogPostStatusEnum_EXECUTION_OK:
 				logStatusRectangle.StrokeColor = color.Transparent
@@ -384,6 +381,9 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 				log.Fatalf("Unknown LogPostStatusEnum: %v, should never happen", logpostStatus)
 
 			}
+
+			// Add spacer
+			timStampAndStatusContainer.Add(layout.NewSpacer())
 
 			// Add Status-box  to container
 			timStampAndStatusContainer.Add(logStatusRectangle)

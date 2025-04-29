@@ -362,11 +362,11 @@ func GenerateListTestCaseExecutionsUI(
 	// Generate the split-container holding both the Execution-preview and the execution-logs
 	tempTestCasePreviewTestInstructionExecutionLogSplitContainer = container.NewHSplit(
 		testCaseExecutionPreviewContainerScroll, testInstructionsExecutionLogContainerScroll)
-	tempTestCasePreviewTestInstructionExecutionLogSplitContainer.Offset = 0.75
+	tempTestCasePreviewTestInstructionExecutionLogSplitContainer.Offset = 0.60
 
 	// Generate the split-container holding the TestCaseExecution-list and the Execution-Preview
 	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(testCasesListScrollContainer2, tempTestCasePreviewTestInstructionExecutionLogSplitContainer)
-	tempTestCaseListAndTestCasePreviewSplitContainer.Offset = 0.75
+	tempTestCaseListAndTestCasePreviewSplitContainer.Offset = 0.60
 
 	TestCaseExecutionListAndTestCaseExecutionPreviewSplitContainer = tempTestCaseListAndTestCasePreviewSplitContainer
 

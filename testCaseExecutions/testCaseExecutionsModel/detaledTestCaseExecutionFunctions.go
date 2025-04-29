@@ -90,7 +90,7 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) ExtractAndStoreRela
 		tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap[testInstructionExecutionUuid] = RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct{
 			TestInstructionUuid: relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey,
 			TestInstructionName: testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionName +
-				" [" + string(relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey[:8]) + "]"}
+				" [" + string(relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey[:7]) + "]"}
 
 	}
 

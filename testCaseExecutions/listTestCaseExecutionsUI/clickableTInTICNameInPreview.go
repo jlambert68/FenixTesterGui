@@ -230,6 +230,10 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 
 		logPostFormContainer = container.New(layout.NewFormLayout())
 
+		var fullTextLogToBeExportedStringBuilder strings.Builder
+		var copyLogToClipBoardContainer *fyne.Container
+		copyLogToClipBoardContainer = container.New(layout.NewHBoxLayout())
+
 		// Loop over all log-post messages and create the RichText instance for each log-post and add to a Form-container
 		for _, logPostAndValuesMessage := range *logPostAndValuesMessagesPtr {
 
@@ -438,13 +442,39 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 			// Add 'logMessageContainerScroll' to 'logPostFormContainer'
 			logPostFormContainer.Add(logMessageBorderContainer)
 
-			// Add the updated Scroll container to the Border container for the logs
-			testInstructionsExecutionLogContainer.Objects[0] = container.NewBorder(nil, nil, nil, nil, logPostFormContainer)
-
-			// Update GUI for logs
-			testInstructionsExecutionLogContainer.Refresh()
+			// Create the full log that can be sent to clipboard
+			fullTextLogToBeExportedStringBuilder.WriteString(timeStampStringBuilder.String())
+			fullTextLogToBeExportedStringBuilder.WriteString(" \n\n ")
+			fullTextLogToBeExportedStringBuilder.WriteString(logMessageStringBuilder.String())
+			fullTextLogToBeExportedStringBuilder.WriteString(" \n\n ")
 
 		}
+
+		// Create the 'copyLogToClipBoardContainer'
+		copyLogToClipBoardContainer.Add(widget.NewButton("Copy log to clipboard", func() {
+
+			fenixMasterWindow := *sharedCode.FenixMasterWindowPtr
+			clipboard := fenixMasterWindow.Clipboard()
+
+			clipboard.SetContent(fullTextLogToBeExportedStringBuilder.String())
+
+			// Notify the user
+
+			// Trigger System Notification sound
+			soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
+
+			fyne.CurrentApp().SendNotification(&fyne.Notification{
+				Title:   "Clipboard",
+				Content: fmt.Sprintf("Visible log was copied to clipboard!"),
+			})
+		}))
+
+		// Add the updated Scroll container to the Border container for the logs
+		testInstructionsExecutionLogContainer.Objects[0] = container.NewBorder(copyLogToClipBoardContainer, nil, nil, nil, logPostFormContainer)
+
+		// Update GUI for logs
+		testInstructionsExecutionLogContainer.Refresh()
+
 	} else {
 
 		// Create a new temporary container for the logs

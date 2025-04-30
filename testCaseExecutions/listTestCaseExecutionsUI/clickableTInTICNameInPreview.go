@@ -389,30 +389,33 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 			timStampAndStatusContainer.Add(logStatusRectangle)
 
 			// Format message information using Markdown syntax
-			logMessageStringBuilder.WriteString(fmt.Sprintf("**%s**\n\n", testInstructionNameForLog))
-			logMessageStringBuilder.WriteString(fmt.Sprintf("TestInstructionExecution: %s(%d)\n\n", testInstructionExecutionUuid, testInstructionExecutionVersion))
-			logMessageStringBuilder.WriteString(fmt.Sprintf("%s", logPostText))
+			logMessageStringBuilder.WriteString(fmt.Sprintf("## %s\n\n", testInstructionNameForLog))
+			logMessageStringBuilder.WriteString(fmt.Sprintf("*TIEUuid: %s(%d)* \n\n ", testInstructionExecutionUuid, testInstructionExecutionVersion))
+			logMessageStringBuilder.WriteString(fmt.Sprintf("LogText: *%s*", logPostText))
 
 			// Add Found vs Expected values, if exist
 			if len(foundVersusExpectedValue) > 0 {
 
-				var headerFoundVsExpectedValue string
+				var variableName string
+				var variableDescription string
 				var foundValue string
 				var expectedValue string
 
 				// Loop all found vs expected value pars
 				if len(foundVersusExpectedValue) > 0 {
-					logMessageStringBuilder.WriteString("\n\n")
+					logMessageStringBuilder.WriteString(" \n\n *** \n\n **Expected vs Found** \n\n ")
 				}
 				for _, foundVersusExpectedValueMessage := range foundVersusExpectedValue {
 
 					foundValue = foundVersusExpectedValueMessage.GetFoundValue()
 					expectedValue = foundVersusExpectedValueMessage.GetExpectedValue()
-					headerFoundVsExpectedValue = foundVersusExpectedValueMessage.GetName()
+					variableName = foundVersusExpectedValueMessage.GetVariableName()
+					variableDescription = foundVersusExpectedValueMessage.GetVariableDescription()
 
-					logMessageStringBuilder.WriteString("\n\n")
-					logMessageStringBuilder.WriteString(fmt.Sprintf("**%s:**\n\n", headerFoundVsExpectedValue))
-					logMessageStringBuilder.WriteString(fmt.Sprintf("Found: *%s*\n\n", foundValue))
+					logMessageStringBuilder.WriteString(" \n\n *** \n\n ")
+					logMessageStringBuilder.WriteString(fmt.Sprintf("**%s:** \n\n ", variableName))
+					logMessageStringBuilder.WriteString(fmt.Sprintf("Description: *%s* \n\n ", variableDescription))
+					logMessageStringBuilder.WriteString(fmt.Sprintf("Found:      *%s* \n\n ", foundValue))
 					logMessageStringBuilder.WriteString(fmt.Sprintf("Expected: *%s*", expectedValue))
 				}
 
@@ -420,6 +423,9 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 
 			// Create RichText widget from the generated markdown content for Log-message
 			logMessageRichText = widget.NewRichTextFromMarkdown(logMessageStringBuilder.String())
+
+			// Make the log do soft line breaks
+			logMessageRichText.Wrapping = fyne.TextWrapWord
 
 			// Put Log-message-richText into a scrollable container
 			//logMessageContainerScroll = container.NewScroll(

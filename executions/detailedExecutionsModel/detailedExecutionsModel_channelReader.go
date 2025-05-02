@@ -90,7 +90,11 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) trigge
 		incomingChannelCommandAndMessage.FullTestCaseExecutionResponseMessage)
 
 	// Recreate the Detailed Executions Summary Table
-	*TestCasesSummaryTable = *CreateSummaryTableForDetailedTestCaseExecutionsList()
+	if TestCasesSummaryTable != nil {
+		*TestCasesSummaryTable = *CreateSummaryTableForDetailedTestCaseExecutionsList()
+	} else {
+		TestCasesSummaryTable = CreateSummaryTableForDetailedTestCaseExecutionsList()
+	}
 
 	// Only refresh (repaint) the table at a maximum refresh-rate
 	testCasesSummaryTableRefreshThrottler.RequestRefreshTestCasesSummaryTable()
@@ -110,7 +114,11 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) trigge
 		incomingChannelCommandAndMessage.TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage)
 
 	// Recreate the Detailed Executions Summary Table
-	*TestCasesSummaryTable = *CreateSummaryTableForDetailedTestCaseExecutionsList()
+	if TestCasesSummaryTable != nil {
+		*TestCasesSummaryTable = *CreateSummaryTableForDetailedTestCaseExecutionsList()
+	} else {
+		TestCasesSummaryTable = CreateSummaryTableForDetailedTestCaseExecutionsList()
+	}
 
 	// Only refresh (repaint) the table at a maximum refresh-rate
 	testCasesSummaryTableRefreshThrottler.RequestRefreshTestCasesSummaryTable()
@@ -133,7 +141,11 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) trigge
 	}
 
 	// Recreate the Detailed Executions Summary Table
-	*TestCasesSummaryTable = *CreateSummaryTableForDetailedTestCaseExecutionsList()
+	if TestCasesSummaryTable != nil {
+		*TestCasesSummaryTable = *CreateSummaryTableForDetailedTestCaseExecutionsList()
+	} else {
+		TestCasesSummaryTable = CreateSummaryTableForDetailedTestCaseExecutionsList()
+	}
 
 	// Only refresh (repaint) the table at a maximum refresh-rate
 	testCasesSummaryTableRefreshThrottler.RequestRefreshTestCasesSummaryTable()
@@ -156,7 +168,11 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) trigge
 	}
 
 	// Recreate the Detailed Executions Summary Table
-	*TestCasesSummaryTable = *CreateSummaryTableForDetailedTestCaseExecutionsList()
+	if TestCasesSummaryTable != nil {
+		*TestCasesSummaryTable = *CreateSummaryTableForDetailedTestCaseExecutionsList()
+	} else {
+		TestCasesSummaryTable = CreateSummaryTableForDetailedTestCaseExecutionsList()
+	}
 
 	// Only refresh (repaint) the table at a maximum refresh-rate
 	testCasesSummaryTableRefreshThrottler.RequestRefreshTestCasesSummaryTable()

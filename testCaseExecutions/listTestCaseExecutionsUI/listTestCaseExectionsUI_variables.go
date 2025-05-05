@@ -74,7 +74,7 @@ const testCaseNodeRectangleSize = 40
 
 // The size of the rectangles used for indicate status of a TestInstructionExecution
 const testCaseExecutionStatusRectangleHeight = 30
-const testCaseExecutionStatusRectangleWidth = 25
+const testCaseExecutionStatusRectangleWidth = 15
 
 // The size of the rectangles used for log-status in execution log
 const logStatusRectangleHeight = 25

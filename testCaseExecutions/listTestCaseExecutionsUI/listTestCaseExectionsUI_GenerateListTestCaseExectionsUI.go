@@ -386,6 +386,7 @@ func GenerateTestCaseExecutionPreviewContainer(
 	var err error
 	var existInMap bool
 	var foundValue bool
+	var runTimeValueExists bool
 
 	// Lock Map
 	testCaseExecutionAttributesForPreviewMapMutex.Lock()
@@ -429,6 +430,39 @@ func GenerateTestCaseExecutionPreviewContainer(
 		tempTestCaseExecutionsListMessage = &fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage{}
 
 	}
+
+	// Read from the TestCaseExecutions-Map to Get object holding Logs, RunTimeAtributes and ...
+
+	//var detailedTestCaseExecutionsMapObject testCaseExecutionsModel.DetailedTestCaseExecutionsMapObjectStruct
+
+	var detailedTestCaseExecutionsObjectsMapPtr *map[testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType]*testCaseExecutionsModel.DetailedTestCaseExecutionsMapObjectStruct
+	var detailedTestCaseExecutionsObjectsMap map[testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType]*testCaseExecutionsModel.DetailedTestCaseExecutionsMapObjectStruct
+	detailedTestCaseExecutionsObjectsMapPtr = testCaseExecutionsModelRef.DetailedTestCaseExecutionsObjectsMapPtr
+	detailedTestCaseExecutionsObjectsMap = *detailedTestCaseExecutionsObjectsMapPtr
+
+	var detailedTestCaseExecutionsObjectPtr *testCaseExecutionsModel.DetailedTestCaseExecutionsMapObjectStruct
+	var detailedTestCaseExecutionMapKey testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType
+	detailedTestCaseExecutionMapKey = testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType(
+		testCaseExecutionUuid + strconv.Itoa(int(testCaseExecutionVersion)))
+
+	detailedTestCaseExecutionsObjectPtr, existInMap = detailedTestCaseExecutionsObjectsMap[detailedTestCaseExecutionMapKey]
+
+	if existInMap == false {
+
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"id":                              "98ac73f4-2b99-4fc8-826d-0f3282ca9870",
+			"detailedTestCaseExecutionMapKey": detailedTestCaseExecutionMapKey,
+		}).Fatalln("Couldn't find TestCaseExecution in 'detailedTestCaseExecutionMap', should never happen!")
+	}
+
+	// Extract the run-time variables map
+	var runTimeUpdatedAttributesMapPtr *map[testCaseExecutionsModel.TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType]*map[testCaseExecutionsModel.AttributeNameMapKeyType]testCaseExecutionsModel.
+		RunTimeUpdatedAttributeValueType
+	var testInstructionExecutionsRunTimeUpdatedAttributesMap map[testCaseExecutionsModel.TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType]*map[testCaseExecutionsModel.AttributeNameMapKeyType]testCaseExecutionsModel.
+		RunTimeUpdatedAttributeValueType
+
+	runTimeUpdatedAttributesMapPtr = detailedTestCaseExecutionsObjectPtr.RunTimeUpdatedAttributesMapPtr
+	testInstructionExecutionsRunTimeUpdatedAttributesMap = *runTimeUpdatedAttributesMapPtr
 
 	// Create the Top container
 	testCaseExecutionPreviewTopContainer = container.New(layout.NewFormLayout())
@@ -829,16 +863,19 @@ func GenerateTestCaseExecutionPreviewContainer(
 
 				}
 
-				if existInMap == false {
-					var id string
-					id = "7945551e-5e4d-41d3-8faf-54f1501daac9"
-					log.Fatalf(fmt.Sprintf("Couldn't find testCaseExecutionUuidThatIsShownInPreview '%s' in "+
-						"TestCaseExecutionsThatCanBeViewedByUserMap. ID='%s'",
-						selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-							testCaseExecutionUuidThatIsShownInPreview,
-						id))
-				}
+				/*
+					if existInMap == false {
+						var id string
+						id = "7945551e-5e4d-41d3-8faf-54f1501daac9"
+						log.Fatalf(fmt.Sprintf("Couldn't find testCaseExecutionUuidThatIsShownInPreview '%s' in "+
+							"TestCaseExecutionsThatCanBeViewedByUserMap. ID='%s'",
+							selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+								testCaseExecutionUuidThatIsShownInPreview,
+							id))
+					}
 
+
+				*/
 				var tempTestInstructionExecutionsStatusPreviewValues []*fenixExecutionServerGuiGrpcApi.
 					TestInstructionExecutionStatusPreviewValueMessage
 				tempTestInstructionExecutionsStatusPreviewValues = temp2TestCaseExecutionsListMessage.
@@ -974,12 +1011,86 @@ func GenerateTestCaseExecutionPreviewContainer(
 						attributeLabel = widget.NewLabel(attribute.AttributeName)
 
 						// Create value for attribute
-						var attributeValue *widget.Label
-						attributeValue = widget.NewLabel(attribute.AttributeValue)
+						var originalTestCaseAttributeValue *widget.Label
+						originalTestCaseAttributeValue = widget.NewLabel(attribute.AttributeValue)
 
-						// Add label and value ro the attribute container
+						// Create the RunTime-changed value for the attribute, if is changed
+						var runtTimeChangedAttributeValue *widget.Label
+
+						// Extract Attributes for TestInstructionExecution
+
+						var runTimeUpdatedAttributesNameMapPtr *map[testCaseExecutionsModel.AttributeNameMapKeyType]testCaseExecutionsModel.
+							RunTimeUpdatedAttributeValueType
+						var runTimeUpdatedAttributesMap map[testCaseExecutionsModel.AttributeNameMapKeyType]testCaseExecutionsModel.
+							RunTimeUpdatedAttributeValueType
+
+						// Convert TestInstructionUuid into TestInstructionExecutionMapKey
+						var testInstructionExecutionAttributeRunTimeUpdatedMapKey testCaseExecutionsModel.TestInstructionExecutionUuidType
+						testInstructionExecutionAttributeRunTimeUpdatedMapKey, existInMap = testCaseExecutionsModel.TestCaseExecutionsModel.
+							GetTestInstructionExecutionUuidFromTestInstructionUuid(
+								testCaseExecutionsModel.TestCaseExecutionUuidType(detailedTestCaseExecutionMapKey),
+								testCaseExecutionsModel.RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType(previewObject.GetTestInstructionUuid()))
+
+						runTimeUpdatedAttributesNameMapPtr, existInMap = testInstructionExecutionsRunTimeUpdatedAttributesMap[testCaseExecutionsModel.TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType(
+							testInstructionExecutionAttributeRunTimeUpdatedMapKey)]
+
+						if existInMap == false {
+
+							/*
+								sharedCode.Logger.WithFields(logrus.Fields{
+									"id": "31ae4664-1107-4928-a95b-aed7b618e1f7",
+									"testInstructionExecutionAttributeRunTimeUpdatedMapKey": testInstructionExecutionAttributeRunTimeUpdatedMapKey,
+								}).Fatalln("Couldn't find testInstructionExecutionAttributeRunTimeUpdatedMapKey in 'testInstructionExecutionsRunTimeUpdatedAttributesMap', should never happen")
+
+							*/
+							runtTimeChangedAttributeValue = widget.NewLabel("No RunTime-value")
+							runTimeValueExists = false
+
+						} else {
+
+							runTimeUpdatedAttributesMap = *runTimeUpdatedAttributesNameMapPtr
+
+							var attributeNameMapKey testCaseExecutionsModel.AttributeNameMapKeyType
+							attributeNameMapKey = testCaseExecutionsModel.AttributeNameMapKeyType(attribute.AttributeName)
+
+							var attributeRunTimeValue, existInMap = runTimeUpdatedAttributesMap[attributeNameMapKey]
+
+							if existInMap == true {
+
+								// Attribute has RunTime-value
+								runtTimeChangedAttributeValue = widget.NewLabel(string(attributeRunTimeValue))
+								runTimeValueExists = true
+
+							} else {
+
+								runtTimeChangedAttributeValue = widget.NewLabel("No RunTime-value")
+								runTimeValueExists = false
+
+							}
+						}
+
+						var testCaseAttributeValuesContainer *fyne.Container
+						testCaseAttributeValuesContainer = container.New(layout.NewHBoxLayout())
+
+						// Add Attributes in order depending on if there is any RunTime-value for the Attribute
+						if runTimeValueExists == true {
+
+							// RunTime-value exits
+							testCaseAttributeValuesContainer.Add(runtTimeChangedAttributeValue)
+							testCaseAttributeValuesContainer.Add(layout.NewSpacer())
+							testCaseAttributeValuesContainer.Add(originalTestCaseAttributeValue)
+
+						} else {
+
+							// No RunTime-value exits
+							testCaseAttributeValuesContainer.Add(originalTestCaseAttributeValue)
+							testCaseAttributeValuesContainer.Add(layout.NewSpacer())
+
+						}
+
+						// Add label and value to the attribute container
 						testInstructionAttributesContainer.Add(attributeLabel)
-						testInstructionAttributesContainer.Add(attributeValue)
+						testInstructionAttributesContainer.Add(testCaseAttributeValuesContainer)
 
 					}
 

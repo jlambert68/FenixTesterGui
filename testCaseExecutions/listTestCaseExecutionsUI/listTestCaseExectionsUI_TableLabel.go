@@ -195,6 +195,10 @@ func (l *clickableTableLabel) MouseIn(*desktop.MouseEvent) {
 		return
 	}
 
+	if mouseHasLeftTable == true {
+		return
+	}
+
 	// Hinder concurrent setting of variable
 	currentRowThatMouseIsHoveringAboveMutex.Lock()
 
@@ -213,6 +217,10 @@ func (l *clickableTableLabel) MouseMoved(*desktop.MouseEvent) {}
 func (l *clickableTableLabel) MouseOut() {
 
 	if l.isClickable == false {
+		return
+	}
+
+	if mouseHasLeftTable == true {
 		return
 	}
 

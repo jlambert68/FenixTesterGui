@@ -14,6 +14,7 @@ import (
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
+	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
@@ -359,13 +360,24 @@ func GenerateListTestCaseExecutionsUI(
 	// Generate the scroll-container used for Execution-logs
 	testInstructionsExecutionLogContainerScroll = container.NewScroll(testInstructionsExecutionLogContainer)
 
-	// Generate the split-container holding both the Execution-preview and the execution-logs
 	tempTestCasePreviewTestInstructionExecutionLogSplitContainer = container.NewHSplit(
 		testCaseExecutionPreviewContainerScroll, testInstructionsExecutionLogContainerScroll)
 	tempTestCasePreviewTestInstructionExecutionLogSplitContainer.Offset = 0.60
 
+	// make a hoverable transparent overlay, to stop table-row hovering in left Table
+	overlay := NewHoverableRect(color.Transparent)
+	overlay.OnMouseIn = func(ev *desktop.MouseEvent) {
+		mouseHasLeftTable = true
+	}
+	overlay.OnMouseOut = func() {
+
+		mouseHasLeftTable = false
+	}
+
+	fullPreViewContainer := container.New(layout.NewStackLayout(), tempTestCasePreviewTestInstructionExecutionLogSplitContainer, overlay)
+
 	// Generate the split-container holding the TestCaseExecution-list and the Execution-Preview
-	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(testCasesListScrollContainer2, tempTestCasePreviewTestInstructionExecutionLogSplitContainer)
+	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(testCasesListScrollContainer2, fullPreViewContainer)
 	tempTestCaseListAndTestCasePreviewSplitContainer.Offset = 0.60
 
 	TestCaseExecutionListAndTestCaseExecutionPreviewSplitContainer = tempTestCaseListAndTestCasePreviewSplitContainer

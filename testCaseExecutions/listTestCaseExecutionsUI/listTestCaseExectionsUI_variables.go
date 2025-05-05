@@ -69,6 +69,9 @@ var currentRowThatMouseIsHoveringAbove int16 = -1
 // Use a mutex to synchronize access to 'currentRowThatMouseIsHoveringAbove'
 var currentRowThatMouseIsHoveringAboveMutex sync.Mutex
 
+// Indicate of mouse left table for the Preview-area
+var mouseHasLeftTable bool = true
+
 // The size of the rectangles used for TestInstructionContainers-processing type and the color of the TestInstruction
 const testCaseNodeRectangleSize = 40
 

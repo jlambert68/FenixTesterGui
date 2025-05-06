@@ -17,6 +17,12 @@ const (
 	attributeIsRunTimeChanged
 )
 
+const (
+	numberOfVisibleRow        = 10
+	numberOfVisibleCharacters = 100
+	visibleCharacterOfType    = "A"
+)
+
 type attributeTypeType uint8
 
 // Definition of a clickable Attribute used in the TestCaseExecution-Preview
@@ -58,8 +64,68 @@ func newClickableAttributeInPreview(
 // CreateRenderer
 // Renderer (required by fyne.Widget)
 func (c *clickableAttributeInPreviewStruct) CreateRenderer() fyne.WidgetRenderer {
+
+	var labelScrollContainer *container.Scroll
+	var labelBorderContainer *fyne.Container
+
 	lbl := widget.NewLabel(c.Label.Text)
-	return widget.NewSimpleRenderer(lbl)
+
+	// Get Size and MaxSize
+	var existingLabelSize fyne.Size
+	var newLabelSize fyne.Size
+	var labelMaxSize fyne.Size
+
+	// Get existing size of label
+	existingLabelSize = lbl.MinSize()
+	newLabelSize = existingLabelSize
+
+	// Generate max label size
+	var maxlabelStringBuilder strings.Builder
+
+	// Generate rows
+	for row := 0; row < numberOfVisibleRow; row++ {
+
+		// When not the first then add 'new row'
+		if row != 0 {
+			maxlabelStringBuilder.WriteString("\n")
+		}
+
+		// Generate one row
+		for characterIndex := 0; characterIndex < numberOfVisibleCharacters; characterIndex++ {
+			maxlabelStringBuilder.WriteString(visibleCharacterOfType)
+
+		}
+	}
+
+	// Extract max size
+	tempMaxWidget := widget.NewLabel(maxlabelStringBuilder.String())
+	tempMaxWidget.Refresh()
+	labelMaxSize = tempMaxWidget.MinSize()
+
+	// Check if current text is bigger than Max, if so then create a smaller size-object
+	if existingLabelSize.Height > labelMaxSize.Height {
+		newLabelSize.Height = labelMaxSize.Height
+	}
+	if existingLabelSize.Width > labelMaxSize.Width {
+		newLabelSize.Width = labelMaxSize.Width
+	}
+
+	// Create the border container for the label
+	labelBorderContainer = container.NewBorder(nil, nil, nil, nil, lbl)
+	labelBorderContainer.Resize(newLabelSize)
+	labelBorderContainer.Refresh()
+
+	// Create a scroll container and set then new size
+	labelScrollContainer = container.NewScroll(labelBorderContainer)
+	labelScrollContainer.SetMinSize(newLabelSize)
+	labelScrollContainer.Resize(newLabelSize)
+	labelScrollContainer.Refresh()
+
+	//limitedScroll := container.New(layout.NewStackLayout(), labelScrollContainer)
+	//limitedScroll.Resize(newLabelSize)
+	//labelScrollContainer.Refresh()
+
+	return widget.NewSimpleRenderer(labelScrollContainer)
 }
 
 // Tapped

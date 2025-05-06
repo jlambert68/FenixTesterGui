@@ -132,6 +132,11 @@ func (c *clickableAttributeInPreviewStruct) CreateRenderer() fyne.WidgetRenderer
 // Tapped interface clickableAttributeInPreviewStruct
 func (c *clickableAttributeInPreviewStruct) Tapped(*fyne.PointEvent) {
 
+	// Check if mouse has left TestCaseExecutionTree-container
+	if mouseHasLeftTestCaseExecutionPreviewTree == true {
+		return
+	}
+
 	// Create the Attribute information to present in Attribute-exploret
 	var attributeMessageStringBuilder strings.Builder
 	var attributeMessageRichText *widget.RichText
@@ -201,6 +206,11 @@ func (c *clickableAttributeInPreviewStruct) Tapped(*fyne.PointEvent) {
 // TappedSecondary
 // Optional: Handle secondary tap (right-click)
 func (c *clickableAttributeInPreviewStruct) TappedSecondary(*fyne.PointEvent) {
+
+	// Check if mouse has left TestCaseExecutionTree-container
+	if mouseHasLeftTestCaseExecutionPreviewTree == true {
+		return
+	}
 
 	fenixMasterWindow := *sharedCode.FenixMasterWindowPtr
 	clipboard := fenixMasterWindow.Clipboard()

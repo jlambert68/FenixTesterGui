@@ -47,6 +47,11 @@ func (c *copyableLabelStruct) Tapped(*fyne.PointEvent) {
 // Optional: Handle secondary tap (right-click)
 func (c *copyableLabelStruct) TappedSecondary(*fyne.PointEvent) {
 
+	// Check if mouse has left TestCaseExecutionTree-container
+	if mouseHasLeftTestCaseExecutionPreviewTree == true {
+		return
+	}
+
 	// Check if value can be copied
 	if c.IsCopyable == false {
 		return

@@ -72,6 +72,9 @@ var currentRowThatMouseIsHoveringAboveMutex sync.Mutex
 // Indicate of mouse left table for the Preview-area
 var mouseHasLeftTable bool = true
 
+// Indicate of mouse left TestCaseExecutionPreview for the Tab-explorer area
+var mouseHasLeftTestCaseExecutionPreviewTree bool = true
+
 // The size of the rectangles used for TestInstructionContainers-processing type and the color of the TestInstruction
 const testCaseNodeRectangleSize = 40
 

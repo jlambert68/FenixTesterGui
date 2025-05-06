@@ -381,9 +381,40 @@ func GenerateListTestCaseExecutionsUI(
 	// Set the Tabs to be positioned in upper part of the object
 	preViewTabs.SetTabLocation(container.TabLocationTop)
 
+	// make a hoverable transparent Execution-tree-overlay, to stop TestCaseExecution-nodes to be clickable
+	testCaseTreePreViewOverlay := NewHoverableRect(color.Transparent, nil)
+	testCaseTreePreViewOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
+
+		mouseHasLeftTestCaseExecutionPreviewTree = false
+		testCaseTreePreViewOverlay.Hide()
+		testCaseTreePreViewOverlay.OtherHoverableRect.Show()
+	}
+	testCaseTreePreViewOverlay.OnMouseOut = func() {
+
+	}
+
+	// make a hoverable transparent preViewTab-overlay, to stop TestCaseExecution-nodes to be clickable
+	explorerTabOverlay := NewHoverableRect(color.Transparent, nil)
+	explorerTabOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
+
+		mouseHasLeftTestCaseExecutionPreviewTree = true
+		explorerTabOverlay.Hide()
+		explorerTabOverlay.OtherHoverableRect.Show()
+	}
+	explorerTabOverlay.OnMouseOut = func() {
+
+	}
+
+	// Cross connect the two overlays
+	testCaseTreePreViewOverlay.OtherHoverableRect = explorerTabOverlay
+	explorerTabOverlay.OtherHoverableRect = testCaseTreePreViewOverlay
+
+	testCaseExecutionPreviewAndOverlayContainer := container.New(layout.NewStackLayout(), testCaseExecutionPreviewContainerScroll, testCaseTreePreViewOverlay)
+	preViewTabsAndOverlayContainer := container.New(layout.NewStackLayout(), preViewTabs, explorerTabOverlay)
+
 	// Create the split-container that has the Execution-preview to the left and Logs/Attribute to the right
 	tempTestCasePreviewTestInstructionExecutionLogSplitContainer = container.NewHSplit(
-		testCaseExecutionPreviewContainerScroll, preViewTabs)
+		testCaseExecutionPreviewAndOverlayContainer, preViewTabsAndOverlayContainer)
 	tempTestCasePreviewTestInstructionExecutionLogSplitContainer.Offset = 0.60
 
 	// make a hoverable transparent PreView-overlay, to stop table-row hovering in left Table
@@ -414,11 +445,11 @@ func GenerateListTestCaseExecutionsUI(
 	preViewOverlay.OtherHoverableRect = executionListViewOverlay
 	executionListViewOverlay.OtherHoverableRect = preViewOverlay
 
-	fullPreViewContainer := container.New(layout.NewStackLayout(), tempTestCasePreviewTestInstructionExecutionLogSplitContainer, preViewOverlay)
-	fullExecutionListContainer := container.New(layout.NewStackLayout(), testCasesListScrollContainer2, executionListViewOverlay)
+	preViewAndOverlayContainer := container.New(layout.NewStackLayout(), tempTestCasePreviewTestInstructionExecutionLogSplitContainer, preViewOverlay)
+	executionListAndOverlayContainer := container.New(layout.NewStackLayout(), testCasesListScrollContainer2, executionListViewOverlay)
 
 	// Generate the split-container holding the TestCaseExecution-list and the Execution-Preview
-	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(fullExecutionListContainer, fullPreViewContainer)
+	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(executionListAndOverlayContainer, preViewAndOverlayContainer)
 	tempTestCaseListAndTestCasePreviewSplitContainer.Offset = 0.60
 
 	TestCaseExecutionListAndTestCaseExecutionPreviewSplitContainer = tempTestCaseListAndTestCasePreviewSplitContainer

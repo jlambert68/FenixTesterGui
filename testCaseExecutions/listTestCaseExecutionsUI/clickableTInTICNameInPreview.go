@@ -75,7 +75,9 @@ func (c *clickableTInTICNameLabelInPreviewStruct) CreateRenderer() fyne.WidgetRe
 // Tapped interface implementation
 func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 
-	fmt.Println("LeftClicked")
+	if mouseHasLeftTestCaseExecutionPreviewTree == true {
+		return
+	}
 
 	testCaseExecutionAttributesForPreviewMapMutex.Lock()
 
@@ -497,7 +499,9 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 // Optional: Handle secondary tap (right-click)
 func (c *clickableTInTICNameLabelInPreviewStruct) TappedSecondary(*fyne.PointEvent) {
 
-	fmt.Println("RightClicked")
+	if mouseHasLeftTestCaseExecutionPreviewTree == true {
+		return
+	}
 
 	fenixMasterWindow := *sharedCode.FenixMasterWindowPtr
 	clipboard := fenixMasterWindow.Clipboard()

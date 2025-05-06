@@ -12,7 +12,6 @@ import (
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testCase/testCaseUI"
-	"FenixTesterGui/testCaseExecutions/listTestCaseExecutionsModel"
 	"FenixTesterGui/testCaseExecutions/listTestCaseExecutionsUI"
 	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
 	"FenixTesterGui/testCaseSubscriptionHandler"
@@ -209,25 +208,28 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Initiate TestCaseExecutionModel
 	testCaseExecutionsModel.InitiateTestCaseExecutionModel()
 
-	// Channel used to trigger update of Gui
-	var updateGuiChannel chan bool
-	updateGuiChannel = make(chan bool)
+	/*
+		// Channel used to trigger update of Gui
+		var updateGuiChannel chan bool
+		updateGuiChannel = make(chan bool)
 
-	// Load list with TestCasesExecutions that can be viewed by used
-	listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
-		0,
-		true,
-		testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
-		false,
-		"",
-		testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
-		testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
-		true,
-		&updateGuiChannel)
+		// Load list with TestCasesExecutions that can be viewed by used
 
-	go func() {
-		<-updateGuiChannel
-	}()
+		listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
+			0,
+			true,
+			testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
+			false,
+			"",
+			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
+			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
+			true,
+			&updateGuiChannel)
+
+		go func() {
+			<-updateGuiChannel
+		}()
+	*/
 
 	// Load Available Bonds
 	uiServer.commandAndRuleEngine.LoadAvailableBondsFromServer()
@@ -318,6 +320,10 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	tempListTestCaseExecutionsUI = listTestCaseExecutionsUI.GenerateListTestCaseExecutionsUI(
 		&testCaseExecutionsModel.TestCaseExecutionsModel)
 
+	// Load list with TestCases
+	listTestCaseExecutionsUI.LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction(
+		&testCaseExecutionsModel.TestCaseExecutionsModel, false)
+
 	// Create the UI for List Detailed TestCaseExecutions-UI
 	//var detailedTestCaseExecutionsTab fyne.CanvasObject
 	//detailedTestCaseExecutionsTab = listTestCaseExecutionsUI.GenerateDetailedTestCaseExecutionsTabUI(
@@ -377,6 +383,11 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 		executionsUIForSubscriptions.ExecutionsUIObject.UnderExecutionTable.Data.Refresh()
 		executionsUIForSubscriptions.ExecutionsUIObject.FinishedExecutionTable.Data.ScrollToLeading()
 		executionsUIForSubscriptions.ExecutionsUIObject.FinishedExecutionTable.Data.Refresh()
+
+		// Update TestCaseExecutions-list
+		if tabItem.Text == "TestCaseExecutions List" {
+			listTestCaseExecutionsUI.SortGuiTableOnCurrentColumnAndSorting()
+		}
 	}
 
 	tabs.SetTabLocation(container.TabLocationLeading)

@@ -46,6 +46,79 @@ var sortImageAscendingAsImage image.Image
 var sortImageDescendingAsByteArray []byte
 var sortImageDescendingAsImage image.Image
 
+// Define the function to be executed to load TestCaseExecutions from that Database that the user can view
+// Only loads one TestCaseExecution per TestCase
+func LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction(
+	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct,
+	updateGui bool) {
+
+	// If previously data set is of other kind then 'OneExecutionPerTestCase' then no selection should be made
+	if selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType != OneExecutionPerTestCase {
+		//selectedTestCaseExecutionObjected.isAnyRowSelected = false
+		ClearTestCaseExecutionPreviewContainer()
+		loadAllTestCaseExecutionsForOneTestCaseButtonReference.Disable()
+
+	}
+
+	// Get number of TestCase retrieved from Database before and after loading more data
+	//var beforeNumberOfRowsRetrievedFromDatabase int
+	//var afterNumberOfRowsRetrievedFromDatabase int
+	//beforeNumberOfRowsRetrievedFromDatabase = testCaseExecutionsModel.
+	//	GetNumberOfTestCaseExecutionsRetrievedFromDatabase()
+
+	// Specify from were Executions in the GUI comes from
+	selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType = OneExecutionPerTestCase
+
+	// Channel used to trigger update of Gui
+	var updateGuiChannelStep1 chan bool
+	var updateGuiChannelStep2 chan bool
+	updateGuiChannelStep1 = make(chan bool)
+	updateGuiChannelStep2 = make(chan bool)
+
+	listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
+		testCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.LatestUniqueTestCaseExecutionDatabaseRowId,
+		true,
+		testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
+		false,
+		"",
+		testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
+		testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
+		true,
+		&updateGuiChannelStep1)
+
+	// Update the UI with the new data
+	go func() {
+
+		// Wait for trigger to update GUI
+		<-updateGuiChannelStep1
+		<-updateGuiChannelStep2
+
+		// Update the GUI
+		if updateGui == true {
+			SortGuiTableOnCurrentColumnAndSorting()
+		}
+
+		/*
+			// Get number of TestCase retrieved from Database after loading more data
+			afterNumberOfRowsRetrievedFromDatabase = testCaseExecutionsModel.
+				GetNumberOfTestCaseExecutionsRetrievedFromDatabase()
+
+			// If they are different then sort the table
+			if beforeNumberOfRowsRetrievedFromDatabase != afterNumberOfRowsRetrievedFromDatabase {
+				//sortableHeaderReference.sortImage.onTapped()
+				testCaseExecutionsListTableHeadersMapRef[int(latestTestCaseExecutionTimeStampColumnNumber)].sortImage.onTapped()
+
+			}
+
+		*/
+
+	}()
+
+	updateGuiChannelStep2 <- true
+	//filterTestCaseExcutionsButtonFunction()
+
+}
+
 // Create the UI used for list all TestCases that the User can edit
 func GenerateListTestCaseExecutionsUI(
 	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) (
@@ -62,8 +135,10 @@ func GenerateListTestCaseExecutionsUI(
 	var executionColorPaletteContainer *fyne.Container
 	var statisticsAndColorPaletteContainer *fyne.Container
 
+	// Button used for Retrieving all TestCaseExecutions
 	var loadTestCaseExecutionsFromDataBaseButton *widget.Button
 	var loadOneTestCaseExecutionPerTestCaseFromDataBaseFunction func()
+
 	var filterTestCaseExcutionsButton *widget.Button
 	var filterTestCaseExcutionsButtonFunction func()
 	var clearFiltersButton *widget.Button
@@ -109,72 +184,12 @@ func GenerateListTestCaseExecutionsUI(
 		ExecutionsInGuiIsOfType: 0,
 	}
 
-	// Define the function to be executed to load TestCaseExecutions from that Database that the user can view
+	// Local function - Define the function to be executed to load TestCaseExecutions from that Database that the user can view
 	// Only loads one TestCaseExecution per TestCase
 	loadOneTestCaseExecutionPerTestCaseFromDataBaseFunction = func() {
-		fmt.Println("'loadOneTestCaseExecutionPerTestCaseFromDataBaseFunction' was pressed")
 
-		// If previously data set is of other kind then 'OneExecutionPerTestCase' then no selection should be made
-		if selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType != OneExecutionPerTestCase {
-			//selectedTestCaseExecutionObjected.isAnyRowSelected = false
-			ClearTestCaseExecutionPreviewContainer()
-			loadAllTestCaseExecutionsForOneTestCaseButtonReference.Disable()
-
-		}
-
-		// Get number of TestCase retrieved from Database before and after loading more data
-		//var beforeNumberOfRowsRetrievedFromDatabase int
-		//var afterNumberOfRowsRetrievedFromDatabase int
-		//beforeNumberOfRowsRetrievedFromDatabase = testCaseExecutionsModel.
-		//	GetNumberOfTestCaseExecutionsRetrievedFromDatabase()
-
-		// Specify from were Executions in the GUI comes from
-		selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType = OneExecutionPerTestCase
-
-		// Channel used to trigger update of Gui
-		var updateGuiChannelStep1 chan bool
-		var updateGuiChannelStep2 chan bool
-		updateGuiChannelStep1 = make(chan bool)
-		updateGuiChannelStep2 = make(chan bool)
-
-		listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
-			testCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.LatestUniqueTestCaseExecutionDatabaseRowId,
-			true,
-			testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
-			false,
-			"",
-			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
-			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
-			true,
-			&updateGuiChannelStep1)
-
-		// Update the UI with the new data
-		go func() {
-
-			// Wait for trigger to update GUI
-			<-updateGuiChannelStep1
-			<-updateGuiChannelStep2
-
-			// Update the GUI
-			SortGuiTableOnCurrentColumnAndSorting()
-			/*
-				// Get number of TestCase retrieved from Database after loading more data
-				afterNumberOfRowsRetrievedFromDatabase = testCaseExecutionsModel.
-					GetNumberOfTestCaseExecutionsRetrievedFromDatabase()
-
-				// If they are different then sort the table
-				if beforeNumberOfRowsRetrievedFromDatabase != afterNumberOfRowsRetrievedFromDatabase {
-					//sortableHeaderReference.sortImage.onTapped()
-					testCaseExecutionsListTableHeadersMapRef[int(latestTestCaseExecutionTimeStampColumnNumber)].sortImage.onTapped()
-
-				}
-
-			*/
-
-		}()
-
-		updateGuiChannelStep2 <- true
-		//filterTestCaseExcutionsButtonFunction()
+		// Call public load-function
+		LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction(testCaseExecutionsModel, true)
 
 	}
 

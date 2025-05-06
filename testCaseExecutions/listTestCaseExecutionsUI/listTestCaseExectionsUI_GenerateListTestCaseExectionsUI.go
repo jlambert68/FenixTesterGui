@@ -357,11 +357,33 @@ func GenerateListTestCaseExecutionsUI(
 	// Add the temporary container to the Border container for the logs
 	testInstructionsExecutionLogContainer = container.NewBorder(nil, nil, nil, nil, tempTestInstructionsExecutionLogContainer)
 
-	// Generate the scroll-container used for Execution-logs
+	// Generate the Attribute-container for the Tab-object
+	testInstructionsExecutionAttributesContainer = container.NewBorder(nil, nil, nil, nil, widget.NewLabel("Select an attribute to get the full attribute-value"))
+
+	// Generate the scroll-container used for Execution-logs-explorer
 	testInstructionsExecutionLogContainerScroll = container.NewScroll(testInstructionsExecutionLogContainer)
 
+	// Generate the scroll-container used for Attributes-explorer
+	testInstructionsExecutionAttributesContainerScroll = container.NewScroll(testInstructionsExecutionAttributesContainer)
+
+	// Generate PreViewTab-object
+	logsExplorerTab = container.NewTabItem("Logs Explorer", testInstructionsExecutionLogContainerScroll)
+
+	// Generate AttributeExplorerTab
+	attributeExplorerTab = container.NewTabItem("Attribute Explorer", testInstructionsExecutionAttributesContainerScroll)
+
+	// Generate the 'PreView-tabs'-object
+	preViewTabs = container.NewAppTabs(logsExplorerTab, attributeExplorerTab)
+	preViewTabs.OnSelected = func(item *container.TabItem) {
+		item.Content.Refresh()
+	}
+
+	// Set the Tabs to be positioned in upper part of the object
+	preViewTabs.SetTabLocation(container.TabLocationTop)
+
+	// Create the split-container that has the Execution-preview to the left and Logs/Attribute to the right
 	tempTestCasePreviewTestInstructionExecutionLogSplitContainer = container.NewHSplit(
-		testCaseExecutionPreviewContainerScroll, testInstructionsExecutionLogContainerScroll)
+		testCaseExecutionPreviewContainerScroll, preViewTabs)
 	tempTestCasePreviewTestInstructionExecutionLogSplitContainer.Offset = 0.60
 
 	// make a hoverable transparent PreView-overlay, to stop table-row hovering in left Table
@@ -552,7 +574,8 @@ func GenerateTestCaseExecutionPreviewContainer(
 	tempTestCaseNameLabel := widget.NewLabel("TestCaseName:")
 	tempTestCaseNameLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewTopContainer.Add(tempTestCaseNameLabel)
-	testCaseExecutionPreviewTopContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetTestCaseName()))
+	copyableTestCaseNameLabel := newCopyableLabel(tempTestCaseExecutionsListMessage.GetTestCaseName(), true)
+	testCaseExecutionPreviewTopContainer.Add(copyableTestCaseNameLabel)
 
 	// Add TestCaseExecutionStatus
 	tempTestCaseExecutionStatusLabel := widget.NewLabel("TestCaseExecution-status:")
@@ -579,7 +602,9 @@ func GenerateTestCaseExecutionPreviewContainer(
 	tempOwnerDomainLabel := widget.NewLabel("OwnerDomain:")
 	tempOwnerDomainLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewTopContainer.Add(tempOwnerDomainLabel)
-	testCaseExecutionPreviewTopContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetTestCasePreview().GetDomainThatOwnTheTestCase()))
+	copyableDomainThatOwnTheTestCaseLabel := newCopyableLabel(
+		tempTestCaseExecutionsListMessage.GetTestCasePreview().GetDomainThatOwnTheTestCase(), true)
+	testCaseExecutionPreviewTopContainer.Add(copyableDomainThatOwnTheTestCaseLabel)
 
 	// Add empty row
 	testCaseExecutionPreviewTopContainer.Add(widget.NewLabel(""))
@@ -624,30 +649,40 @@ func GenerateTestCaseExecutionPreviewContainer(
 	tempExecutionStartTimeStampLabel := widget.NewLabel("TestCase Execution Start TimeStamp:")
 	tempExecutionStartTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStartTimeStampLabel)
-	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.
-		GetExecutionStartTimeStamp().AsTime().String()))
+	copyableExecutionStartTimeStampLabel := newCopyableLabel(
+		tempTestCaseExecutionsListMessage.
+			GetExecutionStartTimeStamp().AsTime().String(), true)
+	testCaseExecutionPreviewBottomContainer.Add(copyableExecutionStartTimeStampLabel)
 
 	// Add ExecutionStopTimeStamp to Bottom container
 	tempExecutionStopTimeStampLabel := widget.NewLabel("TestCase Execution Stop TimeStamp:")
 	tempExecutionStopTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStopTimeStampLabel)
-	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.
-		GetExecutionStopTimeStamp().AsTime().String()))
+	copyableExecutionStopTimeStampLabel := newCopyableLabel(
+		tempTestCaseExecutionsListMessage.
+			GetExecutionStopTimeStamp().AsTime().String(), true)
+	testCaseExecutionPreviewBottomContainer.Add(copyableExecutionStopTimeStampLabel)
 
 	// Add ExecutionStatusUpdateTimeStamp to Bottom container
 	tempExecutionStatusUpdateTimeStampLabel := widget.NewLabel("TestCase Execution Status Update TimeStamp:")
 	tempExecutionStatusUpdateTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStatusUpdateTimeStampLabel)
-	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.
-		GetExecutionStatusUpdateTimeStamp().AsTime().String()))
+	copyableExecutionStatusUpdateTimeStampLabel := newCopyableLabel(
+		tempTestCaseExecutionsListMessage.
+			GetExecutionStatusUpdateTimeStamp().AsTime().String(), true)
+	testCaseExecutionPreviewBottomContainer.Add(copyableExecutionStatusUpdateTimeStampLabel)
 
 	// Add LastSavedByUserGCPAuthorization to Bottom container
-	tempLastSavedByUserGCPAuthorizationLabel := widget.NewLabel("TestCase Execution Stop TimeStamp:")
-	tempLastSavedByUserGCPAuthorizationLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCaseExecutionPreviewBottomContainer.Add(tempLastSavedByUserGCPAuthorizationLabel)
-	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.
-		GetExecutionStopTimeStamp().AsTime().String()))
+	/*
+		tempLastSavedByUserGCPAuthorizationLabel := widget.NewLabel("Last saved by this GCP-user:")
+		tempLastSavedByUserGCPAuthorizationLabel.TextStyle = fyne.TextStyle{Bold: true}
+		testCaseExecutionPreviewBottomContainer.Add(tempLastSavedByUserGCPAuthorizationLabel)
+		copyableExecutionStatusUpdateTimeStampLabel := newCopyableLabel(
+			tempTestCaseExecutionsListMessage..
+				Get().AsTime().String(),true)
+		testCaseExecutionPreviewBottomContainer.Add(copyableExecutionStatusUpdateTimeStampLabel)
 
+	*/
 	// Create the area used for TIC, TI and the attributes
 	testCaseExecutionMainAreaForPreviewContainer = container.NewVBox()
 
@@ -1038,15 +1073,21 @@ func GenerateTestCaseExecutionPreviewContainer(
 					for _, attribute := range previewObject.TestInstructionAttributes {
 
 						// Create label for attribute
-						var attributeLabel *widget.Label
-						attributeLabel = widget.NewLabel(attribute.AttributeName)
+						var attributeLabel *copyableLabelStruct
+						attributeLabel = newCopyableLabel(attribute.AttributeName, true)
 
-						// Create value for attribute
-						var originalTestCaseAttributeValue *widget.Label
-						originalTestCaseAttributeValue = widget.NewLabel(attribute.AttributeValue)
+						// Create value for original attribute value
+						var originalTestCaseAttributeValue *clickableAttributeInPreviewStruct
+						originalTestCaseAttributeValue = newClickableAttributeInPreview(
+							attribute.AttributeValue,
+							attribute.AttributeName,
+							previewObject.TestInstructionName,
+							nil,
+							nil,
+							attributeIsOriginal)
 
 						// Create the RunTime-changed value for the attribute, if is changed
-						var runtTimeChangedAttributeValue *widget.Label
+						var runtTimeChangedAttributeValue *clickableAttributeInPreviewStruct
 
 						// Extract Attributes for TestInstructionExecution
 
@@ -1074,7 +1115,7 @@ func GenerateTestCaseExecutionPreviewContainer(
 								}).Fatalln("Couldn't find testInstructionExecutionAttributeRunTimeUpdatedMapKey in 'testInstructionExecutionsRunTimeUpdatedAttributesMap', should never happen")
 
 							*/
-							runtTimeChangedAttributeValue = widget.NewLabel("No RunTime-value")
+							//runtTimeChangedAttributeValue = widget.NewLabel("No RunTime-value")
 							runTimeValueExists = false
 
 						} else {
@@ -1089,12 +1130,19 @@ func GenerateTestCaseExecutionPreviewContainer(
 							if existInMap == true {
 
 								// Attribute has RunTime-value
-								runtTimeChangedAttributeValue = widget.NewLabel(string(attributeRunTimeValue))
+								runtTimeChangedAttributeValue = newClickableAttributeInPreview(
+									string(attributeRunTimeValue),
+									attribute.AttributeName,
+									previewObject.TestInstructionName,
+									nil,
+									nil,
+									attributeIsRunTimeChanged)
+
 								runTimeValueExists = true
 
 							} else {
 
-								runtTimeChangedAttributeValue = widget.NewLabel("No RunTime-value")
+								//runtTimeChangedAttributeValue = widget.NewLabel("No RunTime-value")
 								runTimeValueExists = false
 
 							}

@@ -508,9 +508,17 @@ func (c *clickableTInTICNameLabelInPreviewStruct) TappedSecondary(*fyne.PointEve
 	// Trigger System Notification sound
 	soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
 
+	// If the message is too long, then cut it
+	var textToShowInNotification string
+	if len(textToShowInNotification) > sharedCode.TextToShowInNotificationLength {
+		textToShowInNotification = c.Text[:sharedCode.TextToShowInNotificationLength] + "..."
+	} else {
+		textToShowInNotification = c.Text
+	}
+
 	fyne.CurrentApp().SendNotification(&fyne.Notification{
 		Title:   "Clipboard",
-		Content: fmt.Sprintf("'%s' copied to clipboard!", c.Text),
+		Content: fmt.Sprintf("'%s' copied to clipboard!", textToShowInNotification),
 	})
 
 	// handle secondary tap if needed

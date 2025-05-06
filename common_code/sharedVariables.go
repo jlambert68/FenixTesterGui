@@ -103,3 +103,5 @@ var TemplateRepositoryApiUrlsPtr *[]*fenixGuiTestCaseBuilderServerGrpcApi.Reposi
 // Variable holding pointer o the main object that keeps the list of users available ExecutionDomains
 var ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMapPtr *map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
 	ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMessage
+
+const TextToShowInNotificationLength = 100

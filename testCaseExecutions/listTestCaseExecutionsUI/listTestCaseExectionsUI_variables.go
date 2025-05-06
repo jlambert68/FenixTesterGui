@@ -88,6 +88,11 @@ var testCaseExecutionPreviewContainerScroll *container.Scroll
 var testCaseExecutionPreviewContainer *fyne.Container
 var testInstructionsExecutionLogContainerScroll *container.Scroll
 var testInstructionsExecutionLogContainer *fyne.Container
+var testInstructionsExecutionAttributesContainerScroll *container.Scroll
+var testInstructionsExecutionAttributesContainer *fyne.Container
+var preViewTabs *container.AppTabs
+var attributeExplorerTab *container.TabItem
+var logsExplorerTab *container.TabItem
 
 //var tempTestCasePreviewTestInstructionExecutionLogSplitContainer
 

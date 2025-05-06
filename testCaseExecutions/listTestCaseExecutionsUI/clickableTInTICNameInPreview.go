@@ -471,8 +471,11 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 			})
 		}))
 
+		// Generate the scroll-container used for Execution-logs-explorer
+		testInstructionsExecutionLogContainerScroll = container.NewScroll(logPostFormContainer)
+
 		// Add the updated Scroll container to the Border container for the logs
-		testInstructionsExecutionLogContainer.Objects[0] = container.NewBorder(copyLogToClipBoardContainer, nil, nil, nil, logPostFormContainer)
+		testInstructionsExecutionLogContainer.Objects[0] = container.NewBorder(copyLogToClipBoardContainer, nil, nil, nil, testInstructionsExecutionLogContainerScroll)
 
 		// Update GUI for logs
 		testInstructionsExecutionLogContainer.Refresh()

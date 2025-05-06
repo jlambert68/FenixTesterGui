@@ -360,14 +360,11 @@ func GenerateListTestCaseExecutionsUI(
 	// Generate the Attribute-container for the Tab-object
 	testInstructionsExecutionAttributesContainer = container.NewBorder(nil, nil, nil, nil, widget.NewLabel("Select an attribute to get the full attribute-value"))
 
-	// Generate the scroll-container used for Execution-logs-explorer
-	testInstructionsExecutionLogContainerScroll = container.NewScroll(testInstructionsExecutionLogContainer)
-
 	// Generate the scroll-container used for Attributes-explorer
 	testInstructionsExecutionAttributesContainerScroll = container.NewScroll(testInstructionsExecutionAttributesContainer)
 
 	// Generate PreViewTab-object
-	logsExplorerTab = container.NewTabItem("Logs Explorer", testInstructionsExecutionLogContainerScroll)
+	logsExplorerTab = container.NewTabItem("Logs Explorer", testInstructionsExecutionLogContainer)
 
 	// Generate AttributeExplorerTab
 	attributeExplorerTab = container.NewTabItem("Attribute Explorer", testInstructionsExecutionAttributesContainerScroll)

@@ -89,6 +89,7 @@ const logStatusRectangleWidth = 25
 // The TestCase Preview-container
 var testCaseExecutionPreviewContainerScroll *container.Scroll
 var testCaseExecutionPreviewContainer *fyne.Container
+
 var testInstructionsExecutionLogContainerScroll *container.Scroll
 var testInstructionsExecutionLogContainer *fyne.Container
 var testInstructionsExecutionAttributesContainerScroll *container.Scroll

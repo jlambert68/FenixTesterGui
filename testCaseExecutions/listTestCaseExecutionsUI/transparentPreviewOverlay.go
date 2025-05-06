@@ -5,19 +5,22 @@ import (
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/widget"
+	"image/color"
 )
 
 // HoverableRect is a widget that shows a Rectangle and lets you hook MouseIn/Out
 type HoverableRect struct {
 	widget.BaseWidget
-	Rect       *canvas.Rectangle
-	OnMouseIn  func(*desktop.MouseEvent)
-	OnMouseOut func()
+	Rect               *canvas.Rectangle
+	OnMouseIn          func(*desktop.MouseEvent)
+	OnMouseOut         func()
+	OtherHoverableRect *HoverableRect
 }
 
-func NewHoverableRect(col color.Color) *HoverableRect {
+func NewHoverableRect(color color.Color, otherHoverableRect *HoverableRect) *HoverableRect {
 	h := &HoverableRect{
-		Rect: canvas.NewRectangle(col),
+		Rect:               canvas.NewRectangle(color),
+		OtherHoverableRect: otherHoverableRect,
 	}
 	h.ExtendBaseWidget(h)
 	return h

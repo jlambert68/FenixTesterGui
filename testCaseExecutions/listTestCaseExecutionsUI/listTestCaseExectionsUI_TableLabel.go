@@ -78,6 +78,10 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 		return
 	}
 
+	if mouseHasLeftTable == true {
+		return
+	}
+
 	if time.Since(l.lastTapTime) < 500*time.Millisecond {
 		if l.onDoubleTap != nil {
 			l.onDoubleTap()
@@ -170,6 +174,10 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 // Implement if you need right-click (secondary tap) actions.
 func (l *clickableTableLabel) TappedSecondary(*fyne.PointEvent) {
 	if l.isClickable == false {
+		return
+	}
+
+	if mouseHasLeftTable == true {
 		return
 	}
 

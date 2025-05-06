@@ -364,20 +364,39 @@ func GenerateListTestCaseExecutionsUI(
 		testCaseExecutionPreviewContainerScroll, testInstructionsExecutionLogContainerScroll)
 	tempTestCasePreviewTestInstructionExecutionLogSplitContainer.Offset = 0.60
 
-	// make a hoverable transparent overlay, to stop table-row hovering in left Table
-	overlay := NewHoverableRect(color.Transparent)
-	overlay.OnMouseIn = func(ev *desktop.MouseEvent) {
+	// make a hoverable transparent PreView-overlay, to stop table-row hovering in left Table
+	preViewOverlay := NewHoverableRect(color.Transparent, nil)
+	preViewOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
+
 		mouseHasLeftTable = true
+		preViewOverlay.Hide()
+		preViewOverlay.OtherHoverableRect.Show()
 	}
-	overlay.OnMouseOut = func() {
+	preViewOverlay.OnMouseOut = func() {
+
+	}
+
+	// make a hoverable transparent ExecutionList-overlay, to stop table-row hovering in left Table
+	executionListViewOverlay := NewHoverableRect(color.Transparent, nil)
+	executionListViewOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
 
 		mouseHasLeftTable = false
+		executionListViewOverlay.Hide()
+		executionListViewOverlay.OtherHoverableRect.Show()
+	}
+	executionListViewOverlay.OnMouseOut = func() {
+
 	}
 
-	fullPreViewContainer := container.New(layout.NewStackLayout(), tempTestCasePreviewTestInstructionExecutionLogSplitContainer, overlay)
+	// Cross connect the two overlays
+	preViewOverlay.OtherHoverableRect = executionListViewOverlay
+	executionListViewOverlay.OtherHoverableRect = preViewOverlay
+
+	fullPreViewContainer := container.New(layout.NewStackLayout(), tempTestCasePreviewTestInstructionExecutionLogSplitContainer, preViewOverlay)
+	fullExecutionListContainer := container.New(layout.NewStackLayout(), testCasesListScrollContainer2, executionListViewOverlay)
 
 	// Generate the split-container holding the TestCaseExecution-list and the Execution-Preview
-	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(testCasesListScrollContainer2, fullPreViewContainer)
+	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(fullExecutionListContainer, fullPreViewContainer)
 	tempTestCaseListAndTestCasePreviewSplitContainer.Offset = 0.60
 
 	TestCaseExecutionListAndTestCaseExecutionPreviewSplitContainer = tempTestCaseListAndTestCasePreviewSplitContainer

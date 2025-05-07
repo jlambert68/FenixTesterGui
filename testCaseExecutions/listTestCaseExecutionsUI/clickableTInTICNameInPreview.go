@@ -612,7 +612,9 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 
 			// Add TestInstructionExecution-text to be copied
 			fullTextTestInstructionExecutionToBeExportedStringBuilder.WriteString(fmt.Sprintf("%s",
-				testInstructionExecutionMessageStringBuilder))
+				testInstructionExecutionMessageStringBuilder.String()))
+			fullTextTestInstructionExecutionToBeExportedStringBuilder.WriteString(fmt.Sprintf("%s",
+				"*************************************************************"))
 			if len(*testInstructionExecutionDetailsForExplorerPtr) != testInstructionExecutionIndex+1 {
 				fullTextTestInstructionExecutionToBeExportedStringBuilder.WriteString(fmt.Sprintf("\n\n"))
 			}
@@ -620,7 +622,7 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 		}
 
 		// Create the 'copyTestInstructionExecutionDataToClipBoardContainer'
-		copyTestInstructionExecutionDataToClipBoardContainer.Add(widget.NewButton("Copy log to clipboard", func() {
+		copyTestInstructionExecutionDataToClipBoardContainer.Add(widget.NewButton("Copy TestInstructionExecution-data to clipboard", func() {
 
 			fenixMasterWindow := *sharedCode.FenixMasterWindowPtr
 			clipboard := fenixMasterWindow.Clipboard()

@@ -14,6 +14,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"image/color"
 	"log"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -86,6 +87,7 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 	var testCaseExecutionAttributesForPreviewObjectPtr *testCaseExecutionAttributesForPreviewStruct
 	var testCaseExecutionAttributesForPreviewMap map[testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType]*testCaseExecutionAttributesForPreviewStruct
 	var testInstructionExecutionLogPostMapKeys []testCaseExecutionsModel.TestInstructionExecutionLogPostMapKeyType
+	var testInstructionExecutionDetailsMapKeys []testCaseExecutionsModel.TestInstructionExecutionDetailsMapKeyType
 
 	testCaseExecutionAttributesForPreviewMap = *testCaseExecutionAttributesForPreviewMapPtr
 	testCaseExecutionAttributesForPreviewObjectPtr, existInMap = testCaseExecutionAttributesForPreviewMap[c.TInTICExecutionKey]
@@ -199,9 +201,12 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 		// If TI or TIC is visible/expanded then add to slice
 		if tempChildTestCaseExecutionAttributesForPreviewObjectPtr.attributesContainerShouldBeVisible == true &&
 			tempChildTestCaseExecutionAttributesForPreviewObjectPtr.LabelType == labelIsTestInstruction {
-			// Add this TI execution-key to slice of execution key to extract log-post data for
+
+			// Add this TI execution-key to the two key-slices of execution keys to be able to extract the data for each keyType
 			testInstructionExecutionLogPostMapKeys = append(testInstructionExecutionLogPostMapKeys,
 				testCaseExecutionsModel.TestInstructionExecutionLogPostMapKeyType(tempChildObjectKey))
+			testInstructionExecutionDetailsMapKeys = append(testInstructionExecutionDetailsMapKeys,
+				testCaseExecutionsModel.TestInstructionExecutionDetailsMapKeyType(tempChildObjectKey))
 		}
 	}
 
@@ -258,7 +263,7 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 			logpostStatus = logPostAndValuesMessage.GetLogPostStatus()
 			logpostStatusAsText = logpostStatus.String()
 			logPostTimeStamp = logPostAndValuesMessage.GetLogPostTimeStamp().AsTime()
-			logPostTimeStampAsText = logPostTimeStamp.Format(time.RFC3339)
+			logPostTimeStampAsText = logPostTimeStamp.Format(time.RFC3339Nano)
 			testInstructionExecutionUuid = logPostAndValuesMessage.GetTestInstructionExecutionUuid()
 			testInstructionExecutionVersion = logPostAndValuesMessage.GetTestInstructionExecutionVersion()
 			logPostText = logPostAndValuesMessage.GetLogPostText()
@@ -472,13 +477,177 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 		}))
 
 		// Generate the scroll-container used for Execution-logs-explorer
-		testInstructionsExecutionLogContainerScroll = container.NewScroll(logPostFormContainer)
+		testInstructionsExecutionDetailsContainerScroll = container.NewScroll(logPostFormContainer)
 
 		// Add the updated Scroll container to the Border container for the logs
-		testInstructionsExecutionLogContainer.Objects[0] = container.NewBorder(copyLogToClipBoardContainer, nil, nil, nil, testInstructionsExecutionLogContainerScroll)
+		testInstructionsExecutionLogContainer.Objects[0] = container.NewBorder(copyLogToClipBoardContainer, nil, nil, nil, testInstructionsExecutionDetailsContainerScroll)
 
 		// Update GUI for logs
 		testInstructionsExecutionLogContainer.Refresh()
+
+	} else {
+
+		// Create a new temporary container for the logs
+		testInstructionsExecutionLogContainer.Objects[0] = container.NewCenter(
+			widget.NewLabel("Select a TestInstructionExecution or a TesInstructionContainer to get the Logs"))
+
+		// Update GUI for logs
+		testInstructionsExecutionLogContainer.Refresh()
+	}
+
+	// Extract Execution-data from clicked object and its children
+	var testInstructionExecutionDetailsForExplorerPtr *[]*testCaseExecutionsModel.TestInstructionExecutionDetailsForExplorerStruct
+	testInstructionExecutionDetailsForExplorerPtr = testCaseExecutionsModel.TestCaseExecutionsModel.
+		ListExecutionDataForTestInstructionExecutions(
+			c.TCExecutionKey,
+			testInstructionExecutionDetailsMapKeys)
+
+	if testInstructionExecutionDetailsForExplorerPtr != nil && len(*testInstructionExecutionDetailsForExplorerPtr) > 0 {
+
+		// Variables for extracted data from TestInstructionExecution-messages
+		var testInstructionExecutionUuid string
+		var testInstructionExecutionVersion int32
+		var queueTimeStampAsString string
+		var sentTimeStampAsString string
+		var executionStatusUpdateTimeStampAsString string
+		var expectedExecutionEndTimeStampAsString string
+		var testInstructionExecutionEndTimeStampAsString string
+		var testInstructionExecutionHasFinishedAsString string
+		var testInstructionCanBeReExecutedAsString string
+		var testInstructionExecutionStatusAsString string
+
+		// Variables for the log-post-container
+		var testInstructionExecutionDetailsFormContainer *fyne.Container
+		testInstructionExecutionDetailsFormContainer = container.New(layout.NewFormLayout())
+
+		var fullTextTestInstructionExecutionToBeExportedStringBuilder strings.Builder
+		var copyTestInstructionExecutionDataToClipBoardContainer *fyne.Container
+		copyTestInstructionExecutionDataToClipBoardContainer = container.New(layout.NewHBoxLayout())
+
+		// Loop over all testInstructionExecutionDetails-post messages and create the RichText instance for each TestInstructionExecution-post and add to a Form-container
+		for testInstructionExecutionIndex, testInstructionExecutionMessage := range *testInstructionExecutionDetailsForExplorerPtr {
+
+			testInstructionExecutionUuid = testInstructionExecutionMessage.
+				TestInstructionExecutionBasicInformation.GetTestInstructionExecutionUuid()
+			testInstructionExecutionVersion = int32(testInstructionExecutionMessage.
+				TestInstructionExecutionBasicInformation.GetTestInstructionExecutionVersion())
+
+			var timStampRichText *widget.RichText
+			var testInstructionExecutionMessageRichText *widget.RichText
+
+			var timStampContainer *fyne.Container
+			var testInstructionExecutionMessageContainer *fyne.Container
+
+			timStampContainer = container.New(layout.NewStackLayout())
+			testInstructionExecutionMessageContainer = container.New(layout.NewStackLayout())
+
+			// Build a markdown-formatted string dynamically
+			var timeStampStringBuilder strings.Builder
+			var testInstructionExecutionMessageStringBuilder strings.Builder
+
+			// Extract the data from 'testInstructionExecutionMessage' and add to 'timeStampStringBuilder'
+			// Format TimeStamp information using Markdown syntax
+			timeStampStringBuilder.WriteString(fmt.Sprintf("%s", testInstructionExecutionMessage.
+				TestInstructionExecutionDetails.GetExecutionStatusUpdateTimeStamp().AsTime().Format(time.RFC3339Nano)))
+
+			// Extract the data from 'testInstructionExecutionMessage' and add to 'testInstructionExecutionMessageStringBuilder'
+			// Format message information using Markdown syntax
+			testInstructionExecutionMessageStringBuilder.WriteString(fmt.Sprintf("## %s\n\n",
+				testInstructionExecutionMessage.TestInstructionExecutionBasicInformation.GetTestInstructionName()))
+			testInstructionExecutionMessageStringBuilder.WriteString(fmt.Sprintf("*TIEUuid:* **%s(%d)** \n\n ",
+				testInstructionExecutionUuid, testInstructionExecutionVersion))
+
+			// Extract data form TestInstructionExecution
+			queueTimeStampAsString = testInstructionExecutionMessage.TestInstructionExecutionBasicInformation.
+				GetQueueTimeStamp().AsTime().Format(time.RFC3339Nano)
+			sentTimeStampAsString = testInstructionExecutionMessage.TestInstructionExecutionDetails.
+				GetSentTimeStamp().AsTime().Format(time.RFC3339Nano)
+			executionStatusUpdateTimeStampAsString = testInstructionExecutionMessage.TestInstructionExecutionDetails.
+				GetExecutionStatusUpdateTimeStamp().AsTime().Format(time.RFC3339Nano)
+			expectedExecutionEndTimeStampAsString = testInstructionExecutionMessage.TestInstructionExecutionDetails.
+				GetExpectedExecutionEndTimeStamp().AsTime().Format(time.RFC3339Nano)
+			testInstructionExecutionEndTimeStampAsString = testInstructionExecutionMessage.TestInstructionExecutionDetails.
+				GetTestInstructionExecutionEndTimeStamp().AsTime().Format(time.RFC3339Nano)
+			testInstructionExecutionHasFinishedAsString = strconv.FormatBool(testInstructionExecutionMessage.TestInstructionExecutionDetails.
+				GetTestInstructionExecutionHasFinished())
+			testInstructionCanBeReExecutedAsString = strconv.FormatBool(testInstructionExecutionMessage.TestInstructionExecutionDetails.
+				GetTestInstructionCanBeReExecuted())
+			testInstructionExecutionStatusAsString = testInstructionExecutionMessage.TestInstructionExecutionDetails.
+				GetTestInstructionExecutionStatus().String()
+
+			// Add the data for the TestInstructionExecution using Markdown syntax
+			testInstructionExecutionMessageStringBuilder.WriteString(fmt.Sprintf("*Put on execution queue:* **%s**\n\n",
+				queueTimeStampAsString))
+			testInstructionExecutionMessageStringBuilder.WriteString(fmt.Sprintf("*Sent for execution:* **%s**\n\n",
+				sentTimeStampAsString))
+			testInstructionExecutionMessageStringBuilder.WriteString(fmt.Sprintf("*Expected max End Time:* **%s**\n\n",
+				expectedExecutionEndTimeStampAsString))
+			testInstructionExecutionMessageStringBuilder.WriteString(fmt.Sprintf("*Actual End Time:* **%s**\n\n",
+				testInstructionExecutionEndTimeStampAsString))
+			testInstructionExecutionMessageStringBuilder.WriteString(fmt.Sprintf("*Latest updated:* **%s**\n\n",
+				executionStatusUpdateTimeStampAsString))
+			testInstructionExecutionMessageStringBuilder.WriteString(fmt.Sprintf("*Execution has finished:* **%s**\n\n",
+				testInstructionExecutionHasFinishedAsString))
+			testInstructionExecutionMessageStringBuilder.WriteString(fmt.Sprintf("*Execution can be reexecuted:* **%s**\n\n",
+				testInstructionCanBeReExecutedAsString))
+			testInstructionExecutionMessageStringBuilder.WriteString(fmt.Sprintf("*Execution status:* **%s**\n\n",
+				testInstructionExecutionStatusAsString))
+
+			// Create RichText widget from the generated markdown content for 'timeStampStringBuilder' and 'testInstructionExecutionMessageStringBuilder'
+			timStampRichText = widget.NewRichTextFromMarkdown(timeStampStringBuilder.String())
+			testInstructionExecutionMessageRichText = widget.NewRichTextFromMarkdown(testInstructionExecutionMessageStringBuilder.String())
+
+			// Make the log do soft line breaks
+			testInstructionExecutionMessageRichText.Wrapping = fyne.TextWrapWord
+
+			// Add RichTexts to Containers
+			timStampContainer.Add(timStampRichText)
+			testInstructionExecutionMessageContainer.Add(testInstructionExecutionMessageRichText)
+
+			// Add 'timStampContainer' to 'testInstructionExecutionDetailsFormContainer'
+			testInstructionExecutionDetailsFormContainer.Add(timStampContainer)
+
+			// Add 'testInstructionExecutionMessageContainer' to 'testInstructionExecutionDetailsFormContainer'
+			testInstructionExecutionDetailsFormContainer.Add(testInstructionExecutionMessageContainer)
+
+			// Add TestInstructionExecution-text to be copied
+			fullTextTestInstructionExecutionToBeExportedStringBuilder.WriteString(fmt.Sprintf("%s",
+				testInstructionExecutionMessageStringBuilder))
+			if len(*testInstructionExecutionDetailsForExplorerPtr) != testInstructionExecutionIndex+1 {
+				fullTextTestInstructionExecutionToBeExportedStringBuilder.WriteString(fmt.Sprintf("\n\n"))
+			}
+
+		}
+
+		// Create the 'copyTestInstructionExecutionDataToClipBoardContainer'
+		copyTestInstructionExecutionDataToClipBoardContainer.Add(widget.NewButton("Copy log to clipboard", func() {
+
+			fenixMasterWindow := *sharedCode.FenixMasterWindowPtr
+			clipboard := fenixMasterWindow.Clipboard()
+
+			fullTextTestInstructionExecutionToBeExportedStringBuilder.WriteString(" \n\n ")
+
+			clipboard.SetContent(fullTextTestInstructionExecutionToBeExportedStringBuilder.String())
+
+			// Notify the user
+
+			// Trigger System Notification sound
+			soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
+
+			fyne.CurrentApp().SendNotification(&fyne.Notification{
+				Title:   "Clipboard",
+				Content: fmt.Sprintf("Visible TestInstructionExecution-data was copied to clipboard!"),
+			})
+		}))
+
+		// Generate the scroll-container used for Execution-logs-explorer
+		testInstructionsExecutionDetailsContainerScroll = container.NewScroll(testInstructionExecutionDetailsFormContainer)
+
+		// Add the updated Scroll container to the Border container for the logs
+		testInstructionsExecutionDetailsContainer.Objects[0] = container.NewBorder(copyTestInstructionExecutionDataToClipBoardContainer, nil, nil, nil, testInstructionsExecutionDetailsContainerScroll)
+
+		// Update GUI for logs
+		testInstructionsExecutionDetailsContainer.Refresh()
 
 	} else {
 

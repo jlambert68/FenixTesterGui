@@ -90,13 +90,15 @@ const logStatusRectangleWidth = 25
 var testCaseExecutionPreviewContainerScroll *container.Scroll
 var testCaseExecutionPreviewContainer *fyne.Container
 
-var testInstructionsExecutionLogContainerScroll *container.Scroll
+var testInstructionsExecutionDetailsContainerScroll *container.Scroll
 var testInstructionsExecutionLogContainer *fyne.Container
 var testInstructionsExecutionAttributesContainerScroll *container.Scroll
 var testInstructionsExecutionAttributesContainer *fyne.Container
+var testInstructionsExecutionDetailsContainer *fyne.Container
 var preViewTabs *container.AppTabs
 var attributeExplorerTab *container.TabItem
 var logsExplorerTab *container.TabItem
+var testInstructionDetailsExplorerTab *container.TabItem
 
 //var tempTestCasePreviewTestInstructionExecutionLogSplitContainer
 

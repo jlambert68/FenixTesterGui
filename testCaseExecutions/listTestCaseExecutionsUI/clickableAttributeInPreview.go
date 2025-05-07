@@ -145,7 +145,7 @@ func (c *clickableAttributeInPreviewStruct) Tapped(*fyne.PointEvent) {
 	var attributeMessageScrollContainer *container.Scroll
 	var copyAttributeClipBoardContainer *fyne.Container
 
-	// Create the 'copyLogToClipBoardContainer'
+	// Create the 'copyAttributeClipBoardContainer'
 	copyAttributeClipBoardContainer = container.NewVBox(
 		widget.NewButton("Copy attribute to clipboard", func() {
 

@@ -53,12 +53,28 @@ type TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType string // TestIns
 type AttributeNameMapKeyType string          // AttributeName
 type RunTimeUpdatedAttributeValueType string // The attributes value after it was changed during run time
 
+type TestInstructionExecutionDetailsMapKeyType string // TestInstructionExecutionUuid + TestInstructionExecutionVersion
+
+// TestInstructionExecutionDetailsStruct
+// Used to keep the base-data for TestInstructionExecution-explorer
+type TestInstructionExecutionDetailsStruct struct {
+	TestInstructionExecutionDetails          []*fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
+	TestInstructionExecutionBasicInformation *fenixExecutionServerGuiGrpcApi.TestInstructionExecutionBasicInformationMessage
+}
+
+// TestInstructionExecutionDetailsForExplorerStruct
+// Used in TestInstructionExecution-explorer to present data regarding the TestInstructionExecutions
+type TestInstructionExecutionDetailsForExplorerStruct struct {
+	TestInstructionExecutionDetails          *fenixExecutionServerGuiGrpcApi.TestInstructionExecutionsInformationMessage
+	TestInstructionExecutionBasicInformation *fenixExecutionServerGuiGrpcApi.TestInstructionExecutionBasicInformationMessage
+}
+
 type RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct struct {
 	TestInstructionUuid RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType
 	TestInstructionName string
 }
 
-type TestInstructionExecutionUuidType string // TestInstructionExecutionUuidT
+type TestInstructionExecutionUuidType string // TestInstructionExecutionUuid
 
 type DetailedTestCaseExecutionsMapObjectStruct struct {
 	DetailedTestCaseExecution                                               *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage
@@ -66,6 +82,7 @@ type DetailedTestCaseExecutionsMapObjectStruct struct {
 	RelationBetweenTestInstructionUuidAndTestInstructionExecutionUuidMapPtr *map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
 	RelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMapPtr *map[TestInstructionExecutionUuidType]RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct
 	RunTimeUpdatedAttributesMapPtr                                          *map[TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType]*map[AttributeNameMapKeyType]RunTimeUpdatedAttributeValueType
+	TestInstructionExecutionDetailsMapPtr                                   *map[TestInstructionExecutionDetailsMapKeyType]*TestInstructionExecutionDetailsStruct
 
 	WaitingForDatabaseUpdate      bool
 	WaitingForDatabaseUpdateMutex *sync.RWMutex

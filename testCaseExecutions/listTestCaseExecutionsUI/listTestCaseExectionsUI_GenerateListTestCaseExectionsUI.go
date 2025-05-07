@@ -370,13 +370,24 @@ func GenerateListTestCaseExecutionsUI(
 		widget.NewLabel("Select a TestInstructionExecution or a TesInstructionContainer to get the Logs"))
 
 	// Add the temporary container to the Border container for the logs
-	testInstructionsExecutionLogContainer = container.NewBorder(nil, nil, nil, nil, tempTestInstructionsExecutionLogContainer)
+	testInstructionsExecutionLogContainer = container.
+		NewBorder(nil, nil, nil, nil, tempTestInstructionsExecutionLogContainer)
 
 	// Generate the Attribute-container for the Tab-object
-	testInstructionsExecutionAttributesContainer = container.NewBorder(nil, nil, nil, nil, widget.NewLabel("Select an attribute to get the full attribute-value"))
+	testInstructionsExecutionAttributesContainer = container.
+		NewBorder(nil, nil, nil, nil,
+			widget.NewLabel("Select an attribute to get the full attribute-value"))
 
 	// Generate the scroll-container used for Attributes-explorer
 	testInstructionsExecutionAttributesContainerScroll = container.NewScroll(testInstructionsExecutionAttributesContainer)
+
+	// Generate the TestInstructionExecution-container for the Tab-object
+	testInstructionsExecutionDetailsContainer = container.
+		NewBorder(nil, nil, nil, nil,
+			widget.NewLabel("Select a TestInstructionExecution or a TesInstructionContainer to get the details"))
+
+	// Generate the scroll-container used for TestInstructionExecutionsDetails-explorer
+	testInstructionsExecutionDetailsContainerScroll = container.NewScroll(testInstructionsExecutionDetailsContainer)
 
 	// Generate PreViewTab-object
 	logsExplorerTab = container.NewTabItem("Logs Explorer", testInstructionsExecutionLogContainer)
@@ -384,8 +395,11 @@ func GenerateListTestCaseExecutionsUI(
 	// Generate AttributeExplorerTab
 	attributeExplorerTab = container.NewTabItem("Attribute Explorer", testInstructionsExecutionAttributesContainerScroll)
 
+	// Generate DestInstructionDetailsExplorerTab
+	testInstructionDetailsExplorerTab = container.NewTabItem("TestInstructionDetails Explorer", testInstructionsExecutionDetailsContainerScroll)
+
 	// Generate the 'PreView-tabs'-object
-	preViewTabs = container.NewAppTabs(logsExplorerTab, attributeExplorerTab)
+	preViewTabs = container.NewAppTabs(testInstructionDetailsExplorerTab, logsExplorerTab, attributeExplorerTab)
 	preViewTabs.OnSelected = func(item *container.TabItem) {
 		item.Content.Refresh()
 	}

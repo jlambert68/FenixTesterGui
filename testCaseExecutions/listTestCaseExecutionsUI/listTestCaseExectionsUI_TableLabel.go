@@ -152,7 +152,7 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 	testCaseExecutionsModel.LoadDetailedTestCaseExecutionFromDatabase(testCaseExecutionUuid, testCaseExecutionVersion)
 
 	// Update TestCase Preview
-	GenerateTestCaseExecutionPreviewContainer(
+	TestCaseInstructionPreViewObject.GenerateTestCaseExecutionPreviewContainer(
 		l.currentTestCaseExecutionUuid,
 		l.currentTestCaseExecutionVersion,
 		l.testCaseExecutionsModel)

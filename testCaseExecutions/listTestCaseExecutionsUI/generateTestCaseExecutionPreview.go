@@ -19,7 +19,7 @@ import (
 	"strconv"
 )
 
-func GenerateTestCaseExecutionPreviewContainer(
+func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) GenerateTestCaseExecutionPreviewContainer(
 	testCaseExecutionUuid string,
 	testCaseExecutionVersion uint32,
 	testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
@@ -374,7 +374,8 @@ func GenerateTestCaseExecutionPreviewContainer(
 					tempTIEAttributesContainerMapKey,
 					nil,
 					nil,
-					labelIsTestInstructionContainer)
+					labelIsTestInstructionContainer,
+					testCaseInstructionPreViewObjectRef)
 
 				// Create the container containing the TestInstructionContainer
 				var tempTestInstructionContainerContainer *fyne.Container
@@ -492,7 +493,8 @@ func GenerateTestCaseExecutionPreviewContainer(
 					tempTIEAttributesContainerMapKey,
 					nil,
 					nil,
-					labelIsTestInstruction)
+					labelIsTestInstruction,
+					testCaseInstructionPreViewObjectRef)
 
 				// Set correct color on ExecutionStatus Rectangle
 				var statusId uint8
@@ -677,7 +679,8 @@ func GenerateTestCaseExecutionPreviewContainer(
 							previewObject.TestInstructionName,
 							nil,
 							nil,
-							attributeIsOriginal)
+							attributeIsOriginal,
+							testCaseInstructionPreViewObjectRef)
 
 						// Create the RunTime-changed value for the attribute, if is changed
 						var runtTimeChangedAttributeValue *clickableAttributeInPreviewStruct
@@ -729,7 +732,8 @@ func GenerateTestCaseExecutionPreviewContainer(
 									previewObject.TestInstructionName,
 									nil,
 									nil,
-									attributeIsRunTimeChanged)
+									attributeIsRunTimeChanged,
+									testCaseInstructionPreViewObjectRef)
 
 								runTimeValueExists = true
 
@@ -877,11 +881,35 @@ func GenerateTestCaseExecutionPreviewContainer(
 
 		// Define the popup menu
 		items := []*fyne.MenuItem{
-			fyne.NewMenuItem("Option 1", func() {
-				println("Option 1 selected")
+			fyne.NewMenuItem("Open TestCaseExecution in new Tab", func() {
+
+				// Create a new Tab used for a specific TestCaseExecution
+				var newDetailedTestCaseExecutionsTab *container.TabItem
+				newDetailedTestCaseExecutionsTab = container.NewTabItem(testCaseExecutionUuid, widget.NewLabel(testCaseExecutionUuid))
+
+				// Add Tab to TabObjects TestCaseExecutions
+				detailedTestCaseExecutionsUITabObjectRef.Append(newDetailedTestCaseExecutionsTab)
+
 			}),
-			fyne.NewMenuItem("Option 2", func() {
-				println("Option 2 selected")
+			fyne.NewMenuItem("Open TestCaseExecution in new separate window", func() {
+
+				var fenixApp fyne.App
+				fenixApp = *sharedCode.FenixAppPtr
+
+				// 1) Create a new window on the same app
+				secWin := fenixApp.NewWindow(fmt.Sprintf("TestCaseExecution '%s'", testCaseExecutionUuid))
+
+				// 2) Set whatever content you like
+				secWin.SetContent(container.NewVBox(
+					widget.NewLabel("This is a secondary window."),
+					widget.NewButton("Close Me", func() {
+						secWin.Close()
+					}),
+				))
+
+				// 3) Size and show
+				secWin.Resize(fyne.NewSize(300, 150))
+				secWin.Show() // NOT ShowAndRun!
 			}),
 		}
 
@@ -904,22 +932,22 @@ func GenerateTestCaseExecutionPreviewContainer(
 		tempTopHeaderContainer.Add(btn)
 
 		// Create the new Execution-Preview
-		testCaseExecutionPreviewContainer.Objects[0] = container.NewBorder(
+		testCaseInstructionPreViewObjectRef.testCaseExecutionPreviewContainer.Objects[0] = container.NewBorder(
 			container.NewVBox(container.NewCenter(tempTopHeaderContainer), testCaseExecutionPreviewTopContainer, widget.NewSeparator()),
 			container.NewVBox(widget.NewSeparator(), testCaseExecutionPreviewBottomContainer), nil, nil,
 			testCaseMainAreaForPreviewScrollContainer)
 
 		// Create a new temporary container for the logs
-		testInstructionsExecutionLogContainer.Objects[0] = container.NewCenter(
+		testCaseInstructionPreViewObjectRef.testInstructionsExecutionLogContainer.Objects[0] = container.NewCenter(
 			widget.NewLabel("Select a TestInstructionExecution or a TesInstructionContainer to get the Logs"))
 
 	} else {
 
 		// No row is selected and only an info text should be shown
-		testCaseExecutionPreviewContainer.Objects[0] = container.NewCenter(widget.NewLabel("Select a TestCaseExecution to get the Preview"))
+		testCaseInstructionPreViewObjectRef.testCaseExecutionPreviewContainer.Objects[0] = container.NewCenter(widget.NewLabel("Select a TestCaseExecution to get the Preview"))
 
 		// Create a new temporary container for the logs
-		testInstructionsExecutionLogContainer.Objects[0] = container.NewCenter(
+		testCaseInstructionPreViewObjectRef.testInstructionsExecutionLogContainer.Objects[0] = container.NewCenter(
 			widget.NewLabel("Select a TestInstructionExecution or a TesInstructionContainer to get the Logs"))
 	}
 
@@ -927,12 +955,12 @@ func GenerateTestCaseExecutionPreviewContainer(
 	testCaseExecutionAttributesForPreviewMapPtr = &testCaseExecutionAttributesForPreviewMap
 
 	// Refresh the 'testCaseExecutionPreviewContainer'
-	testCaseExecutionPreviewContainer.Refresh()
+	testCaseInstructionPreViewObjectRef.testCaseExecutionPreviewContainer.Refresh()
 
 }
 
 // ClearTestCaseExecutionPreviewContainer
 // Clears the preview area for the TestCaseExecution
-func ClearTestCaseExecutionPreviewContainer() {
-	testCaseExecutionPreviewContainer.Objects[0] = container.NewCenter(widget.NewLabel("Select a TestCaseExecution to get the Preview"))
+func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) ClearTestCaseExecutionPreviewContainer() {
+	testCaseInstructionPreViewObjectRef.testCaseExecutionPreviewContainer.Objects[0] = container.NewCenter(widget.NewLabel("Select a TestCaseExecution to get the Preview"))
 }

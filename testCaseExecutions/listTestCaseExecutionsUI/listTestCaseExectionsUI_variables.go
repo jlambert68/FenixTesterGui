@@ -86,19 +86,38 @@ const testCaseExecutionStatusRectangleWidth = 15
 const logStatusRectangleHeight = 25
 const logStatusRectangleWidth = 25
 
-// The TestCase Preview-container
-var testCaseExecutionPreviewContainerScroll *container.Scroll
-var testCaseExecutionPreviewContainer *fyne.Container
+// Struct holding all variables needed for the PreView
+type TestCaseInstructionPreViewStruct struct {
+	// The TestCase Preview-container
+	testCaseExecutionPreviewContainerScroll *container.Scroll
+	testCaseExecutionPreviewContainer       *fyne.Container
 
-var testInstructionsExecutionDetailsContainerScroll *container.Scroll
-var testInstructionsExecutionLogContainer *fyne.Container
-var testInstructionsExecutionAttributesContainerScroll *container.Scroll
-var testInstructionsExecutionAttributesContainer *fyne.Container
-var testInstructionsExecutionDetailsContainer *fyne.Container
-var preViewTabs *container.AppTabs
-var attributeExplorerTab *container.TabItem
-var logsExplorerTab *container.TabItem
-var testInstructionDetailsExplorerTab *container.TabItem
+	testInstructionsExecutionDetailsContainerScroll    *container.Scroll
+	testInstructionsExecutionLogContainer              *fyne.Container
+	testInstructionsExecutionAttributesContainerScroll *container.Scroll
+	testInstructionsExecutionAttributesContainer       *fyne.Container
+	testInstructionsExecutionDetailsContainer          *fyne.Container
+	preViewTabs                                        *container.AppTabs
+	attributeExplorerTab                               *container.TabItem
+	logsExplorerTab                                    *container.TabItem
+	testInstructionDetailsExplorerTab                  *container.TabItem
+}
+
+// Variables holding all objects used in PreView to the right of the TestCaseExecutions-list
+var TestCaseInstructionPreViewObject *TestCaseInstructionPreViewStruct
+
+// Reference to the TabObject that hold TestCaseExecutions
+var detailedTestCaseExecutionsUITabObjectRef *container.DocTabs
+
+type openedDetailedTestCaseExecutionsMapKeyType string
+
+type openedDetailedTestCaseExecutionsMapStruct struct {
+	isTestCaseExecutionOpenInTab            bool
+	isTestCaseExecutionOpenInExternalWindow bool
+}
+
+// Map keeping track of all opened TestCaseExecutions, in Tab and/or Separate window
+var openedDetailedTestCaseExecutionsMapPtr *map[openedDetailedTestCaseExecutionsMapKeyType]bool
 
 //var tempTestCasePreviewTestInstructionExecutionLogSplitContainer
 

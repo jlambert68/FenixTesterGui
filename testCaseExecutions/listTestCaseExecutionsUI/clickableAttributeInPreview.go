@@ -28,12 +28,13 @@ type attributeTypeType uint8
 // Definition of a clickable Attribute used in the TestCaseExecution-Preview
 type clickableAttributeInPreviewStruct struct {
 	widget.Label
-	AttributeName       string
-	TestInstructionName string
-	LeftClicked         func()
-	RightClicked        func()
-	lastTapTime         time.Time
-	AttributeType       attributeTypeType
+	AttributeName                       string
+	TestInstructionName                 string
+	LeftClicked                         func()
+	RightClicked                        func()
+	lastTapTime                         time.Time
+	AttributeType                       attributeTypeType
+	testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct
 }
 
 // Used for creating a new Attribute label
@@ -44,16 +45,18 @@ func newClickableAttributeInPreview(
 	leftClicked func(),
 	rightClicked func(),
 	attributeType attributeTypeType,
+	testCaseInstructionPreViewObject *TestCaseInstructionPreViewStruct,
 ) *clickableAttributeInPreviewStruct {
 
 	clickableAttributeInPreview := &clickableAttributeInPreviewStruct{
-		Label:               widget.Label{Text: attributeValue},
-		AttributeName:       attributeName,
-		TestInstructionName: testInstructionName,
-		LeftClicked:         leftClicked,
-		RightClicked:        rightClicked,
-		lastTapTime:         time.Now(),
-		AttributeType:       attributeType,
+		Label:                               widget.Label{Text: attributeValue},
+		AttributeName:                       attributeName,
+		TestInstructionName:                 testInstructionName,
+		LeftClicked:                         leftClicked,
+		RightClicked:                        rightClicked,
+		lastTapTime:                         time.Now(),
+		AttributeType:                       attributeType,
+		testCaseInstructionPreViewObjectRef: testCaseInstructionPreViewObject,
 	}
 
 	clickableAttributeInPreview.ExtendBaseWidget(clickableAttributeInPreview)
@@ -193,9 +196,9 @@ func (c *clickableAttributeInPreviewStruct) Tapped(*fyne.PointEvent) {
 	attributeMessageBorderContainer = container.NewBorder(copyAttributeClipBoardContainer, nil, nil, nil, attributeMessageScrollContainer)
 
 	// Add attribute-explorer to tab
-	attributeExplorerTab.Content = attributeMessageBorderContainer
+	c.testCaseInstructionPreViewObjectRef.attributeExplorerTab.Content = attributeMessageBorderContainer
 	attributeMessageBorderContainer.Refresh()
-	preViewTabs.Refresh()
+	c.testCaseInstructionPreViewObjectRef.preViewTabs.Refresh()
 
 	if c.LeftClicked != nil {
 

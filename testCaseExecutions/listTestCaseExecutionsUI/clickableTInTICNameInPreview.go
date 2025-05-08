@@ -33,10 +33,11 @@ type clickableTInTICNameLabelInPreviewStruct struct {
 	TCExecutionKey     testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType
 	TInTICExecutionKey testCaseExecutionsModel.
 				TCEoTICoTIEAttributesContainerMapKeyType
-	LeftClicked  func()
-	RightClicked func()
-	LabelType    labelTypeType
-	lastTapTime  time.Time
+	LeftClicked                         func()
+	RightClicked                        func()
+	LabelType                           labelTypeType
+	lastTapTime                         time.Time
+	testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct
 }
 
 // Used for creating a new TestInstructionName label
@@ -48,16 +49,18 @@ func newClickableTestInstructionNameLabelInPreview(
 	leftClicked func(),
 	rightClicked func(),
 	labelType labelTypeType,
+	testCaseInstructionPreViewObject *TestCaseInstructionPreViewStruct,
 ) *clickableTInTICNameLabelInPreviewStruct {
 
 	clickableTInTICNameLabelInPreview := &clickableTInTICNameLabelInPreviewStruct{
-		Label:              widget.Label{Text: tInTICName},
-		TCExecutionKey:     tCExecutionKey,
-		TInTICExecutionKey: tInTICExecutionKey,
-		LeftClicked:        leftClicked,
-		RightClicked:       rightClicked,
-		LabelType:          labelType,
-		lastTapTime:        time.Now(),
+		Label:                               widget.Label{Text: tInTICName},
+		TCExecutionKey:                      tCExecutionKey,
+		TInTICExecutionKey:                  tInTICExecutionKey,
+		LeftClicked:                         leftClicked,
+		RightClicked:                        rightClicked,
+		LabelType:                           labelType,
+		lastTapTime:                         time.Now(),
+		testCaseInstructionPreViewObjectRef: testCaseInstructionPreViewObject,
 	}
 
 	clickableTInTICNameLabelInPreview.ExtendBaseWidget(clickableTInTICNameLabelInPreview)
@@ -189,7 +192,7 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 
 	}
 
-	testCaseExecutionPreviewContainerScroll.Refresh()
+	c.testCaseInstructionPreViewObjectRef.testCaseExecutionPreviewContainerScroll.Refresh()
 
 	if testCaseExecutionAttributesForPreviewObjectPtr.testInstructionExecutionAttributesContainer != nil {
 		attributesContainerPtr.Refresh()
@@ -477,22 +480,28 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 		}))
 
 		// Generate the scroll-container used for Execution-logs-explorer
-		testInstructionsExecutionDetailsContainerScroll = container.NewScroll(logPostFormContainer)
+		c.testCaseInstructionPreViewObjectRef.
+			testInstructionsExecutionDetailsContainerScroll = container.NewScroll(logPostFormContainer)
 
 		// Add the updated Scroll container to the Border container for the logs
-		testInstructionsExecutionLogContainer.Objects[0] = container.NewBorder(copyLogToClipBoardContainer, nil, nil, nil, testInstructionsExecutionDetailsContainerScroll)
+		c.testCaseInstructionPreViewObjectRef.
+			testInstructionsExecutionLogContainer.Objects[0] = container.NewBorder(
+			copyLogToClipBoardContainer, nil, nil, nil,
+			c.testCaseInstructionPreViewObjectRef.
+				testInstructionsExecutionDetailsContainerScroll)
 
 		// Update GUI for logs
-		testInstructionsExecutionLogContainer.Refresh()
+		c.testCaseInstructionPreViewObjectRef.testInstructionsExecutionLogContainer.Refresh()
 
 	} else {
 
 		// Create a new temporary container for the logs
-		testInstructionsExecutionLogContainer.Objects[0] = container.NewCenter(
+		c.testCaseInstructionPreViewObjectRef.
+			testInstructionsExecutionLogContainer.Objects[0] = container.NewCenter(
 			widget.NewLabel("Select a TestInstructionExecution or a TesInstructionContainer to get the Logs"))
 
 		// Update GUI for logs
-		testInstructionsExecutionLogContainer.Refresh()
+		c.testCaseInstructionPreViewObjectRef.testInstructionsExecutionLogContainer.Refresh()
 	}
 
 	// Extract Execution-data from clicked object and its children
@@ -643,22 +652,28 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 		}))
 
 		// Generate the scroll-container used for Execution-logs-explorer
-		testInstructionsExecutionDetailsContainerScroll = container.NewScroll(testInstructionExecutionDetailsFormContainer)
+		c.testCaseInstructionPreViewObjectRef.
+			testInstructionsExecutionDetailsContainerScroll = container.NewScroll(testInstructionExecutionDetailsFormContainer)
 
 		// Add the updated Scroll container to the Border container for the logs
-		testInstructionsExecutionDetailsContainer.Objects[0] = container.NewBorder(copyTestInstructionExecutionDataToClipBoardContainer, nil, nil, nil, testInstructionsExecutionDetailsContainerScroll)
+		c.testCaseInstructionPreViewObjectRef.
+			testInstructionsExecutionDetailsContainer.Objects[0] = container.NewBorder(
+			copyTestInstructionExecutionDataToClipBoardContainer,
+			nil, nil, nil,
+			c.testCaseInstructionPreViewObjectRef.testInstructionsExecutionDetailsContainerScroll)
 
 		// Update GUI for logs
-		testInstructionsExecutionDetailsContainer.Refresh()
+		c.testCaseInstructionPreViewObjectRef.testInstructionsExecutionDetailsContainer.Refresh()
 
 	} else {
 
 		// Create a new temporary container for the logs
-		testInstructionsExecutionLogContainer.Objects[0] = container.NewCenter(
+		c.testCaseInstructionPreViewObjectRef.
+			testInstructionsExecutionLogContainer.Objects[0] = container.NewCenter(
 			widget.NewLabel("Select a TestInstructionExecution or a TesInstructionContainer to get the Logs"))
 
 		// Update GUI for logs
-		testInstructionsExecutionLogContainer.Refresh()
+		c.testCaseInstructionPreViewObjectRef.testInstructionsExecutionLogContainer.Refresh()
 	}
 
 	testCaseExecutionAttributesForPreviewMapMutex.Unlock()

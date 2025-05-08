@@ -42,12 +42,13 @@ var sortImageDescendingAsImage image.Image
 // Only loads one TestCaseExecution per TestCase
 func LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction(
 	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct,
-	updateGui bool) {
+	updateGui bool,
+	testCaseInstructionPreViewObject *TestCaseInstructionPreViewStruct) {
 
 	// If previously data set is of other kind then 'OneExecutionPerTestCase' then no selection should be made
 	if selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType != OneExecutionPerTestCase {
 		//selectedTestCaseExecutionObjected.isAnyRowSelected = false
-		ClearTestCaseExecutionPreviewContainer()
+		testCaseInstructionPreViewObject.ClearTestCaseExecutionPreviewContainer()
 		loadAllTestCaseExecutionsForOneTestCaseButtonReference.Disable()
 
 	}
@@ -113,8 +114,13 @@ func LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction(
 
 // Create the UI used for list all TestCases that the User can edit
 func GenerateListTestCaseExecutionsUI(
-	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) (
+	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct,
+	detailedTestCaseExecutionsUITabObject *container.DocTabs,
+	testCaseInstructionPreViewObject *TestCaseInstructionPreViewStruct) (
 	listTestCasesUI fyne.CanvasObject) {
+
+	// save reference to 'detailedTestCaseExecutionsUITabObject'
+	detailedTestCaseExecutionsUITabObjectRef = detailedTestCaseExecutionsUITabObject
 
 	//var testCaseTable *widget.Table
 
@@ -181,7 +187,9 @@ func GenerateListTestCaseExecutionsUI(
 	loadOneTestCaseExecutionPerTestCaseFromDataBaseFunction = func() {
 
 		// Call public load-function
-		LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction(testCaseExecutionsModel, true)
+		LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction(testCaseExecutionsModel,
+			true,
+			testCaseInstructionPreViewObject)
 
 	}
 
@@ -257,7 +265,7 @@ func GenerateListTestCaseExecutionsUI(
 		if selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType != AllExecutionsForOneTestCase {
 			selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
 				isAnyRowSelected = false
-			ClearTestCaseExecutionPreviewContainer()
+			testCaseInstructionPreViewObject.ClearTestCaseExecutionPreviewContainer()
 			loadAllTestCaseExecutionsForOneTestCaseButtonReference.Disable()
 		}
 
@@ -352,52 +360,73 @@ func GenerateListTestCaseExecutionsUI(
 	// Create the Temporary container that should be shown
 	temporaryContainer := container.NewCenter(widget.NewLabel("Select a TestCaseExecution to get the Preview"))
 
-	testCaseExecutionPreviewContainer = container.NewBorder(nil, nil, nil, nil, temporaryContainer)
+	testCaseInstructionPreViewObject.
+		testCaseExecutionPreviewContainer = container.NewBorder(nil, nil, nil, nil, temporaryContainer)
 
 	// Generate the container for the Preview, 'testCaseExecutionPreviewContainer'
-	testCaseExecutionPreviewContainerScroll = container.NewScroll(testCaseExecutionPreviewContainer)
+	testCaseInstructionPreViewObject.
+		testCaseExecutionPreviewContainerScroll = container.NewScroll(testCaseInstructionPreViewObject.
+		testCaseExecutionPreviewContainer)
 
 	// Create the temporary container for the logs
 	tempTestInstructionsExecutionLogContainer := container.NewCenter(
 		widget.NewLabel("Select a TestInstructionExecution or a TesInstructionContainer to get the Logs"))
 
 	// Add the temporary container to the Border container for the logs
-	testInstructionsExecutionLogContainer = container.
+	testCaseInstructionPreViewObject.
+		testInstructionsExecutionLogContainer = container.
 		NewBorder(nil, nil, nil, nil, tempTestInstructionsExecutionLogContainer)
 
 	// Generate the Attribute-container for the Tab-object
-	testInstructionsExecutionAttributesContainer = container.
+	testCaseInstructionPreViewObject.
+		testInstructionsExecutionAttributesContainer = container.
 		NewBorder(nil, nil, nil, nil,
 			widget.NewLabel("Select an attribute to get the full attribute-value"))
 
 	// Generate the scroll-container used for Attributes-explorer
-	testInstructionsExecutionAttributesContainerScroll = container.NewScroll(testInstructionsExecutionAttributesContainer)
+	testCaseInstructionPreViewObject.
+		testInstructionsExecutionAttributesContainerScroll = container.NewScroll(testCaseInstructionPreViewObject.
+		testInstructionsExecutionAttributesContainer)
 
 	// Generate the TestInstructionExecution-container for the Tab-object
-	testInstructionsExecutionDetailsContainer = container.
+	testCaseInstructionPreViewObject.
+		testInstructionsExecutionDetailsContainer = container.
 		NewBorder(nil, nil, nil, nil,
 			widget.NewLabel("Select a TestInstructionExecution or a TesInstructionContainer to get the details"))
 
 	// Generate the scroll-container used for TestInstructionExecutionsDetails-explorer
-	testInstructionsExecutionDetailsContainerScroll = container.NewScroll(testInstructionsExecutionDetailsContainer)
+	testCaseInstructionPreViewObject.
+		testInstructionsExecutionDetailsContainerScroll = container.NewScroll(testCaseInstructionPreViewObject.
+		testInstructionsExecutionDetailsContainer)
 
 	// Generate PreViewTab-object
-	logsExplorerTab = container.NewTabItem("Logs Explorer", testInstructionsExecutionLogContainer)
+	testCaseInstructionPreViewObject.
+		logsExplorerTab = container.NewTabItem("Logs Explorer", testCaseInstructionPreViewObject.
+		testInstructionsExecutionLogContainer)
 
 	// Generate AttributeExplorerTab
-	attributeExplorerTab = container.NewTabItem("Attribute Explorer", testInstructionsExecutionAttributesContainerScroll)
+	testCaseInstructionPreViewObject.
+		attributeExplorerTab = container.NewTabItem("Attribute Explorer", testCaseInstructionPreViewObject.
+		testInstructionsExecutionAttributesContainerScroll)
 
 	// Generate DestInstructionDetailsExplorerTab
-	testInstructionDetailsExplorerTab = container.NewTabItem("TestInstructionDetails Explorer", testInstructionsExecutionDetailsContainerScroll)
+	testCaseInstructionPreViewObject.
+		testInstructionDetailsExplorerTab = container.NewTabItem("TestInstructionDetails Explorer",
+		testCaseInstructionPreViewObject.testInstructionsExecutionDetailsContainerScroll)
 
 	// Generate the 'PreView-tabs'-object
-	preViewTabs = container.NewAppTabs(testInstructionDetailsExplorerTab, logsExplorerTab, attributeExplorerTab)
-	preViewTabs.OnSelected = func(item *container.TabItem) {
+	testCaseInstructionPreViewObject.
+		preViewTabs = container.NewAppTabs(testCaseInstructionPreViewObject.testInstructionDetailsExplorerTab,
+		testCaseInstructionPreViewObject.logsExplorerTab,
+		testCaseInstructionPreViewObject.attributeExplorerTab)
+	testCaseInstructionPreViewObject.
+		preViewTabs.OnSelected = func(item *container.TabItem) {
 		item.Content.Refresh()
 	}
 
 	// Set the Tabs to be positioned in upper part of the object
-	preViewTabs.SetTabLocation(container.TabLocationTop)
+	testCaseInstructionPreViewObject.
+		preViewTabs.SetTabLocation(container.TabLocationTop)
 
 	// make a hoverable transparent Execution-tree-overlay, to stop TestCaseExecution-nodes to be clickable
 	testCaseTreePreViewOverlay := NewHoverableRect(color.Transparent, nil)
@@ -427,8 +456,10 @@ func GenerateListTestCaseExecutionsUI(
 	testCaseTreePreViewOverlay.OtherHoverableRect = explorerTabOverlay
 	explorerTabOverlay.OtherHoverableRect = testCaseTreePreViewOverlay
 
-	testCaseExecutionPreviewAndOverlayContainer := container.New(layout.NewStackLayout(), testCaseExecutionPreviewContainerScroll, testCaseTreePreViewOverlay)
-	preViewTabsAndOverlayContainer := container.New(layout.NewStackLayout(), preViewTabs, explorerTabOverlay)
+	testCaseExecutionPreviewAndOverlayContainer := container.New(layout.NewStackLayout(), testCaseInstructionPreViewObject.
+		testCaseExecutionPreviewContainerScroll, testCaseTreePreViewOverlay)
+	preViewTabsAndOverlayContainer := container.New(layout.NewStackLayout(), testCaseInstructionPreViewObject.
+		preViewTabs, explorerTabOverlay)
 
 	// Create the split-container that has the Execution-preview to the left and Logs/Attribute to the right
 	tempTestCasePreviewTestInstructionExecutionLogSplitContainer = container.NewHSplit(

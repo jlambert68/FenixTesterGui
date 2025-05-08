@@ -10,6 +10,7 @@ import (
 	"FenixTesterGui/executions/executionsUIForExecutions"
 	"FenixTesterGui/executions/executionsUIForSubscriptions"
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
+	"FenixTesterGui/soundEngine"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testCase/testCaseUI"
 	"FenixTesterGui/testCaseExecutions/listTestCaseExecutionsUI"
@@ -315,32 +316,53 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	var tempListTestCasesUI fyne.CanvasObject
 	tempListTestCasesUI = listTestCasesUI.GenerateListTestCasesUI(&uiServer.testCasesModel)
 
+	// Create the TabObject used to show TestCaseExecutions-list with Execution-PreView and all TestCaseExecutions-tabs
+	var detailedTestCaseExecutionsUITabObject *container.DocTabs
+	detailedTestCaseExecutionsUITabObject = container.NewDocTabs()
+
+	// Initiate the 'TestCaseInstructionPreViewObject' holding all UI for the PreView to the right of the TestCaseExecution-list
+	listTestCaseExecutionsUI.TestCaseInstructionPreViewObject = &listTestCaseExecutionsUI.
+		TestCaseInstructionPreViewStruct{}
+
 	// Create the UI for List TestCaseExecutions-UI
 	var tempListTestCaseExecutionsUI fyne.CanvasObject
 	tempListTestCaseExecutionsUI = listTestCaseExecutionsUI.GenerateListTestCaseExecutionsUI(
-		&testCaseExecutionsModel.TestCaseExecutionsModel)
+		&testCaseExecutionsModel.TestCaseExecutionsModel,
+		detailedTestCaseExecutionsUITabObject,
+		listTestCaseExecutionsUI.TestCaseInstructionPreViewObject)
 
 	// Load list with TestCasesExecutions
 	listTestCaseExecutionsUI.LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction(
-		&testCaseExecutionsModel.TestCaseExecutionsModel, false)
-
-	// Create the TabObject used to show TestCaseExecutions-list with Execution-PreView and all TestCaseExecutions-tabs
-	var detailedTestCaseExecutionsUITabObject *container.DocTabs
+		&testCaseExecutionsModel.TestCaseExecutionsModel,
+		false,
+		listTestCaseExecutionsUI.TestCaseInstructionPreViewObject,
+	)
 
 	// Create the Tab used for TestCaseExecutions-list with Execution-PreView
 	var detailedTestCaseExecutionsUITab *container.TabItem
 	detailedTestCaseExecutionsUITab = container.NewTabItem("TestCaseExecutions List", tempListTestCaseExecutionsUI)
 
 	// Add TestCaseExecutionList-tab to TabObject
-	detailedTestCaseExecutionsUITabObject = container.NewDocTabs(detailedTestCaseExecutionsUITab)
+	detailedTestCaseExecutionsUITabObject.Append(detailedTestCaseExecutionsUITab)
 
 	// Set Tabs to be shown at top
 	detailedTestCaseExecutionsUITabObject.SetTabLocation(container.TabLocationTop)
 
 	// Create Function that stops ExecutionList-tab to be closed
 	detailedTestCaseExecutionsUITabObject.CloseIntercept = func(tabItem *container.TabItem) {
+
+		// User tries to close TestCaseExecutionsList-tab
 		if tabItem.Text == "TestCaseExecutions List" {
 
+			// Notify the user
+
+			// Trigger System Notification sound
+			soundEngine.PlaySoundChannel <- soundEngine.InvalidNotificationSound
+
+			fyne.CurrentApp().SendNotification(&fyne.Notification{
+				Title:   "Information",
+				Content: fmt.Sprintf("TestCaseExecutionsList-tab can't be closed!"),
+			})
 		}
 
 	}

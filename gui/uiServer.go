@@ -320,9 +320,30 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	tempListTestCaseExecutionsUI = listTestCaseExecutionsUI.GenerateListTestCaseExecutionsUI(
 		&testCaseExecutionsModel.TestCaseExecutionsModel)
 
-	// Load list with TestCases
+	// Load list with TestCasesExecutions
 	listTestCaseExecutionsUI.LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction(
 		&testCaseExecutionsModel.TestCaseExecutionsModel, false)
+
+	// Create the TabObject used to show TestCaseExecutions-list with Execution-PreView and all TestCaseExecutions-tabs
+	var detailedTestCaseExecutionsUITabObject *container.DocTabs
+
+	// Create the Tab used for TestCaseExecutions-list with Execution-PreView
+	var detailedTestCaseExecutionsUITab *container.TabItem
+	detailedTestCaseExecutionsUITab = container.NewTabItem("TestCaseExecutions List", tempListTestCaseExecutionsUI)
+
+	// Add TestCaseExecutionList-tab to TabObject
+	detailedTestCaseExecutionsUITabObject = container.NewDocTabs(detailedTestCaseExecutionsUITab)
+
+	// Set Tabs to be shown at top
+	detailedTestCaseExecutionsUITabObject.SetTabLocation(container.TabLocationTop)
+
+	// Create Function that stops ExecutionList-tab to be closed
+	detailedTestCaseExecutionsUITabObject.CloseIntercept = func(tabItem *container.TabItem) {
+		if tabItem.Text == "TestCaseExecutions List" {
+
+		}
+
+	}
 
 	// Create the UI for List Detailed TestCaseExecutions-UI
 	//var detailedTestCaseExecutionsTab fyne.CanvasObject
@@ -362,7 +383,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 		container.NewTabItem("Executions", executionsUITab),
 		container.NewTabItem("Detailed TestCaseExecutions - short summary", detailedTestCaseExecutionSummaryTab),
 		//container.NewTabItem("Detailed TestCaseExecutions", detailedTestCaseExecutionsTab),
-		container.NewTabItem("TestCaseExecutions List", tempListTestCaseExecutionsUI),
+		container.NewTabItem("TestCaseExecutions List", detailedTestCaseExecutionsUITabObject),
 		container.NewTabItem("Config", configContainerGrid),
 	)
 

@@ -116,16 +116,20 @@ func LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction(
 func GenerateListTestCaseExecutionsUI(
 	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct,
 	detailedTestCaseExecutionsUITabObject *container.DocTabs,
+	exitFunctionsForDetailedTestCaseExecutionsUITabObject *map[*container.TabItem]func(),
 	testCaseInstructionPreViewObject *TestCaseInstructionPreViewStruct) (
 	listTestCasesUI fyne.CanvasObject) {
 
 	// save reference to 'detailedTestCaseExecutionsUITabObject'
 	detailedTestCaseExecutionsUITabObjectRef = detailedTestCaseExecutionsUITabObject
 
+	// save Reference to Map over Exit-functions for the Tabs in 'detailedTestCaseExecutionsUITabObject'
+	exitFunctionsForDetailedTestCaseExecutionsUITabObjectPtr = exitFunctionsForDetailedTestCaseExecutionsUITabObject
+
 	//var testCaseTable *widget.Table
 
 	var tempTestCaseListAndTestCasePreviewSplitContainer *container.Split
-	var tempTestCasePreviewTestInstructionExecutionLogSplitContainer *container.Split
+	//var tempTestCasePreviewTestInstructionExecutionLogSplitContainer *container.Split
 
 	var testCaseExecutionsListContainer *fyne.Container
 	var testCaseExecutionsListScrollContainer *container.Scroll
@@ -357,6 +361,172 @@ func GenerateListTestCaseExecutionsUI(
 	testCaseExecutionsListContainer = container.NewBorder(filterAndButtonsContainer, statisticsAndColorPaletteContainer, nil, nil, testCaseExecutionsListScrollContainer)
 	testCasesListScrollContainer2 := container.NewScroll(testCaseExecutionsListContainer)
 
+	// ***********
+	/*
+
+
+		// Create the Temporary container that should be shown
+		temporaryContainer := container.NewCenter(widget.NewLabel("Select a TestCaseExecution to get the Preview"))
+
+		testCaseInstructionPreViewObject.
+			testCaseExecutionPreviewContainer = container.NewBorder(nil, nil, nil, nil, temporaryContainer)
+
+		// Generate the container for the Preview, 'testCaseExecutionPreviewContainer'
+		testCaseInstructionPreViewObject.
+			testCaseExecutionPreviewContainerScroll = container.NewScroll(testCaseInstructionPreViewObject.
+			testCaseExecutionPreviewContainer)
+
+		// Create the temporary container for the logs
+		tempTestInstructionsExecutionLogContainer := container.NewCenter(
+			widget.NewLabel("Select a TestInstructionExecution or a TesInstructionContainer to get the Logs"))
+
+		// Add the temporary container to the Border container for the logs
+		testCaseInstructionPreViewObject.
+			testInstructionsExecutionLogContainer = container.
+			NewBorder(nil, nil, nil, nil, tempTestInstructionsExecutionLogContainer)
+
+		// Generate the Attribute-container for the Tab-object
+		testCaseInstructionPreViewObject.
+			testInstructionsExecutionAttributesContainer = container.
+			NewBorder(nil, nil, nil, nil,
+				widget.NewLabel("Select an attribute to get the full attribute-value"))
+
+		// Generate the scroll-container used for Attributes-explorer
+		testCaseInstructionPreViewObject.
+			testInstructionsExecutionAttributesContainerScroll = container.NewScroll(testCaseInstructionPreViewObject.
+			testInstructionsExecutionAttributesContainer)
+
+		// Generate the TestInstructionExecution-container for the Tab-object
+		testCaseInstructionPreViewObject.
+			testInstructionsExecutionDetailsContainer = container.
+			NewBorder(nil, nil, nil, nil,
+				widget.NewLabel("Select a TestInstructionExecution or a TesInstructionContainer to get the details"))
+
+		// Generate the scroll-container used for TestInstructionExecutionsDetails-explorer
+		testCaseInstructionPreViewObject.
+			testInstructionsExecutionDetailsContainerScroll = container.NewScroll(testCaseInstructionPreViewObject.
+			testInstructionsExecutionDetailsContainer)
+
+		// Generate PreViewTab-object
+		testCaseInstructionPreViewObject.
+			logsExplorerTab = container.NewTabItem("Logs Explorer", testCaseInstructionPreViewObject.
+			testInstructionsExecutionLogContainer)
+
+		// Generate AttributeExplorerTab
+		testCaseInstructionPreViewObject.
+			attributeExplorerTab = container.NewTabItem("Attribute Explorer", testCaseInstructionPreViewObject.
+			testInstructionsExecutionAttributesContainerScroll)
+
+		// Generate DestInstructionDetailsExplorerTab
+		testCaseInstructionPreViewObject.
+			testInstructionDetailsExplorerTab = container.NewTabItem("TestInstructionDetails Explorer",
+			testCaseInstructionPreViewObject.testInstructionsExecutionDetailsContainerScroll)
+
+		// Generate the 'PreView-tabs'-object
+		testCaseInstructionPreViewObject.
+			preViewTabs = container.NewAppTabs(testCaseInstructionPreViewObject.testInstructionDetailsExplorerTab,
+			testCaseInstructionPreViewObject.logsExplorerTab,
+			testCaseInstructionPreViewObject.attributeExplorerTab)
+		testCaseInstructionPreViewObject.
+			preViewTabs.OnSelected = func(item *container.TabItem) {
+			item.Content.Refresh()
+		}
+
+		// Set the Tabs to be positioned in upper part of the object
+		testCaseInstructionPreViewObject.
+			preViewTabs.SetTabLocation(container.TabLocationTop)
+
+		// make a hoverable transparent Execution-tree-overlay, to stop TestCaseExecution-nodes to be clickable
+		testCaseTreePreViewOverlay := NewHoverableRect(color.Transparent, nil)
+		testCaseTreePreViewOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
+
+			mouseHasLeftTestCaseExecutionPreviewTree = false
+			testCaseTreePreViewOverlay.Hide()
+			testCaseTreePreViewOverlay.OtherHoverableRect.Show()
+		}
+		testCaseTreePreViewOverlay.OnMouseOut = func() {
+
+		}
+
+		// make a hoverable transparent preViewTab-overlay, to stop TestCaseExecution-nodes to be clickable
+		explorerTabOverlay := NewHoverableRect(color.Transparent, nil)
+		explorerTabOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
+
+			mouseHasLeftTestCaseExecutionPreviewTree = true
+			explorerTabOverlay.Hide()
+			explorerTabOverlay.OtherHoverableRect.Show()
+		}
+		explorerTabOverlay.OnMouseOut = func() {
+
+		}
+
+		// Cross connect the two overlays
+		testCaseTreePreViewOverlay.OtherHoverableRect = explorerTabOverlay
+		explorerTabOverlay.OtherHoverableRect = testCaseTreePreViewOverlay
+
+		testCaseExecutionPreviewAndOverlayContainer := container.New(layout.NewStackLayout(), testCaseInstructionPreViewObject.
+			testCaseExecutionPreviewContainerScroll, testCaseTreePreViewOverlay)
+		preViewTabsAndOverlayContainer := container.New(layout.NewStackLayout(), testCaseInstructionPreViewObject.
+			preViewTabs, explorerTabOverlay)
+
+		// Create the split-container that has the Execution-preview to the left and Logs/Attribute to the right
+		tempTestCasePreviewTestInstructionExecutionLogSplitContainer = container.NewHSplit(
+			testCaseExecutionPreviewAndOverlayContainer, preViewTabsAndOverlayContainer)
+		tempTestCasePreviewTestInstructionExecutionLogSplitContainer.Offset = 0.60
+
+	*/
+	// **************
+
+	// Generates the Container structure for the PreView-container
+	testCaseInstructionPreViewObject.
+		testCasePreviewTestInstructionExecutionLogSplitContainer = generatePreViewObject(testCaseInstructionPreViewObject)
+
+	// make a hoverable transparent PreView-overlay, to stop table-row hovering in left Table
+	preViewOverlay := NewHoverableRect(color.Transparent, nil)
+	preViewOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
+
+		mouseHasLeftTable = true
+		preViewOverlay.Hide()
+		preViewOverlay.OtherHoverableRect.Show()
+	}
+	preViewOverlay.OnMouseOut = func() {
+
+	}
+
+	// make a hoverable transparent ExecutionList-overlay, to stop table-row hovering in left Table
+	executionListViewOverlay := NewHoverableRect(color.Transparent, nil)
+	executionListViewOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
+
+		mouseHasLeftTable = false
+		executionListViewOverlay.Hide()
+		executionListViewOverlay.OtherHoverableRect.Show()
+	}
+	executionListViewOverlay.OnMouseOut = func() {
+
+	}
+
+	// Cross connect the two overlays
+	preViewOverlay.OtherHoverableRect = executionListViewOverlay
+	executionListViewOverlay.OtherHoverableRect = preViewOverlay
+
+	preViewAndOverlayContainer := container.New(layout.NewStackLayout(), testCaseInstructionPreViewObject.
+		testCasePreviewTestInstructionExecutionLogSplitContainer, preViewOverlay)
+	executionListAndOverlayContainer := container.New(layout.NewStackLayout(), testCasesListScrollContainer2, executionListViewOverlay)
+
+	// Generate the split-container holding the TestCaseExecution-list and the Execution-Preview
+	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(executionListAndOverlayContainer, preViewAndOverlayContainer)
+	tempTestCaseListAndTestCasePreviewSplitContainer.Offset = 0.60
+
+	TestCaseExecutionListAndTestCaseExecutionPreviewSplitContainer = tempTestCaseListAndTestCasePreviewSplitContainer
+
+	return tempTestCaseListAndTestCasePreviewSplitContainer
+}
+
+// Generates the Container structure for the PreView-container
+func generatePreViewObject(
+	testCaseInstructionPreViewObject *TestCaseInstructionPreViewStruct) (
+	tempTestCasePreviewTestInstructionExecutionLogSplitContainer *container.Split) {
+
 	// Create the Temporary container that should be shown
 	temporaryContainer := container.NewCenter(widget.NewLabel("Select a TestCaseExecution to get the Preview"))
 
@@ -466,42 +636,6 @@ func GenerateListTestCaseExecutionsUI(
 		testCaseExecutionPreviewAndOverlayContainer, preViewTabsAndOverlayContainer)
 	tempTestCasePreviewTestInstructionExecutionLogSplitContainer.Offset = 0.60
 
-	// make a hoverable transparent PreView-overlay, to stop table-row hovering in left Table
-	preViewOverlay := NewHoverableRect(color.Transparent, nil)
-	preViewOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
+	return tempTestCasePreviewTestInstructionExecutionLogSplitContainer
 
-		mouseHasLeftTable = true
-		preViewOverlay.Hide()
-		preViewOverlay.OtherHoverableRect.Show()
-	}
-	preViewOverlay.OnMouseOut = func() {
-
-	}
-
-	// make a hoverable transparent ExecutionList-overlay, to stop table-row hovering in left Table
-	executionListViewOverlay := NewHoverableRect(color.Transparent, nil)
-	executionListViewOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
-
-		mouseHasLeftTable = false
-		executionListViewOverlay.Hide()
-		executionListViewOverlay.OtherHoverableRect.Show()
-	}
-	executionListViewOverlay.OnMouseOut = func() {
-
-	}
-
-	// Cross connect the two overlays
-	preViewOverlay.OtherHoverableRect = executionListViewOverlay
-	executionListViewOverlay.OtherHoverableRect = preViewOverlay
-
-	preViewAndOverlayContainer := container.New(layout.NewStackLayout(), tempTestCasePreviewTestInstructionExecutionLogSplitContainer, preViewOverlay)
-	executionListAndOverlayContainer := container.New(layout.NewStackLayout(), testCasesListScrollContainer2, executionListViewOverlay)
-
-	// Generate the split-container holding the TestCaseExecution-list and the Execution-Preview
-	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(executionListAndOverlayContainer, preViewAndOverlayContainer)
-	tempTestCaseListAndTestCasePreviewSplitContainer.Offset = 0.60
-
-	TestCaseExecutionListAndTestCaseExecutionPreviewSplitContainer = tempTestCaseListAndTestCasePreviewSplitContainer
-
-	return tempTestCaseListAndTestCasePreviewSplitContainer
 }

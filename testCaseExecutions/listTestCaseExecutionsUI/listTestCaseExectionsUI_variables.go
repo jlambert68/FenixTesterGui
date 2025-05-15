@@ -88,6 +88,9 @@ const logStatusRectangleWidth = 25
 
 // Struct holding all variables needed for the PreView
 type TestCaseInstructionPreViewStruct struct {
+	// Split container holding TestCase-PreView, to the left, and Explorer-Tabs to the Right
+	testCasePreviewTestInstructionExecutionLogSplitContainer *container.Split
+
 	// The TestCase Preview-container
 	testCaseExecutionPreviewContainerScroll *container.Scroll
 	testCaseExecutionPreviewContainer       *fyne.Container
@@ -109,15 +112,23 @@ var TestCaseInstructionPreViewObject *TestCaseInstructionPreViewStruct
 // Reference to the TabObject that hold TestCaseExecutions
 var detailedTestCaseExecutionsUITabObjectRef *container.DocTabs
 
-type openedDetailedTestCaseExecutionsMapKeyType string
+// Reference to the Exit-functions for the Tabs in 'detailedTestCaseExecutionsUITabObjectRef'
+var exitFunctionsForDetailedTestCaseExecutionsUITabObjectPtr *map[*container.TabItem]func()
 
-type openedDetailedTestCaseExecutionsMapStruct struct {
-	isTestCaseExecutionOpenInTab            bool
-	isTestCaseExecutionOpenInExternalWindow bool
+type openedDetailedTestCaseExecutionsMapKeyType string // TestCaseExecutionUuid + TestCaseExecutionVersion
+
+// Keeps track if a TestCaseExecution is open in Tab and/or Window
+type openedDetailedTestCaseExecutionStruct struct {
+	isTestCaseExecutionOpenInTab                     bool
+	TestCaseInstructionPreViewObjectInTab            *TestCaseInstructionPreViewStruct
+	isTestCaseExecutionOpenInExternalWindow          bool
+	TestCaseInstructionPreViewObjectInExternalWindow *TestCaseInstructionPreViewStruct
+	externalWindow                                   fyne.Window
+	tabItem                                          *container.TabItem
 }
 
-// Map keeping track of all opened TestCaseExecutions, in Tab and/or Separate window
-var openedDetailedTestCaseExecutionsMapPtr *map[openedDetailedTestCaseExecutionsMapKeyType]bool
+// Map keeping track of all opened TestCaseExecutions, in Tabs and/or Separate windows
+var openedDetailedTestCaseExecutionsMapPtr *map[openedDetailedTestCaseExecutionsMapKeyType]*openedDetailedTestCaseExecutionStruct
 
 //var tempTestCasePreviewTestInstructionExecutionLogSplitContainer
 

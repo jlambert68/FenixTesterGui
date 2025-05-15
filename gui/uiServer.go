@@ -320,6 +320,12 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	var detailedTestCaseExecutionsUITabObject *container.DocTabs
 	detailedTestCaseExecutionsUITabObject = container.NewDocTabs()
 
+	// Prepare a map to hold per‐tab exit functions
+	var exitFunctionsForDetailedTestCaseExecutionsUITabObjectPtr *map[*container.TabItem]func()
+	var exitFunctionsForDetailedTestCaseExecutionsUITabObject map[*container.TabItem]func()
+	exitFunctionsForDetailedTestCaseExecutionsUITabObject = make(map[*container.TabItem]func())
+	exitFunctionsForDetailedTestCaseExecutionsUITabObjectPtr = &exitFunctionsForDetailedTestCaseExecutionsUITabObject
+
 	// Initiate the 'TestCaseInstructionPreViewObject' holding all UI for the PreView to the right of the TestCaseExecution-list
 	listTestCaseExecutionsUI.TestCaseInstructionPreViewObject = &listTestCaseExecutionsUI.
 		TestCaseInstructionPreViewStruct{}
@@ -329,6 +335,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	tempListTestCaseExecutionsUI = listTestCaseExecutionsUI.GenerateListTestCaseExecutionsUI(
 		&testCaseExecutionsModel.TestCaseExecutionsModel,
 		detailedTestCaseExecutionsUITabObject,
+		exitFunctionsForDetailedTestCaseExecutionsUITabObjectPtr,
 		listTestCaseExecutionsUI.TestCaseInstructionPreViewObject)
 
 	// Load list with TestCasesExecutions
@@ -363,6 +370,13 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 				Title:   "Information",
 				Content: fmt.Sprintf("TestCaseExecutionsList-tab can't be closed!"),
 			})
+		} else {
+
+			detailedTestCaseExecutionsUITabObject.Remove(tabItem)
+			if fn, ok := exitFunctionsForDetailedTestCaseExecutionsUITabObject[tabItem]; ok {
+				fn()
+			}
+
 		}
 
 	}
@@ -457,7 +471,11 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	}
 
-	myCanvas.SetContent(tabs)
+	// Then main container put on the Canvas
+	var canvasContainer *fyne.Container
+	canvasContainer = container.NewBorder(nil, widget.NewLabel("bottom"), nil, nil, tabs)
+
+	myCanvas.SetContent(canvasContainer)
 	_ = os.Setenv(scaleEnvKey, sharedCode.FYNE_SCALE)
 
 	//myCanvas.Overlays().Add(myCanvasLabel)

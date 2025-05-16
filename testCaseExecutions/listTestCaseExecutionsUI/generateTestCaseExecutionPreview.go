@@ -22,7 +22,12 @@ import (
 func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) GenerateTestCaseExecutionPreviewContainer(
 	testCaseExecutionUuid string,
 	testCaseExecutionVersion uint32,
-	testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
+	testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct,
+	openedTestCaseExecutionFrom openedTestCaseExecutionFromType,
+	currentWindowPtr *fyne.Window) {
+
+	var currentWindow fyne.Window
+	currentWindow = *currentWindowPtr
 
 	var testCaseExecutionPreviewTopContainer *fyne.Container
 	var testCaseExecutionPreviewBottomContainer *fyne.Container
@@ -879,58 +884,61 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 
 		*/
 
+		var openedDetailedTestCaseExecutionsMap map[openedDetailedTestCaseExecutionsMapKeyType]*openedDetailedTestCaseExecutionStruct
+		// Check if Map with Open TestCaseExecutions, map or Window has been initialized
+		if openedDetailedTestCaseExecutionsMapPtr == nil {
+			openedDetailedTestCaseExecutionsMap = make(map[openedDetailedTestCaseExecutionsMapKeyType]*openedDetailedTestCaseExecutionStruct)
+			openedDetailedTestCaseExecutionsMapPtr = &openedDetailedTestCaseExecutionsMap
+		} else {
+			openedDetailedTestCaseExecutionsMap = *openedDetailedTestCaseExecutionsMapPtr
+		}
+
+		// Generate map-key
+		var openedDetailedTestCaseExecutionsMapKey openedDetailedTestCaseExecutionsMapKeyType
+		openedDetailedTestCaseExecutionsMapKey = openedDetailedTestCaseExecutionsMapKeyType(testCaseExecutionUuid + strconv.Itoa(int(testCaseExecutionVersion)))
+
+		// Get Object if is open
+		//var openedDetailedTestCaseExecution openedDetailedTestCaseExecutionStruct
+		//var openedDetailedTestCaseExecutionPtr *openedDetailedTestCaseExecutionStruct
+
+		// Extract the Object holding all information for Tab/Window-container for the TestCaseExecution
+		var openedDetailedTestCaseExecutionPtr *openedDetailedTestCaseExecutionStruct
+		openedDetailedTestCaseExecutionPtr, existInMap = openedDetailedTestCaseExecutionsMap[openedDetailedTestCaseExecutionsMapKey]
+		if existInMap == false {
+
+			// Object doesn't exist som create a new one
+			openedDetailedTestCaseExecutionPtr = &openedDetailedTestCaseExecutionStruct{
+				isTestCaseExecutionOpenInTab: false,
+				TestCaseInstructionPreViewObjectInTab: &TestCaseInstructionPreViewStruct{
+					testCasePreviewTestInstructionExecutionLogSplitContainer: nil,
+					testCaseExecutionPreviewContainerScroll:                  nil,
+					testCaseExecutionPreviewContainer:                        container.New(layout.NewVBoxLayout()),
+					testInstructionsExecutionDetailsContainerScroll:          nil,
+					testInstructionsExecutionLogContainer:                    nil,
+					testInstructionsExecutionAttributesContainerScroll:       nil,
+					testInstructionsExecutionAttributesContainer:             nil,
+					testInstructionsExecutionDetailsContainer:                nil,
+					preViewTabs:                       nil,
+					attributeExplorerTab:              nil,
+					logsExplorerTab:                   nil,
+					testInstructionDetailsExplorerTab: nil,
+				},
+				isTestCaseExecutionOpenInExternalWindow:          false,
+				TestCaseInstructionPreViewObjectInExternalWindow: nil,
+
+				externalWindow: nil,
+				tabItem:        nil,
+			}
+		}
+
+		// Reference to current window
+
 		// Define function to open a TestCaseExecution in a external window
 		var openTestCaseExecutionInExternalWindowFunction func()
 		openTestCaseExecutionInExternalWindowFunction = func() {
 
 			var fenixApp fyne.App
 			fenixApp = *sharedCode.FenixAppPtr
-
-			var openedDetailedTestCaseExecutionsMap map[openedDetailedTestCaseExecutionsMapKeyType]*openedDetailedTestCaseExecutionStruct
-			// Check if Map with Open TestCaseExecutions, map or Window has been initialized
-			if openedDetailedTestCaseExecutionsMapPtr == nil {
-				openedDetailedTestCaseExecutionsMap = make(map[openedDetailedTestCaseExecutionsMapKeyType]*openedDetailedTestCaseExecutionStruct)
-				openedDetailedTestCaseExecutionsMapPtr = &openedDetailedTestCaseExecutionsMap
-			} else {
-				openedDetailedTestCaseExecutionsMap = *openedDetailedTestCaseExecutionsMapPtr
-			}
-
-			// Generate map-key
-			var openedDetailedTestCaseExecutionsMapKey openedDetailedTestCaseExecutionsMapKeyType
-			openedDetailedTestCaseExecutionsMapKey = openedDetailedTestCaseExecutionsMapKeyType(testCaseExecutionUuid + strconv.Itoa(int(testCaseExecutionVersion)))
-
-			// Get Object if is open
-			//var openedDetailedTestCaseExecution openedDetailedTestCaseExecutionStruct
-			//var openedDetailedTestCaseExecutionPtr *openedDetailedTestCaseExecutionStruct
-
-			// Extract the Object holding all information for Tab/Window-container for the TestCaseExecution
-			var openedDetailedTestCaseExecutionPtr *openedDetailedTestCaseExecutionStruct
-			openedDetailedTestCaseExecutionPtr, existInMap = openedDetailedTestCaseExecutionsMap[openedDetailedTestCaseExecutionsMapKey]
-			if existInMap == false {
-
-				// Object doesn't exist som create a new one
-				openedDetailedTestCaseExecutionPtr = &openedDetailedTestCaseExecutionStruct{
-					isTestCaseExecutionOpenInTab:            false,
-					TestCaseInstructionPreViewObjectInTab:   nil,
-					isTestCaseExecutionOpenInExternalWindow: false,
-					TestCaseInstructionPreViewObjectInExternalWindow: &TestCaseInstructionPreViewStruct{
-						testCasePreviewTestInstructionExecutionLogSplitContainer: nil,
-						testCaseExecutionPreviewContainerScroll:                  nil,
-						testCaseExecutionPreviewContainer:                        container.New(layout.NewVBoxLayout()),
-						testInstructionsExecutionDetailsContainerScroll:          nil,
-						testInstructionsExecutionLogContainer:                    nil,
-						testInstructionsExecutionAttributesContainerScroll:       nil,
-						testInstructionsExecutionAttributesContainer:             nil,
-						testInstructionsExecutionDetailsContainer:                nil,
-						preViewTabs:                       nil,
-						attributeExplorerTab:              nil,
-						logsExplorerTab:                   nil,
-						testInstructionDetailsExplorerTab: nil,
-					},
-					externalWindow: nil,
-					tabItem:        nil,
-				}
-			}
 
 			// Object exist, but check if the window is open
 			if openedDetailedTestCaseExecutionPtr.isTestCaseExecutionOpenInExternalWindow == true {
@@ -957,10 +965,39 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 				}
 
 				// Create a new window for the TestCaseExecution
-				openedDetailedTestCaseExecutionPtr.externalWindow = fenixApp.NewWindow(fmt.Sprintf("TestCaseExecution '%s'", testCaseExecutionUuid))
+				openedDetailedTestCaseExecutionPtr.externalWindow = fenixApp.NewWindow(fmt.Sprintf(
+					"TestCaseExecution '%s'", testCaseExecutionUuid))
 
 				// Set boolean to indicate that window is open
 				openedDetailedTestCaseExecutionPtr.isTestCaseExecutionOpenInExternalWindow = true
+
+				// Catch the close action
+				openedDetailedTestCaseExecutionPtr.externalWindow.SetOnClosed(func() {
+
+					// Remove Content container object from map and mark not there
+					defer func() {
+						openedDetailedTestCaseExecutionPtr.isTestCaseExecutionOpenInExternalWindow = false
+						openedDetailedTestCaseExecutionPtr.
+							TestCaseInstructionPreViewObjectInExternalWindow = &TestCaseInstructionPreViewStruct{
+							testCasePreviewTestInstructionExecutionLogSplitContainer: nil,
+							testCaseExecutionPreviewContainerScroll:                  nil,
+							testCaseExecutionPreviewContainer:                        container.New(layout.NewVBoxLayout()),
+							testInstructionsExecutionDetailsContainerScroll:          nil,
+							testInstructionsExecutionLogContainer:                    nil,
+							testInstructionsExecutionAttributesContainerScroll:       nil,
+							testInstructionsExecutionAttributesContainer:             nil,
+							testInstructionsExecutionDetailsContainer:                nil,
+							preViewTabs:                       nil,
+							attributeExplorerTab:              nil,
+							logsExplorerTab:                   nil,
+							testInstructionDetailsExplorerTab: nil,
+						}
+						openedDetailedTestCaseExecutionPtr.externalWindow = nil
+					}()
+
+					//openedDetailedTestCaseExecutionPtr.externalWindow.Close()
+
+				})
 
 				// Generate base objects for the PreView
 				openedDetailedTestCaseExecutionPtr.TestCaseInstructionPreViewObjectInExternalWindow.
@@ -972,37 +1009,20 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 					GenerateTestCaseExecutionPreviewContainer(
 						testCaseExecutionUuid,
 						testCaseExecutionVersion,
-						testCaseExecutionsModelRef)
+						testCaseExecutionsModelRef,
+						fromExternalWindow,
+						&openedDetailedTestCaseExecutionPtr.externalWindow)
 
 				// Save the Object back to the Map
 				openedDetailedTestCaseExecutionsMap[openedDetailedTestCaseExecutionsMapKey] = openedDetailedTestCaseExecutionPtr
 
 				// Set TestCaseExecution as content
-				openedDetailedTestCaseExecutionPtr.externalWindow.SetContent(container.NewBorder(
+				var externalWindowCanvas fyne.Canvas
+				externalWindowCanvas = openedDetailedTestCaseExecutionPtr.externalWindow.Canvas()
+
+				externalWindowCanvas.SetContent(container.NewBorder(
 					widget.NewLabel("This is a secondary window."),
 					widget.NewButton("Close TestCaseExecution", func() {
-
-						// Remove Content container object from map and mark not there
-						defer func() {
-							openedDetailedTestCaseExecutionPtr.isTestCaseExecutionOpenInExternalWindow = false
-							openedDetailedTestCaseExecutionPtr.
-								TestCaseInstructionPreViewObjectInExternalWindow = &TestCaseInstructionPreViewStruct{
-								testCasePreviewTestInstructionExecutionLogSplitContainer: nil,
-								testCaseExecutionPreviewContainerScroll:                  nil,
-								testCaseExecutionPreviewContainer:                        container.New(layout.NewVBoxLayout()),
-								testInstructionsExecutionDetailsContainerScroll:          nil,
-								testInstructionsExecutionLogContainer:                    nil,
-								testInstructionsExecutionAttributesContainerScroll:       nil,
-								testInstructionsExecutionAttributesContainer:             nil,
-								testInstructionsExecutionDetailsContainer:                nil,
-								preViewTabs:                       nil,
-								attributeExplorerTab:              nil,
-								logsExplorerTab:                   nil,
-								testInstructionDetailsExplorerTab: nil,
-							}
-							openedDetailedTestCaseExecutionPtr.externalWindow = nil
-						}()
-
 						openedDetailedTestCaseExecutionPtr.externalWindow.Close()
 					}),
 					nil, nil,
@@ -1020,53 +1040,6 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 		// Define function to open a TestCaseExecution in a Tab
 		var openTestCaseExecutionInTabFunction func()
 		openTestCaseExecutionInTabFunction = func() {
-
-			var openedDetailedTestCaseExecutionsMap map[openedDetailedTestCaseExecutionsMapKeyType]*openedDetailedTestCaseExecutionStruct
-			// Check if Map with Open TestCaseExecutions, map or Window has been initialized
-			if openedDetailedTestCaseExecutionsMapPtr == nil {
-				openedDetailedTestCaseExecutionsMap = make(map[openedDetailedTestCaseExecutionsMapKeyType]*openedDetailedTestCaseExecutionStruct)
-				openedDetailedTestCaseExecutionsMapPtr = &openedDetailedTestCaseExecutionsMap
-			} else {
-				openedDetailedTestCaseExecutionsMap = *openedDetailedTestCaseExecutionsMapPtr
-			}
-
-			// Generate map-key
-			var openedDetailedTestCaseExecutionsMapKey openedDetailedTestCaseExecutionsMapKeyType
-			openedDetailedTestCaseExecutionsMapKey = openedDetailedTestCaseExecutionsMapKeyType(testCaseExecutionUuid + strconv.Itoa(int(testCaseExecutionVersion)))
-
-			// Get Object if is open
-			//var openedDetailedTestCaseExecution openedDetailedTestCaseExecutionStruct
-			//var openedDetailedTestCaseExecutionPtr *openedDetailedTestCaseExecutionStruct
-
-			// Extract the Object holding all information for Tab/Window-container for the TestCaseExecution
-			var openedDetailedTestCaseExecutionPtr *openedDetailedTestCaseExecutionStruct
-			openedDetailedTestCaseExecutionPtr, existInMap = openedDetailedTestCaseExecutionsMap[openedDetailedTestCaseExecutionsMapKey]
-			if existInMap == false {
-
-				// Object doesn't exist som create a new one
-				openedDetailedTestCaseExecutionPtr = &openedDetailedTestCaseExecutionStruct{
-					isTestCaseExecutionOpenInTab: false,
-					TestCaseInstructionPreViewObjectInTab: &TestCaseInstructionPreViewStruct{
-						testCasePreviewTestInstructionExecutionLogSplitContainer: nil,
-						testCaseExecutionPreviewContainerScroll:                  nil,
-						testCaseExecutionPreviewContainer:                        container.New(layout.NewVBoxLayout()),
-						testInstructionsExecutionDetailsContainerScroll:          nil,
-						testInstructionsExecutionLogContainer:                    nil,
-						testInstructionsExecutionAttributesContainerScroll:       nil,
-						testInstructionsExecutionAttributesContainer:             nil,
-						testInstructionsExecutionDetailsContainer:                nil,
-						preViewTabs:                       nil,
-						attributeExplorerTab:              nil,
-						logsExplorerTab:                   nil,
-						testInstructionDetailsExplorerTab: nil,
-					},
-					isTestCaseExecutionOpenInExternalWindow:          false,
-					TestCaseInstructionPreViewObjectInExternalWindow: nil,
-
-					externalWindow: nil,
-					tabItem:        nil,
-				}
-			}
 
 			// Object exist, but check if the Tab already exist
 			if openedDetailedTestCaseExecutionPtr.isTestCaseExecutionOpenInTab == true {
@@ -1102,7 +1075,9 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 					GenerateTestCaseExecutionPreviewContainer(
 						testCaseExecutionUuid,
 						testCaseExecutionVersion,
-						testCaseExecutionsModelRef)
+						testCaseExecutionsModelRef,
+						fromTab,
+						sharedCode.FenixMasterWindowPtr)
 
 				// Save the Object back to the Map
 				openedDetailedTestCaseExecutionsMap[openedDetailedTestCaseExecutionsMapKey] = openedDetailedTestCaseExecutionPtr
@@ -1152,56 +1127,42 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 				// Set boolean to indicate that window is open
 				openedDetailedTestCaseExecutionPtr.isTestCaseExecutionOpenInTab = true
 
-				/*
-					// Set TestCaseExecution as content
-					openedDetailedTestCaseExecutionPtr.externalWindow.SetContent(container.NewBorder(
-						widget.NewLabel("This is a secondary window."),
-						widget.NewButton("Close TestCaseExecution", func() {
-
-							// Remove Content container object from map and mark not there
-							defer func() {
-								openedDetailedTestCaseExecutionPtr.isTestCaseExecutionOpenInTab = false
-								openedDetailedTestCaseExecutionPtr.
-									TestCaseInstructionPreViewObjectInExternalWindow = &TestCaseInstructionPreViewStruct{
-									testCasePreviewTestInstructionExecutionLogSplitContainer: nil,
-									testCaseExecutionPreviewContainerScroll:                  nil,
-									testCaseExecutionPreviewContainer:                        container.New(layout.NewVBoxLayout()),
-									testInstructionsExecutionDetailsContainerScroll:          nil,
-									testInstructionsExecutionLogContainer:                    nil,
-									testInstructionsExecutionAttributesContainerScroll:       nil,
-									testInstructionsExecutionAttributesContainer:             nil,
-									testInstructionsExecutionDetailsContainer:                nil,
-									preViewTabs:                       nil,
-									attributeExplorerTab:              nil,
-									logsExplorerTab:                   nil,
-									testInstructionDetailsExplorerTab: nil,
-								}
-								openedDetailedTestCaseExecutionPtr.externalWindow = nil,
-									openedDetailedTestCaseExecutionPtr.tabItem = nil,
-
-							}()
-
-							openedDetailedTestCaseExecutionPtr.externalWindow.Close()
-						}),
-						nil, nil,
-						openedDetailedTestCaseExecutionPtr.TestCaseInstructionPreViewObjectInExternalWindow.
-							testCasePreviewTestInstructionExecutionLogSplitContainer,
-					))
-
-				*/
-
 			}
 
 		}
 
-		// Define the popup menu
-		items := []*fyne.MenuItem{
-			fyne.NewMenuItem("Open TestCaseExecution in new Tab", openTestCaseExecutionInTabFunction),
-			fyne.NewMenuItem("Open TestCaseExecution in new separate window", openTestCaseExecutionInExternalWindowFunction),
-		}
+		// Define the menu items to open TestCaseExecution in Tab/External Window
+		var items []*fyne.MenuItem
 
-		var fenixMasterWindow fyne.Window
-		fenixMasterWindow = *sharedCode.FenixMasterWindowPtr
+		// From where is the opening of the TestCaseExecution initiated; FromExecutionList, FromExternalWindow, FromTab
+		switch openedTestCaseExecutionFrom {
+
+		case fromExecutionList:
+			// Define the popup menu
+			items = []*fyne.MenuItem{
+				fyne.NewMenuItem("Open TestCaseExecution in Tab", openTestCaseExecutionInTabFunction),
+				fyne.NewMenuItem("Open TestCaseExecution in separate window", openTestCaseExecutionInExternalWindowFunction),
+			}
+
+		case fromExternalWindow:
+			// Define the popup menu
+			items = []*fyne.MenuItem{
+				fyne.NewMenuItem("Open TestCaseExecution in Tab", openTestCaseExecutionInTabFunction),
+			}
+
+		case fromTab:
+			// Define the popup menu
+			items = []*fyne.MenuItem{
+				fyne.NewMenuItem("Open TestCaseExecution in separate window", openTestCaseExecutionInExternalWindowFunction),
+			}
+
+		default:
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"Id":                          "f6c3f4ec-91c3-4b2a-dab-0aef96453a2a",
+				"openedTestCaseExecutionFrom": openedTestCaseExecutionFrom,
+			}).Fatalln("Unhandled 'openedTestCaseExecutionFrom', should never happen")
+
+		}
 
 		// Create the button
 		var btn *widget.Button
@@ -1210,7 +1171,7 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 			pos := fyne.CurrentApp().Driver().AbsolutePositionForObject(btn)
 
 			// 2) Build the popup menu
-			popup := widget.NewPopUpMenu(fyne.NewMenu("", items...), fenixMasterWindow.Canvas())
+			popup := widget.NewPopUpMenu(fyne.NewMenu("", items...), currentWindow.Canvas())
 
 			// 3) Show it just below the button
 			popup.ShowAtPosition(pos.Add(fyne.NewPos(0, btn.Size().Height)))

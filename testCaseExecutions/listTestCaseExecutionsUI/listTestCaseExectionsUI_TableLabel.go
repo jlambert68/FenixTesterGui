@@ -155,7 +155,10 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 	TestCaseInstructionPreViewObject.GenerateTestCaseExecutionPreviewContainer(
 		l.currentTestCaseExecutionUuid,
 		l.currentTestCaseExecutionVersion,
-		l.testCaseExecutionsModel)
+		l.testCaseExecutionsModel,
+		fromExecutionList,
+		sharedCode.FenixMasterWindowPtr)
+
 	testCaseExecutionsListTable.Refresh()
 
 	// Update 'loadAllTestCaseExecutionsForOneTestCaseButton' with correct text, if we are in 'OneExecutionPerTestCase'

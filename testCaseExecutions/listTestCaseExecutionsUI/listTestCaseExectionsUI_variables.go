@@ -130,6 +130,16 @@ type openedDetailedTestCaseExecutionStruct struct {
 // Map keeping track of all opened TestCaseExecutions, in Tabs and/or Separate windows
 var openedDetailedTestCaseExecutionsMapPtr *map[openedDetailedTestCaseExecutionsMapKeyType]*openedDetailedTestCaseExecutionStruct
 
+// From where is the opening of the TestCaseExecution initiated; FromExecutionList, FromExternalWindow, FromTab
+type openedTestCaseExecutionFromType uint8
+
+const (
+	fromNotDefined    openedTestCaseExecutionFromType = iota
+	fromExecutionList openedTestCaseExecutionFromType = iota
+	fromExternalWindow
+	fromTab
+)
+
 //var tempTestCasePreviewTestInstructionExecutionLogSplitContainer
 
 // Mutex for Attributes-map below

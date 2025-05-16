@@ -9,6 +9,7 @@ import (
 	executionsModelForExecutions "FenixTesterGui/executions/executionsModelForTestCaseExecutions"
 	"FenixTesterGui/executions/executionsUIForExecutions"
 	"FenixTesterGui/executions/executionsUIForSubscriptions"
+	"FenixTesterGui/fenix_pig"
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
 	"FenixTesterGui/soundEngine"
 	"FenixTesterGui/testCase/testCaseModel"
@@ -471,9 +472,16 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	}
 
+	// Generate to bottom container for main UI
+	var bottomContainer *fyne.Container
+	var pigContainer *fyne.Container
+	pigContainer = fenix_pig.GeneratePigUI()
+
+	bottomContainer = container.NewHBox(widget.NewLabel("bottom"), pigContainer, layout.NewSpacer(), widget.NewLabel("bottom"))
+
 	// Then main container put on the Canvas
 	var canvasContainer *fyne.Container
-	canvasContainer = container.NewBorder(nil, widget.NewLabel("bottom"), nil, nil, tabs)
+	canvasContainer = container.NewBorder(nil, bottomContainer, nil, nil, tabs)
 
 	myCanvas.SetContent(canvasContainer)
 	_ = os.Setenv(scaleEnvKey, sharedCode.FYNE_SCALE)

@@ -1021,7 +1021,7 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 				externalWindowCanvas = openedDetailedTestCaseExecutionPtr.externalWindow.Canvas()
 
 				externalWindowCanvas.SetContent(container.NewBorder(
-					widget.NewLabel("This is a secondary window."),
+					nil,
 					widget.NewButton("Close TestCaseExecution", func() {
 						openedDetailedTestCaseExecutionPtr.externalWindow.Close()
 					}),

@@ -11,6 +11,7 @@ import (
 	"FenixTesterGui/executions/executionsUIForSubscriptions"
 	"FenixTesterGui/fenix_pig"
 	"FenixTesterGui/grpc_out_GuiTestCaseBuilderServer"
+	"FenixTesterGui/memoryUsage"
 	"FenixTesterGui/soundEngine"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testCase/testCaseUI"
@@ -164,24 +165,24 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	uiServer.AvailableBuildingBlocksModel.grpcOut.SetDialAddressString(uiServer.fenixGuiBuilderServerAddressToDial)
 
 	uiServer.fenixApp = app.NewWithID("se.fenix.testcasebuilder")
-	//fenixApp.Settings().SetTheme(&myTheme{})
+	uiServer.fenixApp.Settings().SetTheme(theme.DarkTheme())
 	uiServer.fenixMasterWindow = uiServer.fenixApp.NewWindow("Fenix TestCase Builder")
 	uiServer.fenixMasterWindow.SetMaster()
 	uiServer.fenixMasterWindow.CenterOnScreen()
 
-	/*
-		var w fyne.Window
-		if drv, ok := fyne.CurrentApp().Driver().(desktop.Driver); ok {
-			w = drv.CreateSplashWindow()
-			w.SetContent(widget.NewLabel("\"If you want to change the world, don't protest. Write code!\" - Hal Finney (1994)"))
-			w.Show()
+	/*uiServer
+	var w fyne.Window
+	if drv, ok := fyne.CurrentApp().Driver().(desktop.Driver); ok {
+		w = drv.CreateSplashWindow()
+		w.SetContent(widget.NewLabel("\"If you want to change the world, don't protest. Write code!\" - Hal Finney (1994)"))
+		w.Show()
 
-			go func() {
-				time.Sleep(time.Second * 5)
-				w.Close()
+		go func() {
+			time.Sleep(time.Second * 5)
+			w.Close()
 
-			}()
-		}
+		}()
+	}
 
 	*/
 	// Create Fenix Splash screen
@@ -472,12 +473,22 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	}
 
+	// Store pointers to FenixApp and FenixMainWindow
+	sharedCode.FenixAppPtr = &uiServer.fenixApp
+	sharedCode.FenixMasterWindowPtr = &uiServer.fenixMasterWindow
+
 	// Generate to bottom container for main UI
 	var bottomContainer *fyne.Container
 	var pigContainer *fyne.Container
-	pigContainer = fenix_pig.GeneratePigUI()
+	var memoryContainer *fyne.Container
 
-	bottomContainer = container.NewHBox(widget.NewLabel("bottom"), pigContainer, layout.NewSpacer(), widget.NewLabel("bottom"))
+	pigContainer = fenix_pig.GeneratePigUI()
+	memoryContainer = memoryUsage.GenerateMemoryUsageIcon()
+
+	bottomContainer = container.NewHBox(
+		widget.NewLabel("bottom"),
+		pigContainer, layout.NewSpacer(),
+		memoryContainer)
 
 	// Then main container put on the Canvas
 	var canvasContainer *fyne.Container
@@ -496,10 +507,6 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	uiServer.fenixMasterWindow.Resize(fyne.NewSize(3000, 1500))
 
 	//w.Hide()
-
-	// Store pointers to FenixApp and FenixMainWindow
-	sharedCode.FenixAppPtr = &uiServer.fenixApp
-	sharedCode.FenixMasterWindowPtr = &uiServer.fenixMasterWindow
 
 	splashWindow.RequestFocus()
 	splashWindow.Show()

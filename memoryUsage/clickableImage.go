@@ -7,12 +7,18 @@ import (
 
 type ClickableContainerStruct struct {
 	widget.BaseWidget
-	Content  fyne.CanvasObject
-	OnTapped func()
+	Content     fyne.CanvasObject
+	OnTapped    func(clickableContainer *ClickableContainerStruct)
+	AlreadyOpen bool
 }
 
-func NewClickableContainer(obj fyne.CanvasObject, tapped func()) *ClickableContainerStruct {
-	cc := &ClickableContainerStruct{Content: obj, OnTapped: tapped}
+func NewClickableContainer(
+	obj fyne.CanvasObject,
+	tapped func(clickableContainer *ClickableContainerStruct)) *ClickableContainerStruct {
+	cc := &ClickableContainerStruct{
+		Content:  obj,
+		OnTapped: tapped}
+
 	cc.ExtendBaseWidget(cc)
 	return cc
 }
@@ -23,7 +29,13 @@ func (c *ClickableContainerStruct) CreateRenderer() fyne.WidgetRenderer {
 
 func (c *ClickableContainerStruct) Tapped(_ *fyne.PointEvent) {
 	if c.OnTapped != nil {
-		c.OnTapped()
+
+		if c.AlreadyOpen == true {
+			return
+		}
+
+		c.AlreadyOpen = true
+		c.OnTapped(c)
 	}
 }
 

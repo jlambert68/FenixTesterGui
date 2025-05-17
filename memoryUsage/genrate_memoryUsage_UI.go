@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/v2/theme"
 	"github.com/skoona/sknlinechart"
 	"runtime"
+	"sync"
 	"time"
 )
 
@@ -138,10 +139,33 @@ func GenerateMemoryUsageIcon() (
 */
 
 // Open up the statistics window
-func openStatisticsWindow() {
+func openStatisticsWindow(clickableContainer *ClickableContainerStruct) {
 
 	var memoryUsageWindow fyne.Window
 	memoryUsageWindow = (*sharedCode.FenixAppPtr).NewWindow("Memory Usage")
+
+	var wg sync.WaitGroup
+	var waitingToCloseDown bool = false
+
+	var stopOneMinuteTicker chan struct{}
+	stopOneMinuteTicker = make(chan struct{})
+
+	// We have 2 flows
+	wg.Add(2)
+
+	memoryUsageWindow.SetCloseIntercept(func() {
+
+		// Initiate close down
+		waitingToCloseDown = true
+
+		// Wait for go routines to finish
+		wg.Wait()
+
+		defer func() {
+			clickableContainer.AlreadyOpen = false
+		}()
+	})
+
 	// 1) Take an initial sample so series aren't empty
 	var ms runtime.MemStats
 	runtime.ReadMemStats(&ms)
@@ -177,6 +201,8 @@ func openStatisticsWindow() {
 	// 3) Goroutine for 1-second sampling
 
 	go func() {
+		// Stop Window to be double opened
+
 		ticker := time.NewTicker(time.Second)
 		defer ticker.Stop()
 		for t := range ticker.C {
@@ -197,6 +223,15 @@ func openStatisticsWindow() {
 				//chart.ApplyDataPoint("Every Second", &pt3)
 				chart.Refresh()
 			})
+
+			if waitingToCloseDown == true {
+				wg.Done()
+
+				// Stop 1 minute ticker
+				stopOneMinuteTicker <- struct{}{}
+
+				return
+			}
 		}
 	}()
 
@@ -204,7 +239,8 @@ func openStatisticsWindow() {
 	go func() {
 		ticker := time.NewTicker(time.Minute)
 		defer ticker.Stop()
-		for t := range ticker.C {
+		select {
+		case t := <-ticker.C:
 			runtime.ReadMemStats(&ms)
 			mib := float32(ms.Alloc) / (1024 * 1024)
 			pt := sknlinechart.NewChartDatapoint(mib, theme.ColorRed, t.Format("15:04"))
@@ -213,6 +249,16 @@ func openStatisticsWindow() {
 				chart.ApplyDataPoint("Every Minute", &pt)
 				chart.Refresh()
 			})
+
+			if waitingToCloseDown == true {
+				wg.Done()
+				return
+			}
+
+		case <-stopOneMinuteTicker:
+
+			wg.Done()
+			return
 		}
 	}()
 

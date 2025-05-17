@@ -480,7 +480,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Generate to bottom container for main UI
 	var bottomContainer *fyne.Container
 	var pigContainer *fyne.Container
-	var memoryContainer *fyne.Container
+	var memoryContainer *memoryUsage.ClickableContainerStruct
 
 	pigContainer = fenix_pig.GeneratePigUI()
 	memoryContainer = memoryUsage.GenerateMemoryUsageIcon()

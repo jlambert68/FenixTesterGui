@@ -7,7 +7,6 @@ import (
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
 	"github.com/skoona/sknlinechart"
 	"runtime"
 	"time"
@@ -18,7 +17,7 @@ var memoryUsage []byte
 
 // Genrate the UI-component to be used at the bottom of the Fenix-UI, to show ongoing probes(pigs)
 func GenerateMemoryUsageIcon() (
-	memoryUsageContainer *fyne.Container) {
+	memoryUsageContainer *ClickableContainerStruct) {
 
 	// turn the raw bytes into a Fyne resource
 	var memoryUsageResource fyne.Resource
@@ -30,6 +29,14 @@ func GenerateMemoryUsageIcon() (
 
 	// Set size on image
 	memoryUsageImage.SetMinSize(fyne.NewSize(84, 48))
+
+	var clickableContainer *ClickableContainerStruct
+	clickableContainer = NewClickableContainer(memoryUsageImage, openStatisticsWindow)
+
+	return clickableContainer
+}
+
+/*
 
 	// Prepare and start collecting data
 	var memoryUsageWindow fyne.Window
@@ -112,17 +119,23 @@ func GenerateMemoryUsageIcon() (
 
 		// Open new window with statistics
 		// 5) Show the window
-		memoryUsageWindow.SetContent(container.NewStack(chart))
-		memoryUsageWindow.Resize(fyne.NewSize(620, 420))
-		memoryUsageWindow.Show()
+		go func() {
+			memoryUsageWindow.SetContent(container.NewStack(chart))
+			memoryUsageWindow.Resize(fyne.NewSize(620, 420))
+			memoryUsageWindow.Show()
+
+		}()
+
 	})
 
 	btn.Resize(fyne.NewSize(84, 48))
 
-	memoryUsageContainer = container.NewStack(btn)
+	memoryUsageContainer = container.NewBorder(
+		nil, nil, memoryUsageImage, nil, btn)
 
 	return memoryUsageContainer
 }
+*/
 
 // Open up the statistics window
 func openStatisticsWindow() {

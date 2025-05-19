@@ -1,6 +1,7 @@
 package fenix_pig
 
 import (
+	"FenixTesterGui/memoryUsage"
 	_ "embed"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -10,6 +11,7 @@ import (
 //go:embed graphics/Fenix_pig_48x48.png
 var fenixPig48x48 []byte
 
+// GeneratePigUI
 // Genrate the UI-component to be used at the bottom of the Fenix-UI, to show ongoing probes(pigs)
 func GeneratePigUI() (
 	pigMainContainer *fyne.Container) {
@@ -24,12 +26,15 @@ func GeneratePigUI() (
 
 	fenixPig48x48Image.SetMinSize(fyne.NewSize(48, 48))
 
+	var pigClickableImageContainer *memoryUsage.ClickableImageStruct
+	pigClickableImageContainer = memoryUsage.NewClickableImage(fenixPig48x48Image, nil)
+
 	// center it in a container
 
 	pigMainContainer = container.NewBorder(
 		nil,
 		nil,
-		container.NewVBox(fenixPig48x48Image),
+		container.NewVBox(pigClickableImageContainer),
 		nil,
 		nil)
 

@@ -16,9 +16,12 @@ import (
 //go:embed graphics/graph_84x48.png
 var memoryUsage []byte
 
+var memoryUsageWindow fyne.Window
+
+// GenerateMemoryUsageIcon
 // Genrate the UI-component to be used at the bottom of the Fenix-UI, to show ongoing probes(pigs)
 func GenerateMemoryUsageIcon() (
-	memoryUsageContainer *ClickableContainerStruct) {
+	memoryUsageContainer *ClickableImageStruct) {
 
 	// turn the raw bytes into a Fyne resource
 	var memoryUsageResource fyne.Resource
@@ -31,118 +34,27 @@ func GenerateMemoryUsageIcon() (
 	// Set size on image
 	memoryUsageImage.SetMinSize(fyne.NewSize(84, 48))
 
-	var clickableContainer *ClickableContainerStruct
-	clickableContainer = NewClickableContainer(memoryUsageImage, openStatisticsWindow)
+	var clickableContainer *ClickableImageStruct
+	clickableContainer = NewClickableImage(memoryUsageImage, openStatisticsWindowFunction)
 
 	return clickableContainer
 }
 
-/*
-
-	// Prepare and start collecting data
-	var memoryUsageWindow fyne.Window
-	memoryUsageWindow = (*sharedCode.FenixAppPtr).NewWindow("Memory Usage")
-	// 1) Take an initial sample so series aren't empty
-	var ms runtime.MemStats
-	runtime.ReadMemStats(&ms)
-	now := time.Now()
-	ptSec0 := sknlinechart.NewChartDatapoint(
-		float32(ms.Alloc)/(1024*1024), theme.ColorBlue, now.Format("15:04:05"),
-	)
-	ptMin0 := sknlinechart.NewChartDatapoint(
-		float32(ms.Alloc)/(1024*1024), theme.ColorRed, now.Format("15:04"),
-	)
-
-	// 2) Build the chart, seeding both series
-	opts := sknlinechart.NewChartOptions(
-		sknlinechart.WithTitle("Heap Alloc (MiB)"),
-		sknlinechart.WithLeftScaleLabel("MiB"),
-		// ← add this to get numeric Y-axis ticks every 10 MiB
-		sknlinechart.WithYScaleFactor(20),
-		sknlinechart.WithBottomLeftLabel("Time"),
-		sknlinechart.WithColorLegend(true),
-		sknlinechart.WithDataPoints(map[string][]*sknlinechart.ChartDatapoint{
-			"Every Second": {&ptSec0},
-			"Every Minute": {&ptMin0},
-		}),
-	)
-
-	chart, err := sknlinechart.NewWithOptions(opts)
-
-	if err != nil {
-		panic(err)
-	}
-	chart.SetMinSize(fyne.NewSize(600, 400))
-
-	// 3) Goroutine for 1-second sampling
-
-	go func() {
-		ticker := time.NewTicker(time.Second)
-		defer ticker.Stop()
-		for t := range ticker.C {
-			runtime.ReadMemStats(&ms)
-			mib := float32(ms.Alloc) / (1024 * 1024)
-			pt := sknlinechart.NewChartDatapoint(mib, theme.ColorBlue, t.Format("15:04:05"))
-
-			//sysMb := float32(ms.HeapSys) / (1024 * 1024)
-			//pt2 := sknlinechart.NewChartDatapoint(sysMb, theme.ColorBlue, t.Format("15:04:05"))
-
-			//objs := float32(ms.HeapObjects)
-			//pt3 := sknlinechart.NewChartDatapoint(objs, theme.ColorBlue, t.Format("15:04:05"))
-
-			// marshal back to the UI thread
-			fyne.Do(func() {
-				chart.ApplyDataPoint("Every Second", &pt)
-				//chart.ApplyDataPoint("Every Second", &pt2)
-				//chart.ApplyDataPoint("Every Second", &pt3)
-				chart.Refresh()
-			})
-		}
-	}()
-
-	// 4) Goroutine for 1-minute sampling
-	go func() {
-		ticker := time.NewTicker(time.Minute)
-		defer ticker.Stop()
-		for t := range ticker.C {
-			runtime.ReadMemStats(&ms)
-			mib := float32(ms.Alloc) / (1024 * 1024)
-			pt := sknlinechart.NewChartDatapoint(mib, theme.ColorRed, t.Format("15:04"))
-
-			fyne.Do(func() {
-				chart.ApplyDataPoint("Every Minute", &pt)
-				chart.Refresh()
-			})
-		}
-	}()
-
-	btn := widget.NewButtonWithIcon("", memoryUsageResource, func() {
-
-		// Open new window with statistics
-		// 5) Show the window
-		go func() {
-			memoryUsageWindow.SetContent(container.NewStack(chart))
-			memoryUsageWindow.Resize(fyne.NewSize(620, 420))
-			memoryUsageWindow.Show()
-
-		}()
-
-	})
-
-	btn.Resize(fyne.NewSize(84, 48))
-
-	memoryUsageContainer = container.NewBorder(
-		nil, nil, memoryUsageImage, nil, btn)
-
-	return memoryUsageContainer
-}
-*/
-
 // Open up the statistics window
-func openStatisticsWindow(clickableContainer *ClickableContainerStruct) {
+func openStatisticsWindowFunction(clickableContainer *ClickableImageStruct) {
 
-	var memoryUsageWindow fyne.Window
-	memoryUsageWindow = (*sharedCode.FenixAppPtr).NewWindow("Memory Usage")
+	if clickableContainer.AlreadyOpen == false {
+
+		// Initiate new window
+		memoryUsageWindow = (*sharedCode.FenixAppPtr).NewWindow("Memory Usage")
+		clickableContainer.AlreadyOpen = true
+
+	} else {
+		// Set focus on the window
+		memoryUsageWindow.RequestFocus()
+
+		return
+	}
 
 	var wg sync.WaitGroup
 	var waitingToCloseDown bool = false
@@ -160,6 +72,11 @@ func openStatisticsWindow(clickableContainer *ClickableContainerStruct) {
 
 		// Wait for go routines to finish
 		wg.Wait()
+
+		// Remove the intercept so Close() will actually close
+		memoryUsageWindow.SetCloseIntercept(nil)
+
+		memoryUsageWindow.Close()
 
 		defer func() {
 			clickableContainer.AlreadyOpen = false
@@ -217,40 +134,54 @@ func openStatisticsWindow(clickableContainer *ClickableContainerStruct) {
 			//pt3 := sknlinechart.NewChartDatapoint(objs, theme.ColorBlue, t.Format("15:04:05"))
 
 			// marshal back to the UI thread
-			fyne.Do(func() {
-				chart.ApplyDataPoint("Every Second", &pt)
-				//chart.ApplyDataPoint("Every Second", &pt2)
-				//chart.ApplyDataPoint("Every Second", &pt3)
-				chart.Refresh()
-			})
 
-			if waitingToCloseDown == true {
+			if waitingToCloseDown == false {
+				fyne.Do(func() {
+
+					chart.ApplyDataPoint("Every Second", &pt)
+					//chart.ApplyDataPoint("Every Second", &pt2)
+					//chart.ApplyDataPoint("Every Second", &pt3)
+					chart.Refresh()
+
+				})
+			} else {
+
 				wg.Done()
 
 				// Stop 1 minute ticker
 				stopOneMinuteTicker <- struct{}{}
-
 				return
 			}
+
 		}
 	}()
 
 	// 4) Goroutine for 1-minute sampling
 	go func() {
+
 		ticker := time.NewTicker(time.Minute)
 		defer ticker.Stop()
 		select {
 		case t := <-ticker.C:
+
+			// Secure that when in this part we wait for it to finish
+			if waitingToCloseDown == true {
+
+				wg.Add(1)
+			}
+
 			runtime.ReadMemStats(&ms)
 			mib := float32(ms.Alloc) / (1024 * 1024)
 			pt := sknlinechart.NewChartDatapoint(mib, theme.ColorRed, t.Format("15:04"))
 
-			fyne.Do(func() {
-				chart.ApplyDataPoint("Every Minute", &pt)
-				chart.Refresh()
-			})
+			if waitingToCloseDown == false {
 
-			if waitingToCloseDown == true {
+				fyne.Do(func() {
+					chart.ApplyDataPoint("Every Minute", &pt)
+					chart.Refresh()
+				})
+			} else {
+
 				wg.Done()
 				return
 			}

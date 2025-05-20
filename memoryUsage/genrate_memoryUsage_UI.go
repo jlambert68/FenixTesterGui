@@ -76,11 +76,12 @@ func openStatisticsWindowFunction(clickableContainer *ClickableImageStruct) {
 		// Remove the intercept so Close() will actually close
 		memoryUsageWindow.SetCloseIntercept(nil)
 
-		memoryUsageWindow.Close()
-
 		defer func() {
 			clickableContainer.AlreadyOpen = false
 		}()
+
+		memoryUsageWindow.Close()
+
 	})
 
 	// 1) Take an initial sample so series aren't empty
@@ -161,35 +162,33 @@ func openStatisticsWindowFunction(clickableContainer *ClickableImageStruct) {
 
 		ticker := time.NewTicker(time.Minute)
 		defer ticker.Stop()
-		select {
-		case t := <-ticker.C:
 
-			// Secure that when in this part we wait for it to finish
-			if waitingToCloseDown == true {
+		for {
+			select {
+			case t := <-ticker.C:
 
-				wg.Add(1)
-			}
+				runtime.ReadMemStats(&ms)
+				mib := float32(ms.Alloc) / (1024 * 1024)
+				pt := sknlinechart.NewChartDatapoint(mib, theme.ColorRed, t.Format("15:04"))
 
-			runtime.ReadMemStats(&ms)
-			mib := float32(ms.Alloc) / (1024 * 1024)
-			pt := sknlinechart.NewChartDatapoint(mib, theme.ColorRed, t.Format("15:04"))
+				if waitingToCloseDown == false {
 
-			if waitingToCloseDown == false {
+					fyne.Do(func() {
+						chart.ApplyDataPoint("Every Minute", &pt)
+						chart.Refresh()
+					})
+				} else {
 
-				fyne.Do(func() {
-					chart.ApplyDataPoint("Every Minute", &pt)
-					chart.Refresh()
-				})
-			} else {
+					wg.Done()
+					return
+				}
+
+			case <-stopOneMinuteTicker:
 
 				wg.Done()
 				return
 			}
 
-		case <-stopOneMinuteTicker:
-
-			wg.Done()
-			return
 		}
 	}()
 

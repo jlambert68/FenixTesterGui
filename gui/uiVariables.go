@@ -145,6 +145,9 @@ type AvailableBuildingBlocksModelStruct struct {
 	// URLs to repositories with Template for this user
 	TemplateRepositoryApiUrls []*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage
 
+	// The TestCaseMetaData for Domain that the user has acces to when creating TestCases
+	TestCaseMetaDataForDomains []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseMetaDataForOneDomainMessage
+
 	// TestData that this User can use
 	TestData []*fenixGuiTestCaseBuilderServerGrpcApi.TestDataFromOneSimpleTestDataAreaFileMessage
 

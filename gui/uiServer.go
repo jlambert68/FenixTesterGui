@@ -202,6 +202,9 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Load list with TemplateRepositoryApiUrls form GUI-server
 	uiServer.AvailableBuildingBlocksModel.loadTemplateRepositoryApiUrls(&uiServer.testCasesModel)
 
+	// Load list with TestCaseMetaData from, GUI-server
+	uiServer.AvailableBuildingBlocksModel.loadTestCaseMetaData(&uiServer.testCasesModel)
+
 	// Load available TestData for the User
 	uiServer.AvailableBuildingBlocksModel.loadTestData(&uiServer.testCasesModel)
 
@@ -716,6 +719,9 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 
 			// Load list with TemplateRepositoryApiUrls form GUI-server
 			uiServer.AvailableBuildingBlocksModel.loadTemplateRepositoryApiUrls(&uiServer.testCasesModel)
+
+			// Load list with TestCaseMetaData from, GUI-server
+			uiServer.AvailableBuildingBlocksModel.loadTestCaseMetaData(&uiServer.testCasesModel)
 
 			// Load available TestData for the User
 			uiServer.AvailableBuildingBlocksModel.loadTestData(&uiServer.testCasesModel)

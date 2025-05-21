@@ -446,6 +446,32 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeDom
 
 }
 
+// Store list with TestCaseMEtaData per Domain
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeTestCaseMetaDataPerDomain(
+	testCaseMetaDataForDomainsToBeStored []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseMetaDataForOneDomainMessage,
+	testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
+
+	// Store the list with TemplateRepositoryApiUrls
+	availableBuildingBlocksModel.TestCaseMetaDataForDomains = testCaseMetaDataForDomainsToBeStored
+
+	// Store a pointer to 'TestCaseMetaDataForDomains'
+	sharedCode.TestCaseMetaDataForDomainsPtr = &availableBuildingBlocksModel.TestCaseMetaDataForDomains
+
+	// Store the TestCaseMetaData-list in the TestCaseModel
+	testCaseModeReference.TestCaseMetaDataForDomainsMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
+		TestCaseMetaDataForOneDomainMessage)
+
+	// Store the Available TestCaseMetaData as a map structure in TestCase-struct
+	for _, testCaseMetaDataForDomain := range testCaseMetaDataForDomainsToBeStored {
+
+		testCaseModeReference.
+			TestCaseMetaDataForDomainsMap[testCaseMetaDataForDomain.GetDomainUuid()] =
+			testCaseMetaDataForDomain
+
+	}
+
+}
+
 // Store list with TemplateRepositoryApiUrls
 func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeTemplateRepositoryApiUrls(
 	templateRepositoryApiUrlsToBeStored []*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage,

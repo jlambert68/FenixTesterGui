@@ -360,6 +360,27 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadTemp
 
 }
 
+// Load a list of TestCaseMetaData per Domain form GUI-server
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadTestCaseMetaData(testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
+
+	var listTestCaseMetaDataResponseMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListTestCaseMetaDataResponseMessage
+	listTestCaseMetaDataResponseMessage = availableBuildingBlocksModel.grpcOut.SendListTestCaseMetaData()
+
+	if listTestCaseMetaDataResponseMessage.GetAckNackResponse().AckNack == false {
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"ID":    "28977bdb-b9e4-46c1-87ff-0bef28c9cdc5",
+			"error": listTestCaseMetaDataResponseMessage.GetAckNackResponse().Comments,
+		}).Warning("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'loadTestCaseMetaData'")
+
+		return
+
+	}
+
+	// Store list with TestCaseMetaData per Domain
+	availableBuildingBlocksModel.storeTestCaseMetaDataPerDomain(listTestCaseMetaDataResponseMessage.GetTestCaseMetaDataForDomains(), testCaseModeReference)
+
+}
+
 // Load list with loadTestData form GUI-server
 func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadTestData(testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
 

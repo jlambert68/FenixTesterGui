@@ -37,12 +37,33 @@ type TestCasesModelsStruct struct {
 	ImmatureDropZonesDataMap                      map[string]ImmatureDropZoneDataMapStruct                                                                                             // map[DropZoneUuid]ImmatureDropZoneDataMapStruct
 	DomainsThatCanOwnTheTestCaseMap               map[string]*DomainThatCanOwnTheTestCaseStruct
 	TemplateRepositoryApiUrlMap                   map[string]*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage
-	TestCaseMetaDataForDomainsMap                 map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseMetaDataForOneDomainMessage // Key = DomainUuid
+	TestCaseMetaDataForDomainsMap                 map[string]*TestCaseMetaDataForDomainsForMapStruct // Key = DomainUuid
 	TestCasesThatCanBeEditedByUserMap             map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseThatCanBeEditedByUserMessage
 	//TestCasesThatCanBeEditedByUserSlice           []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseThatCanBeEditedByUserMessage
 
 	//AvailableBuildingBlocksModel                  *gui.AvailableBuildingBlocksModelStruct
 
+}
+
+// TestCaseMetaDataForDomainsMapStruct
+// Hold one Domains all TestCaseMetaData as original json and as a struct
+type TestCaseMetaDataForDomainsForMapStruct struct {
+	TestCaseMetaDataForDomainAsJsonPtr *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseMetaDataForOneDomainMessage // Hold one Domains all TestCaseMetaData as original json
+	TestCaseMetaDataForDomainPtr       *TestCaseMetaDataForDomainStruct                                          // Hold one Domains all TestCaseMetaData as a struct
+}
+
+// TestCaseMetaDataForDomainStruct
+// Struct holding the TestCaseMetaData converted from the pure json-object
+type TestCaseMetaDataForDomainStruct struct {
+	MetaDataGroups []struct {
+		MetaDataGroupName string `json:"MetaDataGroupName"`
+		MetaDataInGroup   []struct {
+			MetaDataName   string   `json:"MetaDataName"`
+			SelectType     string   `json:"SelectType"`
+			Mandatory      string   `json:"Mandatory"`
+			MetaDataValues []string `json:"MetaDataValues"`
+		} `json:"MetaDataInGroup"`
+	} `json:"MetaDataGroups"`
 }
 
 type DomainThatCanOwnTheTestCaseStruct struct {
@@ -90,7 +111,48 @@ type TestCaseModelStruct struct {
 	TestData                        *testDataEngine.TestDataForGroupObjectStruct
 
 	TestCasePreviewObject *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage
+
+	TestCaseMetaDataPtr *TestCaseMetaDataStruct
 }
+
+// TestCaseMetaDataStruct
+// Struct holding the current TestCaseMetaDataSet and what has been selected
+type TestCaseMetaDataStruct struct {
+	CurrentSelectedDomainUuid                             string                                                                            // Specifies the current selected Owner Domain for the TestCase
+	TestCaseMetaDataMessageJsonForTestCaseWhenLastSaved   *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseMetaDataMessage_MetaDataItemMessage // The json used with the latest save version of the TestCase
+	TestCaseMetaDataMessageStructForTestCaseWhenLastSaved *TestCaseMetaDataForDomainStruct
+
+	MetaDataGroupsSlicePtr *[]*MetaDataGroupStruct // holding MetaDataGroups and its MetaData. The order is the same as is presented in the GUI
+
+}
+
+// MetaDataGroupStruct
+// Struct holding one MetaDataGroup and its MetaData
+type MetaDataGroupStruct struct {
+	MetaDataGroupName  string
+	MetaDataInGroupPtr *[]*MetaDataInGroupStruct // Holding all MetaDataName and their values. It also holds what was selected
+}
+
+// MetaDataInGroupStruct
+// Struct holding the available values, how they are selected and what was selected
+type MetaDataInGroupStruct struct {
+	MetaDataName                         string             // The name of the MetaData-post
+	SelectType                           MetaDataSelectType // Is the MetaData-post single- or multi-select
+	Mandatory                            bool               // Is the MetaData-post mandatory or not
+	AvailableMetaDataValues              []string           // The available values for the MetaData-post
+	SelectedMetaDataValueForSingleSelect string             // The value selected for single select
+	SelectedMetaDataValuesForMultiSelect []string           // The values selected for multi select
+}
+
+// MetaDataSelectType
+// The type for the SelectType for the MetaData
+type MetaDataSelectType uint8 // The type used for SelectType
+
+const (
+	MetaDataSelectType_NotSelected MetaDataSelectType = iota
+	MetaDataSelectType_SingleSelect
+	MetaDataSelectType_MultiSelect
+)
 
 type AttributeStructSliceReferenceType []*AttributeStruct
 

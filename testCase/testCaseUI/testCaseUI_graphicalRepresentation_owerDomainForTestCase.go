@@ -74,12 +74,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 	newOwnerDomainSelect = widget.NewSelect(options,
 		func(value string) {
 			// This function is called when an option is selected.
-			// You can handle the selection here.
-			fmt.Println("Selected:", value)
 
-			// Save TestCase back in Map
-			// Get the latest version of TestCase
-			tempTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+			testCasesUiCanvasObject.
+
+				// Save TestCase back in Map
+				// Get the latest version of TestCase
+				tempTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
 
 			// Store Domain in LocalTestCase in TestCase-model
 			tempTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid =

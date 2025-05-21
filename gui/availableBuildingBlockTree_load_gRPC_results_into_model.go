@@ -3,6 +3,7 @@ package gui
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
+	"encoding/json"
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/jlambert68/FenixScriptEngine/testDataEngine"
@@ -451,6 +452,9 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeTes
 	testCaseMetaDataForDomainsToBeStored []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseMetaDataForOneDomainMessage,
 	testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
 
+	var err error
+	var supportedMetaDataJsonAsByteArray []byte
+
 	// Store the list with TemplateRepositoryApiUrls
 	availableBuildingBlocksModel.TestCaseMetaDataForDomains = testCaseMetaDataForDomainsToBeStored
 
@@ -458,15 +462,41 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeTes
 	sharedCode.TestCaseMetaDataForDomainsPtr = &availableBuildingBlocksModel.TestCaseMetaDataForDomains
 
 	// Store the TestCaseMetaData-list in the TestCaseModel
-	testCaseModeReference.TestCaseMetaDataForDomainsMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
-		TestCaseMetaDataForOneDomainMessage)
+	testCaseModeReference.TestCaseMetaDataForDomainsMap = make(map[string]*testCaseModel.
+		TestCaseMetaDataForDomainsForMapStruct)
 
 	// Store the Available TestCaseMetaData as a map structure in TestCase-struct
 	for _, testCaseMetaDataForDomain := range testCaseMetaDataForDomainsToBeStored {
 
+		// Inititate struct to save in map
+		var testCaseMetaDataForDomainsForMap testCaseModel.TestCaseMetaDataForDomainsForMapStruct
+
+		// Store original json message
+		testCaseMetaDataForDomainsForMap = testCaseModel.TestCaseMetaDataForDomainsForMapStruct{
+			TestCaseMetaDataForDomainAsJsonPtr: testCaseMetaDataForDomain,
+			TestCaseMetaDataForDomainPtr:       nil,
+		}
+
+		// Convert to json object into a struct
+		supportedMetaDataJsonAsByteArray = []byte(testCaseMetaDataForDomain.TestCaseMetaDataAsJson)
+		var supportedMetaDataJsonAsStruct testCaseModel.TestCaseMetaDataForDomainStruct
+		err = json.Unmarshal(supportedMetaDataJsonAsByteArray, &supportedMetaDataJsonAsStruct)
+
+		if err != nil {
+			availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
+				"id":                        "128dddff-0ae7-4d60-826d-efa27d18e52c",
+				"error":                     err,
+				"testCaseMetaDataForDomain": testCaseMetaDataForDomain,
+			}).Fatalln("Error while unmarshalling json")
+		}
+
+		// Store 'supportedMetaDataJsonAsStruct'
+		testCaseMetaDataForDomainsForMap.TestCaseMetaDataForDomainPtr = &supportedMetaDataJsonAsStruct
+
+		// Store both the json and the struct into the TestCasesModel
 		testCaseModeReference.
 			TestCaseMetaDataForDomainsMap[testCaseMetaDataForDomain.GetDomainUuid()] =
-			testCaseMetaDataForDomain
+			&testCaseMetaDataForDomainsForMap
 
 	}
 

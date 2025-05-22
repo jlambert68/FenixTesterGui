@@ -61,10 +61,24 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 		var metaDataGroupsAsCanvasObject fyne.CanvasObject
 		metaDataGroupsAsCanvasObject = buildGUIFromMetaDataGroupsSlice(metaDataGroupsPtr)
 
-		myContainer := container.NewScroll(container.NewBorder(nil, nil, nil, nil, metaDataGroupsAsCanvasObject))
+		myContainer := container.NewBorder(nil, nil, nil, nil, metaDataGroupsAsCanvasObject)
+		fmt.Println("MinSize", myContainer.MinSize())
+		fmt.Println("Size", myContainer.Size())
 
-		// Create an Accordion item for the MetaData
-		metaDataAccordionItem = widget.NewAccordionItem("TestCase MetaData", myContainer)
+		if myContainer.MinSize().Width > 600 || myContainer.MinSize().Height > 600 {
+			myContainerScroll := container.NewScroll(myContainer)
+			myContainerScroll.SetMinSize(fyne.NewSize(600, 600))
+
+			// Create an Accordion item for the MetaData
+			metaDataAccordionItem = widget.NewAccordionItem("TestCase MetaData", myContainerScroll)
+
+		} else {
+
+			// Create an Accordion item for the MetaData
+			metaDataAccordionItem = widget.NewAccordionItem("TestCase MetaData", myContainer)
+		}
+
+		metaDataAccordionItem.Detail.Hide()
 	} else {
 
 		myContainer := container.New(layout.NewGridLayout(1), widget.NewLabel("MetaData is available when 'Owner Domain' is selected"))

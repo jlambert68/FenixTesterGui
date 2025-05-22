@@ -58,8 +58,42 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 		testCaseMetaDataForDomain = *testCaseMetaDataForDomainPtr
 		metaDataGroupsPtr = testCaseModel.ConvertTestCaseMetaData(testCaseMetaDataForDomain.TestCaseMetaDataForDomainPtr)
 
+		// Get Object holding Selected data for TestCase
+		var testCase testCaseModel.TestCaseModelStruct
+		testCase, existsInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		if existsInMap == false {
+
+			errorId := "7feb5fb3-0640-4866-8bd4-40c0011ceff1"
+			err = errors.New(fmt.Sprintf("TestCase with Uuid '%s' doesn't exist in'TestCasesmap'. Should never happen [ErrorID: %s]",
+				testCaseUuid, errorId))
+
+			return nil, nil, err
+		}
+
+		// Get pointer to Structure holding selected values in TestCase
+		var metaDataGroupInTestCasePtr *testCaseModel.TestCaseMetaDataStruct
+		metaDataGroupInTestCasePtr = testCase.TestCaseMetaDataPtr
+		if metaDataGroupInTestCasePtr == nil {
+			metaDataGroupInTestCasePtr = &testCaseModel.TestCaseMetaDataStruct{
+				CurrentSelectedDomainUuid:                             domainUuidToGetMetaDataFor,
+				TestCaseMetaDataMessageJsonForTestCaseWhenLastSaved:   nil,
+				TestCaseMetaDataMessageStructForTestCaseWhenLastSaved: nil,
+				MetaDataGroupsSlicePtr:                                nil,
+			}
+		}
+
+		// Generate TestCaseMeta-UI-object
 		var metaDataGroupsAsCanvasObject fyne.CanvasObject
-		metaDataGroupsAsCanvasObject = buildGUIFromMetaDataGroupsSlice(metaDataGroupsPtr)
+		metaDataGroupsAsCanvasObject = buildGUIFromMetaDataGroupsSlice(
+			metaDataGroupsPtr,
+
+			metaDataGroupInTestCasePtr)
+
+		// Save back 'metaDataGroupInTestCasePtr' into the TestCase
+		testCase.TestCaseMetaDataPtr = metaDataGroupInTestCasePtr
+
+		// Save back the TestCase in TestCases-map
+		testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = testCase
 
 		myContainer := container.NewBorder(nil, nil, nil, nil, metaDataGroupsAsCanvasObject)
 		fmt.Println("MinSize", myContainer.MinSize())
@@ -96,14 +130,27 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 }
 
 // buildGUIFromSlice builds a fyne.CanvasObject from your slice pointer
-func buildGUIFromMetaDataGroupsSlice(metaDataGroupsPtr *[]*testCaseModel.MetaDataGroupStruct) fyne.CanvasObject {
+func buildGUIFromMetaDataGroupsSlice(
+	metaDataGroupsSourcePtr *[]*testCaseModel.MetaDataGroupStruct,
+	metaDataGroupInTestCasePtr *testCaseModel.TestCaseMetaDataStruct) fyne.CanvasObject {
+
+	var convertMetaDataToMapMap map[string]map[string]*NewMetaDataInGroupStruct
+	convertMetaDataToMapMap = ConvertMetaDataToNewMap(metaDataGroupInTestCasePtr)
 
 	// Create one “card” per MetaDataGroup
 	var metaDataGroupCards []fyne.CanvasObject
-	metaDataGroupCards = make([]fyne.CanvasObject, 0, len(*metaDataGroupsPtr))
+	metaDataGroupCards = make([]fyne.CanvasObject, 0, len(*metaDataGroupsSourcePtr))
+
+	var metaDataGroupFromTestCase map[string]*NewMetaDataInGroupStruct
+	var newMetaDataItemInGroup *NewMetaDataInGroupStruct
+	var metaDataGroupFromSourceExistInTestCaseMap bool
+	var metaDataGroupItemFromSourceExistInTestCaseMap bool
 
 	// Loop all MetaData-groups
-	for _, metaDataGroupPtr := range *metaDataGroupsPtr {
+	for _, metaDataGroupPtr := range *metaDataGroupsSourcePtr {
+
+		// Get the MetaDataGroupName from the TestCase
+		metaDataGroupFromTestCase, metaDataGroupFromSourceExistInTestCaseMap = convertMetaDataToMapMap[metaDataGroupPtr.MetaDataGroupName]
 
 		// unpack the slice of *MetaDataInGroupStruct
 		var metaDataItemsInGroupPtr *[]*testCaseModel.MetaDataInGroupStruct
@@ -114,6 +161,10 @@ func buildGUIFromMetaDataGroupsSlice(metaDataGroupsPtr *[]*testCaseModel.MetaDat
 
 		// Loop all MetaDataItems in the MetaData-group
 		for _, metaDataItemPtr := range *metaDataItemsInGroupPtr {
+
+			if metaDataGroupFromSourceExistInTestCaseMap == true {
+				newMetaDataItemInGroup, metaDataGroupItemFromSourceExistInTestCaseMap = metaDataGroupFromTestCase[metaDataItemPtr.MetaDataName]
+			}
 
 			var metaDataItem testCaseModel.MetaDataInGroupStruct
 			metaDataItem = *metaDataItemPtr
@@ -127,12 +178,73 @@ func buildGUIFromMetaDataGroupsSlice(metaDataGroupsPtr *[]*testCaseModel.MetaDat
 			switch metaDataItem.SelectType {
 			case testCaseModel.MetaDataSelectType_SingleSelect:
 				sel := widget.NewSelect(metaDataItem.AvailableMetaDataValues, func(val string) {
+
 					fmt.Printf("Selected %q for %s\n", val, metaDataItem.MetaDataName)
+
+					// store value in TestCase-version of the MetaData
+					metaDataItem.SelectedMetaDataValueForSingleSelect = val
+
+					// If the
+					if metaDataGroupInTestCasePtr.MetaDataGroupsMapPtr == nil {
+						// No 'MetaDataGroupsMap'
+
+						var tempMetaDataInGroupMap map[string]*testCaseModel.MetaDataInGroupStruct
+						tempMetaDataInGroupMap = make(map[string]*testCaseModel.MetaDataInGroupStruct)
+
+						// Create MetaData for Group in TestCase
+						var tempMetaDataInGroup testCaseModel.MetaDataInGroupStruct
+						tempMetaDataInGroup = testCaseModel.MetaDataInGroupStruct{
+							MetaDataGroupName:                       metaDataItem.MetaDataGroupName,
+							MetaDataName:                            metaDataItem.MetaDataName,
+							SelectType:                              metaDataItem.SelectType,
+							Mandatory:                               metaDataItem.Mandatory,
+							AvailableMetaDataValues:                 metaDataItem.AvailableMetaDataValues,
+							SelectedMetaDataValueForSingleSelect:    val,
+							SelectedMetaDataValuesForMultiSelect:    nil,
+							SelectedMetaDataValuesForMultiSelectMap: nil,
+						}
+
+						// Add MetaData for Group to 'MetaDataGroupsMap' in TestCase
+						tempMetaDataInGroupMap[metaDataItem.MetaDataGroupName] = &tempMetaDataInGroup
+
+						// Create the 'MetaDataGroup'
+						var testMetaDataGroup testCaseModel.MetaDataGroupStruct
+						testMetaDataGroup = testCaseModel.MetaDataGroupStruct{
+							MetaDataGroupName:     metaDataItem.MetaDataGroupName,
+							MetaDataInGroupMapPtr: &tempMetaDataInGroupMap,
+						}
+
+						// Create the 'MetaDataGroupsMap' to be able to add the 'MetaDataGroup'
+						var tempMetaDataGroupsMap map[string]*testCaseModel.MetaDataGroupStruct
+						tempMetaDataGroupsMap = make(map[string]*testCaseModel.MetaDataGroupStruct)
+
+						// Add the 'MetaDataGroup' to the 'MetaDataGroupsMap'
+						tempMetaDataGroupsMap[metaDataItem.MetaDataGroupName] = &testMetaDataGroup
+
+						metaDataGroupInTestCasePtr.MetaDataGroupsMapPtr = &tempMetaDataGroupsMap
+
+					} else {
+						// 'MetaDataGroupsMap' exists
+
+					}
+
+					fmt.Println(metaDataGroupInTestCasePtr)
+
 				})
+				// Extract Selected values from TestCase
+				var selectedValue string
+				if metaDataGroupFromSourceExistInTestCaseMap == true && metaDataGroupItemFromSourceExistInTestCaseMap == true {
+					for _, availableValue := range metaDataItem.AvailableMetaDataValues {
+						if value, ok := newMetaDataItemInGroup.SelectedMetaDataValuesForMultiSelectMap[availableValue]; ok {
+							selectedValue = value
+						}
+					}
+				}
+
 				sel.PlaceHolder = "Choose..."
 				// apply the existing selection if any
-				if metaDataItem.SelectedMetaDataValueForSingleSelect != "" {
-					sel.SetSelected(metaDataItem.SelectedMetaDataValueForSingleSelect)
+				if selectedValue != "" {
+					sel.SetSelected(selectedValue)
 				}
 
 				// wrap in a 1-cell grid to force width
@@ -151,16 +263,35 @@ func buildGUIFromMetaDataGroupsSlice(metaDataGroupsPtr *[]*testCaseModel.MetaDat
 
 			case testCaseModel.MetaDataSelectType_MultiSelect:
 				chk := widget.NewCheckGroup(metaDataItem.AvailableMetaDataValues, func(vals []string) {
+
 					fmt.Printf("Multi-selected %v for %s\n", vals, metaDataItem.MetaDataName)
+
 				})
+
+				// Extract Selected values from TestCase
+				var selectedValues []string
+				if metaDataGroupFromSourceExistInTestCaseMap == true && metaDataGroupItemFromSourceExistInTestCaseMap == true {
+					for _, availableValue := range metaDataItem.AvailableMetaDataValues {
+						if _, ok := metaDataGroupFromTestCase[metaDataItem.MetaDataName].SelectedMetaDataValuesForMultiSelectMap[availableValue]; ok {
+							selectedValues = append(selectedValues, availableValue)
+						}
+					}
+				}
+
 				// apply existing selections
-				chk.Selected = append([]string(nil), metaDataItem.SelectedMetaDataValuesForMultiSelect...)
+				chk.Selected = append([]string(nil), selectedValues...)
 				chk.Refresh()
+
+				w := calcCheckGroupWidth(metaDataItem.AvailableMetaDataValues)
+				wrapper := container.New(
+					layout.NewGridWrapLayout(fyne.NewSize(w, chk.MinSize().Height)),
+					chk,
+				)
 
 				metaDataItemsAsCanvasObject = append(metaDataItemsAsCanvasObject,
 					container.NewVBox(
 						widget.NewLabel(label),
-						chk,
+						wrapper,
 					),
 				)
 
@@ -212,4 +343,60 @@ func calcCheckGroupWidth(values []string) float32 {
 	tmp := widget.NewCheckGroup(values, nil)
 	tmp.Refresh()
 	return tmp.MinSize().Width
+}
+
+// NewMetaDataInGroupStruct
+// Struct holding the available values, how they are selected and what was selected
+type NewMetaDataInGroupStruct struct {
+	MetaDataGroupName                       string                           // The name of the MetaData-Group
+	MetaDataName                            string                           // The name of the MetaData-post
+	SelectType                              testCaseModel.MetaDataSelectType // Is the MetaData-post single- or multi-select
+	Mandatory                               bool                             // Is the MetaData-post mandatory or not
+	SelectedMetaDataValueForSingleSelect    string                           // The value selected for single select
+	SelectedMetaDataValuesForMultiSelectMap map[string]string                // The values selected for multi select
+}
+
+// ConvertMetaDataToNewMap transforms the TestCaseMetaDataStruct.MetaDataGroupsSlicePtr
+// into a nested map[groupName][metaDataName] => *NewMetaDataInGroupStruct.
+func ConvertMetaDataToNewMap(tc *testCaseModel.TestCaseMetaDataStruct) map[string]map[string]*NewMetaDataInGroupStruct {
+	result := make(map[string]map[string]*NewMetaDataInGroupStruct)
+
+	if tc == nil {
+		return result
+	}
+
+	if tc.MetaDataGroupsSlicePtr == nil {
+		return result
+	}
+
+	for _, grp := range *tc.MetaDataGroupsSlicePtr {
+		if grp == nil {
+			continue
+		}
+		inner := make(map[string]*NewMetaDataInGroupStruct)
+		if grp.MetaDataInGroupPtr != nil {
+			for _, item := range *grp.MetaDataInGroupPtr {
+				if item == nil {
+					continue
+				}
+				// build the multi-select map
+				selMap := make(map[string]string, len(item.SelectedMetaDataValuesForMultiSelect))
+				for _, v := range item.SelectedMetaDataValuesForMultiSelect {
+					selMap[v] = v
+				}
+
+				newItem := &NewMetaDataInGroupStruct{
+					MetaDataGroupName:                       grp.MetaDataGroupName,
+					MetaDataName:                            item.MetaDataName,
+					SelectType:                              item.SelectType,
+					Mandatory:                               item.Mandatory,
+					SelectedMetaDataValueForSingleSelect:    item.SelectedMetaDataValueForSingleSelect,
+					SelectedMetaDataValuesForMultiSelectMap: selMap,
+				}
+				inner[item.MetaDataName] = newItem
+			}
+		}
+		result[grp.MetaDataGroupName] = inner
+	}
+	return result
 }

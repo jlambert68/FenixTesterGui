@@ -122,26 +122,29 @@ type TestCaseMetaDataStruct struct {
 	TestCaseMetaDataMessageJsonForTestCaseWhenLastSaved   *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseMetaDataMessage_MetaDataItemMessage // The json used with the latest save version of the TestCase
 	TestCaseMetaDataMessageStructForTestCaseWhenLastSaved *TestCaseMetaDataForDomainStruct
 
-	MetaDataGroupsSlicePtr *[]*MetaDataGroupStruct // holding MetaDataGroups and its MetaData. The order is the same as is presented in the GUI
+	MetaDataGroupsMapPtr *map[string]*MetaDataGroupStruct // holding MetaDataGroups and its MetaData. The key is the MetaDataGroupName
 
 }
 
 // MetaDataGroupStruct
 // Struct holding one MetaDataGroup and its MetaData
 type MetaDataGroupStruct struct {
-	MetaDataGroupName  string
-	MetaDataInGroupPtr *[]*MetaDataInGroupStruct // Holding all MetaDataName and their values. It also holds what was selected
+	MetaDataGroupName string
+	//MetaDataInGroupPtr *[]*MetaDataInGroupStruct // Holding all MetaDataName and their values. It also holds what was selected
+	MetaDataInGroupMapPtr *map[string]*MetaDataInGroupStruct // Holding all MetaDataName and their values. It also holds what was selected
 }
 
 // MetaDataInGroupStruct
 // Struct holding the available values, how they are selected and what was selected
 type MetaDataInGroupStruct struct {
-	MetaDataName                         string             // The name of the MetaData-post
-	SelectType                           MetaDataSelectType // Is the MetaData-post single- or multi-select
-	Mandatory                            bool               // Is the MetaData-post mandatory or not
-	AvailableMetaDataValues              []string           // The available values for the MetaData-post
-	SelectedMetaDataValueForSingleSelect string             // The value selected for single select
-	SelectedMetaDataValuesForMultiSelect []string           // The values selected for multi select
+	MetaDataGroupName                       string             // The name of the MetaData-Group
+	MetaDataName                            string             // The name of the MetaData-post
+	SelectType                              MetaDataSelectType // Is the MetaData-post single- or multi-select
+	Mandatory                               bool               // Is the MetaData-post mandatory or not
+	AvailableMetaDataValues                 []string           // The available values for the MetaData-post
+	SelectedMetaDataValueForSingleSelect    string             // The value selected for single select
+	SelectedMetaDataValuesForMultiSelect    []string           // The values selected for multi select
+	SelectedMetaDataValuesForMultiSelectMap map[string]string  // The values selected for multi select
 }
 
 // MetaDataSelectType

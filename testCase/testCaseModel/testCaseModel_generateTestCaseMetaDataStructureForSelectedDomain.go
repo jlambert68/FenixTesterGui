@@ -98,12 +98,13 @@ func buildMetaDataGroups(testCaseMetaDataForDomain *TestCaseMetaDataForDomainStr
 			}
 
 			metaDataInGroup = append(metaDataInGroup, &MetaDataInGroupStruct{
-				MetaDataName:                         metaDataItem.MetaDataName,
-				SelectType:                           selType,
-				Mandatory:                            mandatory,
-				AvailableMetaDataValues:              append([]string(nil), metaDataItem.MetaDataValues...),
-				SelectedMetaDataValueForSingleSelect: "",
-				SelectedMetaDataValuesForMultiSelect: nil,
+				MetaDataName:                            metaDataItem.MetaDataName,
+				SelectType:                              selType,
+				Mandatory:                               mandatory,
+				AvailableMetaDataValues:                 append([]string(nil), metaDataItem.MetaDataValues...),
+				SelectedMetaDataValueForSingleSelect:    "",
+				SelectedMetaDataValuesForMultiSelect:    nil,
+				SelectedMetaDataValuesForMultiSelectMap: nil,
 			})
 		}
 
@@ -145,13 +146,16 @@ func ConvertTestCaseMetaData(testCaseMetaDataForDomain *TestCaseMetaDataForDomai
 			}
 
 			item := &MetaDataInGroupStruct{
-				MetaDataName:                         md.MetaDataName,
-				SelectType:                           selType,
-				Mandatory:                            mandatory,
-				AvailableMetaDataValues:              append([]string(nil), md.MetaDataValues...),
-				SelectedMetaDataValueForSingleSelect: "",
-				SelectedMetaDataValuesForMultiSelect: nil,
+				MetaDataGroupName:                       g.MetaDataGroupName,
+				MetaDataName:                            md.MetaDataName,
+				SelectType:                              selType,
+				Mandatory:                               mandatory,
+				AvailableMetaDataValues:                 append([]string(nil), md.MetaDataValues...),
+				SelectedMetaDataValueForSingleSelect:    "",
+				SelectedMetaDataValuesForMultiSelect:    nil,
+				SelectedMetaDataValuesForMultiSelectMap: nil,
 			}
+
 			inGroup = append(inGroup, item)
 		}
 

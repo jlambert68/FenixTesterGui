@@ -65,7 +65,7 @@ type testCaseGraphicalAreasStruct struct {
 	TestCaseTextualModelArea    fyne.CanvasObject
 	TestCaseGraphicalModelArea  fyne.CanvasObject
 	TestCaseBaseInformationArea fyne.CanvasObject
-	TestCaseMetaDataArea        fyne.CanvasObject
+	TestCaseMetaDataArea        *fyne.CanvasObject
 	TestCaseAttributesArea      fyne.CanvasObject
 }
 

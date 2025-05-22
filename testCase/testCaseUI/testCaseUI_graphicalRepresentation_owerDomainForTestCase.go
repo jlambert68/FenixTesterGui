@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"image/color"
+	"log"
 )
 
 // Generate the OwnerDomain Area for the TestCase
@@ -75,17 +76,70 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 		func(value string) {
 			// This function is called when an option is selected.
 
-			testCasesUiCanvasObject.
-
-				// Save TestCase back in Map
-				// Get the latest version of TestCase
-				tempTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+			// Save TestCase back in Map
+			// Get the latest version of TestCase
+			tempTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
 
 			// Store Domain in LocalTestCase in TestCase-model
 			tempTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid =
 				testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseMap[value].DomainUuid
 			tempTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainName =
 				testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseMap[value].DomainName
+
+			// Get the TestCaseUI-model
+			var testCasesUiModelMap map[string]*testCaseGraphicalAreasStruct
+			var testCaseGraphicalAreas *testCaseGraphicalAreasStruct
+			testCasesUiModelMap = testCasesUiCanvasObject.TestCasesUiModelMap
+			testCaseGraphicalAreas, _ = testCasesUiModelMap[testCaseUuid]
+
+			//var testCaseMetaDataArea fyne.CanvasObject
+			var metaDataAccordion *widget.Accordion
+			_, metaDataAccordion, err = testCasesUiCanvasObject.GenerateMetaDataAreaForTestCase(
+				testCaseUuid,
+				testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseMap[value].DomainUuid)
+
+			if err != nil {
+				log.Println(err, metaDataAccordion)
+
+				return
+			}
+
+			//var testCaseMetaDataAreaContainer fyne.Container
+			//var ok binding.BoolList
+			var TestCaseMetaDataAreaCanvasObject fyne.CanvasObject
+			TestCaseMetaDataAreaCanvasObject = *testCaseGraphicalAreas.TestCaseMetaDataArea
+			if testCaseMetaDataAreaContainer, ok := TestCaseMetaDataAreaCanvasObject.(*fyne.Container); ok {
+				if ok != true {
+					log.Fatalln("couldn't cast to fyne.Container")
+				}
+
+				metaDataAccordion.OpenAll()
+
+				testCaseMetaDataAreaContainer.Objects[0] = metaDataAccordion
+
+				testCaseMetaDataAreaContainer.Refresh()
+			}
+
+			/*
+					metaDataAccordionItem2 := *metaDataAccordionItem
+					if metaDataAccordionItemCanvas, ok :=  metaDataAccordionItem2.(*fyne.CanvasObject); ok {
+						if ok != true {
+							log.Fatalln("couldn't cast to fyne.Container")
+						}
+					testCaseMetaDataAreaContainer.Objects[0] = metaDataAccordionItem
+				}
+
+
+				testCaseMetaDataAreaContainer = *testCaseGraphicalAreas.TestCaseMetaDataArea
+				testCaseMetaDataAreaContainer, err = (fyne.Container).(testCaseGraphicalAreas)
+				//*testCaseGraphicalAreas.TestCaseMetaDataArea. = testCaseMetaDataArea
+			*/
+			// Save back TestCaseUI
+			testCasesUiModelMap[testCaseUuid] = testCaseGraphicalAreas
+
+			testCasesUiCanvasObject.TestCasesUiModelMap = testCasesUiModelMap
+
+			//testCaseMetaDataArea.Refresh()
 
 			// Store back TestCase-model in Map
 			testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = tempTestCase

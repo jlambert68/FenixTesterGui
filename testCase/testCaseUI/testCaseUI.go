@@ -235,14 +235,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	testCaseGraphicalAreas.TestCaseBaseInformationArea = testCaseBaseInformationArea
 
 	// Generate the MetaData Area for the TestCase
-	testCaseMetaDataArea, err := testCasesUiCanvasObject.generateMetaDataAreaForTestCase(testCaseToBeAddedUuid, "")
+	testCaseMetaDataArea, _, err := testCasesUiCanvasObject.GenerateMetaDataAreaForTestCase(
+		testCaseToBeAddedUuid,
+		"")
 
 	if err != nil {
 		return err
 	}
 
 	// Add newly created MetaData Area to object for all graphical parts of one TestCase
-	testCaseGraphicalAreas.TestCaseMetaDataArea = testCaseMetaDataArea
+	testCaseGraphicalAreas.TestCaseMetaDataArea = &testCaseMetaDataArea
 
 	// Generate the TestCaseAttributes Area for the TestCase
 	testCaseAttributesArea, testInstructionAttributesAccordion, err := testCasesUiCanvasObject.
@@ -278,7 +280,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	baseInformationMetaDataTestCaseAttributes := container.NewVBox(
 		testCaseGraphicalAreas.TestCaseBaseInformationArea,
 		widget.NewSeparator(),
-		testCaseGraphicalAreas.TestCaseMetaDataArea,
+		//container.NewScroll(testCaseGraphicalAreas.TestCaseAttributesArea),
+		*testCaseGraphicalAreas.TestCaseMetaDataArea,
 		widget.NewSeparator(),
 	)
 
@@ -296,11 +299,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	newTestCaseTabObject := container.NewTabItem(tabName, testCaseAdaptiveSplitContainer)
 
 	// Add tab to existing Tab-object
+	//fyne.Do(func() {
 	testCasesUiCanvasObject.TestCasesTabs.Append(newTestCaseTabObject)
+	//})
 
 	testCasesUiCanvasObject.TestCasesTabs.OnSelected = func(tabItem *container.TabItem) {
-		fmt.Println("OnSelected")
-		fmt.Println(tabItem)
 
 		if TempTestCasesUiCanvasObject != nil {
 			var existInMap bool
@@ -334,7 +337,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	}
 
 	// Set focus on newly created Tab
+	//fyne.Do(func() {
 	testCasesUiCanvasObject.TestCasesTabs.Select(newTestCaseTabObject)
+	//})
 
 	/*
 		// Initiate Textual Representations for TestCase

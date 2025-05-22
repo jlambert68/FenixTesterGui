@@ -11,28 +11,34 @@ import (
 )
 
 // Generate the MetaData Area for the TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateMetaDataAreaForTestCase(
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTestCase(
 	testCaseUuid string,
 	domainUuidToGetMetaDataFor string) (
-	testCaseMetaDataArea fyne.CanvasObject, err error) {
+	testCaseMetaDataArea fyne.CanvasObject,
+	accordion *widget.Accordion,
+	err error) {
 
-	var metaDataAccordionItem *widget.AccordionItem
-	var accordion *widget.Accordion
 	var metaDataArea fyne.CanvasObject
+	var metaDataAccordionItem *widget.AccordionItem
+
+	var existsInMap bool
 
 	//
 	if len(domainUuidToGetMetaDataFor) > 0 {
 
-		// Get current TestCase-UI-model
-		_, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
+		/*
+			// Get current TestCase-UI-model
+			_, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
 
-		if existsInMap == true {
-			errorId := "bcb9d984-3106-42b6-9c23-288ec6d26224"
-			err = errors.New(fmt.Sprintf("testcase-UI-model with sourceUuid '%s' allready exist in 'TestCasesUiModelMap' [ErrorID: %s]", testCaseUuid, errorId))
+			if existsInMap == true {
+				errorId := "bcb9d984-3106-42b6-9c23-288ec6d26224"
+				err = errors.New(fmt.Sprintf("testcase-UI-model with sourceUuid '%s' allready exist in 'TestCasesUiModelMap' [ErrorID: %s]", testCaseUuid, errorId))
 
-			return nil, err
-		}
+				return nil, err
+			}
 
+
+		*/
 		// Get the MetaDataGroups depending on Domain
 		var metaDataGroupsPtr *[]*testCaseModel.MetaDataGroupStruct
 		var testCaseMetaDataForDomainsMap map[string]*testCaseModel.TestCaseMetaDataForDomainsForMapStruct
@@ -46,7 +52,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateMetaDataAreaForTe
 			err = errors.New(fmt.Sprintf("Domain with Uuid '%s' doesn't exist in'testCaseMetaDataForDomainsMap'. Should never happen [ErrorID: %s]",
 				domainUuidToGetMetaDataFor, errorId))
 
-			return nil, err
+			return nil, nil, err
 		}
 
 		testCaseMetaDataForDomain = *testCaseMetaDataForDomainPtr
@@ -55,11 +61,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateMetaDataAreaForTe
 		var metaDataGroupsAsCanvasObject fyne.CanvasObject
 		metaDataGroupsAsCanvasObject = buildGUIFromMetaDataGroupsSlice(metaDataGroupsPtr)
 
+		myContainer := container.NewScroll(container.NewBorder(nil, nil, nil, nil, metaDataGroupsAsCanvasObject))
+
 		// Create an Accordion item for the MetaData
-		metaDataAccordionItem = widget.NewAccordionItem("TestCase MetaData", metaDataGroupsAsCanvasObject)
+		metaDataAccordionItem = widget.NewAccordionItem("TestCase MetaData", myContainer)
 	} else {
+
+		myContainer := container.New(layout.NewGridLayout(1), widget.NewLabel("MetaData is available when 'Owner Domain' is selected"))
+
 		// Create an Accordion item for the MetaData
-		metaDataAccordionItem = widget.NewAccordionItem("TestCase MetaData", widget.NewLabel("MetaData is available when 'Owner Domain' is selected"))
+		metaDataAccordionItem = widget.NewAccordionItem("TestCase MetaData", myContainer)
 	}
 
 	accordion = widget.NewAccordion(metaDataAccordionItem)
@@ -67,7 +78,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateMetaDataAreaForTe
 	// Create the VBox-container that will be returned
 	metaDataArea = container.NewVBox(accordion, widget.NewLabel(""), widget.NewSeparator())
 
-	return metaDataArea, err
+	return metaDataArea, accordion, err
 }
 
 // buildGUIFromSlice builds a fyne.CanvasObject from your slice pointer
@@ -109,10 +120,18 @@ func buildGUIFromMetaDataGroupsSlice(metaDataGroupsPtr *[]*testCaseModel.MetaDat
 				if metaDataItem.SelectedMetaDataValueForSingleSelect != "" {
 					sel.SetSelected(metaDataItem.SelectedMetaDataValueForSingleSelect)
 				}
+
+				// wrap in a 1-cell grid to force width
+				w := calcSelectWidth(metaDataItem.AvailableMetaDataValues)
+				wrapper := container.New(
+					layout.NewGridWrapLayout(fyne.NewSize(w, sel.MinSize().Height)),
+					sel,
+				)
+
 				metaDataItemsAsCanvasObject = append(metaDataItemsAsCanvasObject,
 					container.NewVBox(
 						widget.NewLabel(label),
-						sel,
+						wrapper,
 					),
 				)
 
@@ -137,9 +156,9 @@ func buildGUIFromMetaDataGroupsSlice(metaDataGroupsPtr *[]*testCaseModel.MetaDat
 			}
 		}
 
-		// each metadata item cell is 200×60
+		// each metadata
 		content := container.New(
-			layout.NewGridWrapLayout(fyne.NewSize(200, 60)),
+			layout.NewHBoxLayout(),
 			metaDataItemsAsCanvasObject...,
 		)
 
@@ -150,7 +169,33 @@ func buildGUIFromMetaDataGroupsSlice(metaDataGroupsPtr *[]*testCaseModel.MetaDat
 
 	// top‐level grid: each card cell is 220×180
 	return container.New(
-		layout.NewGridWrapLayout(fyne.NewSize(220, 180)),
+		layout.NewVBoxLayout(),
 		metaDataGroupCards...,
 	)
+}
+
+// calcSelectWidth returns the width needed to show the longest option
+func calcSelectWidth(values []string) float32 {
+	tmp := widget.NewSelect(values, nil)
+
+	// Loop the values and check which has most characters
+	var maxValue float32
+	var indexForMaxValue int
+	for valueIndex, value := range values {
+		if maxValue < float32(len(value)) {
+			maxValue = float32(len(value))
+			indexForMaxValue = valueIndex
+		}
+	}
+
+	tmp.PlaceHolder = values[indexForMaxValue] // ensure MinSize measures a non-empty string
+	tmp.Refresh()                              // recalc cached size
+	return tmp.MinSize().Width
+}
+
+// calcCheckGroupWidth returns the width needed to show the widest checkbox label
+func calcCheckGroupWidth(values []string) float32 {
+	tmp := widget.NewCheckGroup(values, nil)
+	tmp.Refresh()
+	return tmp.MinSize().Width
 }

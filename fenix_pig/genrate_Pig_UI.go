@@ -3,6 +3,7 @@ package fenix_pig
 import (
 	"FenixTesterGui/memoryUsage"
 	_ "embed"
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
@@ -27,7 +28,10 @@ func GeneratePigUI() (
 	fenixPig48x48Image.SetMinSize(fyne.NewSize(48, 48))
 
 	var pigClickableImageContainer *memoryUsage.ClickableImageStruct
-	pigClickableImageContainer = memoryUsage.NewClickableImage(fenixPig48x48Image, nil)
+	pigClickableImageContainer = memoryUsage.NewClickableImage(
+		fenixPig48x48Image, func(clickableContainer *memoryUsage.ClickableImageStruct) {
+			fmt.Println("Pig clicked")
+		})
 
 	// center it in a container
 

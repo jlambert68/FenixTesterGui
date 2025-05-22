@@ -54,8 +54,7 @@ func (detailedTestCaseExecutionsUIObject *DetailedTestCaseExecutionsUIModelStruc
 	})
 
 	detailedTestCaseExecutionsUIObject.TestCaseExecutionsTabs.OnSelected = func(tabItem *container.TabItem) {
-		fmt.Println("OnSelected")
-		fmt.Println(tabItem)
+
 		testCaseExecutionsTabPage.Refresh()
 
 	}

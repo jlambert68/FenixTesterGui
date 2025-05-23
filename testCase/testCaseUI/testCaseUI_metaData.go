@@ -40,7 +40,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 
 		*/
 		// Get the MetaDataGroups depending on Domain
-		var metaDataGroupsPtr *[]*testCaseModel.MetaDataGroupStruct
+		var metaDataGroupsPtr *map[string]*testCaseModel.MetaDataGroupStruct
 		var testCaseMetaDataForDomainsMap map[string]*testCaseModel.TestCaseMetaDataForDomainsForMapStruct
 		var testCaseMetaDataForDomainPtr *testCaseModel.TestCaseMetaDataForDomainsForMapStruct
 		var testCaseMetaDataForDomain testCaseModel.TestCaseMetaDataForDomainsForMapStruct
@@ -78,7 +78,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 				CurrentSelectedDomainUuid:                             domainUuidToGetMetaDataFor,
 				TestCaseMetaDataMessageJsonForTestCaseWhenLastSaved:   nil,
 				TestCaseMetaDataMessageStructForTestCaseWhenLastSaved: nil,
-				MetaDataGroupsSlicePtr:                                nil,
+				MetaDataGroupsMapPtr:                                  nil,
 			}
 		}
 
@@ -96,8 +96,6 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 		testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = testCase
 
 		myContainer := container.NewBorder(nil, nil, nil, nil, metaDataGroupsAsCanvasObject)
-		fmt.Println("MinSize", myContainer.MinSize())
-		fmt.Println("Size", myContainer.Size())
 
 		if myContainer.MinSize().Width > 600 || myContainer.MinSize().Height > 600 {
 			myContainerScroll := container.NewScroll(myContainer)
@@ -131,7 +129,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 
 // buildGUIFromSlice builds a fyne.CanvasObject from your slice pointer
 func buildGUIFromMetaDataGroupsSlice(
-	metaDataGroupsSourcePtr *[]*testCaseModel.MetaDataGroupStruct,
+	metaDataGroupsSourceMapPtr *map[string]*testCaseModel.MetaDataGroupStruct,
 	metaDataGroupInTestCasePtr *testCaseModel.TestCaseMetaDataStruct) fyne.CanvasObject {
 
 	var convertMetaDataToMapMap map[string]map[string]*NewMetaDataInGroupStruct
@@ -139,25 +137,26 @@ func buildGUIFromMetaDataGroupsSlice(
 
 	// Create one “card” per MetaDataGroup
 	var metaDataGroupCards []fyne.CanvasObject
-	metaDataGroupCards = make([]fyne.CanvasObject, 0, len(*metaDataGroupsSourcePtr))
+	metaDataGroupCards = make([]fyne.CanvasObject, 0, len(*metaDataGroupsSourceMapPtr))
 
 	var metaDataGroupFromTestCase map[string]*NewMetaDataInGroupStruct
 	var newMetaDataItemInGroup *NewMetaDataInGroupStruct
 	var metaDataGroupFromSourceExistInTestCaseMap bool
 	var metaDataGroupItemFromSourceExistInTestCaseMap bool
+	var existInMap bool
 
 	// Loop all MetaData-groups
-	for _, metaDataGroupPtr := range *metaDataGroupsSourcePtr {
+	for _, metaDataGroupPtr := range *metaDataGroupsSourceMapPtr {
 
 		// Get the MetaDataGroupName from the TestCase
 		metaDataGroupFromTestCase, metaDataGroupFromSourceExistInTestCaseMap = convertMetaDataToMapMap[metaDataGroupPtr.MetaDataGroupName]
 
 		// unpack the slice of *MetaDataInGroupStruct
-		var metaDataItemsInGroupPtr *[]*testCaseModel.MetaDataInGroupStruct
-		metaDataItemsInGroupPtr = metaDataGroupPtr.MetaDataInGroupPtr
+		var metaDataItemsInGroupPtr *map[string]*testCaseModel.MetaDataInGroupStruct
+		metaDataItemsInGroupPtr = metaDataGroupPtr.MetaDataInGroupMapPtr
 
 		var metaDataItemsAsCanvasObject []fyne.CanvasObject
-		metaDataItemsAsCanvasObject = make([]fyne.CanvasObject, 0, len(*metaDataGroupPtr.MetaDataInGroupPtr))
+		metaDataItemsAsCanvasObject = make([]fyne.CanvasObject, 0, len(*metaDataGroupPtr.MetaDataInGroupMapPtr))
 
 		// Loop all MetaDataItems in the MetaData-group
 		for _, metaDataItemPtr := range *metaDataItemsInGroupPtr {
@@ -184,7 +183,7 @@ func buildGUIFromMetaDataGroupsSlice(
 					// store value in TestCase-version of the MetaData
 					metaDataItem.SelectedMetaDataValueForSingleSelect = val
 
-					// If the
+					// If the 'MetaDataGroupsMap' exist
 					if metaDataGroupInTestCasePtr.MetaDataGroupsMapPtr == nil {
 						// No 'MetaDataGroupsMap'
 
@@ -224,11 +223,99 @@ func buildGUIFromMetaDataGroupsSlice(
 						metaDataGroupInTestCasePtr.MetaDataGroupsMapPtr = &tempMetaDataGroupsMap
 
 					} else {
-						// 'MetaDataGroupsMap' exists
+						// 'MetaDataGroupsMap' exists, so get it
+						var tempMetaDataGroupsMapPtr *map[string]*testCaseModel.MetaDataGroupStruct
+						var tempMetaDataGroupsMap map[string]*testCaseModel.MetaDataGroupStruct
+						tempMetaDataGroupsMapPtr = metaDataGroupInTestCasePtr.MetaDataGroupsMapPtr
+						tempMetaDataGroupsMap = *tempMetaDataGroupsMapPtr
+
+						// Check for specific MetaDataGroup
+						var tempMetaDataGroupPtr *testCaseModel.MetaDataGroupStruct
+						tempMetaDataGroupPtr, existInMap = tempMetaDataGroupsMap[metaDataItem.MetaDataGroupName]
+						if existInMap == false {
+							// Specific MetaDataGroupName doesn't exist
+
+							var tempMetaDataInGroupMap map[string]*testCaseModel.MetaDataInGroupStruct
+							tempMetaDataInGroupMap = make(map[string]*testCaseModel.MetaDataInGroupStruct)
+
+							// Create the specific MetaDataItem
+							var tempMetaDataInGroup testCaseModel.MetaDataInGroupStruct
+							tempMetaDataInGroup = testCaseModel.MetaDataInGroupStruct{
+								MetaDataGroupName:                       metaDataItem.MetaDataGroupName,
+								MetaDataName:                            metaDataItem.MetaDataName,
+								SelectType:                              metaDataItem.SelectType,
+								Mandatory:                               metaDataItem.Mandatory,
+								AvailableMetaDataValues:                 metaDataItem.AvailableMetaDataValues,
+								SelectedMetaDataValueForSingleSelect:    val,
+								SelectedMetaDataValuesForMultiSelect:    nil,
+								SelectedMetaDataValuesForMultiSelectMap: nil,
+							}
+
+							// Add MetaData for Group to 'MetaDataGroupsMap' in TestCase
+							tempMetaDataInGroupMap[metaDataItem.MetaDataName] = &tempMetaDataInGroup
+
+							// Create the 'MetaDataGroup'
+							tempMetaDataGroupPtr = &testCaseModel.MetaDataGroupStruct{
+								MetaDataGroupName:     metaDataItem.MetaDataGroupName,
+								MetaDataInGroupMapPtr: &tempMetaDataInGroupMap,
+							}
+
+							// Save MetaDataGroup with Item in 'MetaDataGroupsMap'
+							tempMetaDataGroupsMap[metaDataItem.MetaDataGroupName] = tempMetaDataGroupPtr
+
+						} else {
+
+							// Specific MetaDataGroupName does exist
+							var tempMetaDataGroup testCaseModel.MetaDataGroupStruct
+							tempMetaDataGroup = *tempMetaDataGroupPtr
+
+							// Get map for MetaDataGroupItems
+							var tempMetaDataInGroupMap map[string]*testCaseModel.MetaDataInGroupStruct
+							tempMetaDataInGroupMap = *tempMetaDataGroup.MetaDataInGroupMapPtr
+
+							// Check if MetaDataItem exist
+							var tempMetaDataInGroupPtr *testCaseModel.MetaDataInGroupStruct
+							tempMetaDataInGroupPtr, existInMap = tempMetaDataInGroupMap[metaDataItem.MetaDataName]
+
+							if existInMap == false {
+
+								// Create the specific MetaDataItem, because it doesn't exist
+								var tempMetaDataInGroup testCaseModel.MetaDataInGroupStruct
+								tempMetaDataInGroup = testCaseModel.MetaDataInGroupStruct{
+									MetaDataGroupName:                       metaDataItem.MetaDataGroupName,
+									MetaDataName:                            metaDataItem.MetaDataName,
+									SelectType:                              metaDataItem.SelectType,
+									Mandatory:                               metaDataItem.Mandatory,
+									AvailableMetaDataValues:                 metaDataItem.AvailableMetaDataValues,
+									SelectedMetaDataValueForSingleSelect:    val,
+									SelectedMetaDataValuesForMultiSelect:    nil,
+									SelectedMetaDataValuesForMultiSelectMap: nil,
+								}
+
+								// Add MetaData for Group to 'MetaDataGroupsMap' in TestCase
+								tempMetaDataInGroupMap[metaDataItem.MetaDataName] = &tempMetaDataInGroup
+
+								// Create the 'MetaDataGroup'
+								tempMetaDataGroupPtr = &testCaseModel.MetaDataGroupStruct{
+									MetaDataGroupName:     metaDataItem.MetaDataGroupName,
+									MetaDataInGroupMapPtr: &tempMetaDataInGroupMap,
+								}
+
+								// Save MetaDataGroup with Item in 'MetaDataGroupsMap'
+								tempMetaDataGroupsMap[metaDataItem.MetaDataGroupName] = tempMetaDataGroupPtr
+
+							} else {
+								// MetaDataItem does exist, so get it
+								var tempMetaDataInGroup testCaseModel.MetaDataInGroupStruct
+								tempMetaDataInGroup = *tempMetaDataInGroupPtr
+
+								// Set selected value for the TestDataItem
+								tempMetaDataInGroup.SelectedMetaDataValueForSingleSelect = val
+
+							}
+						}
 
 					}
-
-					fmt.Println(metaDataGroupInTestCasePtr)
 
 				})
 				// Extract Selected values from TestCase
@@ -262,9 +349,144 @@ func buildGUIFromMetaDataGroupsSlice(
 				)
 
 			case testCaseModel.MetaDataSelectType_MultiSelect:
-				chk := widget.NewCheckGroup(metaDataItem.AvailableMetaDataValues, func(vals []string) {
+				var chk *widget.CheckGroup
+				chk = widget.NewCheckGroup(metaDataItem.AvailableMetaDataValues, func(vals []string) {
 
 					fmt.Printf("Multi-selected %v for %s\n", vals, metaDataItem.MetaDataName)
+
+					// If the 'MetaDataGroupsMap' exist
+					if metaDataGroupInTestCasePtr.MetaDataGroupsMapPtr == nil {
+						// No 'MetaDataGroupsMap'
+
+						var tempMetaDataInGroupMap map[string]*testCaseModel.MetaDataInGroupStruct
+						tempMetaDataInGroupMap = make(map[string]*testCaseModel.MetaDataInGroupStruct)
+
+						// Create MetaData for Group in TestCase
+						var tempMetaDataInGroup testCaseModel.MetaDataInGroupStruct
+						tempMetaDataInGroup = testCaseModel.MetaDataInGroupStruct{
+							MetaDataGroupName:                       metaDataItem.MetaDataGroupName,
+							MetaDataName:                            metaDataItem.MetaDataName,
+							SelectType:                              metaDataItem.SelectType,
+							Mandatory:                               metaDataItem.Mandatory,
+							AvailableMetaDataValues:                 metaDataItem.AvailableMetaDataValues,
+							SelectedMetaDataValueForSingleSelect:    "",
+							SelectedMetaDataValuesForMultiSelect:    chk.Selected,
+							SelectedMetaDataValuesForMultiSelectMap: nil,
+						}
+
+						// Add MetaData for Group to 'MetaDataGroupsMap' in TestCase
+						tempMetaDataInGroupMap[metaDataItem.MetaDataGroupName] = &tempMetaDataInGroup
+
+						// Create the 'MetaDataGroup'
+						var testMetaDataGroup testCaseModel.MetaDataGroupStruct
+						testMetaDataGroup = testCaseModel.MetaDataGroupStruct{
+							MetaDataGroupName:     metaDataItem.MetaDataGroupName,
+							MetaDataInGroupMapPtr: &tempMetaDataInGroupMap,
+						}
+
+						// Create the 'MetaDataGroupsMap' to be able to add the 'MetaDataGroup'
+						var tempMetaDataGroupsMap map[string]*testCaseModel.MetaDataGroupStruct
+						tempMetaDataGroupsMap = make(map[string]*testCaseModel.MetaDataGroupStruct)
+
+						// Add the 'MetaDataGroup' to the 'MetaDataGroupsMap'
+						tempMetaDataGroupsMap[metaDataItem.MetaDataGroupName] = &testMetaDataGroup
+
+						metaDataGroupInTestCasePtr.MetaDataGroupsMapPtr = &tempMetaDataGroupsMap
+
+					} else {
+						// 'MetaDataGroupsMap' exists, so get it
+						var tempMetaDataGroupsMapPtr *map[string]*testCaseModel.MetaDataGroupStruct
+						var tempMetaDataGroupsMap map[string]*testCaseModel.MetaDataGroupStruct
+						tempMetaDataGroupsMapPtr = metaDataGroupInTestCasePtr.MetaDataGroupsMapPtr
+						tempMetaDataGroupsMap = *tempMetaDataGroupsMapPtr
+
+						// Check for specific MetaDataGroup
+						var tempMetaDataGroupPtr *testCaseModel.MetaDataGroupStruct
+						tempMetaDataGroupPtr, existInMap = tempMetaDataGroupsMap[metaDataItem.MetaDataGroupName]
+						if existInMap == false {
+							// Specific MetaDataGroupName doesn't exist
+
+							var tempMetaDataInGroupMap map[string]*testCaseModel.MetaDataInGroupStruct
+							tempMetaDataInGroupMap = make(map[string]*testCaseModel.MetaDataInGroupStruct)
+
+							// Create the specific MetaDataItem
+							var tempMetaDataInGroup testCaseModel.MetaDataInGroupStruct
+							tempMetaDataInGroup = testCaseModel.MetaDataInGroupStruct{
+								MetaDataGroupName:                       metaDataItem.MetaDataGroupName,
+								MetaDataName:                            metaDataItem.MetaDataName,
+								SelectType:                              metaDataItem.SelectType,
+								Mandatory:                               metaDataItem.Mandatory,
+								AvailableMetaDataValues:                 metaDataItem.AvailableMetaDataValues,
+								SelectedMetaDataValueForSingleSelect:    "",
+								SelectedMetaDataValuesForMultiSelect:    chk.Selected,
+								SelectedMetaDataValuesForMultiSelectMap: nil,
+							}
+
+							// Add MetaData for Group to 'MetaDataGroupsMap' in TestCase
+							tempMetaDataInGroupMap[metaDataItem.MetaDataName] = &tempMetaDataInGroup
+
+							// Create the 'MetaDataGroup'
+							tempMetaDataGroupPtr = &testCaseModel.MetaDataGroupStruct{
+								MetaDataGroupName:     metaDataItem.MetaDataGroupName,
+								MetaDataInGroupMapPtr: &tempMetaDataInGroupMap,
+							}
+
+							// Save MetaDataGroup with Item in 'MetaDataGroupsMap'
+							tempMetaDataGroupsMap[metaDataItem.MetaDataGroupName] = tempMetaDataGroupPtr
+
+						} else {
+
+							// Specific MetaDataGroupName does exist
+							var tempMetaDataGroup testCaseModel.MetaDataGroupStruct
+							tempMetaDataGroup = *tempMetaDataGroupPtr
+
+							// Get map for MetaDataGroupItems
+							var tempMetaDataInGroupMap map[string]*testCaseModel.MetaDataInGroupStruct
+							tempMetaDataInGroupMap = *tempMetaDataGroup.MetaDataInGroupMapPtr
+
+							// Check if MetaDataItem exist
+							var tempMetaDataInGroupPtr *testCaseModel.MetaDataInGroupStruct
+							tempMetaDataInGroupPtr, existInMap = tempMetaDataInGroupMap[metaDataItem.MetaDataName]
+
+							if existInMap == false {
+
+								// Create the specific MetaDataItem, because it doesn't exist
+								var tempMetaDataInGroup testCaseModel.MetaDataInGroupStruct
+								tempMetaDataInGroup = testCaseModel.MetaDataInGroupStruct{
+									MetaDataGroupName:                       metaDataItem.MetaDataGroupName,
+									MetaDataName:                            metaDataItem.MetaDataName,
+									SelectType:                              metaDataItem.SelectType,
+									Mandatory:                               metaDataItem.Mandatory,
+									AvailableMetaDataValues:                 metaDataItem.AvailableMetaDataValues,
+									SelectedMetaDataValueForSingleSelect:    "",
+									SelectedMetaDataValuesForMultiSelect:    chk.Selected,
+									SelectedMetaDataValuesForMultiSelectMap: nil,
+								}
+
+								// Add MetaData for Group to 'MetaDataGroupsMap' in TestCase
+								tempMetaDataInGroupMap[metaDataItem.MetaDataName] = &tempMetaDataInGroup
+
+								// Create the 'MetaDataGroup'
+								tempMetaDataGroupPtr = &testCaseModel.MetaDataGroupStruct{
+									MetaDataGroupName:     metaDataItem.MetaDataGroupName,
+									MetaDataInGroupMapPtr: &tempMetaDataInGroupMap,
+								}
+
+								// Save MetaDataGroup with Item in 'MetaDataGroupsMap'
+								tempMetaDataGroupsMap[metaDataItem.MetaDataGroupName] = tempMetaDataGroupPtr
+
+							} else {
+								// MetaDataItem does exist, so get it
+								var tempMetaDataInGroup testCaseModel.MetaDataInGroupStruct
+								tempMetaDataInGroup = *tempMetaDataInGroupPtr
+
+								// Set selected value for the TestDataItem
+								tempMetaDataInGroup.SelectedMetaDataValuesForMultiSelect = chk.Selected
+
+							}
+						}
+
+					}
 
 				})
 
@@ -365,17 +587,17 @@ func ConvertMetaDataToNewMap(tc *testCaseModel.TestCaseMetaDataStruct) map[strin
 		return result
 	}
 
-	if tc.MetaDataGroupsSlicePtr == nil {
+	if tc.MetaDataGroupsMapPtr == nil {
 		return result
 	}
 
-	for _, grp := range *tc.MetaDataGroupsSlicePtr {
+	for _, grp := range *tc.MetaDataGroupsMapPtr {
 		if grp == nil {
 			continue
 		}
 		inner := make(map[string]*NewMetaDataInGroupStruct)
-		if grp.MetaDataInGroupPtr != nil {
-			for _, item := range *grp.MetaDataInGroupPtr {
+		if grp.MetaDataInGroupMapPtr != nil {
+			for _, item := range *grp.MetaDataInGroupMapPtr {
 				if item == nil {
 					continue
 				}

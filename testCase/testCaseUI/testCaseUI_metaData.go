@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"log"
 )
 
 // Generate the MetaData Area for the TestCase
@@ -56,7 +57,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 		}
 
 		testCaseMetaDataForDomain = *testCaseMetaDataForDomainPtr
-		metaDataGroupsPtr = testCaseModel.ConvertTestCaseMetaData(testCaseMetaDataForDomain.TestCaseMetaDataForDomainPtr)
+		var tempMetaDataGroupsOrder []string
+		metaDataGroupsPtr, tempMetaDataGroupsOrder = testCaseModel.ConvertTestCaseMetaData(testCaseMetaDataForDomain.TestCaseMetaDataForDomainPtr)
 
 		// Get Object holding Selected data for TestCase
 		var testCase testCaseModel.TestCaseModelStruct
@@ -78,15 +80,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 				CurrentSelectedDomainUuid:                             domainUuidToGetMetaDataFor,
 				TestCaseMetaDataMessageJsonForTestCaseWhenLastSaved:   nil,
 				TestCaseMetaDataMessageStructForTestCaseWhenLastSaved: nil,
+				MetaDataGroupsOrder:                                   tempMetaDataGroupsOrder,
 				MetaDataGroupsMapPtr:                                  nil,
 			}
 		}
 
 		// Generate TestCaseMeta-UI-object
 		var metaDataGroupsAsCanvasObject fyne.CanvasObject
-		metaDataGroupsAsCanvasObject = buildGUIFromMetaDataGroupsSlice(
+		metaDataGroupsAsCanvasObject = buildGUIFromMetaDataGroupsMap(
+			metaDataGroupInTestCasePtr.MetaDataGroupsOrder,
 			metaDataGroupsPtr,
-
 			metaDataGroupInTestCasePtr)
 
 		// Save back 'metaDataGroupInTestCasePtr' into the TestCase
@@ -128,9 +131,18 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 }
 
 // buildGUIFromSlice builds a fyne.CanvasObject from your slice pointer
-func buildGUIFromMetaDataGroupsSlice(
+func buildGUIFromMetaDataGroupsMap(
+	metaDataGroupsOrder []string,
 	metaDataGroupsSourceMapPtr *map[string]*testCaseModel.MetaDataGroupStruct,
 	metaDataGroupInTestCasePtr *testCaseModel.TestCaseMetaDataStruct) fyne.CanvasObject {
+
+	// Get the 'metaDataGroupsSourceMap'
+	var metaDataGroupsSourceMap map[string]*testCaseModel.MetaDataGroupStruct
+	metaDataGroupsSourceMap = *metaDataGroupsSourceMapPtr
+
+	if len(*metaDataGroupsSourceMapPtr) != len(metaDataGroupsOrder) {
+		log.Println("ERROR: The number of MetaDataGroups in the 'metaDataGroupsSourceMap' doesn't match the number of MetaDataGroups in the 'metaDataGroupsOrder'")
+	}
 
 	var convertMetaDataToMapMap map[string]map[string]*NewMetaDataInGroupStruct
 	convertMetaDataToMapMap = ConvertMetaDataToNewMap(metaDataGroupInTestCasePtr)
@@ -146,7 +158,10 @@ func buildGUIFromMetaDataGroupsSlice(
 	var existInMap bool
 
 	// Loop all MetaData-groups
-	for _, metaDataGroupPtr := range *metaDataGroupsSourceMapPtr {
+	for _, metaDataGroupName := range metaDataGroupsOrder {
+
+		var metaDataGroupPtr *testCaseModel.MetaDataGroupStruct
+		metaDataGroupPtr = metaDataGroupsSourceMap[metaDataGroupName]
 
 		// Get the MetaDataGroupName from the TestCase
 		metaDataGroupFromTestCase, metaDataGroupFromSourceExistInTestCaseMap = convertMetaDataToMapMap[metaDataGroupPtr.MetaDataGroupName]
@@ -155,11 +170,20 @@ func buildGUIFromMetaDataGroupsSlice(
 		var metaDataItemsInGroupPtr *map[string]*testCaseModel.MetaDataInGroupStruct
 		metaDataItemsInGroupPtr = metaDataGroupPtr.MetaDataInGroupMapPtr
 
+		// Get the metaDataItemsInGroupMap
+		var metaDataItemsInGroupMap map[string]*testCaseModel.MetaDataInGroupStruct
+		metaDataItemsInGroupMap = *metaDataItemsInGroupPtr
+
 		var metaDataItemsAsCanvasObject []fyne.CanvasObject
 		metaDataItemsAsCanvasObject = make([]fyne.CanvasObject, 0, len(*metaDataGroupPtr.MetaDataInGroupMapPtr))
 
 		// Loop all MetaDataItems in the MetaData-group
-		for _, metaDataItemPtr := range *metaDataItemsInGroupPtr {
+		for _, metaDataItemName := range metaDataGroupPtr.MetaDataInGroupOrder {
+
+			metaDataGroupPtr.MetaDataInGroupOrder är tom
+
+			var metaDataItemPtr *testCaseModel.MetaDataInGroupStruct
+			metaDataItemPtr = metaDataItemsInGroupMap[metaDataItemName]
 
 			if metaDataGroupFromSourceExistInTestCaseMap == true {
 				newMetaDataItemInGroup, metaDataGroupItemFromSourceExistInTestCaseMap = metaDataGroupFromTestCase[metaDataItemPtr.MetaDataName]

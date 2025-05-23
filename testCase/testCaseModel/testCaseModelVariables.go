@@ -121,8 +121,8 @@ type TestCaseMetaDataStruct struct {
 	CurrentSelectedDomainUuid                             string                                                                            // Specifies the current selected Owner Domain for the TestCase
 	TestCaseMetaDataMessageJsonForTestCaseWhenLastSaved   *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseMetaDataMessage_MetaDataItemMessage // The json used with the latest save version of the TestCase
 	TestCaseMetaDataMessageStructForTestCaseWhenLastSaved *TestCaseMetaDataForDomainStruct
-
-	MetaDataGroupsMapPtr *map[string]*MetaDataGroupStruct // holding MetaDataGroups and its MetaData. The key is the MetaDataGroupName
+	MetaDataGroupsOrder                                   []string
+	MetaDataGroupsMapPtr                                  *map[string]*MetaDataGroupStruct // holding MetaDataGroups and its MetaData. The key is the MetaDataGroupName
 
 }
 
@@ -131,6 +131,7 @@ type TestCaseMetaDataStruct struct {
 type MetaDataGroupStruct struct {
 	MetaDataGroupName string
 	//MetaDataInGroupPtr *[]*MetaDataInGroupStruct // Holding all MetaDataName and their values. It also holds what was selected
+	MetaDataInGroupOrder  []string
 	MetaDataInGroupMapPtr *map[string]*MetaDataInGroupStruct // Holding all MetaDataName and their values. It also holds what was selected
 }
 

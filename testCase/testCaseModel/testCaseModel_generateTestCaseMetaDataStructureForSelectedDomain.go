@@ -29,10 +29,16 @@ func (testCaseModel *TestCasesModelsStruct) GenerateTestCaseMetaDataStructureFor
 	}
 
 	var testCaseMetaDataForDomain *TestCaseMetaDataForDomainStruct
-	var metaDataGroupsPtr *map[string]*MetaDataGroupStruct
+	var metaDataGroupsMapPtr *map[string]*MetaDataGroupStruct
 
 	// Convert original structure based on json into TestCase-structure for TestCaseMetaData
-	metaDataGroupsPtr = buildMetaDataGroups(testCaseMetaDataForDomain)
+	metaDataGroupsMapPtr = buildMetaDataGroups(testCaseMetaDataForDomain)
+
+	// Get map keys
+	var metaDataGroupsMapKeys []string
+	for mapKey := range *metaDataGroupsMapPtr {
+		metaDataGroupsMapKeys = append(metaDataGroupsMapKeys, mapKey)
+	}
 
 	// MetaDataObject for a newly selected Domain
 	var testCaseMetaData TestCaseMetaDataStruct
@@ -40,7 +46,8 @@ func (testCaseModel *TestCasesModelsStruct) GenerateTestCaseMetaDataStructureFor
 		CurrentSelectedDomainUuid:                             selectedDomainUuid,
 		TestCaseMetaDataMessageJsonForTestCaseWhenLastSaved:   nil,
 		TestCaseMetaDataMessageStructForTestCaseWhenLastSaved: nil,
-		MetaDataGroupsMapPtr:                                  metaDataGroupsPtr,
+		MetaDataGroupsOrder:                                   metaDataGroupsMapKeys,
+		MetaDataGroupsMapPtr:                                  metaDataGroupsMapPtr,
 	}
 
 	// Store MetaData-object back into TestCase
@@ -57,6 +64,8 @@ func buildMetaDataGroups(testCaseMetaDataForDomain *TestCaseMetaDataForDomainStr
 	// The MetaDataGroups for the TestCase
 	var metaDataGroupsMap map[string]*MetaDataGroupStruct
 	metaDataGroupsMap = make(map[string]*MetaDataGroupStruct)
+
+	var metaDataGroupItemsMapKeys []string
 
 	// Loop over Domains MetaDataGroups to convert into TestCase-version of MetaDataGroups
 	for _, tempMetaDataGroup := range testCaseMetaDataForDomain.MetaDataGroups {
@@ -107,11 +116,15 @@ func buildMetaDataGroups(testCaseMetaDataForDomain *TestCaseMetaDataForDomainStr
 				SelectedMetaDataValuesForMultiSelect:    nil,
 				SelectedMetaDataValuesForMultiSelectMap: nil,
 			}
+
+			// Get map keys
+			metaDataGroupItemsMapKeys = append(metaDataGroupItemsMapKeys, metaDataItem.MetaDataName)
 		}
 
 		var metaDataGroup *MetaDataGroupStruct
 		metaDataGroup = &MetaDataGroupStruct{
 			MetaDataGroupName:     tempMetaDataGroup.MetaDataGroupName,
+			MetaDataInGroupOrder:  metaDataGroupItemsMapKeys,
 			MetaDataInGroupMapPtr: &metaDataInGroupMap,
 		}
 
@@ -124,10 +137,14 @@ func buildMetaDataGroups(testCaseMetaDataForDomain *TestCaseMetaDataForDomainStr
 
 // ConvertTestCaseMetaData converts the JSON‐parsed TestCaseMetaDataForDomainStruct
 // into the GUI‐friendly slice *[]*MetaDataGroupStruct.
-func ConvertTestCaseMetaData(testCaseMetaDataForDomain *TestCaseMetaDataForDomainStruct) *map[string]*MetaDataGroupStruct {
+func ConvertTestCaseMetaData(testCaseMetaDataForDomain *TestCaseMetaDataForDomainStruct) (*map[string]*MetaDataGroupStruct, []string) {
 	groupsMap := make(map[string]*MetaDataGroupStruct)
+	var tempMetaDataGroupsOrder []string
 
 	for _, g := range testCaseMetaDataForDomain.MetaDataGroups {
+
+		tempMetaDataGroupsOrder = append(tempMetaDataGroupsOrder, g.MetaDataGroupName)
+
 		// build slice of MetaDataInGroupStruct pointers
 		inGroupMap := make(map[string]*MetaDataInGroupStruct)
 		for _, md := range g.MetaDataInGroup {
@@ -170,5 +187,5 @@ func ConvertTestCaseMetaData(testCaseMetaDataForDomain *TestCaseMetaDataForDomai
 		groupsMap[g.MetaDataGroupName] = group
 	}
 
-	return &groupsMap
+	return &groupsMap, tempMetaDataGroupsOrder
 }

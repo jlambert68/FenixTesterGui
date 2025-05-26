@@ -107,14 +107,14 @@ func buildMetaDataGroups(testCaseMetaDataForDomain *TestCaseMetaDataForDomainStr
 			}
 
 			metaDataInGroupMap[metaDataItem.MetaDataName] = &MetaDataInGroupStruct{
-				MetaDataGroupName:                       tempMetaDataGroup.MetaDataGroupName,
-				MetaDataName:                            metaDataItem.MetaDataName,
-				SelectType:                              selType,
-				Mandatory:                               mandatory,
-				AvailableMetaDataValues:                 append([]string(nil), metaDataItem.MetaDataValues...),
-				SelectedMetaDataValueForSingleSelect:    "",
-				SelectedMetaDataValuesForMultiSelect:    nil,
-				SelectedMetaDataValuesForMultiSelectMap: nil,
+				MetaDataGroupName:                          tempMetaDataGroup.MetaDataGroupName,
+				MetaDataName:                               metaDataItem.MetaDataName,
+				SelectType:                                 selType,
+				Mandatory:                                  mandatory,
+				AvailableMetaDataValues:                    append([]string(nil), metaDataItem.MetaDataValues...),
+				SelectedMetaDataValueForSingleSelect:       "",
+				SelectedMetaDataValuesForMultiSelect:       nil,
+				SelectedMetaDataValuesForMultiSelectMapPtr: nil,
 			}
 
 			// Get map keys
@@ -174,14 +174,14 @@ func ConvertTestCaseMetaData(testCaseMetaDataForDomain *TestCaseMetaDataForDomai
 			}
 
 			item := &MetaDataInGroupStruct{
-				MetaDataGroupName:                       g.MetaDataGroupName,
-				MetaDataName:                            md.MetaDataName,
-				SelectType:                              selType,
-				Mandatory:                               mandatory,
-				AvailableMetaDataValues:                 append([]string(nil), md.MetaDataValues...),
-				SelectedMetaDataValueForSingleSelect:    "",
-				SelectedMetaDataValuesForMultiSelect:    nil,
-				SelectedMetaDataValuesForMultiSelectMap: nil,
+				MetaDataGroupName:                          g.MetaDataGroupName,
+				MetaDataName:                               md.MetaDataName,
+				SelectType:                                 selType,
+				Mandatory:                                  mandatory,
+				AvailableMetaDataValues:                    append([]string(nil), md.MetaDataValues...),
+				SelectedMetaDataValueForSingleSelect:       "",
+				SelectedMetaDataValuesForMultiSelect:       nil,
+				SelectedMetaDataValuesForMultiSelectMapPtr: nil,
 			}
 
 			inGroupMap[md.MetaDataName] = item

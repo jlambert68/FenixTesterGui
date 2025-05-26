@@ -36,21 +36,22 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 		return err
 	}
 
-	//Loop all TestInstructions and Update
+	//Copy MetaData from Gui, to TestCase-model, and validate that all mandatory MetaData-fields has values
 
 	// Create timestamp to be used
 	timeStampForTestCaseUpdate := timestamppb.Now()
 
 	// Convert map-messages into gRPC-version, mostly arrays
 	var (
-		gRPCMatureTestCaseModelElementMessage []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
-		gRPCMatureTestInstructions            []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage_MatureTestInstructionMessage
-		gRPCMatureTestInstructionContainers   []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage_MatureTestInstructionContainerMessage
-		gRPCTestCaseExtraInformation          *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExtraInformationMessage
-		gRPCTestCaseTemplateFiles             *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseTemplateFilesMessage
-		gRPCTestCaseTestData                  *fenixGuiTestCaseBuilderServerGrpcApi.UsersChosenTestDataForTestCaseMessage
-		gRPCTestCasePreviewMessage            *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewMessage
-		finalHash                             string
+		gRPCMatureTestCaseModelElementMessage    []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage
+		gRPCMatureTestInstructions               []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionsMessage_MatureTestInstructionMessage
+		gRPCMatureTestInstructionContainers      []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage_MatureTestInstructionContainerMessage
+		gRPCTestCaseExtraInformation             *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseExtraInformationMessage
+		gRPCTestCaseTemplateFiles                *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseTemplateFilesMessage
+		gRPCTestCaseTestData                     *fenixGuiTestCaseBuilderServerGrpcApi.UsersChosenTestDataForTestCaseMessage
+		gRPCTestCasePreviewMessage               *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewMessage
+		gRPCUserSpecifiedTestCaseMetaDataMessage *fenixGuiTestCaseBuilderServerGrpcApi.UserSpecifiedTestCaseMetaDataMessage
+		finalHash                                string
 	)
 	gRPCMatureTestCaseModelElementMessage,
 		gRPCMatureTestInstructions,
@@ -59,6 +60,7 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 		gRPCTestCaseTemplateFiles,
 		gRPCTestCaseTestData,
 		gRPCTestCasePreviewMessage,
+		gRPCUserSpecifiedTestCaseMetaDataMessage,
 		finalHash, err = testCaseModel.generateTestCaseForGrpcAndHash(testCaseUuid, true)
 	if err != nil {
 		return err
@@ -116,11 +118,11 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 		},
 		MatureTestInstructionContainers: &fenixGuiTestCaseBuilderServerGrpcApi.MatureTestInstructionContainersMessage{
 			MatureTestInstructionContainers: gRPCMatureTestInstructionContainers},
-		MessageHash:              currentTestCase.TestCaseHash,
 		TestCaseExtraInformation: gRPCTestCaseExtraInformation,
 		TestCaseTemplateFiles:    gRPCTestCaseTemplateFiles,
 		TestCaseTestData:         gRPCTestCaseTestData,
 		TestCasePreview:          gRPCTestCasePreviewMessage,
+		TestCaseMetaData:         gRPCUserSpecifiedTestCaseMetaDataMessage,
 	}
 
 	// Send using gRPC
@@ -757,6 +759,91 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCasePreviewMessageForGrp
 
 }
 
+// Convert the UserSpecifiedTestCaseMetaDataMessage into its gRPC-version
+func (testCaseModel *TestCasesModelsStruct) generateUserSpecifiedTestCaseMetaDataMessageForGrpc(
+	testCaseUuid string) (
+	gRPCUserSpecifiedTestCaseMetaDataMessage *fenixGuiTestCaseBuilderServerGrpcApi.UserSpecifiedTestCaseMetaDataMessage,
+	err error) {
+
+	// Get current TestCase
+	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+	if existsInMap == false {
+
+		errorId := "5b6834dd-0763-4d12-9d4a-d97281a93a46"
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map witsh all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return nil, err
+	}
+
+	// Generate the Domain that owns the TestCase
+	var domainNameThatOwnsTestCase string
+	domainNameThatOwnsTestCase = fmt.Sprintf("%s [%s]",
+		currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainName,
+		currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid[0:8])
+
+	gRPCUserSpecifiedTestCaseMetaDataMessage = &fenixGuiTestCaseBuilderServerGrpcApi.UserSpecifiedTestCaseMetaDataMessage{
+		CurrentSelectedDomainUuid: currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid,
+		CurrentSelectedDomainName: domainNameThatOwnsTestCase,
+		MetaDataGroupsMap:         nil,
+	}
+
+	var tempMetaDataGroupsMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.MetaDataGroupMessage
+	tempMetaDataGroupsMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.MetaDataGroupMessage)
+
+	// Get the TestCaseMetaData from TestCaseMetaDataPtr
+	//var TestCaseMetaData
+
+	// Loop MetaDataGroups in the TestCase and extract each MetaDataGroup
+	for tempMetaGroupNameInTestCase, tempMetaDataGroupInTestCasePtr := range *currentTestCase.TestCaseMetaDataPtr.MetaDataGroupsMapPtr {
+
+		// Get the MetaDataGroupInTestCaseMap
+		var tempMetaDataGroupInTestCaseMap map[string]*MetaDataInGroupStruct
+		tempMetaDataGroupInTestCaseMap = *tempMetaDataGroupInTestCasePtr.MetaDataInGroupMapPtr
+
+		// Create the MetaDataInGroupItem-map
+		var metaDataInGroupMessage map[string]*fenixGuiTestCaseBuilderServerGrpcApi.MetaDataInGroupMessage
+		metaDataInGroupMessage = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.MetaDataInGroupMessage)
+
+		// Loop items in MetaDataGroup
+		for tempMetaDataGroupItemNameInTestCase, tempMetaDataGroupItemInTestCase := range tempMetaDataGroupInTestCaseMap {
+
+			// Create the MetaDataGroupItem for the gRPC-message
+			var metaDataGroupItem fenixGuiTestCaseBuilderServerGrpcApi.MetaDataInGroupMessage
+			metaDataGroupItem = fenixGuiTestCaseBuilderServerGrpcApi.MetaDataInGroupMessage{
+				MetaDataGroupName:                       tempMetaGroupNameInTestCase,
+				MetaDataName:                            tempMetaDataGroupItemNameInTestCase,
+				SelectType:                              fenixGuiTestCaseBuilderServerGrpcApi.MetaDataSelectTypeEnum(tempMetaDataGroupItemInTestCase.SelectType),
+				IsMandatory:                             tempMetaDataGroupItemInTestCase.Mandatory,
+				AvailableMetaDataValues:                 tempMetaDataGroupItemInTestCase.AvailableMetaDataValues,
+				SelectedMetaDataValueForSingleSelect:    tempMetaDataGroupItemInTestCase.SelectedMetaDataValueForSingleSelect,
+				SelectedMetaDataValuesForMultiSelect:    tempMetaDataGroupItemInTestCase.SelectedMetaDataValuesForMultiSelect,
+				SelectedMetaDataValuesForMultiSelectMap: *tempMetaDataGroupItemInTestCase.SelectedMetaDataValuesForMultiSelectMapPtr,
+			}
+
+			// Add the MetaDataGroupItem for the gRPC-map-message
+			metaDataInGroupMessage[tempMetaDataGroupItemNameInTestCase] = &metaDataGroupItem
+		}
+
+		// Create the MetaDataGroupMessage
+		var metaDataGroupMessage fenixGuiTestCaseBuilderServerGrpcApi.MetaDataGroupMessage
+		metaDataGroupMessage = fenixGuiTestCaseBuilderServerGrpcApi.MetaDataGroupMessage{
+			MetaDataGroupName:  tempMetaGroupNameInTestCase,
+			MetaDataInGroupMap: metaDataInGroupMessage,
+		}
+
+		// Add the MetaDataGroup-message for the gRPC-map-message
+		tempMetaDataGroupsMap[tempMetaGroupNameInTestCase] = &metaDataGroupMessage
+
+	}
+
+	// Add the MetaDataGroupsMap to the gRPC-object
+	gRPCUserSpecifiedTestCaseMetaDataMessage.MetaDataGroupsMap = tempMetaDataGroupsMap
+
+	return gRPCUserSpecifiedTestCaseMetaDataMessage, err
+}
+
 // Pack different parts of the TestCase into gRPC-version into one message together with Hash of TestCase
 func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testCaseUuid string, shouldBeSaved bool) (
 	gRPCMatureTestCaseModelElementMessage []*fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage,
@@ -766,6 +853,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCTestCaseTemplateFiles *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseTemplateFilesMessage,
 	gRPCTestCaseTestData *fenixGuiTestCaseBuilderServerGrpcApi.UsersChosenTestDataForTestCaseMessage,
 	gRPCTestCasePreviewMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewMessage,
+	gRPCUserSpecifiedTestCaseMetaDataMessage *fenixGuiTestCaseBuilderServerGrpcApi.UserSpecifiedTestCaseMetaDataMessage,
 	finalHash string,
 	err error) {
 
@@ -778,7 +866,16 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 
 		fmt.Println(err) // TODO Send on Error-channel
 
-		return nil, nil, nil, nil, nil, nil, nil, "", err
+		return nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			"",
+			err
 	}
 
 	// Initiate 'subHashPartsSlice', used for holding all Hashes and content, to be logged. Used for debugging when
@@ -797,7 +894,16 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCMatureTestCaseModelElementMessage, hashedMatureTestCaseModelElements, valuesToBeHashedSlice, err =
 		testCaseModel.generateTestCaseModelElementsForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, nil, nil, nil, nil, "", err
+		return nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			"",
+			err
 	}
 
 	// Add hash and values to slice
@@ -814,7 +920,16 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCMatureTestInstructions, hashedgRPCMatureTestInstructions, valuesToBeHashedSlice, err =
 		testCaseModel.generateMatureTestInstructionsForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, nil, nil, nil, nil, "", err
+		return nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			"",
+			err
 	}
 	// Add hash and values to slice
 	var tempGrpcMatureTestInstructions subHashPartsMapValueType
@@ -830,7 +945,16 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCMatureTestInstructionContainers, hashedgRPCMatureTestInstructionContainers, valuesToBeHashedSlice, err =
 		testCaseModel.generateMatureTestInstructionContainersForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, nil, nil, nil, nil, "", err
+		return nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			"",
+			err
 	}
 	// Add hash and values to slice
 	var tempGrpcMatureTestInstructionContainers subHashPartsMapValueType
@@ -846,7 +970,16 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCTestCaseExtraInformation, hashedgRPCTestCaseExtraInformation, valuesToBeHashedSlice, err =
 		testCaseModel.generateTestCaseExtraInformationForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, nil, nil, nil, nil, "", err
+		return nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			"",
+			err
 	}
 	// Add hash and values to slice
 	var tempGrpcTestCaseExtraInformation subHashPartsMapValueType
@@ -862,7 +995,16 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCTestCaseTemplateFiles, hashedgRPCTestCaseTemplateFiles, err =
 		testCaseModel.generateTestCaseTemplateFilesForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, nil, nil, nil, nil, "", err
+		return nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			"",
+			err
 	}
 	// Add hash and values to slice
 	var tempGrpcTestCaseTemplateFiles subHashPartsMapValueType
@@ -877,7 +1019,16 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	gRPCTestCaseTestData, err =
 		testCaseModel.generateTestCaseTestDataForGrpc(testCaseUuid)
 	if err != nil {
-		return nil, nil, nil, nil, nil, nil, nil, "", err
+		return nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			"",
+			err
 	}
 
 	// Only Generate Preview when an actual SaveTestCase is performed
@@ -887,7 +1038,36 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 		gRPCTestCasePreviewMessage, err =
 			testCaseModel.generateTestCasePreviewMessageForGrpc(testCaseUuid)
 		if err != nil {
-			return nil, nil, nil, nil, nil, nil, nil, "", err
+			return nil,
+				nil,
+				nil,
+				nil,
+				nil,
+				nil,
+				nil,
+				nil,
+				"",
+				err
+		}
+	}
+
+	// Only Generate UserSpecifiedTestCaseMetaData when an actual SaveTestCase is performed
+	if shouldBeSaved == true {
+
+		// gRPCUserSpecifiedTestCaseMetaDataMessage
+		gRPCUserSpecifiedTestCaseMetaDataMessage, err =
+			testCaseModel.generateUserSpecifiedTestCaseMetaDataMessageForGrpc(testCaseUuid)
+		if err != nil {
+			return nil,
+				nil,
+				nil,
+				nil,
+				nil,
+				nil,
+				nil,
+				nil,
+				"",
+				err
 		}
 	}
 
@@ -1023,6 +1203,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 		gRPCTestCaseTemplateFiles,
 		gRPCTestCaseTestData,
 		gRPCTestCasePreviewMessage,
+		gRPCUserSpecifiedTestCaseMetaDataMessage,
 		finalHash,
 		err
 

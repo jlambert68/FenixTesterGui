@@ -138,14 +138,14 @@ type MetaDataGroupStruct struct {
 // MetaDataInGroupStruct
 // Struct holding the available values, how they are selected and what was selected
 type MetaDataInGroupStruct struct {
-	MetaDataGroupName                       string             // The name of the MetaData-Group
-	MetaDataName                            string             // The name of the MetaData-post
-	SelectType                              MetaDataSelectType // Is the MetaData-post single- or multi-select
-	Mandatory                               bool               // Is the MetaData-post mandatory or not
-	AvailableMetaDataValues                 []string           // The available values for the MetaData-post
-	SelectedMetaDataValueForSingleSelect    string             // The value selected for single select
-	SelectedMetaDataValuesForMultiSelect    []string           // The values selected for multi select
-	SelectedMetaDataValuesForMultiSelectMap map[string]string  // The values selected for multi select
+	MetaDataGroupName                          string             // The name of the MetaData-Group
+	MetaDataName                               string             // The name of the MetaData-post
+	SelectType                                 MetaDataSelectType // Is the MetaData-post single- or multi-select
+	Mandatory                                  bool               // Is the MetaData-post mandatory or not
+	AvailableMetaDataValues                    []string           // The available values for the MetaData-post
+	SelectedMetaDataValueForSingleSelect       string             // The value selected for single select
+	SelectedMetaDataValuesForMultiSelect       []string           // The values selected for multi select
+	SelectedMetaDataValuesForMultiSelectMapPtr *map[string]string // The values selected for multi select
 }
 
 // MetaDataSelectType

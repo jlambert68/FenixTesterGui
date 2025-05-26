@@ -88,6 +88,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 		// Generate TestCaseMeta-UI-object
 		var metaDataGroupsAsCanvasObject fyne.CanvasObject
 		metaDataGroupsAsCanvasObject = buildGUIFromMetaDataGroupsMap(
+			testCaseUuid,
+			testCasesUiCanvasObject.TestCasesModelReference,
 			metaDataGroupInTestCasePtr.MetaDataGroupsOrder,
 			metaDataGroupsPtr,
 			metaDataGroupInTestCasePtr)
@@ -132,6 +134,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 
 // buildGUIFromSlice builds a fyne.CanvasObject from your slice pointer
 func buildGUIFromMetaDataGroupsMap(
+	testCaseUuid string,
+	testCasesModelReference *testCaseModel.TestCasesModelsStruct,
 	metaDataGroupsOrder []string,
 	metaDataGroupsSourceMapPtr *map[string]*testCaseModel.MetaDataGroupStruct,
 	metaDataGroupInTestCasePtr *testCaseModel.TestCaseMetaDataStruct) fyne.CanvasObject {
@@ -202,7 +206,11 @@ func buildGUIFromMetaDataGroupsMap(
 			case testCaseModel.MetaDataSelectType_SingleSelect:
 				sel := widget.NewSelect(metaDataItem.AvailableMetaDataValues, func(val string) {
 
-					fmt.Printf("Selected %q for %s\n", val, metaDataItem.MetaDataName)
+					//fmt.Printf("Selected %q for %s\n", val, metaDataItem.MetaDataName)
+
+					// Get TestCase-Object
+					var testCase testCaseModel.TestCaseModelStruct
+					testCase, _ = testCasesModelReference.TestCases[testCaseUuid]
 
 					// store value in TestCase-version of the MetaData
 					metaDataItem.SelectedMetaDataValueForSingleSelect = val
@@ -214,21 +222,23 @@ func buildGUIFromMetaDataGroupsMap(
 						var tempMetaDataInGroupMap map[string]*testCaseModel.MetaDataInGroupStruct
 						tempMetaDataInGroupMap = make(map[string]*testCaseModel.MetaDataInGroupStruct)
 
+						tempSelectedMetaDataValuesForMultiSelectMapPtr := make(map[string]string)
+
 						// Create MetaData for Group in TestCase
 						var tempMetaDataInGroup testCaseModel.MetaDataInGroupStruct
 						tempMetaDataInGroup = testCaseModel.MetaDataInGroupStruct{
-							MetaDataGroupName:                       metaDataItem.MetaDataGroupName,
-							MetaDataName:                            metaDataItem.MetaDataName,
-							SelectType:                              metaDataItem.SelectType,
-							Mandatory:                               metaDataItem.Mandatory,
-							AvailableMetaDataValues:                 metaDataItem.AvailableMetaDataValues,
-							SelectedMetaDataValueForSingleSelect:    val,
-							SelectedMetaDataValuesForMultiSelect:    nil,
-							SelectedMetaDataValuesForMultiSelectMap: nil,
+							MetaDataGroupName:                          metaDataItem.MetaDataGroupName,
+							MetaDataName:                               metaDataItem.MetaDataName,
+							SelectType:                                 metaDataItem.SelectType,
+							Mandatory:                                  metaDataItem.Mandatory,
+							AvailableMetaDataValues:                    metaDataItem.AvailableMetaDataValues,
+							SelectedMetaDataValueForSingleSelect:       val,
+							SelectedMetaDataValuesForMultiSelect:       nil,
+							SelectedMetaDataValuesForMultiSelectMapPtr: &tempSelectedMetaDataValuesForMultiSelectMapPtr,
 						}
 
 						// Add MetaData for Group to 'MetaDataGroupsMap' in TestCase
-						tempMetaDataInGroupMap[metaDataItem.MetaDataGroupName] = &tempMetaDataInGroup
+						tempMetaDataInGroupMap[metaDataItem.MetaDataName] = &tempMetaDataInGroup
 
 						// Create the 'MetaDataGroup'
 						var testMetaDataGroup testCaseModel.MetaDataGroupStruct
@@ -262,17 +272,19 @@ func buildGUIFromMetaDataGroupsMap(
 							var tempMetaDataInGroupMap map[string]*testCaseModel.MetaDataInGroupStruct
 							tempMetaDataInGroupMap = make(map[string]*testCaseModel.MetaDataInGroupStruct)
 
+							tempSelectedMetaDataValuesForMultiSelectMapPtr := make(map[string]string)
+
 							// Create the specific MetaDataItem
 							var tempMetaDataInGroup testCaseModel.MetaDataInGroupStruct
 							tempMetaDataInGroup = testCaseModel.MetaDataInGroupStruct{
-								MetaDataGroupName:                       metaDataItem.MetaDataGroupName,
-								MetaDataName:                            metaDataItem.MetaDataName,
-								SelectType:                              metaDataItem.SelectType,
-								Mandatory:                               metaDataItem.Mandatory,
-								AvailableMetaDataValues:                 metaDataItem.AvailableMetaDataValues,
-								SelectedMetaDataValueForSingleSelect:    val,
-								SelectedMetaDataValuesForMultiSelect:    nil,
-								SelectedMetaDataValuesForMultiSelectMap: nil,
+								MetaDataGroupName:                          metaDataItem.MetaDataGroupName,
+								MetaDataName:                               metaDataItem.MetaDataName,
+								SelectType:                                 metaDataItem.SelectType,
+								Mandatory:                                  metaDataItem.Mandatory,
+								AvailableMetaDataValues:                    metaDataItem.AvailableMetaDataValues,
+								SelectedMetaDataValueForSingleSelect:       val,
+								SelectedMetaDataValuesForMultiSelect:       nil,
+								SelectedMetaDataValuesForMultiSelectMapPtr: &tempSelectedMetaDataValuesForMultiSelectMapPtr,
 							}
 
 							// Add MetaData for Group to 'MetaDataGroupsMap' in TestCase
@@ -303,17 +315,19 @@ func buildGUIFromMetaDataGroupsMap(
 
 							if existInMap == false {
 
+								tempSelectedMetaDataValuesForMultiSelectMapPtr := make(map[string]string)
+
 								// Create the specific MetaDataItem, because it doesn't exist
 								var tempMetaDataInGroup testCaseModel.MetaDataInGroupStruct
 								tempMetaDataInGroup = testCaseModel.MetaDataInGroupStruct{
-									MetaDataGroupName:                       metaDataItem.MetaDataGroupName,
-									MetaDataName:                            metaDataItem.MetaDataName,
-									SelectType:                              metaDataItem.SelectType,
-									Mandatory:                               metaDataItem.Mandatory,
-									AvailableMetaDataValues:                 metaDataItem.AvailableMetaDataValues,
-									SelectedMetaDataValueForSingleSelect:    val,
-									SelectedMetaDataValuesForMultiSelect:    nil,
-									SelectedMetaDataValuesForMultiSelectMap: nil,
+									MetaDataGroupName:                          metaDataItem.MetaDataGroupName,
+									MetaDataName:                               metaDataItem.MetaDataName,
+									SelectType:                                 metaDataItem.SelectType,
+									Mandatory:                                  metaDataItem.Mandatory,
+									AvailableMetaDataValues:                    metaDataItem.AvailableMetaDataValues,
+									SelectedMetaDataValueForSingleSelect:       val,
+									SelectedMetaDataValuesForMultiSelect:       nil,
+									SelectedMetaDataValuesForMultiSelectMapPtr: &tempSelectedMetaDataValuesForMultiSelectMapPtr,
 								}
 
 								// Add MetaData for Group to 'MetaDataGroupsMap' in TestCase
@@ -340,6 +354,10 @@ func buildGUIFromMetaDataGroupsMap(
 						}
 
 					}
+
+					// Save Changes to TestCase regarding MetaData
+					testCase.TestCaseMetaDataPtr = metaDataGroupInTestCasePtr
+					testCasesModelReference.TestCases[testCaseUuid] = testCase
 
 				})
 				// Extract Selected values from TestCase
@@ -376,7 +394,11 @@ func buildGUIFromMetaDataGroupsMap(
 				var chk *widget.CheckGroup
 				chk = widget.NewCheckGroup(metaDataItem.AvailableMetaDataValues, func(vals []string) {
 
-					fmt.Printf("Multi-selected %v for %s\n", vals, metaDataItem.MetaDataName)
+					//fmt.Printf("Multi-selected %v for %s\n", vals, metaDataItem.MetaDataName)
+
+					// Get TestCase-Object
+					var testCase testCaseModel.TestCaseModelStruct
+					testCase, _ = testCasesModelReference.TestCases[testCaseUuid]
 
 					// If the 'MetaDataGroupsMap' exist
 					if metaDataGroupInTestCasePtr.MetaDataGroupsMapPtr == nil {
@@ -388,18 +410,27 @@ func buildGUIFromMetaDataGroupsMap(
 						// Create MetaData for Group in TestCase
 						var tempMetaDataInGroup testCaseModel.MetaDataInGroupStruct
 						tempMetaDataInGroup = testCaseModel.MetaDataInGroupStruct{
-							MetaDataGroupName:                       metaDataItem.MetaDataGroupName,
-							MetaDataName:                            metaDataItem.MetaDataName,
-							SelectType:                              metaDataItem.SelectType,
-							Mandatory:                               metaDataItem.Mandatory,
-							AvailableMetaDataValues:                 metaDataItem.AvailableMetaDataValues,
-							SelectedMetaDataValueForSingleSelect:    "",
-							SelectedMetaDataValuesForMultiSelect:    chk.Selected,
-							SelectedMetaDataValuesForMultiSelectMap: nil,
+							MetaDataGroupName:                          metaDataItem.MetaDataGroupName,
+							MetaDataName:                               metaDataItem.MetaDataName,
+							SelectType:                                 metaDataItem.SelectType,
+							Mandatory:                                  metaDataItem.Mandatory,
+							AvailableMetaDataValues:                    metaDataItem.AvailableMetaDataValues,
+							SelectedMetaDataValueForSingleSelect:       "",
+							SelectedMetaDataValuesForMultiSelect:       vals,
+							SelectedMetaDataValuesForMultiSelectMapPtr: nil,
 						}
 
+						// Loop the values and create the 'SelectedMetaDataValuesForMultiSelectMap'
+						var tempSelectedMetaDataValuesForMultiSelectMap map[string]string
+						tempSelectedMetaDataValuesForMultiSelectMap = make(map[string]string)
+						for _, value := range vals {
+							tempSelectedMetaDataValuesForMultiSelectMap[value] = value
+						}
+						// Add the map the 'MetaData'-object
+						tempMetaDataInGroup.SelectedMetaDataValuesForMultiSelectMapPtr = &tempSelectedMetaDataValuesForMultiSelectMap
+
 						// Add MetaData for Group to 'MetaDataGroupsMap' in TestCase
-						tempMetaDataInGroupMap[metaDataItem.MetaDataGroupName] = &tempMetaDataInGroup
+						tempMetaDataInGroupMap[metaDataItem.MetaDataName] = &tempMetaDataInGroup
 
 						// Create the 'MetaDataGroup'
 						var testMetaDataGroup testCaseModel.MetaDataGroupStruct
@@ -436,15 +467,24 @@ func buildGUIFromMetaDataGroupsMap(
 							// Create the specific MetaDataItem
 							var tempMetaDataInGroup testCaseModel.MetaDataInGroupStruct
 							tempMetaDataInGroup = testCaseModel.MetaDataInGroupStruct{
-								MetaDataGroupName:                       metaDataItem.MetaDataGroupName,
-								MetaDataName:                            metaDataItem.MetaDataName,
-								SelectType:                              metaDataItem.SelectType,
-								Mandatory:                               metaDataItem.Mandatory,
-								AvailableMetaDataValues:                 metaDataItem.AvailableMetaDataValues,
-								SelectedMetaDataValueForSingleSelect:    "",
-								SelectedMetaDataValuesForMultiSelect:    chk.Selected,
-								SelectedMetaDataValuesForMultiSelectMap: nil,
+								MetaDataGroupName:                          metaDataItem.MetaDataGroupName,
+								MetaDataName:                               metaDataItem.MetaDataName,
+								SelectType:                                 metaDataItem.SelectType,
+								Mandatory:                                  metaDataItem.Mandatory,
+								AvailableMetaDataValues:                    metaDataItem.AvailableMetaDataValues,
+								SelectedMetaDataValueForSingleSelect:       "",
+								SelectedMetaDataValuesForMultiSelect:       vals,
+								SelectedMetaDataValuesForMultiSelectMapPtr: nil,
 							}
+
+							// Loop the values and create the 'SelectedMetaDataValuesForMultiSelectMap'
+							var tempSelectedMetaDataValuesForMultiSelectMap map[string]string
+							tempSelectedMetaDataValuesForMultiSelectMap = make(map[string]string)
+							for _, value := range vals {
+								tempSelectedMetaDataValuesForMultiSelectMap[value] = value
+							}
+							// Add the map the 'MetaData'-object
+							tempMetaDataInGroup.SelectedMetaDataValuesForMultiSelectMapPtr = &tempSelectedMetaDataValuesForMultiSelectMap
 
 							// Add MetaData for Group to 'MetaDataGroupsMap' in TestCase
 							tempMetaDataInGroupMap[metaDataItem.MetaDataName] = &tempMetaDataInGroup
@@ -457,6 +497,8 @@ func buildGUIFromMetaDataGroupsMap(
 
 							// Save MetaDataGroup with Item in 'MetaDataGroupsMap'
 							tempMetaDataGroupsMap[metaDataItem.MetaDataGroupName] = tempMetaDataGroupPtr
+
+							metaDataGroupInTestCasePtr.MetaDataGroupsMapPtr = &tempMetaDataGroupsMap
 
 						} else {
 
@@ -477,15 +519,25 @@ func buildGUIFromMetaDataGroupsMap(
 								// Create the specific MetaDataItem, because it doesn't exist
 								var tempMetaDataInGroup testCaseModel.MetaDataInGroupStruct
 								tempMetaDataInGroup = testCaseModel.MetaDataInGroupStruct{
-									MetaDataGroupName:                       metaDataItem.MetaDataGroupName,
-									MetaDataName:                            metaDataItem.MetaDataName,
-									SelectType:                              metaDataItem.SelectType,
-									Mandatory:                               metaDataItem.Mandatory,
-									AvailableMetaDataValues:                 metaDataItem.AvailableMetaDataValues,
-									SelectedMetaDataValueForSingleSelect:    "",
-									SelectedMetaDataValuesForMultiSelect:    chk.Selected,
-									SelectedMetaDataValuesForMultiSelectMap: nil,
+									MetaDataGroupName:                          metaDataItem.MetaDataGroupName,
+									MetaDataName:                               metaDataItem.MetaDataName,
+									SelectType:                                 metaDataItem.SelectType,
+									Mandatory:                                  metaDataItem.Mandatory,
+									AvailableMetaDataValues:                    metaDataItem.AvailableMetaDataValues,
+									SelectedMetaDataValueForSingleSelect:       "",
+									SelectedMetaDataValuesForMultiSelect:       vals,
+									SelectedMetaDataValuesForMultiSelectMapPtr: nil,
 								}
+
+								// Loop the values and create the 'SelectedMetaDataValuesForMultiSelectMap'
+								var tempSelectedMetaDataValuesForMultiSelectMap map[string]string
+								tempSelectedMetaDataValuesForMultiSelectMap = make(map[string]string)
+								for _, value := range vals {
+									tempSelectedMetaDataValuesForMultiSelectMap[value] = value
+								}
+
+								// Add the map the 'MetaData'-object
+								tempMetaDataInGroup.SelectedMetaDataValuesForMultiSelectMapPtr = &tempSelectedMetaDataValuesForMultiSelectMap
 
 								// Add MetaData for Group to 'MetaDataGroupsMap' in TestCase
 								tempMetaDataInGroupMap[metaDataItem.MetaDataName] = &tempMetaDataInGroup
@@ -499,18 +551,48 @@ func buildGUIFromMetaDataGroupsMap(
 								// Save MetaDataGroup with Item in 'MetaDataGroupsMap'
 								tempMetaDataGroupsMap[metaDataItem.MetaDataGroupName] = tempMetaDataGroupPtr
 
+								metaDataGroupInTestCasePtr.MetaDataGroupsMapPtr = &tempMetaDataGroupsMap
+
 							} else {
 								// MetaDataItem does exist, so get it
 								var tempMetaDataInGroup testCaseModel.MetaDataInGroupStruct
 								tempMetaDataInGroup = *tempMetaDataInGroupPtr
 
 								// Set selected value for the TestDataItem
-								tempMetaDataInGroup.SelectedMetaDataValuesForMultiSelect = chk.Selected
+								tempMetaDataInGroup.SelectedMetaDataValuesForMultiSelect = vals
+
+								// Loop the values and create the 'SelectedMetaDataValuesForMultiSelectMap'
+								var tempSelectedMetaDataValuesForMultiSelectMap map[string]string
+								tempSelectedMetaDataValuesForMultiSelectMap = make(map[string]string)
+								for _, value := range vals {
+									tempSelectedMetaDataValuesForMultiSelectMap[value] = value
+								}
+
+								// Add the map the 'MetaData'-object
+								tempMetaDataInGroup.SelectedMetaDataValuesForMultiSelectMapPtr = &tempSelectedMetaDataValuesForMultiSelectMap
+
+								// Add MetaData for Group to 'MetaDataGroupsMap' in TestCase
+								tempMetaDataInGroupMap[metaDataItem.MetaDataName] = &tempMetaDataInGroup
+
+								// Create the 'MetaDataGroup'
+								tempMetaDataGroupPtr = &testCaseModel.MetaDataGroupStruct{
+									MetaDataGroupName:     metaDataItem.MetaDataGroupName,
+									MetaDataInGroupMapPtr: &tempMetaDataInGroupMap,
+								}
+
+								// Save MetaDataGroup with Item in 'MetaDataGroupsMap'
+								tempMetaDataGroupsMap[metaDataItem.MetaDataGroupName] = tempMetaDataGroupPtr
+
+								metaDataGroupInTestCasePtr.MetaDataGroupsMapPtr = &tempMetaDataGroupsMap
 
 							}
 						}
 
 					}
+
+					// Save Changes to TestCase regarding MetaData
+					testCase.TestCaseMetaDataPtr = metaDataGroupInTestCasePtr
+					testCasesModelReference.TestCases[testCaseUuid] = testCase
 
 				})
 

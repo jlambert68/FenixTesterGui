@@ -137,17 +137,25 @@ func buildMetaDataGroups(testCaseMetaDataForDomain *TestCaseMetaDataForDomainStr
 
 // ConvertTestCaseMetaData converts the JSON‐parsed TestCaseMetaDataForDomainStruct
 // into the GUI‐friendly slice *[]*MetaDataGroupStruct.
-func ConvertTestCaseMetaData(testCaseMetaDataForDomain *TestCaseMetaDataForDomainStruct) (*map[string]*MetaDataGroupStruct, []string) {
+func ConvertTestCaseMetaData(testCaseMetaDataForDomain *TestCaseMetaDataForDomainStruct) (
+	*map[string]*MetaDataGroupStruct, []string) {
 	groupsMap := make(map[string]*MetaDataGroupStruct)
+
 	var tempMetaDataGroupsOrder []string
 
 	for _, g := range testCaseMetaDataForDomain.MetaDataGroups {
+
+		// Create the slice to put the orde of Items in
+		var tempMetaDataItemsInGroupOrder []string
 
 		tempMetaDataGroupsOrder = append(tempMetaDataGroupsOrder, g.MetaDataGroupName)
 
 		// build slice of MetaDataInGroupStruct pointers
 		inGroupMap := make(map[string]*MetaDataInGroupStruct)
 		for _, md := range g.MetaDataInGroup {
+
+			tempMetaDataItemsInGroupOrder = append(tempMetaDataItemsInGroupOrder, md.MetaDataName)
+
 			// map the SelectType string to your enum
 			var selType MetaDataSelectType
 			switch md.SelectType {
@@ -182,6 +190,7 @@ func ConvertTestCaseMetaData(testCaseMetaDataForDomain *TestCaseMetaDataForDomai
 
 		group := &MetaDataGroupStruct{
 			MetaDataGroupName:     g.MetaDataGroupName,
+			MetaDataInGroupOrder:  tempMetaDataItemsInGroupOrder,
 			MetaDataInGroupMapPtr: &inGroupMap,
 		}
 		groupsMap[g.MetaDataGroupName] = group

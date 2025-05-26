@@ -180,7 +180,7 @@ func buildGUIFromMetaDataGroupsMap(
 		// Loop all MetaDataItems in the MetaData-group
 		for _, metaDataItemName := range metaDataGroupPtr.MetaDataInGroupOrder {
 
-			metaDataGroupPtr.MetaDataInGroupOrder är tom
+			//metaDataGroupPtr.MetaDataInGroupOrder är tom
 
 			var metaDataItemPtr *testCaseModel.MetaDataInGroupStruct
 			metaDataItemPtr = metaDataItemsInGroupMap[metaDataItemName]

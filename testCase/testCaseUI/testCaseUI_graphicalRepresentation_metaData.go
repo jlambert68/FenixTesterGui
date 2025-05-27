@@ -145,7 +145,7 @@ func buildGUIFromMetaDataGroupsMap(
 	metaDataGroupsSourceMap = *metaDataGroupsSourceMapPtr
 
 	if len(*metaDataGroupsSourceMapPtr) != len(metaDataGroupsOrder) {
-		log.Println("ERROR: The number of MetaDataGroups in the 'metaDataGroupsSourceMap' doesn't match the number of MetaDataGroups in the 'metaDataGroupsOrder'")
+		log.Fatalln("ERROR: The number of MetaDataGroups in the 'metaDataGroupsSourceMap' doesn't match the number of MetaDataGroups in the 'metaDataGroupsOrder'")
 	}
 
 	var convertMetaDataToMapMap map[string]map[string]*NewMetaDataInGroupStruct
@@ -244,6 +244,7 @@ func buildGUIFromMetaDataGroupsMap(
 						var testMetaDataGroup testCaseModel.MetaDataGroupStruct
 						testMetaDataGroup = testCaseModel.MetaDataGroupStruct{
 							MetaDataGroupName:     metaDataItem.MetaDataGroupName,
+							MetaDataInGroupOrder:  metaDataGroupsOrder,
 							MetaDataInGroupMapPtr: &tempMetaDataInGroupMap,
 						}
 
@@ -293,6 +294,7 @@ func buildGUIFromMetaDataGroupsMap(
 							// Create the 'MetaDataGroup'
 							tempMetaDataGroupPtr = &testCaseModel.MetaDataGroupStruct{
 								MetaDataGroupName:     metaDataItem.MetaDataGroupName,
+								MetaDataInGroupOrder:  metaDataGroupsOrder,
 								MetaDataInGroupMapPtr: &tempMetaDataInGroupMap,
 							}
 
@@ -336,6 +338,7 @@ func buildGUIFromMetaDataGroupsMap(
 								// Create the 'MetaDataGroup'
 								tempMetaDataGroupPtr = &testCaseModel.MetaDataGroupStruct{
 									MetaDataGroupName:     metaDataItem.MetaDataGroupName,
+									MetaDataInGroupOrder:  metaDataGroupsOrder,
 									MetaDataInGroupMapPtr: &tempMetaDataInGroupMap,
 								}
 
@@ -349,6 +352,9 @@ func buildGUIFromMetaDataGroupsMap(
 
 								// Set selected value for the TestDataItem
 								tempMetaDataInGroup.SelectedMetaDataValueForSingleSelect = val
+
+								// Add MetaData for Group to 'MetaDataGroupsMap' in TestCase
+								tempMetaDataInGroupMap[metaDataItem.MetaDataName] = &tempMetaDataInGroup
 
 							}
 						}
@@ -364,8 +370,9 @@ func buildGUIFromMetaDataGroupsMap(
 				var selectedValue string
 				if metaDataGroupFromSourceExistInTestCaseMap == true && metaDataGroupItemFromSourceExistInTestCaseMap == true {
 					for _, availableValue := range metaDataItem.AvailableMetaDataValues {
-						if value, ok := newMetaDataItemInGroup.SelectedMetaDataValuesForMultiSelectMap[availableValue]; ok {
-							selectedValue = value
+						if newMetaDataItemInGroup.SelectedMetaDataValueForSingleSelect == availableValue {
+							selectedValue = availableValue
+							break
 						}
 					}
 				}
@@ -545,6 +552,7 @@ func buildGUIFromMetaDataGroupsMap(
 								// Create the 'MetaDataGroup'
 								tempMetaDataGroupPtr = &testCaseModel.MetaDataGroupStruct{
 									MetaDataGroupName:     metaDataItem.MetaDataGroupName,
+									MetaDataInGroupOrder:  metaDataGroupsOrder,
 									MetaDataInGroupMapPtr: &tempMetaDataInGroupMap,
 								}
 
@@ -576,6 +584,7 @@ func buildGUIFromMetaDataGroupsMap(
 
 								// Create the 'MetaDataGroup'
 								tempMetaDataGroupPtr = &testCaseModel.MetaDataGroupStruct{
+									MetaDataInGroupOrder:  metaDataGroupsOrder,
 									MetaDataGroupName:     metaDataItem.MetaDataGroupName,
 									MetaDataInGroupMapPtr: &tempMetaDataInGroupMap,
 								}
@@ -584,6 +593,9 @@ func buildGUIFromMetaDataGroupsMap(
 								tempMetaDataGroupsMap[metaDataItem.MetaDataGroupName] = tempMetaDataGroupPtr
 
 								metaDataGroupInTestCasePtr.MetaDataGroupsMapPtr = &tempMetaDataGroupsMap
+
+								// Add MetaData for Group to 'MetaDataGroupsMap' in TestCase
+								tempMetaDataInGroupMap[metaDataItem.MetaDataName] = &tempMetaDataInGroup
 
 							}
 						}

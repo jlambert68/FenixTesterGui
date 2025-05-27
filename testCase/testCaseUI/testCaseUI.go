@@ -224,16 +224,6 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	// Add newly created Graphical Representation Area to object for all graphical parts of one TestCase
 	testCaseGraphicalAreas.TestCaseGraphicalModelArea = testCaseGraphicalModelArea
 
-	// Generate the BaseInformation Area for the TestCase
-	testCaseBaseInformationArea, err := testCasesUiCanvasObject.generateBaseInformationAreaForTestCase(testCaseToBeAddedUuid)
-
-	if err != nil {
-		return err
-	}
-
-	// Add newly created BaseInformation Area to object for all graphical parts of one TestCase
-	testCaseGraphicalAreas.TestCaseBaseInformationArea = testCaseBaseInformationArea
-
 	// Generate the MetaData Area for the TestCase
 	testCaseMetaDataArea, _, err := testCasesUiCanvasObject.GenerateMetaDataAreaForTestCase(
 		testCaseToBeAddedUuid,
@@ -245,6 +235,21 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 
 	// Add newly created MetaData Area to object for all graphical parts of one TestCase
 	testCaseGraphicalAreas.TestCaseMetaDataArea = &testCaseMetaDataArea
+
+	// Generate the BaseInformation Area for the TestCase
+	testCaseBaseInformationArea,
+		tempCurrentOwnerDomainToBeChosenInDropDown,
+		newOwnerDomainSelect,
+		valueIsValidWarningBox,
+		err := testCasesUiCanvasObject.generateBaseInformationAreaForTestCase(
+		testCaseToBeAddedUuid)
+
+	if err != nil {
+		return err
+	}
+
+	// Add newly created BaseInformation Area to object for all graphical parts of one TestCase
+	testCaseGraphicalAreas.TestCaseBaseInformationArea = testCaseBaseInformationArea
 
 	// Generate the TestCaseAttributes Area for the TestCase
 	testCaseAttributesArea, testInstructionAttributesAccordion, err := testCasesUiCanvasObject.
@@ -382,6 +387,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 
 	// Save TestCase UI-components-Map
 	testCasesUiCanvasObject.TestCasesUiModelMap[testCaseToBeAddedUuid] = &testCaseGraphicalAreas
+
+	// Sets the Selected value for the DropDown specifying the Owner-Domain of the TestCase
+	testCasesUiCanvasObject.setSelectedOwnerDomainForTestCaseArea(
+		tempCurrentOwnerDomainToBeChosenInDropDown,
+		newOwnerDomainSelect,
+		valueIsValidWarningBox)
 
 	return err
 }

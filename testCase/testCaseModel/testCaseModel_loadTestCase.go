@@ -62,6 +62,8 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 		TestDataHashWhenTestCaseWasSavedOrLoaded: "",
 		ImportedTemplateFilesFromGitHub:          nil,
 		TestData:                                 nil,
+		TestCasePreviewObject:                    nil,
+		TestCaseMetaDataPtr:                      nil,
 	}
 
 	// Initialize AttributesList
@@ -318,6 +320,81 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 	// Update The Hash for the TestCase
 	tempTestCaseModel.TestCaseHashWhenTestCaseWasSavedOrLoaded = detailedTestCaseResponse.DetailedTestCase.MessageHash
 	tempTestCaseModel.TestDataHashWhenTestCaseWasSavedOrLoaded = detailedTestCaseResponse.GetDetailedTestCase().GetTestCaseTestData().GetHashOfThisMessageWithEmptyHashField()
+
+	// Generate the TestCaseMetaData for the TestCase-model from the gRPC-data
+	var tempMetaDataGroupsMap map[string]*MetaDataGroupStruct
+	var tempMetaDataGroupsOrder []string
+	tempMetaDataGroupsMap = make(map[string]*MetaDataGroupStruct)
+
+	// Loop MetaDataGroups in gPRC-data
+	for tempMetaDataGroupNameFromGrpc, tempMetaDataGroupFromGrpc := range detailedTestCaseResponse.GetDetailedTestCase().GetTestCaseMetaData().GetMetaDataGroupsMap() {
+
+		tempMetaDataGroupsOrder = append(tempMetaDataGroupsOrder, tempMetaDataGroupNameFromGrpc)
+
+		var tempMetaDataInGroupOrder []string
+
+		var tempMetaDataInGroupMap map[string]*MetaDataInGroupStruct
+		tempMetaDataInGroupMap = make(map[string]*MetaDataInGroupStruct)
+
+		// Loop MetaDataGroupItems in MetaDataGroup
+		for tempMetaDataGroupItemNameFromGrpc, tempMetaDataGroupItemFromGrpc := range tempMetaDataGroupFromGrpc.GetMetaDataInGroupMap() {
+
+			tempMetaDataInGroupOrder = append(tempMetaDataInGroupOrder, tempMetaDataGroupItemNameFromGrpc)
+
+			var tempMetaDataInGroup MetaDataInGroupStruct
+			tempMetaDataInGroup = MetaDataInGroupStruct{
+				MetaDataGroupName:                          tempMetaDataGroupNameFromGrpc,
+				MetaDataName:                               tempMetaDataGroupItemNameFromGrpc,
+				SelectType:                                 MetaDataSelectType(tempMetaDataGroupItemFromGrpc.SelectType),
+				Mandatory:                                  tempMetaDataGroupItemFromGrpc.IsMandatory,
+				AvailableMetaDataValues:                    tempMetaDataGroupItemFromGrpc.AvailableMetaDataValues,
+				SelectedMetaDataValueForSingleSelect:       tempMetaDataGroupItemFromGrpc.SelectedMetaDataValueForSingleSelect,
+				SelectedMetaDataValuesForMultiSelect:       tempMetaDataGroupItemFromGrpc.SelectedMetaDataValuesForMultiSelect,
+				SelectedMetaDataValuesForMultiSelectMapPtr: nil,
+			}
+
+			// Generate the map holding the Selected values for the multi select
+			var tempSelectedMetaDataValuesMap map[string]string
+			tempSelectedMetaDataValuesMap = make(map[string]string)
+
+			for tempMetaDataItemKeyFromGrpc, tempMetaDataItemValueFromGrpc := range tempMetaDataGroupItemFromGrpc.
+				SelectedMetaDataValuesForMultiSelectMap {
+				tempSelectedMetaDataValuesMap[tempMetaDataItemKeyFromGrpc] = tempMetaDataItemValueFromGrpc
+			}
+
+			// Store selected values map in main message
+			tempMetaDataInGroup.SelectedMetaDataValuesForMultiSelectMapPtr = &tempSelectedMetaDataValuesMap
+
+			// Add MetaDataGroupItem to 'MetaDataInGroupMap'
+			tempMetaDataInGroupMap[tempMetaDataGroupItemNameFromGrpc] = &tempMetaDataInGroup
+
+		}
+
+		// Create the var MetaDataGroup-object
+		var tempMetaDataGroup MetaDataGroupStruct
+		tempMetaDataGroup = MetaDataGroupStruct{
+			MetaDataGroupName:     tempMetaDataGroupNameFromGrpc,
+			MetaDataInGroupOrder:  tempMetaDataInGroupOrder,
+			MetaDataInGroupMapPtr: &tempMetaDataInGroupMap,
+		}
+
+		// Add  MetaDataGroup-object to 'tempMetaDataGroupsMap'
+		tempMetaDataGroupsMap[tempMetaDataGroupNameFromGrpc] = &tempMetaDataGroup
+
+	}
+
+	// Create the full 'TestCaseMetaData-object'
+	var tempTestCaseMetaData TestCaseMetaDataStruct
+	tempTestCaseMetaData = TestCaseMetaDataStruct{
+		CurrentSelectedDomainUuid: detailedTestCaseResponse.GetDetailedTestCase().
+			GetTestCaseMetaData().GetCurrentSelectedDomainUuid(),
+		TestCaseMetaDataMessageStructForTestCaseWhenLastSaved: nil,
+		MetaDataGroupsOrder:  tempMetaDataGroupsOrder,
+		MetaDataGroupsMapPtr: &tempMetaDataGroupsMap,
+	}
+
+	// Add converted TestCaseMetaData to 'TestCaseModel'
+	tempTestCaseModel.TestCaseMetaDataPtr = &tempTestCaseMetaData
 
 	// Add TestCase to map with all TestCases
 	if testCaseModel.TestCases == nil {

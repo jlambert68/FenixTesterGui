@@ -7,7 +7,6 @@ import (
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	testInstruction_SendTemplateToThisDomain_version_1_0 "github.com/jlambert68/FenixStandardTestInstructionAdmin/TestInstructionsAndTesInstructionContainersAndAllowedUsers/TestInstructions/TestInstruction_SendTemplateToThisDomain/version_1_0"
 	testInstruction_SendTestDataToThisDomain_version_1_0 "github.com/jlambert68/FenixStandardTestInstructionAdmin/TestInstructionsAndTesInstructionContainersAndAllowedUsers/TestInstructions/TestInstruction_SendTestDataToThisDomain/version_1_0"
-	"github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"log"
@@ -123,6 +122,8 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 		TestCaseTestData:         gRPCTestCaseTestData,
 		TestCasePreview:          gRPCTestCasePreviewMessage,
 		TestCaseMetaData:         gRPCUserSpecifiedTestCaseMetaDataMessage,
+		MessageHash:              currentTestCase.TestCaseHash,
+		//DeletedDate:              "",
 	}
 
 	// Send using gRPC
@@ -1234,11 +1235,11 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	subHashPartsSlice = append(subHashPartsSlice, tempFinalHash)
 
 	// Log subHashPartsSlice to be used for bug findings when TestCase model is out of sync
-	sharedCode.Logger.WithFields(logrus.Fields{
-		"ID":                "d0034233-202b-469c-93e3-48903991fe23",
-		"testCaseUuid":      testCaseUuid,
-		"subHashPartsSlice": subHashPartsSlice,
-	}).Debug("Used for bug findings when TestCase model gets of sync when saving TestCase and the Loading the same TestCase")
+	//sharedCode.Logger.WithFields(logrus.Fields{
+	//	"ID":                "d0034233-202b-469c-93e3-48903991fe23",
+	//	"testCaseUuid":      testCaseUuid,
+	//	"subHashPartsSlice": subHashPartsSlice,
+	//}).Debug("Used for bug findings when TestCase model gets of sync when saving TestCase and the Loading the same TestCase")
 
 	/*
 		for _, subHashPartSlice := range subHashPartsSlice {

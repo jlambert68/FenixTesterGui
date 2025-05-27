@@ -16,6 +16,9 @@ import (
 func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTestCaseArea(
 	testCaseUuid string) (
 	ownerDomainArea fyne.CanvasObject,
+	tempCurrentOwnerDomainToBeChosenInDropDown string,
+	newOwnerDomainSelect *widget.Select,
+	valueIsValidWarningBox *canvas.Rectangle,
 	err error) {
 
 	// Extract the current TestCase UI model
@@ -27,13 +30,17 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 		//TODO Send ERRORS over error-channel
 		fmt.Println(err)
 
-		return nil, err
+		return nil,
+			"",
+			nil,
+			nil,
+			err
 
 	}
 
 	// If TestCase already has a chosen OwnerDomain then set that value
 	var tempCurrentOwnerDomain string
-	var tempCurrentOwnerDomainToBeChosenInDropDown string
+
 	var testCaseHasOwnerDomain bool
 
 	if len(testCase_Model.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid) > 0 {
@@ -65,13 +72,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 	testCaseOwnerDomainNameFormContainer.Add(headerLabel)
 
 	// Generate Warnings-rectangle for valid value, or that value exist
-	var valueIsValidWarningBox *canvas.Rectangle
+	//var valueIsValidWarningBox *canvas.Rectangle
 	var colorToUse color.NRGBA
 	colorToUse = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
 	valueIsValidWarningBox = canvas.NewRectangle(colorToUse)
 
 	// Add the DropDown box with all domains that can own the TestCase
-	var newOwnerDomainSelect *widget.Select
 	newOwnerDomainSelect = widget.NewSelect(options,
 		func(value string) {
 			// This function is called when an option is selected.
@@ -155,17 +161,19 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 			}
 		})
 
-	// Set the Visible value for DropDown, if there is any
-	if len(tempCurrentOwnerDomainToBeChosenInDropDown) > 0 {
-		newOwnerDomainSelect.SetSelected(tempCurrentOwnerDomainToBeChosenInDropDown)
-	}
+	/*
+		// Set the Visible value for DropDown, if there is any
+		if len(tempCurrentOwnerDomainToBeChosenInDropDown) > 0 {
+			newOwnerDomainSelect.SetSelected(tempCurrentOwnerDomainToBeChosenInDropDown)
+		}
 
-	// Set correct warning box color
-	if len(newOwnerDomainSelect.Selected) == 0 {
-		valueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
-	} else {
-		valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
-	}
+		// Set correct warning box color
+		if len(newOwnerDomainSelect.Selected) == 0 {
+			valueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+		} else {
+			valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
+		}
+	*/
 
 	// Create a custom SelectComboBox, with valueIsValidWarningBox
 	var customSelectComboBox *customAttributeSelectComboBox
@@ -177,5 +185,28 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 	// Create the VBox-container that will be returned
 	testCaseOwnerDomainContainer = container.NewVBox(testCaseOwnerDomainNameFormContainer)
 
-	return testCaseOwnerDomainContainer, err
+	return testCaseOwnerDomainContainer,
+		tempCurrentOwnerDomainToBeChosenInDropDown,
+		newOwnerDomainSelect,
+		valueIsValidWarningBox,
+		err
+}
+
+// Sets the Selected value for the DropDown specifying the Owner-Domain of the TestCase
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) setSelectedOwnerDomainForTestCaseArea(
+	tempCurrentOwnerDomainToBeChosenInDropDown string,
+	newOwnerDomainSelect *widget.Select,
+	valueIsValidWarningBox *canvas.Rectangle) {
+
+	// Set the Visible value for DropDown, if there is any
+	if len(tempCurrentOwnerDomainToBeChosenInDropDown) > 0 {
+		newOwnerDomainSelect.SetSelected(tempCurrentOwnerDomainToBeChosenInDropDown)
+	}
+
+	// Set correct warning box color
+	if len(newOwnerDomainSelect.Selected) == 0 {
+		valueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+	} else {
+		valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
+	}
 }

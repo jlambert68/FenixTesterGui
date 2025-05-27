@@ -4,14 +4,22 @@ import (
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/widget"
 )
 
 // Generate the BaseInformation Area for the TestCase
 func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateBaseInformationAreaForTestCase(
 	testCaseUuid string) (
-	testCaseBaseInformationArea fyne.CanvasObject, err error) {
+	testCaseBaseInformationArea fyne.CanvasObject,
+	// Variables to be able to Set value in OwnerDomain-Dropdown
+	tempCurrentOwnerDomainToBeChosenInDropDown string,
+	newOwnerDomainSelect *widget.Select,
+	valueIsValidWarningBox *canvas.Rectangle,
+	// *****************
+	err error) {
 
 	// Get current TestCase-UI-model
 	_, existsInMap := testCasesUiCanvasObject.TestCasesUiModelMap[testCaseUuid]
@@ -20,7 +28,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateBaseInformationAr
 		errorId := "4b062436-590a-4f2a-9004-181f3f575a4b"
 		err = errors.New(fmt.Sprintf("testcase-UI-model with sourceUuid '%s' allready exist in 'TestCasesUiModelMap' [ErrorID: %s]", testCaseUuid, errorId))
 
-		return nil, err
+		return nil,
+			"",
+			nil,
+			nil,
+			err
 	}
 
 	var tempBaseInformationAreaContainer *fyne.Container
@@ -34,7 +46,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateBaseInformationAr
 	var tempTestCaseDeleteDateArea fyne.CanvasObject
 	tempTestCaseDeleteDateArea, err = testCasesUiCanvasObject.generateTestCaseDeletionDateArea(testCaseUuid)
 	if err != nil {
-		return nil, err
+		return nil,
+			"",
+			nil,
+			nil,
+			err
 	}
 
 	// Add the 'TestCaseName-UI-object' to the 'BaseInformationArea'
@@ -44,7 +60,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateBaseInformationAr
 	var tempTestCaseNameArea fyne.CanvasObject
 	tempTestCaseNameArea, err = testCasesUiCanvasObject.generateTestCaseNameArea(testCaseUuid)
 	if err != nil {
-		return nil, err
+		return nil,
+			"",
+			nil,
+			nil,
+			err
 	}
 
 	// Add the 'TestCaseName-UI-object' to the 'BaseInformationArea'
@@ -52,9 +72,17 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateBaseInformationAr
 
 	// Generate TestCaseDomainOwner-UI-object
 	var tempTestCaseDomainOwnerArea fyne.CanvasObject
-	tempTestCaseDomainOwnerArea, err = testCasesUiCanvasObject.generateOwnerDomainForTestCaseArea(testCaseUuid)
+	tempTestCaseDomainOwnerArea,
+		tempCurrentOwnerDomainToBeChosenInDropDown,
+		newOwnerDomainSelect,
+		valueIsValidWarningBox,
+		err = testCasesUiCanvasObject.generateOwnerDomainForTestCaseArea(testCaseUuid)
 	if err != nil {
-		return nil, err
+		return nil,
+			"",
+			nil,
+			nil,
+			err
 	}
 
 	// Add the 'TestCaseDomainOwner-UI-object' to the 'BaseInformationArea'
@@ -64,7 +92,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateBaseInformationAr
 	var tempTestCaseDescriptionArea fyne.CanvasObject
 	tempTestCaseDescriptionArea, err = testCasesUiCanvasObject.generateTestCaseDescriptionArea(testCaseUuid)
 	if err != nil {
-		return tempBaseInformationAreaContainer, err
+		return nil,
+			"",
+			nil,
+			nil,
+			err
 	}
 
 	// Add the 'TestCaseDescription-UI-object' to the 'BaseInformationArea'
@@ -74,7 +106,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateBaseInformationAr
 	var templateListArea fyne.CanvasObject
 	templateListArea, err = testCasesUiCanvasObject.generateTemplateListForTestCaseArea(testCaseUuid)
 	if err != nil {
-		return tempBaseInformationAreaContainer, err
+		return nil,
+			"",
+			nil,
+			nil,
+			err
 	}
 
 	// Add the 'TemplateList-UI-object' to the 'BaseInformationArea'
@@ -84,11 +120,19 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateBaseInformationAr
 	var testDataSelectorArea fyne.CanvasObject
 	testDataSelectorArea, err = testCasesUiCanvasObject.generateSelectedTestDataForTestCaseArea(testCaseUuid)
 	if err != nil {
-		return tempBaseInformationAreaContainer, err
+		return nil,
+			"",
+			nil,
+			nil,
+			err
 	}
 
 	// Add the 'TestDataSelector-UI-object' to the 'BaseInformationArea'
 	tempBaseInformationAreaContainer.Add(testDataSelectorArea)
 
-	return tempBaseInformationAreaContainer, err
+	return tempBaseInformationAreaContainer,
+		tempCurrentOwnerDomainToBeChosenInDropDown,
+		newOwnerDomainSelect,
+		valueIsValidWarningBox,
+		err
 }

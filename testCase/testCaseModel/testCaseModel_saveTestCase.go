@@ -2,10 +2,8 @@ package testCaseModel
 
 import (
 	sharedCode "FenixTesterGui/common_code"
-	"FenixTesterGui/soundEngine"
 	"errors"
 	"fmt"
-	"fyne.io/fyne/v2"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	testInstruction_SendTemplateToThisDomain_version_1_0 "github.com/jlambert68/FenixStandardTestInstructionAdmin/TestInstructionsAndTesInstructionContainersAndAllowedUsers/TestInstructions/TestInstruction_SendTemplateToThisDomain/version_1_0"
 	testInstruction_SendTestDataToThisDomain_version_1_0 "github.com/jlambert68/FenixStandardTestInstructionAdmin/TestInstructionsAndTesInstructionContainersAndAllowedUsers/TestInstructions/TestInstruction_SendTestDataToThisDomain/version_1_0"
@@ -779,11 +777,6 @@ func (testCaseModel *TestCasesModelsStruct) generateUserSpecifiedTestCaseMetaDat
 		return nil, err
 	}
 
-	// Check if there are any TestCaseMetaData, if not then just return
-	if currentTestCase.TestCaseMetaDataPtr == nil {
-		return nil, nil
-	}
-
 	// Generate the Domain that owns the TestCase
 	var domainNameThatOwnsTestCase string
 	domainNameThatOwnsTestCase = fmt.Sprintf("%s [%s]",
@@ -794,6 +787,22 @@ func (testCaseModel *TestCasesModelsStruct) generateUserSpecifiedTestCaseMetaDat
 		CurrentSelectedDomainUuid: currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid,
 		CurrentSelectedDomainName: domainNameThatOwnsTestCase,
 		MetaDataGroupsMap:         nil,
+	}
+
+	// Verify that all mandatory MetaData-fields have been set
+	err = testCaseModel.verifyMandatoryFieldsForMetaData(
+		gRPCUserSpecifiedTestCaseMetaDataMessage.GetCurrentSelectedDomainUuid(),
+		&currentTestCase)
+
+	// All mandatory fields have not been set
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if there are any TestCaseMetaData, if not then just return
+	if currentTestCase.TestCaseMetaDataPtr == nil ||
+		currentTestCase.TestCaseMetaDataPtr.MetaDataGroupsMapPtr == nil {
+		return nil, nil
 	}
 
 	var tempMetaDataGroupsMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.MetaDataGroupMessage
@@ -829,63 +838,66 @@ func (testCaseModel *TestCasesModelsStruct) generateUserSpecifiedTestCaseMetaDat
 				SelectedMetaDataValuesForMultiSelectMap: *tempMetaDataGroupItemInTestCase.SelectedMetaDataValuesForMultiSelectMapPtr,
 			}
 
-			// Check if MetaDataItem is mandatory
-			if tempMetaDataGroupItemInTestCase.Mandatory == true {
+			/*
+				// Check if MetaDataItem is mandatory
+				if tempMetaDataGroupItemInTestCase.Mandatory == true {
 
-				// Validate that MetaDataItem has value(s)
-				switch tempMetaDataGroupItemInTestCase.SelectType {
-				case MetaDataSelectType_SingleSelect:
-					if tempMetaDataGroupItemInTestCase.SelectedMetaDataValueForSingleSelect == "" {
+					// Validate that MetaDataItem has value(s)
+					switch tempMetaDataGroupItemInTestCase.SelectType {
+					case MetaDataSelectType_SingleSelect:
+						if tempMetaDataGroupItemInTestCase.SelectedMetaDataValueForSingleSelect == "" {
 
-						errorId := "deeaf593-4675-4d47-beef-a6dc6b7367d3"
-						err = errors.New(fmt.Sprintf("MetaDataItem '%s' is mandatory but has no value [ErrorID: %s]",
-							tempMetaDataGroupItemNameInTestCase, errorId))
+							errorId := "deeaf593-4675-4d47-beef-a6dc6b7367d3"
+							err = errors.New(fmt.Sprintf("MetaDataItem '%s' is mandatory but has no value [ErrorID: %s]",
+								tempMetaDataGroupItemNameInTestCase, errorId))
 
-						// Notify the user
+							// Notify the user
 
-						// Trigger System Notification sound
-						soundEngine.PlaySoundChannel <- soundEngine.UserNeedToRespondSound
+							// Trigger System Notification sound
+							soundEngine.PlaySoundChannel <- soundEngine.UserNeedToRespondSound
 
-						fyne.CurrentApp().SendNotification(&fyne.Notification{
-							Title: "Save TestCase, failed",
-							Content: fmt.Sprintf("MetaDataItem '%s' is mandatory but has no value",
-								tempMetaDataGroupItemNameInTestCase),
-						})
+							fyne.CurrentApp().SendNotification(&fyne.Notification{
+								Title: "Save TestCase, failed",
+								Content: fmt.Sprintf("MetaDataItem '%s' is mandatory but has no value",
+									tempMetaDataGroupItemNameInTestCase),
+							})
+
+							return nil, err
+						}
+
+					case MetaDataSelectType_MultiSelect:
+						if len(metaDataGroupItem.SelectedMetaDataValuesForMultiSelect) == 0 {
+
+							errorId := "3f5048a5-9407-428b-bd6c-2a656e3ad56d"
+							err = errors.New(fmt.Sprintf("MetaDataItem '%s' is mandatory but has no value [ErrorID: %s]",
+								tempMetaDataGroupItemNameInTestCase, errorId))
+
+							// Notify the user
+
+							// Trigger System Notification sound
+							soundEngine.PlaySoundChannel <- soundEngine.UserNeedToRespondSound
+
+							fyne.CurrentApp().SendNotification(&fyne.Notification{
+								Title: "Save TestCase, failed",
+								Content: fmt.Sprintf("MetaDataItem '%s' is mandatory but has no value",
+									tempMetaDataGroupItemNameInTestCase),
+							})
+
+							return nil, err
+
+						}
+
+					default:
+						ErrorID := "d47f1cd3-1771-4331-bedb-df2783e61680"
+						err := errors.New(fmt.Sprintf("unknown 'tempMetaDataGroupItemInTestCase.SelectType'. [ErrorID:'%s']", ErrorID))
+
+						fmt.Println(err) // TODO Send on Error-channel
 
 						return nil, err
 					}
-
-				case MetaDataSelectType_MultiSelect:
-					if len(metaDataGroupItem.SelectedMetaDataValuesForMultiSelect) == 0 {
-
-						errorId := "3f5048a5-9407-428b-bd6c-2a656e3ad56d"
-						err = errors.New(fmt.Sprintf("MetaDataItem '%s' is mandatory but has no value [ErrorID: %s]",
-							tempMetaDataGroupItemNameInTestCase, errorId))
-
-						// Notify the user
-
-						// Trigger System Notification sound
-						soundEngine.PlaySoundChannel <- soundEngine.UserNeedToRespondSound
-
-						fyne.CurrentApp().SendNotification(&fyne.Notification{
-							Title: "Save TestCase, failed",
-							Content: fmt.Sprintf("MetaDataItem '%s' is mandatory but has no value",
-								tempMetaDataGroupItemNameInTestCase),
-						})
-
-						return nil, err
-
-					}
-
-				default:
-					ErrorID := "d47f1cd3-1771-4331-bedb-df2783e61680"
-					err := errors.New(fmt.Sprintf("unknown 'tempMetaDataGroupItemInTestCase.SelectType'. [ErrorID:'%s']", ErrorID))
-
-					fmt.Println(err) // TODO Send on Error-channel
-
-					return nil, err
 				}
-			}
+
+			*/
 
 			// Add the MetaDataGroupItem for the gRPC-map-message
 			metaDataInGroupMessage[tempMetaDataGroupItemNameInTestCase] = &metaDataGroupItem

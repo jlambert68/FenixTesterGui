@@ -20,7 +20,7 @@ var (
 
 var highestFenixGuiExecutionServerProtoFileVersion int32 = -1
 
-// Parameters used for channel to update status on Executions for TestCasesMap and TestInstructions
+// Parameters used for channel to update status on Executions for TestCasesMapPtr and TestInstructions
 var executionStatusCommandChannel ExecutionStatusChannelType
 
 type ExecutionStatusChannelType chan ChannelCommandStruct

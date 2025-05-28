@@ -18,10 +18,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseNameArea(
 	err error) {
 
 	// Extract the current TestCase UI model
-	testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
+	testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
 	if existsInMap == false {
 		errorId := "57d439e2-adf2-4abe-a0d0-f4afb98dd0a6"
-		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
+		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
 
 		//TODO Send ERRORS over error-channel
 		fmt.Println(err)
@@ -54,10 +54,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseNameArea(
 
 		// Save TestCase back in Map
 		// Get the latest version of TestCase
-		tempTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
+		tempTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
 
 		tempTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseName = trimmedValue
-		testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid] = tempTestCase
+		testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = tempTestCase
 
 		// Generate short version of UUID to put in TestCase Tab-Name
 		var shortUUid string

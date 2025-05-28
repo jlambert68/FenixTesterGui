@@ -252,7 +252,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) MainTestDataSelector(
 				}
 
 				// Update TestData on the TestCase
-				testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid] = currentTestCasePtr
+				testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
 
 				// Update TestData-Selects in TestCase main area if the Deleted Group is selected in main TestCase area
 				if string(groupNameToDelete) == testDataPointGroupsSelectInMainTestCaseArea.Selected {
@@ -350,7 +350,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) MainTestDataSelector(
 				testDataPointsForAGroupSelectInMainTestCaseArea.Refresh()
 
 				// Update TestData on the TestCase
-				testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid] = currentTestCasePtr
+				testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
 
 				// If there are no TestDataGroups then hide the Selects in main TestCase window
 				if len(currentTestCasePtr.TestData.ListTestDataGroups()) == 0 {

@@ -66,7 +66,7 @@ var (
 
 func (uiServer *UIServerStruct) createTestCaseCommandParametersUI() (testCaseCommandsParametersUIObject fyne.CanvasObject) {
 
-	// List alla TestCasesMap
+	// List alla TestCasesMapPtr
 	availableTestCasesSelectWidget = widget.Select{
 		DisableableWidget: widget.DisableableWidget{},
 		Alignment:         0,
@@ -138,8 +138,8 @@ func (uiServer *UIServerStruct) createTestCaseCommandParametersUI() (testCaseCom
 }
 func (uiServer *UIServerStruct) createTestCaseCommandsUI() (testCaseCommandsUIObject fyne.CanvasObject) {
 
-	// List alla TestCasesMap
-	availableTestCasesLabelWidget := widget.NewLabel("Available TestCasesMap")
+	// List alla TestCasesMapPtr
+	availableTestCasesLabelWidget := widget.NewLabel("Available TestCasesMapPtr")
 	availableTestCasesSelectWidget = widget.Select{
 		DisableableWidget: widget.DisableableWidget{},
 		Alignment:         0,
@@ -302,7 +302,7 @@ func (uiServer *UIServerStruct) newTestCase() {
 
 	}
 
-	// Update List with available TestCasesMap and Select the New one
+	// Update List with available TestCasesMapPtr and Select the New one
 	availableTestCasesSelectWidget.Options = uiServer.testCasesModel.ListAvailableTestCases()
 	availableTestCasesSelectWidget.Selected = testCaseUuid
 	availableTestCasesSelectWidget.Refresh()

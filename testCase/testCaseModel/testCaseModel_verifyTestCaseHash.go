@@ -13,11 +13,11 @@ func (testCaseModel *TestCasesModelsStruct) VerifyTestCaseHashTowardsDatabase(te
 	var existsInMap bool
 
 	// Get current TestCase
-	_, existsInMap = testCaseModel.TestCasesMap[testCaseUuid]
+	_, existsInMap = testCaseModel.TestCasesMapPtr[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "13f7c602-b8b7-427d-92b0-335556c071f1"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -75,11 +75,11 @@ func (testCaseModel *TestCasesModelsStruct) VerifyLatestLoadedOrSavedTestCaseHas
 	var tempTestCasePtr *TestCaseModelStruct
 
 	// Get current TestCase
-	tempTestCasePtr, existsInMap = testCaseModel.TestCasesMap[testCaseUuid]
+	tempTestCasePtr, existsInMap = testCaseModel.TestCasesMapPtr[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "959d258d-2f83-46e5-8aba-8655b8fb27b2"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -126,7 +126,7 @@ func (testCaseModel *TestCasesModelsStruct) VerifyLatestLoadedOrSavedTestCaseHas
 	return hashIsTheSame, err
 }
 
-// TestCaseHashIsChangedSinceLoadedOrSaved - Verify if the Hash for the TestCase is the same as the one when TestCasesMap was last Loaded or Saved
+// TestCaseHashIsChangedSinceLoadedOrSaved - Verify if the Hash for the TestCase is the same as the one when TestCasesMapPtr was last Loaded or Saved
 func (testCaseModel *TestCasesModelsStruct) TestCaseHashIsChangedSinceLoadedOrSaved(testCaseUuid string) (
 	hashIsChanged bool, err error) {
 
@@ -134,11 +134,11 @@ func (testCaseModel *TestCasesModelsStruct) TestCaseHashIsChangedSinceLoadedOrSa
 	var tempTestCasePtr *TestCaseModelStruct
 
 	// Get current TestCase
-	tempTestCasePtr, existsInMap = testCaseModel.TestCasesMap[testCaseUuid]
+	tempTestCasePtr, existsInMap = testCaseModel.TestCasesMapPtr[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "d9b6aa9e-0cc4-4424-8d74-c794b44bbcd6"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 

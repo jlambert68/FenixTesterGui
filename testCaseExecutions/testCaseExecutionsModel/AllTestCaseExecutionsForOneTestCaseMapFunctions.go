@@ -53,7 +53,7 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) GetAllTestCaseExecu
 	//UnLock Map
 	defer allTestCaseExecutionsMapMutex.RUnlock()
 
-	// Check if Outer Map i nil, then no TestCasesMap with no TestCaseExecutions
+	// Check if Outer Map i nil, then no TestCasesMapPtr with no TestCaseExecutions
 	if TestCaseExecutionsModel.AllTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap == nil {
 		return nil, false
 	}
@@ -113,7 +113,7 @@ func (testCaseExecutionsModel TestCaseExecutionsModelStruct) GetSpecificTestCase
 	//UnLock Map
 	defer allTestCaseExecutionsMapMutex.RUnlock()
 
-	// Check if Outer Map i nil, then no TestCasesMap with no TestCaseExecutions
+	// Check if Outer Map i nil, then no TestCasesMapPtr with no TestCaseExecutions
 	if TestCaseExecutionsModel.AllTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap == nil {
 		return nil, false
 	}

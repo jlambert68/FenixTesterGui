@@ -10,7 +10,7 @@ import (
 func (testCaseModel *TestCasesModelsStruct) recursiveZombieElementSearchInTestCaseModel(testCaseUuid string, elementsUuid string, allUuidKeys []string) (processedAllUuidKeys []string, err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
 		return nil, err
@@ -84,7 +84,7 @@ func findElementInSliceAndRemove(sliceToWorkOn *[]string, uuid string) (returnSl
 func (testCaseModel *TestCasesModelsStruct) recursiveTextualTestCaseModelExtractor(testCaseUuid string, elementsUuid string, testCaseModelElementsIn []fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) (testCaseModelElementsIOut []fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage, err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
 		return nil, err
@@ -142,7 +142,7 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 	treeViewNodeChildrenOut []TestCaseModelAdaptedForUiTreeDataStruct, err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
 	if existsInMap == false {
 		errorId := "68f37aee-0b93-4d4f-9225-31ea5ccd8f8a"
 		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))

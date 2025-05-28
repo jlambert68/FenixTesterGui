@@ -12,10 +12,15 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCopyFullELe
 
 	var tempTestCase *testCaseModel.TestCaseModelStruct
 
-	tempTestCaseModelMap := make(map[string]testCaseModel.MatureTestCaseModelElementStruct)
+	var tempTestCaseModelMap map[string]testCaseModel.MatureTestCaseModelElementStruct
+	tempTestCaseModelMap = make(map[string]testCaseModel.MatureTestCaseModelElementStruct)
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	currentTestCasePtr, existsInMap := testCasesMap[testCaseUuid]
 
 	if existsInMap == false {
 		errorId := "64bb031b-88c7-4758-aade-7375816ac285"
@@ -25,12 +30,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCopyFullELe
 	}
 
 	// Transform a copy of current TestCase to 'tempTestCase'
-	for elemenUuid, tempElement := range currentTestCase.TestCaseModelMap {
+	for elemenUuid, tempElement := range currentTestCasePtr.TestCaseModelMap {
 		tempTestCaseModelMap[elemenUuid] = tempElement
 	}
 
 	tempTestCase = &testCaseModel.TestCaseModelStruct{
-		FirstElementUuid: currentTestCase.FirstElementUuid,
+		FirstElementUuid: currentTestCasePtr.FirstElementUuid,
 		TestCaseModelMap: tempTestCaseModelMap,
 	}
 
@@ -77,7 +82,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCopyFullELe
 	}
 
 	//Reload the TestCase - not needed
-	// currentTestCase, existsInMap = commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	// currentTestCasePtr, existsInMap = commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 
 	if existsInMap == false {
 		errorId := "9d857471-7918-4762-be9b-729b82a961e2"
@@ -88,10 +93,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCopyFullELe
 
 	// If there are no errors then save the copied Element Structure in Copy-buffer and then save the Updaed TestCase
 	// Save Copy Buffer in TestCase
-	currentTestCase.CopyBuffer = copiedStructure
+	currentTestCasePtr.CopyBuffer = copiedStructure
 
 	// Save TestCase
-	commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
+	//commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
 
 	return err
 

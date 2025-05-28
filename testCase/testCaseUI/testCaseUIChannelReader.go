@@ -200,7 +200,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 		var currentTestCasePtr *testCaseModel.TestCaseModelStruct
 
 		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.
-			TestCasesMap[incomingChannelCommandGraphicsUpdatedData.ActiveTestCase]
+			TestCasesMapPtr[incomingChannelCommandGraphicsUpdatedData.ActiveTestCase]
 		if existInMap == false {
 			sharedCode.Logger.WithFields(logrus.Fields{
 				"ID":           "2e89c13f-0d3f-4dbd-86dd-c35e2a4b59e8",
@@ -224,8 +224,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 				// Remove TestCase from UI-map
 				delete(testCasesUiCanvasObject.TestCasesUiModelMap, incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
 
-				// Remove TestCase TestCasesMap-model
-				delete(testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap, incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
+				// Remove TestCase TestCasesMapPtr-model
+				delete(testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr, incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
 
 				// Switch Active TestCase by Loop Map with TestCase-tabs to find relation between TabItem and UUID
 				var testCaseUuidToSwitchTo string
@@ -291,8 +291,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 				delete(testCasesUiCanvasObject.TestCasesUiModelMap,
 					incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
 
-				// Remove TestCase TestCasesMap-model
-				delete(testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap,
+				// Remove TestCase TestCasesMapPtr-model
+				delete(testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr,
 					incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
 
 				// Switch Active TestCase by Loop Map with TestCase-tabs to find relation between TabItem and UUID
@@ -382,7 +382,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) closeTestCaseTabBasedOnTe
 		var existInMap bool
 
 		_, existInMap = testCasesUiCanvasObject.TestCasesModelReference.
-			TestCasesMap[incomingChannelCommandGraphicsUpdatedData.ActiveTestCase]
+			TestCasesMapPtr[incomingChannelCommandGraphicsUpdatedData.ActiveTestCase]
 
 		if existInMap == false {
 			sharedCode.Logger.WithFields(logrus.Fields{
@@ -403,8 +403,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) closeTestCaseTabBasedOnTe
 		delete(testCasesUiCanvasObject.TestCasesUiModelMap,
 			incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
 
-		// Remove TestCase TestCasesMap-model
-		delete(testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap,
+		// Remove TestCase TestCasesMapPtr-model
+		delete(testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr,
 			incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
 
 		// Switch Active TestCase by Loop Map with TestCase-tabs to find relation between TabItem and UUID

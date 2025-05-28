@@ -17,12 +17,12 @@ const testCaseNodeRectangleSize = 40
 const testCaseNotDeletedDate = "2068-11-18"
 
 // TestCaseUiStruct
-// This structure holds all UI-objects for all the TestCasesMap
+// This structure holds all UI-objects for all the TestCasesMapPtr
 type TestCasesUiModelStruct struct {
 	TestCaseToolUIBar       *widget.Toolbar                          // Toolbar used copy, cut, paste Building Blocks
 	TestCasesTabs           *container.AppTabs                       // The Tab-structure where each TestCase has its own Tab
 	TestCasesUiModelMap     map[string]*testCaseGraphicalAreasStruct // Holds all UI sub-parts for a TestCase
-	TestCasesModelReference *testCaseModel.TestCasesModelsStruct     // A reference to the model for all TestCasesMap
+	TestCasesModelReference *testCaseModel.TestCasesModelsStruct     // A reference to the model for all TestCasesMapPtr
 
 	DragNDropObject       DragNDropObjectStruct // The object used for Dragging TI and TIC into the TestCase
 	DragNDropStateMachine testUIDragNDropStatemachine.StateMachineDragAndDropStruct

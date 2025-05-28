@@ -142,10 +142,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 	err error) {
 
 	// Extract the current TestCase UI model
-	testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
+	testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
 	if existsInMap == false {
 		errorId := "5c27a6eb-21b2-4719-ab26-04c43cb70f5a"
-		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
+		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
 
 		//TODO Send ERRORS over error-channel
 		fmt.Println(err)
@@ -238,7 +238,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 		var existInMap bool
 		var currentTestCasePtr *testCaseModel.TestCaseModelStruct
 
-		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
+		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
 		if existInMap == false {
 			sharedCode.Logger.WithFields(logrus.Fields{
 				"ID":           "879e46d2-4439-404b-ac6d-d99a3307b6f6",
@@ -286,7 +286,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 		currentTestCasePtr.LocalTestCaseMessage.DeleteTimeStamp = newTestCaseDeletionDateEntry.Text
 
 		// Save back the updated TestCase
-		testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid] = currentTestCasePtr
+		testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
 
 		// Remove TestCase from TestCase model and the UI-model
 		commandEngineChannelMessage := sharedCode.ChannelCommandStruct{

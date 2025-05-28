@@ -51,7 +51,7 @@ func RemoveTestCaseFromList(testCaseUuidToBeRemoved string, testCasesModel *test
 
 }
 
-// Create the UI-list that holds the list of TestCasesMap that the user can edit
+// Create the UI-list that holds the list of TestCasesMapPtr that the user can edit
 func generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
 	// Correctly initialize the selectedFilesTable as a new table
@@ -330,7 +330,7 @@ func loadTestCaseListTableTable(testCasesModel *testCaseModel.TestCasesModelsStr
 
 	testCaseListTableTable = nil
 
-	// Loop all TestCasesMap and add to '[][]string'-object for the Table
+	// Loop all TestCasesMapPtr and add to '[][]string'-object for the Table
 	for _, tempTestCase := range testCasesModel.TestCasesThatCanBeEditedByUserMap {
 
 		// Create temporary Row-object for the table

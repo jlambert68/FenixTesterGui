@@ -24,7 +24,7 @@ var testCaseListTableHeader = []string{
 	"DomainName", "TestCaseName", "TestCaseUuid", "TestCaseVersion", "Latest TestCaseExecution Status",
 	"Latest TestCaseExecution TimeStamp", "Latest OK Finished TestCaseExecution TimeStamp", "Last Saved TimeStamp", "DomainUuid"}
 
-// The number of visible columns in UI-table for TestCasesMap
+// The number of visible columns in UI-table for TestCasesMapPtr
 const numberColumnsInTestCasesListUI int = 9
 
 // Keeps track of the in which column the TestCaseUUID exist in the data source for the UI-table

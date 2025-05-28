@@ -14,7 +14,7 @@ func (testCaseModel *TestCasesModelsStruct) VerifyThatThereAreNoZombieElementsIn
 	var allUuidKeys []string
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
 	if existsInMap == false {
 		if existsInMap == false {
 			errorId := "c3ceca6e-849f-4edb-b759-8512722e8bca"
@@ -47,7 +47,7 @@ func (testCaseModel *TestCasesModelsStruct) VerifyThatThereAreNoZombieElementsIn
 func (testCaseModel *TestCasesModelsStruct) CreateTextualTestCase(testCaseUuid string) (textualTestCaseSimple string, textualTestCaseComplex string, textualTestCaseExtended string, err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "591afb7e-a372-45d4-88c0-332535642a3b"
@@ -183,7 +183,7 @@ func (testCaseModel *TestCasesModelsStruct) CreateTextualTestCase(testCaseUuid s
 func (testCaseModel *TestCasesModelsStruct) ListAllAvailableBuildingBlocksInTestCase(testCaseUuid string) (availableBuidlingBlocksInTestCaseList []string, err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
 
 	if existsInMap == false {
 		errorId := "02914625-46a8-4174-800a-f519f4cf0532"
@@ -224,8 +224,8 @@ func (testCaseModel *TestCasesModelsStruct) ListAllAvailableBuildingBlocksInTest
 // List all available TestCase in TestCasesModel
 func (testCaseModel *TestCasesModelsStruct) ListAvailableTestCases() (availableTestCasesAsList []string) {
 
-	// Loop all available TestCasesMap and append  UUID for TestCase to list
-	for testCaseUuid, _ := range testCaseModel.TestCasesMap {
+	// Loop all available TestCasesMapPtr and append  UUID for TestCase to list
+	for testCaseUuid, _ := range testCaseModel.TestCasesMapPtr {
 
 		availableTestCasesAsList = append(availableTestCasesAsList, testCaseUuid)
 
@@ -253,7 +253,7 @@ func (testCaseModel *TestCasesModelsStruct) GetUuidFromUiName(testCaseUuid strin
 	elementTypeFromName := uiName[firstSquareBracketEnd+1:][secondSquareBracketStart+1 : secondSquareBracketEnd]
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
 
 	if existsInMap == false {
 		errorId := "b04c16dc-ff83-4f53-908c-4b2483cfb01a"
@@ -318,7 +318,7 @@ func (testCaseModel *TestCasesModelsStruct) GenerateShortUuidFromFullUuid(fullUu
 func (testCaseModel *TestCasesModelsStruct) GetTestCaseNameUuid(testCaseUuid string) (testCaseName string, err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
 
 	if existsInMap == false {
 		errorId := "97198543-7717-4925-8643-240ad34bb205"
@@ -337,7 +337,7 @@ func (testCaseModel *TestCasesModelsStruct) GetTestCaseNameUuid(testCaseUuid str
 func (testCaseModel *TestCasesModelsStruct) UpdateTreeViewModelForTestCase(testCaseUuid string) (err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
 
 	if existsInMap == false {
 		errorId := "fa560732-ebab-4093-82a5-0a29dc651ee5"
@@ -350,7 +350,7 @@ func (testCaseModel *TestCasesModelsStruct) UpdateTreeViewModelForTestCase(testC
 	currentTestCase.testCaseModelAdaptedForUiTree = make(map[string][]TestCaseModelAdaptedForUiTreeDataStruct) //string)
 
 	// Save Back the TestCase
-	testCaseModel.TestCasesMap[testCaseUuid] = currentTestCase
+	testCaseModel.TestCasesMapPtr[testCaseUuid] = currentTestCase
 
 	// Generate to model adapted to be used in a UI Tree-view component
 	_, err = testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor(testCaseUuid, currentTestCase.FirstElementUuid, []TestCaseModelAdaptedForUiTreeDataStruct{})
@@ -367,7 +367,7 @@ func (testCaseModel *TestCasesModelsStruct) UpdateTreeViewModelForTestCase(testC
 func (testCaseModel *TestCasesModelsStruct) GetTreeViewModelForTestCase(testCaseUuid string) (treeViewModel map[string][]TestCaseModelAdaptedForUiTreeDataStruct, err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
 
 	if existsInMap == false {
 		errorId := "2c5ea607-d496-4c88-8fb6-bd6f2324f435"

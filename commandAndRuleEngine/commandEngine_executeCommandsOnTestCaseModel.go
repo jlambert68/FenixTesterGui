@@ -55,9 +55,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	// Generate new TestCase-UUID
 	testCaseUuid = uuidGenerator.New().String()
 
-	// If TestCasesMap-map is not initialized then do that
-	if commandAndRuleEngine.Testcases.TestCasesMap == nil {
-		commandAndRuleEngine.Testcases.TestCasesMap = make(map[string]*testCaseModel.TestCaseModelStruct)
+	// If TestCasesMapPtr-map is not initialized then do that
+	if commandAndRuleEngine.Testcases.TestCasesMapPtr == nil {
+		*commandAndRuleEngine.Testcases.TestCasesMapPtr = make(map[string]*testCaseModel.TestCaseModelStruct)
 	}
 
 	// TODO Add dropdown for user to chose among available Domains in available building blocks
@@ -96,8 +96,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	// Set that this is a new TestCase
 	newTestCaseModel.ThisIsANewTestCase = true
 
+	// Get the TestCasesModelMap
+	var testCasesModelMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesModelMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
 	// Add the TestCaseModel into map of all TestCaseModels
-	commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = &newTestCaseModel
+	testCasesModelMap[testCaseUuid] = &newTestCaseModel
 
 	// Add command Textual representations to Textual Representation Stack
 	textualRepresentationSimple, textualRepresentationComplex, textualRepresentationExtended, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
@@ -115,7 +119,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		newTestCaseModel.TextualTestCaseRepresentationExtendedStack = append(newTestCaseModel.TextualTestCaseRepresentationExtendedStack, textualRepresentationExtended)
 
 		// Add the TestCaseModel back into map of all TestCaseModels
-		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = &newTestCaseModel
+		testCasesModelMap[testCaseUuid] = &newTestCaseModel
 
 	}
 
@@ -126,6 +130,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 // TestCaseCommandTypeEnum_REMOVE_ELEMENT
 // Used for Deleting an element from a TestCaseModel that is used within a TestCase
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(testCaseUuid string, elementId string) (err error) {
+
+	var existsInMap bool
 
 	// Try to Delete element
 	err = commandAndRuleEngine.executeDeleteElement(testCaseUuid, elementId)
@@ -147,34 +153,39 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	}
 
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	var currentTestCaseModelPtr *testCaseModel.TestCaseModelStruct
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+	currentTestCaseModelPtr, existsInMap = testCasesMap[testCaseUuid]
+
+	//currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	if existsInMap == false {
 		errorId := "9e42e135-e5c3-479c-8a09-0e33213a68d1"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
 	}
 
 	// Clear 'clicked element'
-	currentTestCaseModel.CurrentSelectedTestCaseElement = testCaseModel.CurrentSelectedTestCaseElementStruct{
+	currentTestCaseModelPtr.CurrentSelectedTestCaseElement = testCaseModel.CurrentSelectedTestCaseElementStruct{
 		CurrentSelectedTestCaseElementUuid: "",
 		CurrentSelectedTestCaseElementName: "",
 	}
 
 	// Add command to command stack
-	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
+	currentTestCaseModelPtr.CommandStack = append(currentTestCaseModelPtr.CommandStack, newCommandEntry)
 
 	// Add the TestCaseModel back into map of all TestCaseModels
-	commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCaseModel
+	//commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCaseModel
 
 	// Add command Textual representations to Textual Representation Stack
 	textualRepresentationSimple, textualRepresentationComplex, textualRepresentationExtended, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	if err == nil {
-		currentTestCaseModel.TextualTestCaseRepresentationSimpleStack = append(currentTestCaseModel.TextualTestCaseRepresentationSimpleStack, textualRepresentationSimple)
-		currentTestCaseModel.TextualTestCaseRepresentationComplexStack = append(currentTestCaseModel.TextualTestCaseRepresentationComplexStack, textualRepresentationComplex)
-		currentTestCaseModel.TextualTestCaseRepresentationExtendedStack = append(currentTestCaseModel.TextualTestCaseRepresentationExtendedStack, textualRepresentationExtended)
+		currentTestCaseModelPtr.TextualTestCaseRepresentationSimpleStack = append(currentTestCaseModelPtr.TextualTestCaseRepresentationSimpleStack, textualRepresentationSimple)
+		currentTestCaseModelPtr.TextualTestCaseRepresentationComplexStack = append(currentTestCaseModelPtr.TextualTestCaseRepresentationComplexStack, textualRepresentationComplex)
+		currentTestCaseModelPtr.TextualTestCaseRepresentationExtendedStack = append(currentTestCaseModelPtr.TextualTestCaseRepresentationExtendedStack, textualRepresentationExtended)
 
 		// Add the TestCaseModel back into map of all TestCaseModels
-		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCaseModel
+		//commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCaseModelPtr
 	}
 
 	return err
@@ -183,6 +194,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 // TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_NEW_ELEMENT
 // Used for Swapping out an element, and in an element structure, from a TestCaseModel that is used within a TestCase
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapOutElemenAndInNewElementInTestCaseModel(testCaseUuid string, elementToSwapOutUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (err error) {
+
+	var existsInMap bool
 
 	// Try to Swap out element
 	err = commandAndRuleEngine.executeSwapElement(testCaseUuid, elementToSwapOutUuid, immatureElementToSwapIn)
@@ -203,30 +216,34 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
-	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	// Extract the TestCasesModel
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	var currentTestCaseModelPtr *testCaseModel.TestCaseModelStruct
+	currentTestCaseModelPtr, existsInMap = testCasesMap[testCaseUuid]
 	if existsInMap == false {
 		errorId := "73cf671c-79e7-4a5e-8f42-d39cd86d94c9"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
 	}
 
 	// Add command to command stack
-	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
+	currentTestCaseModelPtr.CommandStack = append(currentTestCaseModelPtr.CommandStack, newCommandEntry)
 
 	// Add the TestCaseModel back into map of all TestCaseModels
-	// commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCaseModel
+	// commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCaseModelPtr
 
 	// Add command Textual representations to Textual Representation Stack
 	textualRepresentationSimple, textualRepresentationComplex, textualRepresentationExtended, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
 
 	// If no errors then add Simple and Complex Textual Representation to their stacks
 	if err == nil {
-		currentTestCaseModel.TextualTestCaseRepresentationSimpleStack = append(currentTestCaseModel.TextualTestCaseRepresentationSimpleStack, textualRepresentationSimple)
-		currentTestCaseModel.TextualTestCaseRepresentationComplexStack = append(currentTestCaseModel.TextualTestCaseRepresentationComplexStack, textualRepresentationComplex)
-		currentTestCaseModel.TextualTestCaseRepresentationExtendedStack = append(currentTestCaseModel.TextualTestCaseRepresentationExtendedStack, textualRepresentationExtended)
+		currentTestCaseModelPtr.TextualTestCaseRepresentationSimpleStack = append(currentTestCaseModelPtr.TextualTestCaseRepresentationSimpleStack, textualRepresentationSimple)
+		currentTestCaseModelPtr.TextualTestCaseRepresentationComplexStack = append(currentTestCaseModelPtr.TextualTestCaseRepresentationComplexStack, textualRepresentationComplex)
+		currentTestCaseModelPtr.TextualTestCaseRepresentationExtendedStack = append(currentTestCaseModelPtr.TextualTestCaseRepresentationExtendedStack, textualRepresentationExtended)
 
 		// Add the TestCaseModel back into map of all TestCaseModels
-		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCaseModel
+		//commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCaseModelPtr
 	}
 
 	return err
@@ -235,6 +252,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 // TestCaseCommandTypeEnum_COPY_ELEMENT
 // Used for copying an element  in a TestCaseModel that is used within a TestCase
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_CopyElementInTestCaseModel(testCaseUuid string, elementIdToCopy string) (err error) {
+
+	var existsInMap bool
 
 	// Try to Copy element to Copy Buffer
 	err = commandAndRuleEngine.executeCopyElement(testCaseUuid, elementIdToCopy)
@@ -255,20 +274,26 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
+	// Get the TestCasesModel
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	currentTestCaseModelPtr, existsInMap := testCasesMap[testCaseUuid]
 	if existsInMap == false {
 		errorId := "2d6af5bd-5a1b-4cc0-b3e7-da21b5928c4f"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
+
+		return err
 	}
 
 	// Add command to command stack
-	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
+	currentTestCaseModelPtr.CommandStack = append(currentTestCaseModelPtr.CommandStack, newCommandEntry)
 
 	// If no errors then add the TestCaseModel back into map of all TestCaseModels
-	if err == nil {
-		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCaseModel
-	}
+	//if err == nil {
+	//	commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCaseModelPtr
+	//}
 
 	return err
 }
@@ -296,23 +321,29 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
+	// Get the TestCasesModel
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	currentTestCaseModelPtr, existsInMap := testCasesMap[testCaseUuid]
 	if existsInMap == false {
 		errorId := "10ef5496-d92e-4e35-af41-e16c51c7df71"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
+
+		return err
 	}
 
 	// Add command to command stack
-	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
+	currentTestCaseModelPtr.CommandStack = append(currentTestCaseModelPtr.CommandStack, newCommandEntry)
 
 	// Indicate that Cut command has been initiated
-	currentTestCaseModel.CutCommandInitiated = true
+	currentTestCaseModelPtr.CutCommandInitiated = true
 
 	// If no errors then add the TestCaseModel back into map of all TestCaseModels
-	if err == nil {
-		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCaseModel
-	}
+	//if err == nil {
+	//	commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCaseModelPtr
+	//}
 
 	return err
 }
@@ -320,6 +351,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 // TestCaseCommandTypeEnum_CUT_ELEMENT
 // Used for cutting an element in a TestCaseModel that is used within a TestCase
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_CutElementInTestCaseModel(testCaseUuid string, elementIdToCut string) (err error) {
+
+	var existsInMap bool
 
 	// Try to Copy element to Cut Buffer
 	err = commandAndRuleEngine.executeCutElement(testCaseUuid, elementIdToCut)
@@ -340,20 +373,27 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
+	// Get the TestCasesModel
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	var currentTestCaseModelPtr *testCaseModel.TestCaseModelStruct
+	currentTestCaseModelPtr, existsInMap = testCasesMap[testCaseUuid]
 	if existsInMap == false {
 		errorId := "dc1cd5d3-e809-4465-aeda-cdf6ec44070f"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
+
+		return err
 	}
 
 	// Add command to command stack
-	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
+	currentTestCaseModelPtr.CommandStack = append(currentTestCaseModelPtr.CommandStack, newCommandEntry)
 
 	// If no errors then add the TestCaseModel back into map of all TestCaseModels
-	if err == nil {
-		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCaseModel
-	}
+	//if err == nil {
+	//	commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCaseModel
+	//}
 
 	return err
 }
@@ -361,6 +401,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 // TestCaseCommandTypeEnum_SWAP_OUT_ELEMENT_FOR_CUT_BUFFER_ELEMENT
 // Used for Swapping in an element from Cut opy Buffer in a TestCaseModel that is used within a TestCase
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTestCaseModel_SwapInElementFromCutBufferInTestCaseModel(testCaseUuid string, uuidToReplacedByCutBufferContent string) (err error) {
+
+	var existsInMap bool
 
 	// Try to Swap Element From Cut Buffer
 	err = commandAndRuleEngine.executeSwapElementFromCutBuffer(testCaseUuid, uuidToReplacedByCutBufferContent, nil)
@@ -381,30 +423,37 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		CommandExecutedTimeStamp: timestamppb.Now(),
 	}
 
+	// Get the TestCasesModel
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	var currentTestCaseModelPtr *testCaseModel.TestCaseModelStruct
+	currentTestCaseModelPtr, existsInMap = testCasesMap[testCaseUuid]
 	if existsInMap == false {
 		errorId := "e1f7b09a-1867-4c0d-a02a-2b513788d711"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
+
+		return err
 	}
 
 	// Add command to command stack
-	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
+	currentTestCaseModelPtr.CommandStack = append(currentTestCaseModelPtr.CommandStack, newCommandEntry)
 
 	// Indicate that Cut command has been finished, or is not active anymore
-	currentTestCaseModel.CutCommandInitiated = false
+	currentTestCaseModelPtr.CutCommandInitiated = false
 
 	// Clear Cut Buffer
 	newEmptyCutBufferContet := testCaseModel.MatureElementStruct{
 		FirstElementUuid: "",
 		MatureElementMap: nil,
 	}
-	currentTestCaseModel.CutBuffer = newEmptyCutBufferContet
+	currentTestCaseModelPtr.CutBuffer = newEmptyCutBufferContet
 
 	// If no errors then add the TestCaseModel back into map of all TestCaseModels
-	if err == nil {
-		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCaseModel
-	}
+	//if err == nil {
+	//	commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCaseModel
+	//}
 
 	return err
 }

@@ -90,7 +90,7 @@ func (stateMachine *StateMachineDragAndDropStruct) InitiateStateStateMachine(
 	stateMachineDragAndDrop.registeredDroppableTargetLabelsMap = make(map[string]*[]*DroppableLabel)
 	stateMachineDragAndDrop.registeredDroppableTargetRectangleMap = make(map[string]*[]*DroppableRectangle)
 
-	// Store reference to TestCasesMap
+	// Store reference to TestCasesMapPtr
 	stateMachine.testCasesRef = testCasesRef
 	stateMachineDragAndDrop.testCasesRef = testCasesRef
 

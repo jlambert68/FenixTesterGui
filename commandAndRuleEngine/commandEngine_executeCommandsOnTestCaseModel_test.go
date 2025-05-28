@@ -17,9 +17,12 @@ func TestNewTestCaseModelCommand(t *testing.T) {
 	// Initiate logger used when testing
 	myLogger := UnitTestTestData.InitLoggerForTest("")
 
-	// Initiate structure for all TestCasesMap
-	allTestCases := make(map[string]*testCaseModel.TestCaseModelStruct)
-	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCasesMap: allTestCases}
+	// Initiate structure for all TestCasesMapPtr
+	var allTestCases map[string]*testCaseModel.TestCaseModelStruct
+	allTestCases = make(map[string]*testCaseModel.TestCaseModelStruct)
+
+	var testCasesObject testCaseModel.TestCasesModelsStruct
+	testCasesObject = testCaseModel.TestCasesModelsStruct{TestCasesMapPtr: &allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
@@ -54,16 +57,20 @@ func TestNewTestCaseModelCommand(t *testing.T) {
 	// Validate that there were no errors
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
+	// Get TestCasesMap
+	var testCaseMap map[string]*testCaseModel.TestCaseModelStruct
+	testCaseMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
 	// Extract TestCase
 	var testCase testCaseModel.TestCaseModelStruct
-	var testCaseRef *testCaseModel.TestCaseModelStruct
-	testCaseRef = commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
-	testCase = *testCaseRef
+	var testCasePtr *testCaseModel.TestCaseModelStruct
+	testCasePtr = testCaseMap[testCaseUuid]
+	testCase = *testCasePtr
 
 	// Validate the result of the NewTestCaseModel-command, 'B0'
 	// 1) Validate B0 (1)
 	testCaseModelElementUuid_1 := testCase.FirstElementUuid
-	testCaseModelElement_1 := testCase.TestCaseModelMap[testCaseModelElementUuid_1]
+	testCaseModelElement_1 := testCase.TestCaseModelMap[testCaseModelElementUuid_1].MatureTestCaseModelElementMessage
 
 	correctElement := testCaseModelElement_1.MatureElementUuid == testCaseModelElement_1.ParentElementUuid &&
 		testCaseModelElement_1.MatureElementUuid == testCaseModelElement_1.PreviousElementUuid &&
@@ -132,7 +139,8 @@ func TestRemoveElementCommandOnTestCaseModel(t *testing.T) {
 	commandAndRuleEngine.availableBondsMap = tempAvailableBondsMap
 
 	// Initiate a TestCaseModel
-	myTestCaseModel := testCaseModel.TestCaseModelStruct{
+	var myTestCaseModel testCaseModel.TestCaseModelStruct
+	myTestCaseModel = testCaseModel.TestCaseModelStruct{
 		LastLoadedTestCaseModelGRPCMessage: fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage{},
 		FirstElementUuid:                   "",
 		TestCaseModelMap:                   nil,
@@ -195,7 +203,7 @@ func TestRemoveElementCommandOnTestCaseModel(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -207,10 +215,10 @@ func TestRemoveElementCommandOnTestCaseModel(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -222,7 +230,7 @@ func TestRemoveElementCommandOnTestCaseModel(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 
 	// Validate the result of the NewTestCaseModel-command, 'B0'
 	// 1) Validate B0 (1)
@@ -353,7 +361,7 @@ func TestSwapElementCommandOnTestCaseModel(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_b0.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -365,10 +373,10 @@ func TestSwapElementCommandOnTestCaseModel(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -419,7 +427,7 @@ func TestSwapElementCommandOnTestCaseModel(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 
 	// Validate the result of the Swap-Element-command, 'B1f-TIC(B10)-B1l'
 	// 1) Validate B1f (1)
@@ -584,7 +592,7 @@ func TestCopyElementCommandOnTestCaseModel(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -596,10 +604,10 @@ func TestCopyElementCommandOnTestCaseModel(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -611,7 +619,7 @@ func TestCopyElementCommandOnTestCaseModel(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 
 	// Validate the result of the Copy-Element-command, 'B1f-TIC(B10)-B1l'
 	// 1) Validate B1f (1)
@@ -821,7 +829,7 @@ func TestSwapElementFromCopyBufferCommandOnTestCaseModel(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -833,10 +841,10 @@ func TestSwapElementFromCopyBufferCommandOnTestCaseModel(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -854,7 +862,7 @@ func TestSwapElementFromCopyBufferCommandOnTestCaseModel(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 
 	// Validate the result of the Copy-Element-command, 'B1f-TIC(B10)-B1l'
 	// 1) Validate B1f (1)
@@ -1176,7 +1184,7 @@ func TestSwapElementFromCutBufferCommandOnTestCaseModel(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -1188,12 +1196,12 @@ func TestSwapElementFromCutBufferCommandOnTestCaseModel(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
-	// Add reference to TestCasesMap in command and rule engine
+	// Add reference to TestCasesMapPtr in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
 
 	// Execute command Cut
@@ -1209,7 +1217,7 @@ func TestSwapElementFromCutBufferCommandOnTestCaseModel(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 
 	// Validate the result of the Copy-Element-command, 'B1f-TIC(B10)-B1l'
 	// 1) Validate B1f (1)

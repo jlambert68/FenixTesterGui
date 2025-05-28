@@ -17,11 +17,11 @@ func (testCaseModel *TestCasesModelsStruct) GenerateTestCaseMetaDataStructureFor
 	var tempTestCasePtr *TestCaseModelStruct
 
 	// Get current TestCase
-	tempTestCasePtr, existsInMap = testCaseModel.TestCasesMap[testCaseUuid]
+	tempTestCasePtr, existsInMap = testCaseModel.TestCasesMapPtr[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "d067efb8-8f4f-44d6-9e77-ad07c77b5c3c"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -53,8 +53,8 @@ func (testCaseModel *TestCasesModelsStruct) GenerateTestCaseMetaDataStructureFor
 	// Store MetaData-object back into TestCase
 	tempTestCasePtr.TestCaseMetaDataPtr = &testCaseMetaData
 
-	// Store TestCase back into TestCasesMap-model
-	testCaseModel.TestCasesMap[testCaseUuid] = tempTestCasePtr
+	// Store TestCase back into TestCasesMapPtr-model
+	testCaseModel.TestCasesMapPtr[testCaseUuid] = tempTestCasePtr
 
 	return err
 }

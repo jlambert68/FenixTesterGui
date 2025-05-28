@@ -36,7 +36,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	// Initiate Lua-script-Engine. TODO For now only Fenix-Placeholders are supported
 	luaEngine.InitiateLuaScriptEngine([]luaEngine.LuaScriptsStruct{})
 
-	currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
+	currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
 	if existInMap == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":           "a54bce68-fa84-4b29-aa62-5d47b8bdc7fb",
@@ -65,7 +65,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	// Import the Template-files
 	githubFilesImporterButton = widget.NewButton("Import files from GitHub", func() {
 
-		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
+		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
 		if existInMap == false {
 			sharedCode.Logger.WithFields(logrus.Fields{
 				"ID":           "59fab568-2da4-43f9-8300-6858eae73431",
@@ -99,7 +99,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 		currentTestCasePtr.ImportedTemplateFilesFromGitHub = localCopyForSelectedFiles
 
 		// Store back TestCase
-		testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid] = currentTestCasePtr
+		testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
 
 		//updateTemplateFilesTable(templatesFilesInTestCaseTable,
 		//	testCaseUuid,
@@ -132,7 +132,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	checkIfTemplatesAreChangedButton = widget.NewButton("Check if Templates are changed", func() {
 		// Add button functionality here
 
-		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
+		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
 		if existInMap == false {
 			sharedCode.Logger.WithFields(logrus.Fields{
 				"ID":           "59fab568-2da4-43f9-8300-6858eae73431",
@@ -153,7 +153,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	// Create Button to be able to view Template and the effect of TestData- and PlaceHolder-engine
 	viewTemplateButton = widget.NewButton("View Templates", func() {
 
-		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
+		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
 		if existInMap == false {
 			sharedCode.Logger.WithFields(logrus.Fields{
 				"ID":           "994ac3c8-2a89-4786-8c70-96bb86fbe70d",

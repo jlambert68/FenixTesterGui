@@ -23,7 +23,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) update
 	// Create new TestCaseExecutionsStatusForSummaryTable-variable
 	var tempCaseExecutionsStatusForSummaryTable []*detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsStatusForSummaryTableStruct
 
-	// Loop all TestCasesMap
+	// Loop all TestCasesMapPtr
 	for _, tempTestCaseExecutionsDetail := range detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap {
 
 		var latestTimeStamp time.Time

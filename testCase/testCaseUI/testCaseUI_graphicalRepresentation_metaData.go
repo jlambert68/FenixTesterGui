@@ -64,7 +64,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 		// Get Object holding Selected data for TestCase
 		var testCasePtr *testCaseModel.TestCaseModelStruct
 		if tempTestCaseRef == nil {
-			testCasePtr, existsInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
+			testCasePtr, existsInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
 		} else {
 			testCasePtr = tempTestCaseRef
 			existsInMap = true
@@ -104,8 +104,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 		// Save back 'metaDataGroupInTestCasePtr' into the TestCase
 		testCasePtr.TestCaseMetaDataPtr = metaDataGroupInTestCasePtr
 
-		// Save back the TestCase in TestCasesMap-map
-		testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid] = testCasePtr
+		// Save back the TestCase in TestCasesMapPtr-map
+		//testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = testCasePtr
 
 		myContainer := container.NewBorder(nil, nil, nil, nil, metaDataGroupsAsCanvasObject)
 
@@ -217,7 +217,7 @@ func buildGUIFromMetaDataGroupsMap(
 
 					// Get TestCase-Object
 					var testCasePtr *testCaseModel.TestCaseModelStruct
-					testCasePtr, _ = testCasesModelReference.TestCasesMap[testCaseUuid]
+					testCasePtr, _ = testCasesModelReference.TestCasesMapPtr[testCaseUuid]
 
 					// store value in TestCase-version of the MetaData
 					metaDataItem.SelectedMetaDataValueForSingleSelect = val
@@ -370,7 +370,7 @@ func buildGUIFromMetaDataGroupsMap(
 
 					// Save Changes to TestCase regarding MetaData
 					testCasePtr.TestCaseMetaDataPtr = metaDataGroupInTestCasePtr
-					testCasesModelReference.TestCasesMap[testCaseUuid] = testCasePtr
+					testCasesModelReference.TestCasesMapPtr[testCaseUuid] = testCasePtr
 
 				})
 				// Extract Selected values from TestCase
@@ -412,7 +412,7 @@ func buildGUIFromMetaDataGroupsMap(
 
 					// Get TestCase-Object
 					var testCasePtr *testCaseModel.TestCaseModelStruct
-					testCasePtr, _ = testCasesModelReference.TestCasesMap[testCaseUuid]
+					testCasePtr, _ = testCasesModelReference.TestCasesMapPtr[testCaseUuid]
 
 					// If the 'MetaDataGroupsMap' exist
 					if metaDataGroupInTestCasePtr.MetaDataGroupsMapPtr == nil {
@@ -611,7 +611,7 @@ func buildGUIFromMetaDataGroupsMap(
 
 					// Save Changes to TestCase regarding MetaData
 					testCasePtr.TestCaseMetaDataPtr = metaDataGroupInTestCasePtr
-					testCasesModelReference.TestCasesMap[testCaseUuid] = testCasePtr
+					testCasesModelReference.TestCasesMapPtr[testCaseUuid] = testCasePtr
 
 				})
 

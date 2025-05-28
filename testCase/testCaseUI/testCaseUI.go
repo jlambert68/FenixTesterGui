@@ -15,7 +15,7 @@ import (
 )
 
 // GenerateBaseCanvasObjectForTestCaseUI
-// Create the Base-UI-canvas-object for the TestCasesMap object. This base doesn't contain any specific TestCase-parts, and they will be added in other function
+// Create the Base-UI-canvas-object for the TestCasesMapPtr object. This base doesn't contain any specific TestCase-parts, and they will be added in other function
 func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectForTestCaseUI() (baseCanvasObjectForTestCaseUI fyne.CanvasObject) {
 
 	// Create toolbar for TestCase area
@@ -110,7 +110,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectF
 
 						commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
 							ChannelCommand:  sharedCode.ChannelCommandCloseOpenTestCaseWithOutSaving,
-							FirstParameter:  testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid].CurrentSelectedTestCaseElement.CurrentSelectedTestCaseElementUuid,
+							FirstParameter:  testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid].CurrentSelectedTestCaseElement.CurrentSelectedTestCaseElementUuid,
 							SecondParameter: "",
 							ActiveTestCase:  testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid,
 							ElementType:     sharedCode.BuildingBlock(sharedCode.TestInstruction),

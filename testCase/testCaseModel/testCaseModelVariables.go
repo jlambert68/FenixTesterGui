@@ -25,8 +25,8 @@ const (
 )
 
 type TestCasesModelsStruct struct {
-	TestCasesMap map[string]*TestCaseModelStruct // Holds the Model for all the TestCase-models
-	CurrentUser  string                          // Current logged-in user TODO Put this in a more global structure
+	TestCasesMapPtr *map[string]*TestCaseModelStruct // Holds the Model for all the TestCase-models
+	CurrentUser     string                           // Current logged-in user TODO Put this in a more global structure
 	//subSystemsCrossReferences *gui.SubSystemsCrossReferencesStruct
 	GrpcOutReference                              *grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct
 	CurrentActiveTestCaseUuid                     string                                                                                                                                               // The TestCase that should be worked on both by the model and UI

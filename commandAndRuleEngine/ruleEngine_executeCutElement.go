@@ -10,12 +10,20 @@ import (
 
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCutFullELementStructure(testCaseUuid string, uuidToBeCutOut string) (err error) {
 
+	var existsInMap bool
+
 	var tempTestCase *testCaseModel.TestCaseModelStruct
 
-	tempTestCaseModelMap := make(map[string]testCaseModel.MatureTestCaseModelElementStruct)
+	var tempTestCaseModelMap map[string]testCaseModel.MatureTestCaseModelElementStruct
+	tempTestCaseModelMap = make(map[string]testCaseModel.MatureTestCaseModelElementStruct)
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
 
 	if existsInMap == false {
 		errorId := "9ea79cce-e892-4e30-bbd5-7a7e13a1ff35"
@@ -25,12 +33,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCutFullELem
 	}
 
 	// Transform a copy of current TestCase to 'tempTestCase'
-	for elemenUuid, tempElement := range currentTestCase.TestCaseModelMap {
+	for elemenUuid, tempElement := range currentTestCasePtr.TestCaseModelMap {
 		tempTestCaseModelMap[elemenUuid] = tempElement
 	}
 
 	tempTestCase = &testCaseModel.TestCaseModelStruct{
-		FirstElementUuid: currentTestCase.FirstElementUuid,
+		FirstElementUuid: currentTestCasePtr.FirstElementUuid,
 		TestCaseModelMap: tempTestCaseModelMap,
 	}
 
@@ -85,8 +93,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCutFullELem
 		return err
 	}
 
+	// Get TestCasesMap
+
 	//Reload the TestCase
-	currentTestCase, existsInMap = commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
 
 	if existsInMap == false {
 		errorId := "9f8fe113-6980-4ad5-8ea6-ca9d56722145"
@@ -97,10 +107,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCutFullELem
 
 	// If there are no errors then save the copied Element Structure in Copy-buffer and then save the Updated TestCase
 	// Save Copied element to Cut Buffer  in TestCase
-	currentTestCase.CutBuffer = copiedStructure
+	currentTestCasePtr.CutBuffer = copiedStructure
 
 	// Save TestCase
-	commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
+	//commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
 
 	return err
 

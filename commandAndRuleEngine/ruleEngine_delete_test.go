@@ -110,7 +110,7 @@ func TestTCRuleDeletion101(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -122,10 +122,10 @@ func TestTCRuleDeletion101(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -137,7 +137,7 @@ func TestTCRuleDeletion101(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 
 	// Validate the result of the NewTestCaseModel-command, 'B0'
 	// 1) Validate B0 (1)
@@ -329,7 +329,7 @@ func TestTCRuleDeletion102(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -341,10 +341,10 @@ func TestTCRuleDeletion102(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -356,7 +356,7 @@ func TestTCRuleDeletion102(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B10)-B1l'
@@ -585,7 +585,7 @@ func TestTCRuleDeletion103(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -597,10 +597,10 @@ func TestTCRuleDeletion103(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -612,7 +612,7 @@ func TestTCRuleDeletion103(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B10)-B1l'
@@ -841,7 +841,7 @@ func TestTCRuleDeletion104(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -853,10 +853,10 @@ func TestTCRuleDeletion104(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -868,7 +868,7 @@ func TestTCRuleDeletion104(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B10)-B1l'
@@ -1096,7 +1096,7 @@ func TestTCRuleDeletion105(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -1108,10 +1108,10 @@ func TestTCRuleDeletion105(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -1123,7 +1123,7 @@ func TestTCRuleDeletion105(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B10)-B1l'
@@ -1355,7 +1355,7 @@ func TestTCRuleDeletion106(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -1367,10 +1367,10 @@ func TestTCRuleDeletion106(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -1382,7 +1382,7 @@ func TestTCRuleDeletion106(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TI-B11l)-B1l'
@@ -1635,7 +1635,7 @@ func TestTCRuleDeletion107(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -1647,10 +1647,10 @@ func TestTCRuleDeletion107(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -1662,7 +1662,7 @@ func TestTCRuleDeletion107(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11fx-TI-B11l)-B1l'
@@ -1915,7 +1915,7 @@ func TestTCRuleDeletion108(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -1927,10 +1927,10 @@ func TestTCRuleDeletion108(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -1942,7 +1942,7 @@ func TestTCRuleDeletion108(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11fx-TI-B11l)-B1l'
@@ -2195,7 +2195,7 @@ func TestTCRuleDeletion109(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -2207,10 +2207,10 @@ func TestTCRuleDeletion109(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -2222,7 +2222,7 @@ func TestTCRuleDeletion109(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11fx-TI-B11l)-B1l'
@@ -2475,7 +2475,7 @@ func TestTCRuleDeletion110(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -2487,10 +2487,10 @@ func TestTCRuleDeletion110(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -2502,7 +2502,7 @@ func TestTCRuleDeletion110(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B11l)-B1l'
@@ -2767,7 +2767,7 @@ func TestTCRuleDeletion111(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -2779,10 +2779,10 @@ func TestTCRuleDeletion111(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -2794,7 +2794,7 @@ func TestTCRuleDeletion111(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B11lx)-B1l'
@@ -3059,7 +3059,7 @@ func TestTCRuleDeletion112(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -3071,10 +3071,10 @@ func TestTCRuleDeletion112(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -3086,7 +3086,7 @@ func TestTCRuleDeletion112(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B11lx)-B1l'
@@ -3351,7 +3351,7 @@ func TestTCRuleDeletion113(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -3363,10 +3363,10 @@ func TestTCRuleDeletion113(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -3378,7 +3378,7 @@ func TestTCRuleDeletion113(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B11lx)-B1l'
@@ -3667,7 +3667,7 @@ func TestTCRuleDeletion114(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -3679,10 +3679,10 @@ func TestTCRuleDeletion114(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -3694,7 +3694,7 @@ func TestTCRuleDeletion114(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B12-TI-B11l)-B1l'
@@ -4007,7 +4007,7 @@ func TestTCRuleDeletion115(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -4019,10 +4019,10 @@ func TestTCRuleDeletion115(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -4034,7 +4034,7 @@ func TestTCRuleDeletion115(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B12x-TI-B11l)-B1l'
@@ -4347,7 +4347,7 @@ func TestTCRuleDeletion116(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -4359,10 +4359,10 @@ func TestTCRuleDeletion116(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -4374,7 +4374,7 @@ func TestTCRuleDeletion116(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B12x-TI-B11l)-B1l'
@@ -4687,7 +4687,7 @@ func TestTCRuleDeletion117(t *testing.T) {
 	// Set the B1f-bond as first element in TestCaseModel
 	myTestCaseModel.FirstElementUuid = tc_1_b1f.MatureElementUuid
 
-	// Initiate structure for all TestCasesMap
+	// Initiate structure for all TestCasesMapPtr
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 
 	// Generate new UUID
@@ -4699,10 +4699,10 @@ func TestTCRuleDeletion117(t *testing.T) {
 	// Set Current User
 	currentUser := "s41797"
 
-	// Add AddTestCases to TestCasesMap-model
+	// Add AddTestCases to TestCasesMapPtr-model
 	testCasesObject := testCaseModel.TestCasesModelsStruct{
-		TestCasesMap: allTestCases,
-		CurrentUser:  currentUser}
+		TestCasesMapPtr: allTestCases,
+		CurrentUser:     currentUser}
 
 	// Add reference to TestCAses in command and rule engine
 	commandAndRuleEngine.Testcases = &testCasesObject
@@ -4714,7 +4714,7 @@ func TestTCRuleDeletion117(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Extract TestCase
-	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	testCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B12x-TI-B11l)-B1l'

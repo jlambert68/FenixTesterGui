@@ -22,10 +22,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 	err error) {
 
 	// Extract the current TestCase UI model
-	testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
+	testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
 	if existsInMap == false {
 		errorId := "bb7fe228-2079-481f-89d3-8cf07a4da26a"
-		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
+		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
 
 		//TODO Send ERRORS over error-channel
 		fmt.Println(err)
@@ -84,7 +84,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 
 			// Save TestCase back in Map
 			// Get the latest version of TestCase
-			tempTestCasePtr, _ := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
+			tempTestCasePtr, _ := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
 
 			// Store Domain in LocalTestCase in TestCase-model
 			tempTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid =
@@ -152,7 +152,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 			//testCaseMetaDataArea.Refresh()
 
 			// Store back TestCase-model in Map
-			testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid] = tempTestCasePtr
+			testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = tempTestCasePtr
 
 			// Set Warning box that value is not selected
 			if len(value) == 0 {

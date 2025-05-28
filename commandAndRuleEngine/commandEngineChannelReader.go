@@ -107,6 +107,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandCrea
 // Execute command 'Save TestCase' received from Channel reader
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSaveTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct) {
 
+	var existsInMap bool
+
 	currentTestCaseUuid := commandAndRuleEngine.Testcases.CurrentActiveTestCaseUuid
 
 	// Save TestCase
@@ -123,11 +125,16 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSave
 
 	}
 
+	// Get the TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
 	// Extract the current TestCase UI model
-	testCase_Model, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[currentTestCaseUuid]
+	var testCase_ModelPtr *testCaseModel.TestCaseModelStruct
+	testCase_ModelPtr, existsInMap = testCasesMap[currentTestCaseUuid]
 	if existsInMap == false {
 		errorId := "a08730c6-aa91-4b03-9144-eeeccc153d96"
-		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCasesMap [ErrorID: %s]", currentTestCaseUuid, errorId))
+		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCasesMapPtr [ErrorID: %s]", currentTestCaseUuid, errorId))
 
 		//TODO Send ERRORS over error-channel
 		fmt.Println(err)
@@ -140,7 +147,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSave
 	var shortUUid string
 	var tabName string
 	var testCaseName string
-	testCaseName = testCase_Model.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseName
+	testCaseName = testCase_ModelPtr.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseName
 
 	shortUUid = commandAndRuleEngine.Testcases.GenerateShortUuidFromFullUuid(currentTestCaseUuid)
 
@@ -185,10 +192,14 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 	var testCaseUuidToBeExecuted string
 	testCaseUuidToBeExecuted = incomingChannelCommand.FirstParameter
 
+	// Get the TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
 	var existInMap bool
 	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
 
-	currentTestCasePtr, existInMap = commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuidToBeExecuted]
+	currentTestCasePtr, existInMap = testCasesMap[testCaseUuidToBeExecuted]
 	if existInMap == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":           "8d25e3da-e1b5-4222-9446-d25dd7d930f1",
@@ -399,11 +410,15 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChan
 
 	currentTestCaseUuid := incomingChannelCommand.ActiveTestCase
 
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
 	// Verify that TestCase exists
-	tempTestCasePtr, existInMap = commandAndRuleEngine.Testcases.TestCasesMap[currentTestCaseUuid]
+	tempTestCasePtr, existInMap = testCasesMap[currentTestCaseUuid]
 	if existInMap == false {
 		errorId := "a7645bee-7739-4ea3-a0f5-60d5339fb2e4"
-		err := errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", currentTestCaseUuid, errorId))
+		err := errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMapPtr [ErrorID: %s]", currentTestCaseUuid, errorId))
 		// TODO Send on Error-channel
 		fmt.Println(err)
 
@@ -534,8 +549,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandOpen
 	var uuidToOpen string
 	uuidToOpen = <-returnChannelFromOpenTestCaseUuidPopUp
 
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
 	// Verify if TestCase exists
-	_, existInMap = commandAndRuleEngine.Testcases.TestCasesMap[uuidToOpen]
+	_, existInMap = testCasesMap[uuidToOpen]
 	if existInMap == true {
 
 		/*

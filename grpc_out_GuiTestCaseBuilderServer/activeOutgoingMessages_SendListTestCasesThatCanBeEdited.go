@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// ListTestCasesThatCanBeEditedResponseMessage - List all TestCasesMap that can be edited, used for producing a list
+// ListTestCasesThatCanBeEditedResponseMessage - List all TestCasesMapPtr that can be edited, used for producing a list
 // that the used can chose TestCase to edit from
 func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListTestCasesThatCanBeEditedResponseMessage(
 	testCaseUpdatedMinTimeStamp time.Time,

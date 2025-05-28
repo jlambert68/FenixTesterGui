@@ -30,7 +30,7 @@ import (
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedSimpleRules(testCaseUuid string, elementUuid string) (canBeDeleted bool, matchedRule string, err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "889d219a-a96b-4957-b9b6-be54e79d8389"
@@ -178,7 +178,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	ruleCanBeProcessed = false
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuidToDelete '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return "", err

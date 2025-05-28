@@ -18,9 +18,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 	error) {
 
 	var existInMap bool
-	var currentTestCase testCaseModel.TestCaseModelStruct
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
 
-	currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+	currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 	if existInMap == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":           "0bb2ebf8-fae9-4427-ad82-8fad3a73d6e9",
@@ -28,8 +28,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 		}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
 	}
 
-	// Initiate the TestData-object used for keeping Groups and their TestData in the TestCases
-	currentTestCase.TestData = &testDataEngine.TestDataForGroupObjectStruct{}
+	// Initiate the TestData-object used for keeping Groups and their TestData in the TestCasesMap
+	currentTestCasePtr.TestData = &testDataEngine.TestDataForGroupObjectStruct{}
 
 	// Accordion objects
 	var testDataAccordionItem *widget.AccordionItem
@@ -46,7 +46,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 	// Create function that converts a GroupSlice into a string slice
 	getTestGroupsFromTestDataEngineFunction := func() []string {
 
-		testDataPointGroups = currentTestCase.TestData.ListTestDataGroups()
+		testDataPointGroups = currentTestCasePtr.TestData.ListTestDataGroups()
 
 		return testDataPointGroups
 	}
@@ -58,7 +58,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 			return []string{}
 		}
 
-		testDataPointsForAGroup = currentTestCase.TestData.ListTestDataGroupPointsForAGroup(testDataGroup)
+		testDataPointsForAGroup = currentTestCasePtr.TestData.ListTestDataGroupPointsForAGroup(testDataGroup)
 
 		return testDataPointsForAGroup
 	}
@@ -70,7 +70,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 			return []string{}
 		}
 
-		testDataRowsForATestDataPoint = currentTestCase.TestData.ListTestDataRowsForAGroupPoint(
+		testDataRowsForATestDataPoint = currentTestCasePtr.TestData.ListTestDataRowsForAGroupPoint(
 			testDataGroup, testDataGroupPoint)
 
 		return testDataRowsForATestDataPoint
@@ -98,7 +98,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 		testDataPointGroupsSelectSelectedInMainTestCaseArea = selected
 
 		// Store Selected value in 'TestCase'
-		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 		if existInMap == false {
 			sharedCode.Logger.WithFields(logrus.Fields{
 				"ID":           "ab542075-fd93-4ac8-bd4d-46668f4b131d",
@@ -106,8 +106,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
 		}
 
-		currentTestCase.TestData.SelectedTestDataGroup = selected
-		testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = currentTestCase
+		currentTestCasePtr.TestData.SelectedTestDataGroup = selected
+		testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid] = currentTestCasePtr
 
 		// Select the correct TestDataPoint in the dropdown for TestDataPoints
 		testDataPointsForAGroupSelectInMainTestCaseArea.SetOptions(testDataPointsToStringSliceFunction(selected))
@@ -125,7 +125,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 		testDataPointForAGroupSelectSelectedInMainTestCaseArea = selected
 
 		// Store Selected value in 'TestCase'
-		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 		if existInMap == false {
 			sharedCode.Logger.WithFields(logrus.Fields{
 				"ID":           "ecb7e72b-8d7c-4e7f-b4f9-6cd3eec48ecf",
@@ -133,8 +133,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
 		}
 
-		currentTestCase.TestData.SelectedTestDataPoint = selected
-		testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = currentTestCase
+		currentTestCasePtr.TestData.SelectedTestDataPoint = selected
+		testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid] = currentTestCasePtr
 
 		// Select the correct TestDataPoint in the dropdown for TestDataPoints
 		testDataRowsForTestDataPointsSelectInMainTestCaseArea.SetOptions(testDataRowSliceToStringSliceFunction(
@@ -153,7 +153,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 		testDataRowForTestDataPointsSelectSelectedInMainTestCaseArea = selected
 
 		// Store Selected value in 'TestCase'
-		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 		if existInMap == false {
 			sharedCode.Logger.WithFields(logrus.Fields{
 				"ID":           "ba37763b-0609-4cff-8f00-4f45b502feab",
@@ -161,7 +161,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
 		}
 
-		currentTestCase.TestData.SelectedTestDataPointRowSummary = selected
+		currentTestCasePtr.TestData.SelectedTestDataPointRowSummary = selected
 
 		// Extract Unique id, first column, for the TestDataRow
 
@@ -177,28 +177,28 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 		var testDataColumnDataNameMap map[string]string // map[TestDataColumnDataNameType]TestDataValueType
 		testDataColumnDataNameMap,
 			domainUuid, domainName, domainTemplateName, testDataAreaUuid, testDataAreaName =
-			currentTestCase.TestData.GetTestDataPointValuesMapBasedOnGroupPointNameAndSummaryValue(
+			currentTestCasePtr.TestData.GetTestDataPointValuesMapBasedOnGroupPointNameAndSummaryValue(
 				testDataPointGroupsSelectSelectedInMainTestCaseArea,
 				testDataPointForAGroupSelectSelectedInMainTestCaseArea,
 				testDataRowForTestDataPointsSelectSelectedInMainTestCaseArea)
 
 		// Store Selected TestData on the TestCase
-		currentTestCase.TestData.SelectedTestDataDomainUuid = domainUuid
-		currentTestCase.TestData.SelectedTestDataDomainName = domainName
-		currentTestCase.TestData.SelectedTestDataDomainTemplateName = domainTemplateName
-		currentTestCase.TestData.SelectedTestDataTestDataAreaUuid = testDataAreaUuid
-		currentTestCase.TestData.SelectedTestDataAreaName = testDataAreaName
-		currentTestCase.TestData.TestDataColumnDataNameToValueMap = testDataColumnDataNameMap
+		currentTestCasePtr.TestData.SelectedTestDataDomainUuid = domainUuid
+		currentTestCasePtr.TestData.SelectedTestDataDomainName = domainName
+		currentTestCasePtr.TestData.SelectedTestDataDomainTemplateName = domainTemplateName
+		currentTestCasePtr.TestData.SelectedTestDataTestDataAreaUuid = testDataAreaUuid
+		currentTestCasePtr.TestData.SelectedTestDataAreaName = testDataAreaName
+		currentTestCasePtr.TestData.TestDataColumnDataNameToValueMap = testDataColumnDataNameMap
 
 		// Store back the TestCase
-		testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = currentTestCase
+		testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid] = currentTestCasePtr
 
 	})
 
 	// Select TestData the TestCase
 	selectTestDataButton := widget.NewButton("Add TestData to TestCase", func() {
 
-		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 		if existInMap == false {
 			sharedCode.Logger.WithFields(logrus.Fields{
 				"ID":           "a54bce68-fa84-4b29-aa62-5d47b8bdc7fb",
@@ -210,7 +210,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 		testCasesUiCanvasObject.MainTestDataSelector(
 			*sharedCode.FenixAppPtr,
 			*sharedCode.FenixMasterWindowPtr,
-			&currentTestCase,
+			currentTestCasePtr,
 			testCaseUuid,
 			testDataSelectorsContainer,
 			testDataPointGroupsSelectInMainTestCaseArea,
@@ -229,7 +229,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 	testDataSelectorsContainer.Add(widget.NewLabel("TestData Row"))
 	testDataSelectorsContainer.Add(testDataRowsForTestDataPointsSelectInMainTestCaseArea)
 
-	currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+	currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 	if existInMap == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":           "2aa83455-5d5f-42e0-9300-9b1eb55d53b8",
@@ -238,7 +238,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 	}
 
 	// If there is no TestData then hide the "Select-boxes"
-	if len(currentTestCase.TestData.ListTestDataGroups()) == 0 {
+	if len(currentTestCasePtr.TestData.ListTestDataGroups()) == 0 {
 		testDataSelectorsContainer.Hide()
 	} else {
 		testDataPointGroupsSelectInMainTestCaseArea.SetOptions(getTestGroupsFromTestDataEngineFunction())

@@ -55,9 +55,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	// Generate new TestCase-UUID
 	testCaseUuid = uuidGenerator.New().String()
 
-	// If TestCases-map is not initialized then do that
-	if commandAndRuleEngine.Testcases.TestCases == nil {
-		commandAndRuleEngine.Testcases.TestCases = make(map[string]testCaseModel.TestCaseModelStruct)
+	// If TestCasesMap-map is not initialized then do that
+	if commandAndRuleEngine.Testcases.TestCasesMap == nil {
+		commandAndRuleEngine.Testcases.TestCasesMap = make(map[string]*testCaseModel.TestCaseModelStruct)
 	}
 
 	// TODO Add dropdown for user to chose among available Domains in available building blocks
@@ -97,7 +97,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	newTestCaseModel.ThisIsANewTestCase = true
 
 	// Add the TestCaseModel into map of all TestCaseModels
-	commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = newTestCaseModel
+	commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = &newTestCaseModel
 
 	// Add command Textual representations to Textual Representation Stack
 	textualRepresentationSimple, textualRepresentationComplex, textualRepresentationExtended, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
@@ -115,7 +115,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		newTestCaseModel.TextualTestCaseRepresentationExtendedStack = append(newTestCaseModel.TextualTestCaseRepresentationExtendedStack, textualRepresentationExtended)
 
 		// Add the TestCaseModel back into map of all TestCaseModels
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = newTestCaseModel
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = &newTestCaseModel
 
 	}
 
@@ -147,10 +147,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	}
 
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		errorId := "9e42e135-e5c3-479c-8a09-0e33213a68d1"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 	}
 
 	// Clear 'clicked element'
@@ -163,7 +163,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
 
 	// Add the TestCaseModel back into map of all TestCaseModels
-	commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
+	commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCaseModel
 
 	// Add command Textual representations to Textual Representation Stack
 	textualRepresentationSimple, textualRepresentationComplex, textualRepresentationExtended, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
@@ -174,7 +174,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		currentTestCaseModel.TextualTestCaseRepresentationExtendedStack = append(currentTestCaseModel.TextualTestCaseRepresentationExtendedStack, textualRepresentationExtended)
 
 		// Add the TestCaseModel back into map of all TestCaseModels
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCaseModel
 	}
 
 	return err
@@ -204,17 +204,17 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	}
 
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		errorId := "73cf671c-79e7-4a5e-8f42-d39cd86d94c9"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 	}
 
 	// Add command to command stack
 	currentTestCaseModel.CommandStack = append(currentTestCaseModel.CommandStack, newCommandEntry)
 
 	// Add the TestCaseModel back into map of all TestCaseModels
-	// commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
+	// commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCaseModel
 
 	// Add command Textual representations to Textual Representation Stack
 	textualRepresentationSimple, textualRepresentationComplex, textualRepresentationExtended, err := commandAndRuleEngine.Testcases.CreateTextualTestCase(testCaseUuid)
@@ -226,7 +226,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 		currentTestCaseModel.TextualTestCaseRepresentationExtendedStack = append(currentTestCaseModel.TextualTestCaseRepresentationExtendedStack, textualRepresentationExtended)
 
 		// Add the TestCaseModel back into map of all TestCaseModels
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCaseModel
 	}
 
 	return err
@@ -256,10 +256,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	}
 
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		errorId := "2d6af5bd-5a1b-4cc0-b3e7-da21b5928c4f"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 	}
 
 	// Add command to command stack
@@ -267,7 +267,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 
 	// If no errors then add the TestCaseModel back into map of all TestCaseModels
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCaseModel
 	}
 
 	return err
@@ -297,10 +297,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	}
 
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		errorId := "10ef5496-d92e-4e35-af41-e16c51c7df71"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 	}
 
 	// Add command to command stack
@@ -311,7 +311,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 
 	// If no errors then add the TestCaseModel back into map of all TestCaseModels
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCaseModel
 	}
 
 	return err
@@ -341,10 +341,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	}
 
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		errorId := "dc1cd5d3-e809-4465-aeda-cdf6ec44070f"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 	}
 
 	// Add command to command stack
@@ -352,7 +352,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 
 	// If no errors then add the TestCaseModel back into map of all TestCaseModels
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCaseModel
 	}
 
 	return err
@@ -382,10 +382,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 	}
 
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		errorId := "e1f7b09a-1867-4c0d-a02a-2b513788d711"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 	}
 
 	// Add command to command stack
@@ -403,7 +403,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 
 	// If no errors then add the TestCaseModel back into map of all TestCaseModels
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCaseModel
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCaseModel
 	}
 
 	return err

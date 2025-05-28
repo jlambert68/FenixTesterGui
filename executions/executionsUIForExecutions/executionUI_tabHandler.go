@@ -10,7 +10,7 @@ import (
 )
 
 // GenerateBaseUITabForExecutions
-// Create the Base-UI-canvas-object for the TestCases object. This base doesn't contain any specific TestCase-parts, and they will be added in other function
+// Create the Base-UI-canvas-object for the TestCasesMap object. This base doesn't contain any specific TestCase-parts, and they will be added in other function
 func (executionsUIObject *ExecutionsUIModelStruct) GenerateBaseUITabForExecutions() (executionsCanvasObjectUI fyne.CanvasObject) {
 
 	// Create toolbar for Executions Area

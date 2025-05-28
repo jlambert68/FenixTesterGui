@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// LoadHashesForTestCases - Load all hashes for the TestCases supplied into gRPC-call to TestCaseBuilderServer.
+// LoadHashesForTestCases - Load all hashes for the TestCasesMap supplied into gRPC-call to TestCaseBuilderServer.
 // Hashes are used to check if a TestCase is changed in database compared to TestGui-version of the TestCase.
 func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) LoadHashesForTestCases(userId string, testCaseUuidList []string) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestCasesHashResponse) {
 

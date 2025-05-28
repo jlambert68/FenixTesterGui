@@ -197,10 +197,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 		}
 
 		var existInMap bool
-		var currentTestCase testCaseModel.TestCaseModelStruct
+		var currentTestCasePtr *testCaseModel.TestCaseModelStruct
 
-		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.
-			TestCases[incomingChannelCommandGraphicsUpdatedData.ActiveTestCase]
+		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.
+			TestCasesMap[incomingChannelCommandGraphicsUpdatedData.ActiveTestCase]
 		if existInMap == false {
 			sharedCode.Logger.WithFields(logrus.Fields{
 				"ID":           "2e89c13f-0d3f-4dbd-86dd-c35e2a4b59e8",
@@ -209,10 +209,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 		}
 
 		// This TestCase is New and not saved in Database
-		if currentTestCase.ThisIsANewTestCase == true {
+		if currentTestCasePtr.ThisIsANewTestCase == true {
 
 			//If Delete date is equal to Today() then Delete everything
-			if currentTestCase.LocalTestCaseMessage.DeleteTimeStamp <= validTodayDate {
+			if currentTestCasePtr.LocalTestCaseMessage.DeleteTimeStamp <= validTodayDate {
 
 				// flash the window if Te
 				go flashScreen(*sharedCode.FenixAppPtr, *sharedCode.FenixMasterWindowPtr)
@@ -224,8 +224,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 				// Remove TestCase from UI-map
 				delete(testCasesUiCanvasObject.TestCasesUiModelMap, incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
 
-				// Remove TestCase TestCases-model
-				delete(testCasesUiCanvasObject.TestCasesModelReference.TestCases, incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
+				// Remove TestCase TestCasesMap-model
+				delete(testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap, incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
 
 				// Switch Active TestCase by Loop Map with TestCase-tabs to find relation between TabItem and UUID
 				var testCaseUuidToSwitchTo string
@@ -278,7 +278,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 			}
 
 			//If Delete date is equal to Today() then Delete everything
-			if currentTestCase.LocalTestCaseMessage.DeleteTimeStamp <= validTodayDate {
+			if currentTestCasePtr.LocalTestCaseMessage.DeleteTimeStamp <= validTodayDate {
 
 				// flash the window if Te
 				go flashScreen(*sharedCode.FenixAppPtr, *sharedCode.FenixMasterWindowPtr)
@@ -291,8 +291,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 				delete(testCasesUiCanvasObject.TestCasesUiModelMap,
 					incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
 
-				// Remove TestCase TestCases-model
-				delete(testCasesUiCanvasObject.TestCasesModelReference.TestCases,
+				// Remove TestCase TestCasesMap-model
+				delete(testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap,
 					incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
 
 				// Switch Active TestCase by Loop Map with TestCase-tabs to find relation between TabItem and UUID
@@ -333,7 +333,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 				fyne.CurrentApp().SendNotification(&fyne.Notification{
 					Title: "TestCase Deleted",
 					Content: fmt.Sprintf("The TestCase was set to Deleted in the future (%s)",
-						currentTestCase.LocalTestCaseMessage.DeleteTimeStamp),
+						currentTestCasePtr.LocalTestCaseMessage.DeleteTimeStamp),
 				})
 			}
 
@@ -382,7 +382,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) closeTestCaseTabBasedOnTe
 		var existInMap bool
 
 		_, existInMap = testCasesUiCanvasObject.TestCasesModelReference.
-			TestCases[incomingChannelCommandGraphicsUpdatedData.ActiveTestCase]
+			TestCasesMap[incomingChannelCommandGraphicsUpdatedData.ActiveTestCase]
 
 		if existInMap == false {
 			sharedCode.Logger.WithFields(logrus.Fields{
@@ -403,8 +403,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) closeTestCaseTabBasedOnTe
 		delete(testCasesUiCanvasObject.TestCasesUiModelMap,
 			incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
 
-		// Remove TestCase TestCases-model
-		delete(testCasesUiCanvasObject.TestCasesModelReference.TestCases,
+		// Remove TestCase TestCasesMap-model
+		delete(testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap,
 			incomingChannelCommandGraphicsUpdatedData.ActiveTestCase)
 
 		// Switch Active TestCase by Loop Map with TestCase-tabs to find relation between TabItem and UUID

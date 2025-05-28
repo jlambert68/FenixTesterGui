@@ -31,7 +31,7 @@ import (
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedSimpleRules(testCaseUuid string, elementUuid string) (canBeSwapped bool, matchedRule string, err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return false, "", err
@@ -169,7 +169,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	ruleCanBeProcessed = false
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return "", err
@@ -528,14 +528,14 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyThatAllUuids
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveVerifyAllUuidOfChildElements(testCaseUuid string, elementsUuid string) (err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCasePtr, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
 	}
 
 	// Extract current element
-	currentElement, existInMap := currentTestCase.TestCaseModelMap[elementsUuid]
+	currentElement, existInMap := currentTestCasePtr.TestCaseModelMap[elementsUuid]
 
 	// If the element doesn't exit then there is something really wrong
 	if existInMap == false {
@@ -551,7 +551,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveVerifyAll
 
 	// Element has child-element then go that path
 	if currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid)
+		err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentTestCasePtr, currentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -561,7 +561,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveVerifyAll
 
 	// If element has a next-element the go that path
 	if currentElement.MatureTestCaseModelElementMessage.NextElementUuid != elementsUuid {
-		err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElement.MatureTestCaseModelElementMessage.NextElementUuid)
+		err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentTestCasePtr, currentElement.MatureTestCaseModelElementMessage.NextElementUuid)
 	}
 
 	// If we got an error back then something wrong happen, so just back out
@@ -570,7 +570,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveVerifyAll
 	}
 
 	// Remove current element from Map
-	delete(currentTestCase.TestCaseModelMap, elementsUuid)
+	delete(currentTestCasePtr.TestCaseModelMap, elementsUuid)
 
 	return err
 }

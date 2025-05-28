@@ -141,7 +141,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 	err error) {
 
 	// Extract TestCase to work with
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "ea7e4f3f-f6c8-4391-a191-116f60c6b5f5"
@@ -635,7 +635,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 	}
 
 	// // Save TestCase back into model
-	commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+	commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 
 	return err
 }
@@ -644,7 +644,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstructionContainerDataToTestCaseModel(testCaseUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct, matureElementToSwapIn *testCaseModel.MatureElementStruct) (err error) {
 
 	// Extract TestCase to work with
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "bb0490d1-051a-468b-a8de-b0fd5299a45e"
@@ -736,7 +736,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 	}
 
 	// // Save TestCase back into model
-	commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+	commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 
 	return err
 }

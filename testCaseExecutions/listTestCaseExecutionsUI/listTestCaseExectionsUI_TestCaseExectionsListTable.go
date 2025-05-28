@@ -55,7 +55,7 @@ func RemoveTestCaseExecutionFromList(testCaseExecutionUuidToBeRemoved string,
 	*/
 }
 
-// Create the UI-list that holds the list of TestCases that the user can edit
+// Create the UI-list that holds the list of TestCasesMap that the user can edit
 func generateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
 
 	// Correctly initialize the selectedFilesTable as a new table

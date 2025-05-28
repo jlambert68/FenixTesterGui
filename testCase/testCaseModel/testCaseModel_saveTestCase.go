@@ -24,11 +24,11 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 	}
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "4c075798-ec6c-4486-8053-997ef0d0d8eb"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -147,7 +147,7 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 	currentTestCase.TestDataHashWhenTestCaseWasSavedOrLoaded = gRPCFullTestCaseMessageToSend.GetTestCaseTestData().GetHashOfThisMessageWithEmptyHashField()
 
 	// Save the TestCase back in Map
-	testCaseModel.TestCases[testCaseUuid] = currentTestCase
+	testCaseModel.TestCasesMap[testCaseUuid] = currentTestCase
 
 	return err
 
@@ -162,11 +162,11 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionsForGrp
 	err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "48899cab-ce9d-48a2-947f-d7610a3bea81"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -243,11 +243,11 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionContain
 	err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "82040ba6-57c4-47e2-8fb5-c770db41d8f8"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -318,11 +318,11 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseModelElementsForGrpc
 	err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "48899cab-ce9d-48a2-947f-d7610a3bea81"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -362,11 +362,11 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseExtraInformationForG
 	err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "e6fbdfdc-e0dc-4dd8-8ab1-b6be82b9e9fe"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -457,11 +457,11 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseTemplateFilesForGrpc
 	}
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "e6ceecbe-00e2-42af-9782-eb83af2d03c2"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map witsh all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map witsh all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -514,11 +514,11 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseTestDataForGrpc(
 	err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "f6354f22-5bca-41f8-8b92-b168b4381708"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map witsh all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map witsh all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -634,11 +634,11 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCasePreviewMessageForGrp
 	err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "9f3050d4-920e-4065-b7c9-f9d41bee7fb6"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map witsh all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map witsh all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -669,7 +669,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCasePreviewMessageForGrp
 			tempMatureTestInstruction, existInMap = currentTestCase.MatureTestInstructionMap[testCaseStructureObject.GetTestInstructionUuid()]
 			if existInMap == false {
 				errorId := "9f35c094-f35e-47a6-b005-9a637a6eabe9"
-				err = errors.New(fmt.Sprintf("TestInstruction '%s' is missing in map with all TestCases [ErrorID: %s]",
+				err = errors.New(fmt.Sprintf("TestInstruction '%s' is missing in map with all TestCasesMap [ErrorID: %s]",
 					testCaseStructureObject.GetTestInstructionUuid(), errorId))
 
 				// TODO Send on Error-channel
@@ -767,11 +767,11 @@ func (testCaseModel *TestCasesModelsStruct) generateUserSpecifiedTestCaseMetaDat
 	err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+	currentTestCasePtr, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "5b6834dd-0763-4d12-9d4a-d97281a93a46"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map witsh all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map witsh all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -781,11 +781,11 @@ func (testCaseModel *TestCasesModelsStruct) generateUserSpecifiedTestCaseMetaDat
 	// Generate the Domain that owns the TestCase
 	var domainNameThatOwnsTestCase string
 	domainNameThatOwnsTestCase = fmt.Sprintf("%s [%s]",
-		currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainName,
-		currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid[0:8])
+		currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainName,
+		currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid[0:8])
 
 	gRPCUserSpecifiedTestCaseMetaDataMessage = &fenixGuiTestCaseBuilderServerGrpcApi.UserSpecifiedTestCaseMetaDataMessage{
-		CurrentSelectedDomainUuid: currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid,
+		CurrentSelectedDomainUuid: currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid,
 		CurrentSelectedDomainName: domainNameThatOwnsTestCase,
 		MetaDataGroupsMap:         nil,
 	}
@@ -793,7 +793,7 @@ func (testCaseModel *TestCasesModelsStruct) generateUserSpecifiedTestCaseMetaDat
 	// Verify that all mandatory MetaData-fields have been set
 	err = testCaseModel.verifyMandatoryFieldsForMetaData(
 		gRPCUserSpecifiedTestCaseMetaDataMessage.GetCurrentSelectedDomainUuid(),
-		&currentTestCase)
+		currentTestCasePtr)
 
 	// All mandatory fields have not been set
 	if err != nil {
@@ -801,8 +801,8 @@ func (testCaseModel *TestCasesModelsStruct) generateUserSpecifiedTestCaseMetaDat
 	}
 
 	// Check if there are any TestCaseMetaData, if not then just return
-	if currentTestCase.TestCaseMetaDataPtr == nil ||
-		currentTestCase.TestCaseMetaDataPtr.MetaDataGroupsMapPtr == nil {
+	if currentTestCasePtr.TestCaseMetaDataPtr == nil ||
+		currentTestCasePtr.TestCaseMetaDataPtr.MetaDataGroupsMapPtr == nil {
 		return nil, nil
 	}
 
@@ -813,7 +813,7 @@ func (testCaseModel *TestCasesModelsStruct) generateUserSpecifiedTestCaseMetaDat
 	//var TestCaseMetaData
 
 	// Loop MetaDataGroups in the TestCase and extract each MetaDataGroup
-	for tempMetaGroupNameInTestCase, tempMetaDataGroupInTestCasePtr := range *currentTestCase.TestCaseMetaDataPtr.MetaDataGroupsMapPtr {
+	for tempMetaGroupNameInTestCase, tempMetaDataGroupInTestCasePtr := range *currentTestCasePtr.TestCaseMetaDataPtr.MetaDataGroupsMapPtr {
 
 		// Get the MetaDataGroupInTestCaseMap
 		var tempMetaDataGroupInTestCaseMap map[string]*MetaDataInGroupStruct
@@ -936,11 +936,11 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	err error) {
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "4c075798-ec6c-4486-8053-997ef0d0d8eb"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -1293,11 +1293,11 @@ func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCa
 	var atleastOneAttributeIsChanged bool
 
 	// Extract current TestCase
-	testCase, existInMap := testCaseModel.TestCases[testCaseUuid]
+	testCase, existInMap := testCaseModel.TestCasesMap[testCaseUuid]
 	if existInMap == false {
 
 		errorId := "40fc730f-87d4-4c44-96ff-ab1003e40751"
-		err := errors.New(fmt.Sprintf("testCase %s is missing in TestCases-map [ErrorID: %s]", testCaseUuid, errorId))
+		err := errors.New(fmt.Sprintf("testCase %s is missing in TestCasesMap-map [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) //TODO Send error over error-channel
 		return err
@@ -1444,7 +1444,7 @@ func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCa
 
 	// Save back TestCase if any Attribute was changed
 	if atleastOneAttributeIsChanged == true {
-		testCaseModel.TestCases[testCaseUuid] = testCase
+		testCaseModel.TestCasesMap[testCaseUuid] = testCase
 	}
 
 	return err

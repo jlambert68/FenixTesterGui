@@ -15,7 +15,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCutFullELem
 	tempTestCaseModelMap := make(map[string]testCaseModel.MatureTestCaseModelElementStruct)
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 
 	if existsInMap == false {
 		errorId := "9ea79cce-e892-4e30-bbd5-7a7e13a1ff35"
@@ -86,7 +86,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCutFullELem
 	}
 
 	//Reload the TestCase
-	currentTestCase, existsInMap = commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap = commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 
 	if existsInMap == false {
 		errorId := "9f8fe113-6980-4ad5-8ea6-ca9d56722145"
@@ -100,7 +100,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCutFullELem
 	currentTestCase.CutBuffer = copiedStructure
 
 	// Save TestCase
-	commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+	commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 
 	return err
 

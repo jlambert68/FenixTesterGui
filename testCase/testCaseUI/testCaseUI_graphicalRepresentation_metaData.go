@@ -62,11 +62,11 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 		metaDataGroupsPtr, tempMetaDataGroupsOrder = testCaseModel.ConvertTestCaseMetaData(testCaseMetaDataForDomain.TestCaseMetaDataForDomainPtr)
 
 		// Get Object holding Selected data for TestCase
-		var testCase testCaseModel.TestCaseModelStruct
+		var testCasePtr *testCaseModel.TestCaseModelStruct
 		if tempTestCaseRef == nil {
-			testCase, existsInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+			testCasePtr, existsInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 		} else {
-			testCase = *tempTestCaseRef
+			testCasePtr = tempTestCaseRef
 			existsInMap = true
 		}
 
@@ -81,7 +81,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 
 		// Get pointer to Structure holding selected values in TestCase
 		var metaDataGroupInTestCasePtr *testCaseModel.TestCaseMetaDataStruct
-		metaDataGroupInTestCasePtr = testCase.TestCaseMetaDataPtr
+		metaDataGroupInTestCasePtr = testCasePtr.TestCaseMetaDataPtr
 		if metaDataGroupInTestCasePtr == nil {
 			metaDataGroupInTestCasePtr = &testCaseModel.TestCaseMetaDataStruct{
 				CurrentSelectedDomainUuid:                             domainUuidToGetMetaDataFor,
@@ -102,10 +102,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 			metaDataGroupInTestCasePtr)
 
 		// Save back 'metaDataGroupInTestCasePtr' into the TestCase
-		testCase.TestCaseMetaDataPtr = metaDataGroupInTestCasePtr
+		testCasePtr.TestCaseMetaDataPtr = metaDataGroupInTestCasePtr
 
-		// Save back the TestCase in TestCases-map
-		testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = testCase
+		// Save back the TestCase in TestCasesMap-map
+		testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid] = testCasePtr
 
 		myContainer := container.NewBorder(nil, nil, nil, nil, metaDataGroupsAsCanvasObject)
 
@@ -216,8 +216,8 @@ func buildGUIFromMetaDataGroupsMap(
 					//fmt.Printf("Selected %q for %s\n", val, metaDataItem.MetaDataName)
 
 					// Get TestCase-Object
-					var testCase testCaseModel.TestCaseModelStruct
-					testCase, _ = testCasesModelReference.TestCases[testCaseUuid]
+					var testCasePtr *testCaseModel.TestCaseModelStruct
+					testCasePtr, _ = testCasesModelReference.TestCasesMap[testCaseUuid]
 
 					// store value in TestCase-version of the MetaData
 					metaDataItem.SelectedMetaDataValueForSingleSelect = val
@@ -369,8 +369,8 @@ func buildGUIFromMetaDataGroupsMap(
 					}
 
 					// Save Changes to TestCase regarding MetaData
-					testCase.TestCaseMetaDataPtr = metaDataGroupInTestCasePtr
-					testCasesModelReference.TestCases[testCaseUuid] = testCase
+					testCasePtr.TestCaseMetaDataPtr = metaDataGroupInTestCasePtr
+					testCasesModelReference.TestCasesMap[testCaseUuid] = testCasePtr
 
 				})
 				// Extract Selected values from TestCase
@@ -411,8 +411,8 @@ func buildGUIFromMetaDataGroupsMap(
 					//fmt.Printf("Multi-selected %v for %s\n", vals, metaDataItem.MetaDataName)
 
 					// Get TestCase-Object
-					var testCase testCaseModel.TestCaseModelStruct
-					testCase, _ = testCasesModelReference.TestCases[testCaseUuid]
+					var testCasePtr *testCaseModel.TestCaseModelStruct
+					testCasePtr, _ = testCasesModelReference.TestCasesMap[testCaseUuid]
 
 					// If the 'MetaDataGroupsMap' exist
 					if metaDataGroupInTestCasePtr.MetaDataGroupsMapPtr == nil {
@@ -610,8 +610,8 @@ func buildGUIFromMetaDataGroupsMap(
 					}
 
 					// Save Changes to TestCase regarding MetaData
-					testCase.TestCaseMetaDataPtr = metaDataGroupInTestCasePtr
-					testCasesModelReference.TestCases[testCaseUuid] = testCase
+					testCasePtr.TestCaseMetaDataPtr = metaDataGroupInTestCasePtr
+					testCasesModelReference.TestCasesMap[testCaseUuid] = testCasePtr
 
 				})
 

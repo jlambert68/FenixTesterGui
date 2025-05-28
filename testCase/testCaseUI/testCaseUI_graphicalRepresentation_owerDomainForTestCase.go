@@ -22,10 +22,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 	err error) {
 
 	// Extract the current TestCase UI model
-	testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+	testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		errorId := "bb7fe228-2079-481f-89d3-8cf07a4da26a"
-		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 
 		//TODO Send ERRORS over error-channel
 		fmt.Println(err)
@@ -84,12 +84,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 
 			// Save TestCase back in Map
 			// Get the latest version of TestCase
-			tempTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+			tempTestCasePtr, _ := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 
 			// Store Domain in LocalTestCase in TestCase-model
-			tempTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid =
+			tempTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid =
 				testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseMap[value].DomainUuid
-			tempTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainName =
+			tempTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainName =
 				testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseMap[value].DomainName
 
 			// Get the TestCaseUI-model
@@ -101,7 +101,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 			//var testCaseMetaDataArea fyne.CanvasObject
 			var metaDataAccordion *widget.Accordion
 			_, metaDataAccordion, err = testCasesUiCanvasObject.GenerateMetaDataAreaForTestCase(
-				&tempTestCase,
+				tempTestCasePtr,
 				testCaseUuid,
 				testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseMap[value].DomainUuid)
 
@@ -147,12 +147,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 			testCasesUiCanvasObject.TestCasesUiModelMap = testCasesUiModelMap
 
 			// Clear the set MetaData in the TestCase
-			tempTestCase.TestCaseMetaDataPtr = nil
+			tempTestCasePtr.TestCaseMetaDataPtr = nil
 
 			//testCaseMetaDataArea.Refresh()
 
 			// Store back TestCase-model in Map
-			testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = tempTestCase
+			testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid] = tempTestCasePtr
 
 			// Set Warning box that value is not selected
 			if len(value) == 0 {

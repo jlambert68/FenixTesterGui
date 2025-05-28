@@ -20,7 +20,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) update
 		"id": "a94931cd-117f-44ce-8e1b-792f2f3fa38c",
 	}).Debug("Outgoing 'updateTestInstructionExecutionsSummaryTable'")
 
-	// Loop all TestCases
+	// Loop all TestCasesMap
 	for _, tempTestCaseExecutionsDetail := range detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap {
 
 		// Create new TestInstructionExecutionsSummaryTable-variable for every TestCase

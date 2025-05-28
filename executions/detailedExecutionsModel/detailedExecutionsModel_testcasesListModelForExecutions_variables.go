@@ -91,7 +91,7 @@ type ExecutionsForTestCaseExecutionMapDetailsStruct struct {
 // The block below is used for securing that status updates of TestCaseExecutions and TestInstructionExecutions are handled in a controlled way
 
 // DetailedExecutionStatusCommandChannel
-// Parameters used for channel to update status on Executions for TestCases and TestInstructions
+// Parameters used for channel to update status on Executions for TestCasesMap and TestInstructions
 var DetailedExecutionStatusCommandChannel DetailedExecutionStatusChannelType
 
 // DetailedExecutionStatusChannelType

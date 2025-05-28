@@ -25,7 +25,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 		"id": "fd279ee5-0c5b-4e72-8a62-da353b63f95f",
 	}).Debug("Outgoing 'processStatusUpdateOfDetailedExecutionsStatus'")
 
-	// Process TestCaseStatus-messages to check that all TestCases exist in 'detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap'
+	// Process TestCaseStatus-messages to check that all TestCasesMap exist in 'detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap'
 	var testCaseExecutionKeysMap map[string]string // map[tempTestCaseExecutionMapKey]tempTestCaseExecutionMapKey
 	testCaseExecutionKeysMap = make(map[string]string)
 	var existInMap bool
@@ -116,7 +116,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 		}
 	}
 
-	// Process TestInstructionStatus-messages to check that all TestCases exist in 'detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap'
+	// Process TestInstructionStatus-messages to check that all TestCasesMap exist in 'detailedTestCaseExecutionUI_summaryTableDefinition.TestCaseExecutionsDetailsMap'
 	for _, tempTestInstructionExecutionStatusMessage := range testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage.
 		TestInstructionExecutionsStatus {
 

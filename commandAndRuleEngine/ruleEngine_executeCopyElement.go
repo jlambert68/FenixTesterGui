@@ -15,7 +15,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCopyFullELe
 	tempTestCaseModelMap := make(map[string]testCaseModel.MatureTestCaseModelElementStruct)
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 
 	if existsInMap == false {
 		errorId := "64bb031b-88c7-4758-aade-7375816ac285"
@@ -77,7 +77,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCopyFullELe
 	}
 
 	//Reload the TestCase - not needed
-	// currentTestCase, existsInMap = commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	// currentTestCase, existsInMap = commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 
 	if existsInMap == false {
 		errorId := "9d857471-7918-4762-be9b-729b82a961e2"
@@ -91,7 +91,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCopyFullELe
 	currentTestCase.CopyBuffer = copiedStructure
 
 	// Save TestCase
-	commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+	commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 
 	return err
 

@@ -59,9 +59,9 @@ func generateTemplateFilesTable(
 	testCasesUiCanvasObject *TestCasesUiModelStruct) *CustomTemplateTable {
 
 	var existInMap bool
-	var currentTestCase testCaseModel.TestCaseModelStruct
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
 
-	currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+	currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 	if existInMap == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":           "6fb0f1ff-9e16-4576-ae7d-10915065e15f",
@@ -70,14 +70,14 @@ func generateTemplateFilesTable(
 	}
 
 	var templateFilesFromGithub []importFilesFromGitHub.GitHubFile
-	templateFilesFromGithub = currentTestCase.ImportedTemplateFilesFromGitHub
+	templateFilesFromGithub = currentTestCasePtr.ImportedTemplateFilesFromGitHub
 
 	// Correctly initialize the templateFilesTable as a new table
 	templateFilesTable := &CustomTemplateTable{
 		widget.Table{
 			Length: func() (int, int) {
 
-				currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+				currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 				if existInMap == false {
 
 					sharedCode.Logger.WithFields(logrus.Fields{
@@ -86,7 +86,7 @@ func generateTemplateFilesTable(
 					}).Warning("TestCase doesn't exist in TestCaseMap. This should not happen")
 				}
 
-				templateFilesFromGithub = currentTestCase.ImportedTemplateFilesFromGitHub
+				templateFilesFromGithub = currentTestCasePtr.ImportedTemplateFilesFromGitHub
 
 				if templateFilesFromGithub == nil {
 					return 0, 2
@@ -104,7 +104,7 @@ func generateTemplateFilesTable(
 			},
 			UpdateCell: func(id widget.TableCellID, cell fyne.CanvasObject) {
 
-				currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+				currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 				if existInMap == false {
 					sharedCode.Logger.WithFields(logrus.Fields{
 						"ID":           "76ce3c8f-7791-44c9-8f18-be1ed0d9544d",
@@ -112,7 +112,7 @@ func generateTemplateFilesTable(
 					}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
 				}
 
-				templateFilesFromGithub = currentTestCase.ImportedTemplateFilesFromGitHub
+				templateFilesFromGithub = currentTestCasePtr.ImportedTemplateFilesFromGitHub
 
 				// A cell/row can be clickable to remove file when it is in first column and incoming 'filesAreClickable' is true
 				// 1)
@@ -132,8 +132,8 @@ func generateTemplateFilesTable(
 						templateViewer.InitiateTemplateViewer(
 							*sharedCode.FenixMasterWindowPtr,
 							*sharedCode.FenixAppPtr,
-							&currentTestCase.ImportedTemplateFilesFromGitHub,
-							currentTestCase.TestData,
+							&currentTestCasePtr.ImportedTemplateFilesFromGitHub,
+							currentTestCasePtr.TestData,
 							testCaseUuid,
 							templateFilesFromGithub[id.Row].Name,
 							testDataPointGroupsSelectSelectedInMainTestCaseArea,
@@ -166,9 +166,9 @@ func (t *CustomTemplateTable) updateColumnAndRowSizes(
 	viewTemplateButton *widget.Button) {
 
 	var existInMap bool
-	var currentTestCase testCaseModel.TestCaseModelStruct
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
 
-	currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+	currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 	if existInMap == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":           "34d04c69-a6e4-44f7-bbf2-c891268ac3b8",
@@ -177,7 +177,7 @@ func (t *CustomTemplateTable) updateColumnAndRowSizes(
 	}
 
 	var templateFilesFromGithub []importFilesFromGitHub.GitHubFile
-	templateFilesFromGithub = currentTestCase.ImportedTemplateFilesFromGitHub
+	templateFilesFromGithub = currentTestCasePtr.ImportedTemplateFilesFromGitHub
 
 	if templateFilesFromGithub != nil || len(templateFilesFromGithub) > 0 {
 		var nameWidth, maxNameWidth, urlWidth, maxUrlWidth float32

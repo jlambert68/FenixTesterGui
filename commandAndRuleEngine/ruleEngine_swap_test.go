@@ -88,11 +88,11 @@ func TestTCRuleSwap101(t *testing.T) {
 	// Add first Element ti Immature Element Model
 	immatureElementModel.FirstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
-	// Add TestCase to structure for all TestCases
+	// Add TestCase to structure for all TestCasesMap
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
 	allTestCases[testCaseUuid] = myTestCaseModel
-	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCasesMap: allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
@@ -142,7 +142,7 @@ func TestTCRuleSwap101(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Retrieve updated TestCase and validate that it exists im Map
-	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B10)-B1l'
@@ -326,11 +326,11 @@ func TestTCRuleSwap102(t *testing.T) {
 	// Add first Element ti Immature Element Model
 	immatureElementModel.FirstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
-	// Add TestCase to structure for all TestCases
+	// Add TestCase to structure for all TestCasesMap
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
 	allTestCases[testCaseUuid] = myTestCaseModel
-	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCasesMap: allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
@@ -380,7 +380,7 @@ func TestTCRuleSwap102(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Retrieve updated TestCase and validate that it exists im Map
-	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B11l)-B1l'
@@ -631,11 +631,11 @@ func TestTCRuleSwap103(t *testing.T) {
 	// Add first Element ti Immature Element Model
 	immatureElementModel.FirstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
-	// Add TestCase to structure for all TestCases
+	// Add TestCase to structure for all TestCasesMap
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
 	allTestCases[testCaseUuid] = myTestCaseModel
-	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCasesMap: allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
@@ -671,7 +671,7 @@ func TestTCRuleSwap103(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Retrieve updated TestCase and validate that it exists im Map
-	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B12-TIC(B10)-B11l)-B1l'
@@ -956,11 +956,11 @@ func TestTCRuleSwap104(t *testing.T) {
 	// Add first Element ti Immature Element Model
 	immatureElementModel.FirstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
-	// Add TestCase to structure for all TestCases
+	// Add TestCase to structure for all TestCasesMap
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
 	allTestCases[testCaseUuid] = myTestCaseModel
-	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCasesMap: allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
@@ -996,7 +996,7 @@ func TestTCRuleSwap104(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Retrieve updated TestCase and validate that it exists im Map
-	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B12-TIC(B10)-B11l)-B1l'
@@ -1292,11 +1292,11 @@ func TestTCRuleSwap105(t *testing.T) {
 	// Add first Element to Immature Element Model
 	immatureElementModel.FirstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
-	// Add TestCase to structure for all TestCases
+	// Add TestCase to structure for all TestCasesMap
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
 	allTestCases[testCaseUuid] = myTestCaseModel
-	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCasesMap: allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
@@ -1332,7 +1332,7 @@ func TestTCRuleSwap105(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Retrieve updated TestCase and validate that it exists im Map
-	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B12-TI-B12-TI-B11l)-B1l'
@@ -1590,11 +1590,11 @@ func TestTCRuleSwap106(t *testing.T) {
 	// Add first Element ti Immature Element Model
 	immatureElementModel.FirstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
-	// Add TestCase to structure for all TestCases
+	// Add TestCase to structure for all TestCasesMap
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
 	allTestCases[testCaseUuid] = myTestCaseModel
-	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCasesMap: allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
@@ -1644,7 +1644,7 @@ func TestTCRuleSwap106(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Retrieve updated TestCase and validate that it exists im Map
-	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11fx-TIC(B10)-B11lx)-B1l'
@@ -1859,11 +1859,11 @@ func TestTCRuleSwap107(t *testing.T) {
 	// Add first Element ti Immature Element Model
 	immatureElementModel.FirstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
-	// Add TestCase to structure for all TestCases
+	// Add TestCase to structure for all TestCasesMap
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
 	allTestCases[testCaseUuid] = myTestCaseModel
-	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCasesMap: allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
@@ -1913,7 +1913,7 @@ func TestTCRuleSwap107(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Retrieve updated TestCase and validate that it exists im Map
-	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11fx-TIC(B10)-B11l)-B1l'
@@ -2128,11 +2128,11 @@ func TestTCRuleSwap108(t *testing.T) {
 	// Add first Element ti Immature Element Model
 	immatureElementModel.FirstElementUuid = "d444b8d8-b2fb-4505-ad8e-36bfe89988ab"
 
-	// Add TestCase to structure for all TestCases
+	// Add TestCase to structure for all TestCasesMap
 	allTestCases := make(map[string]testCaseModel.TestCaseModelStruct)
 	testCaseUuid := "cce25a4e-913d-466f-8077-5a35a70610e2"
 	allTestCases[testCaseUuid] = myTestCaseModel
-	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCases: allTestCases}
+	testCasesObject := testCaseModel.TestCasesModelsStruct{TestCasesMap: allTestCases}
 
 	// Initiate CommandAndRule-engine
 	commandAndRuleEngine := CommandAndRuleEngineObjectStruct{
@@ -2182,7 +2182,7 @@ func TestTCRuleSwap108(t *testing.T) {
 	assert.Equal(t, "<nil>", fmt.Sprint(err))
 
 	// Retrieve updated TestCase and validate that it exists im Map
-	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	myTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	assert.Equal(t, "true", fmt.Sprint(existsInMap))
 
 	// Validate the result of the swap, 'B1f-TIC(B11f-TIC(B10)-B11xl)-B1l'

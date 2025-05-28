@@ -31,12 +31,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	var viewTemplateButton *widget.Button
 
 	var existInMap bool
-	var currentTestCase testCaseModel.TestCaseModelStruct
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
 
 	// Initiate Lua-script-Engine. TODO For now only Fenix-Placeholders are supported
 	luaEngine.InitiateLuaScriptEngine([]luaEngine.LuaScriptsStruct{})
 
-	currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+	currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 	if existInMap == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":           "a54bce68-fa84-4b29-aa62-5d47b8bdc7fb",
@@ -65,7 +65,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	// Import the Template-files
 	githubFilesImporterButton = widget.NewButton("Import files from GitHub", func() {
 
-		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 		if existInMap == false {
 			sharedCode.Logger.WithFields(logrus.Fields{
 				"ID":           "59fab568-2da4-43f9-8300-6858eae73431",
@@ -85,7 +85,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 			*sharedCode.FenixMasterWindowPtr,
 			*sharedCode.FenixAppPtr,
 			&responseChannel,
-			currentTestCase.ImportedTemplateFilesFromGitHub)
+			currentTestCasePtr.ImportedTemplateFilesFromGitHub)
 
 		// Wait for response from Files Selector Window to close
 		var channelResponseForSelectedFiles importFilesFromGitHub.SharedResponseChannelStruct
@@ -96,10 +96,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 		localCopyForSelectedFiles = *channelResponseForSelectedFiles.SelectedFilesPtr
 
 		// Update Template files for TestCase
-		currentTestCase.ImportedTemplateFilesFromGitHub = localCopyForSelectedFiles
+		currentTestCasePtr.ImportedTemplateFilesFromGitHub = localCopyForSelectedFiles
 
 		// Store back TestCase
-		testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = currentTestCase
+		testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid] = currentTestCasePtr
 
 		//updateTemplateFilesTable(templatesFilesInTestCaseTable,
 		//	testCaseUuid,
@@ -132,7 +132,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	checkIfTemplatesAreChangedButton = widget.NewButton("Check if Templates are changed", func() {
 		// Add button functionality here
 
-		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 		if existInMap == false {
 			sharedCode.Logger.WithFields(logrus.Fields{
 				"ID":           "59fab568-2da4-43f9-8300-6858eae73431",
@@ -153,7 +153,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	// Create Button to be able to view Template and the effect of TestData- and PlaceHolder-engine
 	viewTemplateButton = widget.NewButton("View Templates", func() {
 
-		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 		if existInMap == false {
 			sharedCode.Logger.WithFields(logrus.Fields{
 				"ID":           "994ac3c8-2a89-4786-8c70-96bb86fbe70d",
@@ -164,8 +164,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 		templateViewer.InitiateTemplateViewer(
 			*sharedCode.FenixMasterWindowPtr,
 			*sharedCode.FenixAppPtr,
-			&currentTestCase.ImportedTemplateFilesFromGitHub,
-			currentTestCase.TestData,
+			&currentTestCasePtr.ImportedTemplateFilesFromGitHub,
+			currentTestCasePtr.TestData,
 			testCaseUuid,
 			"",
 			testDataPointGroupsSelectSelectedInMainTestCaseArea,

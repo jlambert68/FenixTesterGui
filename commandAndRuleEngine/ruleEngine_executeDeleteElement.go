@@ -26,16 +26,16 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	*/
 
 	// Get current TestCase
-	var currentTestCase testCaseModel.TestCaseModelStruct
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
 	var existsInMap bool
 
-	currentTestCase, existsInMap = commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCasePtr, existsInMap = commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
 	}
 
-	currentElement, existInMap := currentTestCase.TestCaseModelMap[uuidToDelete]
+	currentElement, existInMap := currentTestCasePtr.TestCaseModelMap[uuidToDelete]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":           "4c328a0d-aaa1-4820-8fa2-e3067456faff",
@@ -62,24 +62,24 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	newB0BondElement := commandAndRuleEngine.createNewBondB0Element()
 
 	// Add New Elements to Map
-	currentTestCase.TestCaseModelMap[newB0BondElement.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+	currentTestCasePtr.TestCaseModelMap[newB0BondElement.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
 		MatureTestCaseModelElementMessage:  newB0BondElement,
 		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
 	}
 
 	// Remove Old Elements from Map
-	delete(currentTestCase.TestCaseModelMap, previousElementUuid)
-	delete(currentTestCase.TestCaseModelMap, nextElementUuid)
+	delete(currentTestCasePtr.TestCaseModelMap, previousElementUuid)
+	delete(currentTestCasePtr.TestCaseModelMap, nextElementUuid)
 
 	// Remove references in currentElement to already removed Previous and Next Elements
 	currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
 	currentElement.MatureTestCaseModelElementMessage.NextElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
 
 	// Save updated currentElement back into TestCase-map
-	currentTestCase.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
+	currentTestCasePtr.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
-	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
+	err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentTestCasePtr, currentElementUuid)
 	if err != nil {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":  "99abee1e-3078-42e7-a08a-a719e0a4ed8d",
@@ -92,11 +92,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	}
 
 	// Update first element of this TestCase
-	currentTestCase.FirstElementUuid = newB0BondElement.MatureElementUuid
+	currentTestCasePtr.FirstElementUuid = newB0BondElement.MatureElementUuid
 
-	// If there are no errors then save the TestCase back into map of all TestCases
+	// If there are no errors then save the TestCase back into map of all TestCasesMap
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCasePtr
 	}
 
 	return err
@@ -122,13 +122,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	*/
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCasePtr, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
 	}
 
-	currentElement, existInMap := currentTestCase.TestCaseModelMap[uuidToDelete]
+	currentElement, existInMap := currentTestCasePtr.TestCaseModelMap[uuidToDelete]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":           "e2773f12-3bf6-4ebe-856b-25e6bb51864f",
@@ -158,24 +158,24 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	newB10BondElement := commandAndRuleEngine.createNewBondB10Element(parentElementUuid)
 
 	// Add New Elements to Map
-	currentTestCase.TestCaseModelMap[newB10BondElement.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+	currentTestCasePtr.TestCaseModelMap[newB10BondElement.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
 		MatureTestCaseModelElementMessage:  newB10BondElement,
 		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
 	}
 
 	// Remove Old Elements from Map
-	delete(currentTestCase.TestCaseModelMap, previousElementUuid)
-	delete(currentTestCase.TestCaseModelMap, nextElementUuid)
+	delete(currentTestCasePtr.TestCaseModelMap, previousElementUuid)
+	delete(currentTestCasePtr.TestCaseModelMap, nextElementUuid)
 
 	// Remove references in currentElement to already removed Previous and Next Elements
 	currentElement.MatureTestCaseModelElementMessage.PreviousElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
 	currentElement.MatureTestCaseModelElementMessage.NextElementUuid = currentElement.MatureTestCaseModelElementMessage.MatureElementUuid
 
 	// Save updated currentElement back into TestCase-map
-	currentTestCase.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
+	currentTestCasePtr.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
-	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
+	err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentTestCasePtr, currentElementUuid)
 	if err != nil {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":  "43f9cfd5-5cfe-4ec0-b9e9-20271ab868e4",
@@ -188,7 +188,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	}
 
 	// Update Reference in parent TIC
-	tempParentElement, existInMap := currentTestCase.TestCaseModelMap[parentElementUuid]
+	tempParentElement, existInMap := currentTestCasePtr.TestCaseModelMap[parentElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":                "b75f6401-0393-411d-bcb6-28005c03ac9d",
@@ -203,11 +203,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	tempParentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid = newB10BondElement.MatureElementUuid
 
 	// Add updated parent-element back into TestCaseModelMap
-	currentTestCase.TestCaseModelMap[parentElementUuid] = tempParentElement
+	currentTestCasePtr.TestCaseModelMap[parentElementUuid] = tempParentElement
 
-	// If there are no errors then save the TestCase back into map of all TestCases
+	// If there are no errors then save the TestCase back into map of all TestCasesMap
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCasePtr
 	}
 
 	return err
@@ -233,7 +233,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	*/
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
@@ -286,7 +286,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentTestCase.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
-	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
+	err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentTestCase, currentElementUuid)
 	if err != nil {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":  "f2683652-02ef-4260-8cb3-15cf627ddfa9",
@@ -316,9 +316,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	// Add updated parent-element back into TestCaseModelMap
 	currentTestCase.TestCaseModelMap[parentElementUuid] = tempParentElement
 
-	// If there are no errors then save the TestCase back into map of all TestCases
+	// If there are no errors then save the TestCase back into map of all TestCasesMap
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 	}
 
 	return err
@@ -344,7 +344,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	*/
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
@@ -397,7 +397,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentTestCase.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
-	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
+	err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentTestCase, currentElementUuid)
 	if err != nil {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":  "b464d0dc-86b6-405b-802d-b538a6c2c840",
@@ -427,9 +427,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	// Add updated parent-element back into TestCaseModelMap
 	currentTestCase.TestCaseModelMap[parentElementUuid] = tempParentElement
 
-	// If there are no errors then save the TestCase back into map of all TestCases
+	// If there are no errors then save the TestCase back into map of all TestCasesMap
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 	}
 
 	return err
@@ -455,7 +455,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	*/
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
@@ -508,7 +508,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentTestCase.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
-	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
+	err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentTestCase, currentElementUuid)
 	if err != nil {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":  "ccda61cf-5c53-4248-aaa2-9be53bd7f46b",
@@ -538,9 +538,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	// Add updated parent-element back into TestCaseModelMap
 	currentTestCase.TestCaseModelMap[parentElementUuid] = tempParentElement
 
-	// If there are no errors then save the TestCase back into map of all TestCases
+	// If there are no errors then save the TestCase back into map of all TestCasesMap
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 	}
 
 	return err
@@ -607,7 +607,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	*/
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
@@ -694,7 +694,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentTestCase.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
-	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
+	err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentTestCase, currentElementUuid)
 	if err != nil {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":  "ccda61cf-5c53-4248-aaa2-9be53bd7f46b",
@@ -706,9 +706,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 		return err
 	}
 
-	// If there are no errors then save the TestCase back into map of all TestCases
+	// If there are no errors then save the TestCase back into map of all TestCasesMap
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 	}
 
 	return err
@@ -775,7 +775,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	*/
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
@@ -861,7 +861,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentTestCase.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
-	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
+	err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentTestCase, currentElementUuid)
 	if err != nil {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":  "73d5c570-d845-4685-a9f8-158ef782eee3",
@@ -873,9 +873,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 		return err
 	}
 
-	// If there are no errors then save the TestCase back into map of all TestCases
+	// If there are no errors then save the TestCase back into map of all TestCasesMap
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 	}
 
 	return err
@@ -942,7 +942,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	*/
 
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err
@@ -1056,7 +1056,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 	currentTestCase.TestCaseModelMap[currentElement.MatureTestCaseModelElementMessage.MatureElementUuid] = currentElement
 
 	// Remove current element and children, if they exist, from map
-	err = commandAndRuleEngine.recursiveDeleteOfChildElements(&currentTestCase, currentElementUuid)
+	err = commandAndRuleEngine.recursiveDeleteOfChildElements(currentTestCase, currentElementUuid)
 	if err != nil {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":  "43492f86-71ee-4a72-bfa4-1a68f84fcbed",
@@ -1068,9 +1068,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleDelet
 		return err
 	}
 
-	// If there are no errors then save the TestCase back into map of all TestCases
+	// If there are no errors then save the TestCase back into map of all TestCasesMap
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 	}
 
 	return err
@@ -1082,7 +1082,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveDeleteOfC
 
 	// Get current TestCase
 	/*
-		currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCase]
+		currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCase]
 		if existsInMap == false {
 			err = errors.New("testcase with uuid '" + testCase + "' doesn't exist in map with all Testcases")
 			return err

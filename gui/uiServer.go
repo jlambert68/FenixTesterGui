@@ -78,7 +78,7 @@ func (globalUISServer *GlobalUIServerStruct) StartUIServer() {
 			grpcOut:                                                                    grpc_out_GuiTestCaseBuilderServer.GRPCOutGuiTestCaseBuilderServerStruct{},
 		},
 		testCasesModel: testCaseModel.TestCasesModelsStruct{
-			TestCases:        nil,
+			TestCasesMap:     nil,
 			CurrentUser:      sharedCode.CurrentUserIdLogedInOnComputer,
 			GrpcOutReference: nil,
 		},
@@ -208,7 +208,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Load available TestData for the User
 	uiServer.AvailableBuildingBlocksModel.loadTestData(&uiServer.testCasesModel)
 
-	// Load list with TestCases that the user can edit
+	// Load list with TestCasesMap that the user can edit
 	listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(&uiServer.testCasesModel, time.Now().Add(-time.Hour*1000), time.Now().Add(-time.Hour*1000))
 
 	// Initiate TestCaseExecutionModel
@@ -317,7 +317,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	var buildTestCasesUI fyne.CanvasObject
 	buildTestCasesUI = uiServer.loadUI()
 
-	// Create the UI for List TestCases-UI
+	// Create the UI for List TestCasesMap-UI
 	var tempListTestCasesUI fyne.CanvasObject
 	tempListTestCasesUI = listTestCasesUI.GenerateListTestCasesUI(&uiServer.testCasesModel)
 
@@ -419,7 +419,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	tabs := container.NewAppTabs(
 		container.NewTabItem("Build TestCase", buildTestCasesUI),
-		container.NewTabItem("List TestCases", tempListTestCasesUI),
+		container.NewTabItem("List TestCasesMap", tempListTestCasesUI),
 		container.NewTabItem("Executions (Subscriptions)", subscriptionExecutionsUITab),
 		container.NewTabItem("Executions", executionsUITab),
 		container.NewTabItem("Detailed TestCaseExecutions - short summary", detailedTestCaseExecutionSummaryTab),

@@ -40,10 +40,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifySwapRuleAndC
 	}
 
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		errorId := "37fcb025-f91b-4c51-aac3-b0f50fba7de5"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 	}
 
 	// If Cut-command is in progress then
@@ -76,7 +76,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 
@@ -141,9 +141,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	// Delete old element to be swapped out
 	delete(currentTestCase.TestCaseModelMap, uuidToSwapOut)
 
-	// If there are no errors then save the TestCase back into map of all TestCases
+	// If there are no errors then save the TestCase back into map of all TestCasesMap
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 	}
 
 	return matureElementToSwapIn, err
@@ -162,7 +162,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 
@@ -235,9 +235,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	// Delete old element to be swapped out
 	delete(currentTestCase.TestCaseModelMap, uuidToSwapOut)
 
-	// If there are no errors then save the TestCase back into map of all TestCases
+	// If there are no errors then save the TestCase back into map of all TestCasesMap
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 	}
 
 	return matureElementToSwapIn, err
@@ -256,7 +256,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 
@@ -323,9 +323,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 	}
 
-	// If there are no errors then save the TestCase back into map of all TestCases
+	// If there are no errors then save the TestCase back into map of all TestCasesMap
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 	}
 
 	return matureElementToSwapIn, err
@@ -344,7 +344,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 
@@ -411,9 +411,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 	}
 
-	// If there are no errors then save the TestCase back into map of all TestCases
+	// If there are no errors then save the TestCase back into map of all TestCasesMap
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 	}
 
 	return matureElementToSwapIn, err
@@ -432,7 +432,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 
@@ -499,9 +499,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 	}
 
-	// If there are no errors then save the TestCase back into map of all TestCases
+	// If there are no errors then save the TestCase back into map of all TestCasesMap
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 	}
 
 	return matureElementToSwapIn, err
@@ -520,7 +520,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 
@@ -592,9 +592,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 
 	}
 
-	// If there are no errors then save the TestCase back into map of all TestCases
+	// If there are no errors then save the TestCase back into map of all TestCasesMap
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 	}
 
 	// Delete old element to be swapped out
@@ -616,7 +616,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 
@@ -691,9 +691,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	// Delete old element to be swapped out
 	delete(currentTestCase.TestCaseModelMap, uuidToSwapOut)
 
-	// If there are no errors then save the TestCase back into map of all TestCases
+	// If there are no errors then save the TestCase back into map of all TestCasesMap
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 	}
 
 	return matureElementToSwapIn, err
@@ -712,7 +712,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 
@@ -786,9 +786,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	// Delete old element to be swapped out
 	delete(currentTestCase.TestCaseModelMap, uuidToSwapOut)
 
-	// If there are no errors then save the TestCase back into map of all TestCases
+	// If there are no errors then save the TestCase back into map of all TestCasesMap
 	if err == nil {
-		commandAndRuleEngine.Testcases.TestCases[testCaseUuid] = currentTestCase
+		commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuid] = currentTestCase
 	}
 
 	return matureElementToSwapIn, err

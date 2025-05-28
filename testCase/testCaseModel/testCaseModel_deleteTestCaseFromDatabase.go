@@ -17,11 +17,11 @@ func (testCaseModel *TestCasesModelsStruct) DeleteTestCaseAtThisDate(
 	}
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCases[testCaseUuid]
+	currentTestCase, existsInMap := testCaseModel.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "4c075798-ec6c-4486-8053-997ef0d0d8eb"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 

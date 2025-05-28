@@ -112,7 +112,7 @@ func LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction(
 
 }
 
-// Create the UI used for list all TestCases that the User can edit
+// Create the UI used for list all TestCasesMap that the User can edit
 func GenerateListTestCaseExecutionsUI(
 	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct,
 	detailedTestCaseExecutionsUITabObject *container.DocTabs,
@@ -201,7 +201,7 @@ func GenerateListTestCaseExecutionsUI(
 	loadTestCaseExecutionsFromDataBaseButton = widget.NewButton("Load one TestCaseExecution per TestCase",
 		loadOneTestCaseExecutionPerTestCaseFromDataBaseFunction)
 
-	// Define the function to be executed to filter TestCases that the user can edit
+	// Define the function to be executed to filter TestCasesMap that the user can edit
 	filterTestCaseExcutionsButtonFunction = func() {
 		fmt.Println("'filterTestCaseExcutionButton' was pressed")
 
@@ -216,22 +216,22 @@ func GenerateListTestCaseExecutionsUI(
 		var numberOfRowsAsString string
 		numberOfRowsAsString = strconv.Itoa(len(testCaseExecutionsListTableTable))
 		numberOfTestCaseExecutionsAfterLocalFilters.Set(
-			fmt.Sprintf("Number of TestCases after local filters was applied: %s",
+			fmt.Sprintf("Number of TestCasesMap after local filters was applied: %s",
 				numberOfRowsAsString))
 
-		// Update the number TestCases retrieved from Database
+		// Update the number TestCasesMap retrieved from Database
 		var numberOfRowsFromDatabaseAsString string
 		numberOfRowsFromDatabaseAsString = strconv.Itoa(len(testCaseExecutionsListTableTable))
 		numberOfTestCaseExecutionsInTheDatabaseSearch.Set(
-			fmt.Sprintf("Number of TestCases retrieved from the Database: %s",
+			fmt.Sprintf("Number of TestCasesMap retrieved from the Database: %s",
 				numberOfRowsFromDatabaseAsString))
 
 	}
 
 	// Define the 'filterTestCaseExcutionsButton'
-	filterTestCaseExcutionsButton = widget.NewButton("Filter TestCases", filterTestCaseExcutionsButtonFunction)
+	filterTestCaseExcutionsButton = widget.NewButton("Filter TestCasesMap", filterTestCaseExcutionsButtonFunction)
 
-	// Define the function to be executed to list TestCases that the user can edit
+	// Define the function to be executed to list TestCasesMap that the user can edit
 	clearFiltersButtonFunction = func() {
 		fmt.Println("'clearFiltersButtonFunction' was pressed")
 	}
@@ -342,14 +342,14 @@ func GenerateListTestCaseExecutionsUI(
 	// Create the Scroll container for the List
 	testCaseExecutionsListScrollContainer = container.NewScroll(testCaseTableContainer)
 
-	// Create the label used for showing number of TestCases in the local filter
+	// Create the label used for showing number of TestCasesMap in the local filter
 	numberOfTestCaseExecutionsAfterLocalFilters = binding.NewString()
-	_ = numberOfTestCaseExecutionsAfterLocalFilters.Set("No TestCases in the List")
+	_ = numberOfTestCaseExecutionsAfterLocalFilters.Set("No TestCasesMap in the List")
 	numberOfTestCaseExecutionsAfterLocalFilterLabel = widget.NewLabelWithData(numberOfTestCaseExecutionsAfterLocalFilters)
 
-	// Create the label used for showing number of TestCases retrieved from the Database
+	// Create the label used for showing number of TestCasesMap retrieved from the Database
 	numberOfTestCaseExecutionsInTheDatabaseSearch = binding.NewString()
-	_ = numberOfTestCaseExecutionsInTheDatabaseSearch.Set("No TestCases retrieved from the Database")
+	_ = numberOfTestCaseExecutionsInTheDatabaseSearch.Set("No TestCasesMap retrieved from the Database")
 	numberOfTestCaseExecutionsRetrievedFromDatabaseLabel = widget.NewLabelWithData(numberOfTestCaseExecutionsInTheDatabaseSearch)
 
 	// Initiate 'statisticsContainer'

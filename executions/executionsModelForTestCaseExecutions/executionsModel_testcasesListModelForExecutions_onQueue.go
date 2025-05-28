@@ -28,7 +28,7 @@ func (executionsModelObject *ExecutionsModelObjectStruct) LoadAndCreateModelForT
 		TestCaseExecutionToTimeStamp:   nil,
 	}
 
-	// Load TestCases, from GuiExecutionServer, that exists on the TestCaseExecutionQueue
+	// Load TestCasesMap, from GuiExecutionServer, that exists on the TestCaseExecutionQueue
 	var listTestCasesInExecutionQueueResponse *fenixExecutionServerGuiGrpcApi.ListTestCasesInExecutionQueueResponse
 	listTestCasesInExecutionQueueResponse = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.SendListTestCasesOnExecutionQueue(listTestCasesInExecutionQueueRequest)
 

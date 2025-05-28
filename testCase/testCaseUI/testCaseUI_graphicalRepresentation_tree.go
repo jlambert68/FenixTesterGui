@@ -41,7 +41,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUIOb
 	testcaseTreeContainer = container.NewVBox()
 
 	// Extract the TestCaseModel
-	testCasesModel, existInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+	testCasesModelPtr, existInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 	if existInMap == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":           "056cf73f-3b6b-4123-a510-bbade40a45b0",
@@ -52,7 +52,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUIOb
 	// Clear Preview object for the TestCase
 	var tempTestCasePreviewObject *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage
 	tempTestCasePreviewObject = &fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage{}
-	testCasesModel.TestCasePreviewObject = tempTestCasePreviewObject
+	testCasesModelPtr.TestCasePreviewObject = tempTestCasePreviewObject
 
 	// Start processing model for TestCase
 	testCaseCanvasObject = testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject(
@@ -61,10 +61,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUIOb
 		nil, 1,
 		testCaseUuid,
 		testcaseTreeContainer,
-		&testCasesModel)
+		testCasesModelPtr)
 
 	// Save back the TestCase in the model
-	testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = testCasesModel
+	testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid] = testCasesModelPtr
 
 	return testcaseTreeContainer
 
@@ -209,7 +209,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			newIndentationRectangleContainer := container.NewStack(newIndentationRectangle)
 
 			// Get current TestCase
-			currentTestCase, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+			currentTestCase, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 			if existsInMap == false {
 				errorId := "0efefe02-6ef3-4612-8ef5-0e506b0765be"
 				err := errors.New(fmt.Sprintf("couldn't find TestCase: '%s' in testCases-map [ErrorID: %s]", testCaseUuid, errorId))
@@ -387,12 +387,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 
 			// Get parent TestInstructionContainerUuid
 			var parentTestInstructionContainerUuid string
-			var testCases map[string]testCaseModel.TestCaseModelStruct
-			var testCaseModel testCaseModel.TestCaseModelStruct
+			var testCases map[string]*testCaseModel.TestCaseModelStruct
+			var testCaseModelPtr *testCaseModel.TestCaseModelStruct
 			var existInMap bool
 
-			testCases = testCasesUiCanvasObject.TestCasesModelReference.TestCases
-			testCaseModel, existInMap = testCases[testCaseUuid]
+			testCases = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap
+			testCaseModelPtr, existInMap = testCases[testCaseUuid]
 			if existInMap == false {
 				errorId := "2acf66fc-cfef-47c7-a133-0f0b466c425c"
 				err := errors.New(fmt.Sprintf("couldn't find TestCase: '%s' in testCases-map [ErrorID: %s]", testCaseUuid, errorId))
@@ -402,7 +402,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 				return
 			}
 
-			parentTestInstructionContainerUuid = testCaseModel.TestCaseModelMap[child.Uuid].MatureTestCaseModelElementMessage.ParentElementUuid
+			parentTestInstructionContainerUuid = testCaseModelPtr.TestCaseModelMap[child.Uuid].MatureTestCaseModelElementMessage.ParentElementUuid
 
 			newDroppableBondRectangle := testCasesUiCanvasObject.DragNDropStateMachine.NewDroppableRectangle(
 				nodeTreeLevel, testCaseNodeRectangleSize, child.Uuid, testCaseUuid, parentTestInstructionContainerUuid)

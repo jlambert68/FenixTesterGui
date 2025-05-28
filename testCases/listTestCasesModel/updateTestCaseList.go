@@ -9,7 +9,7 @@ import (
 )
 
 // LoadTestCaseThatCanBeEditedByUser
-// Load list with TestCases that the user can edit
+// Load list with TestCasesMap that the user can edit
 func LoadTestCaseThatCanBeEditedByUser(
 	testCaseModeReference *testCaseModel.TestCasesModelsStruct,
 	testCaseUpdatedMinTimeStamp time.Time,
@@ -28,12 +28,12 @@ func LoadTestCaseThatCanBeEditedByUser(
 		return
 	}
 
-	// Store the slice with TestCases that a user can edit as a Map
+	// Store the slice with TestCasesMap that a user can edit as a Map
 	storeTestCaseThatCanBeEditedByUser(
 		listTestCasesThatCanBeEditedResponseMessage.GetTestCasesThatCanBeEditedByUser(),
 		testCaseModeReference)
 
-	// Store the slice with TestCases
+	// Store the slice with TestCasesMap
 	//testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = listTestCasesThatCanBeEditedResponseMessage.GetTestCasesThatCanBeEditedByUser()
 	/*
 		testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = nil
@@ -45,7 +45,7 @@ func LoadTestCaseThatCanBeEditedByUser(
 
 }
 
-// Store TestCases That Can Be Edited By User
+// Store TestCasesMap That Can Be Edited By User
 func storeTestCaseThatCanBeEditedByUser(
 	testCasesThatCanBeEditedByUserAsSlice []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseThatCanBeEditedByUserMessage,
 	testCaseModeReference *testCaseModel.TestCasesModelsStruct) {

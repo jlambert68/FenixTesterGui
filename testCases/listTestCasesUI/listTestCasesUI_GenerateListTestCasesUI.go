@@ -43,7 +43,7 @@ var sortImageAscendingAsImage image.Image
 var sortImageDescendingAsByteArray []byte
 var sortImageDescendingAsImage image.Image
 
-// Create the UI used for list all TestCases that the User can edit
+// Create the UI used for list all TestCasesMap that the User can edit
 func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct) (listTestCasesUI fyne.CanvasObject) {
 
 	//var testCaseTable *widget.Table
@@ -69,7 +69,7 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 
 	var filterAndButtonsContainer *fyne.Container
 
-	// Define the function to be executed to load TestCases from that Database that the user can edit
+	// Define the function to be executed to load TestCasesMap from that Database that the user can edit
 	loadTestCaseFromDataBaseFunction = func() {
 		fmt.Println("'loadTestCaseFromDataBaseButton' was pressed")
 		listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(testCasesModel, time.Now().Add(-time.Hour*1000), time.Now().Add(-time.Hour*1000))
@@ -77,27 +77,27 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 	}
 
 	// Define the 'loadTestCaseFromDataBaseButton'
-	loadTestCaseFromDataBaseButton = widget.NewButton("Load TestCases from Database", loadTestCaseFromDataBaseFunction)
+	loadTestCaseFromDataBaseButton = widget.NewButton("Load TestCasesMap from Database", loadTestCaseFromDataBaseFunction)
 
-	// Define the function to be executed to filter TestCases that the user can edit
+	// Define the function to be executed to filter TestCasesMap that the user can edit
 	filterTestCasesButtonFunction = func() {
 		fmt.Println("'filterTestCasesButton' was pressed")
 		loadTestCaseListTableTable(testCasesModel)
 		calculateAndSetCorrectColumnWidths()
 		updateTestCasesListTable(testCasesModel)
 
-		// Update the number TestCases in the list
+		// Update the number TestCasesMap in the list
 		var numberOfRowsAsString string
 		numberOfRowsAsString = strconv.Itoa(len(testCaseListTableTable))
 		numberOfTestCasesAfterLocalFilters.Set(
-			fmt.Sprintf("Number of TestCases after local filters was applied: %s",
+			fmt.Sprintf("Number of TestCasesMap after local filters was applied: %s",
 				numberOfRowsAsString))
 
-		// Update the number TestCases retrieved from Database
+		// Update the number TestCasesMap retrieved from Database
 		var numberOfRowsFromDatabaseAsString string
 		numberOfRowsFromDatabaseAsString = strconv.Itoa(len(testCaseListTableTable))
 		numberOfTestCasesInTheDatabaseSearch.Set(
-			fmt.Sprintf("Number of TestCases retrieved from the Database: %s",
+			fmt.Sprintf("Number of TestCasesMap retrieved from the Database: %s",
 				numberOfRowsFromDatabaseAsString))
 
 		sortableHeaderReference.sortImage.onTapped()
@@ -105,9 +105,9 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 	}
 
 	// Define the 'filterTestCasesButton'
-	filterTestCasesButton = widget.NewButton("Filter TestCases", filterTestCasesButtonFunction)
+	filterTestCasesButton = widget.NewButton("Filter TestCasesMap", filterTestCasesButtonFunction)
 
-	// Define the function to be executed to list TestCases that the user can edit
+	// Define the function to be executed to list TestCasesMap that the user can edit
 	clearFiltersButtonFunction = func() {
 		fmt.Println("'clearFiltersButtonFunction' was pressed")
 	}
@@ -131,14 +131,14 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 	// Create the Scroll container for the List
 	testCasesListScrollContainer = container.NewScroll(testCaseTableContainer)
 
-	// Create the label used for showing number of TestCases in the local filter
+	// Create the label used for showing number of TestCasesMap in the local filter
 	numberOfTestCasesAfterLocalFilters = binding.NewString()
-	_ = numberOfTestCasesAfterLocalFilters.Set("No TestCases in the List")
+	_ = numberOfTestCasesAfterLocalFilters.Set("No TestCasesMap in the List")
 	numberOfTestCasesAfterLocalFilterLabel = widget.NewLabelWithData(numberOfTestCasesAfterLocalFilters)
 
-	// Create the label used for showing number of TestCases retrieved from the Database
+	// Create the label used for showing number of TestCasesMap retrieved from the Database
 	numberOfTestCasesInTheDatabaseSearch = binding.NewString()
-	_ = numberOfTestCasesInTheDatabaseSearch.Set("No TestCases retrieved from the Database")
+	_ = numberOfTestCasesInTheDatabaseSearch.Set("No TestCasesMap retrieved from the Database")
 	numberOfTestCasesRetrievedFromDatabaseLabel = widget.NewLabelWithData(numberOfTestCasesInTheDatabaseSearch)
 
 	// Initiate 'statisticsContainer'

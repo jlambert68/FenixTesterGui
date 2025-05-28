@@ -142,10 +142,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 	err error) {
 
 	// Extract the current TestCase UI model
-	testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+	testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 		errorId := "5c27a6eb-21b2-4719-ab26-04c43cb70f5a"
-		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 
 		//TODO Send ERRORS over error-channel
 		fmt.Println(err)
@@ -236,9 +236,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 		tickerDoneChannel <- true
 
 		var existInMap bool
-		var currentTestCase testCaseModel.TestCaseModelStruct
+		var currentTestCasePtr *testCaseModel.TestCaseModelStruct
 
-		currentTestCase, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid]
 		if existInMap == false {
 			sharedCode.Logger.WithFields(logrus.Fields{
 				"ID":           "879e46d2-4439-404b-ac6d-d99a3307b6f6",
@@ -250,7 +250,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 		//var dateIsInTheFuture bool
 
 		// This TestCase is not saved in Database
-		//if currentTestCase.ThisIsANewTestCase == true {
+		//if currentTestCasePtr.ThisIsANewTestCase == true {
 
 		// Check if The date is Today() or in the future
 		var parseError error
@@ -283,10 +283,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDeletionD
 		//if dateIsInTheFuture == false {
 
 		// Save the Delete date in the local version of the TestCase
-		currentTestCase.LocalTestCaseMessage.DeleteTimeStamp = newTestCaseDeletionDateEntry.Text
+		currentTestCasePtr.LocalTestCaseMessage.DeleteTimeStamp = newTestCaseDeletionDateEntry.Text
 
 		// Save back the updated TestCase
-		testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid] = currentTestCase
+		testCasesUiCanvasObject.TestCasesModelReference.TestCasesMap[testCaseUuid] = currentTestCasePtr
 
 		// Remove TestCase from TestCase model and the UI-model
 		commandEngineChannelMessage := sharedCode.ChannelCommandStruct{

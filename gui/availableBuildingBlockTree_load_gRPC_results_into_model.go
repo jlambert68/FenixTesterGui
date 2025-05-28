@@ -528,7 +528,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeTem
 
 }
 
-// Store TestData that user can use within TestCases
+// Store TestData that user can use within TestCasesMap
 func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeTestData(
 	testDataFromSimpleTestDataAreaFiles []*fenixGuiTestCaseBuilderServerGrpcApi.TestDataFromOneSimpleTestDataAreaFileMessage,
 	testCaseModeReference *testCaseModel.TestCasesModelsStruct) {

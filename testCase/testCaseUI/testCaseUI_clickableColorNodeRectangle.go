@@ -171,9 +171,9 @@ func (c *ClickableRectangle) updateSelectedUINode() {
 	c.selectedRectangle.Show()
 
 	// Set Node to selected
-	currentTestCaseModel, _ := c.testCasesUiModelStruct.TestCasesModelReference.TestCases[c.testCaseUuid]
+	currentTestCaseModel, _ := c.testCasesUiModelStruct.TestCasesModelReference.TestCasesMap[c.testCaseUuid]
 	currentTestCaseModel.CurrentSelectedTestCaseElement.CurrentSelectedTestCaseElementUuid = c.testInstructionUuid
-	c.testCasesUiModelStruct.TestCasesModelReference.TestCases[c.testCaseUuid] = currentTestCaseModel
+	c.testCasesUiModelStruct.TestCasesModelReference.TestCasesMap[c.testCaseUuid] = currentTestCaseModel
 
 }
 

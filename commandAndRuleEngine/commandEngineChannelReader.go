@@ -124,10 +124,10 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandSave
 	}
 
 	// Extract the current TestCase UI model
-	testCase_Model, existsInMap := commandAndRuleEngine.Testcases.TestCases[currentTestCaseUuid]
+	testCase_Model, existsInMap := commandAndRuleEngine.Testcases.TestCasesMap[currentTestCaseUuid]
 	if existsInMap == false {
 		errorId := "a08730c6-aa91-4b03-9144-eeeccc153d96"
-		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCases [ErrorID: %s]", currentTestCaseUuid, errorId))
+		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCasesMap [ErrorID: %s]", currentTestCaseUuid, errorId))
 
 		//TODO Send ERRORS over error-channel
 		fmt.Println(err)
@@ -186,9 +186,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 	testCaseUuidToBeExecuted = incomingChannelCommand.FirstParameter
 
 	var existInMap bool
-	var currentTestCase testCaseModel.TestCaseModelStruct
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
 
-	currentTestCase, existInMap = commandAndRuleEngine.Testcases.TestCases[testCaseUuidToBeExecuted]
+	currentTestCasePtr, existInMap = commandAndRuleEngine.Testcases.TestCasesMap[testCaseUuidToBeExecuted]
 	if existInMap == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":           "8d25e3da-e1b5-4222-9446-d25dd7d930f1",
@@ -200,7 +200,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 	var testDataForTestCaseExecution *fenixExecutionServerGuiGrpcApi.TestDataForTestCaseExecutionMessage
 
 	// Are there any TestData
-	if currentTestCase.TestData != nil {
+	if currentTestCasePtr.TestData != nil {
 		// There might be TestData
 
 		testDataDomainAndAreaNameToUuidMap := *testDataEngine.TestDataModel.TestDataDomainAndAreaNameToUuidMap
@@ -210,9 +210,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 
 		// Check if there exists TestData but the user didn't pick any
 		if len(testDataDomainAndAreaNameToUuidMap) > 0 &&
-			(len(currentTestCase.TestData.SelectedTestDataGroup) == 0 ||
-				len(currentTestCase.TestData.SelectedTestDataPoint) == 0 ||
-				len(currentTestCase.TestData.SelectedTestDataPointRowSummary) == 0) {
+			(len(currentTestCasePtr.TestData.SelectedTestDataGroup) == 0 ||
+				len(currentTestCasePtr.TestData.SelectedTestDataPoint) == 0 ||
+				len(currentTestCasePtr.TestData.SelectedTestDataPointRowSummary) == 0) {
 
 			var syncChannel chan bool
 			syncChannel = make(chan bool, 1)
@@ -245,17 +245,17 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 		} else {
 
 			// Extract values from TestData-model
-			testDataPointRowUuid := currentTestCase.TestData.TestDataColumnDataNameToValueMap["TestDataPointRowUuid"]
+			testDataPointRowUuid := currentTestCasePtr.TestData.TestDataColumnDataNameToValueMap["TestDataPointRowUuid"]
 			testDataModelMap := *testDataEngine.TestDataModel.TestDataModelMap
 			testDataAreasMap := *testDataModelMap[testDataEngine.TestDataDomainUuidType(
-				currentTestCase.TestData.SelectedTestDataDomainUuid)].TestDataAreasMap
+				currentTestCasePtr.TestData.SelectedTestDataDomainUuid)].TestDataAreasMap
 			testDataFileSha256Hash := testDataAreasMap[testDataEngine.TestDataAreaUuidType(
-				currentTestCase.TestData.SelectedTestDataTestDataAreaUuid)].TestDataFileSha256Hash
+				currentTestCasePtr.TestData.SelectedTestDataTestDataAreaUuid)].TestDataFileSha256Hash
 
 			// Create the TestDataValueMap
 			var testDataValueMap map[string]*fenixExecutionServerGuiGrpcApi.TestDataValueMapValueMessage
 			testDataValueMap = make(map[string]*fenixExecutionServerGuiGrpcApi.TestDataValueMapValueMessage)
-			for headerDataName, dataValue := range currentTestCase.TestData.TestDataColumnDataNameToValueMap {
+			for headerDataName, dataValue := range currentTestCasePtr.TestData.TestDataColumnDataNameToValueMap {
 				var testDataValueMapValueMessage fenixExecutionServerGuiGrpcApi.TestDataValueMapValueMessage
 				testDataValueMapValueMessage = fenixExecutionServerGuiGrpcApi.TestDataValueMapValueMessage{
 					HeaderDataName:                    headerDataName,
@@ -272,11 +272,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandExec
 			// Get selected TestData for execution
 
 			testDataForTestCaseExecution = &fenixExecutionServerGuiGrpcApi.TestDataForTestCaseExecutionMessage{
-				TestDataDomainUuid:         currentTestCase.TestData.SelectedTestDataDomainUuid,
-				TestDataDomainName:         currentTestCase.TestData.SelectedTestDataDomainName,
-				TestDataDomainTemplateName: currentTestCase.TestData.SelectedTestDataDomainTemplateName,
-				TestDataAreaUuid:           currentTestCase.TestData.SelectedTestDataTestDataAreaUuid,
-				TestDataAreaName:           currentTestCase.TestData.SelectedTestDataAreaName,
+				TestDataDomainUuid:         currentTestCasePtr.TestData.SelectedTestDataDomainUuid,
+				TestDataDomainName:         currentTestCasePtr.TestData.SelectedTestDataDomainName,
+				TestDataDomainTemplateName: currentTestCasePtr.TestData.SelectedTestDataDomainTemplateName,
+				TestDataAreaUuid:           currentTestCasePtr.TestData.SelectedTestDataTestDataAreaUuid,
+				TestDataAreaName:           currentTestCasePtr.TestData.SelectedTestDataAreaName,
 				TestDataValueMap:           testDataValueMap,
 				TestDataRowIdentifier:      testDataPointRowUuid,
 				TestDataFileSha256Hash:     string(testDataFileSha256Hash),
@@ -395,15 +395,15 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandRemo
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChangeActiveTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct) {
 
 	var existInMap bool
-	var tempTestCase testCaseModel.TestCaseModelStruct
+	var tempTestCasePtr *testCaseModel.TestCaseModelStruct
 
 	currentTestCaseUuid := incomingChannelCommand.ActiveTestCase
 
 	// Verify that TestCase exists
-	tempTestCase, existInMap = commandAndRuleEngine.Testcases.TestCases[currentTestCaseUuid]
+	tempTestCasePtr, existInMap = commandAndRuleEngine.Testcases.TestCasesMap[currentTestCaseUuid]
 	if existInMap == false {
 		errorId := "a7645bee-7739-4ea3-a0f5-60d5339fb2e4"
-		err := errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", currentTestCaseUuid, errorId))
+		err := errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", currentTestCaseUuid, errorId))
 		// TODO Send on Error-channel
 		fmt.Println(err)
 
@@ -416,7 +416,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChan
 	// If this is an already saved TestCase then check if there are changes in Database
 	var testCaseHashIsTheSame bool
 	var err2 error
-	if tempTestCase.ThisIsANewTestCase == false {
+	if tempTestCasePtr.ThisIsANewTestCase == false {
 		testCaseHashIsTheSame, err2 = commandAndRuleEngine.Testcases.VerifyLatestLoadedOrSavedTestCaseHashTowardsDatabase(currentTestCaseUuid)
 		fmt.Println("Is TestCase-Hash the same as Database-hash", testCaseHashIsTheSame, err2, currentTestCaseUuid)
 	}
@@ -429,7 +429,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChan
 	var shortUUid string
 	var tabName string
 	var testCaseName string
-	testCaseName = tempTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseName
+	testCaseName = tempTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseName
 
 	shortUUid = commandAndRuleEngine.Testcases.GenerateShortUuidFromFullUuid(currentTestCaseUuid)
 
@@ -442,7 +442,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandChan
 
 	tabName = tabName + " [" + shortUUid + "]"
 
-	if tempTestCase.ThisIsANewTestCase == true {
+	if tempTestCasePtr.ThisIsANewTestCase == true {
 		// New TestCase
 		tabName = tabName + " (*)"
 	} else {
@@ -535,7 +535,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandOpen
 	uuidToOpen = <-returnChannelFromOpenTestCaseUuidPopUp
 
 	// Verify if TestCase exists
-	_, existInMap = commandAndRuleEngine.Testcases.TestCases[uuidToOpen]
+	_, existInMap = commandAndRuleEngine.Testcases.TestCasesMap[uuidToOpen]
 	if existInMap == true {
 
 		/*

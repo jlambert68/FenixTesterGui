@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// SendListTestCaseMetaData - Load all TestCaseMetaData that the User can use when creating TestCases
+// SendListTestCaseMetaData - Load all TestCaseMetaData that the User can use when creating TestCasesMap
 func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListTestCaseMetaData() (
 	returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListTestCaseMetaDataResponseMessage) {
 

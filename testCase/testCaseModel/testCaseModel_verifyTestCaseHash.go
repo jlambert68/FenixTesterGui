@@ -13,11 +13,11 @@ func (testCaseModel *TestCasesModelsStruct) VerifyTestCaseHashTowardsDatabase(te
 	var existsInMap bool
 
 	// Get current TestCase
-	_, existsInMap = testCaseModel.TestCases[testCaseUuid]
+	_, existsInMap = testCaseModel.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "13f7c602-b8b7-427d-92b0-335556c071f1"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -72,14 +72,14 @@ func (testCaseModel *TestCasesModelsStruct) VerifyLatestLoadedOrSavedTestCaseHas
 	hashIsTheSame bool, err error) {
 
 	var existsInMap bool
-	var tempTestCase TestCaseModelStruct
+	var tempTestCasePtr *TestCaseModelStruct
 
 	// Get current TestCase
-	tempTestCase, existsInMap = testCaseModel.TestCases[testCaseUuid]
+	tempTestCasePtr, existsInMap = testCaseModel.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "959d258d-2f83-46e5-8aba-8655b8fb27b2"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -88,7 +88,7 @@ func (testCaseModel *TestCasesModelsStruct) VerifyLatestLoadedOrSavedTestCaseHas
 
 	// Create TestCase-hash
 	var testcaseHash string
-	testcaseHash = tempTestCase.TestCaseHashWhenTestCaseWasSavedOrLoaded
+	testcaseHash = tempTestCasePtr.TestCaseHashWhenTestCaseWasSavedOrLoaded
 
 	// Get Hash from Database via gRPC
 	var testCaseHashRespons *fenixGuiTestCaseBuilderServerGrpcApi.TestCasesHashResponse
@@ -126,19 +126,19 @@ func (testCaseModel *TestCasesModelsStruct) VerifyLatestLoadedOrSavedTestCaseHas
 	return hashIsTheSame, err
 }
 
-// TestCaseHashIsChangedSinceLoadedOrSaved - Verify if the Hash for the TestCase is the same as the one when TestCases was last Loaded or Saved
+// TestCaseHashIsChangedSinceLoadedOrSaved - Verify if the Hash for the TestCase is the same as the one when TestCasesMap was last Loaded or Saved
 func (testCaseModel *TestCasesModelsStruct) TestCaseHashIsChangedSinceLoadedOrSaved(testCaseUuid string) (
 	hashIsChanged bool, err error) {
 
 	var existsInMap bool
-	var tempTestCase TestCaseModelStruct
+	var tempTestCasePtr *TestCaseModelStruct
 
 	// Get current TestCase
-	tempTestCase, existsInMap = testCaseModel.TestCases[testCaseUuid]
+	tempTestCasePtr, existsInMap = testCaseModel.TestCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "d9b6aa9e-0cc4-4424-8d74-c794b44bbcd6"
-		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCases [ErrorID: %s]", testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMap [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) // TODO Send on Error-channel
 
@@ -153,7 +153,7 @@ func (testCaseModel *TestCasesModelsStruct) TestCaseHashIsChangedSinceLoadedOrSa
 	}
 
 	// Is Hash chaned or not
-	if testcaseHash != tempTestCase.TestCaseHashWhenTestCaseWasSavedOrLoaded {
+	if testcaseHash != tempTestCasePtr.TestCaseHashWhenTestCaseWasSavedOrLoaded {
 		hashIsChanged = true
 	} else {
 		hashIsChanged = false

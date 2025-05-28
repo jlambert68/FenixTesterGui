@@ -101,6 +101,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 			//var testCaseMetaDataArea fyne.CanvasObject
 			var metaDataAccordion *widget.Accordion
 			_, metaDataAccordion, err = testCasesUiCanvasObject.GenerateMetaDataAreaForTestCase(
+				&tempTestCase,
 				testCaseUuid,
 				testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseMap[value].DomainUuid)
 

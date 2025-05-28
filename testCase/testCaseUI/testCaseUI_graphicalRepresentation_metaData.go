@@ -13,6 +13,7 @@ import (
 
 // Generate the MetaData Area for the TestCase
 func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTestCase(
+	tempTestCaseRef *testCaseModel.TestCaseModelStruct,
 	testCaseUuid string,
 	domainUuidToGetMetaDataFor string) (
 	testCaseMetaDataArea fyne.CanvasObject,
@@ -62,7 +63,13 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 
 		// Get Object holding Selected data for TestCase
 		var testCase testCaseModel.TestCaseModelStruct
-		testCase, existsInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		if tempTestCaseRef == nil {
+			testCase, existsInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCases[testCaseUuid]
+		} else {
+			testCase = *tempTestCaseRef
+			existsInMap = true
+		}
+
 		if existsInMap == false {
 
 			errorId := "7feb5fb3-0640-4866-8bd4-40c0011ceff1"

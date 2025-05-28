@@ -226,6 +226,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 
 	// Generate the MetaData Area for the TestCase
 	testCaseMetaDataArea, _, err := testCasesUiCanvasObject.GenerateMetaDataAreaForTestCase(
+		nil,
 		testCaseToBeAddedUuid,
 		"")
 

@@ -101,7 +101,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 		metaDataGroupsAsCanvasObject = buildGUIFromMetaDataGroupsMap(
 			testCaseUuid,
 			testCasesUiCanvasObject.TestCasesModelReference,
-			metaDataGroupInTestCasePtr.MetaDataGroupsOrder,
+			tempMetaDataGroupsOrder,
 			metaDataGroupsPtr,
 			metaDataGroupInTestCasePtr)
 

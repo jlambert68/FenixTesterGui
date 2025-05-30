@@ -4,6 +4,7 @@ import (
 	"FenixTesterGui/soundEngine"
 	"fmt"
 	"fyne.io/fyne/v2"
+	"log"
 )
 
 // Validates that all mandatory MetaData fields has values for specified DomainUuid
@@ -27,13 +28,34 @@ func (testCaseModel *TestCasesModelsStruct) verifyMandatoryFieldsForMetaData(
 		for metaDataGroupName, metaDataGroupPtr := range *currentTestCasePtr.TestCaseMetaDataPtr.MetaDataGroupsMapPtr {
 
 			// Loop all MetaDataGroupItems for the MetaDataGroup
-			for metaDataGroupItemName, _ := range *metaDataGroupPtr.MetaDataInGroupMapPtr {
+			for metaDataGroupItemName, tempMetaDataInGroupPtr := range *metaDataGroupPtr.MetaDataInGroupMapPtr {
 
-				// Create map-key to be able to 'remove' from 'metaDataGroupItemName'.
-				// Is done to be able to find if some MetaDataItems was missed by the user
-				mandatoryMetaDataFieldsMapKey = fmt.Sprintf("%s-%s",
-					metaDataGroupName,
-					metaDataGroupItemName)
+				mandatoryMetaDataFieldsMapKey = ""
+
+				switch tempMetaDataInGroupPtr.SelectType {
+				case MetaDataSelectType_SingleSelect:
+					if len(tempMetaDataInGroupPtr.SelectedMetaDataValueForSingleSelect) > 0 {
+						// Create map-key to be able to 'remove' from 'metaDataGroupItemName'.
+						// Is done to be able to find if some MetaDataItems was missed by the user
+						mandatoryMetaDataFieldsMapKey = fmt.Sprintf("%s-%s",
+							metaDataGroupName,
+							metaDataGroupItemName)
+					}
+
+				case MetaDataSelectType_MultiSelect:
+					if len(tempMetaDataInGroupPtr.SelectedMetaDataValuesForMultiSelect) > 0 {
+						// Create map-key to be able to 'remove' from 'metaDataGroupItemName'.
+						// Is done to be able to find if some MetaDataItems was missed by the user
+						mandatoryMetaDataFieldsMapKey = fmt.Sprintf("%s-%s",
+							metaDataGroupName,
+							metaDataGroupItemName)
+					}
+
+				default:
+
+					errorId := "57f87a09-3287-4127-a478-0675c7606386"
+					log.Fatalln(fmt.Sprintf("MetaDataSelectType not implemented. [ErrorID: %s]", errorId))
+				}
 
 				// Try to Remove Key from 'metaDataGroupItemName'
 				delete(mandatoryMetaDataFieldsMap, mandatoryMetaDataFieldsMapKey)
@@ -114,5 +136,5 @@ func (testCaseModel *TestCasesModelsStruct) generateMandatoryMetaDataFieldsMap(
 			}
 		}
 	}
-	return
+	return mandatoryMetaDataFieldsMap
 }

@@ -247,6 +247,13 @@ func (testCaseModel *TestCasesModelsStruct) ListAllAvailableBuildingBlocksInTest
 // List all available TestCase in TestCasesModel
 func (testCaseModel *TestCasesModelsStruct) ListAvailableTestCases() (availableTestCasesAsList []string) {
 
+	// Check if TestCasesMap has been initialized
+	if testCaseModel.TestCasesMapPtr == nil {
+		var tempTestCasesMap map[string]*TestCaseModelStruct
+		tempTestCasesMap = make(map[string]*TestCaseModelStruct)
+		testCaseModel.TestCasesMapPtr = &tempTestCasesMap
+	}
+
 	// Loop all available TestCasesMapPtr and append  UUID for TestCase to list
 	for testCaseUuid, _ := range *testCaseModel.TestCasesMapPtr {
 

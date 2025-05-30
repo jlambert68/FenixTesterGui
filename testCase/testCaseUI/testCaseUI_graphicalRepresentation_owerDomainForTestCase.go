@@ -156,7 +156,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 			testCasesUiCanvasObject.TestCasesUiModelMap = testCasesUiModelMap
 
 			// Clear the set MetaData in the TestCase
-			tempTestCasePtr.TestCaseMetaDataPtr = nil
+			//tempTestCasePtr.TestCaseMetaDataPtr = nil
 
 			//testCaseMetaDataArea.Refresh()
 

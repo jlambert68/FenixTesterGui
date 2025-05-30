@@ -57,7 +57,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeCommandOnTe
 
 	// If TestCasesMapPtr-map is not initialized then do that
 	if commandAndRuleEngine.Testcases.TestCasesMapPtr == nil {
-		*commandAndRuleEngine.Testcases.TestCasesMapPtr = make(map[string]*testCaseModel.TestCaseModelStruct)
+
+		var tempTestCasesMap map[string]*testCaseModel.TestCaseModelStruct
+		tempTestCasesMap = make(map[string]*testCaseModel.TestCaseModelStruct)
+
+		commandAndRuleEngine.Testcases.TestCasesMapPtr = &tempTestCasesMap
 	}
 
 	// TODO Add dropdown for user to chose among available Domains in available building blocks

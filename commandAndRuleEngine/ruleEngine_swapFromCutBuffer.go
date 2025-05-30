@@ -9,8 +9,17 @@ import (
 // Verify if anor element can be swapped or not, regarding swap rules
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCanBeSwappedForCutBuffer(testCaseUuid string, elementUuidToBeCutOut string) (canBeSwapped bool, matchedSimpledRule string, matchedComplexRule string, err error) {
 
+	var existsInMap bool
+
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "c15ce96e-48ce-4061-9e29-e2d68d27151b"
@@ -20,7 +29,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCan
 	}
 
 	// Verify that there are anything in Copy Buffer, use First Element as a proxy
-	if currentTestCase.CutBuffer.FirstElementUuid == "" {
+	if currentTestCasePtr.CutBuffer.FirstElementUuid == "" {
 
 		errorId := "09b47520-14ff-48a4-8342-06ac58f07813"
 		err = errors.New(fmt.Sprintf("there is no content in Cut Buffer for TestCase '%s' [ErrorID: %s]", testCaseUuid, errorId))
@@ -29,11 +38,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCan
 	}
 
 	// Get ElementType for first element in Cut Buffer
-	elementToBeSwappedIn, existsInMap := currentTestCase.CopyBuffer.ImmatureElementMap[currentTestCase.CopyBuffer.FirstElementUuid]
+	elementToBeSwappedIn, existsInMap := currentTestCasePtr.CopyBuffer.ImmatureElementMap[currentTestCasePtr.CopyBuffer.FirstElementUuid]
 	if existsInMap == false {
 
 		errorId := "52d593c3-ad7a-448d-b301-87fdedcf96b0"
-		err = errors.New(fmt.Sprintf("element referenced by first element ('%s')  doesn't exist in element-map for CopyBuffer in TestCase '%s' [ErrorID: %s]", currentTestCase.CopyBuffer.FirstElementUuid, testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("element referenced by first element ('%s')  doesn't exist in element-map for CopyBuffer in TestCase '%s' [ErrorID: %s]", currentTestCasePtr.CopyBuffer.FirstElementUuid, testCaseUuid, errorId))
 
 		return false, "", "", err
 	}

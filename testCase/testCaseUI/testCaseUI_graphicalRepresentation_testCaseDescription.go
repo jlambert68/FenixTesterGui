@@ -1,6 +1,7 @@
 package testCaseUI
 
 import (
+	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -16,8 +17,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDescripti
 	testCaseDescriptionArea fyne.CanvasObject,
 	err error) {
 
-	// Extract the current TestCase UI model
-	testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
+	var existsInMap bool
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 		errorId := "57d439e2-adf2-4abe-a0d0-f4afb98dd0a6"
 		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
@@ -43,7 +52,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDescripti
 
 	// Add the Entry-widget for TestCaseDescription
 	newTestCaseDescriptionEntry := widget.NewMultiLineEntry()
-	newTestCaseDescriptionEntry.SetText(testCase_Model.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseDescription)
+	newTestCaseDescriptionEntry.SetText(currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseDescription)
 
 	// Change vertical Size of Entry-widget for TestCaseDescription
 	newTestCaseDescriptionEntry.SetMinRowsVisible(5)
@@ -56,10 +65,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseDescripti
 
 		// Save TestCase back in Map
 		// Get the latest version of TestCase
-		tempTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
+		tempTestCase, _ := testCasesMap[testCaseUuid]
 
 		tempTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseDescription = trimmedValue
-		testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = tempTestCase
+		//testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = tempTestCase
 
 	}
 

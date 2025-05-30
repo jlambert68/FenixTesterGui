@@ -29,8 +29,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 
 	var immatureTestInstructionUuid string
 
-	// Extract the current TestCase UI model
-	testCase_ModelPtr, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
+	var existsInMap bool
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 		errorId := "07f8c5db-5a2a-4f1a-87ca-0c2e11f747a2"
 		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
@@ -46,9 +54,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 	//*attributesList = testCase_ModelPtr.AttributesList
 
 	// If previous call to this method resulted in attributes then check if any of them were changed
-	if testCase_ModelPtr.AttributesList != nil &&
-		len(*testCase_ModelPtr.AttributesList) > 0 {
-		for _, attribute := range *testCase_ModelPtr.AttributesList {
+	if currentTestCasePtr.AttributesList != nil &&
+		len(*currentTestCasePtr.AttributesList) > 0 {
+		for _, attribute := range *currentTestCasePtr.AttributesList {
 			if attribute.AttributeIsChanged == true {
 				err = testCasesUiCanvasObject.TestCasesModelReference.SaveChangedTestCaseAttributeInTestCase(testCaseUuid)
 				break
@@ -82,7 +90,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 
 		// Get Immature TestInstruction Uuid
 		var matureTestInstruction testCaseModel.MatureTestInstructionStruct
-		matureTestInstruction, existsInMap = testCase_ModelPtr.MatureTestInstructionMap[testInstructionElementMatureUuid]
+		matureTestInstruction, existsInMap = currentTestCasePtr.MatureTestInstructionMap[testInstructionElementMatureUuid]
 		if existsInMap == false {
 			errorId := "93475afd-c095-4fd6-a277-36cf7d4e703a"
 			err = errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing "+
@@ -129,7 +137,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseAttribute
 				attributeItem,
 				&attributesList,
 				attributesFormContainer,
-				testCase_ModelPtr,
+				currentTestCasePtr,
 				testInstructionElementMatureUuid,
 				immatureTestInstructionUuid)
 
@@ -445,7 +453,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 					currentTestCase.AttributesList = attributesList
 
 					// Save back Updated TestCase
-					testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[currentTestCaseUuid] = currentTestCase
+					//testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[currentTestCaseUuid] = currentTestCase
 
 				// SPECIAL
 				// When the attribute is the ComboBox that the user use to chose to which ExecutionDomain the TestData for the TestExecution
@@ -496,7 +504,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 					currentTestCase.AttributesList = attributesList
 
 					// Save back Updated TestCase
-					testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[currentTestCaseUuid] = currentTestCase
+					//testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[currentTestCaseUuid] = currentTestCase
 
 					// SPECIAL
 				// When the attribute is the ComboBox with Template, then change in lite with Templates if Template is in use or not
@@ -594,7 +602,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 						currentTestCase.AttributesList = attributesList
 
 						// Save back Updated TestCase
-						testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[currentTestCaseUuid] = currentTestCase
+						//testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[currentTestCaseUuid] = currentTestCase
 					}
 
 				default:
@@ -858,8 +866,15 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringLi
 	testCaseUuid string,
 	testInstructionElementMatureUuid string) (attributesListRef testCaseModel.AttributeStructSliceReferenceType, err error) {
 
-	// Extract TestCase-model
-	currentTestCaseModel, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
+	var existsInMap bool
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
 
 	if existsInMap == false {
 		errorId := "50346c17-be7d-4929-b9f2-5367e464b0e7"
@@ -880,8 +895,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringLi
 		attributesList := testCaseModel.AttributeStructSliceReferenceType{}
 
 		// Save AttributesList-reference back to TestCase
-		currentTestCaseModel.AttributesList = &attributesList
-		testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = currentTestCaseModel
+		currentTestCasePtr.AttributesList = &attributesList
+		//testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = currentTestCaseModel
 
 		return attributesList, err
 	}
@@ -890,12 +905,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringLi
 	attributesList := testCaseModel.AttributeStructSliceReferenceType{}
 
 	// Extract the map for the TestInstructions Attributes
-	matureTestInstruction, existInMap := currentTestCaseModel.MatureTestInstructionMap[testInstructionElementMatureUuid]
+	matureTestInstruction, existInMap := currentTestCasePtr.MatureTestInstructionMap[testInstructionElementMatureUuid]
 
 	//If the matureTestInstruction doesn't exist in map then it hasn't any attributes. So just return empty attributesLis
 	if existInMap == false {
 
-		*currentTestCaseModel.AttributesList = attributesList
+		*currentTestCasePtr.AttributesList = attributesList
 
 		return attributesList, err
 
@@ -1023,7 +1038,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeStringLi
 		return attributesList[i].AttributeName < attributesList[j].AttributeName
 	})
 
-	*currentTestCaseModel.AttributesList = attributesList
+	*currentTestCasePtr.AttributesList = attributesList
 
 	//attributesListRef = &attributesList
 

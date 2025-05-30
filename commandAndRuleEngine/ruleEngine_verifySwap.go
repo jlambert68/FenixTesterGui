@@ -30,15 +30,24 @@ import (
 // Verify the simple rules if a component can be Swapped or not
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeSwappedSimpleRules(testCaseUuid string, elementUuid string) (canBeSwapped bool, matchedRule string, err error) {
 
+	var existsInMap bool
+
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return false, "", err
 	}
 
 	// Retrieve component to be verified for Swap
-	element, existInMap := currentTestCase.TestCaseModelMap[elementUuid]
+	element, existInMap := currentTestCasePtr.TestCaseModelMap[elementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":          "9d8aebb2-4409-4236-8740-4ca396007088",
@@ -168,8 +177,17 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	ruleName = ""
 	ruleCanBeProcessed = false
 
+	var existsInMap bool
+
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return "", err
@@ -177,7 +195,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 
 	// Extract data for Previous Elementfunc (commandAndRuleEngine *CommandAndRuleEngineObjectStruct)
 	currentElementUuid := uuidToSwapOut
-	currentElement, existInMap := currentTestCase.TestCaseModelMap[currentElementUuid]
+	currentElement, existInMap := currentTestCasePtr.TestCaseModelMap[currentElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":                 "d450e7e5-32f4-42e9-b371-279d5bfe9d14",
@@ -191,8 +209,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	currentElementType := currentElement.MatureTestCaseModelElementMessage.TestCaseModelElementType
 
 	// Extract data for Previous Element
-	previousElementUuid := currentTestCase.TestCaseModelMap[currentElementUuid].MatureTestCaseModelElementMessage.PreviousElementUuid
-	previousElement, existInMap := currentTestCase.TestCaseModelMap[previousElementUuid]
+	previousElementUuid := currentTestCasePtr.TestCaseModelMap[currentElementUuid].MatureTestCaseModelElementMessage.PreviousElementUuid
+	previousElement, existInMap := currentTestCasePtr.TestCaseModelMap[previousElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":                  "42b050c6-3d63-45fc-9b6c-6b4a6e02516f",
@@ -206,8 +224,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	previousElementType := previousElement.MatureTestCaseModelElementMessage.TestCaseModelElementType
 
 	// Extract data for Next Element
-	nextElementUuid := currentTestCase.TestCaseModelMap[currentElementUuid].MatureTestCaseModelElementMessage.NextElementUuid
-	nextElement, existInMap := currentTestCase.TestCaseModelMap[nextElementUuid]
+	nextElementUuid := currentTestCasePtr.TestCaseModelMap[currentElementUuid].MatureTestCaseModelElementMessage.NextElementUuid
+	nextElement, existInMap := currentTestCasePtr.TestCaseModelMap[nextElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":              "bf2ac32f-5edb-472f-af73-87d04400e132",
@@ -527,8 +545,17 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyThatAllUuids
 // Verify all children, in new Element-model to be swapped in, that they contain correct UUIDs
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) recursiveVerifyAllUuidOfChildElements(testCaseUuid string, elementsUuid string) (err error) {
 
+	var existsInMap bool
+
 	// Get current TestCase
-	currentTestCasePtr, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return err

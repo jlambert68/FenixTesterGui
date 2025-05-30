@@ -61,7 +61,11 @@ func generateTemplateFilesTable(
 	var existInMap bool
 	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
 
-	currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr
+
+	currentTestCasePtr, existInMap = testCasesMap[testCaseUuid]
 	if existInMap == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":           "6fb0f1ff-9e16-4576-ae7d-10915065e15f",
@@ -77,7 +81,7 @@ func generateTemplateFilesTable(
 		widget.Table{
 			Length: func() (int, int) {
 
-				currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
+				currentTestCasePtr, existInMap = testCasesMap[testCaseUuid]
 				if existInMap == false {
 
 					sharedCode.Logger.WithFields(logrus.Fields{
@@ -104,7 +108,7 @@ func generateTemplateFilesTable(
 			},
 			UpdateCell: func(id widget.TableCellID, cell fyne.CanvasObject) {
 
-				currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
+				currentTestCasePtr, existInMap = testCasesMap[testCaseUuid]
 				if existInMap == false {
 					sharedCode.Logger.WithFields(logrus.Fields{
 						"ID":           "76ce3c8f-7791-44c9-8f18-be1ed0d9544d",
@@ -166,9 +170,15 @@ func (t *CustomTemplateTable) updateColumnAndRowSizes(
 	viewTemplateButton *widget.Button) {
 
 	var existInMap bool
-	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
 
-	currentTestCasePtr, existInMap = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existInMap = testCasesMap[testCaseUuid]
+
 	if existInMap == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":           "34d04c69-a6e4-44f7-bbf2-c891268ac3b8",

@@ -9,15 +9,23 @@ import (
 // Verify all children, in TestCaseElement-model and remove the found element from 'allUuidKeys'
 func (testCaseModel *TestCasesModelsStruct) recursiveZombieElementSearchInTestCaseModel(testCaseUuid string, elementsUuid string, allUuidKeys []string) (processedAllUuidKeys []string, err error) {
 
+	var existsInMap bool
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
+	var currentTestCasePtr *TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
 		return nil, err
 	}
 
 	// Extract current element
-	currentElement, existInMap := currentTestCase.TestCaseModelMap[elementsUuid]
+	currentElement, existInMap := currentTestCasePtr.TestCaseModelMap[elementsUuid]
 
 	// If the element doesn't exit then there is something really wrong
 	if existInMap == false {
@@ -83,15 +91,23 @@ func findElementInSliceAndRemove(sliceToWorkOn *[]string, uuid string) (returnSl
 // Generate the slice with the elements in the TestCase. Order is the same as in the Textual Representation of the TestCase
 func (testCaseModel *TestCasesModelsStruct) recursiveTextualTestCaseModelExtractor(testCaseUuid string, elementsUuid string, testCaseModelElementsIn []fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) (testCaseModelElementsIOut []fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage, err error) {
 
+	var existsInMap bool
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
+	var currentTestCasePtr *TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all testcases")
 		return nil, err
 	}
 
 	// Extract current element
-	currentElement, existInMap := currentTestCase.TestCaseModelMap[elementsUuid]
+	currentElement, existInMap := currentTestCasePtr.TestCaseModelMap[elementsUuid]
 
 	// If the element doesn't exit then there is something really wrong
 	if existInMap == false {
@@ -141,8 +157,16 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 	currentElementsUuid string, treeViewNodeChildrenIn []TestCaseModelAdaptedForUiTreeDataStruct) (
 	treeViewNodeChildrenOut []TestCaseModelAdaptedForUiTreeDataStruct, err error) {
 
+	var existsInMap bool
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
+	var currentTestCasePtr *TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 		errorId := "68f37aee-0b93-4d4f-9225-31ea5ccd8f8a"
 		err = errors.New(fmt.Sprintf("testcase with uuid '%s' doesn't exist in map with all testcases [ErrorID: %s]", testCaseUuid, errorId))
@@ -151,7 +175,7 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 	}
 
 	// Extract current element
-	currentElement, existInMap := currentTestCase.TestCaseModelMap[currentElementsUuid]
+	currentElement, existInMap := currentTestCasePtr.TestCaseModelMap[currentElementsUuid]
 
 	// If the element doesn't exit then there is something really wrong
 	if existInMap == false {
@@ -170,7 +194,7 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 		treeViewNodeChildrenToBeSaved := testCaseModel.reverseSliceOfNodeObjects(treeViewNodeChildrenOut)
 
 		// Save children under currentUUid
-		currentTestCase.testCaseModelAdaptedForUiTree[currentElementsUuid] = treeViewNodeChildrenToBeSaved
+		currentTestCasePtr.testCaseModelAdaptedForUiTree[currentElementsUuid] = treeViewNodeChildrenToBeSaved
 
 	}
 
@@ -220,11 +244,11 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 
 		// TI
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TI_TESTINSTRUCTION:
-		if currentTestCase.MatureTestInstructionMap[currentElementsUuid].MatureBasicTestInstructionInformation.ChosenDropZoneUuid == "No DropZone exists" {
-			nodeColor = currentTestCase.MatureTestInstructionMap[currentElementsUuid].BasicTestInstructionInformation_NonEditableInformation.TestInstructionColor
+		if currentTestCasePtr.MatureTestInstructionMap[currentElementsUuid].MatureBasicTestInstructionInformation.ChosenDropZoneUuid == "No DropZone exists" {
+			nodeColor = currentTestCasePtr.MatureTestInstructionMap[currentElementsUuid].BasicTestInstructionInformation_NonEditableInformation.TestInstructionColor
 
 		} else {
-			nodeColor = currentTestCase.MatureTestInstructionMap[currentElementsUuid].MatureBasicTestInstructionInformation.ChosenDropZoneColor //currentElement.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString //nodeColor_TI_TIC
+			nodeColor = currentTestCasePtr.MatureTestInstructionMap[currentElementsUuid].MatureBasicTestInstructionInformation.ChosenDropZoneColor //currentElement.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString //nodeColor_TI_TIC
 			isBond = false
 		}
 
@@ -250,7 +274,7 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 
 	// TIx
 	case fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelElementTypeEnum_TIx_TESTINSTRUCTION_NONE_REMOVABLE:
-		nodeColor = currentTestCase.MatureTestInstructionMap[currentElementsUuid].MatureBasicTestInstructionInformation.ChosenDropZoneColor
+		nodeColor = currentTestCasePtr.MatureTestInstructionMap[currentElementsUuid].MatureBasicTestInstructionInformation.ChosenDropZoneColor
 		isBond = false
 
 	// TICx
@@ -309,7 +333,7 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 	treeViewNodeChildrenIn = append(treeViewNodeChildrenIn, elementDataToAdd)
 
 	// Save the element with itself as original-uuid-key, to be able to find its data
-	currentTestCase.testCaseModelAdaptedForUiTree[currentElementsUuid+"_originalUuid"] = []TestCaseModelAdaptedForUiTreeDataStruct{elementDataToAdd}
+	currentTestCasePtr.testCaseModelAdaptedForUiTree[currentElementsUuid+"_originalUuid"] = []TestCaseModelAdaptedForUiTreeDataStruct{elementDataToAdd}
 
 	// Save Top-Left-Children in Map with ParentElementUuid as map-key
 	if currentElementsUuid == currentElement.MatureTestCaseModelElementMessage.ParentElementUuid &&
@@ -318,7 +342,7 @@ func (testCaseModel *TestCasesModelsStruct) recursiveGraphicalTestCaseTreeModelE
 		treeViewNodeChildrenToBeSaved := testCaseModel.reverseSliceOfNodeObjects(treeViewNodeChildrenIn)
 
 		// Children has no defined parent, put them under "standard" Fyne UI Tree-component Top Node, ("")
-		currentTestCase.testCaseModelAdaptedForUiTree[""] = treeViewNodeChildrenToBeSaved
+		currentTestCasePtr.testCaseModelAdaptedForUiTree[""] = treeViewNodeChildrenToBeSaved
 
 	}
 

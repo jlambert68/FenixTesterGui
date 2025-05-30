@@ -40,8 +40,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUIOb
 	var testcaseTreeContainer *fyne.Container
 	testcaseTreeContainer = container.NewVBox()
 
-	// Extract the TestCaseModel
-	testCasesModelPtr, existInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
+	var existInMap bool
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr
+
+	// Get current TestCase
+	var testCasesModelPtr *testCaseModel.TestCaseModelStruct
+	testCasesModelPtr, existInMap = testCasesMap[testCaseUuid]
+
 	if existInMap == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":           "056cf73f-3b6b-4123-a510-bbade40a45b0",
@@ -64,7 +72,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) makeTestCaseGraphicalUIOb
 		testCasesModelPtr)
 
 	// Save back the TestCase in the model
-	testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = testCasesModelPtr
+	//testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = testCasesModelPtr
 
 	return testcaseTreeContainer
 
@@ -90,6 +98,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 	testCaseModelForUITreeMap := *testCaseModelForUITree
 
 	testCaseNodeChildren := testCaseModelForUITreeMap[uuid]
+
+	var existsInMap bool
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr
 
 	//nodeChildrenContainer := container.NewVBox()
 
@@ -209,7 +223,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 			newIndentationRectangleContainer := container.NewStack(newIndentationRectangle)
 
 			// Get current TestCase
-			currentTestCase, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
+			var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+			currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
 			if existsInMap == false {
 				errorId := "0efefe02-6ef3-4612-8ef5-0e506b0765be"
 				err := errors.New(fmt.Sprintf("couldn't find TestCase: '%s' in testCases-map [ErrorID: %s]", testCaseUuid, errorId))
@@ -221,7 +236,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 
 			// Get the Mature TestInstructionContainer
 			var matureTestInstructionContainer testCaseModel.MatureTestInstructionContainerStruct
-			matureTestInstructionContainer, existsInMap = currentTestCase.MatureTestInstructionContainerMap[child.Uuid]
+			matureTestInstructionContainer, existsInMap = currentTestCasePtr.MatureTestInstructionContainerMap[child.Uuid]
 
 			if existsInMap == false {
 				errorId := "17620910-02bb-45d2-9f0d-a94a769328e7"
@@ -387,12 +402,14 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) recursiveMakeTestCaseGrap
 
 			// Get parent TestInstructionContainerUuid
 			var parentTestInstructionContainerUuid string
-			var testCases map[string]*testCaseModel.TestCaseModelStruct
+			//var testCasesMapPtr *map[string]*testCaseModel.TestCaseModelStruct
+			var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+			testCasesMap = *testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr
+
 			var testCaseModelPtr *testCaseModel.TestCaseModelStruct
 			var existInMap bool
 
-			testCases = testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr
-			testCaseModelPtr, existInMap = testCases[testCaseUuid]
+			testCaseModelPtr, existInMap = testCasesMap[testCaseUuid]
 			if existInMap == false {
 				errorId := "2acf66fc-cfef-47c7-a133-0f0b466c425c"
 				err := errors.New(fmt.Sprintf("couldn't find TestCase: '%s' in testCases-map [ErrorID: %s]", testCaseUuid, errorId))

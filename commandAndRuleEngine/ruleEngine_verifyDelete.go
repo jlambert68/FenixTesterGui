@@ -1,6 +1,7 @@
 package commandAndRuleEngine
 
 import (
+	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
@@ -29,8 +30,17 @@ import (
 // Verify the simple rules if a component can be deleted or not
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedSimpleRules(testCaseUuid string, elementUuid string) (canBeDeleted bool, matchedRule string, err error) {
 
+	var existsInMap bool
+
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "889d219a-a96b-4957-b9b6-be54e79d8389"
@@ -40,7 +50,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	}
 
 	// Retrieve component to be verified for deletion
-	element, existInMap := currentTestCase.TestCaseModelMap[elementUuid]
+	element, existInMap := currentTestCasePtr.TestCaseModelMap[elementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":          "490b9af6-883f-45e9-ac46-a85706680063",
@@ -177,8 +187,17 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	ruleName = ""
 	ruleCanBeProcessed = false
 
+	var existsInMap bool
+
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 		err = errors.New("testcase with uuidToDelete '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 		return "", err
@@ -186,7 +205,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 
 	// Extract data for Previous Elementfunc (commandAndRuleEngine *CommandAndRuleEngineObjectStruct)
 	currentElementUuid := uuidToDelete
-	currentElement, existInMap := currentTestCase.TestCaseModelMap[currentElementUuid]
+	currentElement, existInMap := currentTestCasePtr.TestCaseModelMap[currentElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":                 "8c69112a-31ea-4606-89a5-54b80789e691",
@@ -200,8 +219,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	currentElementType := currentElement.MatureTestCaseModelElementMessage.TestCaseModelElementType
 
 	// Extract data for Previous Element
-	previousElementUuid := currentTestCase.TestCaseModelMap[currentElementUuid].MatureTestCaseModelElementMessage.PreviousElementUuid
-	previousElement, existInMap := currentTestCase.TestCaseModelMap[previousElementUuid]
+	previousElementUuid := currentTestCasePtr.TestCaseModelMap[currentElementUuid].MatureTestCaseModelElementMessage.PreviousElementUuid
+	previousElement, existInMap := currentTestCasePtr.TestCaseModelMap[previousElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":                  "d801356c-5ab6-48d7-bcd5-73d820b86d1e",
@@ -215,8 +234,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	previousElementType := previousElement.MatureTestCaseModelElementMessage.TestCaseModelElementType
 
 	// Extract data for Next Element
-	nextElementUuid := currentTestCase.TestCaseModelMap[currentElementUuid].MatureTestCaseModelElementMessage.NextElementUuid
-	nextElement, existInMap := currentTestCase.TestCaseModelMap[nextElementUuid]
+	nextElementUuid := currentTestCasePtr.TestCaseModelMap[currentElementUuid].MatureTestCaseModelElementMessage.NextElementUuid
+	nextElement, existInMap := currentTestCasePtr.TestCaseModelMap[nextElementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":              "6c8c7382-48c7-4041-9f19-0c9b11298bbf",

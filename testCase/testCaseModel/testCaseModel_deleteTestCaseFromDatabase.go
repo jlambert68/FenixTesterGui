@@ -16,8 +16,16 @@ func (testCaseModel *TestCasesModelsStruct) DeleteTestCaseAtThisDate(
 		return err
 	}
 
+	var existsInMap bool
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
+	var currentTestCasePtr *TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "4c075798-ec6c-4486-8053-997ef0d0d8eb"
@@ -33,11 +41,11 @@ func (testCaseModel *TestCasesModelsStruct) DeleteTestCaseAtThisDate(
 	gRPCDeleteTestCaseAtThisDateRequest = &fenixGuiTestCaseBuilderServerGrpcApi.DeleteTestCaseAtThisDateRequest{
 		UserIdentification: nil,
 		DeleteThisTestCaseAtThisDate: &fenixGuiTestCaseBuilderServerGrpcApi.DeleteTestCaseAtThisDateRequestMessage{
-			DomainUuid:      currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.GetDomainUuid(),
-			DomainName:      currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.GetDomainName(),
-			TestCaseUuid:    currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.GetTestCaseUuid(),
-			TestCaseVersion: currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.GetTestCaseVersion(),
-			DeletedDate:     currentTestCase.LocalTestCaseMessage.DeleteTimeStamp,
+			DomainUuid:      currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.GetDomainUuid(),
+			DomainName:      currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.GetDomainName(),
+			TestCaseUuid:    currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.GetTestCaseUuid(),
+			TestCaseVersion: currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.GetTestCaseVersion(),
+			DeletedDate:     currentTestCasePtr.LocalTestCaseMessage.DeleteTimeStamp,
 		},
 	}
 

@@ -2,6 +2,7 @@ package testCaseUI
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -17,8 +18,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseNameArea(
 	testCaseNameArea fyne.CanvasObject,
 	err error) {
 
-	// Extract the current TestCase UI model
-	testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
+	var existsInMap bool
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 		errorId := "57d439e2-adf2-4abe-a0d0-f4afb98dd0a6"
 		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
@@ -44,7 +53,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseNameArea(
 
 	// Add the Entry-widget for TestCaseName
 	newTestCaseNameEntry := widget.NewEntry()
-	newTestCaseNameEntry.SetText(testCase_Model.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseName)
+	newTestCaseNameEntry.SetText(currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseName)
 
 	// Change Name in model and Tab-name when UI-component-Name-value is changed
 	newTestCaseNameEntry.OnChanged = func(newValue string) {
@@ -54,10 +63,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTestCaseNameArea(
 
 		// Save TestCase back in Map
 		// Get the latest version of TestCase
-		tempTestCase, _ := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
+		tempTestCasePtr, _ := testCasesMap[testCaseUuid]
 
-		tempTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseName = trimmedValue
-		testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = tempTestCase
+		tempTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.TestCaseName = trimmedValue
+		//testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = tempTestCasePtr
 
 		// Generate short version of UUID to put in TestCase Tab-Name
 		var shortUUid string

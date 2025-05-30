@@ -3,6 +3,7 @@ package testCaseUI
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/soundEngine"
+	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -108,9 +109,13 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateBaseCanvasObjectF
 				func(confirm bool) {
 					if confirm {
 
+						// Get TestCasesMap
+						var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+						testCasesMap = *testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr
+
 						commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
 							ChannelCommand:  sharedCode.ChannelCommandCloseOpenTestCaseWithOutSaving,
-							FirstParameter:  testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid].CurrentSelectedTestCaseElement.CurrentSelectedTestCaseElementUuid,
+							FirstParameter:  testCasesMap[testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid].CurrentSelectedTestCaseElement.CurrentSelectedTestCaseElementUuid,
 							SecondParameter: "",
 							ActiveTestCase:  testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid,
 							ElementType:     sharedCode.BuildingBlock(sharedCode.TestInstruction),

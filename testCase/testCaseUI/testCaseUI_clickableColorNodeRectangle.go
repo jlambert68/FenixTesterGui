@@ -1,6 +1,7 @@
 package testCaseUI
 
 import (
+	"FenixTesterGui/testCase/testCaseModel"
 	"bytes"
 	_ "embed"
 	"fyne.io/fyne/v2"
@@ -170,10 +171,14 @@ func (c *ClickableRectangle) updateSelectedUINode() {
 	// Show Graphics for Selected UI-node
 	c.selectedRectangle.Show()
 
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *c.testCasesUiModelStruct.TestCasesModelReference.TestCasesMapPtr
+
 	// Set Node to selected
-	currentTestCaseModel, _ := c.testCasesUiModelStruct.TestCasesModelReference.TestCasesMapPtr[c.testCaseUuid]
+	currentTestCaseModel, _ := testCasesMap[c.testCaseUuid]
 	currentTestCaseModel.CurrentSelectedTestCaseElement.CurrentSelectedTestCaseElementUuid = c.testInstructionUuid
-	c.testCasesUiModelStruct.TestCasesModelReference.TestCasesMapPtr[c.testCaseUuid] = currentTestCaseModel
+	testCasesMap[c.testCaseUuid] = currentTestCaseModel
 
 }
 

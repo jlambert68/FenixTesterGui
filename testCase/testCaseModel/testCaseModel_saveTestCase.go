@@ -17,6 +17,8 @@ import (
 // SaveFullTestCase - Save the TestCase to the Database
 func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string, currentActiveUser string) (err error) {
 
+	var existsInMap bool
+
 	// Save changed Attributes, if there are any, into the TestCase-model. Needs to call because last attributes change is not saved into model
 	err = testCaseModel.SaveChangedTestCaseAttributeInTestCase(testCaseUuid)
 	if err != nil {
@@ -24,7 +26,13 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 	}
 
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "4c075798-ec6c-4486-8053-997ef0d0d8eb"
@@ -66,12 +74,12 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 	}
 
 	// Check if changes are done to TestCase, but is only done if the TestCase is not saved before
-	if currentTestCase.ThisIsANewTestCase == true ||
-		currentTestCase.TestCaseHash != finalHash ||
-		currentTestCase.TestDataHash != gRPCTestCaseTestData.GetHashOfThisMessageWithEmptyHashField() {
+	if currentTestCasePtr.ThisIsANewTestCase == true ||
+		currentTestCasePtr.TestCaseHash != finalHash ||
+		currentTestCasePtr.TestDataHash != gRPCTestCaseTestData.GetHashOfThisMessageWithEmptyHashField() {
 
-		currentTestCase.TestCaseHash = finalHash
-		currentTestCase.TestDataHash = gRPCTestCaseTestData.GetHashOfThisMessageWithEmptyHashField()
+		currentTestCasePtr.TestCaseHash = finalHash
+		currentTestCasePtr.TestDataHash = gRPCTestCaseTestData.GetHashOfThisMessageWithEmptyHashField()
 
 	} else {
 		return nil
@@ -83,8 +91,8 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 	gRPCFullTestCaseMessageToSend := fenixGuiTestCaseBuilderServerGrpcApi.FullTestCaseMessage{
 		TestCaseBasicInformation: &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseBasicInformationMessage{
 			BasicTestCaseInformation: &fenixGuiTestCaseBuilderServerGrpcApi.BasicTestCaseInformationMessage{
-				NonEditableInformation: &currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation,
-				EditableInformation:    &currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation,
+				NonEditableInformation: &currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation,
+				EditableInformation:    &currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation,
 			},
 			CreatedAndUpdatedInformation: &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseBasicInformationMessage_CreatedAndUpdatedInformationMessage{
 				AddedToTestCaseTimeStamp:       timeStampForTestCaseUpdate,
@@ -98,8 +106,8 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 				DeletedFromTestCaseByUserId: "",
 			},
 			TestCaseModel: &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage{
-				TestCaseModelAsString:  currentTestCase.TextualTestCaseRepresentationExtendedStack[0],
-				FirstMatureElementUuid: currentTestCase.FirstElementUuid,
+				TestCaseModelAsString:  currentTestCasePtr.TextualTestCaseRepresentationExtendedStack[0],
+				FirstMatureElementUuid: currentTestCasePtr.FirstElementUuid,
 				TestCaseModelElements:  gRPCMatureTestCaseModelElementMessage,
 				TestCaseModelCommands:  []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseModelMessage_TestCaseModelCommandMessage{},
 			},
@@ -122,7 +130,7 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 		TestCaseTestData:         gRPCTestCaseTestData,
 		TestCasePreview:          gRPCTestCasePreviewMessage,
 		TestCaseMetaData:         gRPCUserSpecifiedTestCaseMetaDataMessage,
-		MessageHash:              currentTestCase.TestCaseHash,
+		MessageHash:              currentTestCasePtr.TestCaseHash,
 		//DeletedDate:              "",
 	}
 
@@ -140,14 +148,14 @@ func (testCaseModel *TestCasesModelsStruct) SaveFullTestCase(testCaseUuid string
 	}
 
 	// Update that the TestCase is not New anymore
-	currentTestCase.ThisIsANewTestCase = false
+	currentTestCasePtr.ThisIsANewTestCase = false
 
 	// Update The Hash for the TestCase
-	currentTestCase.TestCaseHashWhenTestCaseWasSavedOrLoaded = gRPCFullTestCaseMessageToSend.MessageHash
-	currentTestCase.TestDataHashWhenTestCaseWasSavedOrLoaded = gRPCFullTestCaseMessageToSend.GetTestCaseTestData().GetHashOfThisMessageWithEmptyHashField()
+	currentTestCasePtr.TestCaseHashWhenTestCaseWasSavedOrLoaded = gRPCFullTestCaseMessageToSend.MessageHash
+	currentTestCasePtr.TestDataHashWhenTestCaseWasSavedOrLoaded = gRPCFullTestCaseMessageToSend.GetTestCaseTestData().GetHashOfThisMessageWithEmptyHashField()
 
 	// Save the TestCase back in Map
-	testCaseModel.TestCasesMapPtr[testCaseUuid] = currentTestCase
+	//testCaseModel.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
 
 	return err
 
@@ -161,8 +169,16 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionsForGrp
 	valuesToBeHashedSlice []string,
 	err error) {
 
+	var existsInMap bool
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
+	var currentTestCasePtr *TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "48899cab-ce9d-48a2-947f-d7610a3bea81"
@@ -174,7 +190,7 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionsForGrp
 	}
 
 	// Loop map with all 'MatureTestInstructions' in the TestCase and create a slice
-	for _, matureTestInstruction := range currentTestCase.MatureTestInstructionMap {
+	for _, matureTestInstruction := range currentTestCasePtr.MatureTestInstructionMap {
 
 		var tempMatureTestInstruction MatureTestInstructionStruct
 		tempMatureTestInstruction = matureTestInstruction
@@ -242,8 +258,16 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionContain
 	valuesToBeHashedSlice []string,
 	err error) {
 
+	var existsInMap bool
+
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "82040ba6-57c4-47e2-8fb5-c770db41d8f8"
@@ -255,7 +279,7 @@ func (testCaseModel *TestCasesModelsStruct) generateMatureTestInstructionContain
 	}
 
 	// Loop map with all 'MatureTestInstructionContainers' in the TestCase and create a slice
-	for _, matureTestInstructionContainer := range currentTestCase.MatureTestInstructionContainerMap {
+	for _, matureTestInstructionContainer := range currentTestCasePtr.MatureTestInstructionContainerMap {
 		var tempMatureTestInstructionContainer MatureTestInstructionContainerStruct
 		tempMatureTestInstructionContainer = matureTestInstructionContainer
 
@@ -317,8 +341,16 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseModelElementsForGrpc
 	valuesToBeHashedSlice []string,
 	err error) {
 
+	var existsInMap bool
+
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "48899cab-ce9d-48a2-947f-d7610a3bea81"
@@ -330,7 +362,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseModelElementsForGrpc
 	}
 
 	// Loop map with all 'MatureTestCaseModelElementMessage' in the TestCase and create a slice
-	for _, matureTestCaseModelElement := range currentTestCase.TestCaseModelMap {
+	for _, matureTestCaseModelElement := range currentTestCasePtr.TestCaseModelMap {
 		var tempMatureTestCaseModelElement MatureTestCaseModelElementStruct
 		tempMatureTestCaseModelElement = matureTestCaseModelElement
 		gRPCMatureTestCaseModelElements = append(gRPCMatureTestCaseModelElements, &tempMatureTestCaseModelElement.MatureTestCaseModelElementMessage)
@@ -361,8 +393,16 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseExtraInformationForG
 	valuesToBeHashedSlice []string,
 	err error) {
 
+	var existsInMap bool
+
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "e6fbdfdc-e0dc-4dd8-8ab1-b6be82b9e9fe"
@@ -379,9 +419,9 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseExtraInformationForG
 		numberComplexModels  int
 		numberExtendedModels int
 	)
-	numberSimpleModels = len(currentTestCase.TextualTestCaseRepresentationSimpleStack)
-	numberComplexModels = len(currentTestCase.TextualTestCaseRepresentationComplexStack)
-	numberExtendedModels = len(currentTestCase.TextualTestCaseRepresentationExtendedStack)
+	numberSimpleModels = len(currentTestCasePtr.TextualTestCaseRepresentationSimpleStack)
+	numberComplexModels = len(currentTestCasePtr.TextualTestCaseRepresentationComplexStack)
+	numberExtendedModels = len(currentTestCasePtr.TextualTestCaseRepresentationExtendedStack)
 
 	if numberSimpleModels != numberComplexModels && numberComplexModels != numberExtendedModels {
 
@@ -408,17 +448,17 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseExtraInformationForG
 		// Simple
 		tempTestCaseTextualRepresentationHistory.TextualTestCaseRepresentationSimpleHistory =
 			append(tempTestCaseTextualRepresentationHistory.TextualTestCaseRepresentationSimpleHistory,
-				currentTestCase.TextualTestCaseRepresentationSimpleStack[modelCounter])
+				currentTestCasePtr.TextualTestCaseRepresentationSimpleStack[modelCounter])
 
 		// Complex
 		tempTestCaseTextualRepresentationHistory.TextualTestCaseRepresentationComplexHistory =
 			append(tempTestCaseTextualRepresentationHistory.TextualTestCaseRepresentationComplexHistory,
-				currentTestCase.TextualTestCaseRepresentationComplexStack[modelCounter])
+				currentTestCasePtr.TextualTestCaseRepresentationComplexStack[modelCounter])
 
 		// Extended
 		tempTestCaseTextualRepresentationHistory.TextualTestCaseRepresentationExtendedStackHistory =
 			append(tempTestCaseTextualRepresentationHistory.TextualTestCaseRepresentationExtendedStackHistory,
-				currentTestCase.TextualTestCaseRepresentationExtendedStack[modelCounter])
+				currentTestCasePtr.TextualTestCaseRepresentationExtendedStack[modelCounter])
 
 	}
 
@@ -456,8 +496,16 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseTemplateFilesForGrpc
 		HashForAllFiles:      "",
 	}
 
+	var existsInMap bool
+
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "e6ceecbe-00e2-42af-9782-eb83af2d03c2"
@@ -469,7 +517,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseTemplateFilesForGrpc
 	}
 
 	// Loop map with all 'TestCaseTemplateFiles' in the TestCase and add to gPRC-version
-	for _, importedTemplateFileFromGitHub := range currentTestCase.ImportedTemplateFilesFromGitHub {
+	for _, importedTemplateFileFromGitHub := range currentTestCasePtr.ImportedTemplateFilesFromGitHub {
 
 		// Create the gRPC-version of the 'ImportedTemplateFileFromGitHub'
 		var tempTestCaseTemplateFileMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseTemplateFileMessage
@@ -513,8 +561,16 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseTestDataForGrpc(
 	gRPCUsersChosenTestDataForTestCase *fenixGuiTestCaseBuilderServerGrpcApi.UsersChosenTestDataForTestCaseMessage,
 	err error) {
 
+	var existsInMap bool
+
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "f6354f22-5bca-41f8-8b92-b168b4381708"
@@ -531,10 +587,10 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseTestDataForGrpc(
 	chosenTestDataPointsPerGroupMapGrpc = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
 		TestDataPointNameMapMessage)
 
-	if currentTestCase.TestData != nil {
+	if currentTestCasePtr.TestData != nil {
 
 		// Loop TestDataGroups
-		for testDataGroupName, testDataPointNameMap := range currentTestCase.TestData.ChosenTestDataPointsPerGroupMap {
+		for testDataGroupName, testDataPointNameMap := range currentTestCasePtr.TestData.ChosenTestDataPointsPerGroupMap {
 
 			var testDataPointNameMapMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestDataPointNameMapMessage
 			testDataPointNameMapMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestDataPointNameMapMessage{}
@@ -633,8 +689,16 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCasePreviewMessageForGrp
 	gRPCTestCasePreviewMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewMessage,
 	err error) {
 
+	var existsInMap bool
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
+	var currentTestCasePtr *TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "9f3050d4-920e-4065-b7c9-f9d41bee7fb6"
@@ -648,25 +712,25 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCasePreviewMessageForGrp
 	// Generate the Domain that owns the TestCase
 	var domainNameThatOwnsTestCase string
 	domainNameThatOwnsTestCase = fmt.Sprintf("%s [%s]",
-		currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainName,
-		currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid[0:8])
+		currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainName,
+		currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid[0:8])
 
 	// Generate the Complex Textual Model of the TestCase
 	var complexTextualModel string
-	complexTextualModel = currentTestCase.TextualTestCaseRepresentationComplexStack[len(
-		currentTestCase.TextualTestCaseRepresentationComplexStack)-1]
+	complexTextualModel = currentTestCasePtr.TextualTestCaseRepresentationComplexStack[len(
+		currentTestCasePtr.TextualTestCaseRepresentationComplexStack)-1]
 
 	// Loop all TestInstructions and create Attributes for Preview-model
 	var existInMap bool
 	var tempMatureTestInstruction MatureTestInstructionStruct
-	for index, testCaseStructureObject := range currentTestCase.TestCasePreviewObject.TestCaseStructureObjects {
+	for index, testCaseStructureObject := range currentTestCasePtr.TestCasePreviewObject.TestCaseStructureObjects {
 
 		// Check if this is a TestInstruction, if so then add the Attributes to the TestInstruction in Preview-model
 		if testCaseStructureObject.GetTestCaseStructureObjectType() == fenixGuiTestCaseBuilderServerGrpcApi.
 			TestCasePreviewStructureMessage_TestInstruction {
 
 			// Extract the Mature TestInstruction
-			tempMatureTestInstruction, existInMap = currentTestCase.MatureTestInstructionMap[testCaseStructureObject.GetTestInstructionUuid()]
+			tempMatureTestInstruction, existInMap = currentTestCasePtr.MatureTestInstructionMap[testCaseStructureObject.GetTestInstructionUuid()]
 			if existInMap == false {
 				errorId := "9f35c094-f35e-47a6-b005-9a637a6eabe9"
 				err = errors.New(fmt.Sprintf("TestInstruction '%s' is missing in map with all TestCasesMapPtr [ErrorID: %s]",
@@ -724,18 +788,18 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCasePreviewMessageForGrp
 		}
 
 		// Save back the testCaseStructureObject
-		currentTestCase.TestCasePreviewObject.TestCaseStructureObjects[index] = testCaseStructureObject
+		currentTestCasePtr.TestCasePreviewObject.TestCaseStructureObjects[index] = testCaseStructureObject
 	}
 
 	// Generate the full TestCasePreview-object
 	var tempTestCasePreview *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage
 	tempTestCasePreview = &fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage{
-		TestCaseName:                    currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.GetTestCaseName(),
+		TestCaseName:                    currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.GetTestCaseName(),
 		DomainThatOwnTheTestCase:        domainNameThatOwnsTestCase,
-		TestCaseDescription:             currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.GetTestCaseDescription(),
-		TestCaseStructureObjects:        currentTestCase.TestCasePreviewObject.TestCaseStructureObjects,
+		TestCaseDescription:             currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation.GetTestCaseDescription(),
+		TestCaseStructureObjects:        currentTestCasePtr.TestCasePreviewObject.TestCaseStructureObjects,
 		ComplexTextualDescription:       complexTextualModel,
-		TestCaseUuid:                    currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.GetTestCaseUuid(),
+		TestCaseUuid:                    currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.GetTestCaseUuid(),
 		TestCaseVersion:                 "",
 		LastSavedByUserOnComputer:       sharedCode.CurrentUserIdLogedInOnComputer,
 		LastSavedByUserGCPAuthorization: sharedCode.CurrentUserAuthenticatedTowardsGCP,
@@ -766,8 +830,16 @@ func (testCaseModel *TestCasesModelsStruct) generateUserSpecifiedTestCaseMetaDat
 	gRPCUserSpecifiedTestCaseMetaDataMessage *fenixGuiTestCaseBuilderServerGrpcApi.UserSpecifiedTestCaseMetaDataMessage,
 	err error) {
 
+	var existsInMap bool
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
 	// Get current TestCase
-	currentTestCasePtr, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
+	var currentTestCasePtr *TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "5b6834dd-0763-4d12-9d4a-d97281a93a46"
@@ -935,8 +1007,16 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	finalHash string,
 	err error) {
 
+	var existsInMap bool
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
 	// Get current TestCase
-	currentTestCase, existsInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
+	var currentTestCasePtr *TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "4c075798-ec6c-4486-8053-997ef0d0d8eb"
@@ -1152,12 +1232,12 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	var valuesToReHash []string
 
 	// NonEditableInformation, start by clearing Version because it s not the same after save to Database
-	currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.TestCaseVersion = 0
-	//tempNonEditableInformation := fmt.Sprint(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation)
+	currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.TestCaseVersion = 0
+	//tempNonEditableInformation := fmt.Sprint(&currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation)
 
 	// Generate Hash for  'tempNonEditableInformation'
 	valuesToBeHashedSlice = nil
-	tempJson := protojson.Format(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation)
+	tempJson := protojson.Format(&currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation)
 	valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 
 	// Remove spaces before hashing, due to some bug that generates "double space" sometimes when running in non-debug-mode
@@ -1178,10 +1258,10 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	subHashPartsSlice = append(subHashPartsSlice, tempNonEditableInformationValue)
 
 	// EditableInformation
-	//tempEditableInformation := fmt.Sprint(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation)
+	//tempEditableInformation := fmt.Sprint(&currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation)
 	// Generate Hash for  'tempNonEditableInformation'
 	valuesToBeHashedSlice = nil
-	tempJson = protojson.Format(&currentTestCase.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation)
+	tempJson = protojson.Format(&currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageEditableInformation)
 	valuesToBeHashedSlice = append(valuesToBeHashedSlice, tempJson)
 
 	// Remove spaces before hashing, due to some bug that generates "double space" sometimes when running in non-debug-mode
@@ -1202,7 +1282,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 	subHashPartsSlice = append(subHashPartsSlice, tempEditableInformationValue)
 
 	// FirstMatureElementUuid
-	tempFirstMatureElementUuid := fmt.Sprint(currentTestCase.FirstElementUuid)
+	tempFirstMatureElementUuid := fmt.Sprint(currentTestCasePtr.FirstElementUuid)
 	hashFirstMatureElementUuid := sharedCode.HashSingleValue(tempFirstMatureElementUuid)
 	valuesToReHash = append(valuesToReHash, hashFirstMatureElementUuid)
 	// Add hash and values to slice
@@ -1290,26 +1370,34 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCaseForGrpcAndHash(testC
 // SaveChangedTestCaseAttributeInTestCase - Save changed Attributes into the TestCase-model under correct TestInstruction
 func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCase(testCaseUuid string) (err error) {
 
-	var atleastOneAttributeIsChanged bool
+	//var atLeastOneAttributeIsChanged bool
 
-	// Extract current TestCase
-	testCase, existInMap := testCaseModel.TestCasesMapPtr[testCaseUuid]
+	var existInMap bool
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *TestCaseModelStruct
+	currentTestCasePtr, existInMap = testCasesMap[testCaseUuid]
+
 	if existInMap == false {
 
 		errorId := "40fc730f-87d4-4c44-96ff-ab1003e40751"
-		err := errors.New(fmt.Sprintf("testCase %s is missing in TestCasesMapPtr-map [ErrorID: %s]", testCaseUuid, errorId))
+		err := errors.New(fmt.Sprintf("currentTestCasePtr %s is missing in TestCasesMapPtr-map [ErrorID: %s]", testCaseUuid, errorId))
 
 		fmt.Println(err) //TODO Send error over error-channel
 		return err
 	}
 
 	// If there are no attributes in  'AttributesList' for TestCase (No unsaved changes exists) then exist
-	if testCase.AttributesList == nil || len(*testCase.AttributesList) == 0 {
+	if currentTestCasePtr.AttributesList == nil || len(*currentTestCasePtr.AttributesList) == 0 {
 		return err
 	}
 
 	// Extract testInstructionElementMatureUuidUuid
-	attributesList := *testCase.AttributesList
+	attributesList := *currentTestCasePtr.AttributesList
 
 	// If Nothing in attributes list then just exit
 	if len(attributesList) == 0 {
@@ -1324,10 +1412,10 @@ func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCa
 			if attribute.AttributeIsChanged == true {
 				// Attribute is changed so save it,
 
-				atleastOneAttributeIsChanged = true
+				//atLeastOneAttributeIsChanged = true
 
 				// Extract TestInstruction
-				tempMatureTestInstruction, existInMap := testCase.MatureTestInstructionMap[testInstructionElementMatureUuidUuid]
+				tempMatureTestInstruction, existInMap := currentTestCasePtr.MatureTestInstructionMap[testInstructionElementMatureUuidUuid]
 				if existInMap == false {
 					errorId := "83b64181-3a02-4b98-8eba-d1fbad61dcd5"
 					err := errors.New(fmt.Sprintf("mature testInstruction %s is missing in MatureTestInstructionMap [ErrorID: %s]", testInstructionElementMatureUuidUuid, errorId))
@@ -1357,7 +1445,7 @@ func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCa
 					tempMatureTestInstruction.TestInstructionAttributesList[attribute.AttributeUuid] = tempTestInstructionAttribute
 
 					// Save back TestInstruction into TestCase
-					testCase.MatureTestInstructionMap[testInstructionElementMatureUuidUuid] = tempMatureTestInstruction
+					currentTestCasePtr.MatureTestInstructionMap[testInstructionElementMatureUuidUuid] = tempMatureTestInstruction
 
 				case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_COMBOBOX:
 					tempTestInstructionAttribute.AttributeInformation.InputComboBoxProperty.
@@ -1400,7 +1488,7 @@ func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCa
 					tempMatureTestInstruction.TestInstructionAttributesList[attribute.AttributeUuid] = tempTestInstructionAttribute
 
 					// Save back TestInstruction into TestCase
-					testCase.MatureTestInstructionMap[testInstructionElementMatureUuidUuid] = tempMatureTestInstruction
+					currentTestCasePtr.MatureTestInstructionMap[testInstructionElementMatureUuidUuid] = tempMatureTestInstruction
 
 				case fenixGuiTestCaseBuilderServerGrpcApi.TestInstructionAttributeTypeEnum_RESPONSE_VARIABLE_COMBOBOX:
 					tempTestInstructionAttribute.AttributeInformation.ResponseVariableComboBoxProperty.
@@ -1424,7 +1512,7 @@ func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCa
 					tempMatureTestInstruction.TestInstructionAttributesList[attribute.AttributeUuid] = tempTestInstructionAttribute
 
 					// Save back TestInstruction into TestCase
-					testCase.MatureTestInstructionMap[testInstructionElementMatureUuidUuid] = tempMatureTestInstruction
+					currentTestCasePtr.MatureTestInstructionMap[testInstructionElementMatureUuidUuid] = tempMatureTestInstruction
 
 				default:
 
@@ -1443,9 +1531,9 @@ func (testCaseModel *TestCasesModelsStruct) SaveChangedTestCaseAttributeInTestCa
 	}
 
 	// Save back TestCase if any Attribute was changed
-	if atleastOneAttributeIsChanged == true {
-		testCaseModel.TestCasesMapPtr[testCaseUuid] = testCase
-	}
+	//if atLeastOneAttributeIsChanged == true {
+	//	testCaseModel.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
+	//}
 
 	return err
 

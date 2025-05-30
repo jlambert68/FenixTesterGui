@@ -1,6 +1,7 @@
 package testCaseUI
 
 import (
+	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -21,8 +22,16 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 	valueIsValidWarningBox *canvas.Rectangle,
 	err error) {
 
-	// Extract the current TestCase UI model
-	testCase_Model, existsInMap := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
+	var existsInMap bool
+
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 		errorId := "bb7fe228-2079-481f-89d3-8cf07a4da26a"
 		err := errors.New(fmt.Sprintf("testcase-model with TestCaseUuid '%s' is missing map for TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
@@ -43,9 +52,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 
 	var testCaseHasOwnerDomain bool
 
-	if len(testCase_Model.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid) > 0 {
+	if len(currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid) > 0 {
 		testCaseHasOwnerDomain = true
-		tempCurrentOwnerDomain = testCase_Model.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid
+		tempCurrentOwnerDomain = currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid
 	}
 
 	// Load Domains that can own the TestCase into options-array
@@ -84,7 +93,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 
 			// Save TestCase back in Map
 			// Get the latest version of TestCase
-			tempTestCasePtr, _ := testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid]
+			tempTestCasePtr, _ := testCasesMap[testCaseUuid]
 
 			// Store Domain in LocalTestCase in TestCase-model
 			tempTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid =
@@ -152,7 +161,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 			//testCaseMetaDataArea.Refresh()
 
 			// Store back TestCase-model in Map
-			testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = tempTestCasePtr
+			//testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = tempTestCasePtr
 
 			// Set Warning box that value is not selected
 			if len(value) == 0 {

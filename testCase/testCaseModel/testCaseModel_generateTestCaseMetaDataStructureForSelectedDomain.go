@@ -14,10 +14,14 @@ func (testCaseModel *TestCasesModelsStruct) GenerateTestCaseMetaDataStructureFor
 	err error) {
 
 	var existsInMap bool
-	var tempTestCasePtr *TestCaseModelStruct
 
 	// Get current TestCase
-	tempTestCasePtr, existsInMap = testCaseModel.TestCasesMapPtr[testCaseUuid]
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
+	// Get current TestCase
+	var tempTestCasePtr *TestCaseModelStruct
+	tempTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "d067efb8-8f4f-44d6-9e77-ad07c77b5c3c"
@@ -54,7 +58,7 @@ func (testCaseModel *TestCasesModelsStruct) GenerateTestCaseMetaDataStructureFor
 	tempTestCasePtr.TestCaseMetaDataPtr = &testCaseMetaData
 
 	// Store TestCase back into TestCasesMapPtr-model
-	testCaseModel.TestCasesMapPtr[testCaseUuid] = tempTestCasePtr
+	//testCaseModel.TestCasesMapPtr[testCaseUuid] = tempTestCasePtr
 
 	return err
 }

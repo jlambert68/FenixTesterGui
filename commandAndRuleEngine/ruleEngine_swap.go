@@ -140,8 +140,17 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 	matureElementToSwapIn *testCaseModel.MatureElementStruct) (
 	err error) {
 
+	var existsInMap bool
+
 	// Extract TestCase to work with
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "ea7e4f3f-f6c8-4391-a191-116f60c6b5f5"
@@ -153,12 +162,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 	}
 
 	// If 'currentTestCase.MatureTestInstructionMap' then initialize it
-	if currentTestCase.MatureTestInstructionMap == nil {
-		currentTestCase.MatureTestInstructionMap = make(map[string]testCaseModel.MatureTestInstructionStruct)
+	if currentTestCasePtr.MatureTestInstructionMap == nil {
+		currentTestCasePtr.MatureTestInstructionMap = make(map[string]testCaseModel.MatureTestInstructionStruct)
 	}
 
 	// Verify that TestInstruction doesn't exit in TestInstructionMap
-	_, existsInMap = currentTestCase.MatureTestInstructionMap[matureElementToSwapIn.FirstElementUuid]
+	_, existsInMap = currentTestCasePtr.MatureTestInstructionMap[matureElementToSwapIn.FirstElementUuid]
 	if existsInMap == true {
 
 		errorId := "9f659bc5-7088-4bf7-900e-c9e12b4ce36d"
@@ -573,7 +582,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 							TestInstructionAttributeUUID_FenixSentToUsersDomain_FenixOwnedSendTemplateToThisDomain_FenixOwnedSendTemplateComboBox) {
 
 							// Extract Templates
-							for _, templateGitHubFile := range currentTestCase.ImportedTemplateFilesFromGitHub {
+							for _, templateGitHubFile := range currentTestCasePtr.ImportedTemplateFilesFromGitHub {
 
 								// Only add File if it is not already in use
 								if templateGitHubFile.FileIsUsedInTestCase == false {
@@ -629,13 +638,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 
 				}
 				// Save Mature TestInstruction in TestCase
-				currentTestCase.MatureTestInstructionMap[matureElement.MatureElementUuid] = newMatureTestInstruction
+				currentTestCasePtr.MatureTestInstructionMap[matureElement.MatureElementUuid] = newMatureTestInstruction
 			}
 		}
 	}
 
 	// // Save TestCase back into model
-	commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCase
+	//commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCase
 
 	return err
 }
@@ -643,8 +652,17 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 // Add All TestInstructionContainer-data for the new TestInstructionContainer into the TestCase-model
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstructionContainerDataToTestCaseModel(testCaseUuid string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct, matureElementToSwapIn *testCaseModel.MatureElementStruct) (err error) {
 
+	var existsInMap bool
+
 	// Extract TestCase to work with
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "bb0490d1-051a-468b-a8de-b0fd5299a45e"
@@ -655,13 +673,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 		return err
 	}
 
-	// If 'currentTestCase.MatureTestInstructionContainerMap' then initialize it
-	if currentTestCase.MatureTestInstructionContainerMap == nil {
-		currentTestCase.MatureTestInstructionContainerMap = make(map[string]testCaseModel.MatureTestInstructionContainerStruct)
+	// If 'currentTestCasePtr.MatureTestInstructionContainerMap' then initialize it
+	if currentTestCasePtr.MatureTestInstructionContainerMap == nil {
+		currentTestCasePtr.MatureTestInstructionContainerMap = make(map[string]testCaseModel.MatureTestInstructionContainerStruct)
 	}
 
 	// Verify that TestInstructionContainer doesn't exit in TestInstructionContainerMap
-	_, existsInMap = currentTestCase.MatureTestInstructionContainerMap[matureElementToSwapIn.FirstElementUuid]
+	_, existsInMap = currentTestCasePtr.MatureTestInstructionContainerMap[matureElementToSwapIn.FirstElementUuid]
 	if existsInMap == true {
 
 		errorId := "a5fc8c15-9788-45f6-b76c-08ac89a54f1d"
@@ -731,12 +749,12 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) addTestInstruction
 			// ************************************
 
 			// Save Mature TestInstructionContainer in TestCase
-			currentTestCase.MatureTestInstructionContainerMap[matureElement.MatureElementUuid] = newMatureTestInstructionContainer
+			currentTestCasePtr.MatureTestInstructionContainerMap[matureElement.MatureElementUuid] = newMatureTestInstructionContainer
 		}
 	}
 
 	// // Save TestCase back into model
-	commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCase
+	//commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
 
 	return err
 }

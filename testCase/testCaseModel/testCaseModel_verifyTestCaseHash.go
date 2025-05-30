@@ -12,8 +12,12 @@ func (testCaseModel *TestCasesModelsStruct) VerifyTestCaseHashTowardsDatabase(te
 
 	var existsInMap bool
 
+	// Get TestCasesMap
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
 	// Get current TestCase
-	_, existsInMap = testCaseModel.TestCasesMapPtr[testCaseUuid]
+	_, existsInMap = testCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "13f7c602-b8b7-427d-92b0-335556c071f1"
@@ -74,8 +78,12 @@ func (testCaseModel *TestCasesModelsStruct) VerifyLatestLoadedOrSavedTestCaseHas
 	var existsInMap bool
 	var tempTestCasePtr *TestCaseModelStruct
 
+	// Get TestCasesMap
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
 	// Get current TestCase
-	tempTestCasePtr, existsInMap = testCaseModel.TestCasesMapPtr[testCaseUuid]
+	tempTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "959d258d-2f83-46e5-8aba-8655b8fb27b2"
@@ -133,8 +141,12 @@ func (testCaseModel *TestCasesModelsStruct) TestCaseHashIsChangedSinceLoadedOrSa
 	var existsInMap bool
 	var tempTestCasePtr *TestCaseModelStruct
 
+	// Get TestCasesMap
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
 	// Get current TestCase
-	tempTestCasePtr, existsInMap = testCaseModel.TestCasesMapPtr[testCaseUuid]
+	tempTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
 	if existsInMap == false {
 
 		errorId := "d9b6aa9e-0cc4-4424-8d74-c794b44bbcd6"

@@ -398,14 +398,20 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 
 	// Add TestCase to map with all TestCasesMapPtr
 	if testCaseModel.TestCasesMapPtr == nil {
-		testCaseModel.TestCasesMapPtr = make(map[string]*TestCaseModelStruct)
+		var tempTestCasesMapPtr map[string]*TestCaseModelStruct
+		tempTestCasesMapPtr = make(map[string]*TestCaseModelStruct)
+		testCaseModel.TestCasesMapPtr = &tempTestCasesMapPtr
 	}
 
 	// Create temporary instance to be used for verifying of Hash
 	var tempTestCaseUuid string
 	tempTestCaseUuid = "temp_" + testCaseUuid
 
-	testCaseModel.TestCasesMapPtr[tempTestCaseUuid] = &tempTestCaseModel
+	// Get TestCasesMap
+	var testCasesMap map[string]*TestCaseModelStruct
+	testCasesMap = *testCaseModel.TestCasesMapPtr
+
+	testCasesMap[tempTestCaseUuid] = &tempTestCaseModel
 
 	// Verify that calculated Hash is the same as the Stored Hash from the Database
 	var generatedHash string
@@ -413,7 +419,7 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 	if err != nil {
 
 		// Remove temporary stored TestCase
-		delete(testCaseModel.TestCasesMapPtr, tempTestCaseUuid)
+		delete(testCasesMap, tempTestCaseUuid)
 
 		return err
 	}
@@ -429,17 +435,17 @@ func (testCaseModel *TestCasesModelsStruct) LoadFullTestCaseFromDatabase(testCas
 		fmt.Println(err) // TODO Send on Error-channel
 
 		// Remove temporary stored TestCase
-		delete(testCaseModel.TestCasesMapPtr, tempTestCaseUuid)
+		delete(testCasesMap, tempTestCaseUuid)
 
 		return err
 
 	}
 
 	// Add TestCase to map with TestCasesMapPtr
-	testCaseModel.TestCasesMapPtr[testCaseUuid] = &tempTestCaseModel
+	testCasesMap[testCaseUuid] = &tempTestCaseModel
 
 	// Remove temporary stored TestCase
-	delete(testCaseModel.TestCasesMapPtr, tempTestCaseUuid)
+	delete(testCasesMap, tempTestCaseUuid)
 
 	return err
 

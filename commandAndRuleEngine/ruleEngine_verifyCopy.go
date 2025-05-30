@@ -1,6 +1,7 @@
 package commandAndRuleEngine
 
 import (
+	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
@@ -29,8 +30,17 @@ import (
 // Verify the simple rules if a component can be copied or not
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeCopiedSimpleRules(testCaseUuid string, elementUuid string) (canBeCopied bool, matchedRule string, err error) {
 
+	var existsInMap bool
+
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "e60225ed-abcf-4339-b191-061b3084e92f"
@@ -40,7 +50,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	}
 
 	// Retrieve component to be verified for Copy
-	element, existInMap := currentTestCase.TestCaseModelMap[elementUuid]
+	element, existInMap := currentTestCasePtr.TestCaseModelMap[elementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":          "a0c634b0-d55a-4b71-aede-968be81f153b",

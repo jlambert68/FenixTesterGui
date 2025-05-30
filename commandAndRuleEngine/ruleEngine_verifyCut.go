@@ -1,6 +1,7 @@
 package commandAndRuleEngine
 
 import (
+	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
@@ -29,8 +30,17 @@ import (
 // Verify the simple rules if a component can be Cut or not
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeCutSimpleRules(testCaseUuid string, elementUuid string) (canBeCut bool, matchedRule string, err error) {
 
+	var existsInMap bool
+
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "6efc5eca-dfd4-47a8-9599-9f946bcd43e0"
@@ -40,7 +50,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfComponentC
 	}
 
 	// Retrieve component to be verified for Cut
-	element, existInMap := currentTestCase.TestCaseModelMap[elementUuid]
+	element, existInMap := currentTestCasePtr.TestCaseModelMap[elementUuid]
 	if existInMap == false {
 		commandAndRuleEngine.logger.WithFields(logrus.Fields{
 			"id":          "4dd42abe-1798-46ad-b682-9713134a31f6",

@@ -11,6 +11,8 @@ import (
 
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct, ruleNameToVerify string) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
 
+	var existsInMap bool
+
 	// Get ElementType for first element to be swapped in
 	elementToBeSwappedIn, existsInMap := immatureElementToSwapIn.ImmatureElementMap[immatureElementToSwapIn.FirstElementUuid]
 	if existsInMap == false {
@@ -39,18 +41,25 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifySwapRuleAndC
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+
 	// Extract the TestCaseModel
-	currentTestCaseModel, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
 	if existsInMap == false {
 		errorId := "37fcb025-f91b-4c51-aac3-b0f50fba7de5"
 		err = errors.New(fmt.Sprintf("testcase '%s' is missing in map with all TestCasesMapPtr [ErrorID: %s]", testCaseUuid, errorId))
 	}
 
 	// If Cut-command is in progress then
-	if currentTestCaseModel.CutCommandInitiated == true {
+	if currentTestCasePtr.CutCommandInitiated == true {
 
 		//  Swap from cut-buffer then element already is in mature form
-		matureElementToSwapIn := currentTestCaseModel.CutBuffer
+		matureElementToSwapIn := currentTestCasePtr.CutBuffer
 
 		return matureElementToSwapIn, err
 
@@ -69,6 +78,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifySwapRuleAndC
 //	n=TIC(X)			B0					n 		B0								B1-n-B1					TCRuleSwap101
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap101(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
 
+	var existsInMap bool
+
 	matureElementToSwapIn, err = commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap101)
 
 	// Couldn't convert immature element component into mature element component
@@ -76,7 +87,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 
@@ -102,21 +119,21 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	matureElementToSwapIn.MatureElementMap[matureElementToSwapIn.FirstElementUuid] = newTopElement
 
 	// Add new Bonds to TestCase Element Model
-	elementToBeAdded := currentTestCase.TestCaseModelMap[newPreviousB1fBond.MatureElementUuid]
+	elementToBeAdded := currentTestCasePtr.TestCaseModelMap[newPreviousB1fBond.MatureElementUuid]
 	elementToBeAdded.MatureTestCaseModelElementMessage = newPreviousB1fBond
-	currentTestCase.TestCaseModelMap[newPreviousB1fBond.MatureElementUuid] = elementToBeAdded
+	currentTestCasePtr.TestCaseModelMap[newPreviousB1fBond.MatureElementUuid] = elementToBeAdded
 
-	elementToBeAdded = currentTestCase.TestCaseModelMap[newNextB1lBond.MatureElementUuid]
+	elementToBeAdded = currentTestCasePtr.TestCaseModelMap[newNextB1lBond.MatureElementUuid]
 	elementToBeAdded.MatureTestCaseModelElementMessage = newNextB1lBond
-	currentTestCase.TestCaseModelMap[newNextB1lBond.MatureElementUuid] = elementToBeAdded
+	currentTestCasePtr.TestCaseModelMap[newNextB1lBond.MatureElementUuid] = elementToBeAdded
 
 	// Set First Element
-	currentTestCase.FirstElementUuid = newPreviousB1fBond.MatureElementUuid
+	currentTestCasePtr.FirstElementUuid = newPreviousB1fBond.MatureElementUuid
 
 	// Add 'matureElementToSwapIn' to TestCase Element Model
 	for elementUuid, element := range matureElementToSwapIn.MatureElementMap {
 
-		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
+		elementToBeAdded := currentTestCasePtr.TestCaseModelMap[elementUuid]
 		elementToBeAdded.MatureTestCaseModelElementMessage = element
 
 		/*
@@ -134,17 +151,17 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
 		}
 
-		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
+		currentTestCasePtr.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
 
 	// Delete old element to be swapped out
-	delete(currentTestCase.TestCaseModelMap, uuidToSwapOut)
+	delete(currentTestCasePtr.TestCaseModelMap, uuidToSwapOut)
 
 	// If there are no errors then save the TestCase back into map of all TestCasesMapPtr
-	if err == nil {
-		commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCase
-	}
+	//if err == nil {
+	//	commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCase
+	//}
 
 	return matureElementToSwapIn, err
 }
@@ -155,6 +172,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 //	n=TIC or TIC(X)		B10					n		TIC(B10)						TIC(B11f-n-B11l)		TCRuleSwap102
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap102(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
 
+	var existsInMap bool
+
 	matureElementToSwapIn, err = commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap102)
 
 	// Couldn't convert immature element component into mature element component
@@ -162,7 +181,14 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 
@@ -170,9 +196,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	}
 
 	// Extract parent-TIC to element to swap out
-	elementToSwapOut, _ := currentTestCase.TestCaseModelMap[uuidToSwapOut]
+	elementToSwapOut, _ := currentTestCasePtr.TestCaseModelMap[uuidToSwapOut]
 	parentElementUuid := elementToSwapOut.MatureTestCaseModelElementMessage.ParentElementUuid
-	parentElement := currentTestCase.TestCaseModelMap[parentElementUuid]
+	parentElement := currentTestCasePtr.TestCaseModelMap[parentElementUuid]
 
 	// Create the Bonds connecting the TIC
 	newPreviousB11fBond := commandAndRuleEngine.createNewBondB11fElement(parentElementUuid)
@@ -197,21 +223,21 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	parentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid = newPreviousB11fBond.MatureElementUuid
 
 	// Save updated parent element back to TestCase model
-	currentTestCase.TestCaseModelMap[parentElementUuid] = parentElement
+	currentTestCasePtr.TestCaseModelMap[parentElementUuid] = parentElement
 
 	// Add new Bonds to TestCase Element Model
-	elementToBeAdded := currentTestCase.TestCaseModelMap[newPreviousB11fBond.MatureElementUuid]
+	elementToBeAdded := currentTestCasePtr.TestCaseModelMap[newPreviousB11fBond.MatureElementUuid]
 	elementToBeAdded.MatureTestCaseModelElementMessage = newPreviousB11fBond
-	currentTestCase.TestCaseModelMap[newPreviousB11fBond.MatureElementUuid] = elementToBeAdded
+	currentTestCasePtr.TestCaseModelMap[newPreviousB11fBond.MatureElementUuid] = elementToBeAdded
 
-	elementToBeAdded = currentTestCase.TestCaseModelMap[newNextB11lBond.MatureElementUuid]
+	elementToBeAdded = currentTestCasePtr.TestCaseModelMap[newNextB11lBond.MatureElementUuid]
 	elementToBeAdded.MatureTestCaseModelElementMessage = newNextB11lBond
-	currentTestCase.TestCaseModelMap[newNextB11lBond.MatureElementUuid] = elementToBeAdded
+	currentTestCasePtr.TestCaseModelMap[newNextB11lBond.MatureElementUuid] = elementToBeAdded
 
 	// Add 'matureElementToSwapIn' to TestCase Element Model
 	for elementUuid, element := range matureElementToSwapIn.MatureElementMap {
 
-		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
+		elementToBeAdded := currentTestCasePtr.TestCaseModelMap[elementUuid]
 		elementToBeAdded.MatureTestCaseModelElementMessage = element
 
 		/*
@@ -228,17 +254,17 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
 		}
 
-		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
+		currentTestCasePtr.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
 
 	// Delete old element to be swapped out
-	delete(currentTestCase.TestCaseModelMap, uuidToSwapOut)
+	delete(currentTestCasePtr.TestCaseModelMap, uuidToSwapOut)
 
 	// If there are no errors then save the TestCase back into map of all TestCasesMapPtr
-	if err == nil {
-		commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCase
-	}
+	//if err == nil {
+	//	commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
+	//}
 
 	return matureElementToSwapIn, err
 }
@@ -249,6 +275,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 //	n=TIC or TIC(X)		B11f				n		TIC(B11f-X)						TIC(B11f-n-B12-X)		TCRuleSwap103
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap103(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
 
+	var existsInMap bool
+
 	matureElementToSwapIn, err = commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap103)
 
 	// Couldn't convert immature element component into mature element component
@@ -256,7 +284,14 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 
@@ -264,9 +299,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	}
 
 	// Extract parent-TIC to element to swap out
-	elementToSwapOut, _ := currentTestCase.TestCaseModelMap[uuidToSwapOut]
+	elementToSwapOut, _ := currentTestCasePtr.TestCaseModelMap[uuidToSwapOut]
 	parentElementUuid := elementToSwapOut.MatureTestCaseModelElementMessage.ParentElementUuid
-	nextElement := currentTestCase.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.NextElementUuid]
+	nextElement := currentTestCasePtr.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.NextElementUuid]
 
 	// Create the new Bonds
 	newB12Bond := commandAndRuleEngine.createNewBondB12Element(parentElementUuid)
@@ -290,11 +325,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	matureElementToSwapIn.MatureElementMap[topElementInModelToBeSwappedIn.MatureElementUuid] = topElementInModelToBeSwappedIn
 
 	// Update elements in TestCaseModel
-	currentTestCase.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.MatureElementUuid] = elementToSwapOut
-	currentTestCase.TestCaseModelMap[nextElement.MatureTestCaseModelElementMessage.MatureElementUuid] = nextElement
+	currentTestCasePtr.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.MatureElementUuid] = elementToSwapOut
+	currentTestCasePtr.TestCaseModelMap[nextElement.MatureTestCaseModelElementMessage.MatureElementUuid] = nextElement
 
 	// Add new Bonds to TestCase Element Model
-	currentTestCase.TestCaseModelMap[newB12Bond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+	currentTestCasePtr.TestCaseModelMap[newB12Bond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
 		MatureTestCaseModelElementMessage:  newB12Bond,
 		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
 	}
@@ -302,7 +337,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	// Add 'matureElementToSwapIn' to TestCase Element Model
 	for elementUuid, element := range matureElementToSwapIn.MatureElementMap {
 
-		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
+		elementToBeAdded := currentTestCasePtr.TestCaseModelMap[elementUuid]
 		elementToBeAdded.MatureTestCaseModelElementMessage = element
 
 		/*
@@ -319,14 +354,14 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
 		}
 
-		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
+		currentTestCasePtr.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
 
 	// If there are no errors then save the TestCase back into map of all TestCasesMapPtr
-	if err == nil {
-		commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCase
-	}
+	//if err == nil {
+	//	commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
+	//}
 
 	return matureElementToSwapIn, err
 }
@@ -337,6 +372,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 //	n=TIC or TIC(X)		B11l				n		TIC(X-B11l)						TIC(X-B12-n-B11l)		TCRuleSwap104
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap104(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
 
+	var existsInMap bool
+
 	matureElementToSwapIn, err = commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap104)
 
 	// Couldn't convert immature element component into mature element component
@@ -344,7 +381,14 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 
@@ -352,9 +396,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	}
 
 	// Extract parent-TIC to element to swap out
-	elementToSwapOut, _ := currentTestCase.TestCaseModelMap[uuidToSwapOut]
+	elementToSwapOut, _ := currentTestCasePtr.TestCaseModelMap[uuidToSwapOut]
 	parentElementUuid := elementToSwapOut.MatureTestCaseModelElementMessage.ParentElementUuid
-	previousElement := currentTestCase.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.PreviousElementUuid]
+	previousElement := currentTestCasePtr.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.PreviousElementUuid]
 
 	// Create the new Bonds
 	newB12Bond := commandAndRuleEngine.createNewBondB12Element(parentElementUuid)
@@ -378,11 +422,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	matureElementToSwapIn.MatureElementMap[topElementInModelToBeSwappedIn.MatureElementUuid] = topElementInModelToBeSwappedIn
 
 	// Update elements in TestCaseModel
-	currentTestCase.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.MatureElementUuid] = elementToSwapOut
-	currentTestCase.TestCaseModelMap[previousElement.MatureTestCaseModelElementMessage.MatureElementUuid] = previousElement
+	currentTestCasePtr.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.MatureElementUuid] = elementToSwapOut
+	currentTestCasePtr.TestCaseModelMap[previousElement.MatureTestCaseModelElementMessage.MatureElementUuid] = previousElement
 
 	// Add new Bonds to TestCase Element Model
-	currentTestCase.TestCaseModelMap[newB12Bond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+	currentTestCasePtr.TestCaseModelMap[newB12Bond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
 		MatureTestCaseModelElementMessage:  newB12Bond,
 		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
 	}
@@ -390,7 +434,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	// Add 'matureElementToSwapIn' to TestCase Element Model
 	for elementUuid, element := range matureElementToSwapIn.MatureElementMap {
 
-		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
+		elementToBeAdded := currentTestCasePtr.TestCaseModelMap[elementUuid]
 		elementToBeAdded.MatureTestCaseModelElementMessage = element
 
 		/*
@@ -407,14 +451,14 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
 		}
 
-		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
+		currentTestCasePtr.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
 
 	// If there are no errors then save the TestCase back into map of all TestCasesMapPtr
-	if err == nil {
-		commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCase
-	}
+	//if err == nil {
+	//	commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
+	//}
 
 	return matureElementToSwapIn, err
 }
@@ -425,6 +469,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 //	n=TIC or TIC(X)		B12					n		X-B12-X							X-B12-n-B12-X			TCRuleSwap105
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap105(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
 
+	var existsInMap bool
+
 	matureElementToSwapIn, err = commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap105)
 
 	// Couldn't convert immature element component into mature element component
@@ -432,7 +478,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 
@@ -440,9 +492,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	}
 
 	// Extract parent-TIC to element to swap out
-	elementToSwapOut, _ := currentTestCase.TestCaseModelMap[uuidToSwapOut]
+	elementToSwapOut, _ := currentTestCasePtr.TestCaseModelMap[uuidToSwapOut]
 	parentElementUuid := elementToSwapOut.MatureTestCaseModelElementMessage.ParentElementUuid
-	previousElement := currentTestCase.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.PreviousElementUuid]
+	previousElement := currentTestCasePtr.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.PreviousElementUuid]
 
 	// Create the new Bonds
 	newB12Bond := commandAndRuleEngine.createNewBondB12Element(parentElementUuid)
@@ -466,11 +518,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	matureElementToSwapIn.MatureElementMap[topElementInModelToBeSwappedIn.MatureElementUuid] = topElementInModelToBeSwappedIn
 
 	// Update elements in TestCaseModel
-	currentTestCase.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.MatureElementUuid] = elementToSwapOut
-	currentTestCase.TestCaseModelMap[previousElement.MatureTestCaseModelElementMessage.MatureElementUuid] = previousElement
+	currentTestCasePtr.TestCaseModelMap[elementToSwapOut.MatureTestCaseModelElementMessage.MatureElementUuid] = elementToSwapOut
+	currentTestCasePtr.TestCaseModelMap[previousElement.MatureTestCaseModelElementMessage.MatureElementUuid] = previousElement
 
 	// Add new Bonds to TestCase Element Model
-	currentTestCase.TestCaseModelMap[newB12Bond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+	currentTestCasePtr.TestCaseModelMap[newB12Bond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
 		MatureTestCaseModelElementMessage:  newB12Bond,
 		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
 	}
@@ -478,7 +530,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	// Add 'matureElementToSwapIn' to TestCase Element Model
 	for elementUuid, element := range matureElementToSwapIn.MatureElementMap {
 
-		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
+		elementToBeAdded := currentTestCasePtr.TestCaseModelMap[elementUuid]
 		elementToBeAdded.MatureTestCaseModelElementMessage = element
 
 		/*
@@ -495,14 +547,14 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
 		}
 
-		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
+		currentTestCasePtr.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
 
 	// If there are no errors then save the TestCase back into map of all TestCasesMapPtr
-	if err == nil {
-		commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCase
-	}
+	//if err == nil {
+	//	commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
+	//}
 
 	return matureElementToSwapIn, err
 }
@@ -513,6 +565,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 //	n=TIC or TIC(X)		B10x*				n		TIC(B10*x*)						TIC(B11x-n-B11x)		TCRuleSwap106
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap106(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
 
+	var existsInMap bool
+
 	matureElementToSwapIn, err = commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap106)
 
 	// Couldn't convert immature element component into mature element component
@@ -520,7 +574,13 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 
@@ -528,9 +588,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	}
 
 	// Extract parent-TIC to element to swap out
-	elementToSwapOut, _ := currentTestCase.TestCaseModelMap[uuidToSwapOut]
+	elementToSwapOut, _ := currentTestCasePtr.TestCaseModelMap[uuidToSwapOut]
 	parentElementUuid := elementToSwapOut.MatureTestCaseModelElementMessage.ParentElementUuid
-	parentElement := currentTestCase.TestCaseModelMap[parentElementUuid]
+	parentElement := currentTestCasePtr.TestCaseModelMap[parentElementUuid]
 
 	// Create the Bonds connecting the TIC
 	newPreviousB11fxBond := commandAndRuleEngine.createNewBondB11fxElement(parentElementUuid)
@@ -555,15 +615,15 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	parentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid = newPreviousB11fxBond.MatureElementUuid
 
 	// Save updated parent element back to TestCase model
-	currentTestCase.TestCaseModelMap[parentElementUuid] = parentElement
+	currentTestCasePtr.TestCaseModelMap[parentElementUuid] = parentElement
 
 	// Add new Bonds to TestCase Element Model
-	currentTestCase.TestCaseModelMap[newPreviousB11fxBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+	currentTestCasePtr.TestCaseModelMap[newPreviousB11fxBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
 		MatureTestCaseModelElementMessage:  newPreviousB11fxBond,
 		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
 	}
 
-	currentTestCase.TestCaseModelMap[newNextB11lxBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+	currentTestCasePtr.TestCaseModelMap[newNextB11lxBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
 		MatureTestCaseModelElementMessage:  newNextB11lxBond,
 		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
 	}
@@ -571,7 +631,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	// Add 'matureElementToSwapIn' to TestCase Element Model
 	for elementUuid, element := range matureElementToSwapIn.MatureElementMap {
 
-		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
+		elementToBeAdded := currentTestCasePtr.TestCaseModelMap[elementUuid]
 		elementToBeAdded.MatureTestCaseModelElementMessage = element
 
 		/*
@@ -588,17 +648,17 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
 		}
 
-		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
+		currentTestCasePtr.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
 
 	// If there are no errors then save the TestCase back into map of all TestCasesMapPtr
-	if err == nil {
-		commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCase
-	}
+	//if err == nil {
+	//	commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
+	//}
 
 	// Delete old element to be swapped out
-	delete(currentTestCase.TestCaseModelMap, uuidToSwapOut)
+	delete(currentTestCasePtr.TestCaseModelMap, uuidToSwapOut)
 
 	return matureElementToSwapIn, err
 }
@@ -609,6 +669,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 //	n=TIC or TIC(X)		B10*x				n		TIC(B10*x)						TIC(B11x-n-B11)			TCRuleSwap107
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap107(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
 
+	var existsInMap bool
+
 	matureElementToSwapIn, err = commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap107)
 
 	// Couldn't convert immature element component into mature element component
@@ -616,7 +678,14 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 
@@ -624,9 +693,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	}
 
 	// Extract parent-TIC to element to swap out
-	elementToSwapOut, _ := currentTestCase.TestCaseModelMap[uuidToSwapOut]
+	elementToSwapOut, _ := currentTestCasePtr.TestCaseModelMap[uuidToSwapOut]
 	parentElementUuid := elementToSwapOut.MatureTestCaseModelElementMessage.ParentElementUuid
-	parentElement := currentTestCase.TestCaseModelMap[parentElementUuid]
+	parentElement := currentTestCasePtr.TestCaseModelMap[parentElementUuid]
 
 	// Create the Bonds connecting the TIC
 	newPreviousB11fxBond := commandAndRuleEngine.createNewBondB11fxElement(parentElementUuid)
@@ -651,15 +720,15 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	parentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid = newPreviousB11fxBond.MatureElementUuid
 
 	// Save updated parent element back to TestCase model
-	currentTestCase.TestCaseModelMap[parentElementUuid] = parentElement
+	currentTestCasePtr.TestCaseModelMap[parentElementUuid] = parentElement
 
 	// Add new Bonds to TestCase Element Model
-	currentTestCase.TestCaseModelMap[newPreviousB11fxBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+	currentTestCasePtr.TestCaseModelMap[newPreviousB11fxBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
 		MatureTestCaseModelElementMessage:  newPreviousB11fxBond,
 		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
 	}
 
-	currentTestCase.TestCaseModelMap[newNextB11lBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+	currentTestCasePtr.TestCaseModelMap[newNextB11lBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
 		MatureTestCaseModelElementMessage:  newNextB11lBond,
 		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
 	}
@@ -667,7 +736,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	// Add 'matureElementToSwapIn' to TestCase Element Model
 	for elementUuid, element := range matureElementToSwapIn.MatureElementMap {
 
-		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
+		elementToBeAdded := currentTestCasePtr.TestCaseModelMap[elementUuid]
 		elementToBeAdded.MatureTestCaseModelElementMessage = element
 
 		/*
@@ -684,17 +753,17 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
 		}
 
-		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
+		currentTestCasePtr.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
 
 	// Delete old element to be swapped out
-	delete(currentTestCase.TestCaseModelMap, uuidToSwapOut)
+	delete(currentTestCasePtr.TestCaseModelMap, uuidToSwapOut)
 
 	// If there are no errors then save the TestCase back into map of all TestCasesMapPtr
-	if err == nil {
-		commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCase
-	}
+	//if err == nil {
+	//	commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
+	//}
 
 	return matureElementToSwapIn, err
 }
@@ -705,6 +774,8 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 //	n=TIC or TIC(X)		B10x*				n		TIC(B10x*)						TIC(B11-n-B11x)			TCRuleSwap108
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap108(testCaseUuid string, uuidToSwapOut string, immatureElementToSwapIn *testCaseModel.ImmatureElementStruct) (matureElementToSwapIn testCaseModel.MatureElementStruct, err error) {
 
+	var existsInMap bool
+
 	matureElementToSwapIn, err = commandAndRuleEngine.verifySwapRuleAndConvertIntoMatureComponentElementModel(testCaseUuid, uuidToSwapOut, immatureElementToSwapIn, TCRuleSwap108)
 
 	// Couldn't convert immature element component into mature element component
@@ -712,7 +783,14 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 		return testCaseModel.MatureElementStruct{}, err
 	}
 
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 		err = errors.New("testcase with uuid '" + testCaseUuid + "' doesn't exist in map with all Testcases")
 
@@ -720,9 +798,9 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	}
 
 	// Extract parent-TIC to element to swap out
-	elementToSwapOut, _ := currentTestCase.TestCaseModelMap[uuidToSwapOut]
+	elementToSwapOut, _ := currentTestCasePtr.TestCaseModelMap[uuidToSwapOut]
 	parentElementUuid := elementToSwapOut.MatureTestCaseModelElementMessage.ParentElementUuid
-	parentElement := currentTestCase.TestCaseModelMap[parentElementUuid]
+	parentElement := currentTestCasePtr.TestCaseModelMap[parentElementUuid]
 
 	// Create the Bonds connecting the TIC
 	newPreviousB11fBond := commandAndRuleEngine.createNewBondB11fElement(parentElementUuid)
@@ -747,14 +825,14 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	parentElement.MatureTestCaseModelElementMessage.FirstChildElementUuid = newPreviousB11fBond.MatureElementUuid
 
 	// Save updated parent element back to TestCase model
-	currentTestCase.TestCaseModelMap[parentElementUuid] = parentElement
+	currentTestCasePtr.TestCaseModelMap[parentElementUuid] = parentElement
 
 	// Add new Bonds to TestCase Element Model
-	currentTestCase.TestCaseModelMap[newPreviousB11fBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+	currentTestCasePtr.TestCaseModelMap[newPreviousB11fBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
 		MatureTestCaseModelElementMessage:  newPreviousB11fBond,
 		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
 	}
-	currentTestCase.TestCaseModelMap[newNextB11lxBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
+	currentTestCasePtr.TestCaseModelMap[newNextB11lxBond.MatureElementUuid] = testCaseModel.MatureTestCaseModelElementStruct{
 		MatureTestCaseModelElementMessage:  newNextB11lxBond,
 		MatureTestCaseModelElementMetaData: testCaseModel.MatureTestCaseModelElementMetaDataStruct{},
 	}
@@ -762,7 +840,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 	// Add 'matureElementToSwapIn' to TestCase Element Model
 	for elementUuid, element := range matureElementToSwapIn.MatureElementMap {
 
-		elementToBeAdded := currentTestCase.TestCaseModelMap[elementUuid]
+		elementToBeAdded := currentTestCasePtr.TestCaseModelMap[elementUuid]
 		elementToBeAdded.MatureTestCaseModelElementMessage = element
 
 		/*
@@ -779,17 +857,17 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeTCRuleSwap1
 			elementToBeAdded.MatureTestCaseModelElementMetaData.ChosenDropZoneColorString = matureElementToSwapIn.ChosenDropZoneColor
 		}
 
-		currentTestCase.TestCaseModelMap[elementUuid] = elementToBeAdded
+		currentTestCasePtr.TestCaseModelMap[elementUuid] = elementToBeAdded
 
 	}
 
 	// Delete old element to be swapped out
-	delete(currentTestCase.TestCaseModelMap, uuidToSwapOut)
+	delete(currentTestCasePtr.TestCaseModelMap, uuidToSwapOut)
 
 	// If there are no errors then save the TestCase back into map of all TestCasesMapPtr
-	if err == nil {
-		commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCase
-	}
+	//if err == nil {
+	//	commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
+	//}
 
 	return matureElementToSwapIn, err
 }

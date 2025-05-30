@@ -1,6 +1,7 @@
 package commandAndRuleEngine
 
 import (
+	"FenixTesterGui/testCase/testCaseModel"
 	"errors"
 	"fmt"
 )
@@ -8,8 +9,17 @@ import (
 // Verify if an element can be swapped for copy Buffer or not, regarding swap rules
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCanBeSwappedForCopyBuffer(testCaseUuid string, elementUuid string) (canBeSwapped bool, matchedSimpledRule string, matchedComplexRule string, err error) {
 
+	var existsInMap bool
+
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "0b058d20-5ce3-4da7-b9cf-c71c47b5f72d"
@@ -19,7 +29,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCan
 	}
 
 	// Verify that there are anything in Copy Buffer, use First Element as a proxy
-	if currentTestCase.CopyBuffer.FirstElementUuid == "" {
+	if currentTestCasePtr.CopyBuffer.FirstElementUuid == "" {
 
 		errorId := "cdb36ada-03c6-4dbb-be4b-4617cfd4f383"
 		err = errors.New(fmt.Sprintf("there is no content in Copy Buffer for TestCase '%s' [ErrorID: %s]", testCaseUuid, errorId))
@@ -37,11 +47,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCan
 	}
 
 	// Get ElementType for first element in Copy Buffer
-	elementToBeSwappedIn, existsInMap := currentTestCase.CopyBuffer.ImmatureElementMap[currentTestCase.CopyBuffer.FirstElementUuid]
+	elementToBeSwappedIn, existsInMap := currentTestCasePtr.CopyBuffer.ImmatureElementMap[currentTestCasePtr.CopyBuffer.FirstElementUuid]
 	if existsInMap == false {
 
 		errorId := "52d593c3-ad7a-448d-b301-87fdedcf96b0"
-		err = errors.New(fmt.Sprintf("element referenced by first element ('%s')  doesn't exist in element-map for CopyBuffer in TestCase '%s' [ErrorID: %s]", currentTestCase.CopyBuffer.FirstElementUuid, testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("element referenced by first element ('%s')  doesn't exist in element-map for CopyBuffer in TestCase '%s' [ErrorID: %s]", currentTestCasePtr.CopyBuffer.FirstElementUuid, testCaseUuid, errorId))
 
 		return false, "", "", err
 	}
@@ -57,8 +67,17 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) verifyIfElementCan
 // Swap an element for content in Copy Buffer, but first ensure that rules for swapping are used
 func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElementForCopyBuffer(testCaseUuid string, elementToSwapOutUuid string) (err error) {
 
+	var existsInMap bool
+
 	// Get current TestCase
-	currentTestCase, existsInMap := commandAndRuleEngine.Testcases.TestCasesMapPtr[testCaseUuid]
+	// Get TestCasesMap
+	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
+	testCasesMap = *commandAndRuleEngine.Testcases.TestCasesMapPtr
+
+	// Get current TestCase
+	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
+	currentTestCasePtr, existsInMap = testCasesMap[testCaseUuid]
+
 	if existsInMap == false {
 
 		errorId := "91de8132-1950-41be-b567-12fe388b0440"
@@ -68,7 +87,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElement
 	}
 
 	// Verify that there are anything in Copy Buffer, use First Element as a proxy
-	if currentTestCase.CopyBuffer.FirstElementUuid == "" {
+	if currentTestCasePtr.CopyBuffer.FirstElementUuid == "" {
 
 		errorId := "fc59e5d6-880e-42e7-b7a9-0b221a00825b"
 		err = errors.New(fmt.Sprintf("there is no content in Copy Buffer for TestCase '%s' [ErrorID: %s]", testCaseUuid, errorId))
@@ -77,11 +96,11 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElement
 	}
 
 	// Get ElementType for first element in Copy Buffer
-	elementToBeSwappedIn, existsInMap := currentTestCase.CopyBuffer.ImmatureElementMap[currentTestCase.CopyBuffer.FirstElementUuid]
+	elementToBeSwappedIn, existsInMap := currentTestCasePtr.CopyBuffer.ImmatureElementMap[currentTestCasePtr.CopyBuffer.FirstElementUuid]
 	if existsInMap == false {
 
 		errorId := "52d593c3-ad7a-448d-b301-87fdedcf96b0"
-		err = errors.New(fmt.Sprintf("element referenced by first element ('%s')  doesn't exist in element-map for CopyBuffer in TestCase '%s' [ErrorID: %s]", currentTestCase.CopyBuffer.FirstElementUuid, testCaseUuid, errorId))
+		err = errors.New(fmt.Sprintf("element referenced by first element ('%s')  doesn't exist in element-map for CopyBuffer in TestCase '%s' [ErrorID: %s]", currentTestCasePtr.CopyBuffer.FirstElementUuid, testCaseUuid, errorId))
 
 		return err
 	}
@@ -104,7 +123,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) executeSwapElement
 	}
 
 	// Extract element from Copy Buffer
-	immatureElementToSwapInFromCopyBuffer := currentTestCase.CopyBuffer
+	immatureElementToSwapInFromCopyBuffer := currentTestCasePtr.CopyBuffer
 
 	// Execute swap out element for copy buffer content
 	err = commandAndRuleEngine.executeSwapElementBasedOnRule(testCaseUuid, elementToSwapOutUuid, &immatureElementToSwapInFromCopyBuffer, matchedComplexRule)

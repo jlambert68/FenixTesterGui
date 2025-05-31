@@ -5,9 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"image/color"
 	"log"
 )
 
@@ -218,7 +220,17 @@ func buildGUIFromMetaDataGroupsMap(
 
 			// Create correct widget depending on if the item is SingleSelect or MultiSelect
 			switch metaDataItem.SelectType {
+
 			case testCaseModel.MetaDataSelectType_SingleSelect:
+
+				var valueIsValidWarningBox *canvas.Rectangle
+
+				// Generate Warnings-rectangle for valid value, or that value exist
+				//var valueIsValidWarningBox *canvas.Rectangle
+				var colorToUse color.NRGBA
+				colorToUse = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+				valueIsValidWarningBox = canvas.NewRectangle(colorToUse)
+
 				sel := widget.NewSelect(metaDataItem.AvailableMetaDataValues, func(val string) {
 
 					//fmt.Printf("Selected %q for %s\n", val, metaDataItem.MetaDataName)
@@ -380,6 +392,13 @@ func buildGUIFromMetaDataGroupsMap(
 					testCasePtr.TestCaseMetaDataPtr = metaDataGroupInTestCasePtr
 					//testCasesModelReference.TestCasesMapPtr[testCaseUuid] = testCasePtr
 
+					// Set Warning box that value is not selected
+					if len(val) == 0 && metaDataItem.Mandatory == true {
+						valueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+					} else {
+						valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
+					}
+
 				})
 				// Extract Selected values from TestCase
 				var selectedValue string
@@ -398,21 +417,41 @@ func buildGUIFromMetaDataGroupsMap(
 					sel.SetSelected(selectedValue)
 				}
 
+				// Create a custom SelectComboBox, with valueIsValidWarningBox
+				var customSelectComboBox *customAttributeSelectComboBox
+				customSelectComboBox = newCustomAttributeSelectComboBoxWidget(sel, valueIsValidWarningBox)
+
 				// wrap in a 1-cell grid to force width
 				w := calcSelectWidth(metaDataItem.AvailableMetaDataValues)
 				wrapper := container.New(
 					layout.NewGridWrapLayout(fyne.NewSize(w, sel.MinSize().Height)),
-					sel,
+					customSelectComboBox,
 				)
+
+				// Set Warning box that value is not selected
+				if len(customSelectComboBox.selectComboBox.Selected) == 0 && metaDataItem.Mandatory == true {
+					valueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+				} else {
+					valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
+				}
 
 				metaDataItemsAsCanvasObject = append(metaDataItemsAsCanvasObject,
 					container.NewVBox(
-						widget.NewLabel(label),
+						widget.NewLabel("   "+label),
 						wrapper,
 					),
 				)
 
 			case testCaseModel.MetaDataSelectType_MultiSelect:
+
+				var valueIsValidWarningBox *canvas.Rectangle
+
+				// Generate Warnings-rectangle for valid value, or that value exist
+				//var valueIsValidWarningBox *canvas.Rectangle
+				var colorToUse color.NRGBA
+				colorToUse = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+				valueIsValidWarningBox = canvas.NewRectangle(colorToUse)
+
 				var chk *widget.CheckGroup
 				chk = widget.NewCheckGroup(metaDataItem.AvailableMetaDataValues, func(vals []string) {
 
@@ -621,6 +660,13 @@ func buildGUIFromMetaDataGroupsMap(
 					testCasePtr.TestCaseMetaDataPtr = metaDataGroupInTestCasePtr
 					//testCasesModelReference.TestCasesMapPtr[testCaseUuid] = testCasePtr
 
+					// Set Warning box that value is not selected
+					if len(vals) == 0 && metaDataItem.Mandatory == true {
+						valueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+					} else {
+						valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
+					}
+
 				})
 
 				// Extract Selected values from TestCase
@@ -637,15 +683,26 @@ func buildGUIFromMetaDataGroupsMap(
 				chk.Selected = append([]string(nil), selectedValues...)
 				chk.Refresh()
 
+				// Create a custom SelectComboBox, with valueIsValidWarningBox
+				var customCheckBoxGroup *customAttributeCheckBoxGroup
+				customCheckBoxGroup = newCustomAttributeCheckBoxGroupWidget(chk, valueIsValidWarningBox)
+
 				w := calcCheckGroupWidth(metaDataItem.AvailableMetaDataValues)
 				wrapper := container.New(
 					layout.NewGridWrapLayout(fyne.NewSize(w, chk.MinSize().Height)),
-					chk,
+					customCheckBoxGroup,
 				)
+
+				// Set Warning box that value is not selected
+				if len(customCheckBoxGroup.checkBoxGroup.Selected) == 0 && metaDataItem.Mandatory == true {
+					valueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+				} else {
+					valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
+				}
 
 				metaDataItemsAsCanvasObject = append(metaDataItemsAsCanvasObject,
 					container.NewVBox(
-						widget.NewLabel(label),
+						widget.NewLabel("   "+label),
 						wrapper,
 					),
 				)

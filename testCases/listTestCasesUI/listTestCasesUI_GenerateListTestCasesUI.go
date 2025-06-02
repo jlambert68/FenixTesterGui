@@ -155,10 +155,14 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 		"PreView",
 		testCasePreviewContainerScroll)
 
+	// Generate the 'GenerateTestCaseMetaDataFilterContainer'
+	var simpleAndAdvancedMetaDataFilter *container.AppTabs
+	simpleAndAdvancedMetaDataFilter = GenerateTestCaseMetaDataFilterContainer(testCasesModel)
+
 	// Generate Tab for TestCase-filter
 	filterTab = container.NewTabItem(
 		"TestCase-filter",
-		widget.NewLabel("Filter TestCasesMap"))
+		simpleAndAdvancedMetaDataFilter)
 
 	// Generate the AppTabsContainer
 	preViewAndFilterTabs = container.NewAppTabs(filterTab, preViewTab)

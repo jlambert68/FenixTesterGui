@@ -420,8 +420,8 @@ func buildGUIFromMetaDataGroupsMap(
 				// Resize the DropDown
 
 				// Create a custom SelectComboBox, with valueIsValidWarningBox
-				var customSelectComboBox *customAttributeSelectComboBox
-				customSelectComboBox = newCustomAttributeSelectComboBoxWidget(sel, valueIsValidWarningBox)
+				var customSelectComboBox *CustomAttributeSelectComboBox
+				customSelectComboBox = NewCustomAttributeSelectComboBoxWidget(sel, valueIsValidWarningBox)
 
 				// wrap in a 1-cell grid to force width
 				w := calcSelectWidth(metaDataItem.AvailableMetaDataValues)

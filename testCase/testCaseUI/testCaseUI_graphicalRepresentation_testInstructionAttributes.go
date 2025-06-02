@@ -644,8 +644,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 
 		// Create a custom SelectComboBox to use
 		// Create a custom TextBoxEntry to use
-		var customSelectComboBox *customAttributeSelectComboBox
-		customSelectComboBox = newCustomAttributeSelectComboBoxWidget(newAttributeSelect, attributeItem.AttributeValueIsValidWarningBox)
+		var customSelectComboBox *CustomAttributeSelectComboBox
+		customSelectComboBox = NewCustomAttributeSelectComboBoxWidget(newAttributeSelect, attributeItem.AttributeValueIsValidWarningBox)
 
 		// Add the attribute HBox-container to the 'attributesFormContainer'
 		attributesFormContainer.Add(customSelectComboBox)
@@ -841,8 +841,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateAttributeRow(
 
 		// Create a custom SelectComboBox to use
 		// Create a custom TextBoxEntry to use
-		var customSelectComboBox *customAttributeSelectComboBox
-		customSelectComboBox = newCustomAttributeSelectComboBoxWidget(newAttributeSelect, attributeItem.AttributeValueIsValidWarningBox)
+		var customSelectComboBox *CustomAttributeSelectComboBox
+		customSelectComboBox = NewCustomAttributeSelectComboBoxWidget(newAttributeSelect, attributeItem.AttributeValueIsValidWarningBox)
 
 		// Add the attribute HBox-container to the 'attributesFormContainer'
 		attributesFormContainer.Add(customSelectComboBox)

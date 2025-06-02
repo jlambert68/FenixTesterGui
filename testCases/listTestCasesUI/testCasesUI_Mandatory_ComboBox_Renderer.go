@@ -1,4 +1,4 @@
-package testCaseUI
+package listTestCasesUI
 
 import (
 	"fyne.io/fyne/v2"
@@ -7,16 +7,16 @@ import (
 	"image/color"
 )
 
-type CustomAttributeSelectComboBox struct {
+type customMandatorySelectComboBox struct {
 	widget.BaseWidget
 	rectangle      *canvas.Rectangle
 	selectComboBox *widget.Select
 }
 
-func NewCustomAttributeSelectComboBoxWidget(
+func newCustomMandatorySelectComboBoxWidget(
 	newSelect *widget.Select,
-	attributeValueIsValidWarningBox *canvas.Rectangle) *CustomAttributeSelectComboBox {
-	w := &CustomAttributeSelectComboBox{}
+	attributeValueIsValidWarningBox *canvas.Rectangle) *customMandatorySelectComboBox {
+	w := &customMandatorySelectComboBox{}
 
 	tempEntry := widget.NewSelect([]string{"Hallo"}, func(s string) {})
 
@@ -28,26 +28,26 @@ func NewCustomAttributeSelectComboBoxWidget(
 	return w
 }
 
-func (w *CustomAttributeSelectComboBox) CreateRenderer() fyne.WidgetRenderer {
-	return &customAttributeSelectComboBoxRenderer{
+func (w *customMandatorySelectComboBox) CreateRenderer() fyne.WidgetRenderer {
+	return &customMandatorySelectComboBoxRenderer{
 		widget:         w,
 		rectangle:      w.rectangle,
 		selectComboBox: w.selectComboBox,
 	}
 }
 
-type customAttributeSelectComboBoxRenderer struct {
-	widget         *CustomAttributeSelectComboBox
+type customMandatorySelectComboBoxRenderer struct {
+	widget         *customMandatorySelectComboBox
 	rectangle      *canvas.Rectangle
 	selectComboBox *widget.Select
 }
 
-func (r *customAttributeSelectComboBoxRenderer) MinSize() fyne.Size {
+func (r *customMandatorySelectComboBoxRenderer) MinSize() fyne.Size {
 	return fyne.NewSize(r.rectangle.MinSize().Width+r.selectComboBox.MinSize().Width,
 		fyne.Max(r.rectangle.MinSize().Height, r.selectComboBox.MinSize().Height))
 }
 
-func (r *customAttributeSelectComboBoxRenderer) Layout(size fyne.Size) {
+func (r *customMandatorySelectComboBoxRenderer) Layout(size fyne.Size) {
 	r.rectangle.Resize(fyne.NewSize(r.rectangle.MinSize().Width, size.Height))
 	r.rectangle.Move(fyne.NewPos(0, 0))
 
@@ -56,16 +56,16 @@ func (r *customAttributeSelectComboBoxRenderer) Layout(size fyne.Size) {
 	r.selectComboBox.Move(fyne.NewPos(r.rectangle.Size().Width, 0))
 }
 
-func (r *customAttributeSelectComboBoxRenderer) Refresh() {
+func (r *customMandatorySelectComboBoxRenderer) Refresh() {
 	canvas.Refresh(r.widget)
 }
 
-func (r *customAttributeSelectComboBoxRenderer) BackgroundColor() color.Color {
+func (r *customMandatorySelectComboBoxRenderer) BackgroundColor() color.Color {
 	return color.Transparent
 }
 
-func (r *customAttributeSelectComboBoxRenderer) Objects() []fyne.CanvasObject {
+func (r *customMandatorySelectComboBoxRenderer) Objects() []fyne.CanvasObject {
 	return []fyne.CanvasObject{r.rectangle, r.selectComboBox}
 }
 
-func (r *customAttributeSelectComboBoxRenderer) Destroy() {}
+func (r *customMandatorySelectComboBoxRenderer) Destroy() {}

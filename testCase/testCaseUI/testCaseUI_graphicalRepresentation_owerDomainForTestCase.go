@@ -186,8 +186,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 	*/
 
 	// Create a custom SelectComboBox, with valueIsValidWarningBox
-	var customSelectComboBox *customAttributeSelectComboBox
-	customSelectComboBox = newCustomAttributeSelectComboBoxWidget(newOwnerDomainSelect, valueIsValidWarningBox)
+	var customSelectComboBox *CustomAttributeSelectComboBox
+	customSelectComboBox = NewCustomAttributeSelectComboBoxWidget(newOwnerDomainSelect, valueIsValidWarningBox)
 
 	// Add the Entry-widget to the Forms-container
 	testCaseOwnerDomainNameFormContainer.Add(customSelectComboBox)

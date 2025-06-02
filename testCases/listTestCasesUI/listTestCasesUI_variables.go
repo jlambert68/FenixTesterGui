@@ -55,6 +55,10 @@ const testCaseNodeRectangleSize = 40
 var testCasePreviewContainerScroll *container.Scroll
 var testCasePreviewContainer *fyne.Container
 
+var preViewAndFilterTabs *container.AppTabs
+var preViewTab *container.TabItem
+var filterTab *container.TabItem
+
 // The Split container have both the TestCase-list and the Preview-container in it
 var TestCaseListAndTestCasePreviewSplitContainer *container.Split
 

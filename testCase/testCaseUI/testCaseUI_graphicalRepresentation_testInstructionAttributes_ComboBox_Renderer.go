@@ -51,8 +51,8 @@ func (r *customAttributeSelectComboBoxRenderer) Layout(size fyne.Size) {
 	r.rectangle.Resize(fyne.NewSize(r.rectangle.MinSize().Width, size.Height))
 	r.rectangle.Move(fyne.NewPos(0, 0))
 
-	entrySize := fyne.NewSize(size.Width-r.rectangle.Size().Width, size.Height)
-	r.selectComboBox.Resize(entrySize)
+	selectComboBoxSize := fyne.NewSize(size.Width-r.rectangle.Size().Width, size.Height)
+	r.selectComboBox.Resize(selectComboBoxSize)
 	r.selectComboBox.Move(fyne.NewPos(r.rectangle.Size().Width, 0))
 }
 

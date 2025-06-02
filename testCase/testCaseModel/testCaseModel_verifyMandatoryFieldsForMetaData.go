@@ -10,7 +10,8 @@ import (
 // Validates that all mandatory MetaData fields has values for specified DomainUuid
 func (testCaseModel *TestCasesModelsStruct) verifyMandatoryFieldsForMetaData(
 	domainUuid string,
-	currentTestCasePtr *TestCaseModelStruct) (err error) {
+	currentTestCasePtr *TestCaseModelStruct,
+	shouldBeSaved bool) (err error) {
 
 	var mandatoryMetaDataFieldsMapKey string
 
@@ -21,51 +22,55 @@ func (testCaseModel *TestCasesModelsStruct) verifyMandatoryFieldsForMetaData(
 	mandatoryMetaDataFieldsMap = testCaseModel.generateMandatoryMetaDataFieldsMap(domainUuid)
 
 	// Ensure that there are MetaData selected by the user, to be able to loop it
-	if currentTestCasePtr.TestCaseMetaDataPtr != nil &&
-		*currentTestCasePtr.TestCaseMetaDataPtr.MetaDataGroupsMapPtr != nil {
+	if currentTestCasePtr.TestCaseMetaDataPtr != nil {
 
-		// Loop Users selected MetaData-parameters
-		for metaDataGroupName, metaDataGroupPtr := range *currentTestCasePtr.TestCaseMetaDataPtr.MetaDataGroupsMapPtr {
+		var tempTestCaseMetaData TestCaseMetaDataStruct
+		tempTestCaseMetaData = *currentTestCasePtr.TestCaseMetaDataPtr
 
-			// Loop all MetaDataGroupItems for the MetaDataGroup
-			for metaDataGroupItemName, tempMetaDataInGroupPtr := range *metaDataGroupPtr.MetaDataInGroupMapPtr {
+		if tempTestCaseMetaData.MetaDataGroupsMapPtr != nil {
 
-				mandatoryMetaDataFieldsMapKey = ""
+			// Loop Users selected MetaData-parameters
+			for metaDataGroupName, metaDataGroupPtr := range *currentTestCasePtr.TestCaseMetaDataPtr.MetaDataGroupsMapPtr {
 
-				switch tempMetaDataInGroupPtr.SelectType {
-				case MetaDataSelectType_SingleSelect:
-					if len(tempMetaDataInGroupPtr.SelectedMetaDataValueForSingleSelect) > 0 {
-						// Create map-key to be able to 'remove' from 'metaDataGroupItemName'.
-						// Is done to be able to find if some MetaDataItems was missed by the user
-						mandatoryMetaDataFieldsMapKey = fmt.Sprintf("%s-%s",
-							metaDataGroupName,
-							metaDataGroupItemName)
+				// Loop all MetaDataGroupItems for the MetaDataGroup
+				for metaDataGroupItemName, tempMetaDataInGroupPtr := range *metaDataGroupPtr.MetaDataInGroupMapPtr {
+
+					mandatoryMetaDataFieldsMapKey = ""
+
+					switch tempMetaDataInGroupPtr.SelectType {
+					case MetaDataSelectType_SingleSelect:
+						if len(tempMetaDataInGroupPtr.SelectedMetaDataValueForSingleSelect) > 0 {
+							// Create map-key to be able to 'remove' from 'metaDataGroupItemName'.
+							// Is done to be able to find if some MetaDataItems was missed by the user
+							mandatoryMetaDataFieldsMapKey = fmt.Sprintf("%s-%s",
+								metaDataGroupName,
+								metaDataGroupItemName)
+						}
+
+					case MetaDataSelectType_MultiSelect:
+						if len(tempMetaDataInGroupPtr.SelectedMetaDataValuesForMultiSelect) > 0 {
+							// Create map-key to be able to 'remove' from 'metaDataGroupItemName'.
+							// Is done to be able to find if some MetaDataItems was missed by the user
+							mandatoryMetaDataFieldsMapKey = fmt.Sprintf("%s-%s",
+								metaDataGroupName,
+								metaDataGroupItemName)
+						}
+
+					default:
+
+						errorId := "57f87a09-3287-4127-a478-0675c7606386"
+						log.Fatalln(fmt.Sprintf("MetaDataSelectType not implemented. [ErrorID: %s]", errorId))
 					}
 
-				case MetaDataSelectType_MultiSelect:
-					if len(tempMetaDataInGroupPtr.SelectedMetaDataValuesForMultiSelect) > 0 {
-						// Create map-key to be able to 'remove' from 'metaDataGroupItemName'.
-						// Is done to be able to find if some MetaDataItems was missed by the user
-						mandatoryMetaDataFieldsMapKey = fmt.Sprintf("%s-%s",
-							metaDataGroupName,
-							metaDataGroupItemName)
-					}
-
-				default:
-
-					errorId := "57f87a09-3287-4127-a478-0675c7606386"
-					log.Fatalln(fmt.Sprintf("MetaDataSelectType not implemented. [ErrorID: %s]", errorId))
+					// Try to Remove Key from 'metaDataGroupItemName'
+					delete(mandatoryMetaDataFieldsMap, mandatoryMetaDataFieldsMapKey)
 				}
-
-				// Try to Remove Key from 'metaDataGroupItemName'
-				delete(mandatoryMetaDataFieldsMap, mandatoryMetaDataFieldsMapKey)
-
 			}
 		}
 	}
 
 	// Check if there are any MetaDataItems left in the mandatory map, 'mandatoryMetaDataFieldsMap'
-	if len(mandatoryMetaDataFieldsMap) > 0 {
+	if len(mandatoryMetaDataFieldsMap) > 0 && shouldBeSaved == true {
 
 		err = fmt.Errorf("mandatory MetaDataFields are not set")
 

@@ -310,9 +310,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateNewTestCaseTabObj
 	newTestCaseTabObject := container.NewTabItem(tabName, testCaseAdaptiveSplitContainer)
 
 	// Add tab to existing Tab-object
-	//fyne.Do(func() {
-	testCasesUiCanvasObject.TestCasesTabs.Append(newTestCaseTabObject)
-	//})
+	fyne.Do(func() {
+		testCasesUiCanvasObject.TestCasesTabs.Append(newTestCaseTabObject)
+	})
+	//testCasesUiCanvasObject.TestCasesTabs.Append(newTestCaseTabObject)
 
 	testCasesUiCanvasObject.TestCasesTabs.OnSelected = func(tabItem *container.TabItem) {
 

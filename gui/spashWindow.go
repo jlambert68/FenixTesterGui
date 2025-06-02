@@ -67,9 +67,13 @@ func createSplashWindow(splashWindow *fyne.Window, splashWindowProlongedVisibleC
 		go func() {
 			var sleepTime time.Duration
 			sleepTime = <-splashWindowProlongedVisibleChannel
-			(*splashWindow).Show()
+			fyne.Do(func() {
+				(*splashWindow).Show()
+			})
 			time.Sleep(sleepTime)
-			(*splashWindow).Close()
+			fyne.Do(func() {
+				(*splashWindow).Close()
+			})
 
 		}()
 	}

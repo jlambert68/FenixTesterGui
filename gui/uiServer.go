@@ -515,7 +515,10 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	splashWindow.Show()
 	go func() {
 		time.Sleep(time.Millisecond * 500)
-		splashWindow.RequestFocus()
+		fyne.Do(func() {
+			splashWindow.RequestFocus()
+		})
+
 		splashWindowProlongedVisibleChannel <- time.Second * 6
 	}()
 	uiServer.fenixMasterWindow.RequestFocus()

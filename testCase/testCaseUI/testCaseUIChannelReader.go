@@ -148,7 +148,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) selectTestCaseTabBasedOnT
 func (testCasesUiCanvasObject *TestCasesUiModelStruct) updatedUpdateTestCaseTabName(incomingChannelCommandGraphicsUpdatedData sharedCode.ChannelCommandGraphicsUpdatedStruct) {
 
 	testCasesUiCanvasObject.TestCasesTabs.Selected().Text = incomingChannelCommandGraphicsUpdatedData.TestCaseTabName
-	testCasesUiCanvasObject.TestCasesTabs.Refresh()
+	fyne.Do(func() {
+		testCasesUiCanvasObject.TestCasesTabs.Refresh()
+	})
 
 }
 

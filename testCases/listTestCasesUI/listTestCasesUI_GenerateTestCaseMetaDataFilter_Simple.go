@@ -2,6 +2,7 @@ package listTestCasesUI
 
 import (
 	"FenixTesterGui/testCase/testCaseModel"
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
@@ -22,17 +23,25 @@ func generateSimpleTestCaseMetaDataFilterContainer(
 	var testCaseMetaDataDomainFilterTopContainer *fyne.Container
 	testCaseMetaDataDomainFilterTopContainer = generateSimpleTestCaseMetaDataDomainFilterTopContainer(testCasesModel)
 
+	// Generate the Bottom container, having buttons for Filter TestCases-list- and clear MetaData-s
+	var testCaseMetaDataDomainFilterBottomContainer *fyne.Container
+	testCaseMetaDataDomainFilterBottomContainer = generateSimpleTestCaseMetaDataDomainFilterBottomContainer(testCasesModel)
+
+	// Set selected Domain
+	simpleTestCaseMetaDataSelectedDomainUuid = ""
+	simpleTestCaseMetaDataSelectedDomainDisplayName = ""
+
 	// Generate the main MetaData-filter area
-	var testCaseMainAreaForMetaDataFilterContainer *fyne.Container
 	testCaseMainAreaForMetaDataFilterContainer = generateSimpleTestCaseMetaDataMainFilterContainer(
-		"",
+		simpleTestCaseMetaDataSelectedDomainUuid,
+		simpleTestCaseMetaDataSelectedDomainDisplayName,
 		testCasesModel)
 
 	// Generate the full MetaDataFilter-container
-	var testCaseFullMetaDataFilterContainer *fyne.Container
+
 	testCaseFullMetaDataFilterContainer = container.NewBorder(
 		testCaseMetaDataDomainFilterTopContainer,
-		nil,
+		testCaseMetaDataDomainFilterBottomContainer,
 		nil,
 		nil,
 		testCaseMainAreaForMetaDataFilterContainer)
@@ -50,8 +59,12 @@ func generateSimpleTestCaseMetaDataDomainFilterTopContainer(
 
 	// Load Domains that can own the TestCase into options-array
 	var options []string
+	var uuidForDomainThatCanOwnTheTestCaseMap map[string]string
+	uuidForDomainThatCanOwnTheTestCaseMap = make(map[string]string)
 	for _, tempDomainsThatCanOwnTheTestCase := range testCasesModel.DomainsThatCanOwnTheTestCaseMap {
 		options = append(options, tempDomainsThatCanOwnTheTestCase.DomainNameShownInGui)
+		uuidForDomainThatCanOwnTheTestCaseMap[tempDomainsThatCanOwnTheTestCase.DomainNameShownInGui] =
+			tempDomainsThatCanOwnTheTestCase.DomainUuid
 
 	}
 
@@ -85,12 +98,26 @@ func generateSimpleTestCaseMetaDataDomainFilterTopContainer(
 				valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
 			}
 
-			var simpleTestCaseMetaDataMainFilterContainer *fyne.Container
-			simpleTestCaseMetaDataMainFilterContainer = generateSimpleTestCaseMetaDataMainFilterContainer(
-				value,
+			// Set selected Domain
+			simpleTestCaseMetaDataSelectedDomainUuid = uuidForDomainThatCanOwnTheTestCaseMap[value]
+			simpleTestCaseMetaDataSelectedDomainDisplayName = value
+
+			var newSimpleTestCaseMetaDataMainFilterContainer *fyne.Container
+			newSimpleTestCaseMetaDataMainFilterContainer = generateSimpleTestCaseMetaDataMainFilterContainer(
+				simpleTestCaseMetaDataSelectedDomainUuid,
+				simpleTestCaseMetaDataSelectedDomainDisplayName,
 				testCasesModel)
 
-			simpleTestCaseMetaDataMainFilterContainer.Refresh()
+			// Remove old Main MetaData area when user change Domain
+			testCaseFullMetaDataFilterContainer.Remove(testCaseMainAreaForMetaDataFilterContainer)
+
+			// Add the new Main MetaData area when user change Domain
+			testCaseFullMetaDataFilterContainer.Add(newSimpleTestCaseMetaDataMainFilterContainer)
+
+			// Store 'newSimpleTestCaseMetaDataMainFilterContainer' in 'testCaseMainAreaForMetaDataFilterContainer'-variable
+			testCaseMainAreaForMetaDataFilterContainer = newSimpleTestCaseMetaDataMainFilterContainer
+
+			newSimpleTestCaseMetaDataMainFilterContainer.Refresh()
 
 		})
 
@@ -107,22 +134,73 @@ func generateSimpleTestCaseMetaDataDomainFilterTopContainer(
 	return testCaseOwnerDomainContainer
 }
 
+// Generates the bottom container having the Filter TestCases-list- and clear MetaData.selection
+func generateSimpleTestCaseMetaDataDomainFilterBottomContainer(
+	testCasesModel *testCaseModel.TestCasesModelsStruct) (simpleTestCaseMetaDataDomainFilterBottomContainer *fyne.Container) {
+
+	var filterTestCasesListButton *widget.Button
+	var clearMetaDataSelectionButton *widget.Button
+
+	// Create the Filter TestCases-list button
+	filterTestCasesListButton = widget.NewButton("Filter TestCases-list", func() {
+
+	})
+
+	// Create the Clear MetaData-selections button
+	clearMetaDataSelectionButton = widget.NewButton("Clear Selected MetaData values", func() {
+
+		var newSimpleTestCaseMetaDataMainFilterContainer *fyne.Container
+		newSimpleTestCaseMetaDataMainFilterContainer = generateSimpleTestCaseMetaDataMainFilterContainer(
+			simpleTestCaseMetaDataSelectedDomainUuid,
+			simpleTestCaseMetaDataSelectedDomainDisplayName,
+			testCasesModel)
+
+		// Remove old Main MetaData area when user change Domain
+		testCaseFullMetaDataFilterContainer.Remove(testCaseMainAreaForMetaDataFilterContainer)
+
+		// Add the new Main MetaData area when user change Domain
+		testCaseFullMetaDataFilterContainer.Add(newSimpleTestCaseMetaDataMainFilterContainer)
+
+		// Store 'newSimpleTestCaseMetaDataMainFilterContainer' in 'testCaseMainAreaForMetaDataFilterContainer'-variable
+		testCaseMainAreaForMetaDataFilterContainer = newSimpleTestCaseMetaDataMainFilterContainer
+
+		newSimpleTestCaseMetaDataMainFilterContainer.Refresh()
+	})
+
+	// Container having the Buttons
+	simpleTestCaseMetaDataDomainFilterBottomContainer = container.NewHBox(
+		filterTestCasesListButton,
+		clearMetaDataSelectionButton)
+
+	return simpleTestCaseMetaDataDomainFilterBottomContainer
+
+}
+
 // Generates the main container having all the MetaData-filters
 func generateSimpleTestCaseMetaDataMainFilterContainer(
 	domainUuidToGetMetaDataFor string,
+	domainNameToGetMetaDataFor string,
 	testCasesModel *testCaseModel.TestCasesModelsStruct) (metaDataFilterArea *fyne.Container) {
+	var existInMap bool
 
 	//
 	if len(domainUuidToGetMetaDataFor) > 0 {
 
+		// Check if there are any MetaData for the Domain
+		var testCaseMetaDataForDomainsForMapPtr *testCaseModel.TestCaseMetaDataForDomainsForMapStruct
+		testCaseMetaDataForDomainsForMapPtr, existInMap = testCasesModel.TestCaseMetaDataForDomainsMap[domainUuidToGetMetaDataFor]
+		if existInMap == false {
+			metaDataFilterArea = container.NewVBox(widget.NewLabel(
+				fmt.Sprintf("MetaData is not available for Domain having Uuid '%s'",
+					domainNameToGetMetaDataFor)))
+
+			return metaDataFilterArea
+		}
+
 		// Get the MetaDataGroups depending on Domain
 		var metaDataGroupsPtr *map[string]*testCaseModel.MetaDataGroupStruct
-		var testCaseMetaDataForDomainPtr *testCaseModel.TestCaseMetaDataForDomainsForMapStruct
-		var testCaseMetaDataForDomain testCaseModel.TestCaseMetaDataForDomainsForMapStruct
-
-		testCaseMetaDataForDomain = *testCaseMetaDataForDomainPtr
 		var tempMetaDataGroupsOrder []string
-		metaDataGroupsPtr, tempMetaDataGroupsOrder = testCaseModel.ConvertTestCaseMetaData(testCaseMetaDataForDomain.TestCaseMetaDataForDomainPtr)
+		metaDataGroupsPtr, tempMetaDataGroupsOrder = testCaseModel.ConvertTestCaseMetaData(testCaseMetaDataForDomainsForMapPtr.TestCaseMetaDataForDomainPtr)
 
 		// Generate TestCaseMeta-UI-object
 		var metaDataGroupsContainer *fyne.Container

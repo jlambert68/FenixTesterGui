@@ -59,6 +59,11 @@ var preViewAndFilterTabs *container.AppTabs
 var preViewTab *container.TabItem
 var filterTab *container.TabItem
 
+var simpleTestCaseMetaDataSelectedDomainUuid string
+var simpleTestCaseMetaDataSelectedDomainDisplayName string
+var testCaseFullMetaDataFilterContainer *fyne.Container
+var testCaseMainAreaForMetaDataFilterContainer *fyne.Container
+
 // The Split container have both the TestCase-list and the Preview-container in it
 var TestCaseListAndTestCasePreviewSplitContainer *container.Split
 

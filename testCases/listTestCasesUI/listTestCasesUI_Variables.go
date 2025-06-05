@@ -5,6 +5,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/widget"
+	"github.com/jlambert68/Fast_BitFilter_MetaData/boolbits/boolbits"
 	"sync"
 )
 
@@ -63,6 +64,9 @@ var simpleTestCaseMetaDataSelectedDomainUuid string
 var simpleTestCaseMetaDataSelectedDomainDisplayName string
 var testCaseFullMetaDataFilterContainer *fyne.Container
 var testCaseMainAreaForMetaDataFilterContainer *fyne.Container
+
+// Holding all separate MetaDataEntries used in the Simple MetaData-filter
+var simpleMetaDataFilterEntryMap map[string]*boolbits.Entry
 
 // The Split container have both the TestCase-list and the Preview-container in it
 var TestCaseListAndTestCasePreviewSplitContainer *container.Split

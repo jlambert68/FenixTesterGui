@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"github.com/jlambert68/Fast_BitFilter_MetaData/boolbits/boolbits"
 	"image/color"
 	"log"
 )
@@ -18,6 +19,9 @@ func generateSimpleTestCaseMetaDataFilterContainer(
 	testCasesModel *testCaseModel.TestCasesModelsStruct) *fyne.Container {
 
 	//var testCaseMetaDataFilterBottomContainer *fyne.Container
+
+	// Initiate the 'simpleMetaDataFilterEntryMap'
+	simpleMetaDataFilterEntryMap = make(map[string]*boolbits.Entry)
 
 	// Generate the Top container, having the Domain Filter DropDown
 	var testCaseMetaDataDomainFilterTopContainer *fyne.Container
@@ -98,6 +102,9 @@ func generateSimpleTestCaseMetaDataDomainFilterTopContainer(
 				valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
 			}
 
+			// Clear 'simpleMetaDataFilterEntryMap' holding all MetaData-Entry
+			simpleMetaDataFilterEntryMap = make(map[string]*boolbits.Entry)
+
 			// Set selected Domain
 			simpleTestCaseMetaDataSelectedDomainUuid = uuidForDomainThatCanOwnTheTestCaseMap[value]
 			simpleTestCaseMetaDataSelectedDomainDisplayName = value
@@ -143,6 +150,8 @@ func generateSimpleTestCaseMetaDataDomainFilterBottomContainer(
 
 	// Create the Filter TestCases-list button
 	filterTestCasesListButton = widget.NewButton("Filter TestCases-list", func() {
+
+		fmt.Println("Filter TestCases-list")
 
 	})
 
@@ -206,27 +215,14 @@ func generateSimpleTestCaseMetaDataMainFilterContainer(
 		var metaDataGroupsContainer *fyne.Container
 		var metaDataGroupsScroll *container.Scroll
 		metaDataGroupsContainer = buildGUIFromMetaDataGroupsMap(
+			domainUuidToGetMetaDataFor,
 			tempMetaDataGroupsOrder,
-			metaDataGroupsPtr)
+			metaDataGroupsPtr,
+			testCasesModel)
 
 		metaDataGroupsScroll = container.NewScroll(metaDataGroupsContainer)
 
 		metaDataFilterArea = container.NewBorder(nil, nil, nil, nil, metaDataGroupsScroll)
-		/*
-			if myContainer.MinSize().Width > 600 || myContainer.MinSize().Height > 600 {
-				myContainerScroll := container.NewScroll(myContainer)
-				myContainerScroll.SetMinSize(fyne.NewSize(600, 600))
-
-				// Create an Accordion item for the MetaData
-				metaDataAccordionItem = widget.NewAccordionItem("TestCase MetaData", myContainerScroll)
-
-			} else {
-
-				// Create an Accordion item for the MetaData
-				metaDataAccordionItem = widget.NewAccordionItem("TestCase MetaData", myContainer)
-			}
-
-		*/
 
 	} else {
 
@@ -239,8 +235,12 @@ func generateSimpleTestCaseMetaDataMainFilterContainer(
 
 // buildGUIFromSlice builds a fyne.CanvasObject from your slice pointer
 func buildGUIFromMetaDataGroupsMap(
+	domainUUid string,
 	metaDataGroupsOrder []string,
-	metaDataGroupsSourceMapPtr *map[string]*testCaseModel.MetaDataGroupStruct) *fyne.Container {
+	metaDataGroupsSourceMapPtr *map[string]*testCaseModel.MetaDataGroupStruct,
+	testCasesModels *testCaseModel.TestCasesModelsStruct) *fyne.Container {
+
+	var err error
 
 	// Get the 'metaDataGroupsSourceMap'
 	var metaDataGroupsSourceMap map[string]*testCaseModel.MetaDataGroupStruct
@@ -324,6 +324,62 @@ func buildGUIFromMetaDataGroupsMap(
 						valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
 					}
 
+					// Remove all MetDataGroupItem with values from map with  'MetaData-Entries'
+					var entryKey string
+					for _, value := range metaDataItem.AvailableMetaDataValues {
+
+						entryKey = fmt.Sprintf("%s.%s.%s.%s",
+							domainUUid,
+							metaDataItem.MetaDataGroupName,
+							metaDataItem.MetaDataName,
+							value)
+
+						delete(simpleMetaDataFilterEntryMap, entryKey)
+					}
+
+					// If there is a value then add the MetaDataEntry for it
+					if len(val) > 0 {
+						// Add New pointer to selected value into 'simpleMetaDataFilterEntryMap'
+						var metaDataEntry *boolbits.Entry
+						var (
+							domainBitSet *boolbits.BitSet
+							groupBitSet  *boolbits.BitSet
+							nameBitSet   *boolbits.BitSet
+							valueBitSet  *boolbits.BitSet
+						)
+
+						// Get BitSet-parts for the Selected MetaData
+						domainBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.DomainsBitSetMap[domainUUid]
+						groupBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupsBitSetMap[metaDataItem.MetaDataGroupName]
+						nameBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupItemsBitSetMap[metaDataItem.MetaDataName]
+						valueBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupItemValuesBitSetMap[val]
+
+						metaDataEntry, err = boolbits.NewEntry(domainBitSet, groupBitSet, nameBitSet, valueBitSet)
+
+						if err != nil {
+							errorID := "cf5a4b44-6559-4827-9ec8-377aefab0017"
+							errorMessage := fmt.Sprintf("could not create MetaDataEntry for Domain '%s', MetaDataGroup '%s', MetaDataGroupItem '%s' and value '%s' [ErrorID=%s, err='%s']",
+								domainUUid,
+								metaDataItem.MetaDataGroupName,
+								metaDataItem.MetaDataName,
+								val,
+								errorID,
+								err.Error())
+
+							log.Fatalln(errorMessage)
+						}
+
+						// Add MetaDataEntry to Entry-map
+						entryKey = fmt.Sprintf("%s.%s.%s.%s",
+							domainUUid,
+							metaDataItem.MetaDataGroupName,
+							metaDataItem.MetaDataName,
+							val)
+
+						simpleMetaDataFilterEntryMap[entryKey] = metaDataEntry
+
+					}
+
 				})
 				// Extract Selected values from TestCase
 				var selectedValue string
@@ -387,6 +443,66 @@ func buildGUIFromMetaDataGroupsMap(
 						valueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
 					} else {
 						valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
+					}
+
+					// Remove all MetDataGroupItem with values from map with  'MetaData-Entries'
+					var entryKey string
+					for _, value := range metaDataItem.AvailableMetaDataValues {
+
+						entryKey = fmt.Sprintf("%s.%s.%s.%s",
+							domainUUid,
+							metaDataItem.MetaDataGroupName,
+							metaDataItem.MetaDataName,
+							value)
+
+						delete(simpleMetaDataFilterEntryMap, entryKey)
+					}
+
+					// If there is any value then add the MetaDataEntry for it all values
+					if len(vals) > 0 {
+						// Add New pointer to selected value into 'simpleMetaDataFilterEntryMap'
+						var metaDataEntry *boolbits.Entry
+						var (
+							domainBitSet *boolbits.BitSet
+							groupBitSet  *boolbits.BitSet
+							nameBitSet   *boolbits.BitSet
+							valueBitSet  *boolbits.BitSet
+						)
+
+						// Loop all selected values and create its MetaDataEntry
+						for _, value := range vals {
+							// Get BitSet-parts for the Selected MetaData
+							domainBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.DomainsBitSetMap[domainUUid]
+							groupBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupsBitSetMap[metaDataItem.MetaDataGroupName]
+							nameBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupItemsBitSetMap[metaDataItem.MetaDataName]
+							valueBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupItemValuesBitSetMap[value]
+
+							metaDataEntry, err = boolbits.NewEntry(domainBitSet, groupBitSet, nameBitSet, valueBitSet)
+
+							if err != nil {
+								errorID := "d12a97d9-a3a0-4ae2-9385-62d81806afb8"
+								errorMessage := fmt.Sprintf("could not create MetaDataEntry for Domain '%s', MetaDataGroup '%s', MetaDataGroupItem '%s' and value '%s' [ErrorID=%s, err='%s']",
+									domainUUid,
+									metaDataItem.MetaDataGroupName,
+									metaDataItem.MetaDataName,
+									value,
+									errorID,
+									err.Error())
+
+								log.Fatalln(errorMessage)
+							}
+
+							// Add MetaDataEntry to Entry-map
+							entryKey = fmt.Sprintf("%s.%s.%s.%s",
+								domainUUid,
+								metaDataItem.MetaDataGroupName,
+								metaDataItem.MetaDataName,
+								value)
+
+							simpleMetaDataFilterEntryMap[entryKey] = metaDataEntry
+
+						}
+
 					}
 
 				})

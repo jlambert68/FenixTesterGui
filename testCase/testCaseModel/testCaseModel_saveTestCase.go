@@ -829,7 +829,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCasePreviewMessageForGrp
 
 					// Create the map-key
 					selectedMetaDataValuesMapKey = fmt.Sprintf("%s.%s.%s.%s",
-						domainNameThatOwnsTestCase,
+						currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid,
 						tempMetaDataGroupItem.MetaDataGroupName,
 						tempMetaDataGroupItem.MetaDataName,
 						tempMetaDataGroupItem.SelectedMetaDataValueForSingleSelect)
@@ -837,8 +837,8 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCasePreviewMessageForGrp
 					// Create the value to be inserted into the map
 					var tempSelectedMetaDataValueMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_SelectedMetaDataValueMessage
 					tempSelectedMetaDataValueMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_SelectedMetaDataValueMessage{
-						OwnerDomainUuid:   domainNameThatOwnsTestCase,
-						OwnerDomainName:   "",
+						OwnerDomainUuid:   currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid,
+						OwnerDomainName:   domainNameThatOwnsTestCase,
 						MetaDataGroupName: tempMetaDataGroupItem.MetaDataGroupName,
 						MetaDataName:      tempMetaDataGroupItem.MetaDataName,
 						MetaDataNameValue: tempMetaDataGroupItem.SelectedMetaDataValueForSingleSelect,

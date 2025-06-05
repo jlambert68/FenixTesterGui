@@ -791,6 +791,82 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCasePreviewMessageForGrp
 		currentTestCasePtr.TestCasePreviewObject.TestCaseStructureObjects[index] = testCaseStructureObject
 	}
 
+	// Generate Selected MetaData to be used when filtering TestCases
+	var tempSelectedMetaDataValuesMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_SelectedMetaDataValueMessage
+	tempSelectedMetaDataValuesMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_SelectedMetaDataValueMessage)
+
+	// Get the MetaData for the TestCase
+	var tempTestCaseMetaData TestCaseMetaDataStruct
+	tempTestCaseMetaData = *currentTestCasePtr.TestCaseMetaDataPtr
+
+	// Get the MetaDataGroupsMap
+	var tempMetaDataGroupsMap map[string]*MetaDataGroupStruct
+	tempMetaDataGroupsMap = *tempTestCaseMetaData.MetaDataGroupsMapPtr
+
+	var selectedMetaDataValuesMapKey string
+
+	// Loop all MetaDataGroups
+	for _, tempMetaDataGroupPtr := range tempMetaDataGroupsMap {
+
+		// Get the MetaDataGroup
+		var tempMetaDataGroup MetaDataGroupStruct
+		tempMetaDataGroup = *tempMetaDataGroupPtr
+
+		// Loop all MetaDataGroupItems
+		for _, tempMetaDataGroupItemPtr := range *tempMetaDataGroup.MetaDataInGroupMapPtr {
+
+			// Get the MetaDataGroupItem
+			var tempMetaDataGroupItem MetaDataInGroupStruct
+			tempMetaDataGroupItem = *tempMetaDataGroupItemPtr
+
+			// Is the Item a 'single select' or a 'multi select'
+			switch tempMetaDataGroupItem.SelectType {
+
+			case MetaDataSelectType_SingleSelect:
+
+				if len(tempMetaDataGroupItem.SelectedMetaDataValueForSingleSelect) > 0 {
+					// Add selected value to the 'SelectedMetaDataValuesMap'
+
+					// Create the map-key
+					selectedMetaDataValuesMapKey = fmt.Sprintf("%s.%s.%s.%s",
+						domainNameThatOwnsTestCase,
+						tempMetaDataGroupItem.MetaDataGroupName,
+						tempMetaDataGroupItem.MetaDataName,
+						tempMetaDataGroupItem.SelectedMetaDataValueForSingleSelect)
+
+					// Create the value to be inserted into the map
+					var tempSelectedMetaDataValueMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_SelectedMetaDataValueMessage
+					tempSelectedMetaDataValueMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_SelectedMetaDataValueMessage{
+						OwnerDomainUuid:   domainNameThatOwnsTestCase,
+						OwnerDomainName:   "",
+						MetaDataGroupName: tempMetaDataGroupItem.MetaDataGroupName,
+						MetaDataName:      tempMetaDataGroupItem.MetaDataName,
+						MetaDataNameValue: tempMetaDataGroupItem.SelectedMetaDataValueForSingleSelect,
+						SelectType:        fenixGuiTestCaseBuilderServerGrpcApi.MetaDataSelectTypeEnum(tempMetaDataGroupItem.SelectType),
+						IsMandatory:       tempMetaDataGroupItem.Mandatory,
+					}
+
+					// dd selected value to the 'SelectedMetaDataValuesMap'
+					tempSelectedMetaDataValuesMap[selectedMetaDataValuesMapKey] = tempSelectedMetaDataValueMessage
+				}
+
+			case MetaDataSelectType_MultiSelect:
+
+			default:
+
+				errorId := "f2a6571a-f267-4d83-83d3-247eb50d6002"
+
+				errorMessage := fmt.Sprintf("Unknown SelectType for MetaDataGroupItem '%d' [ErrorID: %s]",
+					tempMetaDataGroupItem.SelectType, errorId)
+
+				log.Fatal(errorMessage)
+
+			}
+
+		}
+
+	}
+
 	// Generate the full TestCasePreview-object
 	var tempTestCasePreview *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage
 	tempTestCasePreview = &fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage{
@@ -804,6 +880,7 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCasePreviewMessageForGrp
 		LastSavedByUserOnComputer:       sharedCode.CurrentUserIdLogedInOnComputer,
 		LastSavedByUserGCPAuthorization: sharedCode.CurrentUserAuthenticatedTowardsGCP,
 		LastSavedTimeStamp:              "",
+		SelectedMetaDataValuesMap:       tempSelectedMetaDataValuesMap,
 	}
 
 	gRPCTestCasePreviewMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewMessage{

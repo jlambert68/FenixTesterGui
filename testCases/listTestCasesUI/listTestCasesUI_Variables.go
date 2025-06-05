@@ -66,7 +66,10 @@ var testCaseFullMetaDataFilterContainer *fyne.Container
 var testCaseMainAreaForMetaDataFilterContainer *fyne.Container
 
 // Holding all separate MetaDataEntries used in the Simple MetaData-filter
-var simpleMetaDataFilterEntryMap map[string]*boolbits.Entry
+var simpleMetaDataFilterEntryMap map[string]simpleMetaDataFilterEntryMapStruct // Key = DomainUuid.GroupName.GroupItemName
+type simpleMetaDataFilterEntryMapStruct struct {
+	valueEntryListToBeProcessedWithBooleanOrSlice []*boolbits.Entry
+}
 
 // The Split container have both the TestCase-list and the Preview-container in it
 var TestCaseListAndTestCasePreviewSplitContainer *container.Split

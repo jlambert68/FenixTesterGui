@@ -21,7 +21,7 @@ func generateSimpleTestCaseMetaDataFilterContainer(
 	//var testCaseMetaDataFilterBottomContainer *fyne.Container
 
 	// Initiate the 'simpleMetaDataFilterEntryMap'
-	simpleMetaDataFilterEntryMap = make(map[string]*boolbits.Entry)
+	simpleMetaDataFilterEntryMap = make(map[string]simpleMetaDataFilterEntryMapStruct)
 
 	// Generate the Top container, having the Domain Filter DropDown
 	var testCaseMetaDataDomainFilterTopContainer *fyne.Container
@@ -103,7 +103,7 @@ func generateSimpleTestCaseMetaDataDomainFilterTopContainer(
 			}
 
 			// Clear 'simpleMetaDataFilterEntryMap' holding all MetaData-Entry
-			simpleMetaDataFilterEntryMap = make(map[string]*boolbits.Entry)
+			simpleMetaDataFilterEntryMap = make(map[string]simpleMetaDataFilterEntryMapStruct)
 
 			// Set selected Domain
 			simpleTestCaseMetaDataSelectedDomainUuid = uuidForDomainThatCanOwnTheTestCaseMap[value]
@@ -145,11 +145,64 @@ func generateSimpleTestCaseMetaDataDomainFilterTopContainer(
 func generateSimpleTestCaseMetaDataDomainFilterBottomContainer(
 	testCasesModel *testCaseModel.TestCasesModelsStruct) (simpleTestCaseMetaDataDomainFilterBottomContainer *fyne.Container) {
 
+	var err error
+
 	var filterTestCasesListButton *widget.Button
 	var clearMetaDataSelectionButton *widget.Button
 
 	// Create the Filter TestCases-list button
 	filterTestCasesListButton = widget.NewButton("Filter TestCases-list", func() {
+
+		// Generate Initial Entry for the boolean arithmetic
+		var resultEntry *boolbits.Entry
+		resultEntry, err = boolbits.NewAllZerosEntry(64)
+
+		if err != nil {
+			errorID := "cf0abe12-c6d6-4a38-987a-47137fea19c9"
+			errorMessage := fmt.Sprintf("could not create initial Entry for boolean arithmetic [ErrorID=%s, err='%s']",
+				errorID,
+				err.Error())
+
+			log.Fatalln(errorMessage)
+		}
+
+		// Loop all Simple MetaDataEntry and make boolean 'AND' between all of them
+		for _, simpleMetaDataEntry := range simpleMetaDataFilterEntryMap {
+
+			// If multiple values per MEtaDataItem exist then process them with boolean OR
+			var booleanOrResultsEntry *boolbits.Entry
+			for valueIndex, tempValueEntryListToBeProcessedWithBooleanOr := range simpleMetaDataEntry.valueEntryListToBeProcessedWithBooleanOrSlice {
+
+				if valueIndex == 0 {
+					booleanOrResultsEntry = tempValueEntryListToBeProcessedWithBooleanOr
+
+				} else {
+					booleanOrResultsEntry, err = booleanOrResultsEntry.Or(tempValueEntryListToBeProcessedWithBooleanOr)
+
+					if err != nil {
+						errorID := "750b629a-1b1f-49ce-942b-80968bc118ae"
+						errorMessage := fmt.Sprintf("could not do boolean arithmetic, OR [ErrorID=%s, err='%s']",
+							errorID,
+							err.Error())
+
+						log.Println(errorMessage)
+					}
+
+				}
+			}
+
+			resultEntry, err = resultEntry.Or(booleanOrResultsEntry)
+
+			if err != nil {
+				errorID := "c091dd3e-d059-43d9-9a44-7c9d219b7c36"
+				errorMessage := fmt.Sprintf("could not do boolean arithmetic, AND [ErrorID=%s, err='%s']",
+					errorID,
+					err.Error())
+
+				log.Fatalln(errorMessage)
+			}
+
+		}
 
 		fmt.Println("Filter TestCases-list")
 
@@ -326,16 +379,13 @@ func buildGUIFromMetaDataGroupsMap(
 
 					// Remove all MetDataGroupItem with values from map with  'MetaData-Entries'
 					var entryKey string
-					for _, value := range metaDataItem.AvailableMetaDataValues {
 
-						entryKey = fmt.Sprintf("%s.%s.%s.%s",
-							domainUUid,
-							metaDataItem.MetaDataGroupName,
-							metaDataItem.MetaDataName,
-							value)
+					entryKey = fmt.Sprintf("%s.%s.%s",
+						domainUUid,
+						metaDataItem.MetaDataGroupName,
+						metaDataItem.MetaDataName)
 
-						delete(simpleMetaDataFilterEntryMap, entryKey)
-					}
+					delete(simpleMetaDataFilterEntryMap, entryKey)
 
 					// If there is a value then add the MetaDataEntry for it
 					if len(val) > 0 {
@@ -347,6 +397,8 @@ func buildGUIFromMetaDataGroupsMap(
 							nameBitSet   *boolbits.BitSet
 							valueBitSet  *boolbits.BitSet
 						)
+
+						var valueEntryListToBeProcessedWithBooleanOrSlice []*boolbits.Entry
 
 						// Get BitSet-parts for the Selected MetaData
 						domainBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.DomainsBitSetMap[domainUUid]
@@ -370,13 +422,16 @@ func buildGUIFromMetaDataGroupsMap(
 						}
 
 						// Add MetaDataEntry to Entry-map
-						entryKey = fmt.Sprintf("%s.%s.%s.%s",
+						entryKey = fmt.Sprintf("%s.%s.%s",
 							domainUUid,
 							metaDataItem.MetaDataGroupName,
-							metaDataItem.MetaDataName,
-							val)
+							metaDataItem.MetaDataName)
 
-						simpleMetaDataFilterEntryMap[entryKey] = metaDataEntry
+						valueEntryListToBeProcessedWithBooleanOrSlice = append(valueEntryListToBeProcessedWithBooleanOrSlice, metaDataEntry)
+
+						// 'valueEntryListToBeProcessedWithBooleanOrSlice' to 'simpleMetaDataFilterEntryMap'
+						simpleMetaDataFilterEntryMap[entryKey] = simpleMetaDataFilterEntryMapStruct{
+							valueEntryListToBeProcessedWithBooleanOrSlice: valueEntryListToBeProcessedWithBooleanOrSlice}
 
 					}
 
@@ -447,16 +502,12 @@ func buildGUIFromMetaDataGroupsMap(
 
 					// Remove all MetDataGroupItem with values from map with  'MetaData-Entries'
 					var entryKey string
-					for _, value := range metaDataItem.AvailableMetaDataValues {
+					entryKey = fmt.Sprintf("%s.%s.%s",
+						domainUUid,
+						metaDataItem.MetaDataGroupName,
+						metaDataItem.MetaDataName)
 
-						entryKey = fmt.Sprintf("%s.%s.%s.%s",
-							domainUUid,
-							metaDataItem.MetaDataGroupName,
-							metaDataItem.MetaDataName,
-							value)
-
-						delete(simpleMetaDataFilterEntryMap, entryKey)
-					}
+					delete(simpleMetaDataFilterEntryMap, entryKey)
 
 					// If there is any value then add the MetaDataEntry for it all values
 					if len(vals) > 0 {
@@ -469,7 +520,14 @@ func buildGUIFromMetaDataGroupsMap(
 							valueBitSet  *boolbits.BitSet
 						)
 
+						// Add MetaDataEntry to Entry-map
+						entryKey = fmt.Sprintf("%s.%s.%s",
+							domainUUid,
+							metaDataItem.MetaDataGroupName,
+							metaDataItem.MetaDataName)
+
 						// Loop all selected values and create its MetaDataEntry
+						var valueEntryListToBeProcessedWithBooleanOrSlice []*boolbits.Entry
 						for _, value := range vals {
 							// Get BitSet-parts for the Selected MetaData
 							domainBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.DomainsBitSetMap[domainUUid]
@@ -492,16 +550,12 @@ func buildGUIFromMetaDataGroupsMap(
 								log.Fatalln(errorMessage)
 							}
 
-							// Add MetaDataEntry to Entry-map
-							entryKey = fmt.Sprintf("%s.%s.%s.%s",
-								domainUUid,
-								metaDataItem.MetaDataGroupName,
-								metaDataItem.MetaDataName,
-								value)
-
-							simpleMetaDataFilterEntryMap[entryKey] = metaDataEntry
+							valueEntryListToBeProcessedWithBooleanOrSlice = append(valueEntryListToBeProcessedWithBooleanOrSlice, metaDataEntry)
 
 						}
+						// 'valueEntryListToBeProcessedWithBooleanOrSlice' to 'simpleMetaDataFilterEntryMap'
+						simpleMetaDataFilterEntryMap[entryKey] = simpleMetaDataFilterEntryMapStruct{
+							valueEntryListToBeProcessedWithBooleanOrSlice: valueEntryListToBeProcessedWithBooleanOrSlice}
 
 					}
 

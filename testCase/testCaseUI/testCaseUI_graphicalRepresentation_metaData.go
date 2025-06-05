@@ -48,7 +48,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) GenerateMetaDataAreaForTe
 		var testCaseMetaDataForDomainsMap map[string]*testCaseModel.TestCaseMetaDataForDomainsForMapStruct
 		var testCaseMetaDataForDomainPtr *testCaseModel.TestCaseMetaDataForDomainsForMapStruct
 		var testCaseMetaDataForDomain testCaseModel.TestCaseMetaDataForDomainsForMapStruct
-		testCaseMetaDataForDomainsMap = testCasesUiCanvasObject.TestCasesModelReference.TestCaseMetaDataForDomainsMap
+		testCaseMetaDataForDomainsMap = testCasesUiCanvasObject.TestCasesModelReference.TestCaseMetaDataForDomains.TestCaseMetaDataForDomainsMap
 		testCaseMetaDataForDomainPtr, existsInMap = testCaseMetaDataForDomainsMap[domainUuidToGetMetaDataFor]
 		if existsInMap == false {
 

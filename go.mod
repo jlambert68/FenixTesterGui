@@ -1,11 +1,11 @@
 module FenixTesterGui
 
-go 1.23.0
+go 1.24
 
-toolchain go1.24.1
+toolchain go1.24.2
 
 require (
-	cloud.google.com/go/pubsub v1.44.0
+	cloud.google.com/go/pubsub v1.49.0
 	fyne.io/fyne/v2 v2.6.1 //fyne.io/fyne/v2 v2.5.2
 	github.com/PaulWaldo/fyne-headertable v0.0.2
 	github.com/go-gota/gota v0.12.0
@@ -16,17 +16,18 @@ require (
 	github.com/gorilla/pat v1.0.2
 	// github.com/gorilla/sessions v1.2.2 // v1.3.0 gives session error when trying to get token from GCP
 	github.com/gorilla/sessions v1.2.2 // v1.3.0 gives session error when trying to get token from GCP
+	github.com/jlambert68/Fast_BitFilter_MetaData v0.0.0-20250605075136-5ff08ca69b26
 	github.com/jlambert68/FenixGrpcApi v0.0.0-20250526085356-ea87876035f4
 	github.com/jlambert68/FenixScriptEngine v0.0.0-20241104143504-8f37e95bc346
-	github.com/markbates/goth v1.80.0
+	github.com/markbates/goth v1.81.0
 	github.com/rs/zerolog v1.34.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.10.0
 	github.com/toqueteos/webbrowser v1.2.0
 	golang.org/x/net v0.40.0
 	golang.org/x/oauth2 v0.30.0
-	google.golang.org/api v0.233.0
-	google.golang.org/grpc v1.72.1
+	google.golang.org/api v0.236.0
+	google.golang.org/grpc v1.72.2
 	google.golang.org/protobuf v1.36.6
 )
 
@@ -39,11 +40,11 @@ require (
 )
 
 require (
-	cloud.google.com/go v0.116.0 // indirect
+	cloud.google.com/go v0.120.0 // indirect
 	cloud.google.com/go/auth v0.16.1 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
-	cloud.google.com/go/compute/metadata v0.6.0 // indirect
-	cloud.google.com/go/iam v1.2.2 // indirect
+	cloud.google.com/go/compute/metadata v0.7.0 // indirect
+	cloud.google.com/go/iam v1.5.2 // indirect
 	fyne.io/systray v1.11.0 // indirect
 	github.com/BurntSushi/toml v1.4.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -55,6 +56,7 @@ require (
 	github.com/fyne-io/glfw-js v0.2.0 // indirect
 	github.com/fyne-io/image v0.1.1 // indirect
 	github.com/fyne-io/oksvg v0.1.0 // indirect
+	github.com/go-chi/chi/v5 v5.1.0 // indirect
 	github.com/go-gl/gl v0.0.0-20231021071112-07e5d0ea2e71 // indirect
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20240506104042-037f3cc74f2a // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
@@ -64,7 +66,7 @@ require (
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/google/s2a-go v0.1.9 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.6 // indirect
-	github.com/googleapis/gax-go/v2 v2.14.1 // indirect
+	github.com/googleapis/gax-go/v2 v2.14.2 // indirect
 	github.com/gorilla/context v1.1.2 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
 	github.com/hack-pad/go-indexeddb v0.3.2 // indirect
@@ -105,8 +107,8 @@ require (
 	golang.org/x/text v0.25.0 // indirect
 	golang.org/x/time v0.11.0 // indirect
 	gonum.org/v1/gonum v0.15.1 // indirect
-	google.golang.org/genproto v0.0.0-20241021214115-324edc3d5d38 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20250218202821-56aae31c358a // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250505200425-f936aa4a68b2 // indirect
+	google.golang.org/genproto v0.0.0-20250505200425-f936aa4a68b2 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20250505200425-f936aa4a68b2 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250528174236-200df99c418a // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

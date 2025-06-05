@@ -5,9 +5,12 @@ import (
 	"FenixTesterGui/testCase/testCaseModel"
 	"encoding/json"
 	"fmt"
+	"github.com/jlambert68/Fast_BitFilter_MetaData/boolbits/bitmapper"
+	"github.com/jlambert68/Fast_BitFilter_MetaData/boolbits/boolbits"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/jlambert68/FenixScriptEngine/testDataEngine"
 	"github.com/sirupsen/logrus"
+	"log"
 )
 
 // Load Available Building Blocks, TestInstructions and TestInstructionContainers, from GUI-server into testCaseModel
@@ -462,7 +465,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeTes
 	sharedCode.TestCaseMetaDataForDomainsPtr = &availableBuildingBlocksModel.TestCaseMetaDataForDomains
 
 	// Store the TestCaseMetaData-list in the TestCaseModel
-	testCaseModeReference.TestCaseMetaDataForDomainsMap = make(map[string]*testCaseModel.
+	testCaseModeReference.TestCaseMetaDataForDomains.TestCaseMetaDataForDomainsMap = make(map[string]*testCaseModel.
 		TestCaseMetaDataForDomainsForMapStruct)
 
 	// Store the Available TestCaseMetaData as a map structure in TestCase-struct
@@ -494,10 +497,78 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeTes
 		testCaseMetaDataForDomainsForMap.TestCaseMetaDataForDomainPtr = &supportedMetaDataJsonAsStruct
 
 		// Store both the json and the struct into the TestCasesModel
-		testCaseModeReference.
+		testCaseModeReference.TestCaseMetaDataForDomains.
 			TestCaseMetaDataForDomainsMap[testCaseMetaDataForDomain.GetDomainUuid()] =
 			&testCaseMetaDataForDomainsForMap
 
+	}
+
+	// Generate a BitMaps to be used when filtering TestCases on its MetaData
+
+	// All Domains, MetaDataGroupsNames, MetaDataItemsName and they ItemValues
+	var allDomainsSlice []string
+	var allMetadataGroupNamesSlice []string
+	var allMetadataItemNames []string
+	var allMetadataItemValues []string
+
+	// The BitSets holding the unique BitSet for all MetData-filtering keys(indirect)
+	var domainsBitSetMap map[string]*boolbits.BitSet
+	var metaDataGroupsBitSetMap map[string]*boolbits.BitSet
+	var metaDataItemsBitSetMap map[string]*boolbits.BitSet
+	var meteDataItemValuesBitSetMap map[string]*boolbits.BitSet
+
+	// Initiate the BitSet-maps
+	domainsBitSetMap = make(map[string]*boolbits.BitSet)            // DomainUuid
+	metaDataGroupsBitSetMap = make(map[string]*boolbits.BitSet)     // MetaDataGroupName
+	metaDataItemsBitSetMap = make(map[string]*boolbits.BitSet)      // MetaDataGroupItemName
+	meteDataItemValuesBitSetMap = make(map[string]*boolbits.BitSet) // MetaDataItemValue
+
+	// Extract values to the slices
+	// Loop the Domains and extract the Uuids for the Domains
+	for domainUuid, tempDomain := range testCaseModeReference.TestCaseMetaDataForDomains.TestCaseMetaDataForDomainsMap {
+
+		// Add the DomainUuid to the slice
+		allDomainsSlice = append(allDomainsSlice, domainUuid)
+
+		// Loop all MetaDataGroups for the Domain
+		for _, tempMetaDataGroup := range tempDomain.TestCaseMetaDataForDomainPtr.MetaDataGroups {
+
+			// Add MetaDataGroupName to the slice
+			allMetadataGroupNamesSlice = append(allMetadataGroupNamesSlice, tempMetaDataGroup.MetaDataGroupName)
+
+			// Loop MetaDataItems in the Group
+			for _, metaDataItem := range tempMetaDataGroup.MetaDataInGroup {
+
+				// Add MetaDataItemName to the slice
+				allMetadataItemNames = append(allMetadataItemNames, metaDataItem.MetaDataName)
+
+				// Add all MetaDataItemValues to the slice
+				allMetadataItemValues = append(allMetadataItemValues, metaDataItem.MetaDataValues...)
+
+			}
+		}
+	}
+
+	// Generate the BitSets holding the unique values for all MetDataValues
+	domainsBitSetMap, metaDataGroupsBitSetMap, metaDataItemsBitSetMap, meteDataItemValuesBitSetMap, err = bitmapper.GenerateBitMaps(
+		allDomainsSlice,
+		allMetadataGroupNamesSlice,
+		allMetadataItemNames,
+		allMetadataItemValues,
+	)
+
+	if err != nil {
+		errorId := "451e397e-6673-4a4b-a95f-de40f6921a99"
+
+		log.Fatalf("GenerateBitMaps error: %v. [ErrorId; '%s'", err, errorId)
+	}
+
+	// Store the BitSetMaps in the overall  TestCase-structure for MetaData
+	testCaseModeReference.TestCaseMetaDataForDomains.UniqueMetaDataBitSets = testCaseModel.UniqueMetaDataBitSetsStruct{
+		DomainsBitSetMap:                 domainsBitSetMap,
+		MetaDataGroupsBitSetMap:          metaDataGroupsBitSetMap,
+		MetaDataGroupItemsBitSetMap:      metaDataItemsBitSetMap,
+		MetaDataGroupItemValuesBitSetMap: meteDataItemValuesBitSetMap,
 	}
 
 }

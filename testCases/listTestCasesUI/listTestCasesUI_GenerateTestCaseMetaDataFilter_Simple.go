@@ -188,7 +188,7 @@ func generateSimpleTestCaseMetaDataMainFilterContainer(
 
 		// Check if there are any MetaData for the Domain
 		var testCaseMetaDataForDomainsForMapPtr *testCaseModel.TestCaseMetaDataForDomainsForMapStruct
-		testCaseMetaDataForDomainsForMapPtr, existInMap = testCasesModel.TestCaseMetaDataForDomainsMap[domainUuidToGetMetaDataFor]
+		testCaseMetaDataForDomainsForMapPtr, existInMap = testCasesModel.TestCaseMetaDataForDomains.TestCaseMetaDataForDomainsMap[domainUuidToGetMetaDataFor]
 		if existInMap == false {
 			metaDataFilterArea = container.NewVBox(widget.NewLabel(
 				fmt.Sprintf("MetaData is not available for Domain having Uuid '%s'",

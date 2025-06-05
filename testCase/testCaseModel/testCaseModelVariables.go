@@ -5,6 +5,7 @@ import (
 	"FenixTesterGui/importFilesFromGitHub"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/widget"
+	boolbits "github.com/jlambert68/Fast_BitFilter_MetaData/boolbits/boolbits"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/jlambert68/FenixScriptEngine/testDataEngine"
 	"regexp"
@@ -37,12 +38,28 @@ type TestCasesModelsStruct struct {
 	ImmatureDropZonesDataMap                      map[string]ImmatureDropZoneDataMapStruct                                                                                             // map[DropZoneUuid]ImmatureDropZoneDataMapStruct
 	DomainsThatCanOwnTheTestCaseMap               map[string]*DomainThatCanOwnTheTestCaseStruct
 	TemplateRepositoryApiUrlMap                   map[string]*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage
-	TestCaseMetaDataForDomainsMap                 map[string]*TestCaseMetaDataForDomainsForMapStruct // Key = DomainUuid
+	TestCaseMetaDataForDomains                    TestCaseMetaDataForDomainsStruct
 	TestCasesThatCanBeEditedByUserMap             map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseThatCanBeEditedByUserMessage
 	//TestCasesThatCanBeEditedByUserSlice           []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseThatCanBeEditedByUserMessage
 
 	//AvailableBuildingBlocksModel                  *gui.AvailableBuildingBlocksModelStruct
 
+}
+
+// TestCaseMetaDataForDomainsStruct
+// Holding all MetaData for all domains
+type TestCaseMetaDataForDomainsStruct struct {
+	TestCaseMetaDataForDomainsMap map[string]*TestCaseMetaDataForDomainsForMapStruct // Key = DomainUuid
+	UniqueMetaDataBitSets         UniqueMetaDataBitSetsStruct
+}
+
+// UniqueMetaDataBitSetsStruct
+// Holding the unique Bitset for each of the  Domains, Groups, GroupItems, ItemValues
+type UniqueMetaDataBitSetsStruct struct {
+	DomainsBitSetMap                 map[string]*boolbits.BitSet // map key = DomainUuid
+	MetaDataGroupsBitSetMap          map[string]*boolbits.BitSet // map key = GroupName
+	MetaDataGroupItemsBitSetMap      map[string]*boolbits.BitSet // map key = GroupItemName
+	MetaDataGroupItemValuesBitSetMap map[string]*boolbits.BitSet // map key = GroupItemValue
 }
 
 // TestCaseMetaDataForDomainsMapStruct
@@ -123,7 +140,7 @@ type TestCaseMetaDataStruct struct {
 	TestCaseMetaDataMessageStructForTestCaseWhenLastSaved *TestCaseMetaDataForDomainStruct
 	MetaDataGroupsOrder                                   []string
 	MetaDataGroupsMapPtr                                  *map[string]*MetaDataGroupStruct // holding MetaDataGroups and its MetaData. The key is the MetaDataGroupName
-
+	SelectedTestCaseMetaDataAsEntrySlice                  []*boolbits.Entry                // A slice holding all selected MetaData as boolbits-Entry types
 }
 
 // MetaDataGroupStruct

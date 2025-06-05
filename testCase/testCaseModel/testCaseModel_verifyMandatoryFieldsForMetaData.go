@@ -116,7 +116,7 @@ func (testCaseModel *TestCasesModelsStruct) generateMandatoryMetaDataFieldsMap(
 
 	// Extract Owner Domains MetaData
 	var metaDataForDomainPtr *TestCaseMetaDataForDomainsForMapStruct
-	metaDataForDomainPtr, existInMap = testCaseModel.TestCaseMetaDataForDomainsMap[ownerDomainUuid]
+	metaDataForDomainPtr, existInMap = testCaseModel.TestCaseMetaDataForDomains.TestCaseMetaDataForDomainsMap[ownerDomainUuid]
 
 	if existInMap == false {
 		// No MetaData fields, so no mandatory fields

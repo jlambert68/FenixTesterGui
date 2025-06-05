@@ -852,6 +852,36 @@ func (testCaseModel *TestCasesModelsStruct) generateTestCasePreviewMessageForGrp
 
 			case MetaDataSelectType_MultiSelect:
 
+				if len(tempMetaDataGroupItem.SelectedMetaDataValuesForMultiSelect) > 0 {
+					// Add selected value to the 'SelectedMetaDataValuesMap'
+
+					// Loop SelectedMetaDataValuesForMultiSelect
+					for _, tempSelectedMetaDataValueForMultiSelect := range tempMetaDataGroupItem.SelectedMetaDataValuesForMultiSelect {
+
+						// Create the map-key
+						selectedMetaDataValuesMapKey = fmt.Sprintf("%s.%s.%s.%s",
+							currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid,
+							tempMetaDataGroupItem.MetaDataGroupName,
+							tempMetaDataGroupItem.MetaDataName,
+							tempSelectedMetaDataValueForMultiSelect)
+
+						// Create the value to be inserted into the map
+						var tempSelectedMetaDataValueMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_SelectedMetaDataValueMessage
+						tempSelectedMetaDataValueMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage_SelectedMetaDataValueMessage{
+							OwnerDomainUuid:   currentTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid,
+							OwnerDomainName:   domainNameThatOwnsTestCase,
+							MetaDataGroupName: tempMetaDataGroupItem.MetaDataGroupName,
+							MetaDataName:      tempMetaDataGroupItem.MetaDataName,
+							MetaDataNameValue: tempSelectedMetaDataValueForMultiSelect,
+							SelectType:        fenixGuiTestCaseBuilderServerGrpcApi.MetaDataSelectTypeEnum(tempMetaDataGroupItem.SelectType),
+							IsMandatory:       tempMetaDataGroupItem.Mandatory,
+						}
+
+						// Add selected value to the 'SelectedMetaDataValuesMap'
+						tempSelectedMetaDataValuesMap[selectedMetaDataValuesMapKey] = tempSelectedMetaDataValueMessage
+					}
+				}
+
 			default:
 
 				errorId := "f2a6571a-f267-4d83-83d3-247eb50d6002"

@@ -64,7 +64,10 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 	// Define the function to be executed to load TestCasesMapPtr from that Database that the user can edit
 	loadTestCaseFromDataBaseFunction = func() {
 		fmt.Println("'loadTestCaseFromDataBaseButton' was pressed")
-		listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(testCasesModel, time.Now().Add(-time.Hour*1000), time.Now().Add(-time.Hour*1000))
+		listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(
+			testCasesModel,
+			time.Now().Add(-time.Hour*1000), time.Now().Add(-time.Hour*1000),
+			testCasesModel)
 		filterTestCasesButtonFunction()
 	}
 

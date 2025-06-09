@@ -9,8 +9,9 @@ import (
 
 type customMandatorySelectComboBox struct {
 	widget.BaseWidget
-	rectangle      *canvas.Rectangle
-	selectComboBox *widget.Select
+	rectangle                           *canvas.Rectangle
+	selectComboBox                      *widget.Select
+	dataValueRepresentingVisualizedData string
 }
 
 func newCustomMandatorySelectComboBoxWidget(

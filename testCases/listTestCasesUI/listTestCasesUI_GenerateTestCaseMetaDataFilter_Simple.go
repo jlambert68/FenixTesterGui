@@ -47,42 +47,141 @@ func generateSimpleTestCaseMetaDataFilterContainer(
 			log.Fatalln(errorMessage)
 		}
 
-		// Loop all Simple MetaDataEntry and make boolean 'OR' between all of them
-		for _, simpleMetaDataEntry := range simpleMetaDataFilterEntryMap {
+		// Check if there are any MetaData set
+		if simpleMetaDataFilterEntryMap == nil || len(simpleMetaDataFilterEntryMap) == 0 {
+			// No MetaData-filter is set by the user
 
-			// If multiple values per MEtaDataItem exist then process them with boolean OR
-			var booleanOrResultsEntry *boolbits.Entry
-			for valueIndex, tempValueEntryListToBeProcessedWithBooleanOr := range simpleMetaDataEntry.valueEntryListToBeProcessedWithBooleanOrSlice {
-
-				if valueIndex == 0 {
-					booleanOrResultsEntry = tempValueEntryListToBeProcessedWithBooleanOr
-
-				} else {
-					booleanOrResultsEntry, err = booleanOrResultsEntry.Or(tempValueEntryListToBeProcessedWithBooleanOr)
-
-					if err != nil {
-						errorID := "750b629a-1b1f-49ce-942b-80968bc118ae"
-						errorMessage := fmt.Sprintf("could not do boolean arithmetic, OR [ErrorID=%s, err='%s']",
-							errorID,
-							err.Error())
-
-						log.Println(errorMessage)
-					}
-
-				}
-			}
-
-			resultEntry, err = resultEntry.Or(booleanOrResultsEntry)
+			// Create Filter-Entry based on Domain
+			var booleanANDResultsEntry *boolbits.Entry
+			booleanANDResultsEntry, err = boolbits.NewAllOnesEntry(64)
 
 			if err != nil {
-				errorID := "c091dd3e-d059-43d9-9a44-7c9d219b7c36"
-				errorMessage := fmt.Sprintf("could not do boolean arithmetic, OR [ErrorID=%s, err='%s']",
+				errorID := "8d80fa78-894a-49ee-8dc5-4ed2fccd5df9"
+				errorMessage := fmt.Sprintf("could not create initial Entry for boolean arithmetic [ErrorID=%s, err='%s']",
 					errorID,
 					err.Error())
 
 				log.Fatalln(errorMessage)
 			}
 
+			// Generate BitSet for Domain, Group, Item and Value
+			var domainBitSet *boolbits.BitSet
+			var metaDataGroupBitSet *boolbits.BitSet
+			var metaDataItemBitSet *boolbits.BitSet
+			var metaDataValueBitSet *boolbits.BitSet
+			var domainBitSetExistInMap bool
+
+			// Get BitSets
+			domainBitSet, domainBitSetExistInMap = testCasesModel.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.
+				DomainsBitSetMap[newMandatoryOwnerDomainSelect.dataValueRepresentingVisualizedData]
+
+			if domainBitSetExistInMap == false {
+
+				domainBitSet, err = boolbits.NewBitSet(64)
+
+				if err != nil {
+					errorID := "f0bc6ddd-6f51-4c9d-bdcf-22631ebddbfb"
+					errorMessage := fmt.Sprintf("could not create NewBitSet[ErrorID=%s, err='%s']",
+						errorID,
+						err.Error())
+
+					log.Fatalln(errorMessage)
+				}
+			}
+
+			metaDataGroupBitSet, err = boolbits.NewBitSet(64)
+			if err != nil {
+				errorID := "991b90a7-6b1a-49d7-934a-1c75cac58544"
+				errorMessage := fmt.Sprintf("could not create NewBitSet[ErrorID=%s, err='%s']",
+					errorID,
+					err.Error())
+
+				log.Fatalln(errorMessage)
+			}
+
+			metaDataItemBitSet, err = boolbits.NewBitSet(64)
+			if err != nil {
+				errorID := "f56b9a66-3f26-4865-a2f4-de8194d70fc9"
+				errorMessage := fmt.Sprintf("could not create NewBitSet[ErrorID=%s, err='%s']",
+					errorID,
+					err.Error())
+
+				log.Fatalln(errorMessage)
+			}
+
+			metaDataValueBitSet, err = boolbits.NewBitSet(64)
+			if err != nil {
+				errorID := "63cb406e-6413-4f37-96bc-5113c5d4cf78"
+				errorMessage := fmt.Sprintf("could not create NewBitSet[ErrorID=%s, err='%s']",
+					errorID,
+					err.Error())
+
+				log.Fatalln(errorMessage)
+			}
+
+			var metaDataOnlyDomainEntry *boolbits.Entry
+			metaDataOnlyDomainEntry, err = boolbits.NewEntry(domainBitSet, metaDataGroupBitSet, metaDataItemBitSet, metaDataValueBitSet)
+			if err != nil {
+				errorID := "25547c4a-6172-4e05-ab76-751606ab1461"
+				errorMessage := fmt.Sprintf("could not create Domain-Entry [ErrorID=%s, err='%s']",
+					errorID,
+					err.Error())
+
+				log.Fatalln(errorMessage)
+			}
+
+			resultEntry, err = booleanANDResultsEntry.And(metaDataOnlyDomainEntry)
+
+			if err != nil {
+				errorID := "f93a9a50-5b81-4128-86b3-b6e8f6f88fd5"
+				errorMessage := fmt.Sprintf("could not do boolean arithmetic, AND [ErrorID=%s, err='%s']",
+					errorID,
+					err.Error())
+
+				log.Println(errorMessage)
+			}
+
+		} else {
+
+			// MetaData-filter is selected by the user
+
+			// Loop all Simple MetaDataEntry and make boolean 'OR' between all of them
+			for _, simpleMetaDataEntry := range simpleMetaDataFilterEntryMap {
+
+				// If multiple values per MEtaDataItem exist then process them with boolean OR
+				var booleanOrResultsEntry *boolbits.Entry
+				for valueIndex, tempValueEntryListToBeProcessedWithBooleanOr := range simpleMetaDataEntry.valueEntryListToBeProcessedWithBooleanOrSlice {
+
+					if valueIndex == 0 {
+						booleanOrResultsEntry = tempValueEntryListToBeProcessedWithBooleanOr
+
+					} else {
+						booleanOrResultsEntry, err = booleanOrResultsEntry.Or(tempValueEntryListToBeProcessedWithBooleanOr)
+
+						if err != nil {
+							errorID := "750b629a-1b1f-49ce-942b-80968bc118ae"
+							errorMessage := fmt.Sprintf("could not do boolean arithmetic, OR [ErrorID=%s, err='%s']",
+								errorID,
+								err.Error())
+
+							log.Println(errorMessage)
+						}
+
+					}
+				}
+
+				resultEntry, err = resultEntry.Or(booleanOrResultsEntry)
+
+				if err != nil {
+					errorID := "c091dd3e-d059-43d9-9a44-7c9d219b7c36"
+					errorMessage := fmt.Sprintf("could not do boolean arithmetic, OR [ErrorID=%s, err='%s']",
+						errorID,
+						err.Error())
+
+					log.Fatalln(errorMessage)
+				}
+
+			}
 		}
 
 		// Load a filtered list into the TestCases-list-table
@@ -164,19 +263,26 @@ func generateSimpleTestCaseMetaDataDomainFilterTopContainer(
 		func(value string) {
 			// This function is called when an option is selected.
 
+			// Set selected Domain
+			simpleTestCaseMetaDataSelectedDomainUuid = uuidForDomainThatCanOwnTheTestCaseMap[value]
+			simpleTestCaseMetaDataSelectedDomainDisplayName = value
+
 			// Set Warning box that value is not selected
 			if len(value) == 0 {
 				valueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+
+				// Store data value representing the visual value
+				newMandatoryOwnerDomainSelect.dataValueRepresentingVisualizedData = ""
+
 			} else {
 				valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
+				// Store data value representing the visual value
+				newMandatoryOwnerDomainSelect.dataValueRepresentingVisualizedData = simpleTestCaseMetaDataSelectedDomainUuid
+
 			}
 
 			// Clear 'simpleMetaDataFilterEntryMap' holding all MetaData-Entry
 			simpleMetaDataFilterEntryMap = make(map[string]simpleMetaDataFilterEntryMapStruct)
-
-			// Set selected Domain
-			simpleTestCaseMetaDataSelectedDomainUuid = uuidForDomainThatCanOwnTheTestCaseMap[value]
-			simpleTestCaseMetaDataSelectedDomainDisplayName = value
 
 			var newSimpleTestCaseMetaDataMainFilterContainer *fyne.Container
 			newSimpleTestCaseMetaDataMainFilterContainer = generateSimpleTestCaseMetaDataMainFilterContainer(
@@ -194,6 +300,11 @@ func generateSimpleTestCaseMetaDataDomainFilterTopContainer(
 			testCaseMainAreaForMetaDataFilterContainer = newSimpleTestCaseMetaDataMainFilterContainer
 
 			newSimpleTestCaseMetaDataMainFilterContainer.Refresh()
+
+			// Check if auto-filter is enabled. If so then calculate the new TestCase-liset
+			if useAutoFilter == true {
+				calculateMetaDataFilterFunction()
+			}
 
 		})
 
@@ -248,6 +359,9 @@ func generateSimpleTestCaseMetaDataDomainFilterBottomContainer(
 		// clear the Domain-dropdown
 		newMandatoryOwnerDomainSelect.selectComboBox.ClearSelected()
 		newMandatoryOwnerDomainSelect.Refresh()
+
+		// Clear selected MetaData-map
+		simpleMetaDataFilterEntryMap = make(map[string]simpleMetaDataFilterEntryMapStruct)
 	})
 
 	// Create radio button for Auto-filter where each change in filter setting automatically filters the list

@@ -14,13 +14,12 @@ import (
 // LoadTestCaseThatCanBeEditedByUser
 // Load list with TestCasesMapPtr that the user can edit
 func LoadTestCaseThatCanBeEditedByUser(
-	testCaseModeReference *testCaseModel.TestCasesModelsStruct,
+	testCasesModeReference *testCaseModel.TestCasesModelsStruct,
 	testCaseUpdatedMinTimeStamp time.Time,
-	testCaseExecutionUpdatedMinTimeStamp time.Time,
-	testCaseModel *testCaseModel.TestCaseModelStruct) {
+	testCaseExecutionUpdatedMinTimeStamp time.Time) {
 
 	var listTestCasesThatCanBeEditedResponseMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListTestCasesThatCanBeEditedResponseMessage
-	listTestCasesThatCanBeEditedResponseMessage = testCaseModeReference.GrpcOutReference.
+	listTestCasesThatCanBeEditedResponseMessage = testCasesModeReference.GrpcOutReference.
 		ListTestCasesThatCanBeEditedResponseMessage(testCaseUpdatedMinTimeStamp, testCaseExecutionUpdatedMinTimeStamp)
 
 	if listTestCasesThatCanBeEditedResponseMessage.GetAckNackResponse().AckNack == false {
@@ -35,16 +34,15 @@ func LoadTestCaseThatCanBeEditedByUser(
 	// Store the slice with TestCasesMapPtr that a user can edit as a Map
 	storeTestCaseThatCanBeEditedByUser(
 		listTestCasesThatCanBeEditedResponseMessage.GetTestCasesThatCanBeEditedByUser(),
-		testCaseModeReference,
-		testCaseModel )
+		testCasesModeReference)
 
 	// Store the slice with TestCasesMapPtr
-	//testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = listTestCasesThatCanBeEditedResponseMessage.GetTestCasesThatCanBeEditedByUser()
+	//testCasesModeReference.TestCasesThatCanBeEditedByUserSlice = listTestCasesThatCanBeEditedResponseMessage.GetTestCasesThatCanBeEditedByUser()
 	/*
-		testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = nil
-		for _, tempTestCasesThatCanBeEditedByUser := range testCaseModeReference.TestCasesThatCanBeEditedByUserMap {
-			testCaseModeReference.TestCasesThatCanBeEditedByUserSlice = append(
-				testCaseModeReference.TestCasesThatCanBeEditedByUserSlice, tempTestCasesThatCanBeEditedByUser)
+		testCasesModeReference.TestCasesThatCanBeEditedByUserSlice = nil
+		for _, tempTestCasesThatCanBeEditedByUser := range testCasesModeReference.TestCasesThatCanBeEditedByUserMap {
+			testCasesModeReference.TestCasesThatCanBeEditedByUserSlice = append(
+				testCasesModeReference.TestCasesThatCanBeEditedByUserSlice, tempTestCasesThatCanBeEditedByUser)
 		}
 	*/
 
@@ -53,29 +51,27 @@ func LoadTestCaseThatCanBeEditedByUser(
 // Store TestCasesMapPtr That Can Be Edited By User
 func storeTestCaseThatCanBeEditedByUser(
 	testCasesThatCanBeEditedByUserAsSlice []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseThatCanBeEditedByUserMessage,
-	testCaseModeReference *testCaseModel.TestCasesModelsStruct,
-	testCaseModel *testCaseModel.TestCaseModelStruct) {
+	testCasesModeReference *testCaseModel.TestCasesModelsStruct) {
 
 	var err error
 	var domainBitSetExistiInMap bool
-	var groupBitSetExistiInMap bool
-	var itemBitSetExistiInMap bool
-	var valueBitSetExistiInMap bool
+	var groupBitSetExistInMap bool
+	var itemBitSetExistInMap bool
+	var valueBitSetExistInMap bool
 
 	// Store the TestCaseThatCanBeEditedByUser-list in the TestCaseModel
-	testCaseModeReference.TestCasesThatCanBeEditedByUserMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
+	TestCasesThatCanBeEditedByUserMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
 		TestCaseThatCanBeEditedByUserMessage)
 
 	// Store the Available TemplateRepositoryApiUrls as a map structure in TestCase-struct
 	for _, testCaseThatCanBeEditedByUser := range testCasesThatCanBeEditedByUserAsSlice {
 
-		testCaseModeReference.TestCasesThatCanBeEditedByUserMap[testCaseThatCanBeEditedByUser.GetTestCaseUuid()] =
+		TestCasesThatCanBeEditedByUserMap[testCaseThatCanBeEditedByUser.GetTestCaseUuid()] =
 			testCaseThatCanBeEditedByUser
 
 		// Get PreViewMessage for TestCase
 		var tempTestCasePreview *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage
 		tempTestCasePreview = testCaseThatCanBeEditedByUser.GetTestCasePreview().GetTestCasePreview()
-
 
 		var selectedMetaDataValuesMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
 			TestCasePreviewStructureMessage_SelectedMetaDataValueMessage
@@ -105,18 +101,17 @@ func storeTestCaseThatCanBeEditedByUser(
 			var metaDataValueBitSet *boolbits.BitSet
 
 			// Get BitSets
-			domainBitSet, domainBitSetExistiInMap = testCasesModel.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.
+			domainBitSet, domainBitSetExistiInMap = testCasesModeReference.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.
 				DomainsBitSetMap[selectedMetaDataValue.OwnerDomainUuid]
-			metaDataGroupBitSet, groupBitSetExistiInMap  = testCasesModel.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.
+			metaDataGroupBitSet, groupBitSetExistInMap = testCasesModeReference.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.
 				MetaDataGroupsBitSetMap[selectedMetaDataValue.MetaDataGroupName]
-			metaDataItemBitSet, itemBitSetExistiInMap  = testCasesModel.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.
+			metaDataItemBitSet, itemBitSetExistInMap = testCasesModeReference.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.
 				MetaDataGroupItemsBitSetMap[selectedMetaDataValue.MetaDataName]
-			metaDataValueBitSet, valueBitSetExistiInMap  = testCasesModel.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.
+			metaDataValueBitSet, valueBitSetExistInMap = testCasesModeReference.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.
 				MetaDataGroupItemValuesBitSetMap[selectedMetaDataValue.MetaDataNameValue]
 
-
 			// Only produce the Entry if the all 4 of the BitSets still are valid
-			if 	domainBitSetExistiInMap && groupBitSetExistiInMap && itemBitSetExistiInMap &&  valueBitSetExistiInMap {
+			if domainBitSetExistiInMap && groupBitSetExistInMap && itemBitSetExistInMap && valueBitSetExistInMap {
 
 				var metaDataVaueEntry *boolbits.Entry
 				metaDataVaueEntry, err = boolbits.NewEntry(domainBitSet, metaDataGroupBitSet, metaDataItemBitSet, metaDataValueBitSet)
@@ -130,7 +125,7 @@ func storeTestCaseThatCanBeEditedByUser(
 
 				}
 
-				resultsEntry, err  = resultsEntry.Or(metaDataVaueEntry)
+				resultsEntry, err = resultsEntry.Or(metaDataVaueEntry)
 				if err != nil {
 
 					errorId := "061acd28-e7c0-4438-9c80-5382a9a99ac2"
@@ -143,12 +138,14 @@ func storeTestCaseThatCanBeEditedByUser(
 
 			}
 
-			// Store results Entry in TestCase
-			testCaseModeReference..SimpleTestCaseMetaDataFilterEntry
-
-
-
 		}
+
+		// Store filter results Entry for the TestCase
+		if SimpleTestCaseMetaDataFilterEntryMap == nil {
+			SimpleTestCaseMetaDataFilterEntryMap = make(map[string]*boolbits.Entry)
+		}
+
+		SimpleTestCaseMetaDataFilterEntryMap[testCaseThatCanBeEditedByUser.GetTestCaseUuid()] = resultsEntry
 
 	}
 

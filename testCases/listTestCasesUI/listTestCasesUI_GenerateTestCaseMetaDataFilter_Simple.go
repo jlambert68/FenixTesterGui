@@ -20,6 +20,75 @@ func generateSimpleTestCaseMetaDataFilterContainer(
 
 	//var testCaseMetaDataFilterBottomContainer *fyne.Container
 
+	// Generate the filter function used when user clicks on filter-button or when auto-filter is turned on
+	filterOnMetaDataFunction = func(resultEntry *boolbits.Entry, testCasesModel *testCaseModel.TestCasesModelsStruct) {
+
+		// Load a filtered list into the TestCases-list-table
+		loadTestCaseListTableTable(resultEntry)
+		calculateAndSetCorrectColumnWidths()
+		updateTestCasesListTable(testCasesModel)
+	}
+
+	// Generate the function used for calculating the current MetaData-filter
+	calculateMetaDataFilterFunction = func() {
+
+		var err error
+
+		// Generate Initial Entry for the boolean arithmetic
+		var resultEntry *boolbits.Entry
+		resultEntry, err = boolbits.NewAllZerosEntry(64)
+
+		if err != nil {
+			errorID := "cf0abe12-c6d6-4a38-987a-47137fea19c9"
+			errorMessage := fmt.Sprintf("could not create initial Entry for boolean arithmetic [ErrorID=%s, err='%s']",
+				errorID,
+				err.Error())
+
+			log.Fatalln(errorMessage)
+		}
+
+		// Loop all Simple MetaDataEntry and make boolean 'OR' between all of them
+		for _, simpleMetaDataEntry := range simpleMetaDataFilterEntryMap {
+
+			// If multiple values per MEtaDataItem exist then process them with boolean OR
+			var booleanOrResultsEntry *boolbits.Entry
+			for valueIndex, tempValueEntryListToBeProcessedWithBooleanOr := range simpleMetaDataEntry.valueEntryListToBeProcessedWithBooleanOrSlice {
+
+				if valueIndex == 0 {
+					booleanOrResultsEntry = tempValueEntryListToBeProcessedWithBooleanOr
+
+				} else {
+					booleanOrResultsEntry, err = booleanOrResultsEntry.Or(tempValueEntryListToBeProcessedWithBooleanOr)
+
+					if err != nil {
+						errorID := "750b629a-1b1f-49ce-942b-80968bc118ae"
+						errorMessage := fmt.Sprintf("could not do boolean arithmetic, OR [ErrorID=%s, err='%s']",
+							errorID,
+							err.Error())
+
+						log.Println(errorMessage)
+					}
+
+				}
+			}
+
+			resultEntry, err = resultEntry.Or(booleanOrResultsEntry)
+
+			if err != nil {
+				errorID := "c091dd3e-d059-43d9-9a44-7c9d219b7c36"
+				errorMessage := fmt.Sprintf("could not do boolean arithmetic, OR [ErrorID=%s, err='%s']",
+					errorID,
+					err.Error())
+
+				log.Fatalln(errorMessage)
+			}
+
+		}
+
+		// Load a filtered list into the TestCases-list-table
+		filterOnMetaDataFunction(resultEntry, testCasesModel)
+	}
+
 	// Initiate the 'simpleMetaDataFilterEntryMap'
 	simpleMetaDataFilterEntryMap = make(map[string]simpleMetaDataFilterEntryMapStruct)
 
@@ -129,11 +198,11 @@ func generateSimpleTestCaseMetaDataDomainFilterTopContainer(
 		})
 
 	// Create a custom SelectComboBox, with valueIsValidWarningBox
-	var customSelectComboBox *customMandatorySelectComboBox
-	customSelectComboBox = newCustomMandatorySelectComboBoxWidget(newOwnerDomainSelect, valueIsValidWarningBox)
+	//var customSelectComboBox *customMandatorySelectComboBox
+	newMandatoryOwnerDomainSelect = newCustomMandatorySelectComboBoxWidget(newOwnerDomainSelect, valueIsValidWarningBox)
 
 	// Add the Entry-widget to the Forms-container
-	testCaseOwnerDomainNameFormContainer.Add(customSelectComboBox)
+	testCaseOwnerDomainNameFormContainer.Add(newMandatoryOwnerDomainSelect)
 
 	// Create the VBox-container that will be returned
 	testCaseOwnerDomainContainer = container.NewVBox(testCaseOwnerDomainNameFormContainer)
@@ -145,66 +214,14 @@ func generateSimpleTestCaseMetaDataDomainFilterTopContainer(
 func generateSimpleTestCaseMetaDataDomainFilterBottomContainer(
 	testCasesModel *testCaseModel.TestCasesModelsStruct) (simpleTestCaseMetaDataDomainFilterBottomContainer *fyne.Container) {
 
-	var err error
-
 	var filterTestCasesListButton *widget.Button
 	var clearMetaDataSelectionButton *widget.Button
 
 	// Create the Filter TestCases-list button
 	filterTestCasesListButton = widget.NewButton("Filter TestCases-list", func() {
 
-		// Generate Initial Entry for the boolean arithmetic
-		var resultEntry *boolbits.Entry
-		resultEntry, err = boolbits.NewAllZerosEntry(64)
-
-		if err != nil {
-			errorID := "cf0abe12-c6d6-4a38-987a-47137fea19c9"
-			errorMessage := fmt.Sprintf("could not create initial Entry for boolean arithmetic [ErrorID=%s, err='%s']",
-				errorID,
-				err.Error())
-
-			log.Fatalln(errorMessage)
-		}
-
-		// Loop all Simple MetaDataEntry and make boolean 'AND' between all of them
-		for _, simpleMetaDataEntry := range simpleMetaDataFilterEntryMap {
-
-			// If multiple values per MEtaDataItem exist then process them with boolean OR
-			var booleanOrResultsEntry *boolbits.Entry
-			for valueIndex, tempValueEntryListToBeProcessedWithBooleanOr := range simpleMetaDataEntry.valueEntryListToBeProcessedWithBooleanOrSlice {
-
-				if valueIndex == 0 {
-					booleanOrResultsEntry = tempValueEntryListToBeProcessedWithBooleanOr
-
-				} else {
-					booleanOrResultsEntry, err = booleanOrResultsEntry.Or(tempValueEntryListToBeProcessedWithBooleanOr)
-
-					if err != nil {
-						errorID := "750b629a-1b1f-49ce-942b-80968bc118ae"
-						errorMessage := fmt.Sprintf("could not do boolean arithmetic, OR [ErrorID=%s, err='%s']",
-							errorID,
-							err.Error())
-
-						log.Println(errorMessage)
-					}
-
-				}
-			}
-
-			resultEntry, err = resultEntry.Or(booleanOrResultsEntry)
-
-			if err != nil {
-				errorID := "c091dd3e-d059-43d9-9a44-7c9d219b7c36"
-				errorMessage := fmt.Sprintf("could not do boolean arithmetic, AND [ErrorID=%s, err='%s']",
-					errorID,
-					err.Error())
-
-				log.Fatalln(errorMessage)
-			}
-
-		}
-
-		fmt.Println("Filter TestCases-list")
+		// Trigger the function to calculate the MetaDataFilter
+		calculateMetaDataFilterFunction()
 
 	})
 
@@ -227,12 +244,32 @@ func generateSimpleTestCaseMetaDataDomainFilterBottomContainer(
 		testCaseMainAreaForMetaDataFilterContainer = newSimpleTestCaseMetaDataMainFilterContainer
 
 		newSimpleTestCaseMetaDataMainFilterContainer.Refresh()
+
+		// clear the Domain-dropdown
+		newMandatoryOwnerDomainSelect.selectComboBox.ClearSelected()
+		newMandatoryOwnerDomainSelect.Refresh()
 	})
+
+	// Create radio button for Auto-filter where each change in filter setting automatically filters the list
+	var autoFilterRadioGroup *widget.RadioGroup
+	autoFilterRadioGroup = widget.NewRadioGroup([]string{autoFilterRadioGroupOn, autoFilterRadioGroupOff}, func(selectedValue string) {
+
+		if selectedValue == autoFilterRadioGroupOn {
+
+			useAutoFilter = true
+		} else {
+
+			useAutoFilter = false
+		}
+
+	})
+	autoFilterRadioGroup.SetSelected(autoFilterRadioGroupOn)
 
 	// Container having the Buttons
 	simpleTestCaseMetaDataDomainFilterBottomContainer = container.NewHBox(
 		filterTestCasesListButton,
-		clearMetaDataSelectionButton)
+		clearMetaDataSelectionButton,
+		autoFilterRadioGroup)
 
 	return simpleTestCaseMetaDataDomainFilterBottomContainer
 
@@ -435,6 +472,11 @@ func buildGUIFromMetaDataGroupsMap(
 
 					}
 
+					// Check if auto-filter is enabled. If so then calculate the new TestCase-liset
+					if useAutoFilter == true {
+						calculateMetaDataFilterFunction()
+					}
+
 				})
 				// Extract Selected values from TestCase
 				var selectedValue string
@@ -557,6 +599,11 @@ func buildGUIFromMetaDataGroupsMap(
 						simpleMetaDataFilterEntryMap[entryKey] = simpleMetaDataFilterEntryMapStruct{
 							valueEntryListToBeProcessedWithBooleanOrSlice: valueEntryListToBeProcessedWithBooleanOrSlice}
 
+					}
+
+					// Check if auto-filter is enabled. If so then calculate the new TestCase-liset
+					if useAutoFilter == true {
+						calculateMetaDataFilterFunction()
 					}
 
 				})

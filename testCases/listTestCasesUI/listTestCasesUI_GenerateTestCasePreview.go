@@ -3,6 +3,7 @@ package listTestCasesUI
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testCases/listTestCasesModel"
 	"bytes"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -31,7 +32,7 @@ func GenerateTestCasePreviewContainer(
 	var tempTestCasePreviewStructureMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage
 
 	// Get Data for the Preview
-	tempTestCasePreviewStructureMessage = testCasesModel.TestCasesThatCanBeEditedByUserMap[testCaseUuid].TestCasePreview.TestCasePreview
+	tempTestCasePreviewStructureMessage = listTestCasesModel.TestCasesThatCanBeEditedByUserMap[testCaseUuid].TestCasePreview.TestCasePreview
 
 	// Create the Top container
 	testCasePreviewTopContainer = container.New(layout.NewFormLayout())

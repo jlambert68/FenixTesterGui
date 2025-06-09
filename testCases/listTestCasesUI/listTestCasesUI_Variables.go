@@ -1,6 +1,7 @@
 package listTestCasesUI
 
 import (
+	"FenixTesterGui/testCase/testCaseModel"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
@@ -10,10 +11,10 @@ import (
 )
 
 // The UI-table for the List with TestCase
-var testCaseListTable *widget.Table
+var testCaseaListTable *widget.Table
 
 // The data source used to produce the UI-table for the List with TestCase
-var testCaseListTableTable [][]string
+var testCasesListTableTable [][]string
 
 // Keeps the number of TestCase that is shown in the list, after local filter is applied
 var numberOfTestCasesAfterLocalFilters binding.String
@@ -64,6 +65,11 @@ var simpleTestCaseMetaDataSelectedDomainUuid string
 var simpleTestCaseMetaDataSelectedDomainDisplayName string
 var testCaseFullMetaDataFilterContainer *fyne.Container
 var testCaseMainAreaForMetaDataFilterContainer *fyne.Container
+var newMandatoryOwnerDomainSelect *customMandatorySelectComboBox
+
+var filterOnMetaDataFunction func(*boolbits.Entry, *testCaseModel.TestCasesModelsStruct)
+var calculateMetaDataFilterFunction func()
+var useAutoFilter bool
 
 // Holding all separate MetaDataEntries used in the Simple MetaData-filter
 var simpleMetaDataFilterEntryMap map[string]simpleMetaDataFilterEntryMapStruct // Key = DomainUuid.GroupName.GroupItemName
@@ -105,3 +111,8 @@ var previousHeader *sortableHeaderLabelStruct
 
 // The current Columns SortDirect
 var currentSortColumnsSortDirection SortingDirectionType
+
+const (
+	autoFilterRadioGroupOn  = "AutoFilter - On"
+	autoFilterRadioGroupOff = "AutoFilter - Off"
+)

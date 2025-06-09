@@ -4,6 +4,7 @@ import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/detailedExecutionsModel"
 	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testCases/listTestCasesModel"
 	"bytes"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -11,9 +12,11 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"github.com/jlambert68/Fast_BitFilter_MetaData/boolbits/boolbits"
 	"github.com/sirupsen/logrus"
 	"image/color"
 	"image/png"
+	"log"
 	"sort"
 	"strconv"
 )
@@ -23,7 +26,7 @@ import (
 func RemoveTestCaseFromList(testCaseUuidToBeRemoved string, testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
 	// Delete TestCase from 'TestCasesThatCanBeEditedByUserMap'
-	delete(testCasesModel.TestCasesThatCanBeEditedByUserMap, testCaseUuidToBeRemoved)
+	delete(listTestCasesModel.TestCasesThatCanBeEditedByUserMap, testCaseUuidToBeRemoved)
 
 	// Delete TestCase from 'TestCasesThatCanBeEditedByUserSlice'
 	/*
@@ -45,7 +48,7 @@ func RemoveTestCaseFromList(testCaseUuidToBeRemoved string, testCasesModel *test
 	*/
 
 	// Update table-list and update Table
-	loadTestCaseListTableTable(testCasesModel)
+	loadTestCaseListTableTable(nil)
 	calculateAndSetCorrectColumnWidths()
 	updateTestCasesListTable(testCasesModel)
 
@@ -55,7 +58,7 @@ func RemoveTestCaseFromList(testCaseUuidToBeRemoved string, testCasesModel *test
 func generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
 	// Correctly initialize the selectedFilesTable as a new table
-	testCaseListTable = widget.NewTable(
+	testCaseaListTable = widget.NewTable(
 		func() (int, int) { return 0, numberColumnsInTestCasesListUI }, // Start with zero rows, 8 columns
 		func() fyne.CanvasObject {
 			return widget.NewLabel("") // Create cells as labels
@@ -101,8 +104,8 @@ func generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStr
 	}
 
 	// Define the Header
-	testCaseListTable.ShowHeaderRow = true
-	testCaseListTable.CreateHeader = func() fyne.CanvasObject {
+	testCaseaListTable.ShowHeaderRow = true
+	testCaseaListTable.CreateHeader = func() fyne.CanvasObject {
 		//return widget.NewLabel("") // Create cells as labels
 
 		var tempNewSortableHeaderLabel *sortableHeaderLabelStruct
@@ -128,10 +131,10 @@ func generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStr
 // Update the Table
 func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
-	testCaseListTable.Length = func() (int, int) {
-		return len(testCaseListTableTable), numberColumnsInTestCasesListUI
+	testCaseaListTable.Length = func() (int, int) {
+		return len(testCasesListTableTable), numberColumnsInTestCasesListUI
 	}
-	testCaseListTable.CreateCell = func() fyne.CanvasObject {
+	testCaseaListTable.CreateCell = func() fyne.CanvasObject {
 
 		tempNewClickableLabel := newClickableTableLabel("", func() {}, false, testCasesModel)
 		tempContainer := container.NewStack(canvas.NewRectangle(color.Transparent), tempNewClickableLabel, tempNewClickableLabel.textInsteadOfLabel)
@@ -139,15 +142,15 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 		return tempContainer
 
 	}
-	testCaseListTable.UpdateCell = func(id widget.TableCellID, cell fyne.CanvasObject) {
+	testCaseaListTable.UpdateCell = func(id widget.TableCellID, cell fyne.CanvasObject) {
 
 		clickableContainer := cell.(*fyne.Container)
 		clickable := clickableContainer.Objects[1].(*clickableTableLabel)
 		rectangle := clickableContainer.Objects[0].(*canvas.Rectangle)
-		clickable.SetText(testCaseListTableTable[id.Row][id.Col])
+		clickable.SetText(testCasesListTableTable[id.Row][id.Col])
 		clickable.isClickable = true
 		clickable.currentRow = int16(id.Row)
-		clickable.currentTestCaseUuid = testCaseListTableTable[id.Row][testCaseUuidColumnNumber]
+		clickable.currentTestCaseUuid = testCasesListTableTable[id.Row][testCaseUuidColumnNumber]
 
 		clickable.onDoubleTap = func() {
 
@@ -251,7 +254,7 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 	}
 
 	// Update the Header
-	testCaseListTable.UpdateHeader = func(id widget.TableCellID, cell fyne.CanvasObject) {
+	testCaseaListTable.UpdateHeader = func(id widget.TableCellID, cell fyne.CanvasObject) {
 		tempSortableHeaderLabel := cell.(*sortableHeaderLabelStruct)
 		tempSortableHeaderLabel.label.SetText(testCaseListTableHeader[id.Col])
 		tempSortableHeaderLabel.label.TextStyle = fyne.TextStyle{Bold: true}
@@ -272,7 +275,7 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 		tempSortableHeaderLabel.Refresh()
 	}
 
-	testCaseListTable.Refresh()
+	testCaseaListTable.Refresh()
 }
 
 // TestCaseUuid
@@ -299,7 +302,7 @@ func calculateAndSetCorrectColumnWidths() {
 	}
 
 	// Loop all rows
-	for _, tempRow := range testCaseListTableTable {
+	for _, tempRow := range testCasesListTableTable {
 
 		// Loop columns for a row to get column width
 		for columnIndex, tempColumnValue := range tempRow {
@@ -318,20 +321,81 @@ func calculateAndSetCorrectColumnWidths() {
 
 	// Loop columns in table and set column width including some Padding
 	for columnIndex, columnWidth := range columnsMaxSizeSlice {
-		testCaseListTable.SetColumnWidth(columnIndex, columnWidth+theme.Padding()*4)
+		testCaseaListTable.SetColumnWidth(columnIndex, columnWidth+theme.Padding()*4)
 	}
 
 	// Refresh the table
-	testCaseListTable.Refresh()
+	testCaseaListTable.Refresh()
 
 }
 
-func loadTestCaseListTableTable(testCasesModel *testCaseModel.TestCasesModelsStruct) {
+func loadTestCaseListTableTable(testCaseMetaDataFilterEntry *boolbits.Entry) {
 
-	testCaseListTableTable = nil
+	testCasesListTableTable = nil
+	var testCaseUuid string
+	var existInMap bool
+	var err error
 
 	// Loop all TestCasesMapPtr and add to '[][]string'-object for the Table
-	for _, tempTestCase := range testCasesModel.TestCasesThatCanBeEditedByUserMap {
+	for _, tempTestCase := range listTestCasesModel.TestCasesThatCanBeEditedByUserMap {
+
+		// Check and apply MetaData-filter
+		if testCaseMetaDataFilterEntry != nil {
+
+			// Generate Initial Entry for the boolean arithmetic
+			var resultEntry *boolbits.Entry
+			resultEntry, err = boolbits.NewAllZerosEntry(64)
+			if err != nil {
+				errorID := "cc06778a-54e0-4281-9a67-088a12bf9107"
+				errorMessage := fmt.Sprintf("could not create initial Entry for boolean arithmetic [ErrorID=%s, err='%s']",
+					errorID,
+					err.Error())
+
+				log.Fatalln(errorMessage)
+			}
+
+			// Copy TestCase-filter
+			resultEntry, err = resultEntry.Or(testCaseMetaDataFilterEntry)
+
+			if err != nil {
+				errorID := "4e7bd8b6-b0be-4f79-8d23-679215d074ed"
+				errorMessage := fmt.Sprintf("could not do boolean arithmetic, OR [ErrorID=%s, err='%s']",
+					errorID,
+					err.Error())
+
+				log.Fatalln(errorMessage)
+			}
+
+			// Get TestCaseUuid
+			testCaseUuid = tempTestCase.GetTestCaseUuid()
+
+			// Get precomputed MetaDataFilter for TestCase
+			var tempMetaDataFilterforTestCase *boolbits.Entry
+			tempMetaDataFilterforTestCase, existInMap = listTestCasesModel.SimpleTestCaseMetaDataFilterEntryMap[testCaseUuid]
+
+			// When TestCase doesn't have any filter set then donät show that TestCase
+			if existInMap == false {
+				continue
+			}
+
+			// Apply filter
+			resultEntry, err = resultEntry.And(tempMetaDataFilterforTestCase)
+
+			if err != nil {
+				errorID := "dc08ba75-345a-45bd-8695-73d941acb249"
+				errorMessage := fmt.Sprintf("could not do boolean arithmetic, AND [ErrorID=%s, err='%s']",
+					errorID,
+					err.Error())
+
+				log.Fatalln(errorMessage)
+			}
+
+			// Check if TestCase-filter matches the user set MetaDataFilter. If not the drop TestCase for the list
+			if resultEntry.Equals(testCaseMetaDataFilterEntry) == false {
+				continue
+			}
+
+		}
 
 		// Create temporary Row-object for the table
 		var tempRowslice []string
@@ -413,16 +477,16 @@ func loadTestCaseListTableTable(testCasesModel *testCaseModel.TestCasesModelsStr
 		tempRowslice = append(tempRowslice, tempTestCase.GetDomainUuid())
 
 		// Add Row to slice of rows for the table
-		testCaseListTableTable = append(testCaseListTableTable, tempRowslice)
+		testCasesListTableTable = append(testCasesListTableTable, tempRowslice)
 
 	}
 
-	// Do an initial sort 'testCaseListTableTable' descending on 'LastSavedTimeStamp'
-	if testCasesModel.TestCasesThatCanBeEditedByUserMap != nil &&
-		len(testCasesModel.TestCasesThatCanBeEditedByUserMap) > 0 {
+	// Do an initial sort 'testCasesListTableTable' descending on 'LastSavedTimeStamp'
+	if listTestCasesModel.TestCasesThatCanBeEditedByUserMap != nil &&
+		len(listTestCasesModel.TestCasesThatCanBeEditedByUserMap) > 0 {
 
 		currentSortColumn = initialColumnToSortOn
-		sort2DStringSlice(testCaseListTableTable, initialColumnToSortOn, initialSortDirectionForInitialColumnToSortOn)
+		sort2DStringSlice(testCasesListTableTable, initialColumnToSortOn, initialSortDirectionForInitialColumnToSortOn)
 
 	}
 

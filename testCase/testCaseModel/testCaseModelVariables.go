@@ -39,7 +39,7 @@ type TestCasesModelsStruct struct {
 	DomainsThatCanOwnTheTestCaseMap               map[string]*DomainThatCanOwnTheTestCaseStruct
 	TemplateRepositoryApiUrlMap                   map[string]*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage
 	TestCaseMetaDataForDomains                    TestCaseMetaDataForDomainsStruct
-	TestCasesThatCanBeEditedByUserMap             map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseThatCanBeEditedByUserMessage
+
 	//TestCasesThatCanBeEditedByUserSlice           []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseThatCanBeEditedByUserMessage
 
 	//AvailableBuildingBlocksModel                  *gui.AvailableBuildingBlocksModelStruct

@@ -66,9 +66,9 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 		fmt.Println("'loadTestCaseFromDataBaseButton' was pressed")
 		listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(
 			testCasesModel,
-			time.Now().Add(-time.Hour*1000), time.Now().Add(-time.Hour*1000),
-			testCasesModel)
+			time.Now().Add(-time.Hour*1000), time.Now().Add(-time.Hour*1000))
 		filterTestCasesButtonFunction()
+		//sortTestCasesTable()
 	}
 
 	// Define the 'loadTestCaseFromDataBaseButton'
@@ -77,20 +77,20 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 	// Define the function to be executed to filter TestCasesMapPtr that the user can edit
 	filterTestCasesButtonFunction = func() {
 		fmt.Println("'filterTestCasesButton' was pressed")
-		loadTestCaseListTableTable(testCasesModel)
+		loadTestCaseListTableTable(nil)
 		calculateAndSetCorrectColumnWidths()
 		updateTestCasesListTable(testCasesModel)
 
 		// Update the number TestCasesMapPtr in the list
 		var numberOfRowsAsString string
-		numberOfRowsAsString = strconv.Itoa(len(testCaseListTableTable))
+		numberOfRowsAsString = strconv.Itoa(len(testCasesListTableTable))
 		numberOfTestCasesAfterLocalFilters.Set(
 			fmt.Sprintf("Number of TestCasesMapPtr after local filters was applied: %s",
 				numberOfRowsAsString))
 
 		// Update the number TestCasesMapPtr retrieved from Database
 		var numberOfRowsFromDatabaseAsString string
-		numberOfRowsFromDatabaseAsString = strconv.Itoa(len(testCaseListTableTable))
+		numberOfRowsFromDatabaseAsString = strconv.Itoa(len(testCasesListTableTable))
 		numberOfTestCasesInTheDatabaseSearch.Set(
 			fmt.Sprintf("Number of TestCasesMapPtr retrieved from the Database: %s",
 				numberOfRowsFromDatabaseAsString))
@@ -121,7 +121,7 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 
 	// Initiate the Table
 	generateTestCasesListTable(testCasesModel)
-	testCaseTableContainer := container.NewBorder(nil, nil, nil, nil, testCaseListTable)
+	testCaseTableContainer := container.NewBorder(nil, nil, nil, nil, testCaseaListTable)
 
 	// Create the Scroll container for the List
 	testCasesListScrollContainer = container.NewScroll(testCaseTableContainer)

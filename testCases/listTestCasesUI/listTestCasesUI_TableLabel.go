@@ -85,7 +85,7 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 	preViewAndFilterTabs.Select(preViewTab)
 	GenerateTestCasePreviewContainer(l.currentTestCaseUuid, l.testCasesModel)
 	testCaseThatIsShownInPreview = l.currentTestCaseUuid
-	testCaseListTable.Refresh()
+	testCaseaListTable.Refresh()
 
 }
 
@@ -137,7 +137,7 @@ func (l *clickableTableLabel) MouseIn(*desktop.MouseEvent) {
 
 	l.TextStyle = fyne.TextStyle{Bold: true}
 	l.Refresh()
-	testCaseListTable.Refresh()
+	testCaseaListTable.Refresh()
 
 }
 func (l *clickableTableLabel) MouseMoved(*desktop.MouseEvent) {}
@@ -158,6 +158,6 @@ func (l *clickableTableLabel) MouseOut() {
 
 	l.TextStyle = fyne.TextStyle{Bold: false}
 	l.Refresh()
-	testCaseListTable.Refresh()
+	testCaseaListTable.Refresh()
 
 }

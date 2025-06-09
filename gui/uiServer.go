@@ -20,6 +20,8 @@ import (
 	"FenixTesterGui/testCaseSubscriptionHandler"
 	"FenixTesterGui/testCases/listTestCasesModel"
 	"FenixTesterGui/testCases/listTestCasesUI"
+	"FenixTesterGui/testSuite/testSuiteUI"
+	"FenixTesterGui/testSuites/testSuitesUI"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -317,9 +319,17 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	var buildTestCasesUI fyne.CanvasObject
 	buildTestCasesUI = uiServer.loadUI()
 
-	// Create the UI for List TestCasesMapPtr-UI
+	// Create the UI for List TestCases
 	var tempListTestCasesUI fyne.CanvasObject
 	tempListTestCasesUI = listTestCasesUI.GenerateListTestCasesUI(&uiServer.testCasesModel)
+
+	// Create the UI for Build TestSuite-UI
+	var buildTestSuiteUI fyne.CanvasObject
+	buildTestSuiteUI = testSuiteUI.GenerateBuildTestSuiteUI(&uiServer.testCasesModel)
+
+	// Create the UI for List TestSuites
+	var listTestSuitesUI fyne.CanvasObject
+	listTestSuitesUI = testSuitesUI.GenerateListTestSuitesUI(&uiServer.testCasesModel)
 
 	// Create the TabObject used to show TestCaseExecutions-list with Execution-PreView and all TestCaseExecutions-tabs
 	var detailedTestCaseExecutionsUITabObject *container.DocTabs
@@ -419,7 +429,9 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	tabs := container.NewAppTabs(
 		container.NewTabItem("Build TestCase", buildTestCasesUI),
-		container.NewTabItem("List TestCasesMapPtr", tempListTestCasesUI),
+		container.NewTabItem("List TestCases", tempListTestCasesUI),
+		container.NewTabItem("Build TestSuite", buildTestSuiteUI),
+		container.NewTabItem("List TestSuites", listTestSuitesUI),
 		container.NewTabItem("Executions (Subscriptions)", subscriptionExecutionsUITab),
 		container.NewTabItem("Executions", executionsUITab),
 		container.NewTabItem("Detailed TestCaseExecutions - short summary", detailedTestCaseExecutionSummaryTab),

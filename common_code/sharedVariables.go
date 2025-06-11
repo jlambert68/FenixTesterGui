@@ -85,8 +85,9 @@ var CurrentUserAuthenticatedTowardsGCP string
 
 const ZeroUuid = "00000000-0000-0000-0000-000000000000"
 
-// The number of characters to be shown in TestCase name on the Tab
+// The number of characters to be shown in TestCase and TestSuite name on the Tab
 const TestCaseTabNameVisibleLength = 50
+const TestSuiteTabNameVisibleLength = 50
 
 // The number of characters that will be extracted from a UUID when shorting it to be used in UI
 const numberOfCharactersFromUuid = 8

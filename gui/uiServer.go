@@ -20,8 +20,8 @@ import (
 	"FenixTesterGui/testCaseSubscriptionHandler"
 	"FenixTesterGui/testCases/listTestCasesModel"
 	"FenixTesterGui/testCases/listTestCasesUI"
-	"FenixTesterGui/testSuite/testSuiteUI"
-	"FenixTesterGui/testSuites/testSuitesUI"
+	"FenixTesterGui/testSuites/testSuitesTabsUI"
+	"FenixTesterGui/testSuitesList/testSuitesListUI"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -325,11 +325,11 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	// Create the UI for Build TestSuite-UI
 	var buildTestSuiteUI fyne.CanvasObject
-	buildTestSuiteUI = testSuiteUI.GenerateBuildTestSuiteUI(&uiServer.testCasesModel)
+	buildTestSuiteUI = testSuitesTabsUI.GenerateTestSuiteTabObject(&uiServer.testCasesModel)
 
 	// Create the UI for List TestSuites
 	var listTestSuitesUI fyne.CanvasObject
-	listTestSuitesUI = testSuitesUI.GenerateListTestSuitesUI(&uiServer.testCasesModel)
+	listTestSuitesUI = testSuitesListUI.GenerateListTestSuitesUI(&uiServer.testCasesModel)
 
 	// Create the TabObject used to show TestCaseExecutions-list with Execution-PreView and all TestCaseExecutions-tabs
 	var detailedTestCaseExecutionsUITabObject *container.DocTabs

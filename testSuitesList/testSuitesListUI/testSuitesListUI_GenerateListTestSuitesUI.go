@@ -1,4 +1,4 @@
-package testSuitesUI
+package testSuitesListUI
 
 import (
 	"FenixTesterGui/testCase/testCaseModel"

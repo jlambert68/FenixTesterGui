@@ -83,11 +83,11 @@ func GenerateTestSuiteTabObject(testCasesModel *testCaseModel.TestCasesModelsStr
 			testSuiteHasChangedData = testSuitesModel.IsTestSuiteChanged()
 
 			if testSuiteHasChangedData == true {
-				question := widget.NewLabel("Do you want to save your changes before closing this tab?")
+				question := widget.NewLabel("Do you want to close TestSuite when there are unsaved changes?")
 				dialog.ShowCustomConfirm(
 					"Close TestSuite",
-					"Close",
-					"Cancel",
+					"Just close it",
+					"I want to save the changes",
 					question,
 					func(close bool) {
 						if close {
@@ -103,6 +103,14 @@ func GenerateTestSuiteTabObject(testCasesModel *testCaseModel.TestCasesModelsStr
 					},
 					*sharedCode.FenixMasterWindowPtr,
 				)
+			} else {
+				// No changes so, just close the Tab
+
+				// Close TestSuite
+				TestSuiteTabs.Remove(tab)
+
+				// remove Tab from Tab-map
+				delete(testSuiteUiMap, tab)
 			}
 		}
 	}

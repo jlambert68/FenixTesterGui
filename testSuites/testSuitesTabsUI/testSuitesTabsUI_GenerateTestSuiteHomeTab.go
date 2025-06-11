@@ -3,7 +3,6 @@ package testSuitesTabsUI
 import (
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testSuites/testSuiteUI"
-	"FenixTesterGui/testSuites/testSuitesModel"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -12,8 +11,6 @@ import (
 )
 
 func GenerateTestSuiteHomeTab(testCasesModel *testCaseModel.TestCasesModelsStruct) {
-
-	var err error
 
 	var testSuiteHomePageTabContainer *fyne.Container
 	var testSuiteHomePageTabToolbar *widget.Toolbar
@@ -24,53 +21,7 @@ func GenerateTestSuiteHomeTab(testCasesModel *testCaseModel.TestCasesModelsStruc
 		// New TestSuite
 		widget.NewToolbarAction(theme.DocumentIcon(), func() {
 
-			// Generate the new 'TestSuiteModel'
-			var newTestSuiteModel *testSuitesModel.TestSuiteModelStruct
-			newTestSuiteModel = testSuitesModel.GenerateNewTestSuiteModelObject()
-
-			// Generate a new TestSuiteUI-object
-			var newTestSuiteUiObject *testSuiteUI.TestSuiteUiStruct
-			newTestSuiteUiObject = &testSuiteUI.TestSuiteUiStruct{
-				TestSuiteTabItem:  nil,
-				TestSuiteModelPtr: newTestSuiteModel,
-			}
-
-			var newTestSuiteUiObjectContainer *fyne.Container
-
-			newTestSuiteUiObjectContainer, err = newTestSuiteUiObject.GenerateBuildNewTestSuiteUI(testCasesModel)
-
-			if err != nil {
-				newTestSuiteUiObjectContainer = container.NewVBox(
-					widget.NewLabel(fmt.Sprintf("couldn't generate a new 'TestSuite', err=%s'",
-						err.Error())))
-
-			}
-
-			// Create the Tab-UI-object
-			newTestSuiteUiObject.TestSuiteTabItem = container.NewTabItem("<New TestSuite>", newTestSuiteUiObjectContainer)
-
-			// Get the TestSuiteUiMap from the map-pointer
-			var testSuiteUiMap map[*container.TabItem]*testSuiteUI.TestSuiteUiStruct
-
-			// Check if Map needs to be initialized
-			if TestSuiteUiMapPtr == nil {
-				testSuiteUiMap = make(map[*container.TabItem]*testSuiteUI.TestSuiteUiStruct)
-				TestSuiteUiMapPtr = &testSuiteUiMap
-			}
-
-			testSuiteUiMap = *TestSuiteUiMapPtr
-
-			// Store the 'newTestSuiteUiObject' in the map
-			testSuiteUiMap[newTestSuiteUiObject.TestSuiteTabItem] = newTestSuiteUiObject
-
-			// Add New TestSuite-tab to all tabs
-			TestSuiteTabs.Append(newTestSuiteUiObject.TestSuiteTabItem)
-
-			// Set focus on the new TestSuite-tab
-			TestSuiteTabs.Select(newTestSuiteUiObject.TestSuiteTabItem)
-
-			// Refresh the new TestSuite-tab
-			TestSuiteTabs.Refresh()
+			GenerateNewTestSuiteTab(testCasesModel)
 
 		}),
 

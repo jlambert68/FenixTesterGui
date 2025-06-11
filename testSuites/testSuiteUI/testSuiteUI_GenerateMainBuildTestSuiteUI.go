@@ -6,7 +6,6 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-	uuidGenerator "github.com/google/uuid"
 )
 
 // GenerateBuildNewTestSuiteUI
@@ -16,26 +15,18 @@ func (testSuiteUiModel TestSuiteUiStruct) GenerateBuildNewTestSuiteUI(
 	newTestSuiteUIContainer *fyne.Container,
 	err error) {
 
-	// Generate new TestSuite-UUID
-	var testSuiteUuid string
-	testSuiteUuid = uuidGenerator.New().String()
-
 	// Generate the new TestSuiteModelStruct
-	var newTestSuiteModel testSuitesModel.TestSuiteModelStruct
-	newTestSuiteModel = testSuitesModel.TestSuiteModelStruct{
-		TestSuiteUIModelBinding: testSuitesModel.TestSuiteUIModelBindingStruct{
-			TestSuiteDeletionDate:    "",
-			TestSuiteName:            "",
-			TestSuiteDescription:     "",
-			TestSuiteOwnerDomainUuid: "",
-			TestSuiteIsNew:           true,
-		},
-	}
+	var newTestSuiteModel *testSuitesModel.TestSuiteModelStruct
+	newTestSuiteModel = testSuitesModel.GenerateNewTestSuiteModelObject()
+
+	// Get the new TestSuite-UUID
+	var testSuiteUuid string
+	testSuiteUuid = newTestSuiteModel.GetTestSuiteUuid()
 
 	// Check if TestSuitesModel needs to be initiated
 	if testSuitesModel.TestSuitesModelPtr == nil {
 
-		// Initate 'TestSuitesMap'
+		// Initiate 'TestSuitesMap'
 		var tempTestSuitesMap map[string]*testSuitesModel.TestSuiteModelStruct
 		tempTestSuitesMap = make(map[string]*testSuitesModel.TestSuiteModelStruct)
 
@@ -51,7 +42,7 @@ func (testSuiteUiModel TestSuiteUiStruct) GenerateBuildNewTestSuiteUI(
 	existingTestSuitesMap = *testSuitesModel.TestSuitesModelPtr.TestSuitesMapPtr
 
 	// Save new TestSuiteModel in TestSuitesModel
-	existingTestSuitesMap[testSuiteUuid] = &newTestSuiteModel
+	existingTestSuitesMap[testSuiteUuid] = newTestSuiteModel
 
 	var buildTestSuiteSplitContainer *container.Split
 	var leftSideBuildTestSuiteContainer *fyne.Container

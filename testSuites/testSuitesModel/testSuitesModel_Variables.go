@@ -23,6 +23,7 @@ type TestSuiteModelStruct struct {
 	TestSuiteUIModelBinding TestSuiteUIModelBindingStruct
 }
 
+// TestSuiteUIModelBindingStruct
 // Holding bindings to textboxes, dropDown, in UI
 type TestSuiteUIModelBindingStruct struct {
 	TestSuiteDeletionDate    string // Date that TestSuite will be deleted

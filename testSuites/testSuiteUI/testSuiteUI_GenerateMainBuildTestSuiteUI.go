@@ -43,7 +43,7 @@ func (testSuiteUiModel TestSuiteUiStruct) GenerateBuildNewTestSuiteUI(
 		tempTestSuitesModel = testSuitesModel.TestSuitesModelStruct{
 			TestSuitesMapPtr: &tempTestSuitesMap}
 
-		// Store the initated Object
+		// Store the initiated Object
 		testSuitesModel.TestSuitesModelPtr = &tempTestSuitesModel
 	}
 
@@ -92,7 +92,7 @@ func GenerateBuildExistingTestSuiteUI(
 	var newTestSuiteUiObject *TestSuiteUiStruct
 	newTestSuiteUiObject = &TestSuiteUiStruct{
 		testSuiteTabItem:  nil,
-		testSuiteModelPtr: nil,
+		TestSuiteModelPtr: nil,
 	}
 
 	// Generate leftSideBuildTestSuite - Main information for TestSuite

@@ -3,6 +3,7 @@ package testSuitesTabsUI
 import (
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testSuites/testSuiteUI"
+	"FenixTesterGui/testSuites/testSuitesModel"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -12,7 +13,6 @@ import (
 
 func GenerateTestSuiteHomeTab(testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
-	var testSuiteHomePageTab *container.TabItem
 	var err error
 
 	var testSuiteHomePageTabContainer *fyne.Container
@@ -24,11 +24,15 @@ func GenerateTestSuiteHomeTab(testCasesModel *testCaseModel.TestCasesModelsStruc
 		// New TestSuite
 		widget.NewToolbarAction(theme.DocumentIcon(), func() {
 
-			fmt.Println("New TestSuite")
+			// Generate the new 'TestSuiteModel'
+			var newTestSuiteModel *testSuitesModel.TestSuiteModelStruct
+			newTestSuiteModel = testSuitesModel.GenerateNewTestSuiteModelObject()
+
 			// Generate a new TestSuiteUI-object
 			var newTestSuiteUiObject *testSuiteUI.TestSuiteUiStruct
 			newTestSuiteUiObject = &testSuiteUI.TestSuiteUiStruct{
-				TestSuiteTabItem: nil,
+				TestSuiteTabItem:  nil,
+				TestSuiteModelPtr: newTestSuiteModel,
 			}
 
 			var newTestSuiteUiObjectContainer *fyne.Container
@@ -82,13 +86,30 @@ func GenerateTestSuiteHomeTab(testCasesModel *testCaseModel.TestCasesModelsStruc
 		testSuiteHomePageTabToolbar, nil, nil, nil, nil)
 
 	// Create the HomePage-tab
-	testSuiteHomePageTab = &container.TabItem{
+	testSuiteHomeTabItem = &container.TabItem{
 		Text:    "Build TestSuites",
 		Icon:    theme.HomeIcon(),
 		Content: testSuiteHomePageTabContainer,
 	}
 
 	// Add HomePage-tab to all TestSuite-Tabs
-	TestSuiteTabs.Append(testSuiteHomePageTab)
+	TestSuiteTabs.Append(testSuiteHomeTabItem)
+
+	// Add HomePage-tab 'open' Tab-items for TestSuites
+	var testSuiteUiMap map[*container.TabItem]*testSuiteUI.TestSuiteUiStruct
+
+	if TestSuiteUiMapPtr == nil {
+		testSuiteUiMap = make(map[*container.TabItem]*testSuiteUI.TestSuiteUiStruct)
+		TestSuiteUiMapPtr = &testSuiteUiMap
+	}
+	testSuiteUiMap = *TestSuiteUiMapPtr
+
+	var testSuiteUIForHomeTab *testSuiteUI.TestSuiteUiStruct
+	testSuiteUIForHomeTab = &testSuiteUI.TestSuiteUiStruct{
+		TestSuiteTabItem:  testSuiteHomeTabItem,
+		TestSuiteModelPtr: nil,
+	}
+
+	testSuiteUiMap[testSuiteHomeTabItem] = testSuiteUIForHomeTab
 
 }

@@ -143,10 +143,10 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteDeletionDateArea(
 	err error) {
 
 	// Verify that there is a TestSuiteModel
-	if testSuiteUiModel.testSuiteModelPtr == nil {
+	if testSuiteUiModel.TestSuiteModelPtr == nil {
 
 		errorId := "d2338d89-979b-44a4-b3fb-21fbada2dee9"
-		err = errors.New(fmt.Sprintf("testSuiteModelPtr is nil. TestSuiteUuid=%s [ErrorID: %s]",
+		err = errors.New(fmt.Sprintf("TestSuiteModelPtr is nil. TestSuiteUuid=%s [ErrorID: %s]",
 			testSuiteUuid,
 			errorId))
 
@@ -159,7 +159,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteDeletionDateArea(
 
 	// Get current TestSuiteModel
 	var currentTestSuiteModel testSuitesModel.TestSuiteModelStruct
-	currentTestSuiteModel = *testSuiteUiModel.testSuiteModelPtr
+	currentTestSuiteModel = *testSuiteUiModel.TestSuiteModelPtr
 
 	var deleteTestSuiteButton *widget.Button
 

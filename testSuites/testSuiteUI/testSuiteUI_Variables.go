@@ -9,7 +9,7 @@ import (
 // Struct that holds all variables for one TestSuite-UI-object
 type TestSuiteUiStruct struct {
 	TestSuiteTabItem  *container.TabItem
-	testSuiteModelPtr *testSuitesModel.TestSuiteModelStruct
+	TestSuiteModelPtr *testSuitesModel.TestSuiteModelStruct
 
 	// UI components
 }

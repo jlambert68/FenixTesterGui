@@ -14,7 +14,7 @@ import (
 // Generate the TestCaseDescription Area for the TestCase
 func (testSuiteUiModel *TestSuiteUiStruct) generateTestCaseDescriptionArea(
 	testSuiteUuid string) (
-	testCaseDescriptionArea fyne.CanvasObject,
+	testCaseDescriptionAreaContainer *fyne.Container,
 	err error) {
 
 	var existsInMap bool
@@ -61,8 +61,23 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestCaseDescriptionArea(
 		var trimmedValue string
 		trimmedValue = strings.Trim(newValue, " ")
 
+		// Get entryOnChangetestSuitesMap
+		var entryOnChangetestSuitesMap map[string]*testSuitesModel.TestSuiteModelStruct
+		entryOnChangetestSuitesMap = *testSuitesModel.TestSuitesModelPtr.TestSuitesMapPtr
+
+		// Get a pointer to the TestSuite-model and the TestSuite-model itself
+		var entryOnChangeCurrentTestSuiteModelPtr *testSuitesModel.TestSuiteModelStruct
+		entryOnChangeCurrentTestSuiteModelPtr, existsInMap = entryOnChangetestSuitesMap[testSuiteUuid]
+
+		if existsInMap == false {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":            "48285fad-09a3-4e52-8f34-a104cbcf358a",
+				"testSuiteUuid": testSuiteUuid,
+			}).Fatal("TestSuite doesn't exist in TestSuiteMap. This should not happen")
+		}
+
 		// Store the Description in the TestSuiteModel
-		currentTestSuiteModel.TestSuiteUIModelBinding.TestSuiteDescription = trimmedValue
+		entryOnChangeCurrentTestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteDescription = trimmedValue
 
 	}
 

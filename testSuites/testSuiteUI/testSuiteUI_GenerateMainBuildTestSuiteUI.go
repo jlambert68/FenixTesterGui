@@ -11,13 +11,10 @@ import (
 // GenerateBuildNewTestSuiteUI
 // Create the UI used for creating new TestSuites
 func (testSuiteUiModel TestSuiteUiStruct) GenerateBuildNewTestSuiteUI(
-	testCasesModel *testCaseModel.TestCasesModelsStruct) (
+	testCasesModel *testCaseModel.TestCasesModelsStruct,
+	newTestSuiteModel *testSuitesModel.TestSuiteModelStruct) (
 	newTestSuiteUIContainer *fyne.Container,
 	err error) {
-
-	// Generate the new TestSuiteModelStruct
-	var newTestSuiteModel *testSuitesModel.TestSuiteModelStruct
-	newTestSuiteModel = testSuitesModel.GenerateNewTestSuiteModelObject()
 
 	// Get the new TestSuite-UUID
 	var testSuiteUuid string

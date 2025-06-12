@@ -1,11 +1,14 @@
 package testSuitesTabsUI
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testSuites/testSuiteUI"
+	"FenixTesterGui/testSuites/testSuitesCommandEngine"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
@@ -28,7 +31,27 @@ func GenerateTestSuiteHomeTab(testCasesModel *testCaseModel.TestCasesModelsStruc
 		// Open TestSuite
 		widget.NewToolbarAction(theme.FolderOpenIcon(), func() {
 
-			fmt.Println("Open TestSuite")
+			question := widget.NewLabel("Enter TestSuite-uuid to open")
+			testSuiteUuidEntry := widget.NewEntry()
+			testSuiteUuidEntry.SetPlaceHolder("TestSuite-uuid")
+			openTestSuiteContainer := container.NewVBox(question, testSuiteUuidEntry)
+			dialog.ShowCustomConfirm(
+				"Open TestSuite",
+				"Open",
+				"Cancel",
+				openTestSuiteContainer,
+				func(openTestSuite bool) {
+					if openTestSuite {
+						// Open TestSuite
+						fmt.Println("Open TestSuite")
+
+					} else {
+						// user cancelled
+					}
+				},
+				*sharedCode.FenixMasterWindowPtr,
+			)
+
 		}),
 	)
 
@@ -44,7 +67,7 @@ func GenerateTestSuiteHomeTab(testCasesModel *testCaseModel.TestCasesModelsStruc
 	}
 
 	// Add HomePage-tab to all TestSuite-Tabs
-	TestSuiteTabs.Append(testSuiteHomeTabItem)
+	testSuitesCommandEngine.TestSuiteTabsRef.Append(testSuiteHomeTabItem)
 
 	// Add HomePage-tab 'open' Tab-items for TestSuites
 	var testSuiteUiMap map[*container.TabItem]*testSuiteUI.TestSuiteUiStruct

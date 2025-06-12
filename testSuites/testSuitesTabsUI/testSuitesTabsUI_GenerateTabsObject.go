@@ -5,6 +5,7 @@ import (
 	"FenixTesterGui/soundEngine"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testSuites/testSuiteUI"
+	"FenixTesterGui/testSuites/testSuitesCommandEngine"
 	"FenixTesterGui/testSuites/testSuitesModel"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -16,11 +17,11 @@ import (
 
 func GenerateTestSuiteTabObject(testCasesModel *testCaseModel.TestCasesModelsStruct) *container.DocTabs {
 
-	// Initiate TestSuiteTabs-object
-	TestSuiteTabs = container.NewDocTabs()
+	// Initiate TestSuiteTabsRef-object
+	testSuitesCommandEngine.TestSuiteTabsRef = container.NewDocTabs()
 
 	// Add intercept when closing to be able to NOT close the TestSuite-Home-tab
-	TestSuiteTabs.CloseIntercept = func(tab *container.TabItem) {
+	testSuitesCommandEngine.TestSuiteTabsRef.CloseIntercept = func(tab *container.TabItem) {
 
 		// Never close Home-tab for TestSuites
 		if tab == testSuiteHomeTabItem {
@@ -92,7 +93,7 @@ func GenerateTestSuiteTabObject(testCasesModel *testCaseModel.TestCasesModelsStr
 					func(close bool) {
 						if close {
 							// Close TestSuite
-							TestSuiteTabs.Remove(tab)
+							testSuitesCommandEngine.TestSuiteTabsRef.Remove(tab)
 
 							// remove Tab from Tab-map
 							delete(testSuiteUiMap, tab)
@@ -107,7 +108,7 @@ func GenerateTestSuiteTabObject(testCasesModel *testCaseModel.TestCasesModelsStr
 				// No changes so, just close the Tab
 
 				// Close TestSuite
-				TestSuiteTabs.Remove(tab)
+				testSuitesCommandEngine.TestSuiteTabsRef.Remove(tab)
 
 				// remove Tab from Tab-map
 				delete(testSuiteUiMap, tab)
@@ -118,5 +119,5 @@ func GenerateTestSuiteTabObject(testCasesModel *testCaseModel.TestCasesModelsStr
 	// Generate TestSuite-Home page
 	GenerateTestSuiteHomeTab(testCasesModel)
 
-	return TestSuiteTabs
+	return testSuitesCommandEngine.TestSuiteTabsRef
 }

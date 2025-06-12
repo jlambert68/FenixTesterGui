@@ -245,23 +245,6 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteDeletionDateArea(
 
 		var existInMap bool
 
-		// Get TestSuiteMap
-		var testSuitesMap map[string]*testSuitesModel.TestSuiteModelStruct
-		testSuitesMap = *testSuitesModel.TestSuitesModelPtr.TestSuitesMapPtr
-
-		// Get a pointer to the TestSuite-model and the TestSuite-model itself
-		var currentTestSuiteModelPtr *testSuitesModel.TestSuiteModelStruct
-		var currentTestSuiteModel testSuitesModel.TestSuiteModelStruct
-		currentTestSuiteModelPtr, existInMap = testSuitesMap[testSuiteUuid]
-
-		if existInMap == false {
-			sharedCode.Logger.WithFields(logrus.Fields{
-				"ID":            "4e8ad7cd-4ab0-4dc9-8e00-494da11ef414",
-				"testSuiteUuid": testSuiteUuid,
-			}).Fatal("TestSuite doesn't exist in TestSuiteMap. This should not happen")
-		}
-		currentTestSuiteModel = *currentTestSuiteModelPtr
-
 		// Which type of Delete should be performed?
 		//var dateIsInTheFuture bool
 
@@ -298,11 +281,23 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteDeletionDateArea(
 
 		//if dateIsInTheFuture == false {
 
-		// Save the Delete date in the local version of the TestSuite
-		currentTestSuiteModel.TestSuiteUIModelBinding.TestSuiteDeletionDate = newTestSuiteDeletionDateEntry.Text
+		// Get entryOnChangetestSuitesMap
+		var entryOnChangetestSuitesMap map[string]*testSuitesModel.TestSuiteModelStruct
+		entryOnChangetestSuitesMap = *testSuitesModel.TestSuitesModelPtr.TestSuitesMapPtr
 
-		// Save back the updated TestSuite
-		//testSuitesUiCanvasObject.TestSuitesModelReference.TestSuitesMapPtr[testSuiteUuid] = currentTestSuitePtr
+		// Get a pointer to the TestSuite-model and the TestSuite-model itself
+		var entryOnChangeCurrentTestSuiteModelPtr *testSuitesModel.TestSuiteModelStruct
+		entryOnChangeCurrentTestSuiteModelPtr, existInMap = entryOnChangetestSuitesMap[testSuiteUuid]
+
+		if existInMap == false {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":            "48285fad-09a3-4e52-8f34-a104cbcf358a",
+				"testSuiteUuid": testSuiteUuid,
+			}).Fatal("TestSuite doesn't exist in TestSuiteMap. This should not happen")
+		}
+
+		// Store the Delete date in the TestSuiteModel
+		entryOnChangeCurrentTestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteDeletionDate = newTestSuiteDeletionDateEntry.Text
 
 		/*
 

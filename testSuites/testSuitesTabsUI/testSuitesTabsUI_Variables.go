@@ -5,10 +5,6 @@ import (
 	"fyne.io/fyne/v2/container"
 )
 
-// TestSuiteTabs
-// The Tab-object holding all TestSuiteTabs
-var TestSuiteTabs *container.DocTabs
-
 // TestSuiteUiMapPtr
 // Map with all 'open' Tab-items for TestSuites
 var TestSuiteUiMapPtr *map[*container.TabItem]*testSuiteUI.TestSuiteUiStruct

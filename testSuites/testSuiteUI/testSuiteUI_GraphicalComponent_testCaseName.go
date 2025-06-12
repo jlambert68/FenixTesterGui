@@ -2,6 +2,7 @@ package testSuiteUI
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/testSuites/testSuitesCommandEngine"
 	"FenixTesterGui/testSuites/testSuitesModel"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -14,7 +15,7 @@ import (
 // Generate the TestSuiteName Area for the TestSuite
 func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteNameArea(
 	testSuiteUuid string) (
-	testSuiteNameArea fyne.CanvasObject,
+	testSuiteNameAreaContainer *fyne.Container,
 	err error) {
 
 	var existsInMap bool
@@ -58,8 +59,23 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteNameArea(
 		var trimmedValue string
 		trimmedValue = strings.Trim(newValue, " ")
 
+		// Get entryOnChangetestSuitesMap
+		var entryOnChangetestSuitesMap map[string]*testSuitesModel.TestSuiteModelStruct
+		entryOnChangetestSuitesMap = *testSuitesModel.TestSuitesModelPtr.TestSuitesMapPtr
+
+		// Get a pointer to the TestSuite-model and the TestSuite-model itself
+		var entryOnChangeCurrentTestSuiteModelPtr *testSuitesModel.TestSuiteModelStruct
+		entryOnChangeCurrentTestSuiteModelPtr, existsInMap = entryOnChangetestSuitesMap[testSuiteUuid]
+
+		if existsInMap == false {
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"ID":            "48285fad-09a3-4e52-8f34-a104cbcf358a",
+				"testSuiteUuid": testSuiteUuid,
+			}).Fatal("TestSuite doesn't exist in TestSuiteMap. This should not happen")
+		}
+
 		// Save TestSuite back in Map
-		currentTestSuiteModel.TestSuiteUIModelBinding.TestSuiteName = trimmedValue
+		entryOnChangeCurrentTestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteName = trimmedValue
 
 		// Generate short version of UUID to put in TestSuite Tab-Name
 		var shortUUid string
@@ -75,8 +91,22 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteNameArea(
 		}
 
 		testSuiteUiModel.TestSuiteTabItem.Text = tabName
-		//Test.TestSuitesTabs.Refresh()
 
+		testSuitesCommandEngine.TestSuiteTabsRef.Refresh()
+
+		/*
+
+			// Send Refresh-Tabs command using channel engine
+			var testSuiteChannelCommand testSuitesCommandEngine.CommandTestSuiteChannelStruct
+			testSuiteChannelCommand = testSuitesCommandEngine.CommandTestSuiteChannelStruct{
+				ChannelCommand: testSuitesCommandEngine.TestSuiteChannelCommandRefreshTestSuiteTabsObject}
+
+			go func() {
+				testSuitesCommandEngine.TestSuiteCommandChannel <- testSuiteChannelCommand
+			}()
+
+
+		*/
 	}
 
 	// Add the Entry-widget to the Forms-container

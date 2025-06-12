@@ -4,6 +4,7 @@ import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testSuites/testSuiteUI"
+	"FenixTesterGui/testSuites/testSuitesCommandEngine"
 	"FenixTesterGui/testSuites/testSuitesModel"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -26,9 +27,14 @@ func GenerateNewTestSuiteTab(testCasesModel *testCaseModel.TestCasesModelsStruct
 		TestSuiteModelPtr: newTestSuiteModel,
 	}
 
+	// Create the Tab-UI-object
+	newTestSuiteUiObject.TestSuiteTabItem = container.NewTabItem(
+		fmt.Sprintf("<New TestSuite> [%s]", "not created yet"),
+		nil)
+
 	var newTestSuiteUiObjectContainer *fyne.Container
 
-	newTestSuiteUiObjectContainer, err = newTestSuiteUiObject.GenerateBuildNewTestSuiteUI(testCasesModel)
+	newTestSuiteUiObjectContainer, err = newTestSuiteUiObject.GenerateBuildNewTestSuiteUI(testCasesModel, newTestSuiteModel)
 
 	if err != nil {
 		newTestSuiteUiObjectContainer = container.NewVBox(
@@ -44,10 +50,9 @@ func GenerateNewTestSuiteTab(testCasesModel *testCaseModel.TestCasesModelsStruct
 	testSuiteUuid = newTestSuiteModel.GetTestSuiteUuid()
 	shortTestSuiteUuid = sharedCode.GenerateShortUuidFromFullUuid(testSuiteUuid)
 
-	// Create the Tab-UI-object
-	newTestSuiteUiObject.TestSuiteTabItem = container.NewTabItem(
-		fmt.Sprintf("<New TestSuite> [%s]", shortTestSuiteUuid),
-		newTestSuiteUiObjectContainer)
+	// Add content to the Tab-UI-object
+	newTestSuiteUiObject.TestSuiteTabItem.Text = fmt.Sprintf("<New TestSuite> [%s]", shortTestSuiteUuid)
+	newTestSuiteUiObject.TestSuiteTabItem.Content = newTestSuiteUiObjectContainer
 
 	// Get the TestSuiteUiMap from the map-pointer
 	var testSuiteUiMap map[*container.TabItem]*testSuiteUI.TestSuiteUiStruct
@@ -71,11 +76,11 @@ func GenerateNewTestSuiteTab(testCasesModel *testCaseModel.TestCasesModelsStruct
 	testSuitesMap[testSuiteUuid] = newTestSuiteModel
 
 	// Add New TestSuite-tab to all tabs
-	TestSuiteTabs.Append(newTestSuiteUiObject.TestSuiteTabItem)
+	testSuitesCommandEngine.TestSuiteTabsRef.Append(newTestSuiteUiObject.TestSuiteTabItem)
 
 	// Set focus on the new TestSuite-tab
-	TestSuiteTabs.Select(newTestSuiteUiObject.TestSuiteTabItem)
+	testSuitesCommandEngine.TestSuiteTabsRef.Select(newTestSuiteUiObject.TestSuiteTabItem)
 
 	// Refresh the new TestSuite-tab
-	TestSuiteTabs.Refresh()
+	testSuitesCommandEngine.TestSuiteTabsRef.Refresh()
 }

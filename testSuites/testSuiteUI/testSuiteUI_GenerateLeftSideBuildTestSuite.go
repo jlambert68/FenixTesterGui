@@ -2,6 +2,7 @@ package testSuiteUI
 
 import (
 	"FenixTesterGui/testCase/testCaseModel"
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
@@ -14,33 +15,69 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	leftSideBuildTestSuiteContainer *fyne.Container,
 	err error) {
 
-	leftSideBuildTestSuiteContainer = container.NewVBox(widget.NewLabel("leftSideBuildTestSuiteContainer"))
+	var leftTopSideBuildTestSuiteContainer *fyne.Container
 
-	/*
+	leftTopSideBuildTestSuiteContainer = container.NewVBox()
 
-		var leftSideScrollContainer *fyne.Container
-		var leftSideTopScrollContainer *fyne.Container
-		var leftSideBottomScrollContainer *fyne.Container
+	var testSuiteDeleteDateAreaContainer *fyne.Container
+	var testSuiteNameAreaContainer *fyne.Container
+	var testSuiteDescriptionAreaContainer *fyne.Container
 
-		// Generate Delete TestSuite objec
-		var testSuiteDeletionDateAreaContainer *fyne.Container
-		testSuiteDeletionDateAreaContainer, err = testSuiteUiObject.generateTestSuiteDeletionDateArea(testSuiteUuid)
+	// Generate TestSuite-DeleteDate area
+	testSuiteDeleteDateAreaContainer, err = testSuiteUiModel.generateTestSuiteDeletionDateArea(testSuiteUuid)
+	if err != nil {
 
-		if err != nil {
+		errorId := "8f46fe50-51c8-411c-ad81-30d036083e8f"
+		errorMessage := fmt.Sprintf("couldn't generate 'TestSuite-DeleteDate-area, err=%s. [ErrorId = %s]",
+			err.Error(),
+			errorId)
 
-			errorId := "803beea6-a8db-420d-bf61-a1c16cb6fcad"
+		leftSideBuildTestSuiteContainer = container.NewVBox(widget.NewLabel(errorMessage))
 
-			leftSideBuildTestSuiteContainer = container.NewVBox(
-				widget.NewLabel(fmt.Sprintf("couldn't generate 'Suite-delete-area, err=%s. [ErrorId = %s]",
-					err.Error(),
-					errorId)))
+		return leftSideBuildTestSuiteContainer, nil
 
+	}
+	leftTopSideBuildTestSuiteContainer.Add(testSuiteDeleteDateAreaContainer)
 
+	// Generate TestSuite-Name area
+	testSuiteNameAreaContainer, err = testSuiteUiModel.generateTestSuiteNameArea(testSuiteUuid)
+	if err != nil {
 
+		errorId := "b965b768-3eab-49d0-bc24-c33e2a85e7fe"
+		errorMessage := fmt.Sprintf("couldn't generate 'TestSuite-name-area, err=%s. [ErrorId = %s]",
+			err.Error(),
+			errorId)
 
-		}
+		leftSideBuildTestSuiteContainer = container.NewVBox(widget.NewLabel(errorMessage))
 
-	*/
+		return leftSideBuildTestSuiteContainer, nil
+
+	}
+	leftTopSideBuildTestSuiteContainer.Add(testSuiteNameAreaContainer)
+
+	// Generate TestSuite-Description-area
+	testSuiteDescriptionAreaContainer, err = testSuiteUiModel.generateTestCaseDescriptionArea(testSuiteUuid)
+	if err != nil {
+
+		errorId := "84aae5d4-d081-48f6-aee9-c25bdae7ddd4"
+		errorMessage := fmt.Sprintf("couldn't generate 'TestSuite-Description-area, err=%s. [ErrorId = %s]",
+			err.Error(),
+			errorId)
+
+		leftSideBuildTestSuiteContainer = container.NewVBox(widget.NewLabel(errorMessage))
+
+		return leftSideBuildTestSuiteContainer, nil
+
+	}
+	leftTopSideBuildTestSuiteContainer.Add(testSuiteDescriptionAreaContainer)
+
+	// Create the Left side Container
+	leftSideBuildTestSuiteContainer = container.NewBorder(
+		leftTopSideBuildTestSuiteContainer,
+		nil,
+		nil,
+		nil,
+		nil)
 
 	return leftSideBuildTestSuiteContainer, err
 

@@ -52,8 +52,12 @@ func countDownTicker() {
 
 	// Wait for the countdown to finish
 	<-tickerDoneChannel
-	tickerCountDownlabel.Hide()
-	enableDeletionCheckbox.SetChecked(false)
+	fyne.Do(func() {
+		tickerCountDownlabel.Hide()
+	})
+	fyne.Do(func() {
+		enableDeletionCheckbox.SetChecked(false)
+	})
 
 }
 
@@ -332,7 +336,9 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteDeletionDateArea(
 		// Switch button for the actual deletion
 		if b == true {
 			deleteTestSuiteButton.Enable()
-			go countDownTicker()
+			fyne.Do(func() {
+				go countDownTicker()
+			})
 		} else {
 			deleteTestSuiteButton.Disable()
 		}

@@ -1,4 +1,4 @@
-package testCaseUI
+package testSuiteUI
 
 import (
 	sharedCode "FenixTesterGui/common_code"
@@ -13,7 +13,7 @@ import (
 )
 
 // Generate the TestData-table Area for the TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataForTestCaseArea(
+func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestCaseArea(
 	testCaseUuid string) (
 	fyne.CanvasObject,
 	error) {
@@ -22,7 +22,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateSelectedTestDataF
 
 	// Get TestCasesMap
 	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
-	testCasesMap = *testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr
+	testCasesMap = *testSuiteUiModel.TestCasesModelReference.TestCasesMapPtr
 
 	// Get current TestCase
 	var currentTestCasePtr *testCaseModel.TestCaseModelStruct

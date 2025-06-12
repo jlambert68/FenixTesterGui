@@ -1,4 +1,4 @@
-package testCaseUI
+package testDataSelectorForTestCase
 
 import "fyne.io/fyne/v2/widget"
 

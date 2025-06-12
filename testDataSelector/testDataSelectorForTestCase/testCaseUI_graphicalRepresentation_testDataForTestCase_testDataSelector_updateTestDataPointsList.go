@@ -1,4 +1,4 @@
-package testCaseUI
+package testDataSelectorForTestCase
 
 import "github.com/jlambert68/FenixScriptEngine/testDataEngine"
 

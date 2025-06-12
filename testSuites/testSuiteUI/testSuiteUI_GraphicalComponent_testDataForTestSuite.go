@@ -2,41 +2,22 @@ package testSuiteUI
 
 import (
 	sharedCode "FenixTesterGui/common_code"
-	"FenixTesterGui/testCase/testCaseModel"
-	"FenixTesterGui/testDataSelector/testDataSelectorForTestCase"
+	"FenixTesterGui/testDataSelector/testDataSelectorForTestSuite"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/jlambert68/FenixScriptEngine/testDataEngine"
-	"github.com/sirupsen/logrus"
 )
 
-// Generate the TestData-table Area for the TestCase
-func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestCaseArea(
+// Generate the TestData-table Area for the TestSuite
+func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestSuiteArea(
 	testCaseUuid string) (
 	fyne.CanvasObject,
 	error) {
 
-	var existInMap bool
-
-	// Get TestCasesMap
-	var testCasesMap map[string]*testCaseModel.TestCaseModelStruct
-	testCasesMap = *testSuiteUiModel.TestCasesModelReference.TestCasesMapPtr
-
-	// Get current TestCase
-	var currentTestCasePtr *testCaseModel.TestCaseModelStruct
-	currentTestCasePtr, existInMap = testCasesMap[testCaseUuid]
-
-	if existInMap == false {
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":           "0bb2ebf8-fae9-4427-ad82-8fad3a73d6e9",
-			"testCaseUuid": testCaseUuid,
-		}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
-	}
-
-	// Initiate the TestData-object used for keeping Groups and their TestData in the TestCasesMapPtr
-	currentTestCasePtr.TestData = &testDataEngine.TestDataForGroupObjectStruct{}
+	// Initiate the TestData-object used for keeping Groups and their TestData in the TestSuiteModelPtr
+	testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr = &testDataEngine.TestDataForGroupObjectStruct{}
 
 	// Accordion objects
 	var testDataAccordionItem *widget.AccordionItem
@@ -53,7 +34,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestCaseAr
 	// Create function that converts a GroupSlice into a string slice
 	getTestGroupsFromTestDataEngineFunction := func() []string {
 
-		testDataPointGroups = currentTestCasePtr.TestData.ListTestDataGroups()
+		testDataPointGroups = testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.ListTestDataGroups()
 
 		return testDataPointGroups
 	}
@@ -65,7 +46,8 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestCaseAr
 			return []string{}
 		}
 
-		testDataPointsForAGroup = currentTestCasePtr.TestData.ListTestDataGroupPointsForAGroup(testDataGroup)
+		testDataPointsForAGroup = testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.
+			ListTestDataGroupPointsForAGroup(testDataGroup)
 
 		return testDataPointsForAGroup
 	}
@@ -77,101 +59,74 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestCaseAr
 			return []string{}
 		}
 
-		testDataRowsForATestDataPoint = currentTestCasePtr.TestData.ListTestDataRowsForAGroupPoint(
-			testDataGroup, testDataGroupPoint)
+		testDataRowsForATestDataPoint = testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.
+			ListTestDataRowsForAGroupPoint(
+				testDataGroup, testDataGroupPoint)
 
 		return testDataRowsForATestDataPoint
 	}
 
 	// Create the Group dropdown - <Name of the group>
-	testDataPointGroupsSelectInMainTestCaseArea = widget.NewSelect(getTestGroupsFromTestDataEngineFunction(), func(selected string) {
+	testDataPointGroupsSelectInMainTestSuiteArea = widget.NewSelect(
+		getTestGroupsFromTestDataEngineFunction(), func(selected string) {
 
-		// Check that the selected Group name exist options
-		if len(selected) > 0 {
+			// Check that the selected Group name exist options
+			if len(selected) > 0 {
 
-			var foundGroupName bool
-			for _, groupName := range getTestGroupsFromTestDataEngineFunction() {
-				if groupName == selected {
-					foundGroupName = true
-					break
+				var foundGroupName bool
+				for _, groupName := range getTestGroupsFromTestDataEngineFunction() {
+					if groupName == selected {
+						foundGroupName = true
+						break
+					}
+				}
+
+				if foundGroupName == false {
+					selected = ""
 				}
 			}
 
-			if foundGroupName == false {
-				selected = ""
-			}
-		}
+			testDataPointGroupsSelectSelectedInMainTestSuiteArea = selected
 
-		testDataPointGroupsSelectSelectedInMainTestCaseArea = selected
+			// Store Selected value in 'TestSuite'
+			testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.SelectedTestDataGroup = selected
 
-		// Store Selected value in 'TestCase'
+			// Select the correct TestDataPoint in the dropdown for TestDataPoints
+			testDataPointsForAGroupSelectInMainTestSuiteArea.SetOptions(testDataPointsToStringSliceFunction(selected))
+			testDataPointsForAGroupSelectInMainTestSuiteArea.Refresh()
 
-		var tempCurrentTestCasePtr *testCaseModel.TestCaseModelStruct
-		tempCurrentTestCasePtr, existInMap = testCasesMap[testCaseUuid]
+			// UnSelect in DropDown- and List for TestDataPoints
+			testDataPointsForAGroupSelectInMainTestSuiteArea.ClearSelected()
 
-		if existInMap == false {
-			sharedCode.Logger.WithFields(logrus.Fields{
-				"ID":           "ab542075-fd93-4ac8-bd4d-46668f4b131d",
-				"testCaseUuid": testCaseUuid,
-			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
-		}
-
-		tempCurrentTestCasePtr.TestData.SelectedTestDataGroup = selected
-		//testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
-
-		// Select the correct TestDataPoint in the dropdown for TestDataPoints
-		testDataPointsForAGroupSelectInMainTestCaseArea.SetOptions(testDataPointsToStringSliceFunction(selected))
-		testDataPointsForAGroupSelectInMainTestCaseArea.Refresh()
-
-		// UnSelect in DropDown- and List for TestDataPoints
-		testDataPointsForAGroupSelectInMainTestCaseArea.ClearSelected()
-
-	})
+		})
 
 	// Create the Groups TestDataPoints dropdown - <Sub Custody/Main TestData Area/SEK/AccTest/SE/CRDT/CH/Switzerland/BBH/EUR/EUR/SEK>
-	testDataPointsForAGroupSelectInMainTestCaseArea = widget.NewSelect(testDataPointsToStringSliceFunction(
-		testDataPointGroupsSelectSelectedInMainTestCaseArea), func(selected string) {
+	testDataPointsForAGroupSelectInMainTestSuiteArea = widget.NewSelect(testDataPointsToStringSliceFunction(
+		testDataPointGroupsSelectSelectedInMainTestSuiteArea), func(selected string) {
 
-		testDataPointForAGroupSelectSelectedInMainTestCaseArea = selected
+		testDataPointForAGroupSelectSelectedInMainTestSuiteArea = selected
 
 		// Store Selected value in 'TestCase'
-		currentTestCasePtr, existInMap = testCasesMap[testCaseUuid]
-		if existInMap == false {
-			sharedCode.Logger.WithFields(logrus.Fields{
-				"ID":           "ecb7e72b-8d7c-4e7f-b4f9-6cd3eec48ecf",
-				"testCaseUuid": testCaseUuid,
-			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
-		}
-
-		currentTestCasePtr.TestData.SelectedTestDataPoint = selected
-		//testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
+		testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.SelectedTestDataPoint = selected
 
 		// Select the correct TestDataPoint in the dropdown for TestDataPoints
-		testDataRowsForTestDataPointsSelectInMainTestCaseArea.SetOptions(testDataRowSliceToStringSliceFunction(
-			testDataPointGroupsSelectInMainTestCaseArea.Selected, selected))
-		testDataRowsForTestDataPointsSelectInMainTestCaseArea.Refresh()
+		testDataRowsForTestDataPointsSelectInMainTestSuiteArea.SetOptions(testDataRowSliceToStringSliceFunction(
+			testDataPointGroupsSelectInMainTestSuiteArea.Selected, selected))
+		testDataRowsForTestDataPointsSelectInMainTestSuiteArea.Refresh()
 
 		// UnSelect in DropDown- and List for Specific TestDataPoints
-		testDataRowsForTestDataPointsSelectInMainTestCaseArea.ClearSelected()
+		testDataRowsForTestDataPointsSelectInMainTestSuiteArea.ClearSelected()
 
 	})
 
 	// Create the Groups Specific TestDataPoint dropdown - <All the specific values>
-	testDataRowsForTestDataPointsSelectInMainTestCaseArea = widget.NewSelect(testDataRowSliceToStringSliceFunction(
-		testDataPointGroupsSelectSelectedInMainTestCaseArea, testDataPointForAGroupSelectSelectedInMainTestCaseArea), func(selected string) {
+	testDataRowsForTestDataPointsSelectInMainTestSuiteArea = widget.NewSelect(testDataRowSliceToStringSliceFunction(
+		testDataPointGroupsSelectSelectedInMainTestSuiteArea, testDataPointForAGroupSelectSelectedInMainTestSuiteArea), func(selected string) {
 
-		testDataRowForTestDataPointsSelectSelectedInMainTestCaseArea = selected
+		testDataRowForTestDataPointsSelectSelectedInMainTestSuiteArea = selected
 
-		// Store Selected value in 'TestCase'
-		currentTestCasePtr, existInMap = testCasesMap[testCaseUuid]
-		if existInMap == false {
-			sharedCode.Logger.WithFields(logrus.Fields{
-				"ID":           "ba37763b-0609-4cff-8f00-4f45b502feab",
-				"testCaseUuid": testCaseUuid,
-			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
-		}
-
-		currentTestCasePtr.TestData.SelectedTestDataPointRowSummary = selected
+		// Store Selected value in 'TestSuite'
+		testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.SelectedTestDataPointRowSummary = selected
 
 		// Extract Unique id, first column, for the TestDataRow
 
@@ -187,73 +142,55 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestCaseAr
 		var testDataColumnDataNameMap map[string]string // map[TestDataColumnDataNameType]TestDataValueType
 		testDataColumnDataNameMap,
 			domainUuid, domainName, domainTemplateName, testDataAreaUuid, testDataAreaName =
-			currentTestCasePtr.TestData.GetTestDataPointValuesMapBasedOnGroupPointNameAndSummaryValue(
-				testDataPointGroupsSelectSelectedInMainTestCaseArea,
-				testDataPointForAGroupSelectSelectedInMainTestCaseArea,
-				testDataRowForTestDataPointsSelectSelectedInMainTestCaseArea)
+			testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.
+				GetTestDataPointValuesMapBasedOnGroupPointNameAndSummaryValue(
+					testDataPointGroupsSelectSelectedInMainTestSuiteArea,
+					testDataPointForAGroupSelectSelectedInMainTestSuiteArea,
+					testDataRowForTestDataPointsSelectSelectedInMainTestSuiteArea)
 
-		// Store Selected TestData on the TestCase
-		currentTestCasePtr.TestData.SelectedTestDataDomainUuid = domainUuid
-		currentTestCasePtr.TestData.SelectedTestDataDomainName = domainName
-		currentTestCasePtr.TestData.SelectedTestDataDomainTemplateName = domainTemplateName
-		currentTestCasePtr.TestData.SelectedTestDataTestDataAreaUuid = testDataAreaUuid
-		currentTestCasePtr.TestData.SelectedTestDataAreaName = testDataAreaName
-		currentTestCasePtr.TestData.TestDataColumnDataNameToValueMap = testDataColumnDataNameMap
-
-		// Store back the TestCase
-		//testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
+		// Store Selected TestData on the TestSuite
+		testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.SelectedTestDataDomainUuid = domainUuid
+		testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.SelectedTestDataDomainName = domainName
+		testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.SelectedTestDataDomainTemplateName = domainTemplateName
+		testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.SelectedTestDataTestDataAreaUuid = testDataAreaUuid
+		testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.SelectedTestDataAreaName = testDataAreaName
+		testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.TestDataColumnDataNameToValueMap = testDataColumnDataNameMap
 
 	})
 
-	// Select TestData the TestCase
-	selectTestDataButton := widget.NewButton("Add TestData to TestCase", func() {
-
-		currentTestCasePtr, existInMap = testCasesMap[testCaseUuid]
-		if existInMap == false {
-			sharedCode.Logger.WithFields(logrus.Fields{
-				"ID":           "a54bce68-fa84-4b29-aa62-5d47b8bdc7fb",
-				"testCaseUuid": testCaseUuid,
-			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
-		}
+	// Select TestData the TestSuite
+	selectTestDataButton := widget.NewButton("Add TestData to TestSuite", func() {
 
 		// Open up TestData Selector Window
-		testDataSelectorForTestCase.MainTestDataSelector(
+		testDataSelectorForTestSuite.MainTestDataSelector(
 			*sharedCode.FenixAppPtr,
 			*sharedCode.FenixMasterWindowPtr,
-			currentTestCasePtr,
+			testSuiteUiModel.TestSuiteModelPtr,
 			testCaseUuid,
 			testDataSelectorsContainer,
-			testDataPointGroupsSelectInMainTestCaseArea,
-			testDataPointsForAGroupSelectInMainTestCaseArea,
-			testDataRowsForTestDataPointsSelectInMainTestCaseArea)
+			testDataPointGroupsSelectInMainTestSuiteArea,
+			testDataPointsForAGroupSelectInMainTestSuiteArea,
+			testDataRowsForTestDataPointsSelectInMainTestSuiteArea)
 
 	})
 
 	// Add the Select UI component for TestData-selectors
 	testDataSelectorsContainer.Add(widget.NewLabel("TestData Group"))
-	testDataSelectorsContainer.Add(testDataPointGroupsSelectInMainTestCaseArea)
+	testDataSelectorsContainer.Add(testDataPointGroupsSelectInMainTestSuiteArea)
 
 	testDataSelectorsContainer.Add(widget.NewLabel("TestData Point"))
-	testDataSelectorsContainer.Add(testDataPointsForAGroupSelectInMainTestCaseArea)
+	testDataSelectorsContainer.Add(testDataPointsForAGroupSelectInMainTestSuiteArea)
 
 	testDataSelectorsContainer.Add(widget.NewLabel("TestData Row"))
-	testDataSelectorsContainer.Add(testDataRowsForTestDataPointsSelectInMainTestCaseArea)
-
-	currentTestCasePtr, existInMap = testCasesMap[testCaseUuid]
-	if existInMap == false {
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":           "2aa83455-5d5f-42e0-9300-9b1eb55d53b8",
-			"testCaseUuid": testCaseUuid,
-		}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
-	}
+	testDataSelectorsContainer.Add(testDataRowsForTestDataPointsSelectInMainTestSuiteArea)
 
 	// If there is no TestData then hide the "Select-boxes"
-	if len(currentTestCasePtr.TestData.ListTestDataGroups()) == 0 {
+	if len(testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.ListTestDataGroups()) == 0 {
 		testDataSelectorsContainer.Hide()
 	} else {
-		testDataPointGroupsSelectInMainTestCaseArea.SetOptions(getTestGroupsFromTestDataEngineFunction())
+		testDataPointGroupsSelectInMainTestSuiteArea.SetOptions(getTestGroupsFromTestDataEngineFunction())
 		testDataSelectorsContainer.Show()
-		testDataPointGroupsSelectInMainTestCaseArea.Refresh()
+		testDataPointGroupsSelectInMainTestSuiteArea.Refresh()
 	}
 
 	// Create an Accordion item for the buttons

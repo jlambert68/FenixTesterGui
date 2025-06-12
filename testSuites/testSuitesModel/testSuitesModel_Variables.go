@@ -1,5 +1,7 @@
 package testSuitesModel
 
+import "github.com/jlambert68/FenixScriptEngine/testDataEngine"
+
 // Pointer to the object holding all TestSuites (visible in a Tab)
 var TestSuitesModelPtr *TestSuitesModelStruct
 
@@ -31,4 +33,5 @@ type TestSuiteUIModelBindingStruct struct {
 	TestSuiteDescription     string
 	TestSuiteOwnerDomainUuid string
 	TestSuiteIsNew           bool
+	TestDataPtr              *testDataEngine.TestDataForGroupObjectStruct
 }

@@ -1,13 +1,13 @@
 package testSuiteUI
 
 func GetSelectedTestDataGroup() string {
-	return testDataPointGroupsSelectSelectedInMainTestCaseArea
+	return testDataPointGroupsSelectSelectedInMainTestSuiteArea
 }
 
 func GetSelectedTestDataPoint() string {
-	return testDataPointForAGroupSelectSelectedInMainTestCaseArea
+	return testDataPointForAGroupSelectSelectedInMainTestSuiteArea
 }
 
 func GetSelectedTestDataPointRow() string {
-	return testDataRowForTestDataPointsSelectSelectedInMainTestCaseArea
+	return testDataRowForTestDataPointsSelectSelectedInMainTestSuiteArea
 }

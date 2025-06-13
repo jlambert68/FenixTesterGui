@@ -239,7 +239,9 @@ func generateTestDataSelectionsUIComponent(
 			testDataSelectionsContainer.Objects[2] = tempTestDataValuesSelectionContainer
 			go func() {
 
-				testDataSelectionsContainer.Refresh()
+				fyne.Do(func() {
+					testDataSelectionsContainer.Refresh()
+				})
 				(*newOrEditTestDataPointGroupWindow).CenterOnScreen()
 			}()
 			/*

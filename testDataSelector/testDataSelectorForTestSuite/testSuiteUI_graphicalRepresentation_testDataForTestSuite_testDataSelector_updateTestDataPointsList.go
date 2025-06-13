@@ -1,6 +1,9 @@
 package testDataSelectorForTestSuite
 
-import "github.com/jlambert68/FenixScriptEngine/testDataEngine"
+import (
+	"fyne.io/fyne/v2"
+	"github.com/jlambert68/FenixScriptEngine/testDataEngine"
+)
 
 // Updates the list that show the TestDataPoints for a specific Group in main window
 func updateTestDataPointsForAGroupList(
@@ -22,6 +25,8 @@ func updateTestDataPointsForAGroupList(
 	}
 
 	// Refresh the List in the UI
-	testDataPointsForAGroupList.Refresh()
+	fyne.Do(func() {
+		testDataPointsForAGroupList.Refresh()
+	})
 
 }

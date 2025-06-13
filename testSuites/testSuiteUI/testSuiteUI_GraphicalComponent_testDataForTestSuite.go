@@ -106,7 +106,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestSuiteA
 
 		testDataPointForAGroupSelectSelectedInMainTestSuiteArea = selected
 
-		// Store Selected value in 'TestCase'
+		// Store Selected value in 'TestSuite'
 		testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.SelectedTestDataPoint = selected
 
 		// Select the correct TestDataPoint in the dropdown for TestDataPoints

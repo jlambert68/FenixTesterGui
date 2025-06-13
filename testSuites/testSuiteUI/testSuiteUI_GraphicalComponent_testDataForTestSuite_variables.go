@@ -2,7 +2,7 @@ package testSuiteUI
 
 import "fyne.io/fyne/v2/widget"
 
-// The Select-items for Groups ans TestDataPoints for a Group
+// The Select-items for Groups and TestDataPoints for a Group
 var testDataPointGroupsSelectInMainTestSuiteArea *widget.Select
 var testDataPointGroupsSelectSelectedInMainTestSuiteArea string
 var testDataPointsForAGroupSelectInMainTestSuiteArea *widget.Select

@@ -49,7 +49,9 @@ func MainTestDataSelector(
 			return widget.NewLabel("")
 		},
 		func(id widget.ListItemID, obj fyne.CanvasObject) {
-			obj.(*widget.Label).SetText(string(currentTestSuitePtr.TestSuiteUIModelBinding.TestDataPtr.TestDataPointGroups[id]))
+			fyne.Do(func() {
+				obj.(*widget.Label).SetText(string(currentTestSuitePtr.TestSuiteUIModelBinding.TestDataPtr.TestDataPointGroups[id]))
+			})
 		},
 	)
 
@@ -63,7 +65,9 @@ func MainTestDataSelector(
 		newOrEditTestDataPointGroupUI.TestDataPointGroupsSelect.SetSelected(string(currentTestSuitePtr.TestSuiteUIModelBinding.TestDataPtr.TestDataPointGroups[id]))
 
 		// UnSelect in DropDown- and List for TestDataPoints
-		newOrEditTestDataPointGroupUI.TestDataPointsForAGroupSelect.ClearSelected()
+		fyne.Do(func() {
+			newOrEditTestDataPointGroupUI.TestDataPointsForAGroupSelect.ClearSelected()
+		})
 		testDataPointsForAGroupList.UnselectAll()
 		newOrEditTestDataPointGroupUI.SelectedIndexForGroupTestDataPoints = -1
 
@@ -103,15 +107,21 @@ func MainTestDataSelector(
 		}
 
 		// Select the correct TestDataPoint in the dropdown for TestDataPoints
-		newOrEditTestDataPointGroupUI.TestDataPointsForAGroupSelect.SetOptions(testDataPointsToStringSliceFunction())
-		newOrEditTestDataPointGroupUI.TestDataPointsForAGroupSelect.Refresh()
+		fyne.Do(func() {
+			newOrEditTestDataPointGroupUI.TestDataPointsForAGroupSelect.SetOptions(testDataPointsToStringSliceFunction())
+			newOrEditTestDataPointGroupUI.TestDataPointsForAGroupSelect.Refresh()
+		})
 
 		// Select the correct item in the Groups-List
 		testDataPointGroupsList.Select(newOrEditTestDataPointGroupUI.SelectedIndexForGroups)
-		testDataPointGroupsList.Refresh()
+		fyne.Do(func() {
+			testDataPointGroupsList.Refresh()
+		})
 
 		// UnSelect in DropDown- and List for TestDataPoints
-		newOrEditTestDataPointGroupUI.TestDataPointsForAGroupSelect.ClearSelected()
+		fyne.Do(func() {
+			newOrEditTestDataPointGroupUI.TestDataPointsForAGroupSelect.ClearSelected()
+		})
 		testDataPointsForAGroupList.UnselectAll()
 		newOrEditTestDataPointGroupUI.SelectedIndexForGroupTestDataPoints = -1
 
@@ -130,7 +140,9 @@ func MainTestDataSelector(
 
 		// Select the correct item in the TestDataPoints-List
 		testDataPointsForAGroupList.Select(newOrEditTestDataPointGroupUI.SelectedIndexForGroupTestDataPoints)
-		testDataPointsForAGroupList.Refresh()
+		fyne.Do(func() {
+			testDataPointsForAGroupList.Refresh()
+		})
 	})
 
 	// Create List UI for 'testDataPointsForAGroup'
@@ -331,19 +343,24 @@ func MainTestDataSelector(
 					groupNameIndex = groupNameIndex + 1
 
 				}
-				testDataPointGroupsList.Refresh()
-				testDataPointGroupsList.UnselectAll()
-				testDataPointGroupsList.Select(groupNameIndexToSelect)
+
+				fyne.Do(func() {
+					testDataPointGroupsList.Refresh()
+					testDataPointGroupsList.UnselectAll()
+					testDataPointGroupsList.Select(groupNameIndexToSelect)
+				})
 				newOrEditTestDataPointGroupUI.SelectedIndexForGroups = groupNameIndexToSelect
 
-				// Select the correct group in the dropdown for groups
-				newOrEditTestDataPointGroupUI.TestDataPointGroupsSelect.SetOptions(testDataPointGroupsToStringSliceFunction())
-				newOrEditTestDataPointGroupUI.TestDataPointGroupsSelect.SetSelected(string(shouldListBeUpdated.TestDataPointGroupName))
-				newOrEditTestDataPointGroupUI.TestDataPointGroupsSelect.Refresh()
+				fyne.Do(func() {
+					// Select the correct group in the dropdown for groups
+					newOrEditTestDataPointGroupUI.TestDataPointGroupsSelect.SetOptions(testDataPointGroupsToStringSliceFunction())
+					newOrEditTestDataPointGroupUI.TestDataPointGroupsSelect.SetSelected(string(shouldListBeUpdated.TestDataPointGroupName))
+					newOrEditTestDataPointGroupUI.TestDataPointGroupsSelect.Refresh()
 
-				// Select the correct TestDataPoint in the dropdown for TestDataPoints
-				newOrEditTestDataPointGroupUI.TestDataPointsForAGroupSelect.SetOptions(testDataPointsToStringSliceFunction())
-				newOrEditTestDataPointGroupUI.TestDataPointsForAGroupSelect.Refresh()
+					// Select the correct TestDataPoint in the dropdown for TestDataPoints
+					newOrEditTestDataPointGroupUI.TestDataPointsForAGroupSelect.SetOptions(testDataPointsToStringSliceFunction())
+					newOrEditTestDataPointGroupUI.TestDataPointsForAGroupSelect.Refresh()
+				})
 
 				// Update TestData-Selects in TestCase main area
 				testDataPointGroupsSelectInMainTestSuiteArea.SetOptions(testDataPointGroupsToStringSliceFunction())

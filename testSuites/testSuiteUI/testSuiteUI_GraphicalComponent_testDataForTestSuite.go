@@ -3,11 +3,13 @@ package testSuiteUI
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testDataSelector/testDataSelectorForTestSuite"
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/jlambert68/FenixScriptEngine/testDataEngine"
+	"strings"
 )
 
 // Generate the TestData-table Area for the TestSuite
@@ -30,6 +32,8 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestSuiteA
 
 	// Create UI component for selected TestData-selectors
 	testDataSelectorsContainer := container.New(layout.NewFormLayout())
+
+	var selectorAndButtonContainer *fyne.Container
 
 	// Create function that converts a GroupSlice into a string slice
 	getTestGroupsFromTestDataEngineFunction := func() []string {
@@ -174,6 +178,53 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestSuiteA
 
 	})
 
+	var generateTestDataAsRichTextFunction func()
+	generateTestDataAsRichTextFunction = func() {
+
+		// Generate All TestData as RichText component
+		var testDataAsRichTextBuilder strings.Builder
+		// Loop all TestDataGroups
+		for _, testDataGroup := range testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.
+			ListTestDataGroups() {
+
+			// Add TestDataGroup to StringBuilder
+			testDataAsRichTextBuilder.WriteString(fmt.Sprintf("## TestDataGroup: *%s* \\n\\n", testDataGroup))
+
+			// For each TestDataGroup loop all its TestDataPoints
+			for _, testDataPoint := range testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.
+				ListTestDataGroupPointsForAGroup(testDataGroup) {
+
+				// Add TestDataPoint to StringBuilder
+				testDataAsRichTextBuilder.WriteString(fmt.Sprintf("### TestDataPoint: *%s* \\n\\n", testDataPoint))
+
+				// For each TestDataPoint loop all its TestDataRows
+				for _, testDataRow := range testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.
+					ListTestDataRowsForAGroupPoint(testDataGroup, testDataPoint) {
+
+					// Add TestDataRow to StringBuilder
+					testDataAsRichTextBuilder.WriteString(fmt.Sprintf("%s \\n\\n", testDataRow))
+				}
+			}
+		}
+
+		// Create the RichText component for the TestData
+		testDataAsRichText = widget.NewRichTextFromMarkdown(testDataAsRichTextBuilder.String())
+
+		selectorAndButtonContainer.Remove(testDataSelectorsContainer)
+		selectorAndButtonContainer.Add(testDataAsRichText)
+
+	}
+
+	// Generate RichText  TestData for the TestSuite
+	generateRichTextTestDataButton := widget.NewButton("List all TestData to TestSuite", func() {
+
+		generateTestDataAsRichTextFunction()
+
+	})
+
+	// Create the RichText component for the TestData
+	testDataAsRichText = widget.NewRichTextFromMarkdown("No TestData added to this TestSuite yet.")
+
 	// Add the Select UI component for TestData-selectors
 	testDataSelectorsContainer.Add(widget.NewLabel("TestData Group"))
 	testDataSelectorsContainer.Add(testDataPointGroupsSelectInMainTestSuiteArea)
@@ -183,6 +234,9 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestSuiteA
 
 	testDataSelectorsContainer.Add(widget.NewLabel("TestData Row"))
 	testDataSelectorsContainer.Add(testDataRowsForTestDataPointsSelectInMainTestSuiteArea)
+
+	testDataSelectorsContainer.Add(widget.NewLabel("All TestData for this TestSuite"))
+	testDataSelectorsContainer.Add(testDataAsRichText)
 
 	// If there is no TestData then hide the "Select-boxes"
 	if len(testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.ListTestDataGroups()) == 0 {
@@ -194,9 +248,9 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestSuiteA
 	}
 
 	// Create an Accordion item for the buttons
-	buttonContainer := container.NewHBox(selectTestDataButton)
+	buttonContainer := container.NewHBox(selectTestDataButton, generateRichTextTestDataButton)
 
-	selectorAndButtonContainer := container.NewBorder(nil, buttonContainer, nil, nil, testDataSelectorsContainer)
+	selectorAndButtonContainer = container.NewBorder(buttonContainer, nil, nil, nil, testDataSelectorsContainer)
 	selectorAndButtonContainer.Refresh()
 
 	// Create an Accordion item for the list

@@ -197,15 +197,16 @@ func MainTestDataSelector(
 			return
 		}
 		myWindow.Hide()
+
+		newOrEditTestDataPointGroupUI.ShowNewOrEditGroupWindow(
+			app,
+			myWindow,
+			false,
+			&responseChannel,
+			currentTestSuitePtr.TestSuiteUIModelBinding.TestDataPtr.TestDataPointGroups[newOrEditTestDataPointGroupUI.SelectedIndexForGroups],
+			&currentTestSuitePtr.TestSuiteUIModelBinding.TestDataPtr.ChosenTestDataPointsPerGroupMap,
+			currentTestSuitePtr.TestSuiteUIModelBinding.TestDataPtr)
 	})
-	newOrEditTestDataPointGroupUI.ShowNewOrEditGroupWindow(
-		app,
-		myWindow,
-		false,
-		&responseChannel,
-		currentTestSuitePtr.TestSuiteUIModelBinding.TestDataPtr.TestDataPointGroups[newOrEditTestDataPointGroupUI.SelectedIndexForGroups],
-		&currentTestSuitePtr.TestSuiteUIModelBinding.TestDataPtr.ChosenTestDataPointsPerGroupMap,
-		currentTestSuitePtr.TestSuiteUIModelBinding.TestDataPtr)
 
 	// Crete the 'Delete'-button for deleting an existing Group for TestDataPoints
 	deleteButton := widget.NewButton("Delete", func() {

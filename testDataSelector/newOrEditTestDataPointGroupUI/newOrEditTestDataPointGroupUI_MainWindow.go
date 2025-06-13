@@ -51,10 +51,15 @@ func ShowNewOrEditGroupWindow(
 	})
 
 	// Create and configure the list-component of all TestDataPoints
-	generateAllAvailablePointsListUIComponent(&newOrEditTestDataPointGroupWindow, &testDataEngine.TestDataModel)
+	generateAllAvailablePointsListUIComponent(
+		&newOrEditTestDataPointGroupWindow,
+		&testDataEngine.TestDataModel)
 
 	// *** Create the selection boxes for selecting TestDataValues values
-	generateTestDataSelectionsUIComponent(&testDataEngine.TestDataModel, testDataModelMap, newOrEditTestDataPointGroupWindow)
+	generateTestDataSelectionsUIComponent(
+		&testDataEngine.TestDataModel,
+		testDataModelMap,
+		&newOrEditTestDataPointGroupWindow)
 
 	// Create and configure the list-component of selected TestDataPoints
 	generateSelectedPointsListUIComponent(

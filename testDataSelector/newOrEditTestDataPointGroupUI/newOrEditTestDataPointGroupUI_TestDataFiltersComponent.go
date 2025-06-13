@@ -15,7 +15,7 @@ import (
 func generateTestDataSelectionsUIComponent(
 	testDataModel *testDataEngine.TestDataModelStruct,
 	testDataModelMap map[testDataEngine.TestDataDomainUuidType]*testDataEngine.TestDataDomainModelStruct,
-	newOrEditTestDataPointGroupWindow fyne.Window) {
+	newOrEditTestDataPointGroupWindow *fyne.Window) {
 
 	var existInMap bool
 
@@ -236,11 +236,23 @@ func generateTestDataSelectionsUIComponent(
 				}
 			}
 
-			// Replace existing TestDataHeaders-filter container with a new one
 			testDataSelectionsContainer.Objects[2] = tempTestDataValuesSelectionContainer
-			testDataSelectionsContainer.Refresh()
-			newOrEditTestDataPointGroupWindow.CenterOnScreen()
+			go func() {
 
+				testDataSelectionsContainer.Refresh()
+				(*newOrEditTestDataPointGroupWindow).CenterOnScreen()
+			}()
+			/*
+					fyne.Do(func() {
+						// Replace existing TestDataHeaders-filter container with a new one
+						testDataSelectionsContainer.Objects[2] = tempTestDataValuesSelectionContainer
+
+				testDataSelectionsContainer.Refresh()
+						newOrEditTestDataPointGroupWindow.CenterOnScreen()
+					})
+
+
+			*/
 		})
 
 		// Set label for TestAreas
@@ -252,14 +264,23 @@ func generateTestDataSelectionsUIComponent(
 		testAreasContainer.Refresh()
 		// Replace existing TestDataHeaders-filter container with a new one
 		testDataSelectionsContainer.Objects[2] = container.NewHBox()
-		testDataSelectionsContainer.Refresh()
-		newOrEditTestDataPointGroupWindow.CenterOnScreen()
+		//testDataSelectionsContainer.Refresh()
+		//newOrEditTestDataPointGroupWindow.CenterOnScreen()
+		go func() {
+
+			testDataSelectionsContainer.Refresh()
+			(*newOrEditTestDataPointGroupWindow).CenterOnScreen()
+		}()
 
 		// If there is only one item in TestArea-item then select that one
 		if len(testAreaOptions) == 1 {
 			testAreaSelect.SetSelected(testAreaOptions[0])
-			testAreaSelect.Refresh()
-			newOrEditTestDataPointGroupWindow.CenterOnScreen()
+			//testAreaSelect.Refresh()
+			//newOrEditTestDataPointGroupWindow.CenterOnScreen()
+			go func() {
+				testAreaSelect.Refresh()
+				(*newOrEditTestDataPointGroupWindow).CenterOnScreen()
+			}()
 		}
 
 	})
@@ -267,8 +288,12 @@ func generateTestDataSelectionsUIComponent(
 	// If there is only one item in Domains-dropdown then select that one
 	if len(domainOptions) == 1 {
 		domainsSelect.SetSelected(domainOptions[0])
-		domainsSelect.Refresh()
-		newOrEditTestDataPointGroupWindow.CenterOnScreen()
+		//domainsSelect.Refresh()
+		//newOrEditTestDataPointGroupWindow.CenterOnScreen()
+		go func() {
+			domainsSelect.Refresh()
+			(*newOrEditTestDataPointGroupWindow).CenterOnScreen()
+		}()
 
 		// Set label for TestAreas
 		testAreasLabel.SetText(fmt.Sprintf(testDataTestAreaLabelText+"'%s'", domainOptions[0]))
@@ -294,7 +319,10 @@ func generateTestDataSelectionsUIComponent(
 	// Function used when clicking on  'searchTestDataButton'
 	searchTestDataButtonFunction = func() {
 
-		defer newOrEditTestDataPointGroupWindow.CenterOnScreen()
+		// defer newOrEditTestDataPointGroupWindow.CenterOnScreen()
+		go func() {
+			(*newOrEditTestDataPointGroupWindow).CenterOnScreen()
+		}()
 
 		// Verify that Domain is selected
 		if len(domainsSelect.Selected) == 0 {
@@ -668,7 +696,7 @@ func generateTestDataSelectionsUIComponent(
 	*/
 
 	// Center the window
-	newOrEditTestDataPointGroupWindow.CenterOnScreen()
+	//newOrEditTestDataPointGroupWindow.CenterOnScreen()
 }
 
 // Sort a slice with DataPoints

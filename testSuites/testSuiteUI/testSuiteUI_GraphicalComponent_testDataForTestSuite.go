@@ -13,7 +13,7 @@ import (
 // Generate the TestData-table Area for the TestSuite
 func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestSuiteArea(
 	testCaseUuid string) (
-	fyne.CanvasObject,
+	*fyne.Container,
 	error) {
 
 	// Initiate the TestData-object used for keeping Groups and their TestData in the TestSuiteModelPtr

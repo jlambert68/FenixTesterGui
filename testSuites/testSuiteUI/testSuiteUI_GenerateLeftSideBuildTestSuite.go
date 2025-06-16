@@ -89,6 +89,23 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	}
 	leftTopSideBuildTestSuiteContainer.Add(testSuiteInformationAreaContainer)
 
+	// Generate TestSuite-Owner and Execution environment-area
+	testSuiteInformationAreaContainer, err = testSuiteUiModel.generateOwnerDomainForTestSuiteArea(
+		testSuiteUuid, testCasesModel)
+	if err != nil {
+
+		errorId := "4f059e29-1e5c-46e1-a766-f2f95d7a5c36"
+		errorMessage := fmt.Sprintf("couldn't generate 'TestSuite-Owner and Execution environment-area', err=%s. [ErrorId = %s]",
+			err.Error(),
+			errorId)
+
+		leftSideBuildTestSuiteContainer = container.NewVBox(widget.NewLabel(errorMessage))
+
+		return leftSideBuildTestSuiteContainer, nil
+
+	}
+	leftTopSideBuildTestSuiteContainer.Add(testSuiteInformationAreaContainer)
+
 	// Generate TestSuite-TestData-area
 	testSuiteTestDataAreaContainer, err = testSuiteUiModel.generateSelectedTestDataForTestSuiteArea(testSuiteUuid)
 	if err != nil {

@@ -211,20 +211,20 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestSuiteA
 
 			// Add extra empty line for each of every extra TestDataGroup
 			if testDataGroupIndex > 0 {
-				testDataAsRichTextBuilder.WriteString(fmt.Sprintf("\n\n "))
+				testDataAsRichTextBuilder.WriteString(fmt.Sprintf(" \n\n "))
 			}
 
 			// Add TestDataGroup to StringBuilder
 			testDataAsRichTextBuilder.WriteString(fmt.Sprintf("## %s (TestDataGroup)\n\n ", testDataGroup))
 
 			// For each TestDataGroup loop all its TestDataPoints
-			for testDataPointIndex, testDataPoint := range testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.
+			for _, testDataPoint := range testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.
 				ListTestDataGroupPointsForAGroup(testDataGroup) {
 
 				// Add extra empty line for each of every extra TestDataPoints
-				if testDataPointIndex > 0 {
-					testDataAsRichTextBuilder.WriteString(fmt.Sprintf("--- \n\n "))
-				}
+				//if testDataPointIndex > 0 {
+				//	testDataAsRichTextBuilder.WriteString(fmt.Sprintf(" \n\n "))
+				//}
 
 				// Add TestDataPoint to StringBuilder
 				testDataAsRichTextBuilder.WriteString(fmt.Sprintf("### %s (TestDataPoint)\n\n ", testDataPoint))
@@ -271,6 +271,9 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestSuiteA
 		case "Hide TestDataPointRows":
 			showTestDataPointRows = false
 			generateTestDataAsRichTextFunction(showTestDataPointRows)
+
+		case "":
+			// No change so do nothing
 
 		default:
 			errorId := "a5536546-fd85-4f13-9071-509437ff0d7e"

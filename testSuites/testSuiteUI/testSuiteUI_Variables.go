@@ -13,3 +13,10 @@ type TestSuiteUiStruct struct {
 
 	// UI components
 }
+
+// mouseHasLeftSideSplitContainer
+// Keep s track when mouse leaves or enters left side of the Split-container
+var mouseHasLeftSideSplitContainer bool
+
+// The space between the different Information-boxes
+const spaceBetweenInformationBoxes = "           "

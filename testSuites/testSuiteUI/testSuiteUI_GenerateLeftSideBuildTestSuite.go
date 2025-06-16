@@ -22,6 +22,7 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	var testSuiteDeleteDateAreaContainer *fyne.Container
 	var testSuiteNameAreaContainer *fyne.Container
 	var testSuiteDescriptionAreaContainer *fyne.Container
+	var testSuiteInformationAreaContainer *fyne.Container
 	var testSuiteTestDataAreaContainer *fyne.Container
 
 	// Generate TestSuite-DeleteDate area
@@ -71,6 +72,22 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 
 	}
 	leftTopSideBuildTestSuiteContainer.Add(testSuiteDescriptionAreaContainer)
+
+	// Generate TestSuite-Information-area
+	testSuiteInformationAreaContainer, err = testSuiteUiModel.generateTestSuiteInformationFieldsArea(testSuiteUuid)
+	if err != nil {
+
+		errorId := "a3fa30d8-df0e-408c-8e4c-99aabb62cfab"
+		errorMessage := fmt.Sprintf("couldn't generate 'TestSuite-Information-area, err=%s. [ErrorId = %s]",
+			err.Error(),
+			errorId)
+
+		leftSideBuildTestSuiteContainer = container.NewVBox(widget.NewLabel(errorMessage))
+
+		return leftSideBuildTestSuiteContainer, nil
+
+	}
+	leftTopSideBuildTestSuiteContainer.Add(testSuiteInformationAreaContainer)
 
 	// Generate TestSuite-TestData-area
 	testSuiteTestDataAreaContainer, err = testSuiteUiModel.generateSelectedTestDataForTestSuiteArea(testSuiteUuid)

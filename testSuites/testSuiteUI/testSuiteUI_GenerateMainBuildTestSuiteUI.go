@@ -5,7 +5,10 @@ import (
 	"FenixTesterGui/testSuites/testSuitesModel"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/driver/desktop"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"image/color"
 )
 
 // GenerateBuildNewTestSuiteUI
@@ -58,7 +61,40 @@ func (testSuiteUiModel TestSuiteUiStruct) GenerateBuildNewTestSuiteUI(
 	// Generate rightSideBuildTestSuiteContainer - MetaData filter for TestCases
 	rightSideBuildTestSuiteContainer = generateRightSideBuildTestSuiteContainer(testCasesModel)
 
-	buildTestSuiteSplitContainer = container.NewHSplit(leftSideBuildTestSuiteContainer, rightSideBuildTestSuiteContainer)
+	// make, LeftSide, hoverable transparent overlay, to stop mouse interference between to two sides of the split-container
+	leftCreateTestSuiteOverlay := NewHoverableRect(color.Transparent, nil)
+	leftCreateTestSuiteOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
+
+		mouseHasLeftSideSplitContainer = false
+		leftCreateTestSuiteOverlay.Hide()
+		leftCreateTestSuiteOverlay.OtherHoverableRect.Show()
+	}
+	leftCreateTestSuiteOverlay.OnMouseOut = func() {
+
+	}
+
+	// make, RightSide, hoverable transparent overlay, to stop mouse interference between to two sides of the split-container
+	rightCreateTestSuiteOverlay := NewHoverableRect(color.Transparent, nil)
+	rightCreateTestSuiteOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
+
+		mouseHasLeftSideSplitContainer = false
+		rightCreateTestSuiteOverlay.Hide()
+		rightCreateTestSuiteOverlay.OtherHoverableRect.Show()
+	}
+	rightCreateTestSuiteOverlay.OnMouseOut = func() {
+
+	}
+
+	// Cross connect the two overlays
+	leftCreateTestSuiteOverlay.OtherHoverableRect = rightCreateTestSuiteOverlay
+	rightCreateTestSuiteOverlay.OtherHoverableRect = leftCreateTestSuiteOverlay
+
+	buildTestSuiteAndOverlayContainer := container.New(layout.NewStackLayout(),
+		leftSideBuildTestSuiteContainer, leftCreateTestSuiteOverlay)
+	rightSideAndOverlayContainer := container.New(layout.NewStackLayout(),
+		rightSideBuildTestSuiteContainer, rightCreateTestSuiteOverlay)
+
+	buildTestSuiteSplitContainer = container.NewHSplit(buildTestSuiteAndOverlayContainer, rightSideAndOverlayContainer)
 	newTestSuiteUIContainer = container.NewVBox(buildTestSuiteSplitContainer)
 
 	return newTestSuiteUIContainer, err

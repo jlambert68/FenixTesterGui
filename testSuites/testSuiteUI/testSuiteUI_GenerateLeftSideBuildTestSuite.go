@@ -23,6 +23,8 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	var testSuiteNameAreaContainer *fyne.Container
 	var testSuiteDescriptionAreaContainer *fyne.Container
 	var testSuiteInformationAreaContainer *fyne.Container
+	var testSuiteOwnerDomainContainer *fyne.Container
+	var testSuiteTestEnvironmentContainer *fyne.Container
 	var testSuiteTestDataAreaContainer *fyne.Container
 
 	// Generate TestSuite-DeleteDate area
@@ -89,13 +91,14 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	}
 	leftTopSideBuildTestSuiteContainer.Add(testSuiteInformationAreaContainer)
 
-	// Generate TestSuite-Owner and Execution environment-area
-	testSuiteInformationAreaContainer, err = testSuiteUiModel.generateOwnerDomainForTestSuiteArea(
+	// Generate TestSuite-Owner area
+	var testCaseOwnerDomainCustomSelectComboBox *customSelectComboBox
+	testSuiteOwnerDomainContainer, testCaseOwnerDomainCustomSelectComboBox, err = testSuiteUiModel.generateOwnerDomainForTestSuiteArea(
 		testSuiteUuid, testCasesModel)
 	if err != nil {
 
-		errorId := "4f059e29-1e5c-46e1-a766-f2f95d7a5c36"
-		errorMessage := fmt.Sprintf("couldn't generate 'TestSuite-Owner and Execution environment-area', err=%s. [ErrorId = %s]",
+		errorId := "46cab305-6172-4e06-aa19-3c891c5b8d57"
+		errorMessage := fmt.Sprintf("couldn't generate 'TestSuite-Owner area', err=%s. [ErrorId = %s]",
 			err.Error(),
 			errorId)
 
@@ -104,7 +107,28 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 		return leftSideBuildTestSuiteContainer, nil
 
 	}
-	leftTopSideBuildTestSuiteContainer.Add(testSuiteInformationAreaContainer)
+	leftTopSideBuildTestSuiteContainer.Add(testSuiteOwnerDomainContainer)
+	fmt.Println(testCaseOwnerDomainCustomSelectComboBox)
+
+	// Generate TestSuite-Owner and Execution environment-area
+	var customTestEnvironmentSelectComboBox *customSelectComboBox
+	testSuiteTestEnvironmentContainer, customTestEnvironmentSelectComboBox, err = testSuiteUiModel.
+		generateTestEnvironmentForTestSuite(
+			testSuiteUuid, testCasesModel)
+	if err != nil {
+
+		errorId := "4f059e29-1e5c-46e1-a766-f2f95d7a5c36"
+		errorMessage := fmt.Sprintf("couldn't generate 'TestSuites TestExecution environment-area', err=%s. [ErrorId = %s]",
+			err.Error(),
+			errorId)
+
+		leftSideBuildTestSuiteContainer = container.NewVBox(widget.NewLabel(errorMessage))
+
+		return leftSideBuildTestSuiteContainer, nil
+
+	}
+	leftTopSideBuildTestSuiteContainer.Add(testSuiteTestEnvironmentContainer)
+	fmt.Println(customTestEnvironmentSelectComboBox)
 
 	// Generate TestSuite-TestData-area
 	testSuiteTestDataAreaContainer, err = testSuiteUiModel.generateSelectedTestDataForTestSuiteArea(testSuiteUuid)

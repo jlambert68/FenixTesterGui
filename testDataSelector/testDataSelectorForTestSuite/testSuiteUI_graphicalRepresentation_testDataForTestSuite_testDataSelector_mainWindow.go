@@ -17,6 +17,8 @@ func MainTestDataSelector(
 	currentTestSuitePtr *testSuitesModel.TestSuiteModelStruct,
 	testCaseUuid string,
 	testDataSelectorsContainer *fyne.Container,
+	testDataPointRadioGroupContainer *fyne.Container,
+	generateTestDataAsRichTextCallBackFunctionRef func(),
 	testDataPointGroupsSelectInMainTestSuiteArea *widget.Select,
 	testDataPointsForAGroupSelectInMainTestSuiteArea *widget.Select,
 	testDataRowsForTestDataPointsSelectInMainTestSuiteArea *widget.Select) {
@@ -287,10 +289,12 @@ func MainTestDataSelector(
 					// If there are no TestDataGroups then hide the Selects in main TestCase window
 					if len(currentTestSuitePtr.TestSuiteUIModelBinding.TestDataPtr.ListTestDataGroups()) == 0 {
 						testDataSelectorsContainer.Hide()
+						testDataPointRadioGroupContainer.Hide()
 					}
 				} else {
 					testDataPointGroupsSelectInMainTestSuiteArea.SetOptions(currentTestSuitePtr.TestSuiteUIModelBinding.TestDataPtr.ListTestDataGroups())
 					testDataPointGroupsSelectInMainTestSuiteArea.Refresh()
+					generateTestDataAsRichTextCallBackFunctionRef()
 				}
 
 			}
@@ -363,11 +367,13 @@ func MainTestDataSelector(
 				})
 
 				// Update TestData-Selects in TestCase main area
-				testDataPointGroupsSelectInMainTestSuiteArea.SetOptions(testDataPointGroupsToStringSliceFunction())
-				testDataPointsForAGroupSelectInMainTestSuiteArea.SetOptions(testDataPointsToStringSliceFunction())
+				fyne.Do(func() {
+					testDataPointGroupsSelectInMainTestSuiteArea.SetOptions(testDataPointGroupsToStringSliceFunction())
+					testDataPointsForAGroupSelectInMainTestSuiteArea.SetOptions(testDataPointsToStringSliceFunction())
 
-				testDataPointGroupsSelectInMainTestSuiteArea.Refresh()
-				testDataPointsForAGroupSelectInMainTestSuiteArea.Refresh()
+					testDataPointGroupsSelectInMainTestSuiteArea.Refresh()
+					testDataPointsForAGroupSelectInMainTestSuiteArea.Refresh()
+				})
 
 				// Update TestData on the TestCase
 				//testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = currentTestSuitePtr
@@ -375,9 +381,12 @@ func MainTestDataSelector(
 				// If there are no TestDataGroups then hide the Selects in main TestCase window
 				if len(currentTestSuitePtr.TestSuiteUIModelBinding.TestDataPtr.ListTestDataGroups()) == 0 {
 					testDataSelectorsContainer.Hide()
+					testDataPointRadioGroupContainer.Hide()
 
 				} else {
 					testDataSelectorsContainer.Show()
+					testDataPointRadioGroupContainer.Show()
+					generateTestDataAsRichTextCallBackFunctionRef()
 				}
 			}
 		}

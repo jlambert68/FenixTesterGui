@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/jlambert68/FenixScriptEngine/testDataEngine"
+	"log"
 	"strings"
 )
 
@@ -30,10 +31,24 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestSuiteA
 	var testDataPointsForAGroup []string
 	var testDataRowsForATestDataPoint []string
 
+	var generateTestDataAsRichTextFunction func(bool)
+	var generateTestDataAsRichTextCallBackFunction func()
+
 	// Create UI component for selected TestData-selectors
-	testDataSelectorsContainer := container.New(layout.NewFormLayout())
+	testDataSingleSelectFormContainer := container.New(layout.NewFormLayout())
+
+	// Create the Container holding the RichText
+	richTextContainer := container.NewVBox()
+
+	// Create the TestContainer containing both single select and RichText containers
+	testDataContainer := container.NewVBox()
+
+	// Add the Single Select container and the RichText container for TestData
+	testDataContainer.Add(testDataSingleSelectFormContainer)
+	testDataContainer.Add(richTextContainer)
 
 	var selectorAndButtonContainer *fyne.Container
+	var testDataPointRadioGroupContainer *fyne.Container
 
 	// Create function that converts a GroupSlice into a string slice
 	getTestGroupsFromTestDataEngineFunction := func() []string {
@@ -71,7 +86,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestSuiteA
 	}
 
 	// Create the Group dropdown - <Name of the group>
-	testDataPointGroupsSelectInMainTestSuiteArea = widget.NewSelect(
+	testDataPointGroupsSelect = widget.NewSelect(
 		getTestGroupsFromTestDataEngineFunction(), func(selected string) {
 
 			// Check that the selected Group name exist options
@@ -96,16 +111,16 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestSuiteA
 			testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.SelectedTestDataGroup = selected
 
 			// Select the correct TestDataPoint in the dropdown for TestDataPoints
-			testDataPointsForAGroupSelectInMainTestSuiteArea.SetOptions(testDataPointsToStringSliceFunction(selected))
-			testDataPointsForAGroupSelectInMainTestSuiteArea.Refresh()
+			testDataPointsForAGroupSelect.SetOptions(testDataPointsToStringSliceFunction(selected))
+			testDataPointsForAGroupSelect.Refresh()
 
 			// UnSelect in DropDown- and List for TestDataPoints
-			testDataPointsForAGroupSelectInMainTestSuiteArea.ClearSelected()
+			testDataPointsForAGroupSelect.ClearSelected()
 
 		})
 
 	// Create the Groups TestDataPoints dropdown - <Sub Custody/Main TestData Area/SEK/AccTest/SE/CRDT/CH/Switzerland/BBH/EUR/EUR/SEK>
-	testDataPointsForAGroupSelectInMainTestSuiteArea = widget.NewSelect(testDataPointsToStringSliceFunction(
+	testDataPointsForAGroupSelect = widget.NewSelect(testDataPointsToStringSliceFunction(
 		testDataPointGroupsSelectSelectedInMainTestSuiteArea), func(selected string) {
 
 		testDataPointForAGroupSelectSelectedInMainTestSuiteArea = selected
@@ -114,17 +129,17 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestSuiteA
 		testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.SelectedTestDataPoint = selected
 
 		// Select the correct TestDataPoint in the dropdown for TestDataPoints
-		testDataRowsForTestDataPointsSelectInMainTestSuiteArea.SetOptions(testDataRowSliceToStringSliceFunction(
-			testDataPointGroupsSelectInMainTestSuiteArea.Selected, selected))
-		testDataRowsForTestDataPointsSelectInMainTestSuiteArea.Refresh()
+		testDataRowsForTestDataPointsSelect.SetOptions(testDataRowSliceToStringSliceFunction(
+			testDataPointGroupsSelect.Selected, selected))
+		testDataRowsForTestDataPointsSelect.Refresh()
 
 		// UnSelect in DropDown- and List for Specific TestDataPoints
-		testDataRowsForTestDataPointsSelectInMainTestSuiteArea.ClearSelected()
+		testDataRowsForTestDataPointsSelect.ClearSelected()
 
 	})
 
 	// Create the Groups Specific TestDataPoint dropdown - <All the specific values>
-	testDataRowsForTestDataPointsSelectInMainTestSuiteArea = widget.NewSelect(testDataRowSliceToStringSliceFunction(
+	testDataRowsForTestDataPointsSelect = widget.NewSelect(testDataRowSliceToStringSliceFunction(
 		testDataPointGroupsSelectSelectedInMainTestSuiteArea, testDataPointForAGroupSelectSelectedInMainTestSuiteArea), func(selected string) {
 
 		testDataRowForTestDataPointsSelectSelectedInMainTestSuiteArea = selected
@@ -171,86 +186,154 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestSuiteA
 			*sharedCode.FenixMasterWindowPtr,
 			testSuiteUiModel.TestSuiteModelPtr,
 			testCaseUuid,
-			testDataSelectorsContainer,
-			testDataPointGroupsSelectInMainTestSuiteArea,
-			testDataPointsForAGroupSelectInMainTestSuiteArea,
-			testDataRowsForTestDataPointsSelectInMainTestSuiteArea)
+			testDataContainer,
+			testDataPointRadioGroupContainer,
+			generateTestDataAsRichTextCallBackFunction,
+			testDataPointGroupsSelect,
+			testDataPointsForAGroupSelect,
+			testDataRowsForTestDataPointsSelect)
 
 	})
 
-	var generateTestDataAsRichTextFunction func()
-	generateTestDataAsRichTextFunction = func() {
+	// Define the callback function to be able to trigger correct way of showing TestDataPointRows or not
+	generateTestDataAsRichTextCallBackFunction = func() {
+		generateTestDataAsRichTextFunction(showTestDataPointRows)
+	}
+
+	// Define the function that creates the RichText for TestDataGroups, TestDataPoints and TestDataPointRows
+	generateTestDataAsRichTextFunction = func(showTestDataPointRows bool) {
 
 		// Generate All TestData as RichText component
 		var testDataAsRichTextBuilder strings.Builder
 		// Loop all TestDataGroups
-		for _, testDataGroup := range testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.
+		for testDataGroupIndex, testDataGroup := range testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.
 			ListTestDataGroups() {
 
+			// Add extra empty line for each of every extra TestDataGroup
+			if testDataGroupIndex > 0 {
+				testDataAsRichTextBuilder.WriteString(fmt.Sprintf("\n\n "))
+			}
+
 			// Add TestDataGroup to StringBuilder
-			testDataAsRichTextBuilder.WriteString(fmt.Sprintf("## TestDataGroup: *%s* \\n\\n", testDataGroup))
+			testDataAsRichTextBuilder.WriteString(fmt.Sprintf("## %s (TestDataGroup)\n\n ", testDataGroup))
 
 			// For each TestDataGroup loop all its TestDataPoints
-			for _, testDataPoint := range testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.
+			for testDataPointIndex, testDataPoint := range testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.
 				ListTestDataGroupPointsForAGroup(testDataGroup) {
 
+				// Add extra empty line for each of every extra TestDataPoints
+				if testDataPointIndex > 0 {
+					testDataAsRichTextBuilder.WriteString(fmt.Sprintf("--- \n\n "))
+				}
+
 				// Add TestDataPoint to StringBuilder
-				testDataAsRichTextBuilder.WriteString(fmt.Sprintf("### TestDataPoint: *%s* \\n\\n", testDataPoint))
+				testDataAsRichTextBuilder.WriteString(fmt.Sprintf("### %s (TestDataPoint)\n\n ", testDataPoint))
 
-				// For each TestDataPoint loop all its TestDataRows
-				for _, testDataRow := range testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.
-					ListTestDataRowsForAGroupPoint(testDataGroup, testDataPoint) {
+				// Only add TestDataPointRow when they should be visible
+				if showTestDataPointRows == true {
 
-					// Add TestDataRow to StringBuilder
-					testDataAsRichTextBuilder.WriteString(fmt.Sprintf("%s \\n\\n", testDataRow))
+					// For each TestDataPoint loop all its TestDataRows
+					for _, testDataRow := range testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.
+						ListTestDataRowsForAGroupPoint(testDataGroup, testDataPoint) {
+
+						// Add TestDataRow to StringBuilder
+						testDataAsRichTextBuilder.WriteString(fmt.Sprintf("%s\n\n ", testDataRow))
+					}
 				}
 			}
 		}
 
 		// Create the RichText component for the TestData
 		testDataAsRichText = widget.NewRichTextFromMarkdown(testDataAsRichTextBuilder.String())
+		testDataAsRichTextBorderContainer := container.NewBorder(
+			widget.NewLabel("All TestData for this TestSuite"),
+			nil, nil, nil,
+			testDataAsRichText)
+		//testDataAsRichTextScrollContainer := container.NewHScroll(testDataAsRichTextBorderContainer)
 
-		selectorAndButtonContainer.Remove(testDataSelectorsContainer)
-		selectorAndButtonContainer.Add(testDataAsRichText)
+		testDataContainer.Remove(richTextContainer)
+		testDataContainer.Add(testDataAsRichTextBorderContainer)
+
+		// Store new 'TestDataAsRichTextBorderContainer' back into 'TestDataContainer'
+		richTextContainer = testDataAsRichTextBorderContainer
+		testDataContainer.Refresh()
 
 	}
 
-	// Generate RichText  TestData for the TestSuite
-	generateRichTextTestDataButton := widget.NewButton("List all TestData to TestSuite", func() {
+	// Generate the Radio group for showing/Hiding TestDataPointRows
+	generateRichTextTestDataRadioGroup := widget.NewRadioGroup([]string{"Show TestDataPointRows", "Hide TestDataPointRows"}, func(selected string) {
 
-		generateTestDataAsRichTextFunction()
+		switch selected {
+		case "Show TestDataPointRows":
+			showTestDataPointRows = true
+			generateTestDataAsRichTextFunction(showTestDataPointRows)
 
+		case "Hide TestDataPointRows":
+			showTestDataPointRows = false
+			generateTestDataAsRichTextFunction(showTestDataPointRows)
+
+		default:
+			errorId := "a5536546-fd85-4f13-9071-509437ff0d7e"
+			errorMsg := fmt.Sprintf("RadioGroup selected value not recognized (%s) [ErrorId = %s]",
+				selected,
+				errorId)
+
+			log.Fatalln(errorMsg)
+		}
 	})
+	generateRichTextTestDataRadioGroup.Horizontal = true
+	generateRichTextTestDataRadioGroup.SetSelected("Hide TestDataPointRows")
+	showTestDataPointRows = false
 
-	// Create the RichText component for the TestData
-	testDataAsRichText = widget.NewRichTextFromMarkdown("No TestData added to this TestSuite yet.")
+	// Add RadioGroup to its container
+	testDataPointRadioGroupContainer = container.NewVBox(
+		generateRichTextTestDataRadioGroup)
+
+	// Header regarding the Select-components
+	testDataContainer.Add(widget.NewLabel("TestData to be used for manual single TestSuite Execution"))
 
 	// Add the Select UI component for TestData-selectors
-	testDataSelectorsContainer.Add(widget.NewLabel("TestData Group"))
-	testDataSelectorsContainer.Add(testDataPointGroupsSelectInMainTestSuiteArea)
+	testDataSingleSelectFormContainer.Add(widget.NewLabel("TestData Group"))
+	testDataSingleSelectFormContainer.Add(testDataPointGroupsSelect)
 
-	testDataSelectorsContainer.Add(widget.NewLabel("TestData Point"))
-	testDataSelectorsContainer.Add(testDataPointsForAGroupSelectInMainTestSuiteArea)
+	testDataSingleSelectFormContainer.Add(widget.NewLabel("TestData Point"))
+	testDataSingleSelectFormContainer.Add(testDataPointsForAGroupSelect)
 
-	testDataSelectorsContainer.Add(widget.NewLabel("TestData Row"))
-	testDataSelectorsContainer.Add(testDataRowsForTestDataPointsSelectInMainTestSuiteArea)
+	testDataSingleSelectFormContainer.Add(widget.NewLabel("TestData Row"))
+	testDataSingleSelectFormContainer.Add(testDataRowsForTestDataPointsSelect)
 
-	testDataSelectorsContainer.Add(widget.NewLabel("All TestData for this TestSuite"))
-	testDataSelectorsContainer.Add(testDataAsRichText)
+	// Add SingleSelect  container to the overall TestDataContainer
+	testDataContainer.Add(testDataSingleSelectFormContainer)
 
-	// If there is no TestData then hide the "Select-boxes"
+	// Add separator
+	testDataContainer.Add(widget.NewSeparator())
+
+	// Create the RichText component for the TestData
+	richTextContainer = container.NewBorder(
+		widget.NewLabel("No TestData added to this TestSuite yet."),
+		nil, nil, nil, nil)
+
+	//richTextContainer.Add(widget.NewLabel("All TestData for this TestSuite"))
+	richTextContainer.Add(testDataAsRichText)
+
+	// Add RichText container to the overall TestDataContainer
+	testDataContainer.Add(richTextContainer)
+
+	// If there is no TestData then hide the "TestData-container"
 	if len(testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr.ListTestDataGroups()) == 0 {
-		testDataSelectorsContainer.Hide()
+		testDataContainer.Hide()
+		testDataPointRadioGroupContainer.Hide()
 	} else {
-		testDataPointGroupsSelectInMainTestSuiteArea.SetOptions(getTestGroupsFromTestDataEngineFunction())
-		testDataSelectorsContainer.Show()
-		testDataPointGroupsSelectInMainTestSuiteArea.Refresh()
+		testDataPointGroupsSelect.SetOptions(getTestGroupsFromTestDataEngineFunction())
+		testDataContainer.Show()
+		testDataPointRadioGroupContainer.Show()
+		testDataPointGroupsSelect.Refresh()
 	}
 
 	// Create an Accordion item for the buttons
-	buttonContainer := container.NewHBox(selectTestDataButton, generateRichTextTestDataButton)
+	buttonContainer := container.NewHBox(selectTestDataButton, testDataPointRadioGroupContainer)
 
-	selectorAndButtonContainer = container.NewBorder(buttonContainer, nil, nil, nil, testDataSelectorsContainer)
+	selectorAndButtonContainer = container.NewBorder(buttonContainer, nil, nil, nil, testDataContainer)
 	selectorAndButtonContainer.Refresh()
 
 	// Create an Accordion item for the list

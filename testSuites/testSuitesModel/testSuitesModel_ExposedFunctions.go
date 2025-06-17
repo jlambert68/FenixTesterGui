@@ -85,6 +85,14 @@ func GenerateNewTestSuiteModelObject() (newTestSuiteModel *TestSuiteModelStruct)
 		lastChangedDate:               "",
 		testSuiteExecutionEnvironment: "",
 		testSuiteIsNew:                true,
+		testSuiteMetaDataPtr: &TestSuiteMetaDataStruct{
+			CurrentSelectedDomainUuid:                               "",
+			TestSuiteMetaDataMessageJsonForTestSuiteWhenLastSaved:   nil,
+			TestSuiteMetaDataMessageStructForTestSuiteWhenLastSaved: nil,
+			MetaDataGroupsOrder:                                     nil,
+			MetaDataGroupsMapPtr:                                    nil,
+			SelectedTestSuiteMetaDataAsEntrySlice:                   nil,
+		},
 		TestSuiteUIModelBinding: TestSuiteUIModelBindingStruct{
 			TestSuiteDeletionDate:         "",
 			TestSuiteName:                 "",
@@ -94,6 +102,14 @@ func GenerateNewTestSuiteModelObject() (newTestSuiteModel *TestSuiteModelStruct)
 			TestSuiteExecutionEnvironment: "",
 			TestSuiteIsNew:                true,
 			TestDataPtr:                   nil,
+			testSuiteMetaDataPtr: &TestSuiteMetaDataStruct{
+				CurrentSelectedDomainUuid:                               "",
+				TestSuiteMetaDataMessageJsonForTestSuiteWhenLastSaved:   nil,
+				TestSuiteMetaDataMessageStructForTestSuiteWhenLastSaved: nil,
+				MetaDataGroupsOrder:                                     nil,
+				MetaDataGroupsMapPtr:                                    nil,
+				SelectedTestSuiteMetaDataAsEntrySlice:                   nil,
+			},
 		},
 	}
 

@@ -24,4 +24,4 @@ type TestSuiteUiStruct struct {
 }
 
 // The space between the different Information-boxes
-const spaceBetweenInformationBoxes = "           "
+const spaceBetweenInformationBoxes = "   "

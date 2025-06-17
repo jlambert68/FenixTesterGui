@@ -455,7 +455,7 @@ func buildGUIFromMetaDataGroupsMap(
 	}
 
 	//var convertMetaDataToMapMap map[string]map[string]*NewMetaDataInGroupStruct
-	//convertMetaDataToMapMap = ConvertMetaDataToNewMap(metaDataGroupInTestCasePtr)
+	//convertMetaDataToMapMap = convertMetaDataToNewMap(metaDataGroupInTestCasePtr)
 
 	// Create one “card” per MetaDataGroup
 	var metaDataGroupCards []fyne.CanvasObject

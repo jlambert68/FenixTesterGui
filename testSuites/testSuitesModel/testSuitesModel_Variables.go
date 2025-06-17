@@ -34,6 +34,8 @@ type TestSuiteModelStruct struct {
 
 	testSuiteIsNew bool // Indicates that if this a new or existing TestSuite
 
+	testSuiteMetaDataPtr *TestSuiteMetaDataStruct // Holding the current TestSuiteMetaDataSet and what has been selected
+
 	// TestSuite UI components bindings
 	TestSuiteUIModelBinding TestSuiteUIModelBindingStruct
 }
@@ -50,6 +52,9 @@ type TestSuiteUIModelBindingStruct struct {
 
 	TestSuiteIsNew bool
 	TestDataPtr    *testDataEngine.TestDataForGroupObjectStruct
+
+	TestSuiteMetaDataPtr *TestSuiteMetaDataStruct // Holding the current TestSuiteMetaDataSet and what has been selected
+
 }
 
 // TestSuiteMetaDataForDomainsStruct

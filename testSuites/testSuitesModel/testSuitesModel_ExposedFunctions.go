@@ -1,6 +1,9 @@
 package testSuitesModel
 
-import uuidGenerator "github.com/google/uuid"
+import (
+	sharedCode "FenixTesterGui/common_code"
+	uuidGenerator "github.com/google/uuid"
+)
 
 // GetTestSuiteUuid
 // Gets the TestSuites Uuid
@@ -68,20 +71,29 @@ func GenerateNewTestSuiteModelObject() (newTestSuiteModel *TestSuiteModelStruct)
 
 	// Generate the new TestSuiteModelStruct
 	newTestSuiteModel = &TestSuiteModelStruct{
-		testSuiteDeletionDate:    "",
-		testSuiteUuid:            testSuiteUuid,
-		testSuiteName:            "",
-		testSuiteDescription:     "",
-		testSuiteOwnerDomainUuid: "",
-		testSuiteOwnerDomainName: "",
-		testSuiteIsNew:           true,
-
+		testSuiteDeletionDate:         "",
+		testSuiteUuid:                 testSuiteUuid,
+		testSuiteName:                 "",
+		testSuiteDescription:          "",
+		testSuiteOwnerDomainUuid:      "",
+		testSuiteOwnerDomainName:      "",
+		createdByGcpLogin:             sharedCode.CurrentUserAuthenticatedTowardsGCP,
+		createdByComputerLogin:        sharedCode.CurrentUserIdLogedInOnComputer,
+		createdDate:                   "",
+		lastChangedByGcpLogin:         "",
+		lastChangedByComputerLogin:    "",
+		lastChangedDate:               "",
+		testSuiteExecutionEnvironment: "",
+		testSuiteIsNew:                true,
 		TestSuiteUIModelBinding: TestSuiteUIModelBindingStruct{
-			TestSuiteDeletionDate:    "",
-			TestSuiteName:            "",
-			TestSuiteDescription:     "",
-			TestSuiteOwnerDomainUuid: "",
-			TestSuiteIsNew:           true,
+			TestSuiteDeletionDate:         "",
+			TestSuiteName:                 "",
+			TestSuiteDescription:          "",
+			TestSuiteOwnerDomainUuid:      "",
+			TestSuiteOwnerDomainName:      "",
+			TestSuiteExecutionEnvironment: "",
+			TestSuiteIsNew:                true,
+			TestDataPtr:                   nil,
 		},
 	}
 

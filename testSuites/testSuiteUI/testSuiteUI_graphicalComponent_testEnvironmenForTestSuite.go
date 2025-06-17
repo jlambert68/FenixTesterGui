@@ -45,11 +45,9 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestEnvironmentForTestSuite()
 	testSuiteMetaDataForDomainPtr, existsInMap = testSuiteMetaDataForDomainsMap[ownerDomainUuid]
 	if existsInMap == false {
 
-		errorId := "91e00fd7-e9bc-4172-b7ad-0f6684514e2f"
-		err = errors.New(fmt.Sprintf("Domain with Uuid '%s' doesn't exist in'testSuiteMetaDataForDomainsMap'. Should never happen [ErrorID: %s]",
-			ownerDomainUuid, errorId))
+		testEnvironmentContainer = container.NewVBox(widget.NewLabel("OwnerDomain doesn't have any TestSuite MetaData"))
 
-		return nil,
+		return testEnvironmentContainer,
 			nil,
 			err
 
@@ -68,7 +66,9 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestEnvironmentForTestSuite()
 		err = errors.New(fmt.Sprintf("TestSuite MetaDataGroup '%s' doesn't exist in'metaDataGroupsMap'. Should never happen [ErrorID: %s]",
 			"TestSuite", errorId))
 
-		return nil,
+		testEnvironmentContainer = container.NewVBox(widget.NewLabel(err.Error()))
+
+		return testEnvironmentContainer,
 			nil,
 			err
 
@@ -89,7 +89,9 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestEnvironmentForTestSuite()
 		err = errors.New(fmt.Sprintf("TestSuite MetaDataItem '%s' doesn't exist in'metaDataGroupsMap'. Should never happen [ErrorID: %s]",
 			"TestEnvironment", errorId))
 
-		return nil,
+		testEnvironmentContainer = container.NewVBox(widget.NewLabel(err.Error()))
+
+		return testEnvironmentContainer,
 			nil,
 			err
 

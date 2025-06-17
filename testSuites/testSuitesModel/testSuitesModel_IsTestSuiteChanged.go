@@ -29,5 +29,11 @@ func (testSuiteModel *TestSuiteModelStruct) IsTestSuiteChanged() (isTestSuiteCha
 		isTestSuiteChanged = true
 	}
 
+	// Check 'TestSuiteExecutionEnvironment'
+	if testSuiteModel.testSuiteExecutionEnvironment != testSuiteModel.TestSuiteUIModelBinding.
+		TestSuiteExecutionEnvironment {
+		isTestSuiteChanged = true
+	}
+
 	return isTestSuiteChanged
 }

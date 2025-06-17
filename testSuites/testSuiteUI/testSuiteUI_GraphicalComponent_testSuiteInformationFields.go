@@ -1,40 +1,17 @@
 package testSuiteUI
 
 import (
-	sharedCode "FenixTesterGui/common_code"
-	"FenixTesterGui/testSuites/testSuitesModel"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
-	"github.com/sirupsen/logrus"
 )
 
 // Generate the TestSuiteInformation Area for the TestSuite
 // Uuid, Created By, Created Date, Last Changed Date, Last Changed By
-func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteInformationFieldsArea(
-	testSuiteUuid string) (
+func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteInformationFieldsArea() (
 	testSuiteInformationScroll *container.Scroll,
 	err error) {
-
-	var existsInMap bool
-
-	// Get testSuitesMap
-	var testSuitesMap map[string]*testSuitesModel.TestSuiteModelStruct
-	testSuitesMap = *testSuitesModel.TestSuitesModelPtr.TestSuitesMapPtr
-
-	// Get a pointer to the TestSuite-model and the TestSuite-model itself
-	var currentTestSuiteModelPtr *testSuitesModel.TestSuiteModelStruct
-	var currentTestSuiteModel testSuitesModel.TestSuiteModelStruct
-	currentTestSuiteModelPtr, existsInMap = testSuitesMap[testSuiteUuid]
-
-	if existsInMap == false {
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":            "48285fad-09a3-4e52-8f34-a104check358a",
-			"testSuiteUuid": testSuiteUuid,
-		}).Fatal("TestSuite doesn't exist in TestSuiteMap. This should not happen")
-	}
-	currentTestSuiteModel = *currentTestSuiteModelPtr
 
 	// Create container to be used for the Information parts
 	var testSuiteInformationContainer *fyne.Container
@@ -48,7 +25,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteInformationFieldsAre
 
 	var uuidCopyableLabel *copyableLabelStruct
 	uuidCopyableLabel = newCopyableLabel(
-		currentTestSuiteModel.GetTestSuiteUuid(), true, testSuiteUiModel)
+		testSuiteUiModel.TestSuiteModelPtr.GetTestSuiteUuid(), true, testSuiteUiModel)
 	uuidCopyableLabel.TextStyle = fyne.TextStyle{Italic: true}
 	testSuiteInformationContainer.Add(uuidCopyableLabel)
 
@@ -63,7 +40,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteInformationFieldsAre
 
 	var createdByGcpLoginLabelCopyableLabel *copyableLabelStruct
 	createdByGcpLoginLabelCopyableLabel = newCopyableLabel(
-		currentTestSuiteModel.GetCreatedByGcpLogin(), true, testSuiteUiModel)
+		testSuiteUiModel.TestSuiteModelPtr.GetCreatedByGcpLogin(), true, testSuiteUiModel)
 	createdByGcpLoginLabelCopyableLabel.TextStyle = fyne.TextStyle{Italic: true}
 	testSuiteInformationContainer.Add(createdByGcpLoginLabelCopyableLabel)
 
@@ -78,7 +55,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteInformationFieldsAre
 
 	var createdByComputerLoginCopyableLabel *copyableLabelStruct
 	createdByComputerLoginCopyableLabel = newCopyableLabel(
-		currentTestSuiteModel.GetCreatedByComputerLogin(), true, testSuiteUiModel)
+		testSuiteUiModel.TestSuiteModelPtr.GetCreatedByComputerLogin(), true, testSuiteUiModel)
 	createdByComputerLoginCopyableLabel.TextStyle = fyne.TextStyle{Italic: true}
 	testSuiteInformationContainer.Add(createdByComputerLoginCopyableLabel)
 
@@ -93,7 +70,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteInformationFieldsAre
 
 	var createdDateCopyableLabel *copyableLabelStruct
 	createdDateCopyableLabel = newCopyableLabel(
-		currentTestSuiteModel.GetCreatedDate(), true, testSuiteUiModel)
+		testSuiteUiModel.TestSuiteModelPtr.GetCreatedDate(), true, testSuiteUiModel)
 	createdDateCopyableLabel.TextStyle = fyne.TextStyle{Italic: true}
 	testSuiteInformationContainer.Add(createdDateCopyableLabel)
 
@@ -108,7 +85,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteInformationFieldsAre
 
 	var lastChangedByGcpLoginCopyableLabel *copyableLabelStruct
 	lastChangedByGcpLoginCopyableLabel = newCopyableLabel(
-		currentTestSuiteModel.GetLastChangedByGcpLogin(), true, testSuiteUiModel)
+		testSuiteUiModel.TestSuiteModelPtr.GetLastChangedByGcpLogin(), true, testSuiteUiModel)
 	lastChangedByGcpLoginCopyableLabel.TextStyle = fyne.TextStyle{Italic: true}
 	testSuiteInformationContainer.Add(lastChangedByGcpLoginCopyableLabel)
 
@@ -123,7 +100,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteInformationFieldsAre
 
 	var lastChangedByComputerLoginLabelCopyableLabel *copyableLabelStruct
 	lastChangedByComputerLoginLabelCopyableLabel = newCopyableLabel(
-		currentTestSuiteModel.GetLastChangedByComputerLogin(), true, testSuiteUiModel)
+		testSuiteUiModel.TestSuiteModelPtr.GetLastChangedByComputerLogin(), true, testSuiteUiModel)
 	lastChangedByComputerLoginLabelCopyableLabel.TextStyle = fyne.TextStyle{Italic: true}
 	testSuiteInformationContainer.Add(lastChangedByComputerLoginLabelCopyableLabel)
 
@@ -138,7 +115,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteInformationFieldsAre
 
 	var lastChangeDateCopyableLabel *copyableLabelStruct
 	lastChangeDateCopyableLabel = newCopyableLabel(
-		currentTestSuiteModel.GetLastChangedDate(), true, testSuiteUiModel)
+		testSuiteUiModel.TestSuiteModelPtr.GetLastChangedDate(), true, testSuiteUiModel)
 	lastChangeDateCopyableLabel.TextStyle = fyne.TextStyle{Italic: true}
 	testSuiteInformationContainer.Add(lastChangeDateCopyableLabel)
 

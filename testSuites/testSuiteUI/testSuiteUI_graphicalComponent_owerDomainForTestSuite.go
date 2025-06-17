@@ -71,7 +71,12 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateOwnerDomainForTestSuiteArea(
 
 			// Generate TestSuite's ExecutionEnvironment
 			var customTestEnvironmentSelectComboBox *customSelectComboBox
-			testSuiteUiModel.testSuiteTestEnvironmentContainer, customTestEnvironmentSelectComboBox, err = testSuiteUiModel.
+			var newTestSuiteTestEnvironmentContainer *fyne.Container
+
+			// Clear TestEnvironment
+			testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteExecutionEnvironment = ""
+
+			newTestSuiteTestEnvironmentContainer, customTestEnvironmentSelectComboBox, err = testSuiteUiModel.
 				generateTestEnvironmentForTestSuite()
 			if err != nil {
 
@@ -88,6 +93,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateOwnerDomainForTestSuiteArea(
 
 				// Add new 'testSuiteTestEnvironmentContainer' to stack container
 				testSuiteUiModel.testSuiteTestEnvironmentStackContainer.Add(testSuiteUiModel.testSuiteTestEnvironmentContainer)
+
 				fmt.Println(customTestEnvironmentSelectComboBox)
 
 				// Refresh Tabs
@@ -98,10 +104,21 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateOwnerDomainForTestSuiteArea(
 			}
 
 			// Remove old 'testSuiteTestEnvironmentContainer' from stack container
-			testSuiteUiModel.testSuiteTestEnvironmentStackContainer.Remove(testSuiteUiModel.testSuiteTestEnvironmentContainer)
+			if testSuiteUiModel.testSuiteTestEnvironmentStackContainer != nil {
+				testSuiteUiModel.testSuiteTestEnvironmentStackContainer.Remove(testSuiteUiModel.testSuiteTestEnvironmentContainer)
+			}
 
 			// Add new 'testSuiteTestEnvironmentContainer' to stack container
-			testSuiteUiModel.testSuiteTestEnvironmentStackContainer.Add(testSuiteUiModel.testSuiteTestEnvironmentContainer)
+			if testSuiteUiModel.testSuiteTestEnvironmentStackContainer != nil {
+				testSuiteUiModel.testSuiteTestEnvironmentStackContainer.Add(newTestSuiteTestEnvironmentContainer)
+			} else {
+				testSuiteUiModel.testSuiteTestEnvironmentStackContainer = container.NewStack(newTestSuiteTestEnvironmentContainer)
+
+			}
+
+			// Store 'newTestSuiteTestEnvironmentContainer' in old onec place
+			testSuiteUiModel.testSuiteTestEnvironmentContainer = newTestSuiteTestEnvironmentContainer
+
 			fmt.Println(customTestEnvironmentSelectComboBox)
 
 			// Refresh Tabs

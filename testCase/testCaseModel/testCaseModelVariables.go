@@ -65,8 +65,8 @@ type UniqueMetaDataBitSetsStruct struct {
 // TestCaseMetaDataForDomainsMapStruct
 // Hold one Domains all TestCaseMetaData as original json and as a struct
 type TestCaseMetaDataForDomainsForMapStruct struct {
-	TestCaseMetaDataForDomainAsJsonPtr *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseMetaDataForOneDomainMessage // Hold one Domains all TestCaseMetaData as original json
-	TestCaseMetaDataForDomainPtr       *TestCaseMetaDataForDomainStruct                                          // Hold one Domains all TestCaseMetaData as a struct
+	TestCaseMetaDataForDomainAsJsonPtr *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseAndTestSuiteMetaDataForOneDomainMessage // Hold one Domains all TestCaseMetaData as original json
+	TestCaseMetaDataForDomainPtr       *TestCaseMetaDataForDomainStruct                                                      // Hold one Domains all TestCaseMetaData as a struct
 }
 
 // TestCaseMetaDataForDomainStruct

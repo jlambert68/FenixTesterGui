@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -16,15 +17,13 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	err error) {
 
 	var leftTopSideBuildTestSuiteContainer *fyne.Container
-
 	leftTopSideBuildTestSuiteContainer = container.NewVBox()
 
 	var testSuiteDeleteDateAreaContainer *fyne.Container
 	var testSuiteNameAreaContainer *fyne.Container
 	var testSuiteDescriptionAreaContainer *fyne.Container
-	var testSuiteInformationAreaContainer *fyne.Container
 	var testSuiteOwnerDomainContainer *fyne.Container
-	var testSuiteTestEnvironmentContainer *fyne.Container
+
 	var testSuiteTestDataAreaContainer *fyne.Container
 
 	// Generate TestSuite-DeleteDate area
@@ -76,7 +75,7 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	leftTopSideBuildTestSuiteContainer.Add(testSuiteDescriptionAreaContainer)
 
 	// Generate TestSuite-Information-area
-	testSuiteInformationAreaContainer, err = testSuiteUiModel.generateTestSuiteInformationFieldsArea(testSuiteUuid)
+	testSuiteUiModel.testSuiteInformationScroll, err = testSuiteUiModel.generateTestSuiteInformationFieldsArea(testSuiteUuid)
 	if err != nil {
 
 		errorId := "a3fa30d8-df0e-408c-8e4c-99aabb62cfab"
@@ -89,12 +88,17 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 		return leftSideBuildTestSuiteContainer, nil
 
 	}
-	leftTopSideBuildTestSuiteContainer.Add(testSuiteInformationAreaContainer)
+	// Add Scroll to Stack-container
+	testSuiteUiModel.testSuiteInformationStackContainer = container.NewStack(
+		testSuiteUiModel.testSuiteInformationScroll)
+
+	// Add 'testSuiteInformationStackContainer' to TestSuite's Left sides container
+	leftTopSideBuildTestSuiteContainer.Add(testSuiteUiModel.testSuiteInformationStackContainer)
 
 	// Generate TestSuite-Owner area
 	var testCaseOwnerDomainCustomSelectComboBox *customSelectComboBox
-	testSuiteOwnerDomainContainer, testCaseOwnerDomainCustomSelectComboBox, err = testSuiteUiModel.generateOwnerDomainForTestSuiteArea(
-		testSuiteUuid, testCasesModel)
+	testSuiteOwnerDomainContainer, testCaseOwnerDomainCustomSelectComboBox, err = testSuiteUiModel.
+		generateOwnerDomainForTestSuiteArea(testCasesModel)
 	if err != nil {
 
 		errorId := "46cab305-6172-4e06-aa19-3c891c5b8d57"
@@ -107,14 +111,17 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 		return leftSideBuildTestSuiteContainer, nil
 
 	}
-	leftTopSideBuildTestSuiteContainer.Add(testSuiteOwnerDomainContainer)
+
+	var testSuiteOwnerDomainHorizontalContainer *fyne.Container
+	testSuiteOwnerDomainHorizontalContainer = container.NewHBox(testSuiteOwnerDomainContainer, layout.NewSpacer())
+
+	leftTopSideBuildTestSuiteContainer.Add(testSuiteOwnerDomainHorizontalContainer)
 	fmt.Println(testCaseOwnerDomainCustomSelectComboBox)
 
-	// Generate TestSuite-Owner and Execution environment-area
+	// Generate TestSuite's ExecutionEnvironment
 	var customTestEnvironmentSelectComboBox *customSelectComboBox
-	testSuiteTestEnvironmentContainer, customTestEnvironmentSelectComboBox, err = testSuiteUiModel.
-		generateTestEnvironmentForTestSuite(
-			testSuiteUuid, testCasesModel)
+	testSuiteUiModel.testSuiteTestEnvironmentContainer, customTestEnvironmentSelectComboBox, err = testSuiteUiModel.
+		generateTestEnvironmentForTestSuite()
 	if err != nil {
 
 		errorId := "4f059e29-1e5c-46e1-a766-f2f95d7a5c36"
@@ -127,7 +134,12 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 		return leftSideBuildTestSuiteContainer, nil
 
 	}
-	leftTopSideBuildTestSuiteContainer.Add(testSuiteTestEnvironmentContainer)
+	// Add 'testSuiteTestEnvironmentContainer' to Stack-container
+	testSuiteUiModel.testSuiteTestEnvironmentStackContainer = container.NewStack(
+		testSuiteUiModel.testSuiteTestEnvironmentContainer)
+
+	// Add 'testSuiteTestEnvironmentStackContainer' to TestSuite's Left sides container
+	leftTopSideBuildTestSuiteContainer.Add(testSuiteUiModel.testSuiteTestEnvironmentStackContainer)
 	fmt.Println(customTestEnvironmentSelectComboBox)
 
 	// Generate TestSuite-TestData-area

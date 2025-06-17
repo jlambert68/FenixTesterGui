@@ -1,7 +1,7 @@
 package testSuiteUI
 
 import (
-	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testSuites/testSuitesModel"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -13,29 +13,41 @@ import (
 )
 
 // Generate the OwnerDomain Area for the TestSuite
-func (testSuiteUiModel *TestSuiteUiStruct) generateTestEnvironmentForTestSuite(
-	testSuiteUuid string,
-	testCasesModel *testCaseModel.TestCasesModelsStruct) (
+func (testSuiteUiModel *TestSuiteUiStruct) generateTestEnvironmentForTestSuite() (
 	testEnvironmentContainer *fyne.Container,
 	customTestEnvironmentSelectComboBox *customSelectComboBox,
 	err error) {
 
+	// Get OwnerDomain
+	var ownerDomainUuid string
+	ownerDomainUuid = testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteOwnerDomainUuid
+
 	var existsInMap bool
+
+	// Only process when there is an OwnerDomain
+	var tempCurrentOwnerDomainUuid string
+	tempCurrentOwnerDomainUuid = testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteOwnerDomainUuid
+	if tempCurrentOwnerDomainUuid == "" {
+		testEnvironmentContainer = container.NewVBox(widget.NewLabel("No OwnerDomain specified for TestSuite"))
+
+		return testEnvironmentContainer, nil, err
+	}
 
 	// Add TestEnvironment, if TestSuite-metadata exist *********************
 	// Get the MetaDataGroups depending on Domain
-	var metaDataGroupsMapPtr *map[string]*testCaseModel.MetaDataGroupStruct
-	var metaDataGroupsMap map[string]*testCaseModel.MetaDataGroupStruct
-	var testCaseMetaDataForDomainsMap map[string]*testCaseModel.TestCaseMetaDataForDomainsForMapStruct
-	var testCaseMetaDataForDomainPtr *testCaseModel.TestCaseMetaDataForDomainsForMapStruct
-	var testCaseMetaDataForDomain testCaseModel.TestCaseMetaDataForDomainsForMapStruct
-	testCaseMetaDataForDomainsMap = testCasesModel.TestCaseMetaDataForDomains.TestCaseMetaDataForDomainsMap
-	testCaseMetaDataForDomainPtr, existsInMap = testCaseMetaDataForDomainsMap[testSuiteUuid]
+	var metaDataGroupsMapPtr *map[string]*testSuitesModel.MetaDataGroupStruct
+	var metaDataGroupsMap map[string]*testSuitesModel.MetaDataGroupStruct
+	var testSuiteMetaDataForDomainsMap map[string]*testSuitesModel.TestSuiteMetaDataForDomainsForMapStruct
+	var testSuiteMetaDataForDomainPtr *testSuitesModel.TestSuiteMetaDataForDomainsForMapStruct
+	var testSuiteMetaDataForDomain testSuitesModel.TestSuiteMetaDataForDomainsForMapStruct
+	testSuiteMetaDataForDomainsMap = testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.
+		TestSuiteMetaDataForDomainsMap
+	testSuiteMetaDataForDomainPtr, existsInMap = testSuiteMetaDataForDomainsMap[ownerDomainUuid]
 	if existsInMap == false {
 
 		errorId := "91e00fd7-e9bc-4172-b7ad-0f6684514e2f"
-		err = errors.New(fmt.Sprintf("Domain with Uuid '%s' doesn't exist in'testCaseMetaDataForDomainsMap'. Should never happen [ErrorID: %s]",
-			testSuiteUuid, errorId))
+		err = errors.New(fmt.Sprintf("Domain with Uuid '%s' doesn't exist in'testSuiteMetaDataForDomainsMap'. Should never happen [ErrorID: %s]",
+			ownerDomainUuid, errorId))
 
 		return nil,
 			nil,
@@ -43,12 +55,12 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestEnvironmentForTestSuite(
 
 	}
 
-	testCaseMetaDataForDomain = *testCaseMetaDataForDomainPtr
-	metaDataGroupsMapPtr, _ = testCaseModel.ConvertTestCaseMetaData(testCaseMetaDataForDomain.TestCaseMetaDataForDomainPtr)
+	testSuiteMetaDataForDomain = *testSuiteMetaDataForDomainPtr
+	metaDataGroupsMapPtr, _ = testSuitesModel.ConvertTestSuiteMetaData(testSuiteMetaDataForDomain.TestSuiteMetaDataForDomainPtr)
 	metaDataGroupsMap = *metaDataGroupsMapPtr
 
 	// Get MetaDataGroup for "TestSuite"
-	var tempMetaDataGroupForTestSuitePtr *testCaseModel.MetaDataGroupStruct
+	var tempMetaDataGroupForTestSuitePtr *testSuitesModel.MetaDataGroupStruct
 	tempMetaDataGroupForTestSuitePtr, existsInMap = metaDataGroupsMap["TestSuite"]
 
 	if existsInMap == false {
@@ -63,13 +75,13 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestEnvironmentForTestSuite(
 	}
 
 	// Get 'MetaDataInGroupMap'
-	var tempMetaDataInGroupMapPtr *map[string]*testCaseModel.MetaDataInGroupStruct
-	var tempMetaDataInGroupMap map[string]*testCaseModel.MetaDataInGroupStruct
+	var tempMetaDataInGroupMapPtr *map[string]*testSuitesModel.MetaDataInGroupStruct
+	var tempMetaDataInGroupMap map[string]*testSuitesModel.MetaDataInGroupStruct
 	tempMetaDataInGroupMapPtr = tempMetaDataGroupForTestSuitePtr.MetaDataInGroupMapPtr
 	tempMetaDataInGroupMap = *tempMetaDataInGroupMapPtr
 
-	// Get the TestENvironment for the TestSuite
-	var tempMetaDataInGroupPtr *testCaseModel.MetaDataInGroupStruct
+	// Get the TestEnvironment for the TestSuite
+	var tempMetaDataInGroupPtr *testSuitesModel.MetaDataInGroupStruct
 	tempMetaDataInGroupPtr, existsInMap = tempMetaDataInGroupMap["TestEnvironment"]
 
 	if existsInMap == false {
@@ -101,7 +113,6 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestEnvironmentForTestSuite(
 
 	return testEnvironmentContainer,
 		customTestEnvironmentSelectComboBox,
-
 		err
 }
 
@@ -125,11 +136,11 @@ func (testSuiteUiModel *TestSuiteUiStruct) setSelectedTestEnvironmentForTestSuit
 
 // Generates the TestEnvironment container in the TestSuite
 func (testSuiteUiModel *TestSuiteUiStruct) buildTestEnvironmentGUIContainer(
-	metaDataItemPtr *testCaseModel.MetaDataInGroupStruct) (
+	metaDataItemPtr *testSuitesModel.MetaDataInGroupStruct) (
 	testEnvironmentContainer *fyne.Container,
 	customTestEnvironmentSelectComboBox *customSelectComboBox) {
 
-	var metaDataItem testCaseModel.MetaDataInGroupStruct
+	var metaDataItem testSuitesModel.MetaDataInGroupStruct
 	metaDataItem = *metaDataItemPtr
 
 	// append '*' to the label if it's mandatory
@@ -141,7 +152,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) buildTestEnvironmentGUIContainer(
 	// Create correct widget depending on if the item is SingleSelect or MultiSelect
 	switch metaDataItem.SelectType {
 
-	case testCaseModel.MetaDataSelectType_SingleSelect:
+	case testSuitesModel.MetaDataSelectType_SingleSelect:
 
 		var valueIsValidWarningBox *canvas.Rectangle
 
@@ -165,7 +176,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) buildTestEnvironmentGUIContainer(
 
 		})
 
-		// Extract Selected values from TestCase
+		// Extract Selected values from TestSuite
 		var selectedValue string
 		for _, availableValue := range metaDataItem.AvailableMetaDataValues {
 			if testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.

@@ -101,7 +101,7 @@ var (
 // Variable holding pointer to main object that keeps a list of all Repository-link data
 var TemplateRepositoryApiUrlsPtr *[]*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage
 
-var TestCaseMetaDataForDomainsPtr *[]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseMetaDataForOneDomainMessage
+var TestCaseMetaDataForDomainsPtr *[]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseAndTestSuiteMetaDataForOneDomainMessage
 
 // Variable holding pointer o the main object that keeps the list of users available ExecutionDomains
 var ExecutionDomainsThatCanReceiveDirectTargetedTestInstructionsMapPtr *map[string]*fenixGuiTestCaseBuilderServerGrpcApi.

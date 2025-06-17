@@ -11,18 +11,21 @@ import (
 // Definition of a simple widget label that supports to be copied
 type copyableLabelStruct struct {
 	widget.Label
-	IsCopyable bool
+	IsCopyable     bool
+	TestSuiteUiRef TestSuiteUiStruct
 }
 
 // Used for creating a new copyable label
 func newCopyableLabel(
 	label string,
 	isCopyable bool,
+	testSuiteUiref *TestSuiteUiStruct,
 ) *copyableLabelStruct {
 
 	copyableLabel := &copyableLabelStruct{
-		Label:      widget.Label{Text: label},
-		IsCopyable: isCopyable,
+		Label:          widget.Label{Text: label},
+		IsCopyable:     isCopyable,
+		TestSuiteUiRef: *testSuiteUiref,
 	}
 
 	copyableLabel.ExtendBaseWidget(copyableLabel)
@@ -48,7 +51,7 @@ func (c *copyableLabelStruct) Tapped(*fyne.PointEvent) {
 func (c *copyableLabelStruct) TappedSecondary(*fyne.PointEvent) {
 
 	// Check if mouse has left TestCaseExecutionTree-container
-	if mouseHasLeftSideSplitContainer == true {
+	if c.TestSuiteUiRef.mouseHasLeftSideSplitContainer == true {
 		return
 	}
 

@@ -65,7 +65,7 @@ func (testSuiteUiModel TestSuiteUiStruct) GenerateBuildNewTestSuiteUI(
 	leftCreateTestSuiteOverlay := NewHoverableRect(color.Transparent, nil)
 	leftCreateTestSuiteOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
 
-		mouseHasLeftSideSplitContainer = false
+		testSuiteUiModel.mouseHasLeftSideSplitContainer = false
 		leftCreateTestSuiteOverlay.Hide()
 		leftCreateTestSuiteOverlay.OtherHoverableRect.Show()
 	}
@@ -77,7 +77,7 @@ func (testSuiteUiModel TestSuiteUiStruct) GenerateBuildNewTestSuiteUI(
 	rightCreateTestSuiteOverlay := NewHoverableRect(color.Transparent, nil)
 	rightCreateTestSuiteOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
 
-		mouseHasLeftSideSplitContainer = false
+		testSuiteUiModel.mouseHasLeftSideSplitContainer = false
 		rightCreateTestSuiteOverlay.Hide()
 		rightCreateTestSuiteOverlay.OtherHoverableRect.Show()
 	}

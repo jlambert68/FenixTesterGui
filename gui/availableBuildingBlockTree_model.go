@@ -363,8 +363,8 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadTemp
 // Load a list of TestCaseMetaData per Domain form GUI-server
 func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadTestCaseMetaData(testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
 
-	var listTestCaseMetaDataResponseMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListTestCaseMetaDataResponseMessage
-	listTestCaseMetaDataResponseMessage = availableBuildingBlocksModel.grpcOut.SendListTestCaseMetaData()
+	var listTestCaseMetaDataResponseMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListTestCaseAndTestSuiteMetaDataResponseMessage
+	listTestCaseMetaDataResponseMessage = availableBuildingBlocksModel.grpcOut.SendListTestCaseAndTestSuiteMetaData()
 
 	if listTestCaseMetaDataResponseMessage.GetAckNackResponse().AckNack == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
@@ -377,7 +377,12 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadTest
 	}
 
 	// Store list with TestCaseMetaData per Domain
-	availableBuildingBlocksModel.storeTestCaseMetaDataPerDomain(listTestCaseMetaDataResponseMessage.GetTestCaseMetaDataForDomains(), testCaseModeReference)
+	availableBuildingBlocksModel.storeTestCaseMetaDataPerDomain(listTestCaseMetaDataResponseMessage.
+		GetTestCaseAndTestSuiteMetaDataForDomains(), testCaseModeReference)
+
+	// Store list with TestSuiteMetadata per Domain
+	availableBuildingBlocksModel.storeTestSuiteMetaDataPerDomain(listTestCaseMetaDataResponseMessage.
+		GetTestCaseAndTestSuiteMetaDataForDomains())
 
 }
 

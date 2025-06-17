@@ -2,6 +2,7 @@ package testSuiteUI
 
 import (
 	"FenixTesterGui/testSuites/testSuitesModel"
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 )
 
@@ -11,12 +12,16 @@ type TestSuiteUiStruct struct {
 	TestSuiteTabItem  *container.TabItem
 	TestSuiteModelPtr *testSuitesModel.TestSuiteModelStruct
 
-	// UI components
-}
+	// mouseHasLeftSideSplitContainer
+	// Keep s track when mouse leaves or enters left side of the Split-container
+	mouseHasLeftSideSplitContainer bool
 
-// mouseHasLeftSideSplitContainer
-// Keep s track when mouse leaves or enters left side of the Split-container
-var mouseHasLeftSideSplitContainer bool
+	// UI components
+	testSuiteInformationScroll             *container.Scroll
+	testSuiteInformationStackContainer     *fyne.Container
+	testSuiteTestEnvironmentContainer      *fyne.Container
+	testSuiteTestEnvironmentStackContainer *fyne.Container
+}
 
 // The space between the different Information-boxes
 const spaceBetweenInformationBoxes = "           "

@@ -3,6 +3,7 @@ package gui
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testSuites/testSuitesModel"
 	"encoding/json"
 	"fmt"
 	"github.com/jlambert68/Fast_BitFilter_MetaData/boolbits/bitmapper"
@@ -452,7 +453,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeDom
 
 // Store list with TestCaseMEtaData per Domain
 func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeTestCaseMetaDataPerDomain(
-	testCaseMetaDataForDomainsToBeStored []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseMetaDataForOneDomainMessage,
+	testCaseMetaDataForDomainsToBeStored []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseAndTestSuiteMetaDataForOneDomainMessage,
 	testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
 
 	var err error
@@ -565,6 +566,139 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeTes
 
 	// Store the BitSetMaps in the overall  TestCase-structure for MetaData
 	testCaseModeReference.TestCaseMetaDataForDomains.UniqueMetaDataBitSets = testCaseModel.UniqueMetaDataBitSetsStruct{
+		DomainsBitSetMap:                 domainsBitSetMap,
+		MetaDataGroupsBitSetMap:          metaDataGroupsBitSetMap,
+		MetaDataGroupItemsBitSetMap:      metaDataItemsBitSetMap,
+		MetaDataGroupItemValuesBitSetMap: meteDataItemValuesBitSetMap,
+	}
+
+}
+
+// Store list with TestSuiteMEtaData per Domain
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeTestSuiteMetaDataPerDomain(
+	testSuiteMetaDataForDomainsToBeStored []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseAndTestSuiteMetaDataForOneDomainMessage) {
+
+	var err error
+	var supportedMetaDataJsonAsByteArray []byte
+
+	// Check if TestSuitesModel needs to be initiated
+	if testSuitesModel.TestSuitesModelPtr == nil {
+
+		// Initiate 'TestSuitesMap'
+		var tempTestSuitesMap map[string]*testSuitesModel.TestSuiteModelStruct
+		tempTestSuitesMap = make(map[string]*testSuitesModel.TestSuiteModelStruct)
+
+		var tempTestSuitesModel testSuitesModel.TestSuitesModelStruct
+		tempTestSuitesModel = testSuitesModel.TestSuitesModelStruct{
+			TestSuitesMapPtr: &tempTestSuitesMap}
+
+		// Store the initiated Object
+		testSuitesModel.TestSuitesModelPtr = &tempTestSuitesModel
+	}
+
+	// Store the TestSuiteMetaData-list in the TestSuiteModel
+	testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.
+		TestSuiteMetaDataForDomainsMap = make(map[string]*testSuitesModel.TestSuiteMetaDataForDomainsForMapStruct)
+
+	// Store the Available TestSuiteMetaData as a map structure in TestSuite-struct
+	for _, testSuiteMetaDataForDomain := range testSuiteMetaDataForDomainsToBeStored {
+
+		// Inititate struct to save in map
+		var testSuiteMetaDataForDomainsForMap testSuitesModel.TestSuiteMetaDataForDomainsForMapStruct
+
+		// Store original json message
+		testSuiteMetaDataForDomainsForMap = testSuitesModel.TestSuiteMetaDataForDomainsForMapStruct{
+			TestSuiteMetaDataForDomainAsJsonPtr: testSuiteMetaDataForDomain,
+			TestSuiteMetaDataForDomainPtr:       nil,
+		}
+
+		// Convert to json object into a struct
+		supportedMetaDataJsonAsByteArray = []byte(testSuiteMetaDataForDomain.TestSuiteMetaDataAsJson)
+		var supportedMetaDataJsonAsStruct testSuitesModel.TestSuiteMetaDataForDomainStruct
+		err = json.Unmarshal(supportedMetaDataJsonAsByteArray, &supportedMetaDataJsonAsStruct)
+
+		if err != nil {
+			availableBuildingBlocksModel.logger.WithFields(logrus.Fields{
+				"id":                         "e90ae3a4-e670-4424-b22f-cd9da27c35cf",
+				"error":                      err,
+				"testSuiteMetaDataForDomain": testSuiteMetaDataForDomain,
+			}).Fatalln("Error while unmarshalling json")
+		}
+
+		// Store 'supportedMetaDataJsonAsStruct'
+		testSuiteMetaDataForDomainsForMap.TestSuiteMetaDataForDomainPtr = &supportedMetaDataJsonAsStruct
+
+		// Store both the json and the struct into the TestSuitesModel
+		testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.
+			TestSuiteMetaDataForDomainsMap[testSuiteMetaDataForDomain.GetDomainUuid()] =
+			&testSuiteMetaDataForDomainsForMap
+
+	}
+
+	// Generate a BitMaps to be used when filtering TestSuites on its MetaData
+
+	// All Domains, MetaDataGroupsNames, MetaDataItemsName and they ItemValues
+	var allDomainsSlice []string
+	var allMetadataGroupNamesSlice []string
+	var allMetadataItemNames []string
+	var allMetadataItemValues []string
+
+	// The BitSets holding the unique BitSet for all MetData-filtering keys(indirect)
+	var domainsBitSetMap map[string]*boolbits.BitSet
+	var metaDataGroupsBitSetMap map[string]*boolbits.BitSet
+	var metaDataItemsBitSetMap map[string]*boolbits.BitSet
+	var meteDataItemValuesBitSetMap map[string]*boolbits.BitSet
+
+	// Initiate the BitSet-maps
+	domainsBitSetMap = make(map[string]*boolbits.BitSet)            // DomainUuid
+	metaDataGroupsBitSetMap = make(map[string]*boolbits.BitSet)     // MetaDataGroupName
+	metaDataItemsBitSetMap = make(map[string]*boolbits.BitSet)      // MetaDataGroupItemName
+	meteDataItemValuesBitSetMap = make(map[string]*boolbits.BitSet) // MetaDataItemValue
+
+	// Extract values to the slices
+	// Loop the Domains and extract the Uuids for the Domains
+	for domainUuid, tempDomain := range testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.
+		TestSuiteMetaDataForDomainsMap {
+
+		// Add the DomainUuid to the slice
+		allDomainsSlice = append(allDomainsSlice, domainUuid)
+
+		// Loop all MetaDataGroups for the Domain
+		for _, tempMetaDataGroup := range tempDomain.TestSuiteMetaDataForDomainPtr.MetaDataGroups {
+
+			// Add MetaDataGroupName to the slice
+			allMetadataGroupNamesSlice = append(allMetadataGroupNamesSlice, tempMetaDataGroup.MetaDataGroupName)
+
+			// Loop MetaDataItems in the Group
+			for _, metaDataItem := range tempMetaDataGroup.MetaDataInGroup {
+
+				// Add MetaDataItemName to the slice
+				allMetadataItemNames = append(allMetadataItemNames, metaDataItem.MetaDataName)
+
+				// Add all MetaDataItemValues to the slice
+				allMetadataItemValues = append(allMetadataItemValues, metaDataItem.MetaDataValues...)
+
+			}
+		}
+	}
+
+	// Generate the BitSets holding the unique values for all MetDataValues
+	domainsBitSetMap, metaDataGroupsBitSetMap, metaDataItemsBitSetMap, meteDataItemValuesBitSetMap, err = bitmapper.GenerateBitMaps(
+		allDomainsSlice,
+		allMetadataGroupNamesSlice,
+		allMetadataItemNames,
+		allMetadataItemValues,
+	)
+
+	if err != nil {
+		errorId := "86e5a0fa-a15b-4f85-a91b-91b0cf55eecd"
+
+		log.Fatalf("GenerateBitMaps error: %v. [ErrorId; '%s'", err, errorId)
+	}
+
+	// Store the BitSetMaps in the overall  TestSuite-structure for MetaData
+	testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.UniqueMetaDataBitSets = testSuitesModel.
+		UniqueMetaDataBitSetsStruct{
 		DomainsBitSetMap:                 domainsBitSetMap,
 		MetaDataGroupsBitSetMap:          metaDataGroupsBitSetMap,
 		MetaDataGroupItemsBitSetMap:      metaDataItemsBitSetMap,

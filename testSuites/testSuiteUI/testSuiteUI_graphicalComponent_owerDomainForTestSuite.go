@@ -2,8 +2,7 @@ package testSuiteUI
 
 import (
 	"FenixTesterGui/testCase/testCaseModel"
-	"FenixTesterGui/testSuites/testSuitesModel"
-	"errors"
+	"FenixTesterGui/testSuites/testSuitesCommandEngine"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -15,48 +14,21 @@ import (
 
 // Generate the OwnerDomain Area for the TestSuite
 func (testSuiteUiModel *TestSuiteUiStruct) generateOwnerDomainForTestSuiteArea(
-	testSuiteUuid string,
 	testCasesModel *testCaseModel.TestCasesModelsStruct) (
 	testCaseOwnerDomainContainer *fyne.Container,
 	testCaseOwnerDomainCustomSelectComboBox *customSelectComboBox,
 	err error) {
 
-	var existsInMap bool
 	var tempCurrentOwnerDomainToBeChosenInDropDown string
-
-	// Get testSuitesMap
-	var testSuitesMap map[string]*testSuitesModel.TestSuiteModelStruct
-	testSuitesMap = *testSuitesModel.TestSuitesModelPtr.TestSuitesMapPtr
-
-	// Get a pointer to the TestSuite-model and the TestSuite-model itself
-	var currentTestSuiteModelPtr *testSuitesModel.TestSuiteModelStruct
-	var currentTestSuiteModel testSuitesModel.TestSuiteModelStruct
-	currentTestSuiteModelPtr, existsInMap = testSuitesMap[testSuiteUuid]
-
-	if existsInMap == false {
-		errorId := "47f70e15-17dc-4dac-86b1-8545de829461"
-		err = errors.New(fmt.Sprintf("TestSuite, %s, doesn't exist in TestSuiteMap. This should not happen [ErrorID: %s]",
-			testSuiteUuid,
-			errorId))
-
-		//TODO Send ERRORS over error-channel
-		fmt.Println(err)
-
-		return nil,
-			nil,
-			err
-
-	}
-	currentTestSuiteModel = *currentTestSuiteModelPtr
 
 	// If TestCase already has a chosen OwnerDomain then set that value
 	var tempCurrentOwnerDomain string
 
 	var testCaseHasOwnerDomain bool
 
-	if len(currentTestSuiteModel.TestSuiteUIModelBinding.TestSuiteOwnerDomainUuid) > 0 {
+	if len(testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteOwnerDomainUuid) > 0 {
 		testCaseHasOwnerDomain = true
-		tempCurrentOwnerDomain = currentTestSuiteModel.TestSuiteUIModelBinding.TestSuiteOwnerDomainUuid
+		tempCurrentOwnerDomain = testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteOwnerDomainUuid
 	}
 
 	// Load Domains that can own the TestSuite into options-array
@@ -90,10 +62,50 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateOwnerDomainForTestSuiteArea(
 			// This function is called when an option is selected.
 
 			// Store Domain back to TestSuite-model
-			currentTestSuiteModel.TestSuiteUIModelBinding.TestSuiteOwnerDomainUuid =
+			testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteOwnerDomainUuid =
 				testCasesModel.DomainsThatCanOwnTheTestCaseMap[value].DomainUuid
-			currentTestSuiteModel.TestSuiteUIModelBinding.TestSuiteOwnerDomainName =
+			testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteOwnerDomainName =
 				testCasesModel.DomainsThatCanOwnTheTestCaseMap[value].DomainName
+
+			// Trigger creation of a 'new' TestEnvironment container for the TestSuite-UI
+
+			// Generate TestSuite's ExecutionEnvironment
+			var customTestEnvironmentSelectComboBox *customSelectComboBox
+			testSuiteUiModel.testSuiteTestEnvironmentContainer, customTestEnvironmentSelectComboBox, err = testSuiteUiModel.
+				generateTestEnvironmentForTestSuite()
+			if err != nil {
+
+				errorId := "533565fc-3851-4150-bf7c-364e8529f56c"
+				errorMessage := fmt.Sprintf("couldn't generate 'TestSuites TestExecution environment-area', err=%s. [ErrorId = %s]",
+					err.Error(),
+					errorId)
+
+				// Remove old 'testSuiteTestEnvironmentContainer' from stack container
+				testSuiteUiModel.testSuiteTestEnvironmentStackContainer.Remove(testSuiteUiModel.testSuiteTestEnvironmentContainer)
+
+				// Create new
+				testSuiteUiModel.testSuiteTestEnvironmentContainer = container.NewVBox(widget.NewLabel(errorMessage))
+
+				// Add new 'testSuiteTestEnvironmentContainer' to stack container
+				testSuiteUiModel.testSuiteTestEnvironmentStackContainer.Add(testSuiteUiModel.testSuiteTestEnvironmentContainer)
+				fmt.Println(customTestEnvironmentSelectComboBox)
+
+				// Refresh Tabs
+				testSuitesCommandEngine.TestSuiteTabsRef.Refresh()
+
+				return
+
+			}
+
+			// Remove old 'testSuiteTestEnvironmentContainer' from stack container
+			testSuiteUiModel.testSuiteTestEnvironmentStackContainer.Remove(testSuiteUiModel.testSuiteTestEnvironmentContainer)
+
+			// Add new 'testSuiteTestEnvironmentContainer' to stack container
+			testSuiteUiModel.testSuiteTestEnvironmentStackContainer.Add(testSuiteUiModel.testSuiteTestEnvironmentContainer)
+			fmt.Println(customTestEnvironmentSelectComboBox)
+
+			// Refresh Tabs
+			testSuitesCommandEngine.TestSuiteTabsRef.Refresh()
 
 			//var testCaseMetaDataArea fyne.CanvasObject
 			/*

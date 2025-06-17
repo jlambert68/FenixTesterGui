@@ -9,17 +9,17 @@ import (
 	"time"
 )
 
-// SendListTestCaseMetaData - Load all TestCaseMetaData that the User can use when creating TestCasesMapPtr
-func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListTestCaseMetaData() (
-	returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListTestCaseMetaDataResponseMessage) {
+// SendListTestCaseAndTestSuiteMetaData - Load all TestCaseMetaData that the User can use when creating TestCasesMapPtr
+func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListTestCaseAndTestSuiteMetaData() (
+	returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListTestCaseAndTestSuiteMetaDataResponseMessage) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{
 		"id": "c167ad66-144a-4dec-b39f-54ef30a20db4",
-	}).Debug("Incoming 'grpcOut - SendListTestCaseMetaData'")
+	}).Debug("Incoming 'grpcOut - SendListTestCaseAndTestSuiteMetaData'")
 
 	defer sharedCode.Logger.WithFields(logrus.Fields{
 		"id": "9bc0770f-7b48-4159-9cd2-f159965d4ac9",
-	}).Debug("Outgoing 'grpcOut - SendListTestCaseMetaData'")
+	}).Debug("Outgoing 'grpcOut - SendListTestCaseAndTestSuiteMetaData'")
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -42,9 +42,9 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListTestCaseMetaData()
 					grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 			}
 
-			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListTestCaseMetaDataResponseMessage{
-				AckNackResponse:            ackNackResponse,
-				TestCaseMetaDataForDomains: nil,
+			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListTestCaseAndTestSuiteMetaDataResponseMessage{
+				AckNackResponse:                        ackNackResponse,
+				TestCaseAndTestSuiteMetaDataForDomains: nil,
 			}
 
 			return returnMessage
@@ -85,9 +85,9 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListTestCaseMetaData()
 					grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 			}
 
-			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListTestCaseMetaDataResponseMessage{
-				AckNackResponse:            ackNackResponse,
-				TestCaseMetaDataForDomains: nil,
+			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListTestCaseAndTestSuiteMetaDataResponseMessage{
+				AckNackResponse:                        ackNackResponse,
+				TestCaseAndTestSuiteMetaDataForDomains: nil,
 			}
 
 			return returnMessage
@@ -96,27 +96,27 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListTestCaseMetaData()
 	}
 
 	// Do the gRPC-call
-	returnMessage, err = fenixGuiTestCaseCaseBuilderServerGrpcClient.ListTestCaseMetaData(ctx, userIdentificationMessage)
+	returnMessage, err = fenixGuiTestCaseCaseBuilderServerGrpcClient.ListTestCaseAndTestSuiteMetaData(ctx, userIdentificationMessage)
 
 	// Shouldn't happen
 	if err != nil {
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":    "c3df6f17-8e33-410a-b8f2-69185a91b270",
 			"error": err,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListTestCaseMetaData'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListTestCaseAndTestSuiteMetaData'")
 
 		// When error
 		ackNackResponse := &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{
 			AckNack:    false,
-			Comments:   "Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListTestCaseMetaData'",
+			Comments:   "Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListTestCaseAndTestSuiteMetaData'",
 			ErrorCodes: nil,
 			ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
 				grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 		}
 
-		returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListTestCaseMetaDataResponseMessage{
-			AckNackResponse:            ackNackResponse,
-			TestCaseMetaDataForDomains: nil,
+		returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListTestCaseAndTestSuiteMetaDataResponseMessage{
+			AckNackResponse:                        ackNackResponse,
+			TestCaseAndTestSuiteMetaDataForDomains: nil,
 		}
 
 		return returnMessage
@@ -126,7 +126,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListTestCaseMetaData()
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":                                     "75f6764a-c8ea-43d5-ab05-0c824b4905ce",
 			"Message from FenixTestGuiBuilderServer": returnMessage.AckNackResponse.Comments,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListTestCaseMetaData'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListTestCaseAndTestSuiteMetaData'")
 	}
 
 	return returnMessage

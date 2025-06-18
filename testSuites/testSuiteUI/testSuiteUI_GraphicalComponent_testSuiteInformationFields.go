@@ -119,8 +119,12 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteInformationFieldsAre
 	lastChangeDateCopyableLabel.TextStyle = fyne.TextStyle{Italic: true}
 	testSuiteInformationContainer.Add(lastChangeDateCopyableLabel)
 
+	// Put forms container in VBox-container
+	var testSuiteInformationVContainer *fyne.Container
+	testSuiteInformationVContainer = container.NewVBox(testSuiteInformationContainer, widget.NewLabel(""), widget.NewSeparator())
+
 	// Put the container in the Scroll container
-	testSuiteInformationScroll = container.NewScroll(testSuiteInformationContainer)
+	testSuiteInformationScroll = container.NewScroll(testSuiteInformationVContainer)
 
 	return testSuiteInformationScroll, err
 }

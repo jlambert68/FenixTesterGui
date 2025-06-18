@@ -67,7 +67,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateOwnerDomainForTestSuiteArea(
 			testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteOwnerDomainName =
 				testCasesModel.DomainsThatCanOwnTheTestCaseMap[value].DomainName
 
-			// Trigger creation of a 'new' TestEnvironment container for the TestSuite-UI
+			// Trigger creation of a 'new' TestEnvironment container for the TestSuite-UI ************************
 
 			// Generate TestSuite's ExecutionEnvironment
 			var customTestEnvironmentSelectComboBox *customSelectComboBox
@@ -120,6 +120,51 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateOwnerDomainForTestSuiteArea(
 			testSuiteUiModel.testSuiteTestEnvironmentContainer = newTestSuiteTestEnvironmentContainer
 
 			fmt.Println(customTestEnvironmentSelectComboBox)
+
+			// Trigger creation of a 'new' TestSuiteMetaData container for the TestSuite-UI ************************
+
+			// Generate TestSuite's ExecutionEnvironment
+			var newTestSuiteMetaDataContainer *fyne.Container
+
+			newTestSuiteMetaDataContainer, err = testSuiteUiModel.GenerateMetaDataAreaForTestCase()
+			if err != nil {
+
+				errorId := "f485384b-e1ae-4cf8-a6da-50468c365513"
+				errorMessage := fmt.Sprintf("couldn't generate 'TestSuites MetaData-area', err=%s. [ErrorId = %s]",
+					err.Error(),
+					errorId)
+
+				// Remove old 'testSuiteMetaDataContainer' from stack container
+				testSuiteUiModel.testSuiteMetaDataStackContainer.Remove(testSuiteUiModel.testSuiteMetaDataContainer)
+
+				// Create new
+				testSuiteUiModel.testSuiteMetaDataContainer = container.NewVBox(widget.NewLabel(errorMessage))
+
+				// Add new 'testSuiteMetaDataContainer' to stack container
+				testSuiteUiModel.testSuiteMetaDataStackContainer.Add(testSuiteUiModel.testSuiteMetaDataContainer)
+
+				// Refresh Tabs
+				testSuitesCommandEngine.TestSuiteTabsRef.Refresh()
+
+				return
+
+			}
+
+			// Remove old 'testSuiteMetaDataContainer' from stack container
+			if testSuiteUiModel.testSuiteMetaDataStackContainer != nil {
+				testSuiteUiModel.testSuiteMetaDataStackContainer.Remove(testSuiteUiModel.testSuiteMetaDataContainer)
+			}
+
+			// Add new 'testSuiteTestEnvironmentContainer' to stack container
+			if testSuiteUiModel.testSuiteMetaDataStackContainer != nil {
+				testSuiteUiModel.testSuiteMetaDataStackContainer.Add(newTestSuiteMetaDataContainer)
+			} else {
+				testSuiteUiModel.testSuiteMetaDataStackContainer = container.NewStack(newTestSuiteMetaDataContainer)
+
+			}
+
+			// Store 'newTestSuiteMetaDataContainer' in old onec place
+			testSuiteUiModel.testSuiteMetaDataContainer = newTestSuiteMetaDataContainer
 
 			// Refresh Tabs
 			testSuitesCommandEngine.TestSuiteTabsRef.Refresh()

@@ -102,7 +102,7 @@ func GenerateNewTestSuiteModelObject() (newTestSuiteModel *TestSuiteModelStruct)
 			TestSuiteExecutionEnvironment: "",
 			TestSuiteIsNew:                true,
 			TestDataPtr:                   nil,
-			testSuiteMetaDataPtr: &TestSuiteMetaDataStruct{
+			TestSuiteMetaDataPtr: &TestSuiteMetaDataStruct{
 				CurrentSelectedDomainUuid:                               "",
 				TestSuiteMetaDataMessageJsonForTestSuiteWhenLastSaved:   nil,
 				TestSuiteMetaDataMessageStructForTestSuiteWhenLastSaved: nil,

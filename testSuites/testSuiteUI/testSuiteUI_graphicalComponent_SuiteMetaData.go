@@ -14,7 +14,6 @@ import (
 // Generate the MetaData Area for the TestCase
 func (testSuiteUiModel TestSuiteUiStruct) GenerateMetaDataAreaForTestCase() (
 	testSuiteMetaDataContainer *fyne.Container,
-	testSuiteMetaDataAccordion *widget.Accordion,
 	err error) {
 
 	// Get OwnerDomain
@@ -42,7 +41,7 @@ func (testSuiteUiModel TestSuiteUiStruct) GenerateMetaDataAreaForTestCase() (
 			testSuiteMetaDataContainer = container.NewVBox(widget.NewLabel("OwnerDomain doesn't have any TestSuite MetaData"))
 
 			return testSuiteMetaDataContainer,
-				nil,
+
 				err
 
 		}
@@ -96,12 +95,13 @@ func (testSuiteUiModel TestSuiteUiStruct) GenerateMetaDataAreaForTestCase() (
 		metaDataAccordionItem = widget.NewAccordionItem("TestCase MetaData", myContainer)
 	}
 
+	var testSuiteMetaDataAccordion *widget.Accordion
 	testSuiteMetaDataAccordion = widget.NewAccordion(metaDataAccordionItem)
 
 	// Create the VBox-container that will be returned
 	testSuiteMetaDataContainer = container.NewVBox(testSuiteMetaDataAccordion, widget.NewLabel(""), widget.NewSeparator())
 
-	return testSuiteMetaDataContainer, testSuiteMetaDataAccordion, err
+	return testSuiteMetaDataContainer, err
 }
 
 // buildGUIFromSlice builds a Container from your slice pointer

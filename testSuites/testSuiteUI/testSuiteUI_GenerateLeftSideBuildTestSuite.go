@@ -158,6 +158,28 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	}
 	leftTopSideBuildTestSuiteContainer.Add(testSuiteTestDataAreaContainer)
 
+	// Generate TestSuite's MetaDataContainer
+	testSuiteUiModel.testSuiteMetaDataContainer, err = testSuiteUiModel.
+		GenerateMetaDataAreaForTestCase()
+	if err != nil {
+
+		errorId := "b2ebb210-1afd-49fa-bde1-c64daa9bdde9"
+		errorMessage := fmt.Sprintf("couldn't generate 'TestSuites MetaData-area', err=%s. [ErrorId = %s]",
+			err.Error(),
+			errorId)
+
+		leftSideBuildTestSuiteContainer = container.NewVBox(widget.NewLabel(errorMessage))
+
+		return leftSideBuildTestSuiteContainer, nil
+
+	}
+	// Add 'testSuiteMetaDataContainer' to Stack-container
+	testSuiteUiModel.testSuiteMetaDataStackContainer = container.NewStack(
+		testSuiteUiModel.testSuiteMetaDataContainer)
+
+	// Add 'testSuiteMetaDataStackContainer' to TestSuite's Left sides container
+	leftTopSideBuildTestSuiteContainer.Add(testSuiteUiModel.testSuiteMetaDataStackContainer)
+
 	// Create the Left side Container
 	leftSideBuildTestSuiteContainer = container.NewBorder(
 		leftTopSideBuildTestSuiteContainer,

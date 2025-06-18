@@ -21,6 +21,8 @@ type TestSuiteUiStruct struct {
 	testSuiteInformationStackContainer     *fyne.Container
 	testSuiteTestEnvironmentContainer      *fyne.Container
 	testSuiteTestEnvironmentStackContainer *fyne.Container
+	testSuiteMetaDataContainer             *fyne.Container
+	testSuiteMetaDataStackContainer        *fyne.Container
 }
 
 // The space between the different Information-boxes

@@ -98,6 +98,9 @@ func (testSuiteUiModel TestSuiteUiStruct) GenerateMetaDataAreaForTestCase() (
 	var testSuiteMetaDataAccordion *widget.Accordion
 	testSuiteMetaDataAccordion = widget.NewAccordion(metaDataAccordionItem)
 
+	// Open all for the Accordion
+	testSuiteMetaDataAccordion.OpenAll()
+
 	// Create the VBox-container that will be returned
 	testSuiteMetaDataContainer = container.NewVBox(testSuiteMetaDataAccordion, widget.NewLabel(""), widget.NewSeparator())
 
@@ -346,7 +349,8 @@ func (testSuiteUiModel TestSuiteUiStruct) buildGUIFromMetaDataGroupsMap(
 					}
 
 				})
-				// Extract Selected values from TestCase
+
+				// Extract Selected values from TestSuite
 				var selectedValue string
 				if metaDataGroupFromSourceExistInTestCaseMap == true && metaDataGroupItemFromSourceExistInTestCaseMap == true {
 					for _, availableValue := range metaDataItem.AvailableMetaDataValues {
@@ -361,6 +365,15 @@ func (testSuiteUiModel TestSuiteUiStruct) buildGUIFromMetaDataGroupsMap(
 				// apply the existing selection if any
 				if selectedValue != "" {
 					sel.SetSelected(selectedValue)
+				}
+
+				// If MetaDataItemName == 'TestEnvironment' then overrule and set from separate TestEnvironment-section
+				if metaDataItemName == "TestEnvironment" {
+					sel.SetSelected(testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteExecutionEnvironment)
+
+					// Disable for change due to that TestEnvironment is set from separate TestEnvironment Section
+					sel.Disable()
+
 				}
 
 				// Resize the DropDown

@@ -24,6 +24,8 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	var testSuiteDescriptionAreaContainer *fyne.Container
 	var testSuiteOwnerDomainContainer *fyne.Container
 
+	var lockOwnerAndTestEnvironmentAreaContainer *fyne.Container
+
 	var testSuiteTestDataAreaContainer *fyne.Container
 
 	// Generate TestSuite-DeleteDate area
@@ -141,6 +143,22 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	// Add 'testSuiteTestEnvironmentStackContainer' to TestSuite's Left sides container
 	leftTopSideBuildTestSuiteContainer.Add(testSuiteUiModel.testSuiteTestEnvironmentStackContainer)
 	fmt.Println(customTestEnvironmentSelectComboBox)
+
+	// Generate Lock Owner and TestEnvironment-area
+	lockOwnerAndTestEnvironmentAreaContainer, err = testSuiteUiModel.generateLockOwnerDomainAndTestEnvironmentAreaContainer()
+	if err != nil {
+
+		errorId := "4911133a-ff71-4d9a-b08d-b2835494d75a"
+		errorMessage := fmt.Sprintf("couldn't generate 'TestSuite-ock Owner and TestEnvironment-area, err=%s. [ErrorId = %s]",
+			err.Error(),
+			errorId)
+
+		leftSideBuildTestSuiteContainer = container.NewVBox(widget.NewLabel(errorMessage))
+
+		return leftSideBuildTestSuiteContainer, nil
+
+	}
+	leftTopSideBuildTestSuiteContainer.Add(lockOwnerAndTestEnvironmentAreaContainer)
 
 	// Generate TestSuite-TestData-area
 	testSuiteTestDataAreaContainer, err = testSuiteUiModel.generateSelectedTestDataForTestSuiteArea(testSuiteUuid)

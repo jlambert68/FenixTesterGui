@@ -229,8 +229,8 @@ github.com/jeandeaual/go-locale v0.0.0-20241217141322-fcc2cadd6f08 h1:wMeVzrPO3m
 github.com/jeandeaual/go-locale v0.0.0-20241217141322-fcc2cadd6f08/go.mod h1:ZDXo8KHryOWSIqnsb/CiDq7hQUYryCgdVnxbj8tDG7o=
 github.com/jlambert68/Fast_BitFilter_MetaData v0.0.0-20250605163932-fd0b06c97ef3 h1:3VGnR3LCpopb/BkFmbKQSyNtj7Ymvey7YlPDu1jvlVg=
 github.com/jlambert68/Fast_BitFilter_MetaData v0.0.0-20250605163932-fd0b06c97ef3/go.mod h1:iK/gfxACAKJzwCtqWfUiTE5k6v6gNRKxPtwUtIlnuus=
-github.com/jlambert68/FenixGrpcApi v0.0.0-20250617083004-f5d3247ea3b1 h1:zGG5A3Y+ZeNmHqV6JWQXe0/6bkYypWYO88ERaHTBJzM=
-github.com/jlambert68/FenixGrpcApi v0.0.0-20250617083004-f5d3247ea3b1/go.mod h1:5BO7Hq8qdgzK5W7KY14yXPYN/fNuXAMdDQTY7xHIeXc=
+github.com/jlambert68/FenixGrpcApi v0.0.0-20250618135644-cee7d3e5158c h1:YHKxc0BGU+GF69pbSz8EyYK9wwhwOEZnF3/dntrvRGs=
+github.com/jlambert68/FenixGrpcApi v0.0.0-20250618135644-cee7d3e5158c/go.mod h1:61pmjruYe5pxBSzZEO3YZ+ena1LUoySrkZp9orT9Jj8=
 github.com/jlambert68/FenixScriptEngine v0.0.0-20241104143504-8f37e95bc346 h1:wl0lPbLMtJ3aAXlPyE244suSdyDKvP5fyrvyiGlr2c4=
 github.com/jlambert68/FenixScriptEngine v0.0.0-20241104143504-8f37e95bc346/go.mod h1:7uonnNzavYWGC0Cvbp/88pwU+6SZuFJnV4eLTD+CASg=
 github.com/jlambert68/FenixStandardTestInstructionAdmin v0.0.0-20241025085754-ced7ee5586a6 h1:LEOf2u+WBhHA5eRWDY9iQRZFyfmk0xnH3sejeFyZAAg=

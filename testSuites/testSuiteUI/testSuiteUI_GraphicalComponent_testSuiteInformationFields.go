@@ -124,7 +124,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteInformationFieldsAre
 	testSuiteInformationVContainer = container.NewVBox(testSuiteInformationContainer, widget.NewLabel(""), widget.NewSeparator())
 
 	// Put the container in the Scroll container
-	testSuiteInformationScroll = container.NewScroll(testSuiteInformationVContainer)
+	testSuiteInformationScroll = container.NewHScroll(testSuiteInformationVContainer)
 
 	return testSuiteInformationScroll, err
 }

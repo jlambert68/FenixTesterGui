@@ -48,6 +48,12 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestEnvironmentForTestSuite()
 
 		testEnvironmentContainer = container.NewVBox(widget.NewLabel("OwnerDomain doesn't have any TestSuite MetaData"))
 
+		// Set info in TestSuiteModel about TestEnvironment is selected
+		testSuiteUiModel.TestSuiteModelPtr.TestEnvironmentHasValue(true)
+
+		// Lock parts of UI that shouldn't be accessible before both OwnerDomain and TestEnvironment is Selected by user
+		testSuiteUiModel.lockUIUntilOwnerDomainAndTestEnvironmenIsSelected()
+
 		return testEnvironmentContainer,
 			nil,
 			err
@@ -170,6 +176,12 @@ func (testSuiteUiModel *TestSuiteUiStruct) buildTestEnvironmentGUIContainer(
 			var err error
 			// store value in TestSuite-model
 			testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteExecutionEnvironment = val
+
+			// Set info in TestSuiteModel about TestEnvironment is selected
+			testSuiteUiModel.TestSuiteModelPtr.TestEnvironmentHasValue(true)
+
+			// Lock parts of UI that shouldn't be accessible before both OwnerDomain and TestEnvironment is Selected by user
+			testSuiteUiModel.lockUIUntilOwnerDomainAndTestEnvironmenIsSelected()
 
 			// Trigger creation of a 'new' TestSuiteMetaData container for the TestSuite-UI ************************
 

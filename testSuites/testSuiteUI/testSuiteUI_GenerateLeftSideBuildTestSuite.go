@@ -22,11 +22,6 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	var testSuiteDeleteDateAreaContainer *fyne.Container
 	var testSuiteNameAreaContainer *fyne.Container
 	var testSuiteDescriptionAreaContainer *fyne.Container
-	var testSuiteOwnerDomainContainer *fyne.Container
-
-	var lockOwnerAndTestEnvironmentAreaContainer *fyne.Container
-
-	var testSuiteTestDataAreaContainer *fyne.Container
 
 	// Generate TestSuite-DeleteDate area
 	testSuiteDeleteDateAreaContainer, err = testSuiteUiModel.generateTestSuiteDeletionDateArea(testSuiteUuid)
@@ -98,8 +93,9 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	leftTopSideBuildTestSuiteContainer.Add(testSuiteUiModel.testSuiteInformationStackContainer)
 
 	// Generate TestSuite-Owner area
-	var testCaseOwnerDomainCustomSelectComboBox *customSelectComboBox
-	testSuiteOwnerDomainContainer, testCaseOwnerDomainCustomSelectComboBox, err = testSuiteUiModel.
+	testSuiteUiModel.testSuiteOwnerDomainContainer,
+		testSuiteUiModel.testCaseOwnerDomainCustomSelectComboBox,
+		err = testSuiteUiModel.
 		generateOwnerDomainForTestSuiteArea(testCasesModel)
 	if err != nil {
 
@@ -115,14 +111,15 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	}
 
 	var testSuiteOwnerDomainHorizontalContainer *fyne.Container
-	testSuiteOwnerDomainHorizontalContainer = container.NewHBox(testSuiteOwnerDomainContainer, layout.NewSpacer())
+	testSuiteOwnerDomainHorizontalContainer = container.NewHBox(testSuiteUiModel.testSuiteOwnerDomainContainer, layout.NewSpacer())
 
 	leftTopSideBuildTestSuiteContainer.Add(testSuiteOwnerDomainHorizontalContainer)
-	fmt.Println(testCaseOwnerDomainCustomSelectComboBox)
 
 	// Generate TestSuite's ExecutionEnvironment
-	var customTestEnvironmentSelectComboBox *customSelectComboBox
-	testSuiteUiModel.testSuiteTestEnvironmentContainer, customTestEnvironmentSelectComboBox, err = testSuiteUiModel.
+
+	testSuiteUiModel.testSuiteTestEnvironmentContainer,
+		testSuiteUiModel.customTestEnvironmentSelectComboBox,
+		err = testSuiteUiModel.
 		generateTestEnvironmentForTestSuite()
 	if err != nil {
 
@@ -142,10 +139,9 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 
 	// Add 'testSuiteTestEnvironmentStackContainer' to TestSuite's Left sides container
 	leftTopSideBuildTestSuiteContainer.Add(testSuiteUiModel.testSuiteTestEnvironmentStackContainer)
-	fmt.Println(customTestEnvironmentSelectComboBox)
 
 	// Generate Lock Owner and TestEnvironment-area
-	lockOwnerAndTestEnvironmentAreaContainer, err = testSuiteUiModel.generateLockOwnerDomainAndTestEnvironmentAreaContainer()
+	testSuiteUiModel.lockOwnerAndTestEnvironmentAreaContainer, err = testSuiteUiModel.generateLockOwnerDomainAndTestEnvironmentAreaContainer()
 	if err != nil {
 
 		errorId := "4911133a-ff71-4d9a-b08d-b2835494d75a"
@@ -158,10 +154,11 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 		return leftSideBuildTestSuiteContainer, nil
 
 	}
-	leftTopSideBuildTestSuiteContainer.Add(lockOwnerAndTestEnvironmentAreaContainer)
+	leftTopSideBuildTestSuiteContainer.Add(testSuiteUiModel.lockOwnerAndTestEnvironmentAreaContainer)
+	testSuiteUiModel.lockOwnerAndTestEnvironmentAreaContainer.Hide()
 
 	// Generate TestSuite-TestData-area
-	testSuiteTestDataAreaContainer, err = testSuiteUiModel.generateSelectedTestDataForTestSuiteArea(testSuiteUuid)
+	testSuiteUiModel.testSuiteTestDataAreaContainer, err = testSuiteUiModel.generateSelectedTestDataForTestSuiteArea(testSuiteUuid)
 	if err != nil {
 
 		errorId := "d1f4abd1-95bb-4935-9403-8fe4cc360a57"
@@ -174,7 +171,8 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 		return leftSideBuildTestSuiteContainer, nil
 
 	}
-	leftTopSideBuildTestSuiteContainer.Add(testSuiteTestDataAreaContainer)
+	leftTopSideBuildTestSuiteContainer.Add(testSuiteUiModel.testSuiteTestDataAreaContainer)
+	testSuiteUiModel.testSuiteTestDataAreaContainer.Hide()
 
 	// Generate TestSuite's MetaDataContainer
 	testSuiteUiModel.testSuiteMetaDataContainer, err = testSuiteUiModel.
@@ -197,6 +195,7 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 
 	// Add 'testSuiteMetaDataStackContainer' to TestSuite's Left sides container
 	leftTopSideBuildTestSuiteContainer.Add(testSuiteUiModel.testSuiteMetaDataStackContainer)
+	testSuiteUiModel.testSuiteMetaDataStackContainer.Hide()
 
 	// Create the Left side Container
 	leftSideBuildTestSuiteContainer = container.NewBorder(

@@ -67,16 +67,26 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateOwnerDomainForTestSuiteArea(
 			testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteOwnerDomainName =
 				testCasesModel.DomainsThatCanOwnTheTestCaseMap[value].DomainName
 
+			// Set info in TestSuiteModel that OwnerDomain is set
+			testSuiteUiModel.TestSuiteModelPtr.OwnerDomainHasValue(true)
+
 			// Trigger creation of a 'new' TestEnvironment container for the TestSuite-UI ************************
 
 			// Generate TestSuite's ExecutionEnvironment
-			var customTestEnvironmentSelectComboBox *customSelectComboBox
 			var newTestSuiteTestEnvironmentContainer *fyne.Container
 
 			// Clear TestEnvironment
 			testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteExecutionEnvironment = ""
 
-			newTestSuiteTestEnvironmentContainer, customTestEnvironmentSelectComboBox, err = testSuiteUiModel.
+			// Clear info in TestSuiteModel about TestEnvironment is not selected
+			testSuiteUiModel.TestSuiteModelPtr.TestEnvironmentHasValue(false)
+
+			// Lock parts of UI that shouldn't be accessible before both OwnerDomain and TestEnvironment is Selected by user
+			testSuiteUiModel.lockUIUntilOwnerDomainAndTestEnvironmenIsSelected()
+
+			newTestSuiteTestEnvironmentContainer,
+				testSuiteUiModel.customTestEnvironmentSelectComboBox,
+				err = testSuiteUiModel.
 				generateTestEnvironmentForTestSuite()
 			if err != nil {
 
@@ -95,8 +105,6 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateOwnerDomainForTestSuiteArea(
 				// Add new 'testSuiteTestEnvironmentContainer' to stack container
 				testSuiteUiModel.testSuiteTestEnvironmentStackContainer.
 					Add(testSuiteUiModel.testSuiteTestEnvironmentContainer)
-
-				fmt.Println(customTestEnvironmentSelectComboBox)
 
 				// Refresh Tabs
 				testSuitesCommandEngine.TestSuiteTabsRef.Refresh()
@@ -122,8 +130,6 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateOwnerDomainForTestSuiteArea(
 
 			// Store 'newTestSuiteTestEnvironmentContainer' in old onec place
 			testSuiteUiModel.testSuiteTestEnvironmentContainer = newTestSuiteTestEnvironmentContainer
-
-			fmt.Println(customTestEnvironmentSelectComboBox)
 
 			// Remove old 'testSuiteMetaDataContainer' from stack container
 			testSuiteUiModel.testSuiteMetaDataStackContainer.Remove(testSuiteUiModel.testSuiteMetaDataContainer)

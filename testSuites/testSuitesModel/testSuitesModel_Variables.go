@@ -36,8 +36,18 @@ type TestSuiteModelStruct struct {
 
 	testSuiteMetaDataPtr *TestSuiteMetaDataStruct // Holding the current TestSuiteMetaDataSet and what has been selected
 
+	// Object holding info about if OwnerDomain and TestEnvironment has got any value, used for Locking parts of the GUI in the TestSuite
+	lockValuesForOwnerDomainAndTestEnvironment lockValuesForOwnerDomainAndTestEnvironmentStruct
+
 	// TestSuite UI components bindings
 	TestSuiteUIModelBinding TestSuiteUIModelBindingStruct
+}
+
+// Storing values regarding if Owner domain and TestEnvironment has got any value selected by the user
+type lockValuesForOwnerDomainAndTestEnvironmentStruct struct {
+	OwnerDomainHasValue     bool
+	TestEnvironmentHasValue bool
+	LockButtonHaBeenClicked bool
 }
 
 // TestSuiteUIModelBindingStruct

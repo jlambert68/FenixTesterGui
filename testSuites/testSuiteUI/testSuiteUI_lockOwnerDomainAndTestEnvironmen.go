@@ -5,6 +5,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -27,6 +28,16 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateLockOwnerDomainAndTestEnviron
 					// Lock
 					lockButton.Disable()
 					lockButton.SetText("Locked")
+					testSuiteUiModel.TestSuiteModelPtr.LockButtonHasBeenClicked()
+
+					// Open up correct containers and
+					testSuiteUiModel.lockUIUntilOwnerDomainAndTestEnvironmenIsSelected()
+
+					// Lock down Selected OwnerDomain and TestEnvironment
+					testSuiteUiModel.testCaseOwnerDomainCustomSelectComboBox.selectComboBox.Disable()
+					if testSuiteUiModel.customTestEnvironmentSelectComboBox != nil {
+						testSuiteUiModel.customTestEnvironmentSelectComboBox.selectComboBox.Disable()
+					}
 
 				} else {
 					// user cancelled
@@ -39,7 +50,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateLockOwnerDomainAndTestEnviron
 
 	lockOwnerAndTestEnvironmentAreaContainer = container.NewVBox(
 		widget.NewLabel("Lock Owner and TestEnvironment"),
-		lockButton)
+		container.NewHBox(lockButton, layout.NewSpacer()))
 
 	return lockOwnerAndTestEnvironmentAreaContainer, nil
 }

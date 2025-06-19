@@ -93,6 +93,10 @@ func GenerateNewTestSuiteModelObject() (newTestSuiteModel *TestSuiteModelStruct)
 			MetaDataGroupsMapPtr:                                    nil,
 			SelectedTestSuiteMetaDataAsEntrySlice:                   nil,
 		},
+		lockValuesForOwnerDomainAndTestEnvironment: lockValuesForOwnerDomainAndTestEnvironmentStruct{
+			OwnerDomainHasValue:     false,
+			TestEnvironmentHasValue: false,
+		},
 		TestSuiteUIModelBinding: TestSuiteUIModelBindingStruct{
 			TestSuiteDeletionDate:         "",
 			TestSuiteName:                 "",
@@ -115,4 +119,54 @@ func GenerateNewTestSuiteModelObject() (newTestSuiteModel *TestSuiteModelStruct)
 
 	return newTestSuiteModel
 
+}
+
+// OwnerDomainHasValue
+// Store if OwnerDomain has any value selected by the user
+func (testSuiteModel *TestSuiteModelStruct) OwnerDomainHasValue(hasValue bool) {
+	testSuiteModel.lockValuesForOwnerDomainAndTestEnvironment.OwnerDomainHasValue = hasValue
+
+	// Clear LockButton when false
+	if hasValue == false {
+		testSuiteModel.lockValuesForOwnerDomainAndTestEnvironment.LockButtonHaBeenClicked = false
+	}
+
+}
+
+// TestEnvironmentHasValue
+// Store if TestEnvironmentHasValue has any value selected by the user
+func (testSuiteModel *TestSuiteModelStruct) TestEnvironmentHasValue(hasValue bool) {
+	testSuiteModel.lockValuesForOwnerDomainAndTestEnvironment.TestEnvironmentHasValue = hasValue
+
+	// Clear LockButton when false
+	if hasValue == false {
+		testSuiteModel.lockValuesForOwnerDomainAndTestEnvironment.LockButtonHaBeenClicked = false
+	}
+}
+
+// LockButtonHasBeenClicked
+// Store if LockButton has been clicked by the user
+func (testSuiteModel *TestSuiteModelStruct) LockButtonHasBeenClicked() {
+	testSuiteModel.lockValuesForOwnerDomainAndTestEnvironment.LockButtonHaBeenClicked = true
+}
+
+// DoBothOwnerDomainAndTestEnvironmentHaveValues
+// Do both of OwnerDomain and TestEnvironmentHasValue have their values selected by the user
+func (testSuiteModel *TestSuiteModelStruct) DoBothOwnerDomainAndTestEnvironmentHaveValues() (hasValue bool) {
+
+	hasValue = testSuiteModel.lockValuesForOwnerDomainAndTestEnvironment.TestEnvironmentHasValue &&
+		testSuiteModel.lockValuesForOwnerDomainAndTestEnvironment.OwnerDomainHasValue
+
+	return hasValue
+}
+
+// HasLockButtonBeenClickedAndBothOwnerDomainAndTestEnvironmentHaveValues
+// Has Locked been clicked and both of  OwnerDomain and TestEnvironmentHasValue have their values selected by the user
+func (testSuiteModel *TestSuiteModelStruct) HasLockButtonBeenClickedAndBothOwnerDomainAndTestEnvironmentHaveValues() (hasValue bool) {
+
+	hasValue = testSuiteModel.lockValuesForOwnerDomainAndTestEnvironment.TestEnvironmentHasValue &&
+		testSuiteModel.lockValuesForOwnerDomainAndTestEnvironment.OwnerDomainHasValue &&
+		testSuiteModel.lockValuesForOwnerDomainAndTestEnvironment.LockButtonHaBeenClicked
+
+	return hasValue
 }

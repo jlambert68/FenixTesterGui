@@ -7,37 +7,37 @@ import (
 	"log"
 )
 
-// Copy Fields in Model, that is used by the UI, to models internal fields
-func (testSuiteModel *TestSuiteModelStruct) copyUiFieldsToModel() {
+// Copy Fields in Model to fields that is used by the UI
+func (testSuiteModel *TestSuiteModelStruct) copyModelToUiFields() {
 
 	// Copy 'TestSuiteDeletionDate'
-	testSuiteModel.testSuiteDeletionDate = testSuiteModel.TestSuiteUIModelBinding.TestSuiteDeletionDate
+	testSuiteModel.TestSuiteUIModelBinding.TestSuiteDeletionDate = testSuiteModel.testSuiteDeletionDate
 
 	// Copy 'TestSuiteName'
-	testSuiteModel.testSuiteName = testSuiteModel.TestSuiteUIModelBinding.TestSuiteName
+	testSuiteModel.TestSuiteUIModelBinding.TestSuiteName = testSuiteModel.testSuiteName
 
 	// Copy 'TestSuiteDescription'
-	testSuiteModel.testSuiteDescription = testSuiteModel.TestSuiteUIModelBinding.TestSuiteDescription
+	testSuiteModel.TestSuiteUIModelBinding.TestSuiteDescription = testSuiteModel.testSuiteDescription
 
 	// Copy 'TestSuiteOwnerDomainUuid'
-	testSuiteModel.testSuiteOwnerDomainUuid = testSuiteModel.TestSuiteUIModelBinding.TestSuiteOwnerDomainUuid
+	testSuiteModel.TestSuiteUIModelBinding.TestSuiteOwnerDomainUuid = testSuiteModel.testSuiteOwnerDomainUuid
 
 	// Copy 'TestSuiteExecutionEnvironment'
-	testSuiteModel.testSuiteExecutionEnvironment = testSuiteModel.TestSuiteUIModelBinding.TestSuiteExecutionEnvironment
+	testSuiteModel.TestSuiteUIModelBinding.TestSuiteExecutionEnvironment = testSuiteModel.testSuiteExecutionEnvironment
 
 	// Copy changes for 'TestSuiteMetaDataHash'
-	testSuiteModel.testSuiteMetaDataHash = testSuiteModel.TestSuiteUIModelBinding.TestSuiteMetaDataHash
+	testSuiteModel.TestSuiteUIModelBinding.TestSuiteMetaDataHash = testSuiteModel.testSuiteMetaDataHash
 
 	// Copy changes for 'TestSuiteMetaDataPtr'
 	var copyTestSuiteMetaData TestSuiteMetaDataStruct
 	var originalTestSuiteMetaData TestSuiteMetaDataStruct
 
-	originalTestSuiteMetaData = *testSuiteModel.TestSuiteUIModelBinding.TestSuiteMetaDataPtr
+	originalTestSuiteMetaData = *testSuiteModel.testSuiteMetaDataPtr
 
 	err := copier.CopyWithOption(&copyTestSuiteMetaData, &originalTestSuiteMetaData, copier.Option{DeepCopy: true})
 	if err != nil {
 
-		errorID := "b47a02a5-c035-4f2b-9760-91804d7eea57"
+		errorID := "3e4f465a-8a41-4e44-81f8-47f9a085e778"
 
 		errorMsg := fmt.Sprintf("error copying TestSuiteMetaDataStruct using 'copier'. error = '%s' [ErrorID: %s]",
 			err.Error(),
@@ -45,21 +45,21 @@ func (testSuiteModel *TestSuiteModelStruct) copyUiFieldsToModel() {
 
 		log.Fatalln(errorMsg)
 	}
-	testSuiteModel.testSuiteMetaDataPtr = &copyTestSuiteMetaData
+	testSuiteModel.TestSuiteUIModelBinding.TestSuiteMetaDataPtr = &copyTestSuiteMetaData
 
 	// Copy changes for 'TestSuiteTesDataHash'
-	testSuiteModel.testSuiteTesDataHash = testSuiteModel.TestSuiteUIModelBinding.TestSuiteTesDataHash
+	testSuiteModel.TestSuiteUIModelBinding.TestSuiteTesDataHash = testSuiteModel.testSuiteTesDataHash
 
 	// Copy changes for 'TestDataPtr'
 	var copyTestSuiteTestData testDataEngine.TestDataForGroupObjectStruct
 	var originalTestSuiteTestData testDataEngine.TestDataForGroupObjectStruct
 
-	originalTestSuiteTestData = *testSuiteModel.TestSuiteUIModelBinding.TestDataPtr
+	originalTestSuiteTestData = *testSuiteModel.testDataPtr
 
 	err = copier.CopyWithOption(&copyTestSuiteTestData, &originalTestSuiteTestData, copier.Option{DeepCopy: true})
 	if err != nil {
 
-		errorID := "577cc5ef-7f99-48f6-8f22-34c8630ee491"
+		errorID := "82a55f35-ccf3-4cd3-9b1c-6159d0a5e73d"
 
 		errorMsg := fmt.Sprintf("error copying TestDataForGroupObjectStruct using 'copier'. error = '%s' [ErrorID: %s]",
 			err.Error(),
@@ -67,6 +67,6 @@ func (testSuiteModel *TestSuiteModelStruct) copyUiFieldsToModel() {
 
 		log.Fatalln(errorMsg)
 	}
-	testSuiteModel.testDataPtr = &copyTestSuiteTestData
+	testSuiteModel.TestSuiteUIModelBinding.TestDataPtr = &copyTestSuiteTestData
 
 }

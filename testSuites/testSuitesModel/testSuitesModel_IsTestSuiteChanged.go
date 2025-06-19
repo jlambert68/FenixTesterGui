@@ -59,6 +59,19 @@ func (testSuiteModel *TestSuiteModelStruct) IsTestSuiteChanged() (testSuiteIsCha
 		return testSuiteIsChanged
 	}
 
+	// First update 'TestSuiteTesDataHash'
+	var tempTestSuiteTestDataHash string
+	tempTestSuiteTestDataHash = testSuiteModel.generateTesSuiteTestDataHash()
+	testSuiteModel.TestSuiteUIModelBinding.TestSuiteTesDataHash = tempTestSuiteTestDataHash
+
+	// Second Check changes for 'TestSuiteTesDataHash'
+	if testSuiteModel.testSuiteTesDataHash != testSuiteModel.TestSuiteUIModelBinding.
+		TestSuiteTesDataHash {
+		testSuiteIsChanged = true
+
+		return testSuiteIsChanged
+	}
+
 	return testSuiteIsChanged
 
 }
@@ -129,4 +142,41 @@ func (testSuiteModel *TestSuiteModelStruct) generateTesSuiteMetaDataHash() (
 	testSuiteMetaDataHash = sharedCode.HashValues(valuesToHash, false)
 
 	return testSuiteMetaDataHash
+}
+
+func (testSuiteModel *TestSuiteModelStruct) generateTesSuiteTestDataHash() (
+	testSuiteMetaDataHash string) {
+
+	var testDataValueToHash string
+	var valuesToHash []string
+
+	// Loop all TestDataGroups
+	for _, testDataGroup := range testSuiteModel.TestSuiteUIModelBinding.TestDataPtr.ListTestDataGroups() {
+
+		// For each TestDataGroup loop all its TestDataPoints
+		for _, testDataPoint := range testSuiteModel.TestSuiteUIModelBinding.TestDataPtr.
+			ListTestDataGroupPointsForAGroup(testDataGroup) {
+
+			// For each TestDataPoint loop all its TestDataRows
+			for _, testDataRow := range testSuiteModel.TestSuiteUIModelBinding.TestDataPtr.
+				ListTestDataRowsForAGroupPoint(testDataGroup, testDataPoint) {
+
+				// Create value to be hashed
+				testDataValueToHash = fmt.Sprintf("%s-%s-%s",
+					testDataGroup,
+					testDataPoint,
+					testDataRow)
+
+				// Add Values to slice of values that will be hashed
+				valuesToHash = append(valuesToHash, testDataValueToHash)
+
+			}
+		}
+	}
+
+	// Hash slice with values
+	testSuiteMetaDataHash = sharedCode.HashValues(valuesToHash, false)
+
+	return testSuiteMetaDataHash
+
 }

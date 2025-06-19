@@ -34,6 +34,7 @@ require (
 require (
 	github.com/ebitengine/oto/v3 v3.3.3
 	github.com/hajimehoshi/go-mp3 v0.3.4
+	github.com/jinzhu/copier v0.4.0
 	github.com/jlambert68/FenixStandardTestInstructionAdmin v0.0.0-20241025085754-ced7ee5586a6
 	github.com/jlambert68/FenixSyncShared v0.0.0-20240911064419-da3d922610cb
 	github.com/skoona/sknlinechart v1.6.6

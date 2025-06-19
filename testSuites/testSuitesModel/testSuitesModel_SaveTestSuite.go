@@ -32,7 +32,6 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 	}
 
 	// Check if all mandatory fields has values
-	// Check if TestSuite is Changed
 	mandatoryFieldsHaveValues,
 		mandatoryFieldsHaveValuesNotificationText = testSuiteModel.checkIfAllMandatoryFieldsHaveValues()
 
@@ -50,6 +49,9 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 
 		return nil
 	}
+
+	// Copy all UI-fields to model
+	testSuiteModel.copyUiFieldsToModel()
 
 	return err
 

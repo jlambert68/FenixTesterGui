@@ -32,10 +32,13 @@ type TestSuiteModelStruct struct {
 	lastChangedDate               string // The date when the TestSuite was last changed and saved
 	testSuiteExecutionEnvironment string // The execution environment where the TestSuite will be executed
 	testSuiteMetaDataHash         string // Hash used to check if changes has been done to MetaData
+	testSuiteTesDataHash          string // Hash used to check if changes has been done to TestData
 
 	testSuiteIsNew bool // Indicates that if this a new or existing TestSuite
 
 	testSuiteMetaDataPtr *TestSuiteMetaDataStruct // Holding the current TestSuiteMetaDataSet and what has been selected
+
+	testDataPtr *testDataEngine.TestDataForGroupObjectStruct // Holding all selected TestData
 
 	// Object holding info about if OwnerDomain and TestEnvironment has got any value, used for Locking parts of the GUI in the TestSuite
 	lockValuesForOwnerDomainAndTestEnvironment lockValuesForOwnerDomainAndTestEnvironmentStruct
@@ -61,8 +64,9 @@ type TestSuiteUIModelBindingStruct struct {
 	TestSuiteOwnerDomainName      string // The Name for the Domain that owns the TestSuite
 	TestSuiteExecutionEnvironment string // The execution environment where the TestSuite will be executed
 
-	TestSuiteIsNew bool
-	TestDataPtr    *testDataEngine.TestDataForGroupObjectStruct
+	TestSuiteIsNew       bool
+	TestSuiteTesDataHash string                                       // Hash used to check if changes has been done to TestData
+	TestDataPtr          *testDataEngine.TestDataForGroupObjectStruct // Holding all selected TestData
 
 	TestSuiteMetaDataHash string                   // Hash used to check if changes has been done to MetaData
 	TestSuiteMetaDataPtr  *TestSuiteMetaDataStruct // Holding the current TestSuiteMetaDataSet and what has been selected

@@ -1,6 +1,7 @@
 package testSuitesModel
 
 import (
+	"FenixTesterGui/testCase/testCaseModel"
 	"github.com/jlambert68/Fast_BitFilter_MetaData/boolbits/boolbits"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/jlambert68/FenixScriptEngine/testDataEngine"
@@ -45,6 +46,9 @@ type TestSuiteModelStruct struct {
 
 	// TestSuite UI components bindings
 	TestSuiteUIModelBinding TestSuiteUIModelBindingStruct
+
+	// Reference to the TestCase-model
+	testCasesModel *testCaseModel.TestCasesModelsStruct
 }
 
 // Storing values regarding if Owner domain and TestEnvironment has got any value selected by the user

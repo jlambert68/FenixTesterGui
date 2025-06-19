@@ -2,6 +2,7 @@ package testSuitesModel
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/testCase/testCaseModel"
 	uuidGenerator "github.com/google/uuid"
 )
 
@@ -63,7 +64,9 @@ func (testSuiteModel *TestSuiteModelStruct) GetLastChangedDate() string {
 
 // GenerateNewTestSuiteModelObject
 // Generated s new TestSuiteModel-object
-func GenerateNewTestSuiteModelObject() (newTestSuiteModel *TestSuiteModelStruct) {
+func GenerateNewTestSuiteModelObject(
+	testCasesModel *testCaseModel.TestCasesModelsStruct) (
+	newTestSuiteModel *TestSuiteModelStruct) {
 
 	// Generate new TestSuite-UUID
 	var testSuiteUuid string
@@ -115,6 +118,7 @@ func GenerateNewTestSuiteModelObject() (newTestSuiteModel *TestSuiteModelStruct)
 				SelectedTestSuiteMetaDataAsEntrySlice:                   nil,
 			},
 		},
+		testCasesModel: testCasesModel,
 	}
 
 	return newTestSuiteModel

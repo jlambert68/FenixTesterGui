@@ -9,9 +9,9 @@ import (
 	"time"
 )
 
-// SendSaveFullTestCaseSendSaveFullTestSuite - Save full TestSuite to database
+// SendSaveFullTestSuite - Save full TestSuite to database
 func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendSaveFullTestSuite(
-	gRPCFullTestCaseMessageToSend *fenixGuiTestCaseBuilderServerGrpcApi.FullTestCaseMessage,
+	gRPCFullTestSuiteMessageToSend *fenixGuiTestCaseBuilderServerGrpcApi.FullTestSuiteMessage,
 ) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse) {
 
 	var ctx context.Context
@@ -70,21 +70,21 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendSaveFullTestSuite(
 	}
 
 	// Do the gRPC-call
-	returnMessage, err = fenixGuiTestCaseCaseBuilderServerGrpcClient.SaveFullTestCase(ctx, gRPCFullTestCaseMessageToSend)
+	returnMessage, err = fenixGuiTestCaseCaseBuilderServerGrpcClient.SaveFullTestSuite(ctx, gRPCFullTestSuiteMessageToSend)
 
 	// Shouldn't happen
 	if err != nil {
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":    "dc065973-cbab-4cf9-8091-a0f687cd2d36",
+			"ID":    "d4265690-301d-4938-b021-1d426cd24347",
 			"error": err,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SaveFullTestCase'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SaveFullTestSuite'")
 
 	} else if returnMessage.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":                                     "146af5d6-336c-4653-b8a1-b59f809a7b8b",
+			"ID":                                     "a1690cf5-24a9-4f81-b009-34e5ebdfa703",
 			"Message from FenixTestGuiBuilderServer": returnMessage.Comments,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SaveFullTestCase'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SaveFullTestSuite'")
 	}
 
 	return returnMessage

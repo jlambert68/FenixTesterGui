@@ -1,5 +1,11 @@
 package testSuitesModel
 
+import (
+	sharedCode "FenixTesterGui/common_code"
+	"fmt"
+	"log"
+)
+
 // IsTestSuiteChanged
 // Checks if the TestSuite content has been changed from last saved occasion
 func (testSuiteModel *TestSuiteModelStruct) IsTestSuiteChanged() (testSuiteIsChanged bool) {
@@ -32,13 +38,6 @@ func (testSuiteModel *TestSuiteModelStruct) IsTestSuiteChanged() (testSuiteIsCha
 		return testSuiteIsChanged
 	}
 
-	// Check 'TestSuiteIsNew'
-	//if testSuiteModel.testSuiteIsNew != testSuiteModel.TestSuiteUIModelBinding.TestSuiteIsNew {
-	//	testSuiteIsChanged = true
-
-	//	return testSuiteIsChanged
-	//}
-
 	// Check 'TestSuiteExecutionEnvironment'
 	if testSuiteModel.testSuiteExecutionEnvironment != testSuiteModel.TestSuiteUIModelBinding.
 		TestSuiteExecutionEnvironment {
@@ -47,5 +46,87 @@ func (testSuiteModel *TestSuiteModelStruct) IsTestSuiteChanged() (testSuiteIsCha
 		return testSuiteIsChanged
 	}
 
+	// First update 'TestSuiteMetaDataHash'
+	var tempTestSuiteMetaDataHash string
+	tempTestSuiteMetaDataHash = testSuiteModel.generateTesSuiteMetaDataHash()
+	testSuiteModel.TestSuiteUIModelBinding.TestSuiteMetaDataHash = tempTestSuiteMetaDataHash
+
+	// Second Check changes for 'TestSuiteMetaDataHash'
+	if testSuiteModel.testSuiteMetaDataHash != testSuiteModel.TestSuiteUIModelBinding.
+		TestSuiteMetaDataHash {
+		testSuiteIsChanged = true
+
+		return testSuiteIsChanged
+	}
+
 	return testSuiteIsChanged
+
+}
+
+func (testSuiteModel *TestSuiteModelStruct) generateTesSuiteMetaDataHash() (
+	testSuiteMetaDataHash string) {
+
+	var valuesToHash []string
+
+	var mandatoryMetaDataFieldsMapKey string
+
+	// Ensure that there are MetaData selected by the user, to be able to loop it
+	if testSuiteModel.TestSuiteUIModelBinding.TestSuiteMetaDataPtr != nil {
+
+		var tempTestSuiteMetaData TestSuiteMetaDataStruct
+		tempTestSuiteMetaData = *testSuiteModel.TestSuiteUIModelBinding.TestSuiteMetaDataPtr
+
+		if tempTestSuiteMetaData.MetaDataGroupsMapPtr != nil {
+
+			// Loop Users selected MetaData-parameters
+			for metaDataGroupName, metaDataGroupPtr := range *tempTestSuiteMetaData.MetaDataGroupsMapPtr {
+
+				// Loop all MetaDataGroupItems for the MetaDataGroup
+				for metaDataGroupItemName, tempMetaDataInGroupPtr := range *metaDataGroupPtr.MetaDataInGroupMapPtr {
+
+					mandatoryMetaDataFieldsMapKey = ""
+
+					switch tempMetaDataInGroupPtr.SelectType {
+					case MetaDataSelectType_SingleSelect:
+						if len(tempMetaDataInGroupPtr.SelectedMetaDataValueForSingleSelect) > 0 {
+							mandatoryMetaDataFieldsMapKey = fmt.Sprintf("%s-%s-%s",
+								metaDataGroupName,
+								metaDataGroupItemName,
+								tempMetaDataInGroupPtr.SelectedMetaDataValueForSingleSelect)
+
+							// Add Selected value to slice of selected values
+							valuesToHash = append(valuesToHash, mandatoryMetaDataFieldsMapKey)
+						}
+
+					case MetaDataSelectType_MultiSelect:
+						if len(tempMetaDataInGroupPtr.SelectedMetaDataValuesForMultiSelect) > 0 {
+							// Loop selected values
+							for _, selectedValue := range tempMetaDataInGroupPtr.SelectedMetaDataValuesForMultiSelect {
+
+								mandatoryMetaDataFieldsMapKey = fmt.Sprintf("%s-%s-%s",
+									metaDataGroupName,
+									metaDataGroupItemName,
+									selectedValue,
+								)
+
+								// Add Selected value to slice of selected values
+								valuesToHash = append(valuesToHash, mandatoryMetaDataFieldsMapKey)
+							}
+						}
+
+					default:
+
+						errorId := "cb77bda6-ac2d-4075-803c-d06b0696231d"
+						log.Fatalln(fmt.Sprintf("MetaDataSelectType not implemented. [ErrorID: %s]", errorId))
+					}
+
+				}
+			}
+		}
+	}
+
+	// Hash slice with values
+	testSuiteMetaDataHash = sharedCode.HashValues(valuesToHash, false)
+
+	return testSuiteMetaDataHash
 }

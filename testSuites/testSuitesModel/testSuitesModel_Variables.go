@@ -31,6 +31,7 @@ type TestSuiteModelStruct struct {
 	lastChangedByComputerLogin    string // The person that is logged into the computer when TestSuite was last changed and saved
 	lastChangedDate               string // The date when the TestSuite was last changed and saved
 	testSuiteExecutionEnvironment string // The execution environment where the TestSuite will be executed
+	testSuiteMetaDataHash         string // Hash used to check if changes has been done to MetaData
 
 	testSuiteIsNew bool // Indicates that if this a new or existing TestSuite
 
@@ -63,7 +64,8 @@ type TestSuiteUIModelBindingStruct struct {
 	TestSuiteIsNew bool
 	TestDataPtr    *testDataEngine.TestDataForGroupObjectStruct
 
-	TestSuiteMetaDataPtr *TestSuiteMetaDataStruct // Holding the current TestSuiteMetaDataSet and what has been selected
+	TestSuiteMetaDataHash string                   // Hash used to check if changes has been done to MetaData
+	TestSuiteMetaDataPtr  *TestSuiteMetaDataStruct // Holding the current TestSuiteMetaDataSet and what has been selected
 
 }
 

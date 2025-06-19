@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -33,6 +34,7 @@ func GenerateNewTestSuiteTab(testCasesModel *testCaseModel.TestCasesModelsStruct
 		nil)
 
 	var newTestSuiteUiObjectContainer *fyne.Container
+	var newTestSuiteUiObjectBorderContainer *fyne.Container
 
 	newTestSuiteUiObjectContainer, err = newTestSuiteUiObject.GenerateBuildNewTestSuiteUI(testCasesModel, newTestSuiteModel)
 
@@ -41,6 +43,29 @@ func GenerateNewTestSuiteTab(testCasesModel *testCaseModel.TestCasesModelsStruct
 			widget.NewLabel(fmt.Sprintf("couldn't generate a new 'TestSuite', err=%s'",
 				err.Error())))
 
+		// Generate the BorderContainer that is going to be placed on the Tab
+		newTestSuiteUiObjectBorderContainer = container.NewBorder(
+			nil, nil, nil, nil, newTestSuiteUiObjectContainer)
+
+	} else {
+
+		var testSuiteUiTabToolbar *widget.Toolbar
+
+		// Create toolbar for a new TestSuite page
+		testSuiteUiTabToolbar = widget.NewToolbar(
+
+			// New TestSuite
+			widget.NewToolbarAction(theme.DocumentSaveIcon(), func() {
+
+				// Function to Save Suite
+				newTestSuiteModel.SaveTestSuite()
+
+			}),
+		)
+
+		// Generate the BorderContainer that is going to be placed on the Tab
+		newTestSuiteUiObjectBorderContainer = container.NewBorder(
+			testSuiteUiTabToolbar, nil, nil, nil, newTestSuiteUiObjectContainer)
 	}
 
 	// Get TestSuiteUuid
@@ -52,7 +77,7 @@ func GenerateNewTestSuiteTab(testCasesModel *testCaseModel.TestCasesModelsStruct
 
 	// Add content to the Tab-UI-object
 	newTestSuiteUiObject.TestSuiteTabItem.Text = fmt.Sprintf("<New TestSuite> [%s]", shortTestSuiteUuid)
-	newTestSuiteUiObject.TestSuiteTabItem.Content = newTestSuiteUiObjectContainer
+	newTestSuiteUiObject.TestSuiteTabItem.Content = newTestSuiteUiObjectBorderContainer
 
 	// Get the TestSuiteUiMap from the map-pointer
 	var testSuiteUiMap map[*container.TabItem]*testSuiteUI.TestSuiteUiStruct

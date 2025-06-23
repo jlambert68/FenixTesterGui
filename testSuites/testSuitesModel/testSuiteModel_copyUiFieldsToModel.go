@@ -48,7 +48,7 @@ func (testSuiteModel *TestSuiteModelStruct) copyUiFieldsToModel() {
 	testSuiteModel.testSuiteMetaDataPtr = &copyTestSuiteMetaData
 
 	// Copy changes for 'TestSuiteTesDataHash'
-	testSuiteModel.testSuiteTesDataHash = testSuiteModel.TestSuiteUIModelBinding.TestSuiteTesDataHash
+	testSuiteModel.testSuiteTestDataHash = testSuiteModel.TestSuiteUIModelBinding.TestSuiteTesDataHash
 
 	// Copy changes for 'TestDataPtr'
 	var copyTestSuiteTestData testDataEngine.TestDataForGroupObjectStruct

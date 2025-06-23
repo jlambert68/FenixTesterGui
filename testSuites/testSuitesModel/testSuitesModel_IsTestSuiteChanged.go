@@ -65,7 +65,7 @@ func (testSuiteModel *TestSuiteModelStruct) IsTestSuiteChanged() (testSuiteIsCha
 	testSuiteModel.TestSuiteUIModelBinding.TestSuiteTesDataHash = tempTestSuiteTestDataHash
 
 	// Second Check changes for 'TestSuiteTesDataHash'
-	if testSuiteModel.testSuiteTesDataHash != testSuiteModel.TestSuiteUIModelBinding.
+	if testSuiteModel.testSuiteTestDataHash != testSuiteModel.TestSuiteUIModelBinding.
 		TestSuiteTesDataHash {
 		testSuiteIsChanged = true
 

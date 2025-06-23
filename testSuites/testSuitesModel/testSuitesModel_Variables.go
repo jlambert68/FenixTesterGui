@@ -22,6 +22,7 @@ type TestSuiteModelStruct struct {
 	testSuiteDeletionDate         string // Date for when the TestSuite is deleted. Can be date in the future
 	testSuiteUuid                 string // The TestSuites Uuid
 	testSuiteName                 string // The TestSuites Name
+	testSuiteVersion              uint32 // The current TestSuite version
 	testSuiteDescription          string // A description for the TestSuite
 	testSuiteOwnerDomainUuid      string // The Uuid for the Domain that owns the TestSuite
 	testSuiteOwnerDomainName      string // The Name of the Domain that owns the TestSuite
@@ -33,7 +34,8 @@ type TestSuiteModelStruct struct {
 	lastChangedDate               string // The date when the TestSuite was last changed and saved
 	testSuiteExecutionEnvironment string // The execution environment where the TestSuite will be executed
 	testSuiteMetaDataHash         string // Hash used to check if changes has been done to MetaData
-	testSuiteTesDataHash          string // Hash used to check if changes has been done to TestData
+	testSuiteTestDataHash         string // Hash used to check if changes has been done to TestData
+	testSuiteSavedMessageHah      string // Hash of save TestSuiteMessage
 
 	testSuiteIsNew bool // Indicates that if this a new or existing TestSuite
 
@@ -156,3 +158,19 @@ const (
 	MetaDataSelectType_SingleSelect
 	MetaDataSelectType_MultiSelect
 )
+
+// The type for the constants used to specify what has been stored in database
+type supportedTestSuiteDataToBeStoredType uint8
+
+const (
+	testSuiteBasicInformationIsSupported supportedTestSuiteDataToBeStoredType = iota
+	testSuiteTestDataIsSupported
+	testSuitePreviewIsSupported
+	testSuiteMetaDataIsSupported
+	testCasesInTestSuiteIsSupported
+	deletedDateIsSupported
+)
+
+type testSuiteDataToBeStoredStruct struct {
+	supportedTestSuiteDataToBeStoredMap map[supportedTestSuiteDataToBeStoredType]bool `json:"supportedTestSuiteDataToBeStoredMap"`
+}

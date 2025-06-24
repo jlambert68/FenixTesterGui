@@ -5,7 +5,6 @@ import (
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testSuites/testSuiteUI"
 	"FenixTesterGui/testSuites/testSuitesCommandEngine"
-	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
@@ -42,8 +41,9 @@ func GenerateTestSuiteHomeTab(testCasesModel *testCaseModel.TestCasesModelsStruc
 				openTestSuiteContainer,
 				func(openTestSuite bool) {
 					if openTestSuite {
+
 						// Open TestSuite
-						fmt.Println("Open TestSuite")
+						GenerateTestSuiteTabFromExistingTestSuite(testCasesModel)
 
 					} else {
 						// user cancelled

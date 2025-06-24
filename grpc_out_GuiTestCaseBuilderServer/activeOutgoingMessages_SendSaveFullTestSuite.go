@@ -11,7 +11,7 @@ import (
 
 // SendSaveFullTestSuite - Save full TestSuite to database
 func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendSaveFullTestSuite(
-	gRPCFullTestSuiteMessageToSend *fenixGuiTestCaseBuilderServerGrpcApi.FullTestSuiteMessage) (
+	fullTestSuiteMessage *fenixGuiTestCaseBuilderServerGrpcApi.FullTestSuiteMessage) (
 	returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse) {
 
 	var ctx context.Context
@@ -30,7 +30,13 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendSaveFullTestSuite(
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
 			grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 	}
-	gRPCFullTestSuiteMessageToSend.UserIdentification = userIdentificationMessage
+
+	// Prepare gRPC-message to send
+	var fullGrpcTestSuiteMessageToSend *fenixGuiTestCaseBuilderServerGrpcApi.SaveFullTestSuiteMessageRequest
+	fullGrpcTestSuiteMessageToSend = &fenixGuiTestCaseBuilderServerGrpcApi.SaveFullTestSuiteMessageRequest{
+		UserIdentification: userIdentificationMessage,
+		TestSuite:          fullTestSuiteMessage,
+	}
 
 	// Set up connection to Server
 	ctx, err = grpcOut.setConnectionToFenixGuiTestCaseBuilderServer_new(ctx)
@@ -81,7 +87,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendSaveFullTestSuite(
 	}
 
 	// Do the gRPC-call
-	returnMessage, err = fenixGuiTestCaseCaseBuilderServerGrpcClient.SaveFullTestSuite(ctx, gRPCFullTestSuiteMessageToSend)
+	returnMessage, err = fenixGuiTestCaseCaseBuilderServerGrpcClient.SaveFullTestSuite(ctx, fullGrpcTestSuiteMessageToSend)
 
 	// Shouldn't happen
 	if err != nil {

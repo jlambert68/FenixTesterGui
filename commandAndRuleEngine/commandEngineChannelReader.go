@@ -592,7 +592,7 @@ func (commandAndRuleEngine *CommandAndRuleEngineObjectStruct) channelCommandOpen
 	}
 
 	// Trigger Load the TestCase from Database
-	err := commandAndRuleEngine.Testcases.LoadFullTestCaseFromDatabase(uuidToOpen, commandAndRuleEngine.Testcases.CurrentUser)
+	err := commandAndRuleEngine.Testcases.LoadFullTestCaseFromDatabase(uuidToOpen)
 
 	if err != nil {
 

@@ -46,6 +46,9 @@ type TestSuiteModelStruct struct {
 	// Object holding info about if OwnerDomain and TestEnvironment has got any value, used for Locking parts of the GUI in the TestSuite
 	lockValuesForOwnerDomainAndTestEnvironment lockValuesForOwnerDomainAndTestEnvironmentStruct
 
+	// Structure that keeps keeps
+	nonSavedTestSuiteUIModelBinding TestSuiteUIModelBindingStruct
+
 	// TestSuite UI components bindings
 	TestSuiteUIModelBinding TestSuiteUIModelBindingStruct
 

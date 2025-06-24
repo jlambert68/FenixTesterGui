@@ -15,7 +15,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func GenerateTestSuiteTabObject(testCasesModel *testCaseModel.TestCasesModelsStruct) *container.DocTabs {
+func GenerateTestSuiteTabObject(
+	testCasesModel *testCaseModel.TestCasesModelsStruct) *container.DocTabs {
 
 	// Initiate TestSuiteTabsRef-object
 	testSuitesCommandEngine.TestSuiteTabsRef = container.NewDocTabs()

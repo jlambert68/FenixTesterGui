@@ -9,10 +9,10 @@ import (
 	"time"
 )
 
-// LoadDetailedTestCase - Load a Detailed TestCase from Database via gRPC-call to TestCaseBuilderServer
-func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) LoadDetailedTestCase(
-	testCaseUuidToLoad string) (
-	returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.GetDetailedTestCaseResponse) {
+// LoadDetailedTestSuite - Load a Detailed TestSuite from Database via gRPC-call to TestCaseBuilderServer
+func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) LoadDetailedTestSuite(
+	testSuiteUuidToLoad string) (
+	returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.GetDetailedTestSuiteResponse) {
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -35,22 +35,22 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) LoadDetailedTestCase(
 					grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 			}
 
-			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.GetDetailedTestCaseResponse{
-				AckNackResponse:  ackNackResponse,
-				DetailedTestCase: nil,
+			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.GetDetailedTestSuiteResponse{
+				AckNackResponse:   ackNackResponse,
+				DetailedTestSuite: nil,
 			}
 			return returnMessage
 		}
 	}
 
 	// Create the request message
-	var getTestCaseRequestMessage *fenixGuiTestCaseBuilderServerGrpcApi.GetTestCaseRequestMessage
-	getTestCaseRequestMessage = &fenixGuiTestCaseBuilderServerGrpcApi.GetTestCaseRequestMessage{
+	var getTestSuiteRequestMessage *fenixGuiTestCaseBuilderServerGrpcApi.GetTestSuiteRequestMessage
+	getTestSuiteRequestMessage = &fenixGuiTestCaseBuilderServerGrpcApi.GetTestSuiteRequestMessage{
 		UserIdOnComputer:     sharedCode.CurrentUserIdLogedInOnComputer,
 		GCPAuthenticatedUser: sharedCode.CurrentUserAuthenticatedTowardsGCP,
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
 			grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
-		TestCaseUuid: testCaseUuidToLoad,
+		TestSuiteUuid: testSuiteUuidToLoad,
 	}
 
 	// Do gRPC-call
@@ -78,9 +78,9 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) LoadDetailedTestCase(
 					grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 			}
 
-			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.GetDetailedTestCaseResponse{
-				AckNackResponse:  ackNackResponse,
-				DetailedTestCase: nil,
+			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.GetDetailedTestSuiteResponse{
+				AckNackResponse:   ackNackResponse,
+				DetailedTestSuite: nil,
 			}
 			return returnMessage
 		}
@@ -88,21 +88,21 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) LoadDetailedTestCase(
 	}
 
 	// Do the gRPC-call
-	returnMessage, err = fenixGuiTestCaseCaseBuilderServerGrpcClient.GetDetailedTestCase(ctx, getTestCaseRequestMessage)
+	returnMessage, err = fenixGuiTestCaseCaseBuilderServerGrpcClient.GetDetailedTestSuite(ctx, getTestSuiteRequestMessage)
 
 	// Shouldn't happen
 	if err != nil {
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":    "076305f1-5e03-44fb-874e-5600b8fb11b2",
+			"ID":    "39b6d86f-2f57-45db-a7bc-885e77e4b25d",
 			"error": err,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'GetDetailedTestCase'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'GetDetailedTestSuite'")
 
 	} else if returnMessage.AckNackResponse.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":                                     "552c9298-a32e-4f6f-80b1-edb7171cf14f",
+			"ID":                                     "512ad39b-3193-4aee-b54c-8dd664844a7e",
 			"Message from FenixTestGuiBuilderServer": returnMessage.AckNackResponse.Comments,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'GetDetailedTestCase'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'GetDetailedTestSuite'")
 	}
 
 	return returnMessage

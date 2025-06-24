@@ -71,37 +71,6 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 		generateTestSuiteBasicInformationMessage(&supportedTestSuiteDataToBeStored)
 	valuesToBeHashed = append(valuesToBeHashed, testSuiteBasicInformationHash)
 
-	/*
-		// Generate 'UsersChosenTestDataForTestSuiteMessage' to be added to full gRPC-message
-		var testSuiteTestData *fenixGuiTestCaseBuilderServerGrpcApi.UsersChosenTestDataForTestSuiteMessage
-		var testSuiteTestDataHash string
-		testSuiteTestData, testSuiteTestDataHash, err = testSuiteModel.
-			generateTestSuiteTestDataMessage(&supportedTestSuiteDataToBeStored)
-		valuesToBeHashed = append(valuesToBeHashed, testSuiteTestDataHash)
-
-		// Generate 'TestSuitePreview' to be added to full gRPC-message
-		var testSuitePreview *fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewMessage
-		var testSuitePreviewHash string
-		testSuitePreview, testSuitePreviewHash, err = testSuiteModel.generateTestSuitePreviewMessage(
-			&supportedTestSuiteDataToBeStored)
-		valuesToBeHashed = append(valuesToBeHashed, testSuitePreviewHash)
-
-		// Generate 'TestSuiteMetaData' to be added to full gRPC-message
-		var testSuiteMetaData *fenixGuiTestCaseBuilderServerGrpcApi.UserSpecifiedTestSuiteMetaDataMessage
-		var testSuiteMetaDataHash string
-		testSuiteMetaData, testSuiteMetaDataHash, err = testSuiteModel.generateTestSuiteMetaDataMessage(
-			&supportedTestSuiteDataToBeStored)
-		valuesToBeHashed = append(valuesToBeHashed, testSuiteMetaDataHash)
-
-		// Generate 'TestSuiteMetaData' to be added to full gRPC-message
-		var testCasesInTestSuite *fenixGuiTestCaseBuilderServerGrpcApi.TestCasesInTestSuiteMessage
-		var testCasesInTestSuitenHash string
-		testCasesInTestSuite, testCasesInTestSuitenHash, err = testSuiteModel.generateTestCasesInTestSuiteMessage(
-			&supportedTestSuiteDataToBeStored)
-		valuesToBeHashed = append(valuesToBeHashed, testCasesInTestSuitenHash)
-
-
-	*/
 	// Generate 'DeleteDate' to be added to full gRPC-message
 	var testSuiteDeleteDate string
 	var testSuiteDeleteDateHash string
@@ -138,7 +107,6 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 	// Generate full gRPC-message to be sent to TestCaseBuilder-Server
 	var fullTestSuiteMessage fenixGuiTestCaseBuilderServerGrpcApi.FullTestSuiteMessage
 	fullTestSuiteMessage = fenixGuiTestCaseBuilderServerGrpcApi.FullTestSuiteMessage{
-		UserIdentification:        nil,
 		TestSuiteBasicInformation: testSuiteBasicInformation,
 		TestSuiteTestData:         nil,
 		TestSuitePreview:          nil,

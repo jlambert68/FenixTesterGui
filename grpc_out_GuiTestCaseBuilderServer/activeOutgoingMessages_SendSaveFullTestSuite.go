@@ -11,8 +11,8 @@ import (
 
 // SendSaveFullTestSuite - Save full TestSuite to database
 func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendSaveFullTestSuite(
-	gRPCFullTestSuiteMessageToSend *fenixGuiTestCaseBuilderServerGrpcApi.FullTestSuiteMessage,
-) (returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse) {
+	gRPCFullTestSuiteMessageToSend *fenixGuiTestCaseBuilderServerGrpcApi.FullTestSuiteMessage) (
+	returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse) {
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -20,6 +20,17 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendSaveFullTestSuite(
 	var err error
 
 	ctx = context.Background()
+
+	// Add User and Proto-file
+	// Create the request message
+	var userIdentificationMessage *fenixGuiTestCaseBuilderServerGrpcApi.UserIdentificationMessage
+	userIdentificationMessage = &fenixGuiTestCaseBuilderServerGrpcApi.UserIdentificationMessage{
+		UserIdOnComputer:     sharedCode.CurrentUserIdLogedInOnComputer,
+		GCPAuthenticatedUser: sharedCode.CurrentUserAuthenticatedTowardsGCP,
+		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
+			grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
+	}
+	gRPCFullTestSuiteMessageToSend.UserIdentification = userIdentificationMessage
 
 	// Set up connection to Server
 	ctx, err = grpcOut.setConnectionToFenixGuiTestCaseBuilderServer_new(ctx)

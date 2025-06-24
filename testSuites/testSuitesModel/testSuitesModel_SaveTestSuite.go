@@ -138,6 +138,7 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 	// Generate full gRPC-message to be sent to TestCaseBuilder-Server
 	var fullTestSuiteMessage fenixGuiTestCaseBuilderServerGrpcApi.FullTestSuiteMessage
 	fullTestSuiteMessage = fenixGuiTestCaseBuilderServerGrpcApi.FullTestSuiteMessage{
+		UserIdentification:        nil,
 		TestSuiteBasicInformation: testSuiteBasicInformation,
 		TestSuiteTestData:         nil,
 		TestSuitePreview:          nil,

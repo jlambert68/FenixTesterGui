@@ -22,6 +22,9 @@ func (testSuiteModel *TestSuiteModelStruct) copyUiFieldsToModel() {
 	// Copy 'TestSuiteOwnerDomainUuid'
 	testSuiteModel.testSuiteOwnerDomainUuid = testSuiteModel.TestSuiteUIModelBinding.TestSuiteOwnerDomainUuid
 
+	// Copy 'TestSuiteOwnerDomainName'
+	testSuiteModel.testSuiteOwnerDomainName = testSuiteModel.TestSuiteUIModelBinding.TestSuiteOwnerDomainName
+
 	// Copy 'TestSuiteExecutionEnvironment'
 	testSuiteModel.testSuiteExecutionEnvironment = testSuiteModel.TestSuiteUIModelBinding.TestSuiteExecutionEnvironment
 

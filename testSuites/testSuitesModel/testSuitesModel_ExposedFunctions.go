@@ -108,6 +108,11 @@ func createEmptyAndInitiatedTestSuiteModel(
 				MetaDataGroupsMapPtr:                                    &tempMetaDataGroupsMap,
 				SelectedTestSuiteMetaDataAsEntrySlice:                   []*boolbits.Entry{},
 			},
+			TestSuiteTypeHash: "",
+			TestSuiteType: TestSuiteTypeStruct{
+				TestSuiteType:     TestSuiteTypeIsStandard,
+				TestSuiteTypeName: TestSuiteTypeNameMap[TestSuiteTypeIsStandard],
+			},
 		},
 		NoneSavedTestSuiteUIModelBinding: TestSuiteUIModelBindingStruct{
 			TestSuiteDeletionDate:         "",
@@ -128,6 +133,11 @@ func createEmptyAndInitiatedTestSuiteModel(
 				MetaDataGroupsMapPtr:                                    &tempMetaDataGroupsMap,
 				SelectedTestSuiteMetaDataAsEntrySlice:                   []*boolbits.Entry{},
 			},
+			TestSuiteTypeHash: "",
+			TestSuiteType: TestSuiteTypeStruct{
+				TestSuiteType:     TestSuiteTypeIsStandard,
+				TestSuiteTypeName: TestSuiteTypeNameMap[TestSuiteTypeIsStandard],
+			},
 		},
 		TestSuiteUIModelBinding: TestSuiteUIModelBindingStruct{
 			TestSuiteDeletionDate:         "",
@@ -145,6 +155,11 @@ func createEmptyAndInitiatedTestSuiteModel(
 				MetaDataGroupsOrder:                                     []string{},
 				MetaDataGroupsMapPtr:                                    &tempMetaDataGroupsMap,
 				SelectedTestSuiteMetaDataAsEntrySlice:                   []*boolbits.Entry{},
+			},
+			TestSuiteTypeHash: "",
+			TestSuiteType: TestSuiteTypeStruct{
+				TestSuiteType:     TestSuiteTypeIsStandard,
+				TestSuiteTypeName: TestSuiteTypeNameMap[TestSuiteTypeIsStandard],
 			},
 		},
 		testCasesModel: testCasesModel,

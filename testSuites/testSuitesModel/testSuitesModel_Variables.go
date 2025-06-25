@@ -76,7 +76,43 @@ type TestSuiteUIModelBindingStruct struct {
 	TestSuiteMetaDataHash string                   // Hash used to check if changes has been done to MetaData
 	TestSuiteMetaDataPtr  *TestSuiteMetaDataStruct // Holding the current TestSuiteMetaDataSet and what has been selected
 
+	TestSuiteTypeHash string              // The hash of the TestSuiteType
+	TestSuiteType     TestSuiteTypeStruct // Defines the type for the TestSuite, i.e. Standard, Pig...
+
 }
+
+type TestSuiteTypeStruct struct {
+	TestSuiteType     TestSuiteTypeType
+	TestSuiteTypeName TestSuiteTypeNameType
+}
+
+const (
+	TestSuiteTypeIsNotDefined TestSuiteTypeType = iota
+	TestSuiteTypeIsStandard
+	TestSuiteTypeIsPig
+)
+
+const (
+	TestSuiteTypeNameNotDefined TestSuiteTypeNameType = "Not Defined"
+	TestSuiteTypeNameStandard   TestSuiteTypeNameType = "Standard"
+	TestSuiteTypeNamePig        TestSuiteTypeNameType = "Pig"
+)
+
+// TestSuiteTypeNameMap
+// The Map the gives the name for the TestSuite-type
+var TestSuiteTypeNameMap = map[TestSuiteTypeType]TestSuiteTypeNameType{
+	TestSuiteTypeIsNotDefined: TestSuiteTypeNameNotDefined,
+	TestSuiteTypeIsStandard:   TestSuiteTypeNameStandard,
+	TestSuiteTypeIsPig:        TestSuiteTypeNamePig,
+}
+
+// TestSuiteTypeNameType
+// The type defined for the Type-name of the TestSuite
+type TestSuiteTypeNameType string
+
+// TestSuiteTypeType
+// The type defining what 'type' the TestSuite is of
+type TestSuiteTypeType uint8
 
 // TestSuiteMetaDataForDomainsStruct
 // Holding all MetaData for all domains
@@ -168,6 +204,7 @@ const (
 	testSuiteMetaDataIsSupported
 	testCasesInTestSuiteIsSupported
 	deletedDateIsSupported
+	TestSuiteTypeIsSupported
 )
 
 type testSuiteDataToBeStoredStruct struct {

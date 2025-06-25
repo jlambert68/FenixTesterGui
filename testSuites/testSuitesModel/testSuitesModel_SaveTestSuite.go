@@ -95,7 +95,7 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 		&supportedTestSuiteDataToBeStored)
 	valuesToBeHashed = append(valuesToBeHashed, testSuiteDeleteDateHash)
 
-	// Convert 'supportedTestSuiteDataToBeStored' into json and the HAsh
+	// Convert 'supportedTestSuiteDataToBeStored' into json and the Hash
 	var supportedTestSuiteDataToBeStoredAsJsonByteArray []byte
 	var supportedTestSuiteDataToBeStoredAsJsonString string
 	var supportedTestSuiteDataToBeStoredAsHash string
@@ -118,6 +118,13 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 	// Add 'supportedTestSuiteDataToBeStoredAsHash' to hash-array
 	valuesToBeHashed = append(valuesToBeHashed, supportedTestSuiteDataToBeStoredAsHash)
 
+	// Convert 'TestSuiteType' into gRPC-message
+	var testSuiteType *fenixGuiTestCaseBuilderServerGrpcApi.TestSuiteTypeMessage
+	var testSuiteTypeHash string
+	testSuiteType, testSuiteTypeHash, err = testSuiteModel.
+		generateTestSuiteTypeMessage(&supportedTestSuiteDataToBeStored)
+	valuesToBeHashed = append(valuesToBeHashed, testSuiteTypeHash)
+
 	// Create MessageHash
 	messageHash = sharedCode.HashValues(valuesToBeHashed, false)
 
@@ -131,6 +138,7 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 		TestCasesInTestSuite:      nil,
 		DeletedDate:               testSuiteDeleteDate,
 		UpdatedByAndWhen:          nil, // Used when loading TestSuite
+		TestSuiteType:             testSuiteType,
 		MessageHash:               messageHash,
 	}
 
@@ -303,5 +311,33 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteDeleteDateMessage(
 	testSuiteDeleteDateHash = sharedCode.HashSingleValue(testSuiteDeleteDate)
 
 	return testSuiteDeleteDate, testSuiteDeleteDateHash, err
+
+}
+
+// Generates 'TestCasesInTestSuite' to be added to full gRPC-message
+func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteTypeMessage(
+	supportedTestSuiteDataToBeStored *testSuiteDataToBeStoredStruct) (
+	testSuiteTypeMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestSuiteTypeMessage,
+	testSuiteTypeHash string,
+	err error) {
+
+	// This TestSuite has stored 'TestSuiteTypeIsSupported'
+	supportedTestSuiteDataToBeStored.supportedTestSuiteDataToBeStoredMap[TestSuiteTypeIsSupported] = true
+
+	// Create 'testSuiteTypeMessage'
+	testSuiteTypeMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestSuiteTypeMessage{
+		TestSuiteType:     testSuiteTypeMessage.TestSuiteType,
+		TestSuiteTypeName: testSuiteTypeMessage.TestSuiteTypeName,
+	}
+
+	// Create Hash for 'TestSuiteTypeIsSupported'
+	var valuesToBeHashed []string
+	valuesToBeHashed = append(valuesToBeHashed, fmt.Sprintf("%d", testSuiteTypeMessage.TestSuiteType))
+	valuesToBeHashed = append(valuesToBeHashed, fmt.Sprintf("%s", testSuiteTypeMessage.TestSuiteTypeName))
+
+	// Create the Hash of the Message
+	testSuiteTypeHash = sharedCode.HashValues(valuesToBeHashed, true)
+
+	return testSuiteTypeMessage, testSuiteTypeHash, err
 
 }

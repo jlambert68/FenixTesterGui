@@ -3,7 +3,6 @@ package testSuitesModel
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/soundEngine"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -78,52 +77,37 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 	//testSuiteModel.copyUiFieldsToModel()
 
 	// Keeps a list of what is to be saved. Used to ensure that older versions of the TestSuite can later be loaded when new functionality has been added to the client
-	var supportedTestSuiteDataToBeStored testSuiteDataToBeStoredStruct
-	supportedTestSuiteDataToBeStored.supportedTestSuiteDataToBeStoredMap = make(map[supportedTestSuiteDataToBeStoredType]bool)
+	var supportedTestSuiteDataToBeStored testSuiteImplementedFunctionsToBeStoredStruct
+	supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap = make(map[testSuiteImplementedFucntionsType]bool)
 
 	// Generate 'TestSuiteBasicInformation' to be added to full gRPC-message
 	var testSuiteBasicInformation *fenixGuiTestCaseBuilderServerGrpcApi.TestSuiteBasicInformationMessage
 	var testSuiteBasicInformationHash string
 	testSuiteBasicInformation, testSuiteBasicInformationHash, err = testSuiteModel.
-		generateTestSuiteBasicInformationMessage(&supportedTestSuiteDataToBeStored)
+		generateTestSuiteBasicInformationMessageWhenSaving(&supportedTestSuiteDataToBeStored)
 	valuesToBeHashed = append(valuesToBeHashed, testSuiteBasicInformationHash)
 
 	// Generate 'DeleteDate' to be added to full gRPC-message
 	var testSuiteDeleteDate string
 	var testSuiteDeleteDateHash string
-	testSuiteDeleteDate, testSuiteDeleteDateHash, err = testSuiteModel.generateTestSuiteDeleteDateMessage(
+	testSuiteDeleteDate, testSuiteDeleteDateHash, err = testSuiteModel.generateTestSuiteDeleteDateMessageWhenSaving(
 		&supportedTestSuiteDataToBeStored)
 	valuesToBeHashed = append(valuesToBeHashed, testSuiteDeleteDateHash)
-
-	// Convert 'supportedTestSuiteDataToBeStored' into json and the Hash
-	var supportedTestSuiteDataToBeStoredAsJsonByteArray []byte
-	var supportedTestSuiteDataToBeStoredAsJsonString string
-	var supportedTestSuiteDataToBeStoredAsHash string
-	supportedTestSuiteDataToBeStoredAsJsonByteArray, err = json.Marshal(supportedTestSuiteDataToBeStored.supportedTestSuiteDataToBeStoredMap)
-	if err != nil {
-
-		errorId := "f6a1789c-d50a-4989-bebc-d10395377ec2"
-		err = errors.New(fmt.Sprintf("couldn't marshal 'supportedTestSuiteDataToBeStored'. Error = '%s'. [ErrorID: %s]",
-			err.Error(),
-			errorId))
-
-		fmt.Println(err) // TODO Send on Error-channel
-
-		return err
-	}
-
-	supportedTestSuiteDataToBeStoredAsJsonString = string(supportedTestSuiteDataToBeStoredAsJsonByteArray)
-	supportedTestSuiteDataToBeStoredAsHash = sharedCode.HashSingleValue(supportedTestSuiteDataToBeStoredAsJsonString)
-
-	// Add 'supportedTestSuiteDataToBeStoredAsHash' to hash-array
-	valuesToBeHashed = append(valuesToBeHashed, supportedTestSuiteDataToBeStoredAsHash)
 
 	// Convert 'TestSuiteType' into gRPC-message
 	var testSuiteType *fenixGuiTestCaseBuilderServerGrpcApi.TestSuiteTypeMessage
 	var testSuiteTypeHash string
 	testSuiteType, testSuiteTypeHash, err = testSuiteModel.
-		generateTestSuiteTypeMessage(&supportedTestSuiteDataToBeStored)
+		generateTestSuiteTypeMessageWhenSaving(&supportedTestSuiteDataToBeStored)
 	valuesToBeHashed = append(valuesToBeHashed, testSuiteTypeHash)
+
+	// Convert 'supportedTestSuiteDataToBeStored'to be added to full gRPC-message
+	var testSuiteImplementedFunctionsMap map[int32]bool
+	var testSuiteImplementedFunctionsMapHash string
+	testSuiteImplementedFunctionsMap = make(map[int32]bool)
+	testSuiteImplementedFunctionsMap, testSuiteImplementedFunctionsMapHash, err = testSuiteModel.
+		generateTestSuiteImplementedFunctionsMapWhenSaving(&supportedTestSuiteDataToBeStored)
+	valuesToBeHashed = append(valuesToBeHashed, testSuiteImplementedFunctionsMapHash)
 
 	// Create MessageHash
 	messageHash = sharedCode.HashValues(valuesToBeHashed, false)
@@ -131,15 +115,16 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 	// Generate full gRPC-message to be sent to TestCaseBuilder-Server
 	var fullTestSuiteMessage fenixGuiTestCaseBuilderServerGrpcApi.FullTestSuiteMessage
 	fullTestSuiteMessage = fenixGuiTestCaseBuilderServerGrpcApi.FullTestSuiteMessage{
-		TestSuiteBasicInformation: testSuiteBasicInformation,
-		TestSuiteTestData:         nil,
-		TestSuitePreview:          nil,
-		TestSuiteMetaData:         nil,
-		TestCasesInTestSuite:      nil,
-		DeletedDate:               testSuiteDeleteDate,
-		UpdatedByAndWhen:          nil, // Used when loading TestSuite
-		TestSuiteType:             testSuiteType,
-		MessageHash:               messageHash,
+		TestSuiteBasicInformation:        testSuiteBasicInformation,
+		TestSuiteTestData:                nil,
+		TestSuitePreview:                 nil,
+		TestSuiteMetaData:                nil,
+		TestCasesInTestSuite:             nil,
+		DeletedDate:                      testSuiteDeleteDate,
+		UpdatedByAndWhen:                 nil, // Used when loading TestSuite
+		TestSuiteType:                    testSuiteType,
+		TestSuiteImplementedFunctionsMap: testSuiteImplementedFunctionsMap,
+		MessageHash:                      messageHash,
 	}
 
 	// Send using gRPC
@@ -206,14 +191,14 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 }
 
 // Generates 'TestSuiteBasicInformation' to be added to full gRPC-message
-func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteBasicInformationMessage(
-	supportedTestSuiteDataToBeStored *testSuiteDataToBeStoredStruct) (
+func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteBasicInformationMessageWhenSaving(
+	supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct) (
 	testSuiteBasicInformation *fenixGuiTestCaseBuilderServerGrpcApi.TestSuiteBasicInformationMessage,
 	testSuiteBasicInformationHash string,
 	err error) {
 
 	// This TestSuite has stored 'testSuiteBasicInformationIsSupported'
-	supportedTestSuiteDataToBeStored.supportedTestSuiteDataToBeStoredMap[testSuiteBasicInformationIsSupported] = true
+	supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap[testSuiteBasicInformationIsSupported] = true
 
 	// Generate TestSuiteVersion
 	var testSuiteVersion uint32
@@ -243,7 +228,7 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteBasicInformationMes
 }
 
 // Generates 'UsersChosenTestDataForTestSuiteMessage' to be added to full gRPC-message
-func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteTestDataMessage(supportedTestSuiteDataToBeStored *[]supportedTestSuiteDataToBeStoredType) (
+func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteTestDataMessageWhenSaving(supportedTestSuiteDataToBeStored *[]testSuiteImplementedFucntionsType) (
 	testSuiteTestData *fenixGuiTestCaseBuilderServerGrpcApi.UsersChosenTestDataForTestSuiteMessage,
 	testSuiteTestDataHash string,
 	err error) {
@@ -256,7 +241,7 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteTestDataMessage(sup
 }
 
 // Generates 'TestSuitePreview' to be added to full gRPC-message
-func (testSuiteModel *TestSuiteModelStruct) generateTestSuitePreviewMessage(supportedTestSuiteDataToBeStored *[]supportedTestSuiteDataToBeStoredType) (
+func (testSuiteModel *TestSuiteModelStruct) generateTestSuitePreviewMessageWhenSaving(supportedTestSuiteDataToBeStored *[]testSuiteImplementedFucntionsType) (
 	testSuitePreview *fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewMessage,
 	testSuitePreviewHash string,
 	err error) {
@@ -269,7 +254,7 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuitePreviewMessage(supp
 }
 
 // Generates 'TestSuiteMetaData' to be added to full gRPC-message
-func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteMetaDataMessage(supportedTestSuiteDataToBeStored *[]supportedTestSuiteDataToBeStoredType) (
+func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteMetaDataMessageWhenSaving(supportedTestSuiteDataToBeStored *[]testSuiteImplementedFucntionsType) (
 	testSuiteMetaData *fenixGuiTestCaseBuilderServerGrpcApi.UserSpecifiedTestSuiteMetaDataMessage,
 	testSuiteMetaDataHash string,
 	err error) {
@@ -282,7 +267,7 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteMetaDataMessage(sup
 }
 
 // Generates 'TestCasesInTestSuite' to be added to full gRPC-message
-func (testSuiteModel *TestSuiteModelStruct) generateTestCasesInTestSuiteMessage(supportedTestSuiteDataToBeStored *[]supportedTestSuiteDataToBeStoredType) (
+func (testSuiteModel *TestSuiteModelStruct) generateTestCasesInTestSuiteMessageWhenSaving(supportedTestSuiteDataToBeStored *[]testSuiteImplementedFucntionsType) (
 	testCasesInTestSuite *fenixGuiTestCaseBuilderServerGrpcApi.TestCasesInTestSuiteMessage,
 	testCasesInTestSuitenHash string,
 	err error) {
@@ -295,14 +280,14 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestCasesInTestSuiteMessage(
 }
 
 // Generates 'TestSuiteDeleteData' to be added to full gRPC-message
-func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteDeleteDateMessage(
-	supportedTestSuiteDataToBeStored *testSuiteDataToBeStoredStruct) (
+func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteDeleteDateMessageWhenSaving(
+	supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct) (
 	testSuiteDeleteDate string,
 	testSuiteDeleteDateHash string,
 	err error) {
 
 	// This TestSuite has stored 'deletedDateIsSupported'
-	supportedTestSuiteDataToBeStored.supportedTestSuiteDataToBeStoredMap[deletedDateIsSupported] = true
+	supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap[deletedDateIsSupported] = true
 
 	// Create 'testSuiteDeleteDate'
 	testSuiteDeleteDate = testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteDeletionDate
@@ -315,19 +300,20 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteDeleteDateMessage(
 }
 
 // Generates 'TestCasesInTestSuite' to be added to full gRPC-message
-func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteTypeMessage(
-	supportedTestSuiteDataToBeStored *testSuiteDataToBeStoredStruct) (
+func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteTypeMessageWhenSaving(
+	supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct) (
 	testSuiteTypeMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestSuiteTypeMessage,
 	testSuiteTypeHash string,
 	err error) {
 
 	// This TestSuite has stored 'testSuiteTypeIsSupported'
-	supportedTestSuiteDataToBeStored.supportedTestSuiteDataToBeStoredMap[testSuiteTypeIsSupported] = true
+	supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap[testSuiteTypeIsSupported] = true
 
 	// Create 'testSuiteTypeMessage'
 	testSuiteTypeMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestSuiteTypeMessage{
-		TestSuiteType:     testSuiteTypeMessage.TestSuiteType,
-		TestSuiteTypeName: testSuiteTypeMessage.TestSuiteTypeName,
+		TestSuiteType: fenixGuiTestCaseBuilderServerGrpcApi.TestSuiteTypeEnum(
+			testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteType.TestSuiteType),
+		TestSuiteTypeName: string(testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteType.TestSuiteTypeName),
 	}
 
 	// Create Hash for 'testSuiteTypeIsSupported'
@@ -339,5 +325,34 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteTypeMessage(
 	testSuiteTypeHash = sharedCode.HashValues(valuesToBeHashed, true)
 
 	return testSuiteTypeMessage, testSuiteTypeHash, err
+
+}
+
+// Generates 'TestSuiteImplementedFunctionsMap' to be added to full gRPC-message
+func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteImplementedFunctionsMapWhenSaving(
+	supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct) (
+	testSuiteImplementedFunctionsMap map[int32]bool,
+	testSuiteImplementedFunctionsMapHash string,
+	err error) {
+
+	// This TestSuite has stored 'testSuiteImplementedFunctionsMapIsSupported'
+	supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap[testSuiteImplementedFunctionsMapIsSupported] = true
+
+	// Create 'testSuiteImplementedFunctionsMap'
+	testSuiteImplementedFunctionsMap = make(map[int32]bool)
+
+	// Loop 'supportedTestSuiteDataToBeStored' and convert to gRPC-message
+	var valuesToBeHashed []string
+	for testSuiteImplementedFunction, testSuiteImplementedFunctionValue := range supportedTestSuiteDataToBeStored.
+		testSuiteImplementedFunctionsMap {
+
+		testSuiteImplementedFunctionsMap[int32(testSuiteImplementedFunction)] = testSuiteImplementedFunctionValue
+		valuesToBeHashed = append(valuesToBeHashed, fmt.Sprintf("%d", testSuiteImplementedFunction))
+	}
+
+	// Create the Hash of the Message
+	testSuiteImplementedFunctionsMapHash = sharedCode.HashValues(valuesToBeHashed, true)
+
+	return testSuiteImplementedFunctionsMap, testSuiteImplementedFunctionsMapHash, err
 
 }

@@ -195,18 +195,19 @@ const (
 )
 
 // The type for the constants used to specify what has been stored in database
-type supportedTestSuiteDataToBeStoredType uint8
+type testSuiteImplementedFucntionsType uint8
 
 const (
-	testSuiteBasicInformationIsSupported supportedTestSuiteDataToBeStoredType = iota
+	testSuiteBasicInformationIsSupported testSuiteImplementedFucntionsType = iota
 	testSuiteTestDataIsSupported
 	testSuitePreviewIsSupported
 	testSuiteMetaDataIsSupported
 	testCasesInTestSuiteIsSupported
 	deletedDateIsSupported
 	testSuiteTypeIsSupported
+	testSuiteImplementedFunctionsMapIsSupported
 )
 
-type testSuiteDataToBeStoredStruct struct {
-	supportedTestSuiteDataToBeStoredMap map[supportedTestSuiteDataToBeStoredType]bool `json:"supportedTestSuiteDataToBeStoredMap"`
+type testSuiteImplementedFunctionsToBeStoredStruct struct {
+	testSuiteImplementedFunctionsMap map[testSuiteImplementedFucntionsType]bool `json:"testSuiteImplementedFunctionsMap"`
 }

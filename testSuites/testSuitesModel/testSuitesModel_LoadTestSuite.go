@@ -140,92 +140,125 @@ func (testSuiteModel *TestSuiteModelStruct) extractTestSuiteImplementedFunctions
 
 // Generates 'TestSuiteBasicInformation' from gRPC-message
 func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteBasicInformationMessageWhenLoading(
-	supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct) (
+	supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct,
 	testSuiteBasicInformation *fenixGuiTestCaseBuilderServerGrpcApi.TestSuiteBasicInformationMessage,
-	testSuiteBasicInformationHash string,
+	updatedByAndWhenMessage *fenixGuiTestCaseBuilderServerGrpcApi.UpdatedByAndWhenMessage,
+	messageHash string) (
 	err error) {
 
+	var existInMap bool
+
 	// Check if this TestSuite was stored with 'testSuiteBasicInformationIsSupported'
-	if supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap[testSuiteBasicInformationIsSupported] == false {
-		return nil, "", errors.New(fmt.Sprintf("TestSuiteBasicInformation is not supported"))
+	_, existInMap = supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap[testSuiteBasicInformationIsSupported]
+
+	if existInMap == false {
+		// Do nothing
+
+		return err
 	}
 
-	// Generate TestSuiteVersion
-	var testSuiteVersion uint32
-	if testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteIsNew == true {
-		testSuiteVersion = 1
-	} else {
-		testSuiteVersion = testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteVersion + 1
-	}
+	// Copy values
+	testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteName = testSuiteBasicInformation.GetTestSuiteName()
+	testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteDescription = testSuiteBasicInformation.GetTestSuiteDescription()
+	testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteOwnerDomainUuid = testSuiteBasicInformation.GetDomainUuid()
+	testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteOwnerDomainName = testSuiteBasicInformation.GetDomainName()
+	testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteExecutionEnvironment = "xxxxxxxxxxxxxxxxxxxxxxxxxx"
 
-	// Create 'testSuiteBasicInformation'
-	testSuiteBasicInformation = &fenixGuiTestCaseBuilderServerGrpcApi.TestSuiteBasicInformationMessage{
-		DomainUuid:           testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainUuid,
-		DomainName:           testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainName,
-		TestSuiteUuid:        testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteUuid,
-		TestSuiteVersion:     testSuiteVersion,
-		TestSuiteName:        testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteName,
-		TestSuiteDescription: testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteDescription,
-	}
+	testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteUuid = testSuiteBasicInformation.GetTestSuiteUuid()
+	testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteVersion = testSuiteBasicInformation.GetTestSuiteVersion()
+	testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.createdByGcpLogin = updatedByAndWhenMessage.GetCreatedByGcpLogin()
+	testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.createdByComputerLogin = updatedByAndWhenMessage.GetCreatedByComputerLogin()
+	testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.createdDate = updatedByAndWhenMessage.GetCreatedDate()
+	testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.lastChangedByGcpLogin = updatedByAndWhenMessage.GetGCPAuthenticatedUser()
+	testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.lastChangedByComputerLogin = updatedByAndWhenMessage.GetUserIdOnComputer()
+	testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.lastChangedDate = updatedByAndWhenMessage.GetUpdateTimeStamp()
+	testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteSavedMessageHash = messageHash
 
-	// Create the Hash of the Message
-	var tempJson string
-	tempJson = protojson.Format(testSuiteBasicInformation)
-	testSuiteBasicInformationHash = sharedCode.HashSingleValue(tempJson)
-
-	return testSuiteBasicInformation, testSuiteBasicInformationHash, err
+	return err
 
 }
 
 // Generates 'UsersChosenTestDataForTestSuiteMessage' from gRPC-message
-func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteTestDataMessageWhenLoading(supportedTestSuiteDataToBeStored *[]testSuiteImplementedFucntionsType) (
-	testSuiteTestData *fenixGuiTestCaseBuilderServerGrpcApi.UsersChosenTestDataForTestSuiteMessage,
-	testSuiteTestDataHash string,
+func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteTestDataMessageWhenLoading(
+	supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct,
+	testSuiteTestData *fenixGuiTestCaseBuilderServerGrpcApi.UsersChosenTestDataForTestSuiteMessage) (
 	err error) {
 
-	// Check if this TestSuite was stored with 'testSuiteTestDataIsSupported'
-	//*supportedTestSuiteDataToBeStored = append(*supportedTestSuiteDataToBeStored, testSuiteTestDataIsSupported)
+	var existInMap bool
 
-	return testSuiteTestData, testSuiteTestDataHash, err
+	// Check if this TestSuite was stored with 'testSuiteTestDataIsSupported'
+	_, existInMap = supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap[testSuiteTestDataIsSupported]
+
+	if existInMap == false {
+		// Do nothing
+
+		return err
+	}
+
+	return err
 
 }
 
 // Generates 'TestSuitePreview' from gRPC-message
-func (testSuiteModel *TestSuiteModelStruct) generateTestSuitePreviewMessageWhenLoading(supportedTestSuiteDataToBeStored *[]testSuiteImplementedFucntionsType) (
-	testSuitePreview *fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewMessage,
-	testSuitePreviewHash string,
+func (testSuiteModel *TestSuiteModelStruct) generateTestSuitePreviewMessageWhenLoading(
+	supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct,
+	testSuitePreview *fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewMessage) (
 	err error) {
 
-	// Check if this TestSuite was stored with 'testSuitePreviewIsSupported'
-	//*supportedTestSuiteDataToBeStored = append(*supportedTestSuiteDataToBeStored, testSuitePreviewIsSupported)
+	var existInMap bool
 
-	return testSuitePreview, testSuitePreviewHash, err
+	// Check if this TestSuite was stored with 'testSuitePreviewIsSupported'
+	_, existInMap = supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap[testSuitePreviewIsSupported]
+
+	if existInMap == false {
+		// Do nothing
+
+		return err
+	}
+
+	return err
 
 }
 
 // Generates 'TestSuiteMetaData' from gRPC-message
-func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteMetaDataMessageWhenLoading(supportedTestSuiteDataToBeStored *[]testSuiteImplementedFucntionsType) (
-	testSuiteMetaData *fenixGuiTestCaseBuilderServerGrpcApi.UserSpecifiedTestSuiteMetaDataMessage,
-	testSuiteMetaDataHash string,
+func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteMetaDataMessageWhenLoading(
+	supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct,
+	testSuiteMetaData *fenixGuiTestCaseBuilderServerGrpcApi.UserSpecifiedTestSuiteMetaDataMessage) (
 	err error) {
 
-	// Check if this TestSuite was stored with 'testSuiteMetaDataIsSupported'
-	//*supportedTestSuiteDataToBeStored = append(*supportedTestSuiteDataToBeStored, testSuiteMetaDataIsSupported)
+	var existInMap bool
 
-	return testSuiteMetaData, testSuiteMetaDataHash, err
+	// Check if this TestSuite was stored with 'testSuiteMetaDataIsSupported'
+	_, existInMap = supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap[testSuiteMetaDataIsSupported]
+
+	if existInMap == false {
+		// Do nothing
+
+		return err
+	}
+
+	return err
 
 }
 
 // Generates 'TestCasesInTestSuite' from gRPC-message
-func (testSuiteModel *TestSuiteModelStruct) generateTestCasesInTestSuiteMessageWhenLoading(supportedTestSuiteDataToBeStored *[]testSuiteImplementedFucntionsType) (
-	testCasesInTestSuite *fenixGuiTestCaseBuilderServerGrpcApi.TestCasesInTestSuiteMessage,
-	testCasesInTestSuitenHash string,
+func (testSuiteModel *TestSuiteModelStruct) generateTestCasesInTestSuiteMessageWhenLoading(
+	supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct,
+	testCasesInTestSuiteFromGrpc *fenixGuiTestCaseBuilderServerGrpcApi.TestCasesInTestSuiteMessage) (
 	err error) {
 
-	// Check if this TestSuite was stored with 'testCasesInTestSuiteIsSupported'
-	//*supportedTestSuiteDataToBeStored = append(*supportedTestSuiteDataToBeStored, testCasesInTestSuiteIsSupported)
+	var existInMap bool
 
-	return testCasesInTestSuite, testCasesInTestSuitenHash, err
+	// Check if this TestSuite was stored with 'testCasesInTestSuiteIsSupported'
+	_, existInMap = supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap[testCasesInTestSuiteIsSupported]
+
+	if existInMap == false {
+		// Do nothing
+
+		return err
+	}
+
+	return err
 
 }
 
@@ -235,16 +268,21 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteDeleteDateMessageWh
 	testSuiteDeleteDateFromGrpc string) (
 	err error) {
 
+	var existInMap bool
+
 	// Check if this TestSuite was stored with 'deletedDateIsSupported'
-	supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap[deletedDateIsSupported] = true
+	_, existInMap = supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap[deletedDateIsSupported]
+
+	if existInMap == false {
+		// Do nothing
+
+		return err
+	}
 
 	// Create 'testSuiteDeleteDate'
-	testSuiteDeleteDate = testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteDeletionDate
+	testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteDeletionDate = testSuiteDeleteDateFromGrpc
 
-	// Create the Hash of the Message
-	testSuiteDeleteDateHash = sharedCode.HashSingleValue(testSuiteDeleteDate)
-
-	return testSuiteDeleteDate, testSuiteDeleteDateHash, err
+	return err
 
 }
 
@@ -260,6 +298,8 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteTypeMessageWhenLoad
 	_, existInMap = supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap[testSuiteTypeIsSupported]
 
 	if existInMap == false {
+		// Do nothing
+
 		return err
 	}
 

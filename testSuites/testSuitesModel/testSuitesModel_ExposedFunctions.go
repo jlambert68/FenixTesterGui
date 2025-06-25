@@ -4,13 +4,16 @@ import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
 	uuidGenerator "github.com/google/uuid"
+	"github.com/jlambert68/Fast_BitFilter_MetaData/boolbits/boolbits"
+	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	"github.com/jlambert68/FenixScriptEngine/testDataEngine"
 )
 
 // GetTestSuiteUuid
 // Gets the TestSuites Uuid
 func (testSuiteModel *TestSuiteModelStruct) GetTestSuiteUuid() string {
 
-	return testSuiteModel.testSuiteUuid
+	return testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteUuid
 
 }
 
@@ -18,7 +21,7 @@ func (testSuiteModel *TestSuiteModelStruct) GetTestSuiteUuid() string {
 // Gets the person that did log in towards GCP
 func (testSuiteModel *TestSuiteModelStruct) GetCreatedByGcpLogin() string {
 
-	return testSuiteModel.createdByGcpLogin
+	return testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.createdByGcpLogin
 
 }
 
@@ -26,7 +29,7 @@ func (testSuiteModel *TestSuiteModelStruct) GetCreatedByGcpLogin() string {
 // Gets the person that is logged into the computer
 func (testSuiteModel *TestSuiteModelStruct) GetCreatedByComputerLogin() string {
 
-	return testSuiteModel.createdByComputerLogin
+	return testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.createdByComputerLogin
 
 }
 
@@ -34,7 +37,7 @@ func (testSuiteModel *TestSuiteModelStruct) GetCreatedByComputerLogin() string {
 // Gets the date when the TestSuite was first created
 func (testSuiteModel *TestSuiteModelStruct) GetCreatedDate() string {
 
-	return testSuiteModel.createdDate
+	return testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.createdDate
 
 }
 
@@ -42,7 +45,7 @@ func (testSuiteModel *TestSuiteModelStruct) GetCreatedDate() string {
 // Gets the person that did log in towards GCP when TestSuite was last changed and saved
 func (testSuiteModel *TestSuiteModelStruct) GetLastChangedByGcpLogin() string {
 
-	return testSuiteModel.lastChangedByGcpLogin
+	return testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.lastChangedByGcpLogin
 
 }
 
@@ -50,7 +53,7 @@ func (testSuiteModel *TestSuiteModelStruct) GetLastChangedByGcpLogin() string {
 // Gets the person that is logged into the computer when TestSuite was last changed and saved
 func (testSuiteModel *TestSuiteModelStruct) GetLastChangedByComputerLogin() string {
 
-	return testSuiteModel.lastChangedByComputerLogin
+	return testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.lastChangedByComputerLogin
 
 }
 
@@ -58,47 +61,73 @@ func (testSuiteModel *TestSuiteModelStruct) GetLastChangedByComputerLogin() stri
 // Gets the date when the TestSuite was last changed and saved
 func (testSuiteModel *TestSuiteModelStruct) GetLastChangedDate() string {
 
-	return testSuiteModel.lastChangedDate
+	return testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.lastChangedDate
 
 }
 
-// GenerateNewTestSuiteModelObject
-// Generated s new TestSuiteModel-object
-func GenerateNewTestSuiteModelObject(
+// createEmptyAndInitiatedTestSuiteModel
+// Generates a fully initiated TestSuiteModelStruct
+func createEmptyAndInitiatedTestSuiteModel(
 	testCasesModel *testCaseModel.TestCasesModelsStruct) (
-	newTestSuiteModel *TestSuiteModelStruct) {
+	emptyAndInitiatedTestSuiteModel *TestSuiteModelStruct) {
 
-	// Generate new TestSuite-UUID
-	var testSuiteUuid string
-	testSuiteUuid = uuidGenerator.New().String()
+	tempMetaDataGroupsMap := make(map[string]*MetaDataGroupStruct)
 
-	// Generate the new TestSuiteModelStruct
-	newTestSuiteModel = &TestSuiteModelStruct{
-		testSuiteDeletionDate:         "",
-		testSuiteUuid:                 testSuiteUuid,
-		testSuiteName:                 "",
-		testSuiteDescription:          "",
-		testSuiteOwnerDomainUuid:      "",
-		testSuiteOwnerDomainName:      "",
-		createdByGcpLogin:             sharedCode.CurrentUserAuthenticatedTowardsGCP,
-		createdByComputerLogin:        sharedCode.CurrentUserIdLogedInOnComputer,
-		createdDate:                   "",
-		lastChangedByGcpLogin:         "",
-		lastChangedByComputerLogin:    "",
-		lastChangedDate:               "",
-		testSuiteExecutionEnvironment: "",
-		testSuiteIsNew:                true,
-		testSuiteMetaDataPtr: &TestSuiteMetaDataStruct{
-			CurrentSelectedDomainUuid:                               "",
-			TestSuiteMetaDataMessageJsonForTestSuiteWhenLastSaved:   nil,
-			TestSuiteMetaDataMessageStructForTestSuiteWhenLastSaved: nil,
-			MetaDataGroupsOrder:                                     nil,
-			MetaDataGroupsMapPtr:                                    nil,
-			SelectedTestSuiteMetaDataAsEntrySlice:                   nil,
+	// Generate the new and initiated TestSuiteModelStruct
+	emptyAndInitiatedTestSuiteModel = &TestSuiteModelStruct{
+		testSuiteModelDataThatCanNotBeChangedFromUI: testSuiteModelDataThatCaNotBeChangedFromUIStruct{
+			testSuiteUuid:              "",
+			createdByGcpLogin:          sharedCode.CurrentUserAuthenticatedTowardsGCP,
+			createdByComputerLogin:     sharedCode.CurrentUserIdLogedInOnComputer,
+			createdDate:                "",
+			lastChangedByGcpLogin:      "",
+			lastChangedByComputerLogin: "",
+			lastChangedDate:            "",
 		},
 		lockValuesForOwnerDomainAndTestEnvironment: lockValuesForOwnerDomainAndTestEnvironmentStruct{
 			OwnerDomainHasValue:     false,
 			TestEnvironmentHasValue: false,
+			LockButtonHaBeenClicked: false,
+		},
+		savedTestSuiteUIModelBinding: TestSuiteUIModelBindingStruct{
+			TestSuiteDeletionDate:         "",
+			TestSuiteName:                 "",
+			TestSuiteDescription:          "",
+			TestSuiteOwnerDomainUuid:      "",
+			TestSuiteOwnerDomainName:      "",
+			TestSuiteExecutionEnvironment: "",
+			TestSuiteIsNew:                false,
+			TestSuiteTestDataHash:         "",
+			TestDataPtr:                   &testDataEngine.TestDataForGroupObjectStruct{},
+			TestSuiteMetaDataHash:         "",
+			TestSuiteMetaDataPtr: &TestSuiteMetaDataStruct{
+				CurrentSelectedDomainUuid:                               "",
+				TestSuiteMetaDataMessageJsonForTestSuiteWhenLastSaved:   &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseAndTestSuiteMetaDataForOneDomainMessage{},
+				TestSuiteMetaDataMessageStructForTestSuiteWhenLastSaved: &TestSuiteMetaDataForDomainStruct{},
+				MetaDataGroupsOrder:                                     []string{},
+				MetaDataGroupsMapPtr:                                    &tempMetaDataGroupsMap,
+				SelectedTestSuiteMetaDataAsEntrySlice:                   []*boolbits.Entry{},
+			},
+		},
+		NoneSavedTestSuiteUIModelBinding: TestSuiteUIModelBindingStruct{
+			TestSuiteDeletionDate:         "",
+			TestSuiteName:                 "",
+			TestSuiteDescription:          "",
+			TestSuiteOwnerDomainUuid:      "",
+			TestSuiteOwnerDomainName:      "",
+			TestSuiteExecutionEnvironment: "",
+			TestSuiteIsNew:                false,
+			TestSuiteTestDataHash:         "",
+			TestDataPtr:                   &testDataEngine.TestDataForGroupObjectStruct{},
+			TestSuiteMetaDataHash:         "",
+			TestSuiteMetaDataPtr: &TestSuiteMetaDataStruct{
+				CurrentSelectedDomainUuid:                               "",
+				TestSuiteMetaDataMessageJsonForTestSuiteWhenLastSaved:   &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseAndTestSuiteMetaDataForOneDomainMessage{},
+				TestSuiteMetaDataMessageStructForTestSuiteWhenLastSaved: &TestSuiteMetaDataForDomainStruct{},
+				MetaDataGroupsOrder:                                     []string{},
+				MetaDataGroupsMapPtr:                                    &tempMetaDataGroupsMap,
+				SelectedTestSuiteMetaDataAsEntrySlice:                   []*boolbits.Entry{},
+			},
 		},
 		TestSuiteUIModelBinding: TestSuiteUIModelBindingStruct{
 			TestSuiteDeletionDate:         "",
@@ -107,19 +136,123 @@ func GenerateNewTestSuiteModelObject(
 			TestSuiteOwnerDomainUuid:      "",
 			TestSuiteOwnerDomainName:      "",
 			TestSuiteExecutionEnvironment: "",
-			TestSuiteIsNew:                true,
-			TestDataPtr:                   nil,
+			TestSuiteIsNew:                false,
+			TestDataPtr:                   &testDataEngine.TestDataForGroupObjectStruct{},
 			TestSuiteMetaDataPtr: &TestSuiteMetaDataStruct{
 				CurrentSelectedDomainUuid:                               "",
-				TestSuiteMetaDataMessageJsonForTestSuiteWhenLastSaved:   nil,
-				TestSuiteMetaDataMessageStructForTestSuiteWhenLastSaved: nil,
-				MetaDataGroupsOrder:                                     nil,
-				MetaDataGroupsMapPtr:                                    nil,
-				SelectedTestSuiteMetaDataAsEntrySlice:                   nil,
+				TestSuiteMetaDataMessageJsonForTestSuiteWhenLastSaved:   &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseAndTestSuiteMetaDataForOneDomainMessage{},
+				TestSuiteMetaDataMessageStructForTestSuiteWhenLastSaved: &TestSuiteMetaDataForDomainStruct{},
+				MetaDataGroupsOrder:                                     []string{},
+				MetaDataGroupsMapPtr:                                    &tempMetaDataGroupsMap,
+				SelectedTestSuiteMetaDataAsEntrySlice:                   []*boolbits.Entry{},
 			},
 		},
 		testCasesModel: testCasesModel,
 	}
+
+	return emptyAndInitiatedTestSuiteModel
+}
+
+// GenerateNewTestSuiteModelObject
+// Generated s new TestSuiteModel-object
+func GenerateNewTestSuiteModelObject(
+	existingTestSuiteUuid string,
+	testCasesModel *testCaseModel.TestCasesModelsStruct) (
+	newTestSuiteModel *TestSuiteModelStruct) {
+
+	// Generate new TestSuite-UUID, if not exist
+	var testSuiteUuid string
+	if existingTestSuiteUuid != "" {
+		// Use existing TestSuiteUuid
+		testSuiteUuid = existingTestSuiteUuid
+	} else {
+		// Generate a new TestSuiteUuid
+		testSuiteUuid = uuidGenerator.New().String()
+	}
+
+	// Generate the new TestSuiteModelStruct
+	newTestSuiteModel = createEmptyAndInitiatedTestSuiteModel(testCasesModel)
+	newTestSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteUuid = testSuiteUuid
+	newTestSuiteModel.savedTestSuiteUIModelBinding.TestSuiteIsNew = true
+	newTestSuiteModel.TestSuiteUIModelBinding.TestSuiteIsNew = true
+	/*
+		newTestSuiteModel = &TestSuiteModelStruct{
+			testSuiteModelDataThatCanNotBeChangedFromUI: testSuiteModelDataThatCaNotBeChangedFromUIStruct{
+				testSuiteUuid:              testSuiteUuid,
+				createdByGcpLogin:          sharedCode.CurrentUserAuthenticatedTowardsGCP,
+				createdByComputerLogin:     sharedCode.CurrentUserIdLogedInOnComputer,
+				createdDate:                "",
+				lastChangedByGcpLogin:      "",
+				lastChangedByComputerLogin: "",
+				lastChangedDate:            "",
+			},
+			lockValuesForOwnerDomainAndTestEnvironment: lockValuesForOwnerDomainAndTestEnvironmentStruct{
+				OwnerDomainHasValue:     false,
+				TestEnvironmentHasValue: false,
+				LockButtonHaBeenClicked: false,
+			},
+			savedTestSuiteUIModelBinding: TestSuiteUIModelBindingStruct{
+				TestSuiteDeletionDate:         "",
+				TestSuiteName:                 "",
+				TestSuiteDescription:          "",
+				TestSuiteOwnerDomainUuid:      "",
+				TestSuiteOwnerDomainName:      "",
+				TestSuiteExecutionEnvironment: "",
+				TestSuiteIsNew:                true,
+				TestSuiteTestDataHash:         "",
+				TestDataPtr:                   nil,
+				TestSuiteMetaDataHash:         "",
+				TestSuiteMetaDataPtr: &TestSuiteMetaDataStruct{
+					CurrentSelectedDomainUuid:                               "",
+					TestSuiteMetaDataMessageJsonForTestSuiteWhenLastSaved:   nil,
+					TestSuiteMetaDataMessageStructForTestSuiteWhenLastSaved: nil,
+					MetaDataGroupsOrder:                                     nil,
+					MetaDataGroupsMapPtr:                                    nil,
+					SelectedTestSuiteMetaDataAsEntrySlice:                   nil,
+				},
+			},
+			NoneSavedTestSuiteUIModelBinding: TestSuiteUIModelBindingStruct{
+				TestSuiteDeletionDate:         "",
+				TestSuiteName:                 "",
+				TestSuiteDescription:          "",
+				TestSuiteOwnerDomainUuid:      "",
+				TestSuiteOwnerDomainName:      "",
+				TestSuiteExecutionEnvironment: "",
+				TestSuiteIsNew:                false,
+				TestSuiteTestDataHash:         "",
+				TestDataPtr:                   nil,
+				TestSuiteMetaDataHash:         "",
+				TestSuiteMetaDataPtr: &TestSuiteMetaDataStruct{
+					CurrentSelectedDomainUuid:                               "",
+					TestSuiteMetaDataMessageJsonForTestSuiteWhenLastSaved:   nil,
+					TestSuiteMetaDataMessageStructForTestSuiteWhenLastSaved: nil,
+					MetaDataGroupsOrder:                                     nil,
+					MetaDataGroupsMapPtr:                                    nil,
+					SelectedTestSuiteMetaDataAsEntrySlice:                   nil,
+				},
+			},
+			TestSuiteUIModelBinding: TestSuiteUIModelBindingStruct{
+				TestSuiteDeletionDate:         "",
+				TestSuiteName:                 "",
+				TestSuiteDescription:          "",
+				TestSuiteOwnerDomainUuid:      "",
+				TestSuiteOwnerDomainName:      "",
+				TestSuiteExecutionEnvironment: "",
+				TestSuiteIsNew:                true,
+				TestDataPtr:                   nil,
+				TestSuiteMetaDataPtr: &TestSuiteMetaDataStruct{
+					CurrentSelectedDomainUuid:                               "",
+					TestSuiteMetaDataMessageJsonForTestSuiteWhenLastSaved:   nil,
+					TestSuiteMetaDataMessageStructForTestSuiteWhenLastSaved: nil,
+					MetaDataGroupsOrder:                                     nil,
+					MetaDataGroupsMapPtr:                                    nil,
+					SelectedTestSuiteMetaDataAsEntrySlice:                   nil,
+				},
+			},
+			testCasesModel: testCasesModel,
+		}
+
+	*/
 
 	return newTestSuiteModel
 

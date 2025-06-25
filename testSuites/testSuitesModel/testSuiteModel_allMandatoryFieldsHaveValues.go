@@ -12,7 +12,7 @@ func (testSuiteModel *TestSuiteModelStruct) checkIfAllMandatoryFieldsHaveValues(
 	mandatoryFieldsHaveValuesNotificationText string) {
 
 	// Check 'TestSuiteName'
-	if len(testSuiteModel.TestSuiteUIModelBinding.TestSuiteName) == 0 {
+	if len(testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteName) == 0 {
 
 		allMandatoryFieldsHaveValues = false
 		mandatoryFieldsHaveValuesNotificationText = "TestSuite Name"
@@ -21,7 +21,7 @@ func (testSuiteModel *TestSuiteModelStruct) checkIfAllMandatoryFieldsHaveValues(
 	}
 
 	// Check 'TestSuiteOwnerDomainUuid'
-	if len(testSuiteModel.TestSuiteUIModelBinding.TestSuiteOwnerDomainUuid) == 0 {
+	if len(testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainUuid) == 0 {
 
 		allMandatoryFieldsHaveValues = false
 		mandatoryFieldsHaveValuesNotificationText = "Owner Domain "
@@ -30,7 +30,7 @@ func (testSuiteModel *TestSuiteModelStruct) checkIfAllMandatoryFieldsHaveValues(
 	}
 
 	// Check 'TestSuiteExecutionEnvironment'
-	if len(testSuiteModel.TestSuiteUIModelBinding.TestSuiteExecutionEnvironment) == 0 {
+	if len(testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteExecutionEnvironment) == 0 {
 
 		allMandatoryFieldsHaveValues = false
 		mandatoryFieldsHaveValuesNotificationText = "Execution Environment "
@@ -67,10 +67,10 @@ func (testSuiteModel *TestSuiteModelStruct) verifyMandatoryFieldsForMetaData() (
 	mandatoryMetaDataFieldsMap = testSuiteModel.generateMandatoryMetaDataFieldsMap()
 
 	// Ensure that there are MetaData selected by the user, to be able to loop it
-	if testSuiteModel.TestSuiteUIModelBinding.TestSuiteMetaDataPtr != nil {
+	if testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteMetaDataPtr != nil {
 
 		var tempTestSuiteMetaData TestSuiteMetaDataStruct
-		tempTestSuiteMetaData = *testSuiteModel.TestSuiteUIModelBinding.TestSuiteMetaDataPtr
+		tempTestSuiteMetaData = *testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteMetaDataPtr
 
 		if tempTestSuiteMetaData.MetaDataGroupsMapPtr != nil {
 
@@ -149,7 +149,8 @@ func (testSuiteModel *TestSuiteModelStruct) generateMandatoryMetaDataFieldsMap()
 
 	// Extract Owner Domains MetaData
 	var testSuiteMetaDataForDomainsForMapStructmetaDataForDomainPtr *TestSuiteMetaDataForDomainsForMapStruct
-	testSuiteMetaDataForDomainsForMapStructmetaDataForDomainPtr, existInMap = TestSuitesModelPtr.TestSuiteMetaDataForDomains.TestSuiteMetaDataForDomainsMap[testSuiteModel.TestSuiteUIModelBinding.TestSuiteOwnerDomainUuid]
+	testSuiteMetaDataForDomainsForMapStructmetaDataForDomainPtr, existInMap = TestSuitesModelPtr.
+		TestSuiteMetaDataForDomains.TestSuiteMetaDataForDomainsMap[testSuiteModel.TestSuiteUIModelBinding.TestSuiteOwnerDomainUuid]
 
 	if existInMap == false {
 		// No MetaData fields, so no mandatory fields

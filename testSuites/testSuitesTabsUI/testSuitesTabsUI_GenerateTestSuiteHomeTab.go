@@ -43,7 +43,7 @@ func GenerateTestSuiteHomeTab(testCasesModel *testCaseModel.TestCasesModelsStruc
 					if openTestSuite {
 
 						// Open TestSuite
-						GenerateTestSuiteTabFromExistingTestSuite(testCasesModel)
+						go GenerateTestSuiteTabFromExistingTestSuite(testSuiteUuidEntry.Text, testCasesModel)
 
 					} else {
 						// user cancelled

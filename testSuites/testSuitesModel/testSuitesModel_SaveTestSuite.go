@@ -7,8 +7,10 @@ import (
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
+	"github.com/jinzhu/copier"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"google.golang.org/protobuf/encoding/protojson"
+	"log"
 )
 
 // SaveTestSuite
@@ -38,6 +40,21 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 		return nil
 	}
 
+	//testSuiteModel.NoneSavedTestSuiteUIModelBinding = createEmptyAndInitiatedTestSuiteModel(testSuiteModel.testCasesModel)
+
+	// Copy fields from 'TestSuiteUIModelBinding' to  'NoneSavedTestSuiteUIModelBinding' using deep copy
+	err = copier.CopyWithOption(&testSuiteModel.NoneSavedTestSuiteUIModelBinding, &testSuiteModel.TestSuiteUIModelBinding, copier.Option{DeepCopy: true})
+	if err != nil {
+
+		errorID := "85acf490-2599-4a8a-bf9e-1451eef60f78"
+
+		errorMsg := fmt.Sprintf("error copying 'TestSuiteUIModelBinding' using 'copier'. error = '%s' [ErrorID: %s]",
+			err.Error(),
+			errorID)
+
+		log.Fatalln(errorMsg)
+	}
+
 	// Check if all mandatory fields has values
 	mandatoryFieldsHaveValues,
 		mandatoryFieldsHaveValuesNotificationText = testSuiteModel.checkIfAllMandatoryFieldsHaveValues()
@@ -58,9 +75,9 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 	}
 
 	// Copy all UI-fields to model
-	testSuiteModel.copyUiFieldsToModel()
+	//testSuiteModel.copyUiFieldsToModel()
 
-	// Keeps a list of what is to be saved. Used to ensure that older versions of the TestSuite can later be loaded
+	// Keeps a list of what is to be saved. Used to ensure that older versions of the TestSuite can later be loaded when new functionality has been added to the client
 	var supportedTestSuiteDataToBeStored testSuiteDataToBeStoredStruct
 	supportedTestSuiteDataToBeStored.supportedTestSuiteDataToBeStoredMap = make(map[supportedTestSuiteDataToBeStoredType]bool)
 
@@ -113,14 +130,22 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 		TestSuiteMetaData:         nil,
 		TestCasesInTestSuite:      nil,
 		DeletedDate:               testSuiteDeleteDate,
-		SupportedTestSuiteDataToBeStoredAsJsonString: supportedTestSuiteDataToBeStoredAsJsonString,
-		MessageHash: messageHash,
+		UpdatedByAndWhen:          nil, // Used when loading TestSuite
+		MessageHash:               messageHash,
 	}
 
 	// Send using gRPC
 	returnMessage := testSuiteModel.testCasesModel.GrpcOutReference.SendSaveFullTestSuite(&fullTestSuiteMessage)
 
 	if returnMessage == nil || returnMessage.AckNack == false {
+
+		// Trigger System Notification sound
+		soundEngine.PlaySoundChannel <- soundEngine.InvalidNotificationSound
+
+		fyne.CurrentApp().SendNotification(&fyne.Notification{
+			Title:   "Save TestSuite",
+			Content: fmt.Sprintf("Got some error when trying to Save TestSuite"),
+		})
 
 		if returnMessage == nil {
 			errorId := "6c8be10e-404e-49a3-b121-df05c952d5b8"
@@ -137,12 +162,36 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 		return err
 	}
 
+	// Trigger System Notification sound
+	soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
+
+	fyne.CurrentApp().SendNotification(&fyne.Notification{
+		Title:   "Save TestSuite",
+		Content: fmt.Sprintf("Success in saving TestSuite"),
+	})
+
 	// Update that the TestSuite is not New anymore and Update the TestSuiteVersion
-	testSuiteModel.testSuiteIsNew = false
-	testSuiteModel.testSuiteVersion = testSuiteBasicInformation.TestSuiteVersion
+	testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteIsNew = false
+	testSuiteModel.TestSuiteUIModelBinding.TestSuiteIsNew = false
+
+	// Copy data from 'NoneSavedTestSuiteUIModelBinding' to 'savedTestSuiteUIModelBinding' using deep copy
+	err = copier.CopyWithOption(&testSuiteModel.savedTestSuiteUIModelBinding, &testSuiteModel.NoneSavedTestSuiteUIModelBinding, copier.Option{DeepCopy: true})
+	if err != nil {
+
+		errorID := "2304dabe-7e12-4cf4-a021-597793ace220"
+
+		errorMsg := fmt.Sprintf("error copying 'NoneSavedTestSuiteUIModelBinding' using 'copier'. error = '%s' [ErrorID: %s]",
+			err.Error(),
+			errorID)
+
+		log.Fatalln(errorMsg)
+	}
 
 	// Update The Hash for the saved TestSuite
-	testSuiteModel.testSuiteTestDataHash = messageHash
+	testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteSavedMessageHash = messageHash
+
+	// Set the new TestSuiteVersion
+	testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteVersion = testSuiteBasicInformation.TestSuiteVersion
 
 	return err
 
@@ -160,20 +209,20 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteBasicInformationMes
 
 	// Generate TestSuiteVersion
 	var testSuiteVersion uint32
-	if testSuiteModel.testSuiteIsNew == true {
+	if testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteIsNew == true {
 		testSuiteVersion = 1
 	} else {
-		testSuiteVersion = testSuiteModel.testSuiteVersion + 1
+		testSuiteVersion = testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteVersion + 1
 	}
 
 	// Create 'testSuiteBasicInformation'
 	testSuiteBasicInformation = &fenixGuiTestCaseBuilderServerGrpcApi.TestSuiteBasicInformationMessage{
-		DomainUuid:           testSuiteModel.testSuiteOwnerDomainUuid,
-		DomainName:           testSuiteModel.testSuiteOwnerDomainName,
-		TestSuiteUuid:        testSuiteModel.testSuiteUuid,
+		DomainUuid:           testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainUuid,
+		DomainName:           testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainName,
+		TestSuiteUuid:        testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteUuid,
 		TestSuiteVersion:     testSuiteVersion,
-		TestSuiteName:        testSuiteModel.testSuiteName,
-		TestSuiteDescription: testSuiteModel.testSuiteDescription,
+		TestSuiteName:        testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteName,
+		TestSuiteDescription: testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteDescription,
 	}
 
 	// Create the Hash of the Message
@@ -248,7 +297,7 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteDeleteDateMessage(
 	supportedTestSuiteDataToBeStored.supportedTestSuiteDataToBeStoredMap[deletedDateIsSupported] = true
 
 	// Create 'testSuiteDeleteDate'
-	testSuiteDeleteDate = testSuiteModel.testSuiteDeletionDate
+	testSuiteDeleteDate = testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteDeletionDate
 
 	// Create the Hash of the Message
 	testSuiteDeleteDateHash = sharedCode.HashSingleValue(testSuiteDeleteDate)

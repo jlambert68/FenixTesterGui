@@ -2,6 +2,7 @@ package testSuitesTabsUI
 
 import (
 	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/soundEngine"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testSuites/testSuiteUI"
 	"FenixTesterGui/testSuites/testSuitesCommandEngine"
@@ -14,15 +15,41 @@ import (
 )
 
 func GenerateTestSuiteTabFromExistingTestSuite(
+	testSuiteUuidToOpen string,
 	testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
 	var err error
+
+	// Verify that it is an Uuid that was received
+	if len(testSuiteUuidToOpen) != 36 {
+
+		// Notify the user
+
+		// Trigger System Notification sound
+		soundEngine.PlaySoundChannel <- soundEngine.InvalidNotificationSound
+
+		fyne.CurrentApp().SendNotification(&fyne.Notification{
+			Title:   "Warning",
+			Content: "TestSuite-uuid is not valid. It should be 36 characters long.",
+		})
+
+		return
+	}
 
 	// Check if TestSuite is already opened
 
 	// Generate the new 'TestSuiteModel'
 	var newTestSuiteModel *testSuitesModel.TestSuiteModelStruct
-	newTestSuiteModel = testSuitesModel.GenerateNewTestSuiteModelObject(testCasesModel)
+	newTestSuiteModel = testSuitesModel.GenerateNewTestSuiteModelObject(
+		testSuiteUuidToOpen,
+		testCasesModel)
+
+	// Get TestSuiteUuid
+	var shortTestSuiteUuid string
+	shortTestSuiteUuid = sharedCode.GenerateShortUuidFromFullUuid(testSuiteUuidToOpen)
+
+	// Load the new model with an existing TestSuite
+	err = newTestSuiteModel.LoadFullTestSuiteFromDatabase(testSuiteUuidToOpen)
 
 	// Generate a new TestSuiteUI-object
 	var newTestSuiteUiObject *testSuiteUI.TestSuiteUiStruct
@@ -71,13 +98,6 @@ func GenerateTestSuiteTabFromExistingTestSuite(
 			testSuiteUiTabToolbar, nil, nil, nil, newTestSuiteUiObjectContainer)
 	}
 
-	// Get TestSuiteUuid
-	var testSuiteUuid string
-	var shortTestSuiteUuid string
-
-	testSuiteUuid = newTestSuiteModel.GetTestSuiteUuid()
-	shortTestSuiteUuid = sharedCode.GenerateShortUuidFromFullUuid(testSuiteUuid)
-
 	// Add content to the Tab-UI-object
 	newTestSuiteUiObject.TestSuiteTabItem.Text = fmt.Sprintf("<New TestSuite> [%s]", shortTestSuiteUuid)
 	newTestSuiteUiObject.TestSuiteTabItem.Content = newTestSuiteUiObjectBorderContainer
@@ -101,7 +121,7 @@ func GenerateTestSuiteTabFromExistingTestSuite(
 	testSuitesMap = *testSuitesModel.TestSuitesModelPtr.TestSuitesMapPtr
 
 	// Add TestSuiteModel to the TestSuiteModels-map
-	testSuitesMap[testSuiteUuid] = newTestSuiteModel
+	testSuitesMap[testSuiteUuidToOpen] = newTestSuiteModel
 
 	// Add New TestSuite-tab to all tabs
 	testSuitesCommandEngine.TestSuiteTabsRef.Append(newTestSuiteUiObject.TestSuiteTabItem)

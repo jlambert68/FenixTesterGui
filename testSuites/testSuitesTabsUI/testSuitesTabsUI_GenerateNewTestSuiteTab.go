@@ -19,7 +19,7 @@ func GenerateNewTestSuiteTab(testCasesModel *testCaseModel.TestCasesModelsStruct
 
 	// Generate the new 'TestSuiteModel'
 	var newTestSuiteModel *testSuitesModel.TestSuiteModelStruct
-	newTestSuiteModel = testSuitesModel.GenerateNewTestSuiteModelObject(testCasesModel)
+	newTestSuiteModel = testSuitesModel.GenerateNewTestSuiteModelObject("", testCasesModel)
 
 	// Generate a new TestSuiteUI-object
 	var newTestSuiteUiObject *testSuiteUI.TestSuiteUiStruct

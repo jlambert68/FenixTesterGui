@@ -11,35 +11,39 @@ import (
 func (testSuiteModel *TestSuiteModelStruct) IsTestSuiteChanged() (testSuiteIsChanged bool) {
 
 	// Check 'TestSuiteDeletionDate'
-	if testSuiteModel.testSuiteDeletionDate != testSuiteModel.TestSuiteUIModelBinding.TestSuiteDeletionDate {
+	if testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteDeletionDate != testSuiteModel.TestSuiteUIModelBinding.
+		TestSuiteDeletionDate {
 		testSuiteIsChanged = true
 
 		return testSuiteIsChanged
 	}
 
 	// Check 'TestSuiteName'
-	if testSuiteModel.testSuiteName != testSuiteModel.TestSuiteUIModelBinding.TestSuiteName {
+	if testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteName != testSuiteModel.TestSuiteUIModelBinding.
+		TestSuiteName {
 		testSuiteIsChanged = true
 
 		return testSuiteIsChanged
 	}
 
 	// Check 'TestSuiteDescription'
-	if testSuiteModel.testSuiteDescription != testSuiteModel.TestSuiteUIModelBinding.TestSuiteDescription {
+	if testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteDescription != testSuiteModel.TestSuiteUIModelBinding.
+		TestSuiteDescription {
 		testSuiteIsChanged = true
 
 		return testSuiteIsChanged
 	}
 
 	// Check 'TestSuiteOwnerDomainUuid'
-	if testSuiteModel.testSuiteOwnerDomainUuid != testSuiteModel.TestSuiteUIModelBinding.TestSuiteOwnerDomainUuid {
+	if testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteOwnerDomainUuid != testSuiteModel.TestSuiteUIModelBinding.
+		TestSuiteOwnerDomainUuid {
 		testSuiteIsChanged = true
 
 		return testSuiteIsChanged
 	}
 
 	// Check 'TestSuiteExecutionEnvironment'
-	if testSuiteModel.testSuiteExecutionEnvironment != testSuiteModel.TestSuiteUIModelBinding.
+	if testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteExecutionEnvironment != testSuiteModel.TestSuiteUIModelBinding.
 		TestSuiteExecutionEnvironment {
 		testSuiteIsChanged = true
 
@@ -52,21 +56,21 @@ func (testSuiteModel *TestSuiteModelStruct) IsTestSuiteChanged() (testSuiteIsCha
 	testSuiteModel.TestSuiteUIModelBinding.TestSuiteMetaDataHash = tempTestSuiteMetaDataHash
 
 	// Second Check changes for 'TestSuiteMetaDataHash'
-	if testSuiteModel.testSuiteMetaDataHash != testSuiteModel.TestSuiteUIModelBinding.
+	if testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteMetaDataHash != testSuiteModel.TestSuiteUIModelBinding.
 		TestSuiteMetaDataHash {
 		testSuiteIsChanged = true
 
 		return testSuiteIsChanged
 	}
 
-	// First update 'TestSuiteTesDataHash'
+	// First update 'TestSuiteTestDataHash'
 	var tempTestSuiteTestDataHash string
 	tempTestSuiteTestDataHash = testSuiteModel.generateTesSuiteTestDataHash()
-	testSuiteModel.TestSuiteUIModelBinding.TestSuiteTesDataHash = tempTestSuiteTestDataHash
+	testSuiteModel.TestSuiteUIModelBinding.TestSuiteTestDataHash = tempTestSuiteTestDataHash
 
-	// Second Check changes for 'TestSuiteTesDataHash'
-	if testSuiteModel.testSuiteTestDataHash != testSuiteModel.TestSuiteUIModelBinding.
-		TestSuiteTesDataHash {
+	// Second Check changes for 'TestSuiteTestDataHash'
+	if testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteTestDataHash != testSuiteModel.TestSuiteUIModelBinding.
+		TestSuiteTestDataHash {
 		testSuiteIsChanged = true
 
 		return testSuiteIsChanged

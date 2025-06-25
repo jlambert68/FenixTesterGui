@@ -321,8 +321,8 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteTypeMessage(
 	testSuiteTypeHash string,
 	err error) {
 
-	// This TestSuite has stored 'TestSuiteTypeIsSupported'
-	supportedTestSuiteDataToBeStored.supportedTestSuiteDataToBeStoredMap[TestSuiteTypeIsSupported] = true
+	// This TestSuite has stored 'testSuiteTypeIsSupported'
+	supportedTestSuiteDataToBeStored.supportedTestSuiteDataToBeStoredMap[testSuiteTypeIsSupported] = true
 
 	// Create 'testSuiteTypeMessage'
 	testSuiteTypeMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestSuiteTypeMessage{
@@ -330,7 +330,7 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteTypeMessage(
 		TestSuiteTypeName: testSuiteTypeMessage.TestSuiteTypeName,
 	}
 
-	// Create Hash for 'TestSuiteTypeIsSupported'
+	// Create Hash for 'testSuiteTypeIsSupported'
 	var valuesToBeHashed []string
 	valuesToBeHashed = append(valuesToBeHashed, fmt.Sprintf("%d", testSuiteTypeMessage.TestSuiteType))
 	valuesToBeHashed = append(valuesToBeHashed, fmt.Sprintf("%s", testSuiteTypeMessage.TestSuiteTypeName))

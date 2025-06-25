@@ -204,7 +204,7 @@ const (
 	testSuiteMetaDataIsSupported
 	testCasesInTestSuiteIsSupported
 	deletedDateIsSupported
-	TestSuiteTypeIsSupported
+	testSuiteTypeIsSupported
 )
 
 type testSuiteDataToBeStoredStruct struct {

@@ -153,7 +153,7 @@ func (testSuiteModel *TestSuiteModelStruct) LoadFullTestSuiteFromDatabase(
 		return err
 	}
 
-	// Copy data from 'savedTestSuiteUIModelBinding' to 'savedTestSuiteUIModelBinding' using deep copy
+	// Copy data from 'savedTestSuiteUIModelBinding' to 'TestSuiteUIModelBinding' using deep copy
 	err = copier.CopyWithOption(&testSuiteModel.TestSuiteUIModelBinding, &testSuiteModel.savedTestSuiteUIModelBinding, copier.Option{DeepCopy: true})
 	if err != nil {
 
@@ -290,6 +290,89 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteMetaDataMessageWhen
 
 		return err
 	}
+
+	// Generate the TestSuiteMetaData for the TestSuite-model from the gRPC-data
+	var tempMetaDataGroupsMap map[string]*MetaDataGroupStruct
+	var tempMetaDataGroupsOrder []string
+	tempMetaDataGroupsMap = make(map[string]*MetaDataGroupStruct)
+
+	// Loop MetaDataGroups in gPRC-data
+	for tempMetaDataGroupNameFromGrpc, tempMetaDataGroupFromGrpc := range testSuiteMetaData.GetMetaDataGroupsMap() {
+
+		tempMetaDataGroupsOrder = append(tempMetaDataGroupsOrder, tempMetaDataGroupNameFromGrpc)
+
+		var tempMetaDataInGroupOrder []string
+
+		var tempMetaDataInGroupMap map[string]*MetaDataInGroupStruct
+		tempMetaDataInGroupMap = make(map[string]*MetaDataInGroupStruct)
+
+		// Loop MetaDataGroupItems in MetaDataGroup
+		for tempMetaDataGroupItemNameFromGrpc, tempMetaDataGroupItemFromGrpc := range tempMetaDataGroupFromGrpc.GetMetaDataInGroupMap() {
+
+			tempMetaDataInGroupOrder = append(tempMetaDataInGroupOrder, tempMetaDataGroupItemNameFromGrpc)
+
+			var tempMetaDataInGroup MetaDataInGroupStruct
+			tempMetaDataInGroup = MetaDataInGroupStruct{
+				MetaDataGroupName:                          tempMetaDataGroupNameFromGrpc,
+				MetaDataName:                               tempMetaDataGroupItemNameFromGrpc,
+				SelectType:                                 MetaDataSelectType(tempMetaDataGroupItemFromGrpc.SelectType),
+				Mandatory:                                  tempMetaDataGroupItemFromGrpc.IsMandatory,
+				AvailableMetaDataValues:                    tempMetaDataGroupItemFromGrpc.AvailableMetaDataValues,
+				SelectedMetaDataValueForSingleSelect:       tempMetaDataGroupItemFromGrpc.SelectedMetaDataValueForSingleSelect,
+				SelectedMetaDataValuesForMultiSelect:       tempMetaDataGroupItemFromGrpc.SelectedMetaDataValuesForMultiSelect,
+				SelectedMetaDataValuesForMultiSelectMapPtr: nil,
+			}
+
+			// Generate the map holding the Selected values for the multi select
+			var tempSelectedMetaDataValuesMap map[string]string
+			tempSelectedMetaDataValuesMap = make(map[string]string)
+
+			for tempMetaDataItemKeyFromGrpc, tempMetaDataItemValueFromGrpc := range tempMetaDataGroupItemFromGrpc.
+				SelectedMetaDataValuesForMultiSelectMap {
+				tempSelectedMetaDataValuesMap[tempMetaDataItemKeyFromGrpc] = tempMetaDataItemValueFromGrpc
+			}
+
+			// Store selected values map in main message
+			tempMetaDataInGroup.SelectedMetaDataValuesForMultiSelectMapPtr = &tempSelectedMetaDataValuesMap
+
+			// Add MetaDataGroupItem to 'MetaDataInGroupMap'
+			tempMetaDataInGroupMap[tempMetaDataGroupItemNameFromGrpc] = &tempMetaDataInGroup
+
+		}
+
+		// Create the var MetaDataGroup-object
+		var tempMetaDataGroup MetaDataGroupStruct
+		tempMetaDataGroup = MetaDataGroupStruct{
+			MetaDataGroupName:     tempMetaDataGroupNameFromGrpc,
+			MetaDataInGroupOrder:  tempMetaDataInGroupOrder,
+			MetaDataInGroupMapPtr: &tempMetaDataInGroupMap,
+		}
+
+		// Add  MetaDataGroup-object to 'tempMetaDataGroupsMap'
+		tempMetaDataGroupsMap[tempMetaDataGroupNameFromGrpc] = &tempMetaDataGroup
+
+	}
+
+	// Create the full 'TestSuiteMetaData-object'
+	var tempTestSuiteMetaData TestSuiteMetaDataStruct
+	tempTestSuiteMetaData = TestSuiteMetaDataStruct{
+		CurrentSelectedDomainUuid: testSuiteMetaData.GetCurrentSelectedDomainUuid(),
+		TestSuiteMetaDataMessageJsonForTestSuiteWhenLastSaved: &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseAndTestSuiteMetaDataForOneDomainMessage{
+			DomainUuid:              testSuiteMetaData.GetCurrentSelectedDomainUuid(),
+			DomainName:              testSuiteMetaData.GetCurrentSelectedDomainName(),
+			TestCaseMetaDataAsJson:  "",
+			TestSuiteMetaDataAsJson: "",
+		},
+		TestSuiteMetaDataMessageStructForTestSuiteWhenLastSaved: &TestSuiteMetaDataForDomainStruct{
+			MetaDataGroups: nil,
+		},
+		MetaDataGroupsOrder:                   tempMetaDataGroupsOrder,
+		MetaDataGroupsMapPtr:                  &tempMetaDataGroupsMap,
+		SelectedTestSuiteMetaDataAsEntrySlice: nil,
+	}
+
+	// Add converted TestSuiteMetaData to 'TestSuiteModel'
+	testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteMetaDataPtr = &tempTestSuiteMetaData
 
 	return err
 

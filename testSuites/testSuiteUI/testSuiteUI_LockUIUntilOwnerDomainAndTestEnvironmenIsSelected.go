@@ -2,6 +2,7 @@ package testSuiteUI
 
 import (
 	"FenixTesterGui/testSuites/testSuitesCommandEngine"
+	"fyne.io/fyne/v2"
 )
 
 // Lock or Unlock UI depending on if user has selected OwnerDomain and TestEnvironment
@@ -37,6 +38,8 @@ func (testSuiteUiModel *TestSuiteUiStruct) lockUIUntilOwnerDomainAndTestEnvironm
 	}
 
 	// Refresh Tabs
-	testSuitesCommandEngine.TestSuiteTabsRef.Refresh()
+	fyne.Do(func() {
+		testSuitesCommandEngine.TestSuiteTabsRef.Refresh()
+	})
 
 }

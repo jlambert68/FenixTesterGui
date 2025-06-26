@@ -185,9 +185,11 @@ func (testSuiteUiModel *TestSuiteUiStruct) buildTestEnvironmentGUIContainer(
 
 			// Trigger creation of a 'new' TestSuiteMetaData container for the TestSuite-UI ************************
 
-			// Clear MetaData
-			testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.
-				TestSuiteMetaDataPtr = &testSuitesModel.TestSuiteMetaDataStruct{}
+			// Clear MetaData if this a new TestSuite
+			if testSuiteUiModel.TestSuiteModelPtr.HasLockButtonBeenClickedAndBothOwnerDomainAndTestEnvironmentHaveValues() == false {
+				testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.
+					TestSuiteMetaDataPtr = &testSuitesModel.TestSuiteMetaDataStruct{}
+			}
 
 			// Generate TestSuite's ExecutionEnvironment
 			var newTestSuiteMetaDataContainer *fyne.Container
@@ -233,7 +235,9 @@ func (testSuiteUiModel *TestSuiteUiStruct) buildTestEnvironmentGUIContainer(
 			testSuiteUiModel.testSuiteMetaDataContainer = newTestSuiteMetaDataContainer
 
 			// Refresh Tabs
-			testSuitesCommandEngine.TestSuiteTabsRef.Refresh()
+			fyne.Do(func() {
+				testSuitesCommandEngine.TestSuiteTabsRef.Refresh()
+			})
 
 			// Set Warning box that value is not selected
 			if len(val) == 0 && metaDataItem.Mandatory == true {

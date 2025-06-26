@@ -51,6 +51,21 @@ func GenerateTestSuiteTabFromExistingTestSuite(
 	// Load the new model with an existing TestSuite
 	err = newTestSuiteModel.LoadFullTestSuiteFromDatabase(testSuiteUuidToOpen)
 
+	if err != nil {
+
+		// Notify the user
+
+		// Trigger System Notification sound
+		soundEngine.PlaySoundChannel <- soundEngine.InvalidNotificationSound
+
+		fyne.CurrentApp().SendNotification(&fyne.Notification{
+			Title:   "Load TestSuite",
+			Content: "Load TestSuite failed",
+		})
+
+		return
+	}
+
 	// Generate a new TestSuiteUI-object
 	var newTestSuiteUiObject *testSuiteUI.TestSuiteUiStruct
 	newTestSuiteUiObject = &testSuiteUI.TestSuiteUiStruct{
@@ -126,10 +141,14 @@ func GenerateTestSuiteTabFromExistingTestSuite(
 	testSuitesMap[testSuiteUuidToOpen] = newTestSuiteModel
 
 	// Add New TestSuite-tab to all tabs
-	testSuitesCommandEngine.TestSuiteTabsRef.Append(newTestSuiteUiObject.TestSuiteTabItem)
+	fyne.Do(func() {
+		testSuitesCommandEngine.TestSuiteTabsRef.Append(newTestSuiteUiObject.TestSuiteTabItem)
+	})
 
 	// Set focus on the new TestSuite-tab
-	testSuitesCommandEngine.TestSuiteTabsRef.Select(newTestSuiteUiObject.TestSuiteTabItem)
+	fyne.Do(func() {
+		testSuitesCommandEngine.TestSuiteTabsRef.Select(newTestSuiteUiObject.TestSuiteTabItem)
+	})
 
 	// Refresh the new TestSuite-tab
 	fyne.Do(func() {

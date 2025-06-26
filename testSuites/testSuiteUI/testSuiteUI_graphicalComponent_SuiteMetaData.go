@@ -113,6 +113,9 @@ func (testSuiteUiModel TestSuiteUiStruct) buildGUIFromMetaDataGroupsMap(
 	metaDataGroupsSourceMapPtr *map[string]*testSuitesModel.MetaDataGroupStruct,
 	metaDataGroupInTestSuitePtr *testSuitesModel.TestSuiteMetaDataStruct) fyne.CanvasObject {
 
+	// Get 'metaDataGroupInTestSuitePtr' from last saved version, which exists "untouched" when this is created
+	metaDataGroupInTestSuitePtr = testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteMetaDataPtr
+
 	// Get the 'metaDataGroupsSourceMap'
 	var metaDataGroupsSourceMap map[string]*testSuitesModel.MetaDataGroupStruct
 	metaDataGroupsSourceMap = *metaDataGroupsSourceMapPtr
@@ -128,7 +131,7 @@ func (testSuiteUiModel TestSuiteUiStruct) buildGUIFromMetaDataGroupsMap(
 	var metaDataGroupCards []fyne.CanvasObject
 	metaDataGroupCards = make([]fyne.CanvasObject, 0, len(*metaDataGroupsSourceMapPtr))
 
-	var metaDataGroupFromTestCase map[string]*NewMetaDataInGroupStruct
+	var metaDataGroupFromTestSuite map[string]*NewMetaDataInGroupStruct
 	var newMetaDataItemInGroup *NewMetaDataInGroupStruct
 	var metaDataGroupFromSourceExistInTestCaseMap bool
 	var metaDataGroupItemFromSourceExistInTestCaseMap bool
@@ -140,8 +143,8 @@ func (testSuiteUiModel TestSuiteUiStruct) buildGUIFromMetaDataGroupsMap(
 		var metaDataGroupPtr *testSuitesModel.MetaDataGroupStruct
 		metaDataGroupPtr = metaDataGroupsSourceMap[metaDataGroupName]
 
-		// Get the MetaDataGroupName from the TestCase
-		metaDataGroupFromTestCase, metaDataGroupFromSourceExistInTestCaseMap = convertMetaDataToMapMap[metaDataGroupPtr.MetaDataGroupName]
+		// Get the MetaDataGroupName from the TestSuite
+		metaDataGroupFromTestSuite, metaDataGroupFromSourceExistInTestCaseMap = convertMetaDataToMapMap[metaDataGroupPtr.MetaDataGroupName]
 
 		// unpack the slice of *MetaDataInGroupStruct
 		var metaDataItemsInGroupPtr *map[string]*testSuitesModel.MetaDataInGroupStruct
@@ -163,7 +166,7 @@ func (testSuiteUiModel TestSuiteUiStruct) buildGUIFromMetaDataGroupsMap(
 			metaDataItemPtr = metaDataItemsInGroupMap[metaDataItemName]
 
 			if metaDataGroupFromSourceExistInTestCaseMap == true {
-				newMetaDataItemInGroup, metaDataGroupItemFromSourceExistInTestCaseMap = metaDataGroupFromTestCase[metaDataItemPtr.MetaDataName]
+				newMetaDataItemInGroup, metaDataGroupItemFromSourceExistInTestCaseMap = metaDataGroupFromTestSuite[metaDataItemPtr.MetaDataName]
 			}
 
 			var metaDataItem testSuitesModel.MetaDataInGroupStruct
@@ -624,7 +627,7 @@ func (testSuiteUiModel TestSuiteUiStruct) buildGUIFromMetaDataGroupsMap(
 				var selectedValues []string
 				if metaDataGroupFromSourceExistInTestCaseMap == true && metaDataGroupItemFromSourceExistInTestCaseMap == true {
 					for _, availableValue := range metaDataItem.AvailableMetaDataValues {
-						if _, ok := metaDataGroupFromTestCase[metaDataItem.MetaDataName].SelectedMetaDataValuesForMultiSelectMap[availableValue]; ok {
+						if _, ok := metaDataGroupFromTestSuite[metaDataItem.MetaDataName].SelectedMetaDataValuesForMultiSelectMap[availableValue]; ok {
 							selectedValues = append(selectedValues, availableValue)
 						}
 					}
@@ -693,20 +696,21 @@ type NewMetaDataInGroupStruct struct {
 	SelectedMetaDataValuesForMultiSelectMap map[string]string                  // The values selected for multi select
 }
 
-// convertMetaDataToNewMap transforms the TestCaseMetaDataStruct.MetaDataGroupsSlicePtr
+// convertMetaDataToNewMap transforms the TestsUITEMetaDataStruct.MetaDataGroupsSlicePtr
 // into a nested map[groupName][metaDataName] => *NewMetaDataInGroupStruct.
-func (testSuiteUiModel TestSuiteUiStruct) convertMetaDataToNewMap(tc *testSuitesModel.TestSuiteMetaDataStruct) map[string]map[string]*NewMetaDataInGroupStruct {
+func (testSuiteUiModel TestSuiteUiStruct) convertMetaDataToNewMap(
+	ts *testSuitesModel.TestSuiteMetaDataStruct) map[string]map[string]*NewMetaDataInGroupStruct {
 	result := make(map[string]map[string]*NewMetaDataInGroupStruct)
 
-	if tc == nil {
+	if ts == nil {
 		return result
 	}
 
-	if tc.MetaDataGroupsMapPtr == nil {
+	if ts.MetaDataGroupsMapPtr == nil {
 		return result
 	}
 
-	for _, grp := range *tc.MetaDataGroupsMapPtr {
+	for _, grp := range *ts.MetaDataGroupsMapPtr {
 		if grp == nil {
 			continue
 		}

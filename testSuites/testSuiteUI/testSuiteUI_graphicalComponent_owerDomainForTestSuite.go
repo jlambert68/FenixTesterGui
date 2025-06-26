@@ -75,14 +75,17 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateOwnerDomainForTestSuiteArea(
 			// Generate TestSuite's ExecutionEnvironment
 			var newTestSuiteTestEnvironmentContainer *fyne.Container
 
-			// Clear TestEnvironment
-			testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteExecutionEnvironment = ""
+			// Clear TestEnvironment, when OwnerDomain and Execution Environment hasn't been locked
+			if testSuiteUiModel.TestSuiteModelPtr.HasLockButtonBeenClickedAndBothOwnerDomainAndTestEnvironmentHaveValues() == false {
+				testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteExecutionEnvironment = ""
 
-			// Clear info in TestSuiteModel about TestEnvironment is not selected
-			testSuiteUiModel.TestSuiteModelPtr.TestEnvironmentHasValue(false)
+				// Clear info in TestSuiteModel about TestEnvironment is not selected
+				testSuiteUiModel.TestSuiteModelPtr.TestEnvironmentHasValue(false)
 
-			// Lock parts of UI that shouldn't be accessible before both OwnerDomain and TestEnvironment is Selected by user
-			testSuiteUiModel.lockUIUntilOwnerDomainAndTestEnvironmenIsSelected()
+				// Lock parts of UI that shouldn't be accessible before both OwnerDomain and TestEnvironment is Selected by user
+				testSuiteUiModel.lockUIUntilOwnerDomainAndTestEnvironmenIsSelected()
+
+			}
 
 			newTestSuiteTestEnvironmentContainer,
 				testSuiteUiModel.customTestEnvironmentSelectComboBox,
@@ -141,7 +144,9 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateOwnerDomainForTestSuiteArea(
 			testSuiteUiModel.testSuiteMetaDataStackContainer.Add(testSuiteUiModel.testSuiteMetaDataContainer)
 
 			// Refresh Tabs
-			testSuitesCommandEngine.TestSuiteTabsRef.Refresh()
+			fyne.Do(func() {
+				testSuitesCommandEngine.TestSuiteTabsRef.Refresh()
+			})
 
 			//var testCaseMetaDataArea fyne.CanvasObject
 			/*

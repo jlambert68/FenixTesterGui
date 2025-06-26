@@ -177,7 +177,6 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 
 	}
 	leftTopSideBuildTestSuiteContainer.Add(testSuiteUiModel.testSuiteTestDataAreaContainer)
-	testSuiteUiModel.testSuiteTestDataAreaContainer.Hide()
 
 	// Generate TestSuite's MetaDataContainer
 	testSuiteUiModel.testSuiteMetaDataContainer, err = testSuiteUiModel.
@@ -200,7 +199,15 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 
 	// Add 'testSuiteMetaDataStackContainer' to TestSuite's Left sides container
 	leftTopSideBuildTestSuiteContainer.Add(testSuiteUiModel.testSuiteMetaDataStackContainer)
-	testSuiteUiModel.testSuiteMetaDataStackContainer.Hide()
+	if testSuiteUiModel.TestSuiteModelPtr.HasLockButtonBeenClickedAndBothOwnerDomainAndTestEnvironmentHaveValues() == true {
+		testSuiteUiModel.testSuiteTestDataAreaContainer.Show()
+		testSuiteUiModel.testSuiteMetaDataStackContainer.Show()
+		//testSuiteUiModel.testSuiteMetaDataContainer.Refresh()
+	} else {
+		testSuiteUiModel.testSuiteTestDataAreaContainer.Hide()
+		testSuiteUiModel.testSuiteMetaDataStackContainer.Hide()
+		//testSuiteUiModel.testSuiteMetaDataContainer.Refresh()
+	}
 
 	// Create the Left side Container
 	leftSideBuildTestSuiteContainer = container.NewBorder(

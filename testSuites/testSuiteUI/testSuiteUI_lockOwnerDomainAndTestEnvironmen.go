@@ -14,6 +14,23 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateLockOwnerDomainAndTestEnviron
 	err error) {
 
 	var lockButton *widget.Button
+	var lockButtonFunction func()
+
+	lockButtonFunction = func() {
+		lockButton.Disable()
+		lockButton.SetText("Locked")
+		testSuiteUiModel.TestSuiteModelPtr.LockButtonHasBeenClicked()
+
+		// Open up correct containers and
+		testSuiteUiModel.lockUIUntilOwnerDomainAndTestEnvironmenIsSelected()
+
+		// Lock down Selected OwnerDomain and TestEnvironment
+		testSuiteUiModel.testCaseOwnerDomainCustomSelectComboBox.selectComboBox.Disable()
+		if testSuiteUiModel.customTestEnvironmentSelectComboBox != nil {
+			testSuiteUiModel.customTestEnvironmentSelectComboBox.selectComboBox.Disable()
+		}
+	}
+
 	lockButton = widget.NewButton("Lock", func() {
 
 		// Create popup asking user if TestSuite's Owner Domain and TestEnvironment should be locked
@@ -26,18 +43,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateLockOwnerDomainAndTestEnviron
 			func(lock bool) {
 				if lock {
 					// Lock
-					lockButton.Disable()
-					lockButton.SetText("Locked")
-					testSuiteUiModel.TestSuiteModelPtr.LockButtonHasBeenClicked()
-
-					// Open up correct containers and
-					testSuiteUiModel.lockUIUntilOwnerDomainAndTestEnvironmenIsSelected()
-
-					// Lock down Selected OwnerDomain and TestEnvironment
-					testSuiteUiModel.testCaseOwnerDomainCustomSelectComboBox.selectComboBox.Disable()
-					if testSuiteUiModel.customTestEnvironmentSelectComboBox != nil {
-						testSuiteUiModel.customTestEnvironmentSelectComboBox.selectComboBox.Disable()
-					}
+					lockButtonFunction()
 
 				} else {
 					// user cancelled
@@ -45,8 +51,12 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateLockOwnerDomainAndTestEnviron
 			},
 			*sharedCode.FenixMasterWindowPtr,
 		)
-
 	})
+
+	// Check if Lock should be applied
+	if testSuiteUiModel.TestSuiteModelPtr.HasLockButtonBeenClickedAndBothOwnerDomainAndTestEnvironmentHaveValues() == true {
+		lockButtonFunction()
+	}
 
 	lockOwnerAndTestEnvironmentAreaContainer = container.NewVBox(
 		widget.NewLabel("Lock Owner and TestEnvironment"),

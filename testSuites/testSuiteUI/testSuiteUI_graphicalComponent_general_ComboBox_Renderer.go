@@ -57,7 +57,10 @@ func (r *customSelectComboBoxRenderer) Layout(size fyne.Size) {
 }
 
 func (r *customSelectComboBoxRenderer) Refresh() {
-	canvas.Refresh(r.widget)
+	fyne.Do(func() {
+		canvas.Refresh(r.widget)
+	})
+
 }
 
 func (r *customSelectComboBoxRenderer) BackgroundColor() color.Color {

@@ -101,6 +101,13 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 		generateTestSuiteTypeMessageWhenSaving(&supportedTestSuiteDataToBeStored)
 	valuesToBeHashed = append(valuesToBeHashed, testSuiteTypeHash)
 
+	// Convert 'TestSuiteMetaData' into gRPC-message
+	var testSuiteMetaData *fenixGuiTestCaseBuilderServerGrpcApi.UserSpecifiedTestSuiteMetaDataMessage
+	var testSuiteMetaDataHash string
+	testSuiteMetaData, testSuiteMetaDataHash, err = testSuiteModel.
+		generateTestSuiteMetaDataMessageWhenSaving(&supportedTestSuiteDataToBeStored)
+	valuesToBeHashed = append(valuesToBeHashed, testSuiteMetaDataHash)
+
 	// Convert 'supportedTestSuiteDataToBeStored'to be added to full gRPC-message
 	var testSuiteImplementedFunctionsMap map[int32]bool
 	var testSuiteImplementedFunctionsMapHash string
@@ -118,7 +125,7 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 		TestSuiteBasicInformation:        testSuiteBasicInformation,
 		TestSuiteTestData:                nil,
 		TestSuitePreview:                 nil,
-		TestSuiteMetaData:                nil,
+		TestSuiteMetaData:                testSuiteMetaData,
 		TestCasesInTestSuite:             nil,
 		DeletedDate:                      testSuiteDeleteDate,
 		UpdatedByAndWhen:                 nil, // Used when loading TestSuite
@@ -242,7 +249,8 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteTestDataMessageWhen
 }
 
 // Generates 'TestSuitePreview' to be added to full gRPC-message
-func (testSuiteModel *TestSuiteModelStruct) generateTestSuitePreviewMessageWhenSaving(supportedTestSuiteDataToBeStored *[]testSuiteImplementedFucntionsType) (
+func (testSuiteModel *TestSuiteModelStruct) generateTestSuitePreviewMessageWhenSaving(
+	supportedTestSuiteDataToBeStored *[]testSuiteImplementedFucntionsType) (
 	testSuitePreview *fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewMessage,
 	testSuitePreviewHash string,
 	err error) {
@@ -255,15 +263,140 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuitePreviewMessageWhenS
 }
 
 // Generates 'TestSuiteMetaData' to be added to full gRPC-message
-func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteMetaDataMessageWhenSaving(supportedTestSuiteDataToBeStored *[]testSuiteImplementedFucntionsType) (
+func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteMetaDataMessageWhenSaving(
+	supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct) (
 	testSuiteMetaData *fenixGuiTestCaseBuilderServerGrpcApi.UserSpecifiedTestSuiteMetaDataMessage,
 	testSuiteMetaDataHash string,
 	err error) {
 
-	// This TestSuite has stored 'testSuiteMetaDataIsSupported'
-	//*supportedTestSuiteDataToBeStored = append(*supportedTestSuiteDataToBeStored, testSuiteMetaDataIsSupported)
+	// Initiate TestSuiteMetaData
+	testSuiteMetaData = &fenixGuiTestCaseBuilderServerGrpcApi.UserSpecifiedTestSuiteMetaDataMessage{
+		CurrentSelectedDomainUuid: testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainUuid,
+		CurrentSelectedDomainName: testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainName,
+		MetaDataGroupsMap:         make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.MetaDataGroupMessage),
+	}
 
-	return testSuiteMetaData, testSuiteMetaDataHash, err
+	// This TestSuite has stored 'testSuiteMetaDataIsSupported'
+	supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap[testSuiteMetaDataIsSupported] = true
+
+	// SLice holding the values that will become the MetaDataSlice
+	var valuesToBeHashedSlice []string
+	var valueToBeHashed string
+
+	// Check if there are any TestCaseMetaData, if not then just return
+	if testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteMetaDataPtr == nil ||
+		testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteMetaDataPtr.MetaDataGroupsMapPtr == nil {
+
+		testSuiteMetaDataHash = sharedCode.HashSingleValue("")
+
+		return testSuiteMetaData,
+			testSuiteMetaDataHash,
+			err
+	}
+
+	var tempMetaDataGroupsMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.MetaDataGroupMessage
+	tempMetaDataGroupsMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.MetaDataGroupMessage)
+
+	// Get the TestCaseMetaData from TestCaseMetaDataPtr
+	//var TestCaseMetaData
+
+	// Loop MetaDataGroups in the TestCase and extract each MetaDataGroup
+	for tempMetaGroupNameInTestCase, tempMetaDataGroupInTestCasePtr := range *testSuiteModel.
+		NoneSavedTestSuiteUIModelBinding.TestSuiteMetaDataPtr.MetaDataGroupsMapPtr {
+
+		// Get the MetaDataGroupInTestCaseMap
+		var tempMetaDataGroupInTestCaseMap map[string]*MetaDataInGroupStruct
+		tempMetaDataGroupInTestCaseMap = *tempMetaDataGroupInTestCasePtr.MetaDataInGroupMapPtr
+
+		// Create the MetaDataInGroupItem-map
+		var metaDataInGroupMessage map[string]*fenixGuiTestCaseBuilderServerGrpcApi.MetaDataInGroupMessage
+		metaDataInGroupMessage = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.MetaDataInGroupMessage)
+
+		// Loop items in MetaDataGroup
+		for tempMetaDataGroupItemNameInTestCase, tempMetaDataGroupItemInTestCase := range tempMetaDataGroupInTestCaseMap {
+
+			// Create the MetaDataGroupItem for the gRPC-message
+			var metaDataGroupItem fenixGuiTestCaseBuilderServerGrpcApi.MetaDataInGroupMessage
+			metaDataGroupItem = fenixGuiTestCaseBuilderServerGrpcApi.MetaDataInGroupMessage{
+				MetaDataGroupName:                       tempMetaGroupNameInTestCase,
+				MetaDataName:                            tempMetaDataGroupItemNameInTestCase,
+				SelectType:                              fenixGuiTestCaseBuilderServerGrpcApi.MetaDataSelectTypeEnum(tempMetaDataGroupItemInTestCase.SelectType),
+				IsMandatory:                             tempMetaDataGroupItemInTestCase.Mandatory,
+				AvailableMetaDataValues:                 tempMetaDataGroupItemInTestCase.AvailableMetaDataValues,
+				SelectedMetaDataValueForSingleSelect:    tempMetaDataGroupItemInTestCase.SelectedMetaDataValueForSingleSelect,
+				SelectedMetaDataValuesForMultiSelect:    tempMetaDataGroupItemInTestCase.SelectedMetaDataValuesForMultiSelect,
+				SelectedMetaDataValuesForMultiSelectMap: *tempMetaDataGroupItemInTestCase.SelectedMetaDataValuesForMultiSelectMapPtr,
+			}
+
+			// Add the MetaDataGroupItem for the gRPC-map-message
+			metaDataInGroupMessage[tempMetaDataGroupItemNameInTestCase] = &metaDataGroupItem
+
+			// Generate shared values, for SingleSelect and MultiSelect, to be hashed
+			valueToBeHashed = fmt.Sprintf("%s-%s-%t-%d",
+				tempMetaGroupNameInTestCase,
+				tempMetaDataGroupItemNameInTestCase,
+				tempMetaDataGroupItemInTestCase.Mandatory,
+				tempMetaDataGroupItemInTestCase.SelectType)
+
+			valuesToBeHashedSlice = append(valuesToBeHashedSlice, valueToBeHashed)
+
+			// Add Available values to be hashed
+			for _, tempMetaDataValue := range tempMetaDataGroupItemInTestCase.AvailableMetaDataValues {
+				valueToBeHashed = fmt.Sprintf("%s",
+					tempMetaDataValue)
+
+				valuesToBeHashedSlice = append(valuesToBeHashedSlice, valueToBeHashed)
+			}
+
+			// Generate values to be hashed, depending on Single or Multiple Select
+			switch tempMetaDataGroupItemInTestCase.SelectType {
+			case MetaDataSelectType_SingleSelect:
+
+				valueToBeHashed = fmt.Sprintf("%s",
+					tempMetaDataGroupItemInTestCase.SelectedMetaDataValueForSingleSelect)
+
+				valuesToBeHashedSlice = append(valuesToBeHashedSlice, valueToBeHashed)
+
+			case MetaDataSelectType_MultiSelect:
+
+				for _, tempMetaDataValue := range tempMetaDataGroupItemInTestCase.SelectedMetaDataValuesForMultiSelect {
+					valueToBeHashed = fmt.Sprintf("%s",
+						tempMetaDataValue)
+
+					valuesToBeHashedSlice = append(valuesToBeHashedSlice, valueToBeHashed)
+				}
+
+			default:
+				errorId := ""
+
+				log.Fatalln(fmt.Sprintf("Unhandled tempMetaDataGroupItemInTestCase.SelectType",
+					tempMetaDataGroupItemInTestCase.SelectType,
+					errorId))
+			}
+
+		}
+
+		// Create the MetaDataGroupMessage
+		var metaDataGroupMessage fenixGuiTestCaseBuilderServerGrpcApi.MetaDataGroupMessage
+		metaDataGroupMessage = fenixGuiTestCaseBuilderServerGrpcApi.MetaDataGroupMessage{
+			MetaDataGroupName:  tempMetaGroupNameInTestCase,
+			MetaDataInGroupMap: metaDataInGroupMessage,
+		}
+
+		// Add the MetaDataGroup-message for the gRPC-map-message
+		tempMetaDataGroupsMap[tempMetaGroupNameInTestCase] = &metaDataGroupMessage
+
+	}
+
+	// Add the MetaDataGroupsMap to the gRPC-object
+	testSuiteMetaData.MetaDataGroupsMap = tempMetaDataGroupsMap
+
+	// Generate Hash of all sub-message-hashes
+	testSuiteMetaDataHash = sharedCode.HashValues(valuesToBeHashedSlice, false)
+
+	return testSuiteMetaData,
+		testSuiteMetaDataHash,
+		err
 
 }
 

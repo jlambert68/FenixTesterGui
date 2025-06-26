@@ -71,7 +71,9 @@ func createEmptyAndInitiatedTestSuiteModel(
 	testCasesModel *testCaseModel.TestCasesModelsStruct) (
 	emptyAndInitiatedTestSuiteModel *TestSuiteModelStruct) {
 
-	tempMetaDataGroupsMap := make(map[string]*MetaDataGroupStruct)
+	tempMetaDataGroupsMap1 := make(map[string]*MetaDataGroupStruct)
+	tempMetaDataGroupsMap2 := make(map[string]*MetaDataGroupStruct)
+	tempMetaDataGroupsMap3 := make(map[string]*MetaDataGroupStruct)
 
 	// Generate the new and initiated TestSuiteModelStruct
 	emptyAndInitiatedTestSuiteModel = &TestSuiteModelStruct{
@@ -105,7 +107,7 @@ func createEmptyAndInitiatedTestSuiteModel(
 				TestSuiteMetaDataMessageJsonForTestSuiteWhenLastSaved:   &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseAndTestSuiteMetaDataForOneDomainMessage{},
 				TestSuiteMetaDataMessageStructForTestSuiteWhenLastSaved: &TestSuiteMetaDataForDomainStruct{},
 				MetaDataGroupsOrder:                                     []string{},
-				MetaDataGroupsMapPtr:                                    &tempMetaDataGroupsMap,
+				MetaDataGroupsMapPtr:                                    &tempMetaDataGroupsMap1,
 				SelectedTestSuiteMetaDataAsEntrySlice:                   []*boolbits.Entry{},
 			},
 			TestSuiteTypeHash: "",
@@ -130,7 +132,7 @@ func createEmptyAndInitiatedTestSuiteModel(
 				TestSuiteMetaDataMessageJsonForTestSuiteWhenLastSaved:   &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseAndTestSuiteMetaDataForOneDomainMessage{},
 				TestSuiteMetaDataMessageStructForTestSuiteWhenLastSaved: &TestSuiteMetaDataForDomainStruct{},
 				MetaDataGroupsOrder:                                     []string{},
-				MetaDataGroupsMapPtr:                                    &tempMetaDataGroupsMap,
+				MetaDataGroupsMapPtr:                                    &tempMetaDataGroupsMap2,
 				SelectedTestSuiteMetaDataAsEntrySlice:                   []*boolbits.Entry{},
 			},
 			TestSuiteTypeHash: "",
@@ -153,7 +155,7 @@ func createEmptyAndInitiatedTestSuiteModel(
 				TestSuiteMetaDataMessageJsonForTestSuiteWhenLastSaved:   &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseAndTestSuiteMetaDataForOneDomainMessage{},
 				TestSuiteMetaDataMessageStructForTestSuiteWhenLastSaved: &TestSuiteMetaDataForDomainStruct{},
 				MetaDataGroupsOrder:                                     []string{},
-				MetaDataGroupsMapPtr:                                    &tempMetaDataGroupsMap,
+				MetaDataGroupsMapPtr:                                    &tempMetaDataGroupsMap3,
 				SelectedTestSuiteMetaDataAsEntrySlice:                   []*boolbits.Entry{},
 			},
 			TestSuiteTypeHash: "",

@@ -210,12 +210,13 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteBasicInformationMes
 
 	// Create 'testSuiteBasicInformation'
 	testSuiteBasicInformation = &fenixGuiTestCaseBuilderServerGrpcApi.TestSuiteBasicInformationMessage{
-		DomainUuid:           testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainUuid,
-		DomainName:           testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainName,
-		TestSuiteUuid:        testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteUuid,
-		TestSuiteVersion:     testSuiteVersion,
-		TestSuiteName:        testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteName,
-		TestSuiteDescription: testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteDescription,
+		DomainUuid:                    testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainUuid,
+		DomainName:                    testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainName,
+		TestSuiteUuid:                 testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteUuid,
+		TestSuiteVersion:              testSuiteVersion,
+		TestSuiteName:                 testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteName,
+		TestSuiteDescription:          testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteDescription,
+		TestSuiteExecutionEnvironment: testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteExecutionEnvironment,
 	}
 
 	// Create the Hash of the Message

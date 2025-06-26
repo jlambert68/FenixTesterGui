@@ -99,7 +99,9 @@ func GenerateTestSuiteTabFromExistingTestSuite(
 	}
 
 	// Add content to the Tab-UI-object
-	newTestSuiteUiObject.TestSuiteTabItem.Text = fmt.Sprintf("<New TestSuite> [%s]", shortTestSuiteUuid)
+	newTestSuiteUiObject.TestSuiteTabItem.Text = fmt.Sprintf("%s [%s]",
+		newTestSuiteModel.TestSuiteUIModelBinding.TestSuiteName,
+		shortTestSuiteUuid)
 	newTestSuiteUiObject.TestSuiteTabItem.Content = newTestSuiteUiObjectBorderContainer
 
 	// Get the TestSuiteUiMap from the map-pointer
@@ -130,5 +132,8 @@ func GenerateTestSuiteTabFromExistingTestSuite(
 	testSuitesCommandEngine.TestSuiteTabsRef.Select(newTestSuiteUiObject.TestSuiteTabItem)
 
 	// Refresh the new TestSuite-tab
-	testSuitesCommandEngine.TestSuiteTabsRef.Refresh()
+	fyne.Do(func() {
+		testSuitesCommandEngine.TestSuiteTabsRef.Refresh()
+	})
+
 }

@@ -1,12 +1,11 @@
 package testSuitesModel
 
 import (
-	sharedCode "FenixTesterGui/common_code"
-	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/jinzhu/copier"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
-	"google.golang.org/protobuf/encoding/protojson"
+	"log"
 )
 
 // LoadFullTestSuiteFromDatabase - Load the TestSuite from the Database into model
@@ -43,71 +42,134 @@ func (testSuiteModel *TestSuiteModelStruct) LoadFullTestSuiteFromDatabase(
 		return err
 	}
 
-	// Extract a list of what was saved.
+	// Extract a list of what was saved from gRPC-message.
 	//Used to ensure that older versions of the TestSuite can later be loaded when new functionality has been added to the client
 	var supportedTestSuiteDataToBeStored testSuiteImplementedFunctionsToBeStoredStruct
-	supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap = testSuiteModel.
+	supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap, err = testSuiteModel.
 		extractTestSuiteImplementedFunctionsMap(detailedTestSuiteResponse.GetDetailedTestSuite().
 			GetTestSuiteImplementedFunctionsMap())
 
-	// Object holding the data that can't be changed directly via the UI
-	var tempTestSuiteModelDataThatCanNotBeChangedFromUI testSuiteModelDataThatCaNotBeChangedFromUIStruct
-	tempTestSuiteModelDataThatCanNotBeChangedFromUI = testSuiteModelDataThatCaNotBeChangedFromUIStruct{
-		testSuiteUuid: detailedTestSuiteResponse.GetDetailedTestSuite().GetTestSuiteBasicInformation().
-			GetTestSuiteUuid(),
-		testSuiteVersion: detailedTestSuiteResponse.GetDetailedTestSuite().GetTestSuiteBasicInformation().
-			GetTestSuiteVersion(),
-		createdByGcpLogin: detailedTestSuiteResponse.GetDetailedTestSuite().GetUpdatedByAndWhen().
-			GetCreatedByGcpLogin(),
-		createdByComputerLogin: detailedTestSuiteResponse.GetDetailedTestSuite().GetUpdatedByAndWhen().
-			GetCreatedByComputerLogin(),
-		createdDate: detailedTestSuiteResponse.GetDetailedTestSuite().GetUpdatedByAndWhen().
-			GetCreatedDate(),
-		lastChangedByGcpLogin: detailedTestSuiteResponse.GetDetailedTestSuite().GetUpdatedByAndWhen().
-			GetGCPAuthenticatedUser(),
-		lastChangedByComputerLogin: detailedTestSuiteResponse.GetDetailedTestSuite().GetUpdatedByAndWhen().
-			GetUserIdOnComputer(),
-		lastChangedDate: detailedTestSuiteResponse.GetDetailedTestSuite().GetUpdatedByAndWhen().
-			GetUpdateTimeStamp(),
-		testSuiteSavedMessageHash: "",
+	// Generates 'TestSuiteBasicInformation' from gRPC-message
+	err = testSuiteModel.generateTestSuiteBasicInformationMessageWhenLoading(
+		&supportedTestSuiteDataToBeStored,
+		detailedTestSuiteResponse.GetDetailedTestSuite().GetTestSuiteBasicInformation(),
+		detailedTestSuiteResponse.GetDetailedTestSuite().GetUpdatedByAndWhen(),
+		detailedTestSuiteResponse.GetDetailedTestSuite().GetMessageHash())
+
+	if err != nil {
+		errorId := "06c6bf54-c165-4410-ac8e-b741c9fd5932"
+		err = errors.New(fmt.Sprintf("Couldn't generate 'TestSuiteBasicInformation' for TestSuite = '%s'. Error = '%s' [ErrorID: %s]",
+			testSuiteUuid,
+			err.Error(),
+			errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return err
 	}
 
-	// Object holding info about if OwnerDomain and TestEnvironment has got any value, used for Locking parts of the GUI in the TestSuite
-	var tempLockValuesForOwnerDomainAndTestEnvironment lockValuesForOwnerDomainAndTestEnvironmentStruct
-	tempLockValuesForOwnerDomainAndTestEnvironment = lockValuesForOwnerDomainAndTestEnvironmentStruct{
-		OwnerDomainHasValue:     true,
-		TestEnvironmentHasValue: true,
-		LockButtonHaBeenClicked: true,
+	// Generates 'UsersChosenTestDataForTestSuiteMessage' from gRPC-message
+	err = testSuiteModel.generateTestSuiteTestDataMessageWhenLoading(
+		&supportedTestSuiteDataToBeStored,
+		detailedTestSuiteResponse.GetDetailedTestSuite().GetTestSuiteTestData())
+
+	if err != nil {
+		errorId := "09552494-9c22-4120-9476-bf4c89d8bd53"
+		err = errors.New(fmt.Sprintf("Couldn't generate 'UsersChosenTestDataForTestSuiteMessage' for TestSuite = '%s'. Error = '%s' [ErrorID: %s]",
+			testSuiteUuid,
+			err.Error(),
+			errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return err
 	}
 
-	// Structure that keeps data used after saving was successfully performed
-	var tempSavedTestSuiteUIModelBinding TestSuiteUIModelBindingStruct
-	tempSavedTestSuiteUIModelBinding = TestSuiteUIModelBindingStruct{
-		TestSuiteDeletionDate: detailedTestSuiteResponse.GetDetailedTestSuite().
-			GetDeletedDate(),
-		TestSuiteName: detailedTestSuiteResponse.GetDetailedTestSuite().GetTestSuiteBasicInformation().
-			GetTestSuiteName(),
-		TestSuiteDescription: detailedTestSuiteResponse.GetDetailedTestSuite().GetTestSuiteBasicInformation().
-			GetTestSuiteDescription(),
-		TestSuiteOwnerDomainUuid: detailedTestSuiteResponse.GetDetailedTestSuite().GetTestSuiteBasicInformation().
-			GetDomainUuid(),
-		TestSuiteOwnerDomainName: detailedTestSuiteResponse.GetDetailedTestSuite().GetTestSuiteBasicInformation().
-			GetDomainName(),
-		TestSuiteExecutionEnvironment: "",
-		TestSuiteIsNew:                false,
-		TestSuiteTestDataHash: detailedTestSuiteResponse.GetDetailedTestSuite().GetTestSuiteTestData().
-			GetHashOfThisMessageWithEmptyHashField(),
-		TestDataPtr:           nil,
-		TestSuiteMetaDataHash: "",
-		TestSuiteMetaDataPtr:  nil,
-		TestSuiteTypeHash:     "",
-		TestSuiteType:         TestSuiteTypeStruct{},
+	// Generates 'TestSuitePreview' from gRPC-message
+	err = testSuiteModel.generateTestSuitePreviewMessageWhenLoading(
+		&supportedTestSuiteDataToBeStored,
+		detailedTestSuiteResponse.GetDetailedTestSuite().GetTestSuitePreview())
+
+	if err != nil {
+		errorId := "a5f9b5e3-e45a-483d-a59b-2ac7c9450836"
+		err = errors.New(fmt.Sprintf("Couldn't generate 'TestSuitePreview' for TestSuite = '%s'. Error = '%s' [ErrorID: %s]",
+			testSuiteUuid,
+			err.Error(),
+			errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return err
 	}
 
-	// Create object that will hold complete TestSuite in memory
-	testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI = tempTestSuiteModelDataThatCanNotBeChangedFromUI
-	testSuiteModel.lockValuesForOwnerDomainAndTestEnvironment = tempLockValuesForOwnerDomainAndTestEnvironment
-	testSuiteModel.savedTestSuiteUIModelBinding = tempSavedTestSuiteUIModelBinding
+	// Generates 'TestSuiteMetaData' from gRPC-message
+	err = testSuiteModel.generateTestSuiteMetaDataMessageWhenLoading(
+		&supportedTestSuiteDataToBeStored,
+		detailedTestSuiteResponse.GetDetailedTestSuite().GetTestSuiteMetaData())
+
+	if err != nil {
+		errorId := "a085470e-10db-4eff-ab24-bf58fafbbb1c"
+		err = errors.New(fmt.Sprintf("Couldn't generate 'TestSuiteMetaData' for TestSuite = '%s'. Error = '%s' [ErrorID: %s]",
+			testSuiteUuid,
+			err.Error(),
+			errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return err
+	}
+
+	// Generates 'TestCasesInTestSuite' from gRPC-message
+	err = testSuiteModel.generateTestCasesInTestSuiteMessageWhenLoading(
+		&supportedTestSuiteDataToBeStored,
+		detailedTestSuiteResponse.GetDetailedTestSuite().GetTestCasesInTestSuite())
+
+	if err != nil {
+		errorId := "f123cec8-db36-46af-ab92-1825ecd57cbb"
+		err = errors.New(fmt.Sprintf("Couldn't generate 'TestCasesInTestSuite' for TestSuite = '%s'. Error = '%s' [ErrorID: %s]",
+			testSuiteUuid,
+			err.Error(),
+			errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return err
+	}
+
+	// Generates 'TestSuiteDeleteData' from gRPC-message
+	err = testSuiteModel.generateTestSuiteDeleteDateMessageWhenLoading(
+		&supportedTestSuiteDataToBeStored,
+		detailedTestSuiteResponse.GetDetailedTestSuite().GetDeletedDate())
+
+	if err != nil {
+		errorId := "cfea21a1-149a-4993-8234-c6f8b3a5316a"
+		err = errors.New(fmt.Sprintf("Couldn't generate 'TestSuiteDeleteData' for TestSuite = '%s'. Error = '%s' [ErrorID: %s]",
+			testSuiteUuid,
+			err.Error(),
+			errorId))
+
+		fmt.Println(err) // TODO Send on Error-channel
+
+		return err
+	}
+
+	// Copy data from 'savedTestSuiteUIModelBinding' to 'savedTestSuiteUIModelBinding' using deep copy
+	err = copier.CopyWithOption(&testSuiteModel.TestSuiteUIModelBinding, &testSuiteModel.savedTestSuiteUIModelBinding, copier.Option{DeepCopy: true})
+	if err != nil {
+
+		errorID := "34791be0-1117-4a46-9d28-479977689cd6"
+
+		errorMsg := fmt.Sprintf("error copying 'savedTestSuiteUIModelBinding' using 'copier'. error = '%s' [ErrorID: %s]",
+			err.Error(),
+			errorID)
+
+		log.Fatalln(errorMsg)
+	}
+
+	// Set that Domain and TestEnvironment is locked
+	testSuiteModel.lockValuesForOwnerDomainAndTestEnvironment.OwnerDomainHasValue = true
+	testSuiteModel.lockValuesForOwnerDomainAndTestEnvironment.TestEnvironmentHasValue = true
+	testSuiteModel.lockValuesForOwnerDomainAndTestEnvironment.LockButtonHaBeenClicked = true
 
 	return err
 
@@ -115,24 +177,15 @@ func (testSuiteModel *TestSuiteModelStruct) LoadFullTestSuiteFromDatabase(
 
 // Extract 'TestSuiteImplementedFunctionsMap' from gRPC-message
 func (testSuiteModel *TestSuiteModelStruct) extractTestSuiteImplementedFunctionsMap(
-	testSuiteImplementedFunctionsMapAsJsonString string) (
+	testSuiteImplementedFunctionsGrpc map[int32]bool) (
 	testSuiteImplementedFunctionsMap map[testSuiteImplementedFucntionsType]bool,
 	err error) {
 
 	testSuiteImplementedFunctionsMap = make(map[testSuiteImplementedFucntionsType]bool)
 
-	// UnMarshal the json
-	err = json.Unmarshal([]byte(testSuiteImplementedFunctionsMapAsJsonString), testSuiteImplementedFunctionsMap)
-	if err != nil {
-
-		errorId := "8a3705bf-b074-4cd9-9466-986cff9d329a"
-		err = errors.New(fmt.Sprintf("couldn't unmarshal 'testSuiteImplementedFunctionsMapAsJsonString'. Error = '%s'. [ErrorID: %s]",
-			err.Error(),
-			errorId))
-
-		fmt.Println(err) // TODO Send on Error-channel
-
-		return nil, err
+	// Loop gRPC-map and add to local map
+	for testSuiteImplementedFunction, testSuiteImplementedFunctionValue := range testSuiteImplementedFunctionsGrpc {
+		testSuiteImplementedFunctionsMap[testSuiteImplementedFucntionsType(testSuiteImplementedFunction)] = testSuiteImplementedFunctionValue
 	}
 
 	return testSuiteImplementedFunctionsMap, err
@@ -162,7 +215,8 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteBasicInformationMes
 	testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteDescription = testSuiteBasicInformation.GetTestSuiteDescription()
 	testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteOwnerDomainUuid = testSuiteBasicInformation.GetDomainUuid()
 	testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteOwnerDomainName = testSuiteBasicInformation.GetDomainName()
-	testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteExecutionEnvironment = "xxxxxxxxxxxxxxxxxxxxxxxxxx"
+	testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteExecutionEnvironment = testSuiteBasicInformation.GetTestSuiteExecutionEnvironment()
+	testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteIsNew = false
 
 	testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteUuid = testSuiteBasicInformation.GetTestSuiteUuid()
 	testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteVersion = testSuiteBasicInformation.GetTestSuiteVersion()
@@ -343,6 +397,6 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteImplementedFunction
 			testSuiteImplementedFunctionsMap[testSuiteImplementedFucntionsType(testSuiteImplementedFunction)] = testSuiteImplementedFunctionValue
 	}
 
-	return testSuiteImplementedFunctionsMapFromGrpc, testSuiteImplementedFunctionsMapHash, err
+	return err
 
 }

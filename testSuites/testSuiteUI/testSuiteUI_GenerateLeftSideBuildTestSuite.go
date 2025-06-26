@@ -23,6 +23,11 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	var testSuiteNameAreaContainer *fyne.Container
 	var testSuiteDescriptionAreaContainer *fyne.Container
 
+	// Initiate some containers
+	testSuiteUiModel.testSuiteMetaDataStackContainer = container.NewStack()
+	testSuiteUiModel.testSuiteTestDataAreaContainer = container.NewStack()
+	testSuiteUiModel.lockOwnerAndTestEnvironmentAreaContainer = container.NewStack()
+
 	// Generate TestSuite-DeleteDate area
 	testSuiteDeleteDateAreaContainer, err = testSuiteUiModel.generateTestSuiteDeletionDateArea(testSuiteUuid)
 	if err != nil {

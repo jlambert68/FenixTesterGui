@@ -66,8 +66,15 @@ func countDownTicker(testSuiteUiModel *TestSuiteUiStruct) {
 		fyne.Do(func() {
 			newTestSuiteDeletionDateEntry.SetText("")
 			testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteDeletionDate = ""
-		})
 
+			// Trigger System Notification sound
+			soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
+
+			fyne.CurrentApp().SendNotification(&fyne.Notification{
+				Title:   "TestSuite Deleted",
+				Content: "Deleted Date is cleared in the Database!",
+			})
+		})
 	}
 
 }
@@ -217,7 +224,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteDeletionDateArea(
 		} else {
 
 			// Date must be equal or bigger then Today()
-			if dateToValidate >= validTodayDate {
+			if dateToValidate > validTodayDate {
 				return true // Valid date
 			} else {
 				return false
@@ -238,7 +245,12 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteDeletionDateArea(
 		dateIsValid = dateValidatorFunction(s)
 		// Set Warning box that value is not selected
 		if dateIsValid == false {
-			valueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+			if len(newTestSuiteDeletionDateEntry.Text) == 0 {
+				valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 255}
+			} else {
+				valueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+			}
+
 			enableDeletionCheckbox.Disable()
 			enableDeletionCheckbox.SetChecked(false)
 			deleteTestSuiteButton.Disable()
@@ -308,6 +320,9 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteDeletionDateArea(
 
 		}
 
+		// Change color to Green for the color-box
+		valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 255, B: 0, A: 255}
+
 		//if dateIsInTheFuture == false {
 
 		// Store the Delete date in the TestSuiteModel
@@ -371,12 +386,17 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteDeletionDateArea(
 	dateIsValid = dateValidatorFunction(newTestSuiteDeletionDateEntry.Text)
 	// Set Warning box that value is not selected
 	if dateIsValid == false {
-		valueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+		if len(newTestSuiteDeletionDateEntry.Text) == 0 {
+			valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 255}
+		} else {
+			valueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
+		}
+
 		enableDeletionCheckbox.Disable()
 		enableDeletionCheckbox.SetChecked(false)
 		deleteTestSuiteButton.Disable()
 	} else {
-		valueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 255, B: 0, A: 255}
+		valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 255, B: 0, A: 255}
 		enableDeletionCheckbox.Enable()
 	}
 

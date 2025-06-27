@@ -99,7 +99,10 @@ func (testSuiteUiModel TestSuiteUiStruct) GenerateMetaDataAreaForTestCase() (
 	testSuiteMetaDataAccordion = widget.NewAccordion(metaDataAccordionItem)
 
 	// Open all for the Accordion
-	testSuiteMetaDataAccordion.OpenAll()
+	// Will only been done when a TestSuite hasn't been locked down due to user selected OwnerDomain and Environment
+	if testSuiteUiModel.TestSuiteModelPtr.HasLockButtonBeenClickedAndBothOwnerDomainAndTestEnvironmentHaveValues() == false {
+		testSuiteMetaDataAccordion.OpenAll()
+	}
 
 	// Create the VBox-container that will be returned
 	testSuiteMetaDataContainer = container.NewVBox(testSuiteMetaDataAccordion, widget.NewLabel(""), widget.NewSeparator())

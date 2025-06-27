@@ -1,7 +1,6 @@
 package testSuiteUI
 
 import (
-	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/soundEngine"
 	"FenixTesterGui/testSuites/testSuitesModel"
 	"errors"
@@ -12,7 +11,6 @@ import (
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
-	"github.com/sirupsen/logrus"
 	"image/color"
 	"time"
 )
@@ -23,11 +21,15 @@ var enableDeletionCheckbox *widget.Check
 var tickerDoneChannel chan bool
 var newTestSuiteDeletionDateEntry *widget.Entry
 
-func countDownTicker() {
+func countDownTicker(testSuiteUiModel *TestSuiteUiStruct) {
 	tickerDoneChannel = make(chan bool)
 	countdown := 10 // Start from 5 seconds
 	tickerCountDownlabelDataBinding.Set(fmt.Sprintf("Countdown: %d seconds remaining", countdown))
-	tickerCountDownlabel.Show()
+	fyne.Do(func() {
+		tickerCountDownlabel.Show()
+	})
+
+	var tickerChannelValue bool
 
 	ticker := time.NewTicker(1 * time.Second)
 	defer ticker.Stop() // Stop the ticker when we're done
@@ -51,13 +53,22 @@ func countDownTicker() {
 	}()
 
 	// Wait for the countdown to finish
-	<-tickerDoneChannel
+	tickerChannelValue = <-tickerDoneChannel
 	fyne.Do(func() {
 		tickerCountDownlabel.Hide()
 	})
 	fyne.Do(func() {
 		enableDeletionCheckbox.SetChecked(false)
 	})
+
+	// If The user ended the Ticker with the Delete-button then accept the value else clear text box
+	if tickerChannelValue == true {
+		fyne.Do(func() {
+			newTestSuiteDeletionDateEntry.SetText("")
+			testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteDeletionDate = ""
+		})
+
+	}
 
 }
 
@@ -238,6 +249,22 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteDeletionDateArea(
 
 		}
 
+		// Check if values has changed, if so the trigger 'ticker count down'
+		if dateIsValid == true && s != currentTestSuiteModel.TestSuiteUIModelBinding.TestSuiteDeletionDate &&
+			time.Now().Format("2006-01-02") == s {
+
+			enableDeletionCheckbox.SetChecked(true)
+
+			// Trigger System Notification sound
+			soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
+
+			fyne.CurrentApp().SendNotification(&fyne.Notification{
+				Title:   "Delete TestSuite",
+				Content: fmt.Sprintf("You must accept the new Delete date"),
+			})
+
+		}
+
 	}
 
 	valueIsValidWarningBox.SetMinSize(fyne.NewSize(15, newTestSuiteDeletionDateEntry.Size().Height))
@@ -245,9 +272,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteDeletionDateArea(
 	// The button that activates the Deletion of the TestSuite
 	deleteTestSuiteButton = widget.NewButton("Auto-Delete TestSuite at specified date", func() {
 		fmt.Println("DELETE")
-		tickerDoneChannel <- true
-
-		var existInMap bool
+		tickerDoneChannel <- false
 
 		// Which type of Delete should be performed?
 		//var dateIsInTheFuture bool
@@ -285,44 +310,40 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteDeletionDateArea(
 
 		//if dateIsInTheFuture == false {
 
-		// Get entryOnChangetestSuitesMap
-		var entryOnChangetestSuitesMap map[string]*testSuitesModel.TestSuiteModelStruct
-		entryOnChangetestSuitesMap = *testSuitesModel.TestSuitesModelPtr.TestSuitesMapPtr
-
-		// Get a pointer to the TestSuite-model and the TestSuite-model itself
-		var entryOnChangeCurrentTestSuiteModelPtr *testSuitesModel.TestSuiteModelStruct
-		entryOnChangeCurrentTestSuiteModelPtr, existInMap = entryOnChangetestSuitesMap[testSuiteUuid]
-
-		if existInMap == false {
-			sharedCode.Logger.WithFields(logrus.Fields{
-				"ID":            "48285fad-09a3-4e52-8f34-a104cbcf358a",
-				"testSuiteUuid": testSuiteUuid,
-			}).Fatal("TestSuite doesn't exist in TestSuiteMap. This should not happen")
-		}
-
 		// Store the Delete date in the TestSuiteModel
-		entryOnChangeCurrentTestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteDeletionDate = newTestSuiteDeletionDateEntry.Text
+		testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteDeletionDate = newTestSuiteDeletionDateEntry.Text
 
-		/*
+		// If TestSuite hase been saved then Trigger 'DeleteTestSuiteAtThisDate'
+		// Otherwise normal save takes care of saving the Delete-date
 
-			************ Denna är bortplockad temporärt for sviter ************
+		if testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestSuiteIsNew == false {
 
-				// Remove TestSuite from TestSuite model and the UI-model
-			commandEngineChannelMessage := sharedCode.ChannelCommandStruct{
-				ChannelCommand:  sharedCode.ChannelCommandRemoveTestSuiteWithOutSaving,
-				FirstParameter:  testSuiteUuid,
-				SecondParameter: "",
-				ActiveTestSuite: "",
-				ElementType:     sharedCode.Undefined,
+			// Send Delete to Database
+			err = testSuiteUiModel.TestSuiteModelPtr.DeleteTestSuiteAtThisDate(
+				testSuiteUiModel.TestSuiteModelPtr.GetTestSuiteUuid())
+
+			if err != nil {
+
+				// Trigger System Notification sound
+				soundEngine.PlaySoundChannel <- soundEngine.InvalidNotificationSound
+
+				fyne.CurrentApp().SendNotification(&fyne.Notification{
+					Title:   "Delete TestSuite",
+					Content: fmt.Sprintf("Got some error when trying to Delete TestSuite"),
+				})
+
+				return
+
+			} else {
+				// Trigger System Notification sound
+				soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
+
+				fyne.CurrentApp().SendNotification(&fyne.Notification{
+					Title:   "Delete TestSuite",
+					Content: fmt.Sprintf("Delete Date was successfuly updated for TestSuite"),
+				})
 			}
-
-			// Send command message over channel to Command and Rule Engine
-			*testSuitesUiCanvasObject.CommandChannelReference <- commandEngineChannelMessage
-
-
-		*/
-		//}
-		//}
+		}
 
 		// This TestSuite is saved in Database and Delete date is Today()
 
@@ -337,7 +358,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteDeletionDateArea(
 		if b == true {
 			deleteTestSuiteButton.Enable()
 			fyne.Do(func() {
-				go countDownTicker()
+				go countDownTicker(testSuiteUiModel)
 			})
 		} else {
 			deleteTestSuiteButton.Disable()

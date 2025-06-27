@@ -97,6 +97,20 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) LoadDetailedTestSuite(
 			"error": err,
 		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'GetDetailedTestSuite'")
 
+		ackNackResponse := &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{
+			AckNack:    false,
+			Comments:   "Problem to do gRPC-call to FenixTestGuiBuilderServer for 'GetDetailedTestSuite'",
+			ErrorCodes: nil,
+			ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
+				grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
+		}
+
+		returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.GetDetailedTestSuiteResponse{
+			AckNackResponse:   ackNackResponse,
+			DetailedTestSuite: nil,
+		}
+		return returnMessage
+
 	} else if returnMessage.AckNackResponse.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
 		sharedCode.Logger.WithFields(logrus.Fields{

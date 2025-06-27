@@ -347,6 +347,12 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestSuiteA
 
 	testDataAccordion = widget.NewAccordion(testDataAccordionItem) // widget.NewAccordion(tableAccordionItem)
 
+	// Open all for the Accordion
+	// Will only been done when a TestSuite hasn't been locked down due to user selected OwnerDomain and Environment
+	if testSuiteUiModel.TestSuiteModelPtr.HasLockButtonBeenClickedAndBothOwnerDomainAndTestEnvironmentHaveValues() == false {
+		testDataAccordion.OpenAll()
+	}
+
 	// Create the VBox-container that will be returned
 	testDataArea := container.NewVBox(testDataAccordion, widget.NewLabel(""), widget.NewSeparator())
 

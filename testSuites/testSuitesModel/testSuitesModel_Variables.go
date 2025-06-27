@@ -69,7 +69,8 @@ type TestSuiteUIModelBindingStruct struct {
 	TestSuiteOwnerDomainName      string // The Name for the Domain that owns the TestSuite
 	TestSuiteExecutionEnvironment string // The execution environment where the TestSuite will be executed
 
-	TestSuiteIsNew        bool
+	TestSuiteIsNew bool
+
 	TestSuiteTestDataHash string                                       // Hash used to check if changes has been done to TestData
 	TestDataPtr           *testDataEngine.TestDataForGroupObjectStruct // Holding all selected TestData
 

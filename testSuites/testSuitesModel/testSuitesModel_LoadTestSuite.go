@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/jinzhu/copier"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
+	"github.com/jlambert68/FenixScriptEngine/testDataEngine"
 	"log"
 )
 
@@ -153,6 +154,12 @@ func (testSuiteModel *TestSuiteModelStruct) LoadFullTestSuiteFromDatabase(
 		return err
 	}
 
+	// Due to that DeepCopier can't copy 'TestDataPtr' it needs to be handled separate(I don't know why)
+	var tempTestDataPtr *testDataEngine.TestDataForGroupObjectStruct
+	tempTestDataPtr = testSuiteModel.savedTestSuiteUIModelBinding.TestDataPtr
+
+	testSuiteModel.savedTestSuiteUIModelBinding.TestDataPtr = nil
+
 	// Copy data from 'savedTestSuiteUIModelBinding' to 'TestSuiteUIModelBinding' using deep copy
 	err = copier.CopyWithOption(&testSuiteModel.TestSuiteUIModelBinding, &testSuiteModel.savedTestSuiteUIModelBinding, copier.Option{DeepCopy: true})
 	if err != nil {
@@ -165,6 +172,10 @@ func (testSuiteModel *TestSuiteModelStruct) LoadFullTestSuiteFromDatabase(
 
 		log.Fatalln(errorMsg)
 	}
+
+	// Set back 'TestDataPtr' and put 'pointer-copy' in 'NoneSavedTestSuiteUIModelBinding'
+	testSuiteModel.savedTestSuiteUIModelBinding.TestDataPtr = tempTestDataPtr
+	testSuiteModel.TestSuiteUIModelBinding.TestDataPtr = tempTestDataPtr
 
 	// Set that Domain and TestEnvironment is locked
 	testSuiteModel.lockValuesForOwnerDomainAndTestEnvironment.OwnerDomainHasValue = true
@@ -248,6 +259,111 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteTestDataMessageWhen
 
 		return err
 	}
+
+	// Generate users TestData for TestSuite
+	var chosenTestDataPointsPerGroupMap map[testDataEngine.TestDataPointGroupNameType]*testDataEngine.TestDataPointNameMapType
+	chosenTestDataPointsPerGroupMap = make(map[testDataEngine.TestDataPointGroupNameType]*testDataEngine.TestDataPointNameMapType)
+
+	var testDataPointGroups []testDataEngine.TestDataPointGroupNameType
+
+	var testData *testDataEngine.TestDataForGroupObjectStruct
+	testData = &testDataEngine.TestDataForGroupObjectStruct{
+		TestDataPointGroups:             nil,
+		TestDataPointsForAGroup:         nil,
+		ChosenTestDataPointsPerGroupMap: chosenTestDataPointsPerGroupMap,
+		ShouldUpdateMainWindow: testDataEngine.ResponseChannelStruct{
+			ShouldBeUpdated:        false,
+			TestDataPointGroupName: "",
+		},
+	}
+
+	if testSuiteTestData != nil {
+		// User has TestData stored for the TestSuite
+
+		// Loop all Groups with TestDataPoints in gRPC-message
+		for testDataGroupNameGrpc, testDataGroupGrpc := range testSuiteTestData.ChosenTestDataPointsPerGroupMap {
+
+			var testDataPointNameMap map[testDataEngine.TestDataValueNameType]*[]*testDataEngine.DataPointTypeForGroupsStruct
+			testDataPointNameMap = make(map[testDataEngine.TestDataValueNameType]*[]*testDataEngine.DataPointTypeForGroupsStruct)
+
+			var testDataPointNameMapAsObject testDataEngine.TestDataPointNameMapType
+
+			for testDataPointNameGrpc, testDataPointGrpc := range testDataGroupGrpc.ChosenTestDataRowsPerTestDataPointMap {
+
+				var dataPointTypeForGroups []*testDataEngine.DataPointTypeForGroupsStruct
+
+				for _, testDataRowGrpc := range testDataPointGrpc.TestDataRows {
+
+					// Initiate the maps in the struct, only 'selectedTestDataPointUuidMap' is filled with values
+					var searchResultDataPointUuidMap map[testDataEngine.TestDataPointRowUuidType]testDataEngine.TestDataPointRowUuidStruct
+					searchResultDataPointUuidMap = make(map[testDataEngine.TestDataPointRowUuidType]testDataEngine.TestDataPointRowUuidStruct)
+					var availableTestDataPointUuidMap map[testDataEngine.TestDataPointRowUuidType]testDataEngine.TestDataPointRowUuidStruct
+					availableTestDataPointUuidMap = make(map[testDataEngine.TestDataPointRowUuidType]testDataEngine.TestDataPointRowUuidStruct)
+					var selectedTestDataPointUuidMap map[testDataEngine.TestDataPointRowUuidType]testDataEngine.TestDataPointRowUuidStruct
+					selectedTestDataPointUuidMap = make(map[testDataEngine.TestDataPointRowUuidType]testDataEngine.TestDataPointRowUuidStruct)
+
+					// Create the RowSummary for each row for 'dataPointTypeForGroup'
+					for _, testDataPointRowValueSummaryGrpc := range testDataRowGrpc.TestDataPointRowValueSummaryMap {
+
+						var testDataPointRowValuesSummary testDataEngine.TestDataPointRowUuidStruct
+						testDataPointRowValuesSummary = testDataEngine.TestDataPointRowUuidStruct{
+							TestDataPointRowUuid:          testDataEngine.TestDataPointRowUuidType(testDataPointRowValueSummaryGrpc.GetTestDataPointRowUuid()),
+							TestDataPointRowValuesSummary: testDataEngine.TestDataPointRowValuesSummaryType(testDataPointRowValueSummaryGrpc.GetTestDataPointRowValuesSummary()),
+						}
+
+						// Add the RowUUid and the values summary to the map
+						selectedTestDataPointUuidMap[testDataEngine.TestDataPointRowUuidType(testDataPointRowValueSummaryGrpc.GetTestDataPointRowUuid())] = testDataPointRowValuesSummary
+
+					}
+
+					// Create the 'dataPointTypeForGroup'
+					var dataPointTypeForGroup *testDataEngine.DataPointTypeForGroupsStruct
+					dataPointTypeForGroup = &testDataEngine.DataPointTypeForGroupsStruct{
+						TestDataDomainUuid:            testDataEngine.TestDataDomainUuidType(testDataRowGrpc.GetTestDataDomainUuid()),
+						TestDataDomainName:            testDataEngine.TestDataDomainNameType(testDataRowGrpc.GetTestDataDomainName()),
+						TestDataAreaUuid:              testDataEngine.TestDataAreaUuidType(testDataRowGrpc.GetTestDataAreaUuid()),
+						TestDataAreaName:              testDataEngine.TestDataAreaNameType(testDataRowGrpc.GetTestDataAreaName()),
+						TestDataPointName:             testDataEngine.TestDataValueNameType(testDataRowGrpc.GetTestDataPointName()),
+						SearchResultDataPointUuidMap:  searchResultDataPointUuidMap,
+						AvailableTestDataPointUuidMap: availableTestDataPointUuidMap,
+						SelectedTestDataPointUuidMap:  selectedTestDataPointUuidMap,
+					}
+
+					// Add 'dataPointTypeForGroup' to slice of 'dataPointTypeForGroups'
+					dataPointTypeForGroups = append(dataPointTypeForGroups, dataPointTypeForGroup)
+
+				}
+
+				// Add the slice of TestDataRows to the map for TestDataPoints
+				testDataPointNameMap[testDataEngine.TestDataValueNameType(testDataPointNameGrpc)] = &dataPointTypeForGroups
+
+			}
+
+			// Add to slice of GroupNames
+			testDataPointGroups = append(testDataPointGroups, testDataEngine.TestDataPointGroupNameType(testDataGroupNameGrpc))
+
+			// Move Map into object
+			testDataPointNameMapAsObject = testDataPointNameMap
+
+			chosenTestDataPointsPerGroupMap[testDataEngine.TestDataPointGroupNameType(testDataGroupNameGrpc)] = &testDataPointNameMapAsObject
+
+		}
+
+		testData.ChosenTestDataPointsPerGroupMap = chosenTestDataPointsPerGroupMap
+
+		testData.TestDataPointGroups = testDataPointGroups
+
+		testSuiteModel.savedTestSuiteUIModelBinding.TestDataPtr = testData
+
+	} else {
+		// User has no TestData stored for the TestSuite
+		testData.ChosenTestDataPointsPerGroupMap = chosenTestDataPointsPerGroupMap
+
+		testSuiteModel.savedTestSuiteUIModelBinding.TestDataPtr = testData
+	}
+
+	// Update The Hash for the TestSuite's TestData
+	testSuiteModel.savedTestSuiteUIModelBinding.TestSuiteTestDataHash = testSuiteTestData.GetHashOfThisMessageWithEmptyHashField()
 
 	return err
 

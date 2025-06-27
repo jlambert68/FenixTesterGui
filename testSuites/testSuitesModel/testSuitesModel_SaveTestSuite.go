@@ -193,6 +193,12 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 	testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteIsNew = false
 	testSuiteModel.TestSuiteUIModelBinding.TestSuiteIsNew = false
 
+	// Due to that DeepCopier can't copy 'TestDataPtr' it needs to be handled separate(I don't know why)
+	var tempTestDataPtr2 *testDataEngine.TestDataForGroupObjectStruct
+	tempTestDataPtr2 = testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestDataPtr
+	testSuiteModel.savedTestSuiteUIModelBinding.TestDataPtr = nil
+	testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestDataPtr = nil
+
 	// Copy data from 'NoneSavedTestSuiteUIModelBinding' to 'savedTestSuiteUIModelBinding' using deep copy
 	err = copier.CopyWithOption(&testSuiteModel.savedTestSuiteUIModelBinding, &testSuiteModel.NoneSavedTestSuiteUIModelBinding, copier.Option{DeepCopy: true})
 	if err != nil {
@@ -205,6 +211,10 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 
 		log.Fatalln(errorMsg)
 	}
+
+	// Set back 'TestDataPtr' and put 'pointer-copy' in 'NoneSavedTestSuiteUIModelBinding'
+	testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestDataPtr = tempTestDataPtr2
+	testSuiteModel.savedTestSuiteUIModelBinding.TestDataPtr = tempTestDataPtr2
 
 	// Update The Hash for the saved TestSuite
 	testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteSavedMessageHash = messageHash

@@ -173,7 +173,7 @@ func (testSuiteModel *TestSuiteModelStruct) LoadFullTestSuiteFromDatabase(
 		log.Fatalln(errorMsg)
 	}
 
-	// Set back 'TestDataPtr' and put 'pointer-copy' in 'NoneSavedTestSuiteUIModelBinding'
+	// Set back 'TestDataPtr' and put 'pointer-copy' in 'savedTestSuiteUIModelBinding'
 	testSuiteModel.savedTestSuiteUIModelBinding.TestDataPtr = tempTestDataPtr
 	testSuiteModel.TestSuiteUIModelBinding.TestDataPtr = tempTestDataPtr
 

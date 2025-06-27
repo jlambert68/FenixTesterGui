@@ -20,7 +20,10 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateSelectedTestDataForTestSuiteA
 	error) {
 
 	// Initiate the TestData-object used for keeping Groups and their TestData in the TestSuiteModelPtr
-	testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr = &testDataEngine.TestDataForGroupObjectStruct{}
+	// Will only been done when a TestSuite hasn't been locked down due to user selected OwnerDomain and Environment
+	if testSuiteUiModel.TestSuiteModelPtr.HasLockButtonBeenClickedAndBothOwnerDomainAndTestEnvironmentHaveValues() == false {
+		testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestDataPtr = &testDataEngine.TestDataForGroupObjectStruct{}
+	}
 
 	// Accordion objects
 	var testDataAccordionItem *widget.AccordionItem

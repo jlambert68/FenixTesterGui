@@ -2,6 +2,7 @@ package testSuiteUI
 
 import (
 	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testCases/listTestCasesUI"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -12,7 +13,8 @@ import (
 // Generate leftSideBuildTestSuite - Main information for TestSuite
 func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContainer(
 	testSuiteUuid string,
-	testCasesModel *testCaseModel.TestCasesModelsStruct) (
+	testCasesModel *testCaseModel.TestCasesModelsStruct,
+	preViewAndFilterTabsUsedForCreateTestSuite *container.AppTabs) (
 	leftSideBuildTestSuiteContainer *fyne.Container,
 	err error) {
 
@@ -25,6 +27,11 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	var ownerDomainAndEnvironmentAccordion *widget.Accordion
 	var ownerDomainAndEnvironmentAccordionItem *widget.AccordionItem
 	var ownerDomainAndEnvironmentAccordionItemContainer *fyne.Container
+
+	var testCaseListAccordion *widget.Accordion
+	var testCaseListAccordionItem *widget.AccordionItem
+	var testCaseListAccordionItemContainer *fyne.Container
+	var testCaseListAccordionItemCanvasObject fyne.CanvasObject
 
 	// Initiate some containers
 	testSuiteUiModel.testSuiteMetaDataStackContainer = container.NewStack()
@@ -217,6 +224,25 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 		testSuiteUiModel.testSuiteMetaDataStackContainer.Hide()
 		//testSuiteUiModel.testSuiteMetaDataContainer.Refresh()
 	}
+
+	/*
+		testCasesModel *testCaseModel.TestCasesModelsStruct,
+		preViewAndFilterTabsUsedForCreateTestSuite *container.AppTabs) (listTestCasesUI fyne.CanvasObject) {
+	*/
+
+	// Generate the TestCases list
+	var listTestCaseUIObject *listTestCasesUI.ListTestCaseUIStruct
+	listTestCaseUIObject = listTestCasesUI.InitiateListTestCaseUIObject()
+	testCaseListAccordionItemCanvasObject = listTestCaseUIObject.GenerateListTestCasesUI(
+		testCasesModel,
+		preViewAndFilterTabsUsedForCreateTestSuite)
+
+	testCaseListAccordionItemContainer = container.NewBorder(nil, nil, nil, nil, testCaseListAccordionItemCanvasObject)
+
+	testCaseListAccordionItem = widget.NewAccordionItem("TestCases", testCaseListAccordionItemContainer)
+	testCaseListAccordion = widget.NewAccordion(testCaseListAccordionItem)
+
+	leftTopSideBuildTestSuiteContainer.Add(testCaseListAccordion)
 
 	// Create the Left side Container
 	leftSideBuildTestSuiteContainer = container.NewBorder(

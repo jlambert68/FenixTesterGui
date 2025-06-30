@@ -48,18 +48,21 @@ func (testSuiteUiModel TestSuiteUiStruct) GenerateBuildNewTestSuiteUI(
 	var leftSideBuildTestSuiteContainer *fyne.Container
 	var rightSideBuildTestSuiteContainer *fyne.Container
 
+	// Generate rightSideBuildTestSuiteContainer - MetaData filter for TestCases
+	var preViewAndFilterTabsUsedForCreateTestSuite *container.AppTabs
+	rightSideBuildTestSuiteContainer,
+		preViewAndFilterTabsUsedForCreateTestSuite = generateRightSideBuildTestSuiteContainer(testCasesModel)
+
 	// Generate leftSideBuildTestSuite - Main information for TestSuite
 	leftSideBuildTestSuiteContainer, err = testSuiteUiModel.generateLeftSideBuildTestSuiteContainer(
 		testSuiteUuid,
-		testCasesModel)
+		testCasesModel,
+		preViewAndFilterTabsUsedForCreateTestSuite)
 	if err != nil {
 		newTestSuiteUIContainer = container.NewVBox(widget.NewLabel(err.Error()))
 		return newTestSuiteUIContainer, err
 
 	}
-
-	// Generate rightSideBuildTestSuiteContainer - MetaData filter for TestCases
-	rightSideBuildTestSuiteContainer = generateRightSideBuildTestSuiteContainer(testCasesModel)
 
 	// make, LeftSide, hoverable transparent overlay, to stop mouse interference between to two sides of the split-container
 	leftCreateTestSuiteOverlay := NewHoverableRect(color.Transparent, nil)

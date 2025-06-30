@@ -71,7 +71,9 @@ func InitiateListTestCaseUIObject() (listTestCaseUIObject *ListTestCaseUIStruct)
 }
 
 // Create the UI used for list all TestCasesMapPtr that the User can edit
-func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct) (listTestCasesUI fyne.CanvasObject) {
+func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateListTestCasesUI(
+	testCasesModel *testCaseModel.TestCasesModelsStruct,
+	preViewAndFilterTabsUsedForCreateTestSuite *container.AppTabs) (listTestCasesUI fyne.CanvasObject) {
 
 	//var testCaseTable *widget.Table
 
@@ -202,13 +204,26 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateListTestCasesUI(testCa
 		"TestCase-filter",
 		simpleAndAdvancedMetaDataFilter)
 
-	// Generate the AppTabsContainer
-	listTestCaseUIObject.preViewAndFilterTabs = container.NewAppTabs(listTestCaseUIObject.filterTab, listTestCaseUIObject.preViewTab)
+	// Generate the AppTabsContainer. If AppTabContainer coming as input is not nil, then use that one (used when creating TestSuite)
+	if preViewAndFilterTabsUsedForCreateTestSuite == nil {
+		// We are in standard List TestCases
+		listTestCaseUIObject.preViewAndFilterTabs = container.NewAppTabs(listTestCaseUIObject.filterTab, listTestCaseUIObject.preViewTab)
 
-	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(testCasesListScrollContainer2, listTestCaseUIObject.preViewAndFilterTabs)
-	tempTestCaseListAndTestCasePreviewSplitContainer.Offset = 0.75
+		tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(testCasesListScrollContainer2, listTestCaseUIObject.preViewAndFilterTabs)
+		tempTestCaseListAndTestCasePreviewSplitContainer.Offset = 0.75
 
-	TestCaseListAndTestCasePreviewSplitContainer = tempTestCaseListAndTestCasePreviewSplitContainer
+		//TestCaseListAndTestCasePreviewSplitContainer = tempTestCaseListAndTestCasePreviewSplitContainer
 
-	return tempTestCaseListAndTestCasePreviewSplitContainer
+		return tempTestCaseListAndTestCasePreviewSplitContainer
+
+	} else {
+		// We are in Create TestSuite
+		listTestCaseUIObject.preViewAndFilterTabs = preViewAndFilterTabsUsedForCreateTestSuite
+		listTestCaseUIObject.preViewAndFilterTabs.Append(listTestCaseUIObject.filterTab)
+		listTestCaseUIObject.preViewAndFilterTabs.Append(listTestCaseUIObject.preViewTab)
+
+		return testCasesListScrollContainer2
+
+	}
+
 }

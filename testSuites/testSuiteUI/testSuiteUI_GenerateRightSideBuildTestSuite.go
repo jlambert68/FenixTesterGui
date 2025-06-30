@@ -4,18 +4,20 @@ import (
 	"FenixTesterGui/testCase/testCaseModel"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
 )
 
 func generateRightSideBuildTestSuiteContainer(
 	testCasesModel *testCaseModel.TestCasesModelsStruct) (
-	rightSideBuildTestSuiteContainer *fyne.Container) {
+	rightSideBuildTestSuiteContainer *fyne.Container,
+	preViewAndFilterTabsUsedForCreateTestSuite *container.AppTabs) {
 
-	var rightSideScrollContainer *fyne.Container
-	rightSideScrollContainer = container.NewCenter(widget.NewLabel("rightSideScrollContainer"))
+	preViewAndFilterTabsUsedForCreateTestSuite = container.NewAppTabs()
+
+	var rightSideScrollContainer *container.Scroll
+	rightSideScrollContainer = container.NewScroll(preViewAndFilterTabsUsedForCreateTestSuite)
 
 	rightSideBuildTestSuiteContainer = container.NewVBox(rightSideScrollContainer)
 
-	return rightSideBuildTestSuiteContainer
+	return rightSideBuildTestSuiteContainer, preViewAndFilterTabsUsedForCreateTestSuite
 
 }

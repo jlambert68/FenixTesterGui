@@ -12,6 +12,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"image"
 	"strconv"
+	"sync"
 	"time"
 )
 
@@ -35,8 +36,42 @@ var sortImageAscendingAsImage image.Image
 var sortImageDescendingAsByteArray []byte
 var sortImageDescendingAsImage image.Image
 
+func InitiateListTestCaseUIObject() (listTestCaseUIObject *ListTestCaseUIStruct) {
+
+	listTestCaseUIObject = &ListTestCaseUIStruct{
+		testCaseListTable:                               nil,
+		testCasesListTableTable:                         nil,
+		numberOfTestCasesAfterLocalFilters:              nil,
+		numberOfTestCasesInTheDatabaseSearch:            nil,
+		sortableHeaderReference:                         nil,
+		currentRowThatMouseIsHoveringAbove:              -1,
+		currentRowThatMouseIsHoveringAboveMutex:         sync.Mutex{},
+		testCasePreviewContainerScroll:                  nil,
+		testCasePreviewContainer:                        nil,
+		preViewAndFilterTabs:                            nil,
+		preViewTab:                                      nil,
+		filterTab:                                       nil,
+		simpleTestCaseMetaDataSelectedDomainUuid:        "",
+		simpleTestCaseMetaDataSelectedDomainDisplayName: "",
+		testCaseFullMetaDataFilterContainer:             nil,
+		testCaseMainAreaForMetaDataFilterContainer:      nil,
+		newMandatoryOwnerDomainSelect:                   nil,
+		filterOnMetaDataFunction:                        nil,
+		calculateMetaDataFilterFunction:                 nil,
+		useAutoFilter:                                   false,
+		simpleMetaDataFilterEntryMap:                    nil,
+		testCaseThatIsShownInPreview:                    "",
+		currentSortColumn:                               -1,
+		currentHeader:                                   nil,
+		previousHeader:                                  nil,
+	}
+
+	return listTestCaseUIObject
+
+}
+
 // Create the UI used for list all TestCasesMapPtr that the User can edit
-func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct) (listTestCasesUI fyne.CanvasObject) {
+func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct) (listTestCasesUI fyne.CanvasObject) {
 
 	//var testCaseTable *widget.Table
 
@@ -77,25 +112,25 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 	// Define the function to be executed to filter TestCasesMapPtr that the user can edit
 	filterTestCasesButtonFunction = func() {
 		fmt.Println("'filterTestCasesButton' was pressed")
-		loadTestCaseListTableTable(nil)
-		calculateAndSetCorrectColumnWidths()
-		updateTestCasesListTable(testCasesModel)
+		listTestCaseUIObject.loadTestCaseListTableTable(nil)
+		listTestCaseUIObject.calculateAndSetCorrectColumnWidths()
+		listTestCaseUIObject.updateTestCasesListTable(testCasesModel)
 
 		// Update the number TestCasesMapPtr in the list
 		var numberOfRowsAsString string
-		numberOfRowsAsString = strconv.Itoa(len(testCasesListTableTable))
-		numberOfTestCasesAfterLocalFilters.Set(
+		numberOfRowsAsString = strconv.Itoa(len(listTestCaseUIObject.testCasesListTableTable))
+		listTestCaseUIObject.numberOfTestCasesAfterLocalFilters.Set(
 			fmt.Sprintf("Number of TestCasesMapPtr after local filters was applied: %s",
 				numberOfRowsAsString))
 
 		// Update the number TestCasesMapPtr retrieved from Database
 		var numberOfRowsFromDatabaseAsString string
-		numberOfRowsFromDatabaseAsString = strconv.Itoa(len(testCasesListTableTable))
-		numberOfTestCasesInTheDatabaseSearch.Set(
+		numberOfRowsFromDatabaseAsString = strconv.Itoa(len(listTestCaseUIObject.testCasesListTableTable))
+		listTestCaseUIObject.numberOfTestCasesInTheDatabaseSearch.Set(
 			fmt.Sprintf("Number of TestCasesMapPtr retrieved from the Database: %s",
 				numberOfRowsFromDatabaseAsString))
 
-		sortableHeaderReference.sortImage.onTapped()
+		listTestCaseUIObject.sortableHeaderReference.sortImage.onTapped()
 
 	}
 
@@ -120,21 +155,21 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 	executionColorPaletteContainer = detailedTestCaseExecutionsUI.GenerateExecutionColorPalette()
 
 	// Initiate the Table
-	generateTestCasesListTable(testCasesModel)
-	testCaseTableContainer := container.NewBorder(nil, nil, nil, nil, testCaseaListTable)
+	listTestCaseUIObject.generateTestCasesListTable(testCasesModel)
+	testCaseTableContainer := container.NewBorder(nil, nil, nil, nil, listTestCaseUIObject.testCaseListTable)
 
 	// Create the Scroll container for the List
 	testCasesListScrollContainer = container.NewScroll(testCaseTableContainer)
 
 	// Create the label used for showing number of TestCasesMapPtr in the local filter
-	numberOfTestCasesAfterLocalFilters = binding.NewString()
-	_ = numberOfTestCasesAfterLocalFilters.Set("No TestCasesMapPtr in the List")
-	numberOfTestCasesAfterLocalFilterLabel = widget.NewLabelWithData(numberOfTestCasesAfterLocalFilters)
+	listTestCaseUIObject.numberOfTestCasesAfterLocalFilters = binding.NewString()
+	_ = listTestCaseUIObject.numberOfTestCasesAfterLocalFilters.Set("No TestCasesMapPtr in the List")
+	numberOfTestCasesAfterLocalFilterLabel = widget.NewLabelWithData(listTestCaseUIObject.numberOfTestCasesAfterLocalFilters)
 
 	// Create the label used for showing number of TestCasesMapPtr retrieved from the Database
-	numberOfTestCasesInTheDatabaseSearch = binding.NewString()
-	_ = numberOfTestCasesInTheDatabaseSearch.Set("No TestCasesMapPtr retrieved from the Database")
-	numberOfTestCasesRetrievedFromDatabaseLabel = widget.NewLabelWithData(numberOfTestCasesInTheDatabaseSearch)
+	listTestCaseUIObject.numberOfTestCasesInTheDatabaseSearch = binding.NewString()
+	_ = listTestCaseUIObject.numberOfTestCasesInTheDatabaseSearch.Set("No TestCasesMapPtr retrieved from the Database")
+	numberOfTestCasesRetrievedFromDatabaseLabel = widget.NewLabelWithData(listTestCaseUIObject.numberOfTestCasesInTheDatabaseSearch)
 
 	// Initiate 'statisticsContainer'
 	statisticsContainer = container.NewHBox(numberOfTestCasesAfterLocalFilterLabel, numberOfTestCasesRetrievedFromDatabaseLabel)
@@ -148,29 +183,29 @@ func GenerateListTestCasesUI(testCasesModel *testCaseModel.TestCasesModelsStruct
 	// Create the Temporary container that should be shown
 	temporaryContainer := container.NewCenter(widget.NewLabel("Select a TestCase to get the Preview"))
 
-	testCasePreviewContainer = container.NewBorder(nil, nil, nil, nil, temporaryContainer)
+	listTestCaseUIObject.testCasePreviewContainer = container.NewBorder(nil, nil, nil, nil, temporaryContainer)
 
 	// Generate the container for the Preview, 'testCasePreviewContainer'
-	testCasePreviewContainerScroll = container.NewScroll(testCasePreviewContainer)
+	listTestCaseUIObject.testCasePreviewContainerScroll = container.NewScroll(listTestCaseUIObject.testCasePreviewContainer)
 
 	// Generate the Tab for the PreView
-	preViewTab = container.NewTabItem(
+	listTestCaseUIObject.preViewTab = container.NewTabItem(
 		"PreView",
-		testCasePreviewContainerScroll)
+		listTestCaseUIObject.testCasePreviewContainerScroll)
 
 	// Generate the 'GenerateTestCaseMetaDataFilterContainer'
 	var simpleAndAdvancedMetaDataFilter *container.AppTabs
-	simpleAndAdvancedMetaDataFilter = GenerateTestCaseMetaDataFilterContainer(testCasesModel)
+	simpleAndAdvancedMetaDataFilter = listTestCaseUIObject.GenerateTestCaseMetaDataFilterContainer(testCasesModel)
 
 	// Generate Tab for TestCase-filter
-	filterTab = container.NewTabItem(
+	listTestCaseUIObject.filterTab = container.NewTabItem(
 		"TestCase-filter",
 		simpleAndAdvancedMetaDataFilter)
 
 	// Generate the AppTabsContainer
-	preViewAndFilterTabs = container.NewAppTabs(filterTab, preViewTab)
+	listTestCaseUIObject.preViewAndFilterTabs = container.NewAppTabs(listTestCaseUIObject.filterTab, listTestCaseUIObject.preViewTab)
 
-	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(testCasesListScrollContainer2, preViewAndFilterTabs)
+	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(testCasesListScrollContainer2, listTestCaseUIObject.preViewAndFilterTabs)
 	tempTestCaseListAndTestCasePreviewSplitContainer.Offset = 0.75
 
 	TestCaseListAndTestCasePreviewSplitContainer = tempTestCaseListAndTestCasePreviewSplitContainer

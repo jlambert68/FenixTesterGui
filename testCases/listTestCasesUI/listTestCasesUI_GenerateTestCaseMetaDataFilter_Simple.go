@@ -15,22 +15,22 @@ import (
 
 // generateSimpleTestCaseMetaDataFilterContainer
 // Generates the GenerateTestCaseMetaDataFilterContainer containing the simple filter version
-func generateSimpleTestCaseMetaDataFilterContainer(
+func (listTestCaseUIObject *ListTestCaseUIStruct) generateSimpleTestCaseMetaDataFilterContainer(
 	testCasesModel *testCaseModel.TestCasesModelsStruct) *fyne.Container {
 
 	//var testCaseMetaDataFilterBottomContainer *fyne.Container
 
 	// Generate the filter function used when user clicks on filter-button or when auto-filter is turned on
-	filterOnMetaDataFunction = func(resultEntry *boolbits.Entry, testCasesModel *testCaseModel.TestCasesModelsStruct) {
+	listTestCaseUIObject.filterOnMetaDataFunction = func(resultEntry *boolbits.Entry, testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
 		// Load a filtered list into the TestCases-list-table
-		loadTestCaseListTableTable(resultEntry)
-		calculateAndSetCorrectColumnWidths()
-		updateTestCasesListTable(testCasesModel)
+		listTestCaseUIObject.loadTestCaseListTableTable(resultEntry)
+		listTestCaseUIObject.calculateAndSetCorrectColumnWidths()
+		listTestCaseUIObject.updateTestCasesListTable(testCasesModel)
 	}
 
 	// Generate the function used for calculating the current MetaData-filter
-	calculateMetaDataFilterFunction = func() {
+	listTestCaseUIObject.calculateMetaDataFilterFunction = func() {
 
 		var err error
 
@@ -48,7 +48,7 @@ func generateSimpleTestCaseMetaDataFilterContainer(
 		}
 
 		// Check if there are any MetaData set
-		if simpleMetaDataFilterEntryMap == nil || len(simpleMetaDataFilterEntryMap) == 0 {
+		if listTestCaseUIObject.simpleMetaDataFilterEntryMap == nil || len(listTestCaseUIObject.simpleMetaDataFilterEntryMap) == 0 {
 			// No MetaData-filter is set by the user
 
 			// Create Filter-Entry based on Domain
@@ -73,7 +73,7 @@ func generateSimpleTestCaseMetaDataFilterContainer(
 
 			// Get BitSets
 			domainBitSet, domainBitSetExistInMap = testCasesModel.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.
-				DomainsBitSetMap[newMandatoryOwnerDomainSelect.dataValueRepresentingVisualizedData]
+				DomainsBitSetMap[listTestCaseUIObject.newMandatoryOwnerDomainSelect.dataValueRepresentingVisualizedData]
 
 			if domainBitSetExistInMap == false {
 
@@ -146,7 +146,7 @@ func generateSimpleTestCaseMetaDataFilterContainer(
 			// MetaData-filter is selected by the user
 
 			// Loop all Simple MetaDataEntry and make boolean 'OR' between all of them
-			for _, simpleMetaDataEntry := range simpleMetaDataFilterEntryMap {
+			for _, simpleMetaDataEntry := range listTestCaseUIObject.simpleMetaDataFilterEntryMap {
 
 				// If multiple values per MEtaDataItem exist then process them with boolean OR
 				var booleanOrResultsEntry *boolbits.Entry
@@ -185,45 +185,45 @@ func generateSimpleTestCaseMetaDataFilterContainer(
 		}
 
 		// Load a filtered list into the TestCases-list-table
-		filterOnMetaDataFunction(resultEntry, testCasesModel)
+		listTestCaseUIObject.filterOnMetaDataFunction(resultEntry, testCasesModel)
 	}
 
 	// Initiate the 'simpleMetaDataFilterEntryMap'
-	simpleMetaDataFilterEntryMap = make(map[string]simpleMetaDataFilterEntryMapStruct)
+	listTestCaseUIObject.simpleMetaDataFilterEntryMap = make(map[string]simpleMetaDataFilterEntryMapStruct)
 
 	// Generate the Top container, having the Domain Filter DropDown
 	var testCaseMetaDataDomainFilterTopContainer *fyne.Container
-	testCaseMetaDataDomainFilterTopContainer = generateSimpleTestCaseMetaDataDomainFilterTopContainer(testCasesModel)
+	testCaseMetaDataDomainFilterTopContainer = listTestCaseUIObject.generateSimpleTestCaseMetaDataDomainFilterTopContainer(testCasesModel)
 
 	// Generate the Bottom container, having buttons for Filter TestCases-list- and clear MetaData-s
 	var testCaseMetaDataDomainFilterBottomContainer *fyne.Container
-	testCaseMetaDataDomainFilterBottomContainer = generateSimpleTestCaseMetaDataDomainFilterBottomContainer(testCasesModel)
+	testCaseMetaDataDomainFilterBottomContainer = listTestCaseUIObject.generateSimpleTestCaseMetaDataDomainFilterBottomContainer(testCasesModel)
 
 	// Set selected Domain
-	simpleTestCaseMetaDataSelectedDomainUuid = ""
-	simpleTestCaseMetaDataSelectedDomainDisplayName = ""
+	listTestCaseUIObject.simpleTestCaseMetaDataSelectedDomainUuid = ""
+	listTestCaseUIObject.simpleTestCaseMetaDataSelectedDomainDisplayName = ""
 
 	// Generate the main MetaData-filter area
-	testCaseMainAreaForMetaDataFilterContainer = generateSimpleTestCaseMetaDataMainFilterContainer(
-		simpleTestCaseMetaDataSelectedDomainUuid,
-		simpleTestCaseMetaDataSelectedDomainDisplayName,
+	listTestCaseUIObject.testCaseMainAreaForMetaDataFilterContainer = listTestCaseUIObject.generateSimpleTestCaseMetaDataMainFilterContainer(
+		listTestCaseUIObject.simpleTestCaseMetaDataSelectedDomainUuid,
+		listTestCaseUIObject.simpleTestCaseMetaDataSelectedDomainDisplayName,
 		testCasesModel)
 
 	// Generate the full MetaDataFilter-container
 
-	testCaseFullMetaDataFilterContainer = container.NewBorder(
+	listTestCaseUIObject.testCaseFullMetaDataFilterContainer = container.NewBorder(
 		testCaseMetaDataDomainFilterTopContainer,
 		testCaseMetaDataDomainFilterBottomContainer,
 		nil,
 		nil,
-		testCaseMainAreaForMetaDataFilterContainer)
+		listTestCaseUIObject.testCaseMainAreaForMetaDataFilterContainer)
 
-	return testCaseFullMetaDataFilterContainer
+	return listTestCaseUIObject.testCaseFullMetaDataFilterContainer
 
 }
 
 // Generates the top container having the Domain DropDown
-func generateSimpleTestCaseMetaDataDomainFilterTopContainer(
+func (listTestCaseUIObject *ListTestCaseUIStruct) generateSimpleTestCaseMetaDataDomainFilterTopContainer(
 	testCasesModel *testCaseModel.TestCasesModelsStruct) *fyne.Container {
 
 	var valueIsValidWarningBox *canvas.Rectangle
@@ -264,56 +264,56 @@ func generateSimpleTestCaseMetaDataDomainFilterTopContainer(
 			// This function is called when an option is selected.
 
 			// Set selected Domain
-			simpleTestCaseMetaDataSelectedDomainUuid = uuidForDomainThatCanOwnTheTestCaseMap[value]
-			simpleTestCaseMetaDataSelectedDomainDisplayName = value
+			listTestCaseUIObject.simpleTestCaseMetaDataSelectedDomainUuid = uuidForDomainThatCanOwnTheTestCaseMap[value]
+			listTestCaseUIObject.simpleTestCaseMetaDataSelectedDomainDisplayName = value
 
 			// Set Warning box that value is not selected
 			if len(value) == 0 {
 				valueIsValidWarningBox.FillColor = color.NRGBA{R: 255, G: 0, B: 0, A: 255}
 
 				// Store data value representing the visual value
-				newMandatoryOwnerDomainSelect.dataValueRepresentingVisualizedData = ""
+				listTestCaseUIObject.newMandatoryOwnerDomainSelect.dataValueRepresentingVisualizedData = ""
 
 			} else {
 				valueIsValidWarningBox.FillColor = color.NRGBA{R: 0, G: 0, B: 0, A: 0}
 				// Store data value representing the visual value
-				newMandatoryOwnerDomainSelect.dataValueRepresentingVisualizedData = simpleTestCaseMetaDataSelectedDomainUuid
+				listTestCaseUIObject.newMandatoryOwnerDomainSelect.dataValueRepresentingVisualizedData = listTestCaseUIObject.simpleTestCaseMetaDataSelectedDomainUuid
 
 			}
 
 			// Clear 'simpleMetaDataFilterEntryMap' holding all MetaData-Entry
-			simpleMetaDataFilterEntryMap = make(map[string]simpleMetaDataFilterEntryMapStruct)
+			listTestCaseUIObject.simpleMetaDataFilterEntryMap = make(map[string]simpleMetaDataFilterEntryMapStruct)
 
 			var newSimpleTestCaseMetaDataMainFilterContainer *fyne.Container
-			newSimpleTestCaseMetaDataMainFilterContainer = generateSimpleTestCaseMetaDataMainFilterContainer(
-				simpleTestCaseMetaDataSelectedDomainUuid,
-				simpleTestCaseMetaDataSelectedDomainDisplayName,
+			newSimpleTestCaseMetaDataMainFilterContainer = listTestCaseUIObject.generateSimpleTestCaseMetaDataMainFilterContainer(
+				listTestCaseUIObject.simpleTestCaseMetaDataSelectedDomainUuid,
+				listTestCaseUIObject.simpleTestCaseMetaDataSelectedDomainDisplayName,
 				testCasesModel)
 
 			// Remove old Main MetaData area when user change Domain
-			testCaseFullMetaDataFilterContainer.Remove(testCaseMainAreaForMetaDataFilterContainer)
+			listTestCaseUIObject.testCaseFullMetaDataFilterContainer.Remove(listTestCaseUIObject.testCaseMainAreaForMetaDataFilterContainer)
 
 			// Add the new Main MetaData area when user change Domain
-			testCaseFullMetaDataFilterContainer.Add(newSimpleTestCaseMetaDataMainFilterContainer)
+			listTestCaseUIObject.testCaseFullMetaDataFilterContainer.Add(newSimpleTestCaseMetaDataMainFilterContainer)
 
 			// Store 'newSimpleTestCaseMetaDataMainFilterContainer' in 'testCaseMainAreaForMetaDataFilterContainer'-variable
-			testCaseMainAreaForMetaDataFilterContainer = newSimpleTestCaseMetaDataMainFilterContainer
+			listTestCaseUIObject.testCaseMainAreaForMetaDataFilterContainer = newSimpleTestCaseMetaDataMainFilterContainer
 
 			newSimpleTestCaseMetaDataMainFilterContainer.Refresh()
 
 			// Check if auto-filter is enabled. If so then calculate the new TestCase-liset
-			if useAutoFilter == true {
-				calculateMetaDataFilterFunction()
+			if listTestCaseUIObject.useAutoFilter == true {
+				listTestCaseUIObject.calculateMetaDataFilterFunction()
 			}
 
 		})
 
 	// Create a custom SelectComboBox, with valueIsValidWarningBox
 	//var customSelectComboBox *customMandatorySelectComboBox
-	newMandatoryOwnerDomainSelect = newCustomMandatorySelectComboBoxWidget(newOwnerDomainSelect, valueIsValidWarningBox)
+	listTestCaseUIObject.newMandatoryOwnerDomainSelect = newCustomMandatorySelectComboBoxWidget(newOwnerDomainSelect, valueIsValidWarningBox)
 
 	// Add the Entry-widget to the Forms-container
-	testCaseOwnerDomainNameFormContainer.Add(newMandatoryOwnerDomainSelect)
+	testCaseOwnerDomainNameFormContainer.Add(listTestCaseUIObject.newMandatoryOwnerDomainSelect)
 
 	// Create the VBox-container that will be returned
 	testCaseOwnerDomainContainer = container.NewVBox(testCaseOwnerDomainNameFormContainer)
@@ -322,7 +322,7 @@ func generateSimpleTestCaseMetaDataDomainFilterTopContainer(
 }
 
 // Generates the bottom container having the Filter TestCases-list- and clear MetaData.selection
-func generateSimpleTestCaseMetaDataDomainFilterBottomContainer(
+func (listTestCaseUIObject *ListTestCaseUIStruct) generateSimpleTestCaseMetaDataDomainFilterBottomContainer(
 	testCasesModel *testCaseModel.TestCasesModelsStruct) (simpleTestCaseMetaDataDomainFilterBottomContainer *fyne.Container) {
 
 	var filterTestCasesListButton *widget.Button
@@ -332,7 +332,7 @@ func generateSimpleTestCaseMetaDataDomainFilterBottomContainer(
 	filterTestCasesListButton = widget.NewButton("Filter TestCases-list", func() {
 
 		// Trigger the function to calculate the MetaDataFilter
-		calculateMetaDataFilterFunction()
+		listTestCaseUIObject.calculateMetaDataFilterFunction()
 
 	})
 
@@ -340,28 +340,28 @@ func generateSimpleTestCaseMetaDataDomainFilterBottomContainer(
 	clearMetaDataSelectionButton = widget.NewButton("Clear Selected MetaData values", func() {
 
 		var newSimpleTestCaseMetaDataMainFilterContainer *fyne.Container
-		newSimpleTestCaseMetaDataMainFilterContainer = generateSimpleTestCaseMetaDataMainFilterContainer(
-			simpleTestCaseMetaDataSelectedDomainUuid,
-			simpleTestCaseMetaDataSelectedDomainDisplayName,
+		newSimpleTestCaseMetaDataMainFilterContainer = listTestCaseUIObject.generateSimpleTestCaseMetaDataMainFilterContainer(
+			listTestCaseUIObject.simpleTestCaseMetaDataSelectedDomainUuid,
+			listTestCaseUIObject.simpleTestCaseMetaDataSelectedDomainDisplayName,
 			testCasesModel)
 
 		// Remove old Main MetaData area when user change Domain
-		testCaseFullMetaDataFilterContainer.Remove(testCaseMainAreaForMetaDataFilterContainer)
+		listTestCaseUIObject.testCaseFullMetaDataFilterContainer.Remove(listTestCaseUIObject.testCaseMainAreaForMetaDataFilterContainer)
 
 		// Add the new Main MetaData area when user change Domain
-		testCaseFullMetaDataFilterContainer.Add(newSimpleTestCaseMetaDataMainFilterContainer)
+		listTestCaseUIObject.testCaseFullMetaDataFilterContainer.Add(newSimpleTestCaseMetaDataMainFilterContainer)
 
 		// Store 'newSimpleTestCaseMetaDataMainFilterContainer' in 'testCaseMainAreaForMetaDataFilterContainer'-variable
-		testCaseMainAreaForMetaDataFilterContainer = newSimpleTestCaseMetaDataMainFilterContainer
+		listTestCaseUIObject.testCaseMainAreaForMetaDataFilterContainer = newSimpleTestCaseMetaDataMainFilterContainer
 
 		newSimpleTestCaseMetaDataMainFilterContainer.Refresh()
 
 		// clear the Domain-dropdown
-		newMandatoryOwnerDomainSelect.selectComboBox.ClearSelected()
-		newMandatoryOwnerDomainSelect.Refresh()
+		listTestCaseUIObject.newMandatoryOwnerDomainSelect.selectComboBox.ClearSelected()
+		listTestCaseUIObject.newMandatoryOwnerDomainSelect.Refresh()
 
 		// Clear selected MetaData-map
-		simpleMetaDataFilterEntryMap = make(map[string]simpleMetaDataFilterEntryMapStruct)
+		listTestCaseUIObject.simpleMetaDataFilterEntryMap = make(map[string]simpleMetaDataFilterEntryMapStruct)
 	})
 
 	// Create radio button for Auto-filter where each change in filter setting automatically filters the list
@@ -370,10 +370,10 @@ func generateSimpleTestCaseMetaDataDomainFilterBottomContainer(
 
 		if selectedValue == autoFilterRadioGroupOn {
 
-			useAutoFilter = true
+			listTestCaseUIObject.useAutoFilter = true
 		} else {
 
-			useAutoFilter = false
+			listTestCaseUIObject.useAutoFilter = false
 		}
 
 	})
@@ -390,7 +390,7 @@ func generateSimpleTestCaseMetaDataDomainFilterBottomContainer(
 }
 
 // Generates the main container having all the MetaData-filters
-func generateSimpleTestCaseMetaDataMainFilterContainer(
+func (listTestCaseUIObject *ListTestCaseUIStruct) generateSimpleTestCaseMetaDataMainFilterContainer(
 	domainUuidToGetMetaDataFor string,
 	domainNameToGetMetaDataFor string,
 	testCasesModel *testCaseModel.TestCasesModelsStruct) (metaDataFilterArea *fyne.Container) {
@@ -418,7 +418,7 @@ func generateSimpleTestCaseMetaDataMainFilterContainer(
 		// Generate TestCaseMeta-UI-object
 		var metaDataGroupsContainer *fyne.Container
 		var metaDataGroupsScroll *container.Scroll
-		metaDataGroupsContainer = buildGUIFromMetaDataGroupsMap(
+		metaDataGroupsContainer = listTestCaseUIObject.buildGUIFromMetaDataGroupsMap(
 			domainUuidToGetMetaDataFor,
 			tempMetaDataGroupsOrder,
 			metaDataGroupsPtr,
@@ -438,7 +438,7 @@ func generateSimpleTestCaseMetaDataMainFilterContainer(
 }
 
 // buildGUIFromSlice builds a fyne.CanvasObject from your slice pointer
-func buildGUIFromMetaDataGroupsMap(
+func (listTestCaseUIObject *ListTestCaseUIStruct) buildGUIFromMetaDataGroupsMap(
 	domainUUid string,
 	metaDataGroupsOrder []string,
 	metaDataGroupsSourceMapPtr *map[string]*testCaseModel.MetaDataGroupStruct,
@@ -536,7 +536,7 @@ func buildGUIFromMetaDataGroupsMap(
 						metaDataItem.MetaDataGroupName,
 						metaDataItem.MetaDataName)
 
-					delete(simpleMetaDataFilterEntryMap, entryKey)
+					delete(listTestCaseUIObject.simpleMetaDataFilterEntryMap, entryKey)
 
 					// If there is a value then add the MetaDataEntry for it
 					if len(val) > 0 {
@@ -581,14 +581,14 @@ func buildGUIFromMetaDataGroupsMap(
 						valueEntryListToBeProcessedWithBooleanOrSlice = append(valueEntryListToBeProcessedWithBooleanOrSlice, metaDataEntry)
 
 						// 'valueEntryListToBeProcessedWithBooleanOrSlice' to 'simpleMetaDataFilterEntryMap'
-						simpleMetaDataFilterEntryMap[entryKey] = simpleMetaDataFilterEntryMapStruct{
+						listTestCaseUIObject.simpleMetaDataFilterEntryMap[entryKey] = simpleMetaDataFilterEntryMapStruct{
 							valueEntryListToBeProcessedWithBooleanOrSlice: valueEntryListToBeProcessedWithBooleanOrSlice}
 
 					}
 
 					// Check if auto-filter is enabled. If so then calculate the new TestCase-liset
-					if useAutoFilter == true {
-						calculateMetaDataFilterFunction()
+					if listTestCaseUIObject.useAutoFilter == true {
+						listTestCaseUIObject.calculateMetaDataFilterFunction()
 					}
 
 				})
@@ -616,7 +616,7 @@ func buildGUIFromMetaDataGroupsMap(
 				customSelectComboBox = newCustomMandatorySelectComboBoxWidget(sel, valueIsValidWarningBox)
 
 				// wrap in a 1-cell grid to force width
-				w := calcSelectWidth(metaDataItem.AvailableMetaDataValues)
+				w := listTestCaseUIObject.calcSelectWidth(metaDataItem.AvailableMetaDataValues)
 				wrapper := container.New(
 					layout.NewGridWrapLayout(fyne.NewSize(w, sel.MinSize().Height)),
 					customSelectComboBox,
@@ -663,7 +663,7 @@ func buildGUIFromMetaDataGroupsMap(
 						metaDataItem.MetaDataGroupName,
 						metaDataItem.MetaDataName)
 
-					delete(simpleMetaDataFilterEntryMap, entryKey)
+					delete(listTestCaseUIObject.simpleMetaDataFilterEntryMap, entryKey)
 
 					// If there is any value then add the MetaDataEntry for it all values
 					if len(vals) > 0 {
@@ -710,14 +710,14 @@ func buildGUIFromMetaDataGroupsMap(
 
 						}
 						// 'valueEntryListToBeProcessedWithBooleanOrSlice' to 'simpleMetaDataFilterEntryMap'
-						simpleMetaDataFilterEntryMap[entryKey] = simpleMetaDataFilterEntryMapStruct{
+						listTestCaseUIObject.simpleMetaDataFilterEntryMap[entryKey] = simpleMetaDataFilterEntryMapStruct{
 							valueEntryListToBeProcessedWithBooleanOrSlice: valueEntryListToBeProcessedWithBooleanOrSlice}
 
 					}
 
 					// Check if auto-filter is enabled. If so then calculate the new TestCase-liset
-					if useAutoFilter == true {
-						calculateMetaDataFilterFunction()
+					if listTestCaseUIObject.useAutoFilter == true {
+						listTestCaseUIObject.calculateMetaDataFilterFunction()
 					}
 
 				})
@@ -740,7 +740,7 @@ func buildGUIFromMetaDataGroupsMap(
 				var customCheckBoxGroup *customMandatoryCheckBoxGroup
 				customCheckBoxGroup = newCustomMandatoryCheckBoxGroupWidget(chk, valueIsValidWarningBox)
 
-				w := calcCheckGroupWidth(metaDataItem.AvailableMetaDataValues)
+				w := listTestCaseUIObject.calcCheckGroupWidth(metaDataItem.AvailableMetaDataValues)
 				wrapper := container.New(
 					layout.NewGridWrapLayout(fyne.NewSize(w, chk.MinSize().Height)),
 					customCheckBoxGroup,
@@ -785,7 +785,7 @@ func buildGUIFromMetaDataGroupsMap(
 }
 
 // calcSelectWidth returns the width needed to show the longest option
-func calcSelectWidth(values []string) float32 {
+func (listTestCaseUIObject *ListTestCaseUIStruct) calcSelectWidth(values []string) float32 {
 	tmp := widget.NewSelect(values, nil)
 
 	// Loop the values and check which has most characters
@@ -804,7 +804,7 @@ func calcSelectWidth(values []string) float32 {
 }
 
 // calcCheckGroupWidth returns the width needed to show the widest checkbox label
-func calcCheckGroupWidth(values []string) float32 {
+func (listTestCaseUIObject *ListTestCaseUIStruct) calcCheckGroupWidth(values []string) float32 {
 	tmp := widget.NewCheckGroup(values, nil)
 	tmp.Refresh()
 	return tmp.MinSize().Width
@@ -823,7 +823,7 @@ type NewMetaDataInGroupStruct struct {
 
 // ConvertMetaDataToNewMap transforms the TestCaseMetaDataStruct.MetaDataGroupsSlicePtr
 // into a nested map[groupName][metaDataName] => *NewMetaDataInGroupStruct.
-func ConvertMetaDataToNewMap(tc *testCaseModel.TestCaseMetaDataStruct) map[string]map[string]*NewMetaDataInGroupStruct {
+func (listTestCaseUIObject *ListTestCaseUIStruct) ConvertMetaDataToNewMap(tc *testCaseModel.TestCaseMetaDataStruct) map[string]map[string]*NewMetaDataInGroupStruct {
 	result := make(map[string]map[string]*NewMetaDataInGroupStruct)
 
 	if tc == nil {

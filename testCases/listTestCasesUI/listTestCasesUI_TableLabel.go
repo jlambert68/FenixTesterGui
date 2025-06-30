@@ -24,17 +24,19 @@ type clickableTableLabel struct {
 	background          *canvas.Rectangle
 	testCasesModel      *testCaseModel.TestCasesModelsStruct
 	textInsteadOfLabel  *canvas.Text
+	listTestCaseUIPtr   *ListTestCaseUIStruct
 }
 
 func newClickableTableLabel(text string, onDoubleTap func(), tempIsClickable bool,
-	testCasesModel *testCaseModel.TestCasesModelsStruct) *clickableTableLabel {
+	testCasesModel *testCaseModel.TestCasesModelsStruct, listTestCaseUI *ListTestCaseUIStruct) *clickableTableLabel {
 
 	l := &clickableTableLabel{
-		Label:       widget.Label{Text: text},
-		onDoubleTap: onDoubleTap,
-		lastTapTime: time.Now(),
-		isClickable: tempIsClickable,
-		currentRow:  -1}
+		Label:             widget.Label{Text: text},
+		onDoubleTap:       onDoubleTap,
+		lastTapTime:       time.Now(),
+		isClickable:       tempIsClickable,
+		currentRow:        -1,
+		listTestCaseUIPtr: listTestCaseUI}
 
 	l.background = canvas.NewRectangle(color.Transparent)
 	l.testCasesModel = testCasesModel
@@ -82,10 +84,10 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 	l.lastTapTime = time.Now()
 
 	// Update TestCase Preview
-	preViewAndFilterTabs.Select(preViewTab)
-	GenerateTestCasePreviewContainer(l.currentTestCaseUuid, l.testCasesModel)
-	testCaseThatIsShownInPreview = l.currentTestCaseUuid
-	testCaseaListTable.Refresh()
+	l.listTestCaseUIPtr.preViewAndFilterTabs.Select(l.listTestCaseUIPtr.preViewTab)
+	l.listTestCaseUIPtr.GenerateTestCasePreviewContainer(l.currentTestCaseUuid, l.testCasesModel)
+	l.listTestCaseUIPtr.testCaseThatIsShownInPreview = l.currentTestCaseUuid
+	l.listTestCaseUIPtr.testCaseListTable.Refresh()
 
 }
 
@@ -127,17 +129,17 @@ func (l *clickableTableLabel) MouseIn(*desktop.MouseEvent) {
 	}
 
 	// Hinder concurrent setting of variable
-	currentRowThatMouseIsHoveringAboveMutex.Lock()
+	l.listTestCaseUIPtr.currentRowThatMouseIsHoveringAboveMutex.Lock()
 
 	// Set current TestCaseUuid to be highlighted
-	currentRowThatMouseIsHoveringAbove = l.currentRow
+	l.listTestCaseUIPtr.currentRowThatMouseIsHoveringAbove = l.currentRow
 
 	// Release variable
-	currentRowThatMouseIsHoveringAboveMutex.Unlock()
+	l.listTestCaseUIPtr.currentRowThatMouseIsHoveringAboveMutex.Unlock()
 
 	l.TextStyle = fyne.TextStyle{Bold: true}
 	l.Refresh()
-	testCaseaListTable.Refresh()
+	l.listTestCaseUIPtr.testCaseListTable.Refresh()
 
 }
 func (l *clickableTableLabel) MouseMoved(*desktop.MouseEvent) {}
@@ -148,16 +150,16 @@ func (l *clickableTableLabel) MouseOut() {
 	}
 
 	// Hinder concurrent setting of variable
-	currentRowThatMouseIsHoveringAboveMutex.Lock()
+	l.listTestCaseUIPtr.currentRowThatMouseIsHoveringAboveMutex.Lock()
 
 	// Set current TestCaseUuid to be highlighted
-	currentRowThatMouseIsHoveringAbove = -1
+	l.listTestCaseUIPtr.currentRowThatMouseIsHoveringAbove = -1
 
 	// Release variable
-	currentRowThatMouseIsHoveringAboveMutex.Unlock()
+	l.listTestCaseUIPtr.currentRowThatMouseIsHoveringAboveMutex.Unlock()
 
 	l.TextStyle = fyne.TextStyle{Bold: false}
 	l.Refresh()
-	testCaseaListTable.Refresh()
+	l.listTestCaseUIPtr.testCaseListTable.Refresh()
 
 }

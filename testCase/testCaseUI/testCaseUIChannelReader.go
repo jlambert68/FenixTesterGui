@@ -326,7 +326,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) removeTestCaseTabBasedOnT
 				}
 
 				// Remove TestCase from TestCase-List
-				listTestCasesUI.RemoveTestCaseFromList(incomingChannelCommandGraphicsUpdatedData.ActiveTestCase,
+				listTestCasesUI.StandardListTesCasesUIObject.RemoveTestCaseFromList(incomingChannelCommandGraphicsUpdatedData.ActiveTestCase,
 					testCasesUiCanvasObject.TestCasesModelReference)
 
 				return

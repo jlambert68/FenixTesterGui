@@ -18,15 +18,17 @@ type sortableHeaderLabelStruct struct {
 	columnNumber               int
 	latestSelectedSortOrder    SortingDirectionType
 	updateColumnNumberFunction func()
+	listTestCaseUIPtr          *ListTestCaseUIStruct
 }
 
 // Used for creating a new Header label
-func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNumber int) *sortableHeaderLabelStruct {
+func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNumber int, listTestCaseUI *ListTestCaseUIStruct) *sortableHeaderLabelStruct {
 
 	tempSortableHeaderLabel := &sortableHeaderLabelStruct{
-		label:        widget.NewLabel(headerText),
-		isSortable:   tempIsSortable,
-		columnNumber: tempColumnNumber,
+		label:             widget.NewLabel(headerText),
+		isSortable:        tempIsSortable,
+		columnNumber:      tempColumnNumber,
+		listTestCaseUIPtr: listTestCaseUI,
 	}
 
 	// Add ClickableSortImage
@@ -35,22 +37,22 @@ func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNu
 			fmt.Println("SortIcon was Clicked!!!", tempSortableHeaderLabel.columnNumber)
 
 			// Check if there is a new that the table should be sorted on
-			if currentSortColumn != tempSortableHeaderLabel.columnNumber {
+			if listTestCaseUI.currentSortColumn != tempSortableHeaderLabel.columnNumber {
 
 				// New column to sort on
-				previousSortColumn = currentSortColumn
-				currentSortColumn = tempSortableHeaderLabel.columnNumber
+				previousSortColumn = listTestCaseUI.currentSortColumn
+				listTestCaseUI.currentSortColumn = tempSortableHeaderLabel.columnNumber
 
-				if currentHeader != nil {
-					previousHeader = currentHeader
+				if listTestCaseUI.currentHeader != nil {
+					listTestCaseUI.previousHeader = listTestCaseUI.currentHeader
 
 					// Reset the previous header's sort order to Unspecified
-					previousHeader.latestSelectedSortOrder = SortingDirectionUnSpecified
-					previousHeader.sortImage.latestSelectedSortOrder = SortingDirectionUnSpecified
+					listTestCaseUI.previousHeader.latestSelectedSortOrder = SortingDirectionUnSpecified
+					listTestCaseUI.previousHeader.sortImage.latestSelectedSortOrder = SortingDirectionUnSpecified
 
 					// Refresh the previous header's sort image and widget
-					previousHeader.sortImage.Refresh()
-					previousHeader.Refresh()
+					listTestCaseUI.previousHeader.sortImage.Refresh()
+					listTestCaseUI.previousHeader.Refresh()
 
 					//previousHeader.sortImage.unspecifiedImageContainer.Show()
 					//previousHeader.sortImage.ascendingImageContainer.Hide()
@@ -58,7 +60,7 @@ func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNu
 					//previousHeader.sortImage.Refresh()
 
 				}
-				currentHeader = tempSortableHeaderLabel
+				listTestCaseUI.currentHeader = tempSortableHeaderLabel
 
 				// New column so use the previous  sort-direction if that existed
 				switch tempSortableHeaderLabel.latestSelectedSortOrder {
@@ -108,8 +110,8 @@ func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNu
 			tempSortableHeaderLabel.sortImage.Refresh()
 			tempSortableHeaderLabel.Refresh()
 
-			sort2DStringSlice(testCasesListTableTable, currentSortColumn, tempSortableHeaderLabel.latestSelectedSortOrder)
-			testCaseaListTable.Refresh()
+			listTestCaseUI.sort2DStringSlice(listTestCaseUI.testCasesListTableTable, listTestCaseUI.currentSortColumn, tempSortableHeaderLabel.latestSelectedSortOrder)
+			listTestCaseUI.testCaseListTable.Refresh()
 
 		},
 		true,

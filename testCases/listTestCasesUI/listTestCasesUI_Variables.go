@@ -10,17 +10,61 @@ import (
 	"sync"
 )
 
-// The UI-table for the List with TestCase
-var testCaseaListTable *widget.Table
+var StandardListTesCasesUIObject *ListTestCaseUIStruct
 
-// The data source used to produce the UI-table for the List with TestCase
-var testCasesListTableTable [][]string
+type ListTestCaseUIStruct struct {
 
-// Keeps the number of TestCase that is shown in the list, after local filter is applied
-var numberOfTestCasesAfterLocalFilters binding.String
+	// The UI-table for the List with TestCase
+	testCaseListTable *widget.Table
 
-// Keeps the number of TestCase that have been retrieved from the Database
-var numberOfTestCasesInTheDatabaseSearch binding.String
+	// The data source used to produce the UI-table for the List with TestCase
+	testCasesListTableTable [][]string
+
+	// Keeps the number of TestCase that is shown in the list, after local filter is applied
+	numberOfTestCasesAfterLocalFilters binding.String
+
+	// Keeps the number of TestCase that have been retrieved from the Database
+	numberOfTestCasesInTheDatabaseSearch binding.String
+
+	sortableHeaderReference *sortableHeaderLabelStruct
+
+	// The row that the mouse is currently hovering above. Used for highlight that row in the UI-Table
+	currentRowThatMouseIsHoveringAbove int16
+
+	// Use a mutex to synchronize access to 'currentRowThatMouseIsHoveringAbove'
+	currentRowThatMouseIsHoveringAboveMutex sync.Mutex
+
+	// The TestCase Preview-container
+	testCasePreviewContainerScroll *container.Scroll
+	testCasePreviewContainer       *fyne.Container
+
+	preViewAndFilterTabs *container.AppTabs
+	preViewTab           *container.TabItem
+	filterTab            *container.TabItem
+
+	simpleTestCaseMetaDataSelectedDomainUuid        string
+	simpleTestCaseMetaDataSelectedDomainDisplayName string
+	testCaseFullMetaDataFilterContainer             *fyne.Container
+	testCaseMainAreaForMetaDataFilterContainer      *fyne.Container
+	newMandatoryOwnerDomainSelect                   *customMandatorySelectComboBox
+
+	filterOnMetaDataFunction        func(*boolbits.Entry, *testCaseModel.TestCasesModelsStruct)
+	calculateMetaDataFilterFunction func()
+	useAutoFilter                   bool
+
+	// Holding all separate MetaDataEntries used in the Simple MetaData-filter
+	simpleMetaDataFilterEntryMap map[string]simpleMetaDataFilterEntryMapStruct // Key = DomainUuid.GroupName.GroupItemName
+
+	// The TestCase that is shown in Preview
+	testCaseThatIsShownInPreview string
+
+	// The current column that the TestCase-list is sorted on
+	currentSortColumn int
+
+	currentHeader *sortableHeaderLabelStruct
+
+	previousHeader *sortableHeaderLabelStruct
+}
 
 var testCaseListTableHeader = []string{
 	"DomainName", "TestCaseName", "TestCaseUuid", "TestCaseVersion", "Latest TestCaseExecution Status",
@@ -42,46 +86,16 @@ const latestTestCaseExecutionTimeStampColumnNumber uint8 = 6
 const latestOkFinishedTestCaseExecutionTimeStamp uint8 = 6
 
 // Reference to Header for column for "Latest TestCaseExecution TimeStamp"
-var sortableHeaderReference *sortableHeaderLabelStruct
-
-// The row that the mouse is currently hovering above. Used for highlight that row in the UI-Table
-var currentRowThatMouseIsHoveringAbove int16 = -1
-
-// Use a mutex to synchronize access to 'currentRowThatMouseIsHoveringAbove'
-var currentRowThatMouseIsHoveringAboveMutex sync.Mutex
 
 // The size of the rectangles used for TestInstructionContainers-processing type and the color of the TestInstruction
 const testCaseNodeRectangleSize = 40
 
-// The TestCase Preview-container
-var testCasePreviewContainerScroll *container.Scroll
-var testCasePreviewContainer *fyne.Container
-
-var preViewAndFilterTabs *container.AppTabs
-var preViewTab *container.TabItem
-var filterTab *container.TabItem
-
-var simpleTestCaseMetaDataSelectedDomainUuid string
-var simpleTestCaseMetaDataSelectedDomainDisplayName string
-var testCaseFullMetaDataFilterContainer *fyne.Container
-var testCaseMainAreaForMetaDataFilterContainer *fyne.Container
-var newMandatoryOwnerDomainSelect *customMandatorySelectComboBox
-
-var filterOnMetaDataFunction func(*boolbits.Entry, *testCaseModel.TestCasesModelsStruct)
-var calculateMetaDataFilterFunction func()
-var useAutoFilter bool
-
-// Holding all separate MetaDataEntries used in the Simple MetaData-filter
-var simpleMetaDataFilterEntryMap map[string]simpleMetaDataFilterEntryMapStruct // Key = DomainUuid.GroupName.GroupItemName
 type simpleMetaDataFilterEntryMapStruct struct {
 	valueEntryListToBeProcessedWithBooleanOrSlice []*boolbits.Entry
 }
 
 // The Split container have both the TestCase-list and the Preview-container in it
 var TestCaseListAndTestCasePreviewSplitContainer *container.Split
-
-// The TestCase that is shown in Preview
-var testCaseThatIsShownInPreview string
 
 // SortingDirectionType
 // Define type for Sorting Direction
@@ -99,15 +113,8 @@ const (
 	initialColumnToSortOn                        int                  = 7
 )
 
-// The current column that the TestCase-list is sorted on
-var currentSortColumn int = -1
-
 // The previous column that the TestCase-list was sorted on
 var previousSortColumn int
-
-var currentHeader *sortableHeaderLabelStruct
-
-var previousHeader *sortableHeaderLabelStruct
 
 // The current Columns SortDirect
 var currentSortColumnsSortDirection SortingDirectionType

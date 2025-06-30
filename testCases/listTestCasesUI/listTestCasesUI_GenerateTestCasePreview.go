@@ -18,7 +18,7 @@ import (
 
 // GenerateTestCasePreviewContainer
 // Generates the PreViewContiner for the TestCase
-func GenerateTestCasePreviewContainer(
+func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateTestCasePreviewContainer(
 	testCaseUuid string,
 	testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
@@ -247,12 +247,12 @@ func GenerateTestCasePreviewContainer(
 	tempTopHeaderLabel := widget.NewLabel("TestCase Preview")
 	tempTopHeaderLabel.TextStyle = fyne.TextStyle{Bold: true}
 
-	testCasePreviewContainer.Objects[0] = container.NewBorder(
+	listTestCaseUIObject.testCasePreviewContainer.Objects[0] = container.NewBorder(
 		container.NewVBox(container.NewCenter(tempTopHeaderLabel), testCasePreviewTopContainer, widget.NewSeparator()),
 		container.NewVBox(widget.NewSeparator(), testCasePreviewBottomContainer), nil, nil,
 		testCaseMainAreaForPreviewScrollContainer)
 
 	// Refresh the 'testCasePreviewContainer'
-	testCasePreviewContainer.Refresh()
+	listTestCaseUIObject.testCasePreviewContainer.Refresh()
 
 }

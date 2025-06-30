@@ -320,8 +320,9 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	buildTestCasesUI = uiServer.loadUI()
 
 	// Create the UI for List TestCases
+	listTestCasesUI.StandardListTesCasesUIObject = listTestCasesUI.InitiateListTestCaseUIObject()
 	var tempListTestCasesUI fyne.CanvasObject
-	tempListTestCasesUI = listTestCasesUI.GenerateListTestCasesUI(&uiServer.testCasesModel)
+	tempListTestCasesUI = listTestCasesUI.StandardListTesCasesUIObject.GenerateListTestCasesUI(&uiServer.testCasesModel)
 
 	// Create the UI for Build TestSuite-UI
 	var buildTestSuiteUI fyne.CanvasObject

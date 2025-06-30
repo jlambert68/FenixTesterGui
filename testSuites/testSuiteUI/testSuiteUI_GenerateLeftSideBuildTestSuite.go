@@ -22,11 +22,15 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	var testSuiteDeleteDateAreaContainer *fyne.Container
 	var testSuiteNameAreaContainer *fyne.Container
 	var testSuiteDescriptionAreaContainer *fyne.Container
+	var ownerDomainAndEnvironmentAccordion *widget.Accordion
+	var ownerDomainAndEnvironmentAccordionItem *widget.AccordionItem
+	var ownerDomainAndEnvironmentAccordionItemContainer *fyne.Container
 
 	// Initiate some containers
 	testSuiteUiModel.testSuiteMetaDataStackContainer = container.NewStack()
 	testSuiteUiModel.testSuiteTestDataAreaContainer = container.NewStack()
 	testSuiteUiModel.lockOwnerAndTestEnvironmentAreaContainer = container.NewStack()
+	ownerDomainAndEnvironmentAccordionItemContainer = container.NewVBox()
 
 	// Generate TestSuite-DeleteDate area
 	testSuiteDeleteDateAreaContainer, err = testSuiteUiModel.generateTestSuiteDeletionDateArea(testSuiteUuid)
@@ -118,7 +122,7 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	var testSuiteOwnerDomainHorizontalContainer *fyne.Container
 	testSuiteOwnerDomainHorizontalContainer = container.NewHBox(testSuiteUiModel.testSuiteOwnerDomainContainer, layout.NewSpacer())
 
-	leftTopSideBuildTestSuiteContainer.Add(testSuiteOwnerDomainHorizontalContainer)
+	ownerDomainAndEnvironmentAccordionItemContainer.Add(testSuiteOwnerDomainHorizontalContainer)
 
 	// Generate TestSuite's ExecutionEnvironment
 
@@ -142,8 +146,7 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	testSuiteUiModel.testSuiteTestEnvironmentStackContainer = container.NewStack(
 		testSuiteUiModel.testSuiteTestEnvironmentContainer)
 
-	// Add 'testSuiteTestEnvironmentStackContainer' to TestSuite's Left sides container
-	leftTopSideBuildTestSuiteContainer.Add(testSuiteUiModel.testSuiteTestEnvironmentStackContainer)
+	ownerDomainAndEnvironmentAccordionItemContainer.Add(testSuiteUiModel.testSuiteTestEnvironmentStackContainer)
 
 	// Generate Lock Owner and TestEnvironment-area
 	testSuiteUiModel.lockOwnerAndTestEnvironmentAreaContainer, err = testSuiteUiModel.generateLockOwnerDomainAndTestEnvironmentAreaContainer()
@@ -159,8 +162,14 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 		return leftSideBuildTestSuiteContainer, nil
 
 	}
-	leftTopSideBuildTestSuiteContainer.Add(testSuiteUiModel.lockOwnerAndTestEnvironmentAreaContainer)
+	ownerDomainAndEnvironmentAccordionItemContainer.Add(testSuiteUiModel.lockOwnerAndTestEnvironmentAreaContainer)
 	testSuiteUiModel.lockOwnerAndTestEnvironmentAreaContainer.Hide()
+
+	ownerDomainAndEnvironmentAccordionItem = widget.NewAccordionItem("Owner Domain and Execution Environment", ownerDomainAndEnvironmentAccordionItemContainer)
+	ownerDomainAndEnvironmentAccordion = widget.NewAccordion(ownerDomainAndEnvironmentAccordionItem)
+	ownerDomainAndEnvironmentAccordion.OpenAll()
+
+	leftTopSideBuildTestSuiteContainer.Add(ownerDomainAndEnvironmentAccordion)
 
 	// Generate TestSuite-TestData-area
 	testSuiteUiModel.testSuiteTestDataAreaContainer, err = testSuiteUiModel.generateSelectedTestDataForTestSuiteArea(testSuiteUuid)

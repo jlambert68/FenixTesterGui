@@ -23,7 +23,7 @@ import (
 
 // RemoveTestCaseFromList
 // Remove a TestCase from the List
-func RemoveTestCaseFromList(testCaseUuidToBeRemoved string, testCasesModel *testCaseModel.TestCasesModelsStruct) {
+func (listTestCaseUIObject *ListTestCaseUIStruct) RemoveTestCaseFromList(testCaseUuidToBeRemoved string, testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
 	// Delete TestCase from 'TestCasesThatCanBeEditedByUserMap'
 	delete(listTestCasesModel.TestCasesThatCanBeEditedByUserMap, testCaseUuidToBeRemoved)
@@ -48,17 +48,17 @@ func RemoveTestCaseFromList(testCaseUuidToBeRemoved string, testCasesModel *test
 	*/
 
 	// Update table-list and update Table
-	loadTestCaseListTableTable(nil)
-	calculateAndSetCorrectColumnWidths()
-	updateTestCasesListTable(testCasesModel)
+	listTestCaseUIObject.loadTestCaseListTableTable(nil)
+	listTestCaseUIObject.calculateAndSetCorrectColumnWidths()
+	listTestCaseUIObject.updateTestCasesListTable(testCasesModel)
 
 }
 
 // Create the UI-list that holds the list of TestCasesMapPtr that the user can edit
-func generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruct) {
+func (listTestCaseUIObject *ListTestCaseUIStruct) generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
 	// Correctly initialize the selectedFilesTable as a new table
-	testCaseaListTable = widget.NewTable(
+	listTestCaseUIObject.testCaseListTable = widget.NewTable(
 		func() (int, int) { return 0, numberColumnsInTestCasesListUI }, // Start with zero rows, 8 columns
 		func() fyne.CanvasObject {
 			return widget.NewLabel("") // Create cells as labels
@@ -104,12 +104,12 @@ func generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStr
 	}
 
 	// Define the Header
-	testCaseaListTable.ShowHeaderRow = true
-	testCaseaListTable.CreateHeader = func() fyne.CanvasObject {
+	listTestCaseUIObject.testCaseListTable.ShowHeaderRow = true
+	listTestCaseUIObject.testCaseListTable.CreateHeader = func() fyne.CanvasObject {
 		//return widget.NewLabel("") // Create cells as labels
 
 		var tempNewSortableHeaderLabel *sortableHeaderLabelStruct
-		tempNewSortableHeaderLabel = newSortableHeaderLabel("", true, 0)
+		tempNewSortableHeaderLabel = newSortableHeaderLabel("", true, 0, listTestCaseUIObject)
 
 		// Create the Sort Icons container
 		//var newSortIconsContainer *fyne.Container
@@ -123,44 +123,44 @@ func generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStr
 
 	}
 
-	updateTestCasesListTable(testCasesModel)
-	calculateAndSetCorrectColumnWidths()
+	listTestCaseUIObject.updateTestCasesListTable(testCasesModel)
+	listTestCaseUIObject.calculateAndSetCorrectColumnWidths()
 
 }
 
 // Update the Table
-func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruct) {
+func (listTestCaseUIObject *ListTestCaseUIStruct) updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
-	testCaseaListTable.Length = func() (int, int) {
-		return len(testCasesListTableTable), numberColumnsInTestCasesListUI
+	listTestCaseUIObject.testCaseListTable.Length = func() (int, int) {
+		return len(listTestCaseUIObject.testCasesListTableTable), numberColumnsInTestCasesListUI
 	}
-	testCaseaListTable.CreateCell = func() fyne.CanvasObject {
+	listTestCaseUIObject.testCaseListTable.CreateCell = func() fyne.CanvasObject {
 
-		tempNewClickableLabel := newClickableTableLabel("", func() {}, false, testCasesModel)
+		tempNewClickableLabel := newClickableTableLabel("", func() {}, false, testCasesModel, listTestCaseUIObject)
 		tempContainer := container.NewStack(canvas.NewRectangle(color.Transparent), tempNewClickableLabel, tempNewClickableLabel.textInsteadOfLabel)
 
 		return tempContainer
 
 	}
-	testCaseaListTable.UpdateCell = func(id widget.TableCellID, cell fyne.CanvasObject) {
+	listTestCaseUIObject.testCaseListTable.UpdateCell = func(id widget.TableCellID, cell fyne.CanvasObject) {
 
 		clickableContainer := cell.(*fyne.Container)
 		clickable := clickableContainer.Objects[1].(*clickableTableLabel)
 		rectangle := clickableContainer.Objects[0].(*canvas.Rectangle)
-		clickable.SetText(testCasesListTableTable[id.Row][id.Col])
+		clickable.SetText(listTestCaseUIObject.testCasesListTableTable[id.Row][id.Col])
 		clickable.isClickable = true
 		clickable.currentRow = int16(id.Row)
-		clickable.currentTestCaseUuid = testCasesListTableTable[id.Row][testCaseUuidColumnNumber]
+		clickable.currentTestCaseUuid = listTestCaseUIObject.testCasesListTableTable[id.Row][testCaseUuidColumnNumber]
 
 		clickable.onDoubleTap = func() {
 
 			// Open TestCase
-			openTestCase(clickable.currentTestCaseUuid, clickable.testCasesModel)
+			listTestCaseUIObject.openTestCase(clickable.currentTestCaseUuid, clickable.testCasesModel)
 
 		}
 
 		// Check if this row should be highlighted or not
-		if int16(id.Row) == currentRowThatMouseIsHoveringAbove {
+		if int16(id.Row) == listTestCaseUIObject.currentRowThatMouseIsHoveringAbove {
 			clickable.TextStyle = fyne.TextStyle{Bold: false}
 			rectangle.FillColor = color.RGBA{
 				R: 0x4A,
@@ -188,7 +188,7 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 		} else {
 
 			// If this row is the one that is shown in TestCase preview window
-			if clickable.currentTestCaseUuid == testCaseThatIsShownInPreview {
+			if clickable.currentTestCaseUuid == listTestCaseUIObject.testCaseThatIsShownInPreview {
 
 				clickable.TextStyle = fyne.TextStyle{Bold: false}
 				rectangle.FillColor = color.RGBA{
@@ -254,7 +254,7 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 	}
 
 	// Update the Header
-	testCaseaListTable.UpdateHeader = func(id widget.TableCellID, cell fyne.CanvasObject) {
+	listTestCaseUIObject.testCaseListTable.UpdateHeader = func(id widget.TableCellID, cell fyne.CanvasObject) {
 		tempSortableHeaderLabel := cell.(*sortableHeaderLabelStruct)
 		tempSortableHeaderLabel.label.SetText(testCaseListTableHeader[id.Col])
 		tempSortableHeaderLabel.label.TextStyle = fyne.TextStyle{Bold: true}
@@ -265,7 +265,7 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 
 		// If this Header is 'latestTestCaseExecutionTimeStampColumnNumber' then save reference to it
 		if id.Col == int(latestTestCaseExecutionTimeStampColumnNumber) {
-			sortableHeaderReference = tempSortableHeaderLabel
+			listTestCaseUIObject.sortableHeaderReference = tempSortableHeaderLabel
 		}
 
 		//tempSortableHeaderLabel.latestSelectedSortOrder = SortingDirectionAscending
@@ -275,7 +275,7 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 		tempSortableHeaderLabel.Refresh()
 	}
 
-	testCaseaListTable.Refresh()
+	listTestCaseUIObject.testCaseListTable.Refresh()
 }
 
 // TestCaseUuid
@@ -285,7 +285,7 @@ func updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruc
 // LatestFinishedOkTestCaseExecutionStatusInsertTimeStamp
 // DomainUuid
 
-func calculateAndSetCorrectColumnWidths() {
+func (listTestCaseUIObject *ListTestCaseUIStruct) calculateAndSetCorrectColumnWidths() {
 
 	// Initiate slice for keeping track of max column width size
 	var columnsMaxSizeSlice []float32
@@ -302,7 +302,7 @@ func calculateAndSetCorrectColumnWidths() {
 	}
 
 	// Loop all rows
-	for _, tempRow := range testCasesListTableTable {
+	for _, tempRow := range listTestCaseUIObject.testCasesListTableTable {
 
 		// Loop columns for a row to get column width
 		for columnIndex, tempColumnValue := range tempRow {
@@ -321,17 +321,17 @@ func calculateAndSetCorrectColumnWidths() {
 
 	// Loop columns in table and set column width including some Padding
 	for columnIndex, columnWidth := range columnsMaxSizeSlice {
-		testCaseaListTable.SetColumnWidth(columnIndex, columnWidth+theme.Padding()*4)
+		listTestCaseUIObject.testCaseListTable.SetColumnWidth(columnIndex, columnWidth+theme.Padding()*4)
 	}
 
 	// Refresh the table
-	testCaseaListTable.Refresh()
+	listTestCaseUIObject.testCaseListTable.Refresh()
 
 }
 
-func loadTestCaseListTableTable(testCaseMetaDataFilterEntry *boolbits.Entry) {
+func (listTestCaseUIObject *ListTestCaseUIStruct) loadTestCaseListTableTable(testCaseMetaDataFilterEntry *boolbits.Entry) {
 
-	testCasesListTableTable = nil
+	listTestCaseUIObject.testCasesListTableTable = nil
 	var testCaseUuid string
 	var existInMap bool
 	var err error
@@ -477,7 +477,7 @@ func loadTestCaseListTableTable(testCaseMetaDataFilterEntry *boolbits.Entry) {
 		tempRowslice = append(tempRowslice, tempTestCase.GetDomainUuid())
 
 		// Add Row to slice of rows for the table
-		testCasesListTableTable = append(testCasesListTableTable, tempRowslice)
+		listTestCaseUIObject.testCasesListTableTable = append(listTestCaseUIObject.testCasesListTableTable, tempRowslice)
 
 	}
 
@@ -485,8 +485,8 @@ func loadTestCaseListTableTable(testCaseMetaDataFilterEntry *boolbits.Entry) {
 	if listTestCasesModel.TestCasesThatCanBeEditedByUserMap != nil &&
 		len(listTestCasesModel.TestCasesThatCanBeEditedByUserMap) > 0 {
 
-		currentSortColumn = initialColumnToSortOn
-		sort2DStringSlice(testCasesListTableTable, initialColumnToSortOn, initialSortDirectionForInitialColumnToSortOn)
+		listTestCaseUIObject.currentSortColumn = initialColumnToSortOn
+		listTestCaseUIObject.sort2DStringSlice(listTestCaseUIObject.testCasesListTableTable, initialColumnToSortOn, initialSortDirectionForInitialColumnToSortOn)
 
 	}
 
@@ -494,7 +494,7 @@ func loadTestCaseListTableTable(testCaseMetaDataFilterEntry *boolbits.Entry) {
 
 // Sort2DStringSlice sorts a 2D string slice by a specified column index.
 // It assumes that the column index is valid for all rows in the slice.
-func sort2DStringSlice(data [][]string, columnToSortOn int, sortingDirection SortingDirectionType) {
+func (listTestCaseUIObject *ListTestCaseUIStruct) sort2DStringSlice(data [][]string, columnToSortOn int, sortingDirection SortingDirectionType) {
 	sort.Slice(data, func(i, j int) bool {
 		// Adjust the sorting logic as needed.
 		// In this case, sorting lexicographically based on the given columnToSortOn

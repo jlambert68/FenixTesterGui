@@ -8,7 +8,7 @@ import (
 
 // GenerateTestCaseMetaDataFilterContainer
 // Generates the GenerateTestCaseMetaDataFilterContainer containing a simple and an advanced filter version
-func GenerateTestCaseMetaDataFilterContainer(
+func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateTestCaseMetaDataFilterContainer(
 	testCasesModel *testCaseModel.TestCasesModelsStruct) *container.AppTabs {
 
 	/*
@@ -26,7 +26,7 @@ func GenerateTestCaseMetaDataFilterContainer(
 	// Generate the Tab for the Simple MetaDataFilter
 	simpleMetaDataFilterTab = container.NewTabItem(
 		"Simple MetaDataFilter",
-		generateSimpleTestCaseMetaDataFilterContainer(testCasesModel))
+		listTestCaseUIObject.generateSimpleTestCaseMetaDataFilterContainer(testCasesModel))
 
 	// Generate Tab for the Advanced MetaDataFilter
 	advancedMetaDataFilterTab = container.NewTabItem(

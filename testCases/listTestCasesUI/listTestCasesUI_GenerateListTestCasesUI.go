@@ -73,7 +73,7 @@ func InitiateListTestCaseUIObject() (listTestCaseUIObject *ListTestCaseUIStruct)
 // Create the UI used for list all TestCasesMapPtr that the User can edit
 func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateListTestCasesUI(
 	testCasesModel *testCaseModel.TestCasesModelsStruct,
-	preViewAndFilterTabsUsedForCreateTestSuite *container.AppTabs) (listTestCasesUI fyne.CanvasObject) {
+	preViewAndFilterTabsUsedForCreateTestSuite *container.AppTabs) (_ *fyne.Container) {
 
 	//var testCaseTable *widget.Table
 
@@ -214,7 +214,7 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateListTestCasesUI(
 
 		//TestCaseListAndTestCasePreviewSplitContainer = tempTestCaseListAndTestCasePreviewSplitContainer
 
-		return tempTestCaseListAndTestCasePreviewSplitContainer
+		return container.NewBorder(nil, nil, nil, nil, tempTestCaseListAndTestCasePreviewSplitContainer)
 
 	} else {
 		// We are in Create TestSuite
@@ -222,7 +222,9 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateListTestCasesUI(
 		listTestCaseUIObject.preViewAndFilterTabs.Append(listTestCaseUIObject.filterTab)
 		listTestCaseUIObject.preViewAndFilterTabs.Append(listTestCaseUIObject.preViewTab)
 
-		return testCasesListScrollContainer2
+		testCasesListContainer := container.NewBorder(nil, nil, nil, nil, testCasesListScrollContainer2)
+
+		return testCasesListContainer
 
 	}
 

@@ -21,6 +21,9 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	var leftTopSideBuildTestSuiteContainer *fyne.Container
 	leftTopSideBuildTestSuiteContainer = container.NewVBox()
 
+	var leftBottomSideBuildTestSuiteContainer *fyne.Container
+	leftBottomSideBuildTestSuiteContainer = container.NewVBox(widget.NewLabel("Bottom"))
+
 	var testSuiteDeleteDateAreaContainer *fyne.Container
 	var testSuiteNameAreaContainer *fyne.Container
 	var testSuiteDescriptionAreaContainer *fyne.Container
@@ -28,10 +31,8 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	var ownerDomainAndEnvironmentAccordionItem *widget.AccordionItem
 	var ownerDomainAndEnvironmentAccordionItemContainer *fyne.Container
 
-	var testCaseListAccordion *widget.Accordion
-	var testCaseListAccordionItem *widget.AccordionItem
-	var testCaseListAccordionItemContainer *fyne.Container
-	var testCaseListAccordionItemCanvasObject fyne.CanvasObject
+	//var testCaseListAccordion *widget.Accordion
+	//var testCaseListAccordionItem *widget.AccordionItem
 
 	// Initiate some containers
 	testSuiteUiModel.testSuiteMetaDataStackContainer = container.NewStack()
@@ -215,13 +216,23 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 
 	// Add 'testSuiteMetaDataStackContainer' to TestSuite's Left sides container
 	leftTopSideBuildTestSuiteContainer.Add(testSuiteUiModel.testSuiteMetaDataStackContainer)
+
+	// Generate the TestCases list
+	var listTestCaseUIObject *listTestCasesUI.ListTestCaseUIStruct
+	listTestCaseUIObject = listTestCasesUI.InitiateListTestCaseUIObject()
+	testSuiteUiModel.testCaseListAccordionItemContainer = listTestCaseUIObject.GenerateListTestCasesUI(
+		testCasesModel,
+		preViewAndFilterTabsUsedForCreateTestSuite)
+
 	if testSuiteUiModel.TestSuiteModelPtr.HasLockButtonBeenClickedAndBothOwnerDomainAndTestEnvironmentHaveValues() == true {
 		testSuiteUiModel.testSuiteTestDataAreaContainer.Show()
 		testSuiteUiModel.testSuiteMetaDataStackContainer.Show()
+		testSuiteUiModel.testCaseListAccordionItemContainer.Show()
 		//testSuiteUiModel.testSuiteMetaDataContainer.Refresh()
 	} else {
 		testSuiteUiModel.testSuiteTestDataAreaContainer.Hide()
 		testSuiteUiModel.testSuiteMetaDataStackContainer.Hide()
+		testSuiteUiModel.testCaseListAccordionItemContainer.Hide()
 		//testSuiteUiModel.testSuiteMetaDataContainer.Refresh()
 	}
 
@@ -230,27 +241,20 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 		preViewAndFilterTabsUsedForCreateTestSuite *container.AppTabs) (listTestCasesUI fyne.CanvasObject) {
 	*/
 
-	// Generate the TestCases list
-	var listTestCaseUIObject *listTestCasesUI.ListTestCaseUIStruct
-	listTestCaseUIObject = listTestCasesUI.InitiateListTestCaseUIObject()
-	testCaseListAccordionItemCanvasObject = listTestCaseUIObject.GenerateListTestCasesUI(
-		testCasesModel,
-		preViewAndFilterTabsUsedForCreateTestSuite)
+	//testCaseListAccordionItemContainer = container.NewBorder(nil, nil, nil, nil, testCaseListAccordionItemCanvasObject)
 
-	testCaseListAccordionItemContainer = container.NewBorder(nil, nil, nil, nil, testCaseListAccordionItemCanvasObject)
+	//testCaseListAccordionItem = widget.NewAccordionItem("TestCases", testCaseListAccordionItemContainer)
+	//testCaseListAccordion = widget.NewAccordion(testCaseListAccordionItem)
 
-	testCaseListAccordionItem = widget.NewAccordionItem("TestCases", testCaseListAccordionItemContainer)
-	testCaseListAccordion = widget.NewAccordion(testCaseListAccordionItem)
-
-	leftTopSideBuildTestSuiteContainer.Add(testCaseListAccordion)
+	//leftTopSideBuildTestSuiteContainer.Add(testCaseListAccordionItemContainer)
 
 	// Create the Left side Container
 	leftSideBuildTestSuiteContainer = container.NewBorder(
 		leftTopSideBuildTestSuiteContainer,
+		leftBottomSideBuildTestSuiteContainer,
 		nil,
 		nil,
-		nil,
-		nil)
+		testSuiteUiModel.testCaseListAccordionItemContainer)
 
 	return leftSideBuildTestSuiteContainer, err
 

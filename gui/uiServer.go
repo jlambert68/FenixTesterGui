@@ -321,8 +321,8 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	// Create the UI for List TestCases
 	listTestCasesUI.StandardListTesCasesUIObject = listTestCasesUI.InitiateListTestCaseUIObject()
-	var tempListTestCasesUI fyne.CanvasObject
-	tempListTestCasesUI = listTestCasesUI.StandardListTesCasesUIObject.GenerateListTestCasesUI(&uiServer.testCasesModel, nil)
+	var tempListTestCasesUIContainer *fyne.Container
+	tempListTestCasesUIContainer = listTestCasesUI.StandardListTesCasesUIObject.GenerateListTestCasesUI(&uiServer.testCasesModel, nil)
 
 	// Create the UI for Build TestSuite-UI
 	var buildTestSuiteUI fyne.CanvasObject
@@ -430,7 +430,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	tabs := container.NewAppTabs(
 		container.NewTabItem("Build TestCase", buildTestCasesUI),
-		container.NewTabItem("List TestCases", tempListTestCasesUI),
+		container.NewTabItem("List TestCases", tempListTestCasesUIContainer),
 		container.NewTabItem("Build TestSuite", buildTestSuiteUI),
 		container.NewTabItem("List TestSuites", listTestSuitesUI),
 		container.NewTabItem("Executions (Subscriptions)", subscriptionExecutionsUITab),

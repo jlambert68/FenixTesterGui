@@ -98,7 +98,7 @@ func (testSuiteUiModel TestSuiteUiStruct) GenerateBuildNewTestSuiteUI(
 		rightSideBuildTestSuiteContainer, rightCreateTestSuiteOverlay)
 
 	buildTestSuiteSplitContainer = container.NewHSplit(buildTestSuiteAndOverlayContainer, rightSideAndOverlayContainer)
-	newTestSuiteUIContainer = container.NewVBox(buildTestSuiteSplitContainer)
+	newTestSuiteUIContainer = container.NewBorder(nil, nil, nil, nil, buildTestSuiteSplitContainer)
 
 	return newTestSuiteUIContainer, err
 }

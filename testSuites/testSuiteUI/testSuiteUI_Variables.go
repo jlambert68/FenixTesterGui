@@ -28,6 +28,7 @@ type TestSuiteUiStruct struct {
 	testSuiteMetaDataContainer               *fyne.Container
 	testSuiteMetaDataStackContainer          *fyne.Container
 	testSuiteTestDataAreaContainer           *fyne.Container
+	testCaseListAccordionItemContainer       *fyne.Container
 }
 
 // The space between the different Information-boxes

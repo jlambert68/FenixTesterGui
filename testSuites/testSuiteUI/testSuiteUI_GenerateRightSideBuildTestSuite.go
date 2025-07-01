@@ -16,7 +16,7 @@ func generateRightSideBuildTestSuiteContainer(
 	var rightSideScrollContainer *container.Scroll
 	rightSideScrollContainer = container.NewScroll(preViewAndFilterTabsUsedForCreateTestSuite)
 
-	rightSideBuildTestSuiteContainer = container.NewVBox(rightSideScrollContainer)
+	rightSideBuildTestSuiteContainer = container.NewBorder(nil, nil, nil, nil, rightSideScrollContainer)
 
 	return rightSideBuildTestSuiteContainer, preViewAndFilterTabsUsedForCreateTestSuite
 

@@ -778,10 +778,14 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) buildGUIFromMetaDataGroupsMap(
 	}
 
 	// top‐level grid: each card cell is 220×180
-	return container.New(
+
+	returnContainer := container.New(
 		layout.NewVBoxLayout(),
 		metaDataGroupCards...,
 	)
+	returnContainer.Add(layout.NewSpacer())
+
+	return returnContainer
 }
 
 // calcSelectWidth returns the width needed to show the longest option

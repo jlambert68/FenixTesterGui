@@ -7,12 +7,14 @@ import (
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/widget"
 	"github.com/jlambert68/Fast_BitFilter_MetaData/boolbits/boolbits"
+	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"sync"
 )
 
 var StandardListTesCasesUIObject *ListTestCaseUIStruct
 
 type ListTestCaseUIStruct struct {
+	howShouldItBeUsed UsedForTestCasesListType
 
 	// The UI-table for the List with TestCase
 	testCaseListTable *widget.Table
@@ -64,7 +66,19 @@ type ListTestCaseUIStruct struct {
 	currentHeader *sortableHeaderLabelStruct
 
 	previousHeader *sortableHeaderLabelStruct
+
+	// Map holding a pointer to the object in the TestSuite having the selected TestCases for the TestSuite
+	selectedTestCasesPtr *map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage
 }
+
+type UsedForTestCasesListType uint8
+
+const (
+	UsedForTestCasesList UsedForTestCasesListType = iota
+	UsedForTestSuiteBuilder
+)
+
+var testCaseListTableHeaderForTestSuiteBuilder = []string{"Selected"}
 
 var testCaseListTableHeader = []string{
 	"DomainName", "TestCaseName", "TestCaseUuid", "TestCaseVersion", "Latest TestCaseExecution Status",

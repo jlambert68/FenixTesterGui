@@ -90,7 +90,7 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 
 	// Keeps a list of what is to be saved. Used to ensure that older versions of the TestSuite can later be loaded when new functionality has been added to the client
 	var supportedTestSuiteDataToBeStored testSuiteImplementedFunctionsToBeStoredStruct
-	supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap = make(map[testSuiteImplementedFucntionsType]bool)
+	supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap = make(map[testSuiteImplementedFunctionsType]bool)
 
 	// Generate 'TestSuiteBasicInformation' to be added to full gRPC-message
 	var testSuiteBasicInformation *fenixGuiTestCaseBuilderServerGrpcApi.TestSuiteBasicInformationMessage
@@ -385,7 +385,7 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteTestDataMessageWhen
 
 // Generates 'TestSuitePreview' to be added to full gRPC-message
 func (testSuiteModel *TestSuiteModelStruct) generateTestSuitePreviewMessageWhenSaving(
-	supportedTestSuiteDataToBeStored *[]testSuiteImplementedFucntionsType) (
+	supportedTestSuiteDataToBeStored *[]testSuiteImplementedFunctionsType) (
 	testSuitePreview *fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewMessage,
 	testSuitePreviewHash string,
 	err error) {
@@ -536,7 +536,7 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteMetaDataMessageWhen
 }
 
 // Generates 'TestCasesInTestSuite' to be added to full gRPC-message
-func (testSuiteModel *TestSuiteModelStruct) generateTestCasesInTestSuiteMessageWhenSaving(supportedTestSuiteDataToBeStored *[]testSuiteImplementedFucntionsType) (
+func (testSuiteModel *TestSuiteModelStruct) generateTestCasesInTestSuiteMessageWhenSaving(supportedTestSuiteDataToBeStored *[]testSuiteImplementedFunctionsType) (
 	testCasesInTestSuite *fenixGuiTestCaseBuilderServerGrpcApi.TestCasesInTestSuiteMessage,
 	testCasesInTestSuitenHash string,
 	err error) {

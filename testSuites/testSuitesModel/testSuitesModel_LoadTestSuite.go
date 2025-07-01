@@ -189,14 +189,14 @@ func (testSuiteModel *TestSuiteModelStruct) LoadFullTestSuiteFromDatabase(
 // Extract 'TestSuiteImplementedFunctionsMap' from gRPC-message
 func (testSuiteModel *TestSuiteModelStruct) extractTestSuiteImplementedFunctionsMap(
 	testSuiteImplementedFunctionsGrpc map[int32]bool) (
-	testSuiteImplementedFunctionsMap map[testSuiteImplementedFucntionsType]bool,
+	testSuiteImplementedFunctionsMap map[testSuiteImplementedFunctionsType]bool,
 	err error) {
 
-	testSuiteImplementedFunctionsMap = make(map[testSuiteImplementedFucntionsType]bool)
+	testSuiteImplementedFunctionsMap = make(map[testSuiteImplementedFunctionsType]bool)
 
 	// Loop gRPC-map and add to local map
 	for testSuiteImplementedFunction, testSuiteImplementedFunctionValue := range testSuiteImplementedFunctionsGrpc {
-		testSuiteImplementedFunctionsMap[testSuiteImplementedFucntionsType(testSuiteImplementedFunction)] = testSuiteImplementedFunctionValue
+		testSuiteImplementedFunctionsMap[testSuiteImplementedFunctionsType(testSuiteImplementedFunction)] = testSuiteImplementedFunctionValue
 	}
 
 	return testSuiteImplementedFunctionsMap, err
@@ -593,7 +593,7 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteImplementedFunction
 	for testSuiteImplementedFunction, testSuiteImplementedFunctionValue := range testSuiteImplementedFunctionsMapFromGrpc {
 
 		supportedTestSuiteDataToBeStored.
-			testSuiteImplementedFunctionsMap[testSuiteImplementedFucntionsType(testSuiteImplementedFunction)] = testSuiteImplementedFunctionValue
+			testSuiteImplementedFunctionsMap[testSuiteImplementedFunctionsType(testSuiteImplementedFunction)] = testSuiteImplementedFunctionValue
 	}
 
 	return err

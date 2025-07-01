@@ -3,6 +3,7 @@ package listTestCasesUI
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/detailedExecutionsModel"
+	"FenixTesterGui/soundEngine"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testCases/listTestCasesModel"
 	"bytes"
@@ -13,6 +14,7 @@ import (
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"github.com/jlambert68/Fast_BitFilter_MetaData/boolbits/boolbits"
+	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"image/color"
 	"image/png"
@@ -59,7 +61,9 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) generateTestCasesListTable(tes
 
 	// Correctly initialize the selectedFilesTable as a new table
 	listTestCaseUIObject.testCaseListTable = widget.NewTable(
-		func() (int, int) { return 0, numberColumnsInTestCasesListUI }, // Start with zero rows, 8 columns
+		func() (int, int) {
+			return 0, numberColumnsInTestCasesListUI + int(listTestCaseUIObject.howShouldItBeUsed)
+		}, // Start with zero rows, 8 columns
 		func() fyne.CanvasObject {
 			return widget.NewLabel("") // Create cells as labels
 		},
@@ -132,7 +136,7 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) generateTestCasesListTable(tes
 func (listTestCaseUIObject *ListTestCaseUIStruct) updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
 	listTestCaseUIObject.testCaseListTable.Length = func() (int, int) {
-		return len(listTestCaseUIObject.testCasesListTableTable), numberColumnsInTestCasesListUI
+		return len(listTestCaseUIObject.testCasesListTableTable), numberColumnsInTestCasesListUI + int(listTestCaseUIObject.howShouldItBeUsed)
 	}
 	listTestCaseUIObject.testCaseListTable.CreateCell = func() fyne.CanvasObject {
 
@@ -150,13 +154,54 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) updateTestCasesListTable(testC
 		clickable.SetText(listTestCaseUIObject.testCasesListTableTable[id.Row][id.Col])
 		clickable.isClickable = true
 		clickable.currentRow = int16(id.Row)
-		clickable.currentTestCaseUuid = listTestCaseUIObject.testCasesListTableTable[id.Row][testCaseUuidColumnNumber]
+		clickable.currentTestCaseUuid = listTestCaseUIObject.testCasesListTableTable[id.Row][testCaseUuidColumnNumber+uint8(listTestCaseUIObject.howShouldItBeUsed)]
 
 		clickable.onDoubleTap = func() {
 
-			// Open TestCase
-			listTestCaseUIObject.openTestCase(clickable.currentTestCaseUuid, clickable.testCasesModel)
+			if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
+				// Open TestCase when we are in TestCaseListing
+				listTestCaseUIObject.openTestCase(clickable.currentTestCaseUuid, clickable.testCasesModel)
 
+			} else {
+				// Select or UnSelect TestCase in TestSuite
+				var selectedTestCases map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage
+				//var selectedTestCase *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage
+				var existInMap bool
+				selectedTestCases = *clickable.listTestCaseUIPtr.selectedTestCasesPtr
+
+				// Check if TestCase is Selected
+				_, existInMap = selectedTestCases[clickable.currentTestCaseUuid]
+				if existInMap == true {
+					// UnSelect TestCase
+					delete(selectedTestCases, clickable.currentTestCaseUuid)
+
+					// Trigger System Notification sound
+					soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
+
+					fyne.CurrentApp().SendNotification(&fyne.Notification{
+						Title:   "TestCase UnSelected",
+						Content: fmt.Sprintf("'%s' was unselected", clickable.currentTestCaseUuid),
+					})
+
+				} else {
+					// Select TestCase
+					selectedTestCases[clickable.currentTestCaseUuid] = &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage{
+						DomainUuid:   "",
+						DomainName:   "",
+						TestCaseUuid: clickable.currentTestCaseUuid,
+						TestCaseName: "",
+					}
+
+					// Trigger System Notification sound
+					soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
+
+					fyne.CurrentApp().SendNotification(&fyne.Notification{
+						Title:   "TestCase Selected",
+						Content: fmt.Sprintf("'%s' was selected", clickable.currentTestCaseUuid),
+					})
+				}
+
+			}
 		}
 
 		// Check if this row should be highlighted or not
@@ -172,7 +217,39 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) updateTestCasesListTable(testC
 			// Special handling for certain Columns for Status color and Timestamps
 			switch uint8(id.Col) {
 
-			case latestTestCaseExecutionStatusColumnNumber:
+			case 0:
+				// Only check this if TestSuiteBuilder is in play and Column '0'
+				if listTestCaseUIObject.howShouldItBeUsed == UsedForTestSuiteBuilder && id.Col == 0 {
+					rectangle.FillColor = color.RGBA{
+						R: 0x00,
+						G: 0xFF,
+						B: 0x00,
+						A: 0x00,
+					}
+
+					// Check if TestCase is Selected or UnSelected in TestSuite
+					var selectedTestCases map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage
+					//var selectedTestCase *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage
+					var existInMap bool
+					selectedTestCases = *clickable.listTestCaseUIPtr.selectedTestCasesPtr
+
+					// Check if TestCase is Selected
+					_, existInMap = selectedTestCases[clickable.currentTestCaseUuid]
+					if existInMap == true {
+						// Is Selected
+						clickable.Text = "SELECTED"
+
+					} else {
+						// Is UnSelected
+						clickable.Text = "-"
+					}
+
+					//listTestCaseUIObject.testCaseListTable.Refresh()
+
+					break
+				}
+
+			case latestTestCaseExecutionStatusColumnNumber + uint8(listTestCaseUIObject.howShouldItBeUsed):
 
 				clickable.textInsteadOfLabel.Text = clickable.Text
 				clickable.Text = ""
@@ -211,7 +288,39 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) updateTestCasesListTable(testC
 			// Special handling for certain Columns for Status color and Timestamps
 			switch uint8(id.Col) {
 
-			case latestTestCaseExecutionStatusColumnNumber:
+			case 0:
+				// Only check this if TestSuiteBuilder is in play and Column '0'
+				if listTestCaseUIObject.howShouldItBeUsed == UsedForTestSuiteBuilder && id.Col == 0 {
+					rectangle.FillColor = color.RGBA{
+						R: 0x00,
+						G: 0xFF,
+						B: 0x00,
+						A: 0x00,
+					}
+
+					// Check if TestCase is Selected or UnSelected in TestSuite
+					var selectedTestCases map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage
+					//var selectedTestCase *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage
+					var existInMap bool
+					selectedTestCases = *clickable.listTestCaseUIPtr.selectedTestCasesPtr
+
+					// Check if TestCase is Selected
+					_, existInMap = selectedTestCases[clickable.currentTestCaseUuid]
+					if existInMap == true {
+						// Is Selected
+						clickable.Text = "SELECTED"
+
+					} else {
+						// Is UnSelected
+						clickable.Text = "-"
+					}
+
+					//listTestCaseUIObject.testCaseListTable.Refresh()
+
+					break
+				}
+
+			case latestTestCaseExecutionStatusColumnNumber + uint8(listTestCaseUIObject.howShouldItBeUsed):
 				var statusId uint8
 				var statusBackgroundColor color.RGBA
 				var statusStrokeColor color.RGBA
@@ -249,6 +358,7 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) updateTestCasesListTable(testC
 			}
 
 		}
+
 		clickableContainer.Refresh()
 
 	}
@@ -264,7 +374,7 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) updateTestCasesListTable(testC
 		tempSortableHeaderLabel.sortImage.headerColumnNumber = id.Col
 
 		// If this Header is 'latestTestCaseExecutionTimeStampColumnNumber' then save reference to it
-		if id.Col == int(latestTestCaseExecutionTimeStampColumnNumber) {
+		if id.Col == int(latestTestCaseExecutionTimeStampColumnNumber+uint8(listTestCaseUIObject.howShouldItBeUsed)) {
 			listTestCaseUIObject.sortableHeaderReference = tempSortableHeaderLabel
 		}
 
@@ -289,7 +399,7 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) calculateAndSetCorrectColumnWi
 
 	// Initiate slice for keeping track of max column width size
 	var columnsMaxSizeSlice []float32
-	columnsMaxSizeSlice = make([]float32, numberColumnsInTestCasesListUI)
+	columnsMaxSizeSlice = make([]float32, numberColumnsInTestCasesListUI+int(listTestCaseUIObject.howShouldItBeUsed))
 
 	var columnWidth float32
 
@@ -329,7 +439,8 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) calculateAndSetCorrectColumnWi
 
 }
 
-func (listTestCaseUIObject *ListTestCaseUIStruct) loadTestCaseListTableTable(testCaseMetaDataFilterEntry *boolbits.Entry) {
+func (listTestCaseUIObject *ListTestCaseUIStruct) loadTestCaseListTableTable(
+	testCaseMetaDataFilterEntry *boolbits.Entry) {
 
 	listTestCaseUIObject.testCasesListTableTable = nil
 	var testCaseUuid string
@@ -401,6 +512,11 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) loadTestCaseListTableTable(tes
 		var tempRowslice []string
 
 		// Populate the temporary Row-object
+		// Column x
+		// TestCaseSelectedForTestSuite
+		if listTestCaseUIObject.howShouldItBeUsed == UsedForTestSuiteBuilder {
+			tempRowslice = append(tempRowslice, "-666")
+		}
 
 		// Column 0:
 		// DomainName
@@ -485,8 +601,8 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) loadTestCaseListTableTable(tes
 	if listTestCasesModel.TestCasesThatCanBeEditedByUserMap != nil &&
 		len(listTestCasesModel.TestCasesThatCanBeEditedByUserMap) > 0 {
 
-		listTestCaseUIObject.currentSortColumn = initialColumnToSortOn
-		listTestCaseUIObject.sort2DStringSlice(listTestCaseUIObject.testCasesListTableTable, initialColumnToSortOn, initialSortDirectionForInitialColumnToSortOn)
+		listTestCaseUIObject.currentSortColumn = initialColumnToSortOn + +int(listTestCaseUIObject.howShouldItBeUsed)
+		listTestCaseUIObject.sort2DStringSlice(listTestCaseUIObject.testCasesListTableTable, initialColumnToSortOn+int(listTestCaseUIObject.howShouldItBeUsed), initialSortDirectionForInitialColumnToSortOn)
 
 	}
 

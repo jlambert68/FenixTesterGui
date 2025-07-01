@@ -219,7 +219,10 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 
 	// Generate the TestCases list
 	var listTestCaseUIObject *listTestCasesUI.ListTestCaseUIStruct
-	listTestCaseUIObject = listTestCasesUI.InitiateListTestCaseUIObject()
+	listTestCaseUIObject = listTestCasesUI.InitiateListTestCaseUIObject(
+		listTestCasesUI.UsedForTestSuiteBuilder,
+		testSuiteUiModel.TestSuiteModelPtr.TestSuiteUIModelBinding.TestCasesInTestSuitePtr.TestCasesInTestSuiteMapPtr)
+
 	testSuiteUiModel.testCaseListAccordionItemContainer = listTestCaseUIObject.GenerateListTestCasesUI(
 		testCasesModel,
 		preViewAndFilterTabsUsedForCreateTestSuite)

@@ -10,6 +10,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/widget"
+	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"image"
 	"strconv"
 	"sync"
@@ -36,9 +37,22 @@ var sortImageAscendingAsImage image.Image
 var sortImageDescendingAsByteArray []byte
 var sortImageDescendingAsImage image.Image
 
-func InitiateListTestCaseUIObject() (listTestCaseUIObject *ListTestCaseUIStruct) {
+func InitiateListTestCaseUIObject(
+	tempHowShouldItBeUsed UsedForTestCasesListType,
+	selectedTestCasesPtr *map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage) (
+	listTestCaseUIObject *ListTestCaseUIStruct) {
+
+	// Handle Headers for TestCaseList by adding first column for when TestCase is selected
+	if tempHowShouldItBeUsed == UsedForTestSuiteBuilder {
+		testCaseListTableHeaderForTestSuiteBuilder = append(
+			testCaseListTableHeaderForTestSuiteBuilder, testCaseListTableHeader...)
+
+		testCaseListTableHeader = testCaseListTableHeaderForTestSuiteBuilder
+
+	}
 
 	listTestCaseUIObject = &ListTestCaseUIStruct{
+		howShouldItBeUsed:                               tempHowShouldItBeUsed,
 		testCaseListTable:                               nil,
 		testCasesListTableTable:                         nil,
 		numberOfTestCasesAfterLocalFilters:              nil,
@@ -64,6 +78,7 @@ func InitiateListTestCaseUIObject() (listTestCaseUIObject *ListTestCaseUIStruct)
 		currentSortColumn:                               -1,
 		currentHeader:                                   nil,
 		previousHeader:                                  nil,
+		selectedTestCasesPtr:                            selectedTestCasesPtr,
 	}
 
 	return listTestCaseUIObject
@@ -73,7 +88,8 @@ func InitiateListTestCaseUIObject() (listTestCaseUIObject *ListTestCaseUIStruct)
 // Create the UI used for list all TestCasesMapPtr that the User can edit
 func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateListTestCasesUI(
 	testCasesModel *testCaseModel.TestCasesModelsStruct,
-	preViewAndFilterTabsUsedForCreateTestSuite *container.AppTabs) (_ *fyne.Container) {
+	preViewAndFilterTabsUsedForCreateTestSuite *container.AppTabs) (
+	_ *fyne.Container) {
 
 	//var testCaseTable *widget.Table
 
@@ -204,8 +220,8 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateListTestCasesUI(
 		"TestCase-filter",
 		simpleAndAdvancedMetaDataFilter)
 
-	// Generate the AppTabsContainer. If AppTabContainer coming as input is not nil, then use that one (used when creating TestSuite)
-	if preViewAndFilterTabsUsedForCreateTestSuite == nil {
+	// Generate the AppTabsContainer, depending on from where it was initiated
+	if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
 		// We are in standard List TestCases
 		listTestCaseUIObject.preViewAndFilterTabs = container.NewAppTabs(listTestCaseUIObject.filterTab, listTestCaseUIObject.preViewTab)
 

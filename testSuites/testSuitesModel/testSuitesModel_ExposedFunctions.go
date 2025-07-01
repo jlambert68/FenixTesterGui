@@ -74,6 +74,9 @@ func createEmptyAndInitiatedTestSuiteModel(
 	tempMetaDataGroupsMap1 := make(map[string]*MetaDataGroupStruct)
 	tempMetaDataGroupsMap2 := make(map[string]*MetaDataGroupStruct)
 	tempMetaDataGroupsMap3 := make(map[string]*MetaDataGroupStruct)
+	tempTestCasesInTestSuiteMap1 := make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage)
+	tempTestCasesInTestSuiteMap2 := make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage)
+	tempTestCasesInTestSuiteMap3 := make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage)
 
 	// Generate the new and initiated TestSuiteModelStruct
 	emptyAndInitiatedTestSuiteModel = &TestSuiteModelStruct{
@@ -110,6 +113,10 @@ func createEmptyAndInitiatedTestSuiteModel(
 				MetaDataGroupsMapPtr:                                    &tempMetaDataGroupsMap1,
 				SelectedTestSuiteMetaDataAsEntrySlice:                   []*boolbits.Entry{},
 			},
+			TestCasesInTestSuiteHash: "",
+			TestCasesInTestSuitePtr: &TestCasesInTestSuiteStruct{
+				TestCasesInTestSuiteMapPtr: &tempTestCasesInTestSuiteMap1,
+			},
 			TestSuiteTypeHash: "",
 			TestSuiteType: TestSuiteTypeStruct{
 				TestSuiteType:     TestSuiteTypeIsStandard,
@@ -135,6 +142,10 @@ func createEmptyAndInitiatedTestSuiteModel(
 				MetaDataGroupsMapPtr:                                    &tempMetaDataGroupsMap2,
 				SelectedTestSuiteMetaDataAsEntrySlice:                   []*boolbits.Entry{},
 			},
+			TestCasesInTestSuiteHash: "",
+			TestCasesInTestSuitePtr: &TestCasesInTestSuiteStruct{
+				TestCasesInTestSuiteMapPtr: &tempTestCasesInTestSuiteMap2,
+			},
 			TestSuiteTypeHash: "",
 			TestSuiteType: TestSuiteTypeStruct{
 				TestSuiteType:     TestSuiteTypeIsStandard,
@@ -149,7 +160,9 @@ func createEmptyAndInitiatedTestSuiteModel(
 			TestSuiteOwnerDomainName:      "",
 			TestSuiteExecutionEnvironment: "",
 			TestSuiteIsNew:                false,
+			TestSuiteTestDataHash:         "",
 			TestDataPtr:                   &testDataEngine.TestDataForGroupObjectStruct{},
+			TestSuiteMetaDataHash:         "",
 			TestSuiteMetaDataPtr: &TestSuiteMetaDataStruct{
 				CurrentSelectedDomainUuid:                               "",
 				TestSuiteMetaDataMessageJsonForTestSuiteWhenLastSaved:   &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseAndTestSuiteMetaDataForOneDomainMessage{},
@@ -157,6 +170,10 @@ func createEmptyAndInitiatedTestSuiteModel(
 				MetaDataGroupsOrder:                                     []string{},
 				MetaDataGroupsMapPtr:                                    &tempMetaDataGroupsMap3,
 				SelectedTestSuiteMetaDataAsEntrySlice:                   []*boolbits.Entry{},
+			},
+			TestCasesInTestSuiteHash: "",
+			TestCasesInTestSuitePtr: &TestCasesInTestSuiteStruct{
+				TestCasesInTestSuiteMapPtr: &tempTestCasesInTestSuiteMap3,
 			},
 			TestSuiteTypeHash: "",
 			TestSuiteType: TestSuiteTypeStruct{

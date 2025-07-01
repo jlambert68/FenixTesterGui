@@ -80,6 +80,9 @@ type TestSuiteUIModelBindingStruct struct {
 	TestSuiteMetaDataHash string                   // Hash used to check if changes has been done to MetaData
 	TestSuiteMetaDataPtr  *TestSuiteMetaDataStruct // Holding the current TestSuiteMetaDataSet and what has been selected
 
+	TestCasesInTestSuiteHash string                      // Hash used to check if changes has been done to TestCases in TestSuite
+	TestCasesInTestSuitePtr  *TestCasesInTestSuiteStruct // Holding the current TestCases selected for the TestSuite
+
 	TestSuiteTypeHash string              // The hash of the TestSuiteType
 	TestSuiteType     TestSuiteTypeStruct // Defines the type for the TestSuite, i.e. Standard, Pig...
 
@@ -198,11 +201,15 @@ const (
 	MetaDataSelectType_MultiSelect
 )
 
+type TestCasesInTestSuiteStruct struct {
+	TestCasesInTestSuiteMapPtr *map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage // Key=TestCaseUuid
+}
+
 // The type for the constants used to specify what has been stored in database
-type testSuiteImplementedFucntionsType uint8
+type testSuiteImplementedFunctionsType uint8
 
 const (
-	testSuiteBasicInformationIsSupported testSuiteImplementedFucntionsType = iota
+	testSuiteBasicInformationIsSupported testSuiteImplementedFunctionsType = iota
 	testSuiteTestDataIsSupported
 	testSuitePreviewIsSupported
 	testSuiteMetaDataIsSupported
@@ -213,5 +220,5 @@ const (
 )
 
 type testSuiteImplementedFunctionsToBeStoredStruct struct {
-	testSuiteImplementedFunctionsMap map[testSuiteImplementedFucntionsType]bool `json:"testSuiteImplementedFunctionsMap"`
+	testSuiteImplementedFunctionsMap map[testSuiteImplementedFunctionsType]bool `json:"testSuiteImplementedFunctionsMap"`
 }

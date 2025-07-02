@@ -249,10 +249,12 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) updateTestCasesListTable(testC
 					if existInMap == true {
 						// Is Selected
 						clickable.Text = "SELECTED"
+						listTestCaseUIObject.testCasesListTableTable[id.Row][0] = "SELECTED"
 
 					} else {
 						// Is UnSelected
 						clickable.Text = "-"
+						listTestCaseUIObject.testCasesListTableTable[id.Row][0] = "-"
 					}
 
 					//listTestCaseUIObject.testCaseListTable.Refresh()
@@ -323,10 +325,12 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) updateTestCasesListTable(testC
 					if existInMap == true {
 						// Is Selected
 						clickable.Text = "SELECTED"
+						listTestCaseUIObject.testCasesListTableTable[id.Row][0] = "SELECTED"
 
 					} else {
 						// Is UnSelected
 						clickable.Text = "-"
+						listTestCaseUIObject.testCasesListTableTable[id.Row][0] = "-"
 					}
 
 					//listTestCaseUIObject.testCaseListTable.Refresh()
@@ -695,7 +699,37 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) sort2DStringSlice(data [][]str
 			}
 
 			// Default to string comparison if not numbers.
-			return data[i][columnToSortOn] < data[j][columnToSortOn]
+			if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
+				// UsedForTestCasesList
+				return data[i][columnToSortOn] < data[j][columnToSortOn]
+
+			} else {
+				// UsedForTestSuiteBuilder
+				switch true {
+				case data[i][0] == "SELECTED" && data[j][0] == "SELECTED":
+
+					return data[i][columnToSortOn] < data[j][columnToSortOn]
+
+					break
+
+				case data[i][0] == "SELECTED" && data[j][0] != "SELECTED":
+
+					return true
+
+					break
+
+				case data[i][0] != "SELECTED" && data[j][0] == "SELECTED":
+
+					return false
+
+					break
+
+				default:
+					// Standard sorting - should not be needed
+					return data[i][columnToSortOn] < data[j][columnToSortOn]
+				}
+
+			}
 
 		case SortingDirectionDescending:
 
@@ -704,7 +738,39 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) sort2DStringSlice(data [][]str
 			}
 
 			// Default to string comparison if not numbers.
-			return data[i][columnToSortOn] > data[j][columnToSortOn]
+			// Default to string comparison if not numbers.
+			if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
+				// UsedForTestCasesList
+				return data[i][columnToSortOn] < data[j][columnToSortOn]
+
+			} else {
+				// UsedForTestSuiteBuilder
+				switch true {
+				case data[i][0] == "SELECTED" && data[j][0] == "SELECTED":
+
+					return data[i][columnToSortOn] > data[j][columnToSortOn]
+
+					break
+
+				case data[i][0] == "SELECTED" && data[j][0] != "SELECTED":
+
+					return true
+
+					break
+
+				case data[i][0] != "SELECTED" && data[j][0] == "SELECTED":
+
+					return false
+
+					break
+
+				default:
+					// Standard sorting - should not be needed
+					return data[i][columnToSortOn] > data[j][columnToSortOn]
+				}
+
+			}
+
 		}
 
 		// Not important due that switch statement will handle all return values

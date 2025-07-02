@@ -511,6 +511,22 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestCasesInTestSuiteMessageW
 		return err
 	}
 
+	// Initiate map for TestCases
+	var tempTestCasesInTestSuiteMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage
+	tempTestCasesInTestSuiteMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage)
+
+	// Loop TestCases in gPRC-data
+	for _, tempTestCasesInTestSuiteFromGrpc := range testCasesInTestSuiteFromGrpc.GetTestCasesInTestSuite() {
+
+		// Add to TestCaseMap
+		tempTestCasesInTestSuiteMap[tempTestCasesInTestSuiteFromGrpc.GetTestCaseUuid()] = tempTestCasesInTestSuiteFromGrpc
+	}
+
+	// Add converted TestSuiteMetaData to 'TestSuiteModel'
+	testSuiteModel.savedTestSuiteUIModelBinding.TestCasesInTestSuitePtr = &TestCasesInTestSuiteStruct{
+		TestCasesInTestSuiteMapPtr: &tempTestCasesInTestSuiteMap,
+	}
+
 	return err
 
 }

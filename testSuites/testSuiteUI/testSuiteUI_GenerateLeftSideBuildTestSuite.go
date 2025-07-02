@@ -27,18 +27,20 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	var testSuiteDeleteDateAreaContainer *fyne.Container
 	var testSuiteNameAreaContainer *fyne.Container
 	var testSuiteDescriptionAreaContainer *fyne.Container
-	var ownerDomainAndEnvironmentAccordion *widget.Accordion
 	var ownerDomainAndEnvironmentAccordionItem *widget.AccordionItem
 	var ownerDomainAndEnvironmentAccordionItemContainer *fyne.Container
 
 	//var testCaseListAccordion *widget.Accordion
 	//var testCaseListAccordionItem *widget.AccordionItem
 
-	// Initiate some containers
+	// Initiate some containers and objects
 	testSuiteUiModel.testSuiteMetaDataStackContainer = container.NewStack()
 	testSuiteUiModel.testSuiteTestDataAreaContainer = container.NewStack()
 	testSuiteUiModel.lockOwnerAndTestEnvironmentAreaContainer = container.NewStack()
 	ownerDomainAndEnvironmentAccordionItemContainer = container.NewVBox()
+	testSuiteUiModel.testCaseListAccordionItemContainer = container.NewBorder(nil, nil, nil, nil, nil)
+	ownerDomainAndEnvironmentAccordionItem = widget.NewAccordionItem("Initiated", ownerDomainAndEnvironmentAccordionItemContainer)
+	testSuiteUiModel.ownerDomainAndEnvironmentAccordion = widget.NewAccordion(ownerDomainAndEnvironmentAccordionItem)
 
 	// Generate TestSuite-DeleteDate area
 	testSuiteDeleteDateAreaContainer, err = testSuiteUiModel.generateTestSuiteDeletionDateArea(testSuiteUuid)
@@ -174,10 +176,10 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	testSuiteUiModel.lockOwnerAndTestEnvironmentAreaContainer.Hide()
 
 	ownerDomainAndEnvironmentAccordionItem = widget.NewAccordionItem("Owner Domain and Execution Environment", ownerDomainAndEnvironmentAccordionItemContainer)
-	ownerDomainAndEnvironmentAccordion = widget.NewAccordion(ownerDomainAndEnvironmentAccordionItem)
-	ownerDomainAndEnvironmentAccordion.OpenAll()
+	testSuiteUiModel.ownerDomainAndEnvironmentAccordion = widget.NewAccordion(ownerDomainAndEnvironmentAccordionItem)
+	testSuiteUiModel.ownerDomainAndEnvironmentAccordion.OpenAll()
 
-	leftTopSideBuildTestSuiteContainer.Add(ownerDomainAndEnvironmentAccordion)
+	leftTopSideBuildTestSuiteContainer.Add(testSuiteUiModel.ownerDomainAndEnvironmentAccordion)
 
 	// Generate TestSuite-TestData-area
 	testSuiteUiModel.testSuiteTestDataAreaContainer, err = testSuiteUiModel.generateSelectedTestDataForTestSuiteArea(testSuiteUuid)
@@ -231,11 +233,14 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 		testSuiteUiModel.testSuiteTestDataAreaContainer.Show()
 		testSuiteUiModel.testSuiteMetaDataStackContainer.Show()
 		testSuiteUiModel.testCaseListAccordionItemContainer.Show()
+		testSuiteUiModel.preViewAndFilterTabsUsedForCreateTestSuite.Show()
+
 		//testSuiteUiModel.testSuiteMetaDataContainer.Refresh()
 	} else {
 		testSuiteUiModel.testSuiteTestDataAreaContainer.Hide()
 		testSuiteUiModel.testSuiteMetaDataStackContainer.Hide()
 		testSuiteUiModel.testCaseListAccordionItemContainer.Hide()
+		testSuiteUiModel.preViewAndFilterTabsUsedForCreateTestSuite.Hide()
 		//testSuiteUiModel.testSuiteMetaDataContainer.Refresh()
 	}
 

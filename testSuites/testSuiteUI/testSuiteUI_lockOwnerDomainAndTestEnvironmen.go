@@ -29,6 +29,9 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateLockOwnerDomainAndTestEnviron
 		if testSuiteUiModel.customTestEnvironmentSelectComboBox != nil {
 			testSuiteUiModel.customTestEnvironmentSelectComboBox.selectComboBox.Disable()
 		}
+
+		// Close accordion for this part
+		testSuiteUiModel.ownerDomainAndEnvironmentAccordion.CloseAll()
 	}
 
 	lockButton = widget.NewButton("Lock", func() {

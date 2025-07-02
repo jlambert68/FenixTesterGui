@@ -127,6 +127,13 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 		generateTestSuiteTestDataMessageWhenSaving(&supportedTestSuiteDataToBeStored)
 	valuesToBeHashed = append(valuesToBeHashed, testSuiteTestDataHash)
 
+	// Convert 'TestCasesInTestSuite' into gRPC-message
+	var testCasesInTestSuite *fenixGuiTestCaseBuilderServerGrpcApi.TestCasesInTestSuiteMessage
+	var testCasesInTestSuiteHash string
+	testCasesInTestSuite, testCasesInTestSuiteHash, err = testSuiteModel.
+		generateTestCasesInTestSuiteMessageWhenSaving(&supportedTestSuiteDataToBeStored)
+	valuesToBeHashed = append(valuesToBeHashed, testCasesInTestSuiteHash)
+
 	// Convert 'supportedTestSuiteDataToBeStored' to be added to full gRPC-message
 	var testSuiteImplementedFunctionsMap map[int32]bool
 	var testSuiteImplementedFunctionsMapHash string
@@ -145,7 +152,7 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 		TestSuiteTestData:                testSuiteTestData,
 		TestSuitePreview:                 nil,
 		TestSuiteMetaData:                testSuiteMetaData,
-		TestCasesInTestSuite:             nil,
+		TestCasesInTestSuite:             testCasesInTestSuite,
 		DeletedDate:                      testSuiteDeleteDate,
 		UpdatedByAndWhen:                 nil, // Used when loading TestSuite
 		TestSuiteType:                    testSuiteType,
@@ -536,15 +543,61 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteMetaDataMessageWhen
 }
 
 // Generates 'TestCasesInTestSuite' to be added to full gRPC-message
-func (testSuiteModel *TestSuiteModelStruct) generateTestCasesInTestSuiteMessageWhenSaving(supportedTestSuiteDataToBeStored *[]testSuiteImplementedFunctionsType) (
+func (testSuiteModel *TestSuiteModelStruct) generateTestCasesInTestSuiteMessageWhenSaving(
+	supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct) (
 	testCasesInTestSuite *fenixGuiTestCaseBuilderServerGrpcApi.TestCasesInTestSuiteMessage,
-	testCasesInTestSuitenHash string,
+	testCasesInTestSuiteHash string,
 	err error) {
 
-	// This TestSuite has stored 'testCasesInTestSuiteIsSupported'
-	//*supportedTestSuiteDataToBeStored = append(*supportedTestSuiteDataToBeStored, testCasesInTestSuiteIsSupported)
+	var valuesToBeHashedSlice []string
+	var valueToBeHashed string
 
-	return testCasesInTestSuite, testCasesInTestSuitenHash, err
+	// Initiate 'testCasesInTestSuite'
+	testCasesInTestSuite = &fenixGuiTestCaseBuilderServerGrpcApi.TestCasesInTestSuiteMessage{
+		TestCasesInTestSuite: nil,
+	}
+
+	// This TestSuite has stored 'testCasesInTestSuiteIsSupported'
+	supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap[testCasesInTestSuiteIsSupported] = true
+
+	// Get the TestCasesMap
+	var testCasesInTestSuiteMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage
+	testCasesInTestSuiteMap = *testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestCasesInTestSuitePtr.TestCasesInTestSuiteMapPtr
+
+	// Loop added TestCases and add to gRPC-message
+	if testCasesInTestSuiteMap != nil {
+		for _, testCasesInTestSuiteMessage := range testCasesInTestSuiteMap {
+
+			var tempTestCaseInTestSuiteMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage
+			tempTestCaseInTestSuiteMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage{
+				DomainUuid:   testCasesInTestSuiteMessage.GetDomainUuid(),
+				DomainName:   testCasesInTestSuiteMessage.GetDomainName(),
+				TestCaseUuid: testCasesInTestSuiteMessage.GetTestCaseUuid(),
+				TestCaseName: testCasesInTestSuiteMessage.GetTestCaseName(),
+			}
+
+			testCasesInTestSuite.TestCasesInTestSuite = append(testCasesInTestSuite.TestCasesInTestSuite, tempTestCaseInTestSuiteMessage)
+
+			// Create value to be hashed
+			valueToBeHashed = fmt.Sprintf("%s-%s-%s-%s",
+				testCasesInTestSuiteMessage.GetDomainUuid(),
+				testCasesInTestSuiteMessage.GetDomainName(),
+				testCasesInTestSuiteMessage.GetTestCaseUuid(),
+				testCasesInTestSuiteMessage.GetTestCaseName())
+
+			valuesToBeHashedSlice = append(valuesToBeHashedSlice, valueToBeHashed)
+
+		}
+	}
+
+	// Create TestCasesInTestSuiteHash
+	if len(valuesToBeHashedSlice) > 0 {
+		testCasesInTestSuiteHash = sharedCode.HashValues(valuesToBeHashedSlice, true)
+	} else {
+		testCasesInTestSuiteHash = sharedCode.HashSingleValue("")
+	}
+
+	return testCasesInTestSuite, testCasesInTestSuiteHash, err
 
 }
 

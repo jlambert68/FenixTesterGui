@@ -4,6 +4,7 @@ import (
 	"FenixTesterGui/testSuites/testSuitesModel"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/widget"
 )
 
 // TestSuiteUiStruct
@@ -17,18 +18,20 @@ type TestSuiteUiStruct struct {
 	mouseHasLeftSideSplitContainer bool
 
 	// UI components
-	testSuiteInformationScroll               *container.Scroll
-	testSuiteInformationStackContainer       *fyne.Container
-	testSuiteOwnerDomainContainer            *fyne.Container
-	testCaseOwnerDomainCustomSelectComboBox  *customSelectComboBox
-	testSuiteTestEnvironmentContainer        *fyne.Container
-	customTestEnvironmentSelectComboBox      *customSelectComboBox
-	testSuiteTestEnvironmentStackContainer   *fyne.Container
-	lockOwnerAndTestEnvironmentAreaContainer *fyne.Container
-	testSuiteMetaDataContainer               *fyne.Container
-	testSuiteMetaDataStackContainer          *fyne.Container
-	testSuiteTestDataAreaContainer           *fyne.Container
-	testCaseListAccordionItemContainer       *fyne.Container
+	testSuiteInformationScroll                 *container.Scroll
+	testSuiteInformationStackContainer         *fyne.Container
+	testSuiteOwnerDomainContainer              *fyne.Container
+	testCaseOwnerDomainCustomSelectComboBox    *customSelectComboBox
+	testSuiteTestEnvironmentContainer          *fyne.Container
+	customTestEnvironmentSelectComboBox        *customSelectComboBox
+	testSuiteTestEnvironmentStackContainer     *fyne.Container
+	lockOwnerAndTestEnvironmentAreaContainer   *fyne.Container
+	testSuiteMetaDataContainer                 *fyne.Container
+	testSuiteMetaDataStackContainer            *fyne.Container
+	testSuiteTestDataAreaContainer             *fyne.Container
+	testCaseListAccordionItemContainer         *fyne.Container
+	preViewAndFilterTabsUsedForCreateTestSuite *container.AppTabs
+	ownerDomainAndEnvironmentAccordion         *widget.Accordion
 }
 
 // The space between the different Information-boxes

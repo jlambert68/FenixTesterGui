@@ -20,11 +20,13 @@ func (testSuiteUiModel *TestSuiteUiStruct) lockUIUntilOwnerDomainAndTestEnvironm
 		testSuiteUiModel.testSuiteMetaDataStackContainer.Show()
 		testSuiteUiModel.testSuiteTestDataAreaContainer.Show()
 		testSuiteUiModel.testCaseListAccordionItemContainer.Show()
+		testSuiteUiModel.preViewAndFilterTabsUsedForCreateTestSuite.Show()
 	} else {
 		// Hide Containers
 		testSuiteUiModel.testSuiteMetaDataStackContainer.Hide()
 		testSuiteUiModel.testSuiteTestDataAreaContainer.Hide()
 		testSuiteUiModel.testCaseListAccordionItemContainer.Hide()
+		testSuiteUiModel.preViewAndFilterTabsUsedForCreateTestSuite.Hide()
 	}
 
 	// Check if  lockButton should be visible

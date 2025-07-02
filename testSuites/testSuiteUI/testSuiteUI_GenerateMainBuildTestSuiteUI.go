@@ -49,15 +49,14 @@ func (testSuiteUiModel TestSuiteUiStruct) GenerateBuildNewTestSuiteUI(
 	var rightSideBuildTestSuiteContainer *fyne.Container
 
 	// Generate rightSideBuildTestSuiteContainer - MetaData filter for TestCases
-	var preViewAndFilterTabsUsedForCreateTestSuite *container.AppTabs
 	rightSideBuildTestSuiteContainer,
-		preViewAndFilterTabsUsedForCreateTestSuite = generateRightSideBuildTestSuiteContainer(testCasesModel)
+		testSuiteUiModel.preViewAndFilterTabsUsedForCreateTestSuite = generateRightSideBuildTestSuiteContainer(testCasesModel)
 
 	// Generate leftSideBuildTestSuite - Main information for TestSuite
 	leftSideBuildTestSuiteContainer, err = testSuiteUiModel.generateLeftSideBuildTestSuiteContainer(
 		testSuiteUuid,
 		testCasesModel,
-		preViewAndFilterTabsUsedForCreateTestSuite)
+		testSuiteUiModel.preViewAndFilterTabsUsedForCreateTestSuite)
 	if err != nil {
 		newTestSuiteUIContainer = container.NewVBox(widget.NewLabel(err.Error()))
 		return newTestSuiteUIContainer, err

@@ -78,14 +78,17 @@ const (
 	UsedForTestSuiteBuilder
 )
 
-var testCaseListTableHeaderForTestSuiteBuilder = []string{"Selected"}
+var testCaseListTableHeader []string
 
-var testCaseListTableHeader = []string{
+var testCaseListTableHeaderForTestSuiteBuilder = []string{"Selected", "DomainName", "TestCaseName", "TestCaseUuid"}
+
+var testCaseListTableHeaderForTestCasesList = []string{
 	"DomainName", "TestCaseName", "TestCaseUuid", "TestCaseVersion", "Latest TestCaseExecution Status",
 	"Latest TestCaseExecution TimeStamp", "Latest OK Finished TestCaseExecution TimeStamp", "Last Saved TimeStamp", "DomainUuid"}
 
 // The number of visible columns in UI-table for TestCasesMapPtr
-const numberColumnsInTestCasesListUI int = 9
+const numberColumnsInTestCasesListUIForTestCasesList int = 9
+const numberColumnsInTestCasesListUIForTestSuiteBuilder int = 4
 
 // Keeps track of the in which column the TestCaseUUID exist in the data source for the UI-table
 const testCaseUuidColumnNumber uint8 = 2
@@ -124,7 +127,8 @@ const (
 // Define initial SortDirection for when the Table is first shown to use
 const (
 	initialSortDirectionForInitialColumnToSortOn SortingDirectionType = SortingDirectionDescending
-	initialColumnToSortOn                        int                  = 7
+	initialColumnToSortOnForTestCasesList        int                  = 7
+	initialColumnToSortOnForTestSuiteBuilder     int                  = 2
 )
 
 // The previous column that the TestCase-list was sorted on

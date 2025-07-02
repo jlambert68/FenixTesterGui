@@ -62,7 +62,13 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) generateTestCasesListTable(tes
 	// Correctly initialize the selectedFilesTable as a new table
 	listTestCaseUIObject.testCaseListTable = widget.NewTable(
 		func() (int, int) {
-			return 0, numberColumnsInTestCasesListUI + int(listTestCaseUIObject.howShouldItBeUsed)
+
+			if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
+				return 0, numberColumnsInTestCasesListUIForTestCasesList
+			} else {
+				return 0, numberColumnsInTestCasesListUIForTestSuiteBuilder
+			}
+
 		}, // Start with zero rows, 8 columns
 		func() fyne.CanvasObject {
 			return widget.NewLabel("") // Create cells as labels
@@ -136,7 +142,12 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) generateTestCasesListTable(tes
 func (listTestCaseUIObject *ListTestCaseUIStruct) updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
 	listTestCaseUIObject.testCaseListTable.Length = func() (int, int) {
-		return len(listTestCaseUIObject.testCasesListTableTable), numberColumnsInTestCasesListUI + int(listTestCaseUIObject.howShouldItBeUsed)
+
+		if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
+			return len(listTestCaseUIObject.testCasesListTableTable), numberColumnsInTestCasesListUIForTestCasesList
+		} else {
+			return len(listTestCaseUIObject.testCasesListTableTable), numberColumnsInTestCasesListUIForTestSuiteBuilder
+		}
 	}
 	listTestCaseUIObject.testCaseListTable.CreateCell = func() fyne.CanvasObject {
 
@@ -249,12 +260,15 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) updateTestCasesListTable(testC
 					break
 				}
 
-			case latestTestCaseExecutionStatusColumnNumber + uint8(listTestCaseUIObject.howShouldItBeUsed):
+			case latestTestCaseExecutionStatusColumnNumber:
+				if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
+					clickable.textInsteadOfLabel.Text = clickable.Text
+					clickable.Text = ""
+					clickable.textInsteadOfLabel.Show()
+					clickable.Hide()
 
-				clickable.textInsteadOfLabel.Text = clickable.Text
-				clickable.Text = ""
-				clickable.textInsteadOfLabel.Show()
-				clickable.Hide()
+					break
+				}
 
 			default:
 				clickable.textInsteadOfLabel.Hide()
@@ -321,36 +335,40 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) updateTestCasesListTable(testC
 				}
 
 			case latestTestCaseExecutionStatusColumnNumber + uint8(listTestCaseUIObject.howShouldItBeUsed):
-				var statusId uint8
-				var statusBackgroundColor color.RGBA
-				var statusStrokeColor color.RGBA
-				var useStroke bool
+				if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
+					var statusId uint8
+					var statusBackgroundColor color.RGBA
+					var statusStrokeColor color.RGBA
+					var useStroke bool
 
-				statusId = detailedExecutionsModel.ExecutionStatusColorNameToNumberMap[clickable.Text].ExecutionStatusNumber
-				statusBackgroundColor = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].BackgroundColor
-				rectangle.FillColor = statusBackgroundColor
+					statusId = detailedExecutionsModel.ExecutionStatusColorNameToNumberMap[clickable.Text].ExecutionStatusNumber
+					statusBackgroundColor = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].BackgroundColor
+					rectangle.FillColor = statusBackgroundColor
 
-				useStroke = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].UseStroke
-				if useStroke == true {
-					statusStrokeColor = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].StrokeColor
-					rectangle.StrokeColor = statusStrokeColor
-				}
+					useStroke = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].UseStroke
+					if useStroke == true {
+						statusStrokeColor = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)].StrokeColor
+						rectangle.StrokeColor = statusStrokeColor
+					}
 
-				// When no background color
-				if statusBackgroundColor.R+statusBackgroundColor.G+statusBackgroundColor.B+statusBackgroundColor.A == 0 {
+					// When no background color
+					if statusBackgroundColor.R+statusBackgroundColor.G+statusBackgroundColor.B+statusBackgroundColor.A == 0 {
 
-					clickable.Alignment = fyne.TextAlignCenter
-					clickable.textInsteadOfLabel.Hide()
-					clickable.Show()
+						clickable.Alignment = fyne.TextAlignCenter
+						clickable.textInsteadOfLabel.Hide()
+						clickable.Show()
 
-				} else {
+					} else {
 
-					clickable.textInsteadOfLabel.Text = clickable.Text
-					clickable.textInsteadOfLabel.TextStyle = clickable.TextStyle
-					clickable.Text = ""
-					clickable.textInsteadOfLabel.Show()
-					clickable.Hide()
+						clickable.textInsteadOfLabel.Text = clickable.Text
+						clickable.textInsteadOfLabel.TextStyle = clickable.TextStyle
+						clickable.Text = ""
+						clickable.textInsteadOfLabel.Show()
+						clickable.Hide()
 
+					}
+
+					break
 				}
 
 			default:
@@ -373,9 +391,18 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) updateTestCasesListTable(testC
 		tempSortableHeaderLabel.columnNumber = id.Col
 		tempSortableHeaderLabel.sortImage.headerColumnNumber = id.Col
 
-		// If this Header is 'latestTestCaseExecutionTimeStampColumnNumber' then save reference to it
-		if id.Col == int(latestTestCaseExecutionTimeStampColumnNumber+uint8(listTestCaseUIObject.howShouldItBeUsed)) {
-			listTestCaseUIObject.sortableHeaderReference = tempSortableHeaderLabel
+		// Save reference to sortableHeaderReference depending on TestCasesList or TestSuiteBuilder
+
+		if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
+			// If this Header is 'latestTestCaseExecutionTimeStampColumnNumber' then save reference to it
+			if id.Col == int(latestTestCaseExecutionTimeStampColumnNumber) {
+				listTestCaseUIObject.sortableHeaderReference = tempSortableHeaderLabel
+			}
+		} else {
+			// If this Header is 'latestTestCaseExecutionTimeStampColumnNumber' then save reference to it
+			if id.Col == int(initialColumnToSortOnForTestSuiteBuilder) {
+				listTestCaseUIObject.sortableHeaderReference = tempSortableHeaderLabel
+			}
 		}
 
 		//tempSortableHeaderLabel.latestSelectedSortOrder = SortingDirectionAscending
@@ -399,7 +426,11 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) calculateAndSetCorrectColumnWi
 
 	// Initiate slice for keeping track of max column width size
 	var columnsMaxSizeSlice []float32
-	columnsMaxSizeSlice = make([]float32, numberColumnsInTestCasesListUI+int(listTestCaseUIObject.howShouldItBeUsed))
+	if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
+		columnsMaxSizeSlice = make([]float32, numberColumnsInTestCasesListUIForTestCasesList)
+	} else {
+		columnsMaxSizeSlice = make([]float32, numberColumnsInTestCasesListUIForTestSuiteBuilder)
+	}
 
 	var columnWidth float32
 
@@ -537,60 +568,81 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) loadTestCaseListTableTable(
 
 		// Column 3:
 		// TestCaseVersion
-		tempRowslice = append(tempRowslice, strconv.Itoa(int(tempTestCase.GetTestCaseVersion())))
+		if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
+			tempRowslice = append(tempRowslice, strconv.Itoa(int(tempTestCase.GetTestCaseVersion())))
+		}
 
 		// Column 4:
 		// LatestTestCaseExecutionStatus
-		var tempLatestTestCaseExecutionStatus string
+		if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
 
-		if tempTestCase.GetLatestTestCaseExecutionStatus() > 0 {
+			var tempLatestTestCaseExecutionStatus string
 
-			tempLatestTestCaseExecutionStatus = detailedExecutionsModel.ExecutionStatusColorMap[int32(tempTestCase.GetLatestTestCaseExecutionStatus())].ExecutionStatusName
-		} else {
-			tempLatestTestCaseExecutionStatus = "<no execution>"
+			if tempTestCase.GetLatestTestCaseExecutionStatus() > 0 {
+
+				tempLatestTestCaseExecutionStatus = detailedExecutionsModel.ExecutionStatusColorMap[int32(tempTestCase.GetLatestTestCaseExecutionStatus())].ExecutionStatusName
+			} else {
+				tempLatestTestCaseExecutionStatus = "<no execution>"
+			}
+
+			tempRowslice = append(tempRowslice, tempLatestTestCaseExecutionStatus)
+
 		}
-
-		tempRowslice = append(tempRowslice, tempLatestTestCaseExecutionStatus)
 
 		// Column 5:
 		// LatestTestCaseExecutionStatusInsertTimeStamp
-		var tempLatestTestCaseExecutionStatusInsertTimeStamp string
+		if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
 
-		if tempTestCase.GetLatestTestCaseExecutionStatusInsertTimeStamp() != nil {
-			tempLatestTestCaseExecutionStatusInsertTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestCase.
-				GetLatestTestCaseExecutionStatusInsertTimeStamp())
-		} else {
-			tempLatestTestCaseExecutionStatusInsertTimeStamp = "<no execution>"
+			var tempLatestTestCaseExecutionStatusInsertTimeStamp string
+
+			if tempTestCase.GetLatestTestCaseExecutionStatusInsertTimeStamp() != nil {
+				tempLatestTestCaseExecutionStatusInsertTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestCase.
+					GetLatestTestCaseExecutionStatusInsertTimeStamp())
+			} else {
+				tempLatestTestCaseExecutionStatusInsertTimeStamp = "<no execution>"
+			}
+			tempRowslice = append(tempRowslice, tempLatestTestCaseExecutionStatusInsertTimeStamp)
+
 		}
-		tempRowslice = append(tempRowslice, tempLatestTestCaseExecutionStatusInsertTimeStamp)
 
 		// Column 6:
 		// LatestFinishedOkTestCaseExecutionStatusInsertTimeStamp
-		var tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp string
+		if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
 
-		if tempTestCase.GetLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp() != nil {
-			tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(
-				tempTestCase.GetLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp())
-		} else {
-			tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp = "<no successful execution yet>"
+			var tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp string
+
+			if tempTestCase.GetLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp() != nil {
+				tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(
+					tempTestCase.GetLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp())
+			} else {
+				tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp = "<no successful execution yet>"
+			}
+			tempRowslice = append(tempRowslice, tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp)
 		}
-		tempRowslice = append(tempRowslice, tempLatestFinishedOkTestCaseExecutionStatusInsertTimeStamp)
 
-		// Column 8:
+		// Column 7:
 		// LastSavedTimeStamp
-		var tempLastSavedTimeStamp string
+		if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
 
-		if tempTestCase.GetLastSavedTimeStamp() != nil {
-			tempLastSavedTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestCase.
-				GetLastSavedTimeStamp())
-		} else {
-			tempLastSavedTimeStamp = "<This should not happen, due to it must have been saved!>"
+			var tempLastSavedTimeStamp string
+
+			if tempTestCase.GetLastSavedTimeStamp() != nil {
+				tempLastSavedTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestCase.
+					GetLastSavedTimeStamp())
+			} else {
+				tempLastSavedTimeStamp = "<This should not happen, due to it must have been saved!>"
+			}
+			tempRowslice = append(tempRowslice, tempLastSavedTimeStamp)
+
 		}
-		tempRowslice = append(tempRowslice, tempLastSavedTimeStamp)
 
 		// Column 8:
 		// DomainUuid
-		tempRowslice = append(tempRowslice, tempTestCase.GetDomainUuid())
+
+		if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
+
+			tempRowslice = append(tempRowslice, tempTestCase.GetDomainUuid())
+		}
 
 		// Add Row to slice of rows for the table
 		listTestCaseUIObject.testCasesListTableTable = append(listTestCaseUIObject.testCasesListTableTable, tempRowslice)
@@ -601,8 +653,20 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) loadTestCaseListTableTable(
 	if listTestCasesModel.TestCasesThatCanBeEditedByUserMap != nil &&
 		len(listTestCasesModel.TestCasesThatCanBeEditedByUserMap) > 0 {
 
-		listTestCaseUIObject.currentSortColumn = initialColumnToSortOn + +int(listTestCaseUIObject.howShouldItBeUsed)
-		listTestCaseUIObject.sort2DStringSlice(listTestCaseUIObject.testCasesListTableTable, initialColumnToSortOn+int(listTestCaseUIObject.howShouldItBeUsed), initialSortDirectionForInitialColumnToSortOn)
+		if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
+			listTestCaseUIObject.currentSortColumn = initialColumnToSortOnForTestCasesList
+			listTestCaseUIObject.sort2DStringSlice(
+				listTestCaseUIObject.testCasesListTableTable,
+				initialColumnToSortOnForTestCasesList,
+				initialSortDirectionForInitialColumnToSortOn)
+		} else {
+			listTestCaseUIObject.currentSortColumn = initialColumnToSortOnForTestSuiteBuilder
+			listTestCaseUIObject.sort2DStringSlice(
+				listTestCaseUIObject.testCasesListTableTable,
+				initialColumnToSortOnForTestSuiteBuilder,
+				initialSortDirectionForInitialColumnToSortOn)
+
+		}
 
 	}
 

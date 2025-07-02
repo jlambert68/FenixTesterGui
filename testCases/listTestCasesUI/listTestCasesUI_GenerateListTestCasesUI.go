@@ -43,12 +43,11 @@ func InitiateListTestCaseUIObject(
 	listTestCaseUIObject *ListTestCaseUIStruct) {
 
 	// Handle Headers for TestCaseList by adding first column for when TestCase is selected
-	if tempHowShouldItBeUsed == UsedForTestSuiteBuilder {
-		testCaseListTableHeaderForTestSuiteBuilder = append(
-			testCaseListTableHeaderForTestSuiteBuilder, testCaseListTableHeader...)
+	if tempHowShouldItBeUsed == UsedForTestCasesList {
+		testCaseListTableHeader = testCaseListTableHeaderForTestCasesList
 
+	} else {
 		testCaseListTableHeader = testCaseListTableHeaderForTestSuiteBuilder
-
 	}
 
 	listTestCaseUIObject = &ListTestCaseUIStruct{

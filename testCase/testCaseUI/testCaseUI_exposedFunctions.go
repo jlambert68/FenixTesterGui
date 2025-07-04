@@ -3,6 +3,7 @@ package testCaseUI
 import (
 	"errors"
 	"fmt"
+	"fyne.io/fyne/v2"
 )
 
 // GenerateShortUuidFromFullUuid
@@ -25,9 +26,12 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) UpdateGraphicalRepresenta
 	currentTestCaseUIModel.TestCaseGraphicalModelArea = testCaseGraphicalModelArea
 
 	// Open and Update Accordion object(Graphical) and Tree-model
-	currentTestCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseGraphicalAccordionObject.RemoveIndex(0)
-	currentTestCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseGraphicalAccordionObject.Append(accordion.Items[0])
-	currentTestCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseGraphicalAccordionObject.Open(0)
+	fyne.Do(func() {
+		currentTestCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseGraphicalAccordionObject.RemoveIndex(0)
+		currentTestCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseGraphicalAccordionObject.Append(accordion.Items[0])
+		currentTestCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseGraphicalAccordionObject.Open(0)
+	})
+
 	//currentTestCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseGraphicalAccordionObject.Refresh()
 
 	//currentTestCaseUIModel.currentTestCaseGraphicalStructure.currentTestCaseGraphicalTreeComponent.OpenAllBranches()

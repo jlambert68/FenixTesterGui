@@ -89,7 +89,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) UpdateTextualStructuresFo
 	currentTestCaseUiModel.currentTestCaseTextualStructure.currentTestCaseTextualStructureComplex.Set(testCaseTextualStructureComplex)
 	currentTestCaseUiModel.currentTestCaseTextualStructure.currentTestCaseTextualStructureExtended.Set(testCaseTextualStructureExtended)
 
-	currentTestCaseUiModel.TestCaseTextualModelArea.Refresh()
+	fyne.Do(func() {
+		currentTestCaseUiModel.TestCaseTextualModelArea.Refresh()
+	})
 
 	return err
 }

@@ -54,12 +54,18 @@ func GenerateNewTestSuiteTab(testCasesModel *testCaseModel.TestCasesModelsStruct
 		// Create toolbar for a new TestSuite page
 		testSuiteUiTabToolbar = widget.NewToolbar(
 
-			// New TestSuite
+			// Save TestSuite
 			widget.NewToolbarAction(theme.DocumentSaveIcon(), func() {
 
 				// Function to Save Suite
 				newTestSuiteModel.SaveTestSuite()
 
+			}),
+
+			// Execute TestSuite
+			widget.NewToolbarAction(theme.MediaPlayIcon(), func() {
+
+				go newTestSuiteModel.ExecuteOneTestSuiteWithOneTestDataSet()
 			}),
 		)
 

@@ -42,14 +42,6 @@ func InitiateListTestCaseUIObject(
 	selectedTestCasesPtr *map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage) (
 	listTestCaseUIObject *ListTestCaseUIStruct) {
 
-	// Handle Headers for TestCaseList by adding first column for when TestCase is selected
-	if tempHowShouldItBeUsed == UsedForTestCasesList {
-		testCaseListTableHeader = testCaseListTableHeaderForTestCasesList
-
-	} else {
-		testCaseListTableHeader = testCaseListTableHeaderForTestSuiteBuilder
-	}
-
 	listTestCaseUIObject = &ListTestCaseUIStruct{
 		howShouldItBeUsed:                               tempHowShouldItBeUsed,
 		testCaseListTable:                               nil,
@@ -78,6 +70,15 @@ func InitiateListTestCaseUIObject(
 		currentHeader:                                   nil,
 		previousHeader:                                  nil,
 		selectedTestCasesPtr:                            selectedTestCasesPtr,
+		//testCaseListTableHeader:                       ???
+	}
+
+	// Handle Headers for TestCaseList by adding first column for when TestCase is selected
+	if tempHowShouldItBeUsed == UsedForTestCasesList {
+		listTestCaseUIObject.testCaseListTableHeader = testCaseListTableHeaderForTestCasesList
+
+	} else {
+		listTestCaseUIObject.testCaseListTableHeader = testCaseListTableHeaderForTestSuiteBuilder
 	}
 
 	return listTestCaseUIObject

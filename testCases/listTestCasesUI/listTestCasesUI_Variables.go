@@ -69,6 +69,9 @@ type ListTestCaseUIStruct struct {
 
 	// Map holding a pointer to the object in the TestSuite having the selected TestCases for the TestSuite
 	selectedTestCasesPtr *map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage
+
+	// Header for the TestCases listings and also deciding number of columns
+	testCaseListTableHeader []string
 }
 
 type UsedForTestCasesListType uint8
@@ -77,8 +80,6 @@ const (
 	UsedForTestCasesList UsedForTestCasesListType = iota
 	UsedForTestSuiteBuilder
 )
-
-var testCaseListTableHeader []string
 
 var testCaseListTableHeaderForTestSuiteBuilder = []string{"Selected", "DomainName", "TestCaseName", "TestCaseUuid"}
 

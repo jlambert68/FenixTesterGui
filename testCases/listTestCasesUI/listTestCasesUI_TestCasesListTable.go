@@ -388,7 +388,8 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) updateTestCasesListTable(testC
 	// Update the Header
 	listTestCaseUIObject.testCaseListTable.UpdateHeader = func(id widget.TableCellID, cell fyne.CanvasObject) {
 		tempSortableHeaderLabel := cell.(*sortableHeaderLabelStruct)
-		tempSortableHeaderLabel.label.SetText(testCaseListTableHeader[id.Col])
+
+		tempSortableHeaderLabel.label.SetText(listTestCaseUIObject.testCaseListTableHeader[id.Col])
 		tempSortableHeaderLabel.label.TextStyle = fyne.TextStyle{Bold: true}
 
 		// Set Column number
@@ -439,7 +440,7 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) calculateAndSetCorrectColumnWi
 	var columnWidth float32
 
 	// Set initial value for max width size
-	for index, headerValue := range testCaseListTableHeader {
+	for index, headerValue := range listTestCaseUIObject.testCaseListTableHeader {
 
 		// Calculate the column width base on this value. Add  'float32(30)' to give room for sort direction icon
 		columnWidth = fyne.MeasureText(headerValue, theme.TextSize(), fyne.TextStyle{Bold: true}).Width + float32(30) //

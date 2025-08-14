@@ -13,7 +13,7 @@ import (
 )
 
 // ExecuteOneTestSuiteWithOneTestDataSet
-// Execute one TestSuit's all TestCases with one TestDataSets
+// Execute one TestSuit's all TestCases with one TestDataSet
 func (testSuiteModel *TestSuiteModelStruct) ExecuteOneTestSuiteWithOneTestDataSet() {
 
 	// Define variable for TestData
@@ -130,8 +130,8 @@ func (testSuiteModel *TestSuiteModelStruct) ExecuteOneTestSuiteWithOneTestDataSe
 	}
 
 	// Create message to be sent to GuiExecutionServer
-	var initiateSingleTestSuiteExecutionRequestMessage *fenixExecutionServerGuiGrpcApi.InitiateSingleTestSuiteExecutionRequestMessage
-	initiateSingleTestSuiteExecutionRequestMessage = &fenixExecutionServerGuiGrpcApi.InitiateSingleTestSuiteExecutionRequestMessage{
+	var initiateSingleTestSuiteExecutionRequestMessage *fenixExecutionServerGuiGrpcApi.InitiateTestSuiteExecutionWithOneTestDataSetRequestMessage
+	initiateSingleTestSuiteExecutionRequestMessage = &fenixExecutionServerGuiGrpcApi.InitiateTestSuiteExecutionWithOneTestDataSetRequestMessage{
 		UserAndApplicationRunTimeIdentification: &fenixExecutionServerGuiGrpcApi.UserAndApplicationRunTimeIdentificationMessage{
 			ApplicationRunTimeUuid: sharedCode.ApplicationRunTimeUuid,
 			UserIdOnComputer:       sharedCode.CurrentUserIdLogedInOnComputer,

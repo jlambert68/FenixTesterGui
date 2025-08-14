@@ -12,20 +12,20 @@ import (
 
 // ********************************************************************************************************************
 
-// SendInitiateTestSuiteExecution - Initiate a TestSuiteExecution
-func (grpcOut *GRPCOutGuiExecutionServerStruct) SendInitiateTestSuiteExecution(
-	initiateSingleTestSuiteExecutionRequestMessage *fenixExecutionServerGuiGrpcApi.InitiateTestSuiteExecutionWithOneTestDataSetRequestMessage) (
+// SendInitiateTestSuiteExecutionWithAllTestDataSets - Initiate a TestSuiteExecution with all its TestDataSets
+func (grpcOut *GRPCOutGuiExecutionServerStruct) SendInitiateTestSuiteExecutionWithAllTestDataSets(
+	initiateTestSuiteExecutionWithAllTestDataSetsRequestMessage *fenixExecutionServerGuiGrpcApi.InitiateTestSuiteExecutionWithAllTestDataSetsRequestMessage) (
 	initiateSingleTestSuiteExecutionResponseMessage *fenixExecutionServerGuiGrpcApi.InitiateSingleTestSuiteExecutionResponseMessage) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "f5641b27-781d-4bdd-b213-28f1e786bcfd",
-		"initiateSingleTestSuiteExecutionRequestMessage": initiateSingleTestSuiteExecutionRequestMessage,
-	}).Debug("Incoming 'grpcOut - SendInitiateTestCaseExecution'")
+		"id": "ec2eeb8f-02fb-4b45-89e6-51d46911aad9",
+		"initiateTestSuiteExecutionWithAllTestDataSetsRequestMessage": initiateTestSuiteExecutionWithAllTestDataSetsRequestMessage,
+	}).Debug("Incoming 'grpcOut - SendInitiateTestSuiteExecutionWithAllTestDataSets'")
 
 	defer sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "245a7e75-0cd2-4394-827e-5b6776751d36",
+		"id": "0c782d61-02b6-4b6d-8732-7d65bf9494a1",
 		"initiateSingleTestSuiteExecutionResponseMessage": &initiateSingleTestSuiteExecutionResponseMessage,
-	}).Debug("Outgoing 'grpcOut - SendInitiateTestCaseExecution'")
+	}).Debug("Outgoing 'grpcOut - SendInitiateTestSuiteExecutionWithAllTestDataSets'")
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -85,21 +85,21 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendInitiateTestSuiteExecution(
 	}
 
 	// Do the gRPC-call
-	initiateSingleTestSuiteExecutionResponseMessage, err = fenixGuiExecutionServerGrpcClient.InitiateTestSuiteExecutionWithOneTestDataSet(
-		ctx, initiateSingleTestSuiteExecutionRequestMessage)
+	initiateSingleTestSuiteExecutionResponseMessage, err = fenixGuiExecutionServerGrpcClient.InitiateTestSuiteExecutionWithAllTestDataSets(
+		ctx, initiateTestSuiteExecutionWithAllTestDataSetsRequestMessage)
 
 	// Shouldn't happen
 	if err != nil {
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":    "136dd79e-bf82-419b-9a7d-56bc46e32984",
+			"ID":    "f1a4bbf0-40c1-4cc6-ab0e-a212bbb4d007",
 			"error": err,
-		}).Error("Problem to do gRPC-call to FenixGuiExecutionServer for 'SendInitiateTestSuiteExecution'")
+		}).Error("Problem to do gRPC-call to FenixGuiExecutionServer for 'SendInitiateTestSuiteExecutionWithAllTestDataSets'")
 
 		initiateSingleTestSuiteExecutionResponseMessage = &fenixExecutionServerGuiGrpcApi.InitiateSingleTestSuiteExecutionResponseMessage{
 			TestCasesInExecutionQueue: nil,
 			AckNackResponse: &fenixExecutionServerGuiGrpcApi.AckNackResponse{
 				AckNack:    false,
-				Comments:   fmt.Sprintf("Problem to do gRPC-call to FenixGuiExecutionServer for 'SendInitiateTestSuiteExecution'. ErrorMessage: '%s'", err.Error()),
+				Comments:   fmt.Sprintf("Problem to do gRPC-call to FenixGuiExecutionServer for 'SendInitiateTestSuiteExecutionWithAllTestDataSets'. ErrorMessage: '%s'", err.Error()),
 				ErrorCodes: nil,
 				ProtoFileVersionUsedByClient: fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum(
 					GetHighestFenixGuiExecutionServerProtoFileVersion()),
@@ -110,9 +110,9 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendInitiateTestSuiteExecution(
 	} else if initiateSingleTestSuiteExecutionResponseMessage.AckNackResponse.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":                                   "9346b271-6e13-4013-b248-8c1330be1203",
+			"ID":                                   "c4c5fa21-76ef-4327-8777-290e881b3491",
 			"Message from FenixGuiExecutionServer": initiateSingleTestSuiteExecutionResponseMessage.AckNackResponse.Comments,
-		}).Error("Problem to do gRPC-call to FenixGuiExecutionServer for 'SendInitiateTestSuiteExecution'")
+		}).Error("Problem to do gRPC-call to FenixGuiExecutionServer for 'SendInitiateTestSuiteExecutionWithAllTestDataSets'")
 	}
 
 	return initiateSingleTestSuiteExecutionResponseMessage

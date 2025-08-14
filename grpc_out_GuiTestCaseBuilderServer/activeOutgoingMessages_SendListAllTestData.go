@@ -103,7 +103,7 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) SendListAllTestData() (
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":    "ccdb63b5-0fd5-427a-8f3f-0c7e594d3539",
 			"error": err,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'ListAllRepositoryApiUrls'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'SendListAllTestData'")
 
 		// When error
 		ackNackResponse := &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{

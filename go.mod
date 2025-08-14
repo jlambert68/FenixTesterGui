@@ -5,8 +5,8 @@ go 1.24
 toolchain go1.24.2
 
 require (
-	cloud.google.com/go/pubsub v1.49.0
-	fyne.io/fyne/v2 v2.6.1 //fyne.io/fyne/v2 v2.5.2
+	cloud.google.com/go/pubsub v1.50.0
+	fyne.io/fyne/v2 v2.6.2 //fyne.io/fyne/v2 v2.5.2
 	github.com/PaulWaldo/fyne-headertable v0.0.2
 	github.com/go-gota/gota v0.12.0
 	github.com/golang/gddo v0.0.0-20210115222349-20d68f94ee1f
@@ -17,18 +17,18 @@ require (
 	// github.com/gorilla/sessions v1.2.2 // v1.3.0 gives session error when trying to get token from GCP
 	github.com/gorilla/sessions v1.2.2 // v1.3.0 gives session error when trying to get token from GCP
 	github.com/jlambert68/Fast_BitFilter_MetaData v0.0.0-20250605163932-fd0b06c97ef3
-	github.com/jlambert68/FenixGrpcApi v0.0.0-20250703075031-1c17eb8f0ba4
+	github.com/jlambert68/FenixGrpcApi v0.0.0-20250806083855-3aba0a954075
 	github.com/jlambert68/FenixScriptEngine v0.0.0-20241104143504-8f37e95bc346
 	github.com/markbates/goth v1.81.0
 	github.com/rs/zerolog v1.34.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.10.0
-	github.com/toqueteos/webbrowser v1.2.0
-	golang.org/x/net v0.41.0
+	github.com/toqueteos/webbrowser v1.2.1
+	golang.org/x/net v0.43.0
 	golang.org/x/oauth2 v0.30.0
-	google.golang.org/api v0.239.0
-	google.golang.org/grpc v1.73.0
-	google.golang.org/protobuf v1.36.6
+	google.golang.org/api v0.247.0
+	google.golang.org/grpc v1.74.2
+	google.golang.org/protobuf v1.36.7
 )
 
 require (
@@ -41,33 +41,34 @@ require (
 )
 
 require (
-	cloud.google.com/go v0.120.0 // indirect
-	cloud.google.com/go/auth v0.16.2 // indirect
+	cloud.google.com/go v0.121.4 // indirect
+	cloud.google.com/go/auth v0.16.4 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
-	cloud.google.com/go/compute/metadata v0.7.0 // indirect
+	cloud.google.com/go/compute/metadata v0.8.0 // indirect
 	cloud.google.com/go/iam v1.5.2 // indirect
+	cloud.google.com/go/pubsub/v2 v2.0.0 // indirect
 	fyne.io/systray v1.11.0 // indirect
 	github.com/BurntSushi/toml v1.4.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/ebitengine/purego v0.8.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fredbi/uri v1.1.0 // indirect
-	github.com/fsnotify/fsnotify v1.7.0 // indirect
-	github.com/fyne-io/gl-js v0.1.0 // indirect
-	github.com/fyne-io/glfw-js v0.2.0 // indirect
+	github.com/fsnotify/fsnotify v1.9.0 // indirect
+	github.com/fyne-io/gl-js v0.2.0 // indirect
+	github.com/fyne-io/glfw-js v0.3.0 // indirect
 	github.com/fyne-io/image v0.1.1 // indirect
 	github.com/fyne-io/oksvg v0.1.0 // indirect
 	github.com/go-chi/chi/v5 v5.1.0 // indirect
 	github.com/go-gl/gl v0.0.0-20231021071112-07e5d0ea2e71 // indirect
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20240506104042-037f3cc74f2a // indirect
-	github.com/go-logr/logr v1.4.2 // indirect
+	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-text/render v0.2.0 // indirect
 	github.com/go-text/typesetting v0.2.1 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/google/s2a-go v0.1.9 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.6 // indirect
-	github.com/googleapis/gax-go/v2 v2.14.2 // indirect
+	github.com/googleapis/gax-go/v2 v2.15.0 // indirect
 	github.com/gorilla/context v1.1.2 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
 	github.com/hack-pad/go-indexeddb v0.3.2 // indirect
@@ -81,7 +82,7 @@ require (
 	github.com/jackc/pgtype v1.14.3 // indirect
 	github.com/jackc/pgx/v4 v4.18.2 // indirect
 	github.com/jackc/puddle v1.3.0 // indirect
-	github.com/jeandeaual/go-locale v0.0.0-20241217141322-fcc2cadd6f08 // indirect
+	github.com/jeandeaual/go-locale v0.0.0-20250612000132-0ef82f21eade // indirect
 	github.com/jlambert68/FenixTestInstructionsAdminShared v0.0.0-20241024135649-85f0f911fdda // indirect
 	github.com/jsummers/gobmp v0.0.0-20230614200233-a9de23ed2e25 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
@@ -101,15 +102,15 @@ require (
 	go.opentelemetry.io/otel v1.36.0 // indirect
 	go.opentelemetry.io/otel/metric v1.36.0 // indirect
 	go.opentelemetry.io/otel/trace v1.36.0 // indirect
-	golang.org/x/crypto v0.39.0 // indirect
+	golang.org/x/crypto v0.41.0 // indirect
 	golang.org/x/image v0.24.0 // indirect
-	golang.org/x/sync v0.15.0 // indirect
-	golang.org/x/sys v0.33.0 // indirect
-	golang.org/x/text v0.26.0 // indirect
+	golang.org/x/sync v0.16.0 // indirect
+	golang.org/x/sys v0.35.0 // indirect
+	golang.org/x/text v0.28.0 // indirect
 	golang.org/x/time v0.12.0 // indirect
 	gonum.org/v1/gonum v0.15.1 // indirect
-	google.golang.org/genproto v0.0.0-20250505200425-f936aa4a68b2 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20250505200425-f936aa4a68b2 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250603155806-513f23925822 // indirect
+	google.golang.org/genproto v0.0.0-20250603155806-513f23925822 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20250721164621-a45f3dfb1074 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250804133106-a7a43d27e69b // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

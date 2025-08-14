@@ -62,10 +62,16 @@ func GenerateNewTestSuiteTab(testCasesModel *testCaseModel.TestCasesModelsStruct
 
 			}),
 
-			// Execute TestSuite
+			// Execute TestSuite with one TestDataSet
 			widget.NewToolbarAction(theme.MediaPlayIcon(), func() {
 
 				go newTestSuiteModel.ExecuteOneTestSuiteWithOneTestDataSet()
+			}),
+
+			// Execute TestSuite with all its TestDataSets
+			widget.NewToolbarAction(theme.MediaFastForwardIcon(), func() {
+
+				go newTestSuiteModel.ExecuteOneTestSuiteWithAllItsTestDataSets()
 			}),
 		)
 

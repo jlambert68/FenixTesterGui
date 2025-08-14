@@ -106,6 +106,18 @@ func GenerateTestSuiteTabFromExistingTestSuite(
 				newTestSuiteModel.SaveTestSuite()
 
 			}),
+
+			// Execute TestSuite with one TestDataSet
+			widget.NewToolbarAction(theme.MediaPlayIcon(), func() {
+
+				go newTestSuiteModel.ExecuteOneTestSuiteWithOneTestDataSet()
+			}),
+
+			// Execute TestSuite with all its TestDataSets
+			widget.NewToolbarAction(theme.MediaFastForwardIcon(), func() {
+
+				go newTestSuiteModel.ExecuteOneTestSuiteWithAllItsTestDataSets()
+			}),
 		)
 
 		// Generate the BorderContainer that is going to be placed on the Tab

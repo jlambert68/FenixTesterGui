@@ -134,6 +134,13 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 		generateTestCasesInTestSuiteMessageWhenSaving(&supportedTestSuiteDataToBeStored)
 	valuesToBeHashed = append(valuesToBeHashed, testCasesInTestSuiteHash)
 
+	// Convert 'TestSuitePreview' into gRPC-message
+	var testSuitePreview *fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewMessage
+	var testSuitePreviewHash string
+	testSuitePreview, testCasesInTestSuiteHash, err = testSuiteModel.
+		generateTestSuitePreviewMessageWhenSaving(&supportedTestSuiteDataToBeStored)
+	valuesToBeHashed = append(valuesToBeHashed, testSuitePreviewHash)
+
 	// Convert 'supportedTestSuiteDataToBeStored' to be added to full gRPC-message
 	var testSuiteImplementedFunctionsMap map[int32]bool
 	var testSuiteImplementedFunctionsMapHash string
@@ -150,7 +157,7 @@ func (testSuiteModel *TestSuiteModelStruct) SaveTestSuite() (err error) {
 	fullTestSuiteMessage = fenixGuiTestCaseBuilderServerGrpcApi.FullTestSuiteMessage{
 		TestSuiteBasicInformation:        testSuiteBasicInformation,
 		TestSuiteTestData:                testSuiteTestData,
-		TestSuitePreview:                 nil,
+		TestSuitePreview:                 testSuitePreview,
 		TestSuiteMetaData:                testSuiteMetaData,
 		TestCasesInTestSuite:             testCasesInTestSuite,
 		DeletedDate:                      testSuiteDeleteDate,
@@ -392,13 +399,144 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuiteTestDataMessageWhen
 
 // Generates 'TestSuitePreview' to be added to full gRPC-message
 func (testSuiteModel *TestSuiteModelStruct) generateTestSuitePreviewMessageWhenSaving(
-	supportedTestSuiteDataToBeStored *[]testSuiteImplementedFunctionsType) (
+	supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct) (
 	testSuitePreview *fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewMessage,
 	testSuitePreviewHash string,
 	err error) {
 
-	// This TestSuite has stored 'testSuitePreviewIsSupported'
-	//*supportedTestSuiteDataToBeStored = append(*supportedTestSuiteDataToBeStored, testSuitePreviewIsSupported)
+	// This TestSuite has stored 'testSuitePreviewSupported'
+	supportedTestSuiteDataToBeStored.testSuiteImplementedFunctionsMap[testSuitePreviewSupported] = true
+
+	// Create final SelectedTestSuiteMetaDataValuesMap
+	var selectedTestSuiteMetaDataValuesMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
+		TestSuitePreviewStructureMessage_SelectedTestSuiteMetaDataValueMessage
+	selectedTestSuiteMetaDataValuesMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
+		TestSuitePreviewStructureMessage_SelectedTestSuiteMetaDataValueMessage)
+
+	// Get the MetaData for the TestSuite
+	var tempTestSuiteMetaData TestSuiteMetaDataStruct
+	tempTestSuiteMetaData = *testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteMetaDataPtr
+
+	// Get the MetaDataGroupsMap
+	var tempMetaDataGroupsMap map[string]*MetaDataGroupStruct
+	tempMetaDataGroupsMap = *tempTestSuiteMetaData.MetaDataGroupsMapPtr
+
+	var selectedMetaDataValuesMapKey string
+
+	// Loop all MetaDataGroups
+	for _, tempMetaDataGroupPtr := range tempMetaDataGroupsMap {
+
+		// Get the MetaDataGroup
+		var tempMetaDataGroup MetaDataGroupStruct
+		tempMetaDataGroup = *tempMetaDataGroupPtr
+
+		// Loop all MetaDataGroupItems
+		for _, tempMetaDataGroupItemPtr := range *tempMetaDataGroup.MetaDataInGroupMapPtr {
+
+			// Get the MetaDataGroupItem
+			var tempMetaDataGroupItem MetaDataInGroupStruct
+			tempMetaDataGroupItem = *tempMetaDataGroupItemPtr
+
+			// Is the Item a 'single select' or a 'multi select'
+			switch tempMetaDataGroupItem.SelectType {
+
+			case MetaDataSelectType_SingleSelect:
+
+				if len(tempMetaDataGroupItem.SelectedMetaDataValueForSingleSelect) > 0 {
+					// Add selected value to the 'SelectedMetaDataValuesMap'
+
+					// Create the map-key
+					// The Map key = 'OwnerDomainUuid.MetaDataGroupName.MetaDataName.MetaDataNameValue'
+					selectedMetaDataValuesMapKey = fmt.Sprintf("%s.%s.%s.%s",
+						testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainUuid,
+						tempMetaDataGroupItem.MetaDataGroupName,
+						tempMetaDataGroupItem.MetaDataName,
+						tempMetaDataGroupItem.SelectedMetaDataValueForSingleSelect)
+
+					// Create the value to be inserted into the map
+					var tempSelectedTestSuiteMetaDataValueMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewStructureMessage_SelectedTestSuiteMetaDataValueMessage
+					tempSelectedTestSuiteMetaDataValueMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewStructureMessage_SelectedTestSuiteMetaDataValueMessage{
+						OwnerDomainUuid:   testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainUuid,
+						OwnerDomainName:   testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainName,
+						MetaDataGroupName: tempMetaDataGroupItem.MetaDataGroupName,
+						MetaDataName:      tempMetaDataGroupItem.MetaDataName,
+						MetaDataNameValue: tempMetaDataGroupItem.SelectedMetaDataValueForSingleSelect,
+						SelectType:        fenixGuiTestCaseBuilderServerGrpcApi.MetaDataSelectTypeEnum(tempMetaDataGroupItem.SelectType),
+						IsMandatory:       tempMetaDataGroupItem.Mandatory,
+					}
+
+					// Add selected value to the 'SelectedMetaDataValuesMap'
+					selectedTestSuiteMetaDataValuesMap[selectedMetaDataValuesMapKey] = tempSelectedTestSuiteMetaDataValueMessage
+				}
+
+			case MetaDataSelectType_MultiSelect:
+
+				if len(tempMetaDataGroupItem.SelectedMetaDataValuesForMultiSelect) > 0 {
+					// Add selected value to the 'SelectedMetaDataValuesMap'
+
+					// Loop SelectedMetaDataValuesForMultiSelect
+					for _, tempSelectedMetaDataValueForMultiSelect := range tempMetaDataGroupItem.SelectedMetaDataValuesForMultiSelect {
+
+						// Create the map-key
+						selectedMetaDataValuesMapKey = fmt.Sprintf("%s.%s.%s.%s",
+							testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainUuid,
+							tempMetaDataGroupItem.MetaDataGroupName,
+							tempMetaDataGroupItem.MetaDataName,
+							tempSelectedMetaDataValueForMultiSelect)
+
+						// Create the value to be inserted into the map
+						var tempSelectedTestSuiteMetaDataValueMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewStructureMessage_SelectedTestSuiteMetaDataValueMessage
+						tempSelectedTestSuiteMetaDataValueMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewStructureMessage_SelectedTestSuiteMetaDataValueMessage{
+							OwnerDomainUuid:   testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainUuid,
+							OwnerDomainName:   testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainName,
+							MetaDataGroupName: tempMetaDataGroupItem.MetaDataGroupName,
+							MetaDataName:      tempMetaDataGroupItem.MetaDataName,
+							MetaDataNameValue: tempSelectedMetaDataValueForMultiSelect,
+							SelectType:        fenixGuiTestCaseBuilderServerGrpcApi.MetaDataSelectTypeEnum(tempMetaDataGroupItem.SelectType),
+							IsMandatory:       tempMetaDataGroupItem.Mandatory,
+						}
+
+						// Add selected value to the 'SelectedMetaDataValuesMap'
+						selectedTestSuiteMetaDataValuesMap[selectedMetaDataValuesMapKey] = tempSelectedTestSuiteMetaDataValueMessage
+					}
+				}
+
+			default:
+
+				errorId := "34089b89-a29b-4a56-b6dc-026cceeacc77"
+
+				errorMessage := fmt.Sprintf("Unknown SelectType for MetaDataGroupItem '%d' [ErrorID: %s]",
+					tempMetaDataGroupItem.SelectType, errorId)
+
+				log.Fatal(errorMessage)
+
+			}
+
+		}
+
+	}
+
+	// Create final TestSuitePreviewStructure-message
+	var testSuitePreviewStructureMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewStructureMessage
+	testSuitePreviewStructureMessage = &fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewStructureMessage{
+		TestSuiteUuid:                      testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteUuid,
+		TestSuiteName:                      testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteName,
+		TestSuiteVersion:                   "0",
+		DomainUuidThatOwnTheTestSuite:      testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainUuid,
+		DomainNameThatOwnTheTestSuite:      testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainName,
+		TestSuiteDescription:               testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteDescription,
+		TestSuiteStructureObjects:          nil,
+		LastSavedByUserOnComputer:          testSuiteModel.GetLastChangedByComputerLogin(),
+		LastSavedByUserGCPAuthorization:    testSuiteModel.GetLastChangedByGcpLogin(),
+		LastSavedTimeStamp:                 "",
+		SelectedTestSuiteMetaDataValuesMap: selectedTestSuiteMetaDataValuesMap,
+	}
+
+	// Create final TestSuitePreview-message
+	testSuitePreview = &fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewMessage{
+		TestSuitePreview:     testSuitePreviewStructureMessage,
+		TestSuitePreviewHash: testSuitePreviewHash,
+	}
 
 	return testSuitePreview, testSuitePreviewHash, err
 

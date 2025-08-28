@@ -59,7 +59,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 
 	// Load Domains that can own the TestCase into options-array
 	var options []string
-	for _, tempDomainsThatCanOwnTheTestCase := range testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseMap {
+	for _, tempDomainsThatCanOwnTheTestCase := range testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseOrTestSuiteMap {
 		options = append(options, tempDomainsThatCanOwnTheTestCase.DomainNameShownInGui)
 
 		// When TestCase has OwnerDomain find the one
@@ -97,9 +97,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 
 			// Store Domain in LocalTestCase in TestCase-model
 			tempTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainUuid =
-				testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseMap[value].DomainUuid
+				testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseOrTestSuiteMap[value].DomainUuid
 			tempTestCasePtr.LocalTestCaseMessage.BasicTestCaseInformationMessageNoneEditableInformation.DomainName =
-				testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseMap[value].DomainName
+				testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseOrTestSuiteMap[value].DomainName
 
 			// Get the TestCaseUI-model
 			var testCasesUiModelMap map[string]*testCaseGraphicalAreasStruct
@@ -112,7 +112,7 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateOwnerDomainForTes
 			_, metaDataAccordion, err = testCasesUiCanvasObject.GenerateMetaDataAreaForTestCase(
 				tempTestCasePtr,
 				testCaseUuid,
-				testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseMap[value].DomainUuid)
+				testCasesUiCanvasObject.TestCasesModelReference.DomainsThatCanOwnTheTestCaseOrTestSuiteMap[value].DomainUuid)
 
 			if err != nil {
 				log.Println(err, metaDataAccordion)

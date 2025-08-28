@@ -119,7 +119,7 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateListTestCasesUI(
 		fmt.Println("'loadTestCaseFromDataBaseButton' was pressed")
 		listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(
 			testCasesModel,
-			time.Now().Add(-time.Hour*1000), time.Now().Add(-time.Hour*1000))
+			time.Now().Add(-time.Hour*10000), time.Now().Add(-time.Hour*10000))
 		filterTestCasesButtonFunction()
 		//sortTestCasesTable()
 	}
@@ -211,7 +211,7 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateListTestCasesUI(
 		"PreView",
 		listTestCaseUIObject.testCasePreviewContainerScroll)
 
-	// Generate the 'GenerateTestCaseMetaDataFilterContainer'
+	// Generate the 'GenerateTestSuiteMetaDataFilterContainer'
 	var simpleAndAdvancedMetaDataFilter *container.AppTabs
 	simpleAndAdvancedMetaDataFilter = listTestCaseUIObject.GenerateTestCaseMetaDataFilterContainer(testCasesModel)
 

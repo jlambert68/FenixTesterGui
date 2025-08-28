@@ -1,4 +1,4 @@
-package listTestCasesModel
+package listTestSuitesModel
 
 import (
 	sharedCode "FenixTesterGui/common_code"
@@ -11,46 +11,46 @@ import (
 	"time"
 )
 
-// LoadTestCaseThatCanBeEditedByUser
-// Load list with TestCasesMapPtr that the user can edit
-func LoadTestCaseThatCanBeEditedByUser(
+// LoadTestSuiteThatCanBeEditedByUser
+// Load list with TestSuitesMapPtr that the user can edit
+func LoadtestSuiteThatCanBeEditedByUser(
 	testCasesModeReference *testCaseModel.TestCasesModelsStruct,
-	testCaseUpdatedMinTimeStamp time.Time,
-	testCaseExecutionUpdatedMinTimeStamp time.Time) {
+	testSuiteUpdatedMinTimeStamp time.Time,
+	testSuiteExecutionUpdatedMinTimeStamp time.Time) {
 
-	var listTestCasesThatCanBeEditedResponseMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListTestCasesThatCanBeEditedResponseMessage
-	listTestCasesThatCanBeEditedResponseMessage = testCasesModeReference.GrpcOutReference.
-		ListTestCasesThatCanBeEditedResponseMessage(testCaseUpdatedMinTimeStamp, testCaseExecutionUpdatedMinTimeStamp)
+	var listTestSuitesThatCanBeEditedResponseMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListTestSuitesResponseMessage
+	listTestSuitesThatCanBeEditedResponseMessage = testCasesModeReference.GrpcOutReference.
+		ListTestSuitesThatCanBeEditedResponseMessage(testSuiteUpdatedMinTimeStamp, testSuiteExecutionUpdatedMinTimeStamp)
 
-	if listTestCasesThatCanBeEditedResponseMessage.GetAckNackResponse().AckNack == false {
+	if listTestSuitesThatCanBeEditedResponseMessage.GetAckNackResponse().AckNack == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":    "ebfe8adb-c224-4071-869b-f79cefde0dd3",
-			"error": listTestCasesThatCanBeEditedResponseMessage.GetAckNackResponse().Comments,
-		}).Warning("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'ListTestCasesThatCanBeEditedResponseMessage'")
+			"ID":    "e9868378-45a8-4cb7-ae61-98be8cb50736",
+			"error": listTestSuitesThatCanBeEditedResponseMessage.GetAckNackResponse().Comments,
+		}).Warning("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'ListTestSuitesThatCanBeEditedResponseMessage'")
 
 		return
 	}
 
-	// Store the slice with TestCasesMapPtr that a user can edit as a Map
-	storeTestCaseThatCanBeEditedByUser(
-		listTestCasesThatCanBeEditedResponseMessage.GetTestCasesThatCanBeEditedByUser(),
+	// Store the slice with TestSuitesMapPtr that a user can edit as a Map
+	storeTestSuiteThatCanBeEditedByUser(
+		listTestSuitesThatCanBeEditedResponseMessage.GetBasicTestSuiteInformation(),
 		testCasesModeReference)
 
-	// Store the slice with TestCasesMapPtr
-	//testCasesModeReference.TestCasesThatCanBeEditedByUserSlice = listTestCasesThatCanBeEditedResponseMessage.GetTestCasesThatCanBeEditedByUser()
+	// Store the slice with TestSuitesMapPtr
+	//TestSuitesModeReference.TestSuitesThatCanBeEditedByUserSlice = listTestSuitesThatCanBeEditedResponseMessage.GetTestSuitesThatCanBeEditedByUser()
 	/*
-		testCasesModeReference.TestCasesThatCanBeEditedByUserSlice = nil
-		for _, tempTestCasesThatCanBeEditedByUser := range testCasesModeReference.TestCasesThatCanBeEditedByUserMap {
-			testCasesModeReference.TestCasesThatCanBeEditedByUserSlice = append(
-				testCasesModeReference.TestCasesThatCanBeEditedByUserSlice, tempTestCasesThatCanBeEditedByUser)
+		TestSuitesModeReference.TestSuitesThatCanBeEditedByUserSlice = nil
+		for _, tempTestSuitesThatCanBeEditedByUser := range TestSuitesModeReference.TestSuitesThatCanBeEditedByUserMap {
+			TestSuitesModeReference.TestSuitesThatCanBeEditedByUserSlice = append(
+				TestSuitesModeReference.TestSuitesThatCanBeEditedByUserSlice, tempTestSuitesThatCanBeEditedByUser)
 		}
 	*/
 
 }
 
-// Store TestCasesMapPtr That Can Be Edited By User
-func storeTestCaseThatCanBeEditedByUser(
-	testCasesThatCanBeEditedByUserAsSlice []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseThatCanBeEditedByUserMessage,
+// Store TestSuitesMapPtr That Can Be Edited By User
+func storeTestSuiteThatCanBeEditedByUser(
+	TestSuitesThatCanBeEditedByUserAsSlice []*fenixGuiTestCaseBuilderServerGrpcApi.BasicTestSuiteInformationMessage,
 	testCasesModeReference *testCaseModel.TestCasesModelsStruct) {
 
 	var err error
@@ -59,31 +59,31 @@ func storeTestCaseThatCanBeEditedByUser(
 	var itemBitSetExistInMap bool
 	var valueBitSetExistInMap bool
 
-	// Store the TestCaseThatCanBeEditedByUser-list in the TestCaseModel
-	TestCasesThatCanBeEditedByUserMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
-		TestCaseThatCanBeEditedByUserMessage)
+	// Store the TestSuiteThatCanBeEditedByUser-list in the TestCaseModel
+	TestSuitesThatCanBeEditedByUserMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
+		BasicTestSuiteInformationMessage)
 
 	// Store the Available TemplateRepositoryApiUrls as a map structure in TestCase-struct
-	for _, testCaseThatCanBeEditedByUser := range testCasesThatCanBeEditedByUserAsSlice {
+	for _, testSuiteThatCanBeEditedByUser := range TestSuitesThatCanBeEditedByUserAsSlice {
 
-		TestCasesThatCanBeEditedByUserMap[testCaseThatCanBeEditedByUser.GetTestCaseUuid()] =
-			testCaseThatCanBeEditedByUser
+		TestSuitesThatCanBeEditedByUserMap[testSuiteThatCanBeEditedByUser.NonEditableInformation.GetTestSuiteUuid()] =
+			testSuiteThatCanBeEditedByUser
 
 		// Get PreViewMessage for TestCase
-		var tempTestCasePreview *fenixGuiTestCaseBuilderServerGrpcApi.TestCasePreviewStructureMessage
-		tempTestCasePreview = testCaseThatCanBeEditedByUser.GetTestCasePreview().GetTestCasePreview()
+		var tempTestSuitePreview *fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewStructureMessage
+		tempTestSuitePreview = testSuiteThatCanBeEditedByUser.GetTestSuitePreview().GetTestSuitePreview()
 
 		var selectedMetaDataValuesMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
-			TestCasePreviewStructureMessage_SelectedMetaDataValueMessage
+			TestSuitePreviewStructureMessage_SelectedTestSuiteMetaDataValueMessage
 
-		selectedMetaDataValuesMap = tempTestCasePreview.GetSelectedMetaDataValuesMap()
+		selectedMetaDataValuesMap = tempTestSuitePreview.GetSelectedTestSuiteMetaDataValuesMap()
 
 		// Generate the resultsEntry
 		var resultsEntry *boolbits.Entry
 		resultsEntry, err = boolbits.NewAllZerosEntry(64)
 		if err != nil {
 
-			errorId := "3739bf55-c0ec-426f-a302-758b2f72f3a1"
+			errorId := "008089bc-6b0a-448a-a48f-62528bd4309c"
 			errorMessage := fmt.Sprintf("couldn't produce new 'NewAllZerosEntry', {error: %s} [ErrorID: %s]",
 				err.Error(), errorId)
 
@@ -141,11 +141,11 @@ func storeTestCaseThatCanBeEditedByUser(
 		}
 
 		// Store filter results Entry for the TestCase
-		if SimpleTestCaseMetaDataFilterEntryMap == nil {
-			SimpleTestCaseMetaDataFilterEntryMap = make(map[string]*boolbits.Entry)
+		if SimpleTestSuiteMetaDataFilterEntryMap == nil {
+			SimpleTestSuiteMetaDataFilterEntryMap = make(map[string]*boolbits.Entry)
 		}
 
-		SimpleTestCaseMetaDataFilterEntryMap[testCaseThatCanBeEditedByUser.GetTestCaseUuid()] = resultsEntry
+		SimpleTestSuiteMetaDataFilterEntryMap[testSuiteThatCanBeEditedByUser.NonEditableInformation.GetTestSuiteUuid()] = resultsEntry
 
 	}
 

@@ -36,7 +36,7 @@ type TestCasesModelsStruct struct {
 	AvailableImmatureTestInstructionContainersMap map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionContainerMessage
 	ImmatureTestInstructionAttributesMap          map[string]map[string]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionAttributesMessage_TestInstructionAttributeMessage // map[TestInstructionUuid]map[TestInstructionAttributeUuid]*fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionAttributesMessage_TestInstructionAttributeMessage
 	ImmatureDropZonesDataMap                      map[string]ImmatureDropZoneDataMapStruct                                                                                             // map[DropZoneUuid]ImmatureDropZoneDataMapStruct
-	DomainsThatCanOwnTheTestCaseMap               map[string]*DomainThatCanOwnTheTestCaseStruct
+	DomainsThatCanOwnTheTestCaseOrTestSuiteMap    map[string]*DomainThatCanOwnTheTestCaseStruct
 	TemplateRepositoryApiUrlMap                   map[string]*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage
 	TestCaseMetaDataForDomains                    TestCaseMetaDataForDomainsStruct
 

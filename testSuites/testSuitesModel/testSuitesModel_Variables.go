@@ -217,6 +217,7 @@ const (
 	deletedDateIsSupported
 	testSuiteTypeIsSupported
 	testSuiteImplementedFunctionsMapIsSupported
+	testSuitePreviewSupported
 )
 
 type testSuiteImplementedFunctionsToBeStoredStruct struct {

@@ -429,7 +429,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeDom
 	availableBuildingBlocksModel.DomainsThatCanOwnTheTestCase = testInstructionsAndTestContainersMessage.DomainsThatCanOwnTheTestCase
 
 	// Store the Domains in the TestCaseModel
-	testCaseModeReference.DomainsThatCanOwnTheTestCaseMap = make(map[string]*testCaseModel.DomainThatCanOwnTheTestCaseStruct)
+	testCaseModeReference.DomainsThatCanOwnTheTestCaseOrTestSuiteMap = make(map[string]*testCaseModel.DomainThatCanOwnTheTestCaseStruct)
 
 	var tempDomainNameShownInGui string
 
@@ -446,7 +446,7 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) storeDom
 			DomainName:           tempDomainThatCanOwnTheTestCase.GetDomainName(),
 			DomainNameShownInGui: tempDomainNameShownInGui,
 		}
-		testCaseModeReference.DomainsThatCanOwnTheTestCaseMap[tempDomainNameShownInGui] = tempDomainsThatCanOwnTheTestCase
+		testCaseModeReference.DomainsThatCanOwnTheTestCaseOrTestSuiteMap[tempDomainNameShownInGui] = tempDomainsThatCanOwnTheTestCase
 	}
 
 }

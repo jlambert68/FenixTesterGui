@@ -10,20 +10,20 @@ import (
 	"time"
 )
 
-// ListTestCasesThatCanBeEditedResponseMessage - List all TestCasesMapPtr that can be edited, used for producing a list
+// ListTestSuitesThatCanBeEditedResponseMessage - List all TestSuitesMapPtr that can be edited, used for producing a list
 // that the used can chose TestCase to edit from
-func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListTestCasesThatCanBeEditedResponseMessage(
+func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListTestSuitesThatCanBeEditedResponseMessage(
 	testCaseUpdatedMinTimeStamp time.Time,
 	testCaseExecutionUpdatedMinTimeStamp time.Time) (
-	returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListTestCasesThatCanBeEditedResponseMessage) {
+	returnMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListTestSuitesResponseMessage) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "42fe98c6-2410-4abe-87c4-d79b5b30dfce",
-	}).Debug("Incoming 'grpcOut - SendListTestCasesThatCanBeEdited'")
+		"id": "0e4b4049-fec8-46ab-a517-61f5bd669527",
+	}).Debug("Incoming 'grpcOut - ListTestSuitesThatCanBeEditedResponseMessage'")
 
 	defer sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "57d234d3-8680-43ab-a02f-dbeda0bc4745",
-	}).Debug("Outgoing 'grpcOut - SendListTestCasesThatCanBeEdited'")
+		"id": "362b08bc-4488-4f01-84bb-0da21f7d1233",
+	}).Debug("Outgoing 'grpcOut - ListTestSuitesThatCanBeEditedResponseMessage'")
 
 	var ctx context.Context
 	var returnMessageAckNack bool
@@ -46,9 +46,9 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListTestCasesThatCanBeEdit
 					grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 			}
 
-			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListTestCasesThatCanBeEditedResponseMessage{
-				AckNackResponse:                ackNackResponse,
-				TestCasesThatCanBeEditedByUser: nil,
+			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListTestSuitesResponseMessage{
+				AckNackResponse:           ackNackResponse,
+				BasicTestSuiteInformation: nil,
 			}
 
 			return returnMessage
@@ -56,14 +56,14 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListTestCasesThatCanBeEdit
 	}
 
 	// Create the request message
-	var listTestCasesRequestMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListTestCasesRequestMessage
-	listTestCasesRequestMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListTestCasesRequestMessage{
+	var listTestSuitesRequestMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListTestSuitesRequestMessage
+	listTestSuitesRequestMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListTestSuitesRequestMessage{
 		UserIdOnComputer:     sharedCode.CurrentUserIdLogedInOnComputer,
 		GCPAuthenticatedUser: sharedCode.CurrentUserAuthenticatedTowardsGCP,
 		ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
 			grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
-		TestCaseUpdatedMinTimeStamp:          timestamppb.New(testCaseUpdatedMinTimeStamp),
-		TestCaseExecutionUpdatedMinTimeStamp: timestamppb.New(testCaseExecutionUpdatedMinTimeStamp),
+		TestSuiteUpdatedMinTimeStamp:          timestamppb.New(testCaseUpdatedMinTimeStamp),
+		TestSuiteExecutionUpdatedMinTimeStamp: timestamppb.New(testCaseExecutionUpdatedMinTimeStamp),
 	}
 
 	// Do gRPC-call
@@ -91,9 +91,9 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListTestCasesThatCanBeEdit
 					grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 			}
 
-			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListTestCasesThatCanBeEditedResponseMessage{
-				AckNackResponse:                ackNackResponse,
-				TestCasesThatCanBeEditedByUser: nil,
+			returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListTestSuitesResponseMessage{
+				AckNackResponse:           ackNackResponse,
+				BasicTestSuiteInformation: nil,
 			}
 
 			return returnMessage
@@ -102,28 +102,28 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListTestCasesThatCanBeEdit
 	}
 
 	// Do the gRPC-call
-	returnMessage, err = fenixGuiTestCaseCaseBuilderServerGrpcClient.ListTestCasesThatCanBeEdited(
-		ctx, listTestCasesRequestMessage)
+	returnMessage, err = fenixGuiTestCaseCaseBuilderServerGrpcClient.ListTestSuitesThatCanBeEdited(
+		ctx, listTestSuitesRequestMessage)
 
 	// Shouldn't happen
 	if err != nil {
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":    "c3df6f17-8e33-410a-b8f2-69185a91b270",
+			"ID":    "fb966a03-5bee-4b6b-8051-c8e0cc36f34e",
 			"error": err,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'ListTestCasesThatCanBeEditedResponseMessage'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'ListTestSuitesThatCanBeEditedResponseMessage'")
 
 		// When error
 		ackNackResponse := &fenixGuiTestCaseBuilderServerGrpcApi.AckNackResponse{
 			AckNack:    false,
-			Comments:   "Problem to do gRPC-call to FenixTestGuiBuilderServer for 'ListTestCasesThatCanBeEditedResponseMessage'",
+			Comments:   "Problem to do gRPC-call to FenixTestGuiBuilderServer for 'ListTestSuitesThatCanBeEditedResponseMessage'",
 			ErrorCodes: nil,
 			ProtoFileVersionUsedByClient: fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum(
 				grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion()),
 		}
 
-		returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListTestCasesThatCanBeEditedResponseMessage{
-			AckNackResponse:                ackNackResponse,
-			TestCasesThatCanBeEditedByUser: nil,
+		returnMessage = &fenixGuiTestCaseBuilderServerGrpcApi.ListTestSuitesResponseMessage{
+			AckNackResponse:           ackNackResponse,
+			BasicTestSuiteInformation: nil,
 		}
 
 		return returnMessage
@@ -131,9 +131,9 @@ func (grpcOut *GRPCOutGuiTestCaseBuilderServerStruct) ListTestCasesThatCanBeEdit
 	} else if returnMessage.AckNackResponse.AckNack == false {
 		// FenixTestGuiBuilderServer couldn't handle gPRC call
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":                                     "becdfdd1-0e21-4e5b-b18f-b395257b8b85",
+			"ID":                                     "8c861ebb-0b30-4341-b882-4772e4e22673",
 			"Message from FenixTestGuiBuilderServer": returnMessage.AckNackResponse.Comments,
-		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'ListTestCasesThatCanBeEditedResponseMessage'")
+		}).Error("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'ListTestSuitesThatCanBeEditedResponseMessage'")
 	}
 
 	return returnMessage

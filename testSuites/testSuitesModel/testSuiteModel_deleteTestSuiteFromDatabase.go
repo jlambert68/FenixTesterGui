@@ -1,4 +1,4 @@
-package testSuitesModel
+package
 
 import (
 	"errors"

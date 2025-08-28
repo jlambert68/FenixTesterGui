@@ -246,7 +246,7 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 
 	/*
 		testCasesModel *testCaseModel.TestCasesModelsStruct,
-		preViewAndFilterTabsUsedForCreateTestSuite *container.AppTabs) (listTestCasesUI fyne.CanvasObject) {
+		preViewAndFilterTabsUsedForCreateTestSuite *container.AppTabs) (listTestSuitesUI fyne.CanvasObject) {
 	*/
 
 	//testCaseListAccordionItemContainer = container.NewBorder(nil, nil, nil, nil, testCaseListAccordionItemCanvasObject)

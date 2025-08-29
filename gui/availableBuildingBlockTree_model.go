@@ -360,28 +360,28 @@ func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadTemp
 
 }
 
-// Load a list of TestCaseMetaData per Domain form GUI-server
-func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadTestCaseMetaData(testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
+// Load a list of TestCaseMetaData and TestSuiteMetaData per Domain form GUI-server
+func (availableBuildingBlocksModel *AvailableBuildingBlocksModelStruct) loadTestCaseAndTestSuiteMetaData(testCaseModeReference *testCaseModel.TestCasesModelsStruct) {
 
-	var listTestCaseMetaDataResponseMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListTestCaseAndTestSuiteMetaDataResponseMessage
-	listTestCaseMetaDataResponseMessage = availableBuildingBlocksModel.grpcOut.SendListTestCaseAndTestSuiteMetaData()
+	var listTestCaseAndTestSuiteMetaDataResponseMessage *fenixGuiTestCaseBuilderServerGrpcApi.ListTestCaseAndTestSuiteMetaDataResponseMessage
+	listTestCaseAndTestSuiteMetaDataResponseMessage = availableBuildingBlocksModel.grpcOut.SendListTestCaseAndTestSuiteMetaData()
 
-	if listTestCaseMetaDataResponseMessage.GetAckNackResponse().AckNack == false {
+	if listTestCaseAndTestSuiteMetaDataResponseMessage.GetAckNackResponse().AckNack == false {
 		sharedCode.Logger.WithFields(logrus.Fields{
 			"ID":    "28977bdb-b9e4-46c1-87ff-0bef28c9cdc5",
-			"error": listTestCaseMetaDataResponseMessage.GetAckNackResponse().Comments,
-		}).Warning("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'loadTestCaseMetaData'")
+			"error": listTestCaseAndTestSuiteMetaDataResponseMessage.GetAckNackResponse().Comments,
+		}).Warning("Problem to do gRPC-call to FenixTestGuiBuilderServer for 'loadTestCaseAndTestSuiteMetaData'")
 
 		return
 
 	}
 
 	// Store list with TestCaseMetaData per Domain
-	availableBuildingBlocksModel.storeTestCaseMetaDataPerDomain(listTestCaseMetaDataResponseMessage.
+	availableBuildingBlocksModel.storeTestCaseMetaDataPerDomain(listTestCaseAndTestSuiteMetaDataResponseMessage.
 		GetTestCaseAndTestSuiteMetaDataForDomains(), testCaseModeReference)
 
 	// Store list with TestSuiteMetadata per Domain
-	availableBuildingBlocksModel.storeTestSuiteMetaDataPerDomain(listTestCaseMetaDataResponseMessage.
+	availableBuildingBlocksModel.storeTestSuiteMetaDataPerDomain(listTestCaseAndTestSuiteMetaDataResponseMessage.
 		GetTestCaseAndTestSuiteMetaDataForDomains())
 
 }

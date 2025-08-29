@@ -119,7 +119,8 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateListTestCasesUI(
 		fmt.Println("'loadTestCaseFromDataBaseButton' was pressed")
 		listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(
 			testCasesModel,
-			time.Now().Add(-time.Hour*10000), time.Now().Add(-time.Hour*10000))
+			time.Now().Add(-time.Hour*10000), time.Now().Add(-time.Hour*10000)) //TODO fixa denna på något sätt
+
 		filterTestCasesButtonFunction()
 		//sortTestCasesTable()
 	}

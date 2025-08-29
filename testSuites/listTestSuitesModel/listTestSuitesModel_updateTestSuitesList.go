@@ -3,6 +3,7 @@ package listTestSuitesModel
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testSuites/testSuitesModel"
 	"fmt"
 	"github.com/jlambert68/Fast_BitFilter_MetaData/boolbits/boolbits"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
@@ -101,13 +102,13 @@ func storeTestSuiteThatCanBeEditedByUser(
 			var metaDataValueBitSet *boolbits.BitSet
 
 			// Get BitSets
-			domainBitSet, domainBitSetExistiInMap = testCasesModeReference.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.
+			domainBitSet, domainBitSetExistiInMap = testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.UniqueMetaDataBitSets.
 				DomainsBitSetMap[selectedMetaDataValue.OwnerDomainUuid]
-			metaDataGroupBitSet, groupBitSetExistInMap = testCasesModeReference.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.
+			metaDataGroupBitSet, groupBitSetExistInMap = testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.UniqueMetaDataBitSets.
 				MetaDataGroupsBitSetMap[selectedMetaDataValue.MetaDataGroupName]
-			metaDataItemBitSet, itemBitSetExistInMap = testCasesModeReference.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.
+			metaDataItemBitSet, itemBitSetExistInMap = testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.UniqueMetaDataBitSets.
 				MetaDataGroupItemsBitSetMap[selectedMetaDataValue.MetaDataName]
-			metaDataValueBitSet, valueBitSetExistInMap = testCasesModeReference.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.
+			metaDataValueBitSet, valueBitSetExistInMap = testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.UniqueMetaDataBitSets.
 				MetaDataGroupItemValuesBitSetMap[selectedMetaDataValue.MetaDataNameValue]
 
 			// Only produce the Entry if the all 4 of the BitSets still are valid

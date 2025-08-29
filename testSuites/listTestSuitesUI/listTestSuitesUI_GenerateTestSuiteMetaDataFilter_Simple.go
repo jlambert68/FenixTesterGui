@@ -2,6 +2,7 @@ package listTestSuitesUI
 
 import (
 	"FenixTesterGui/testCase/testCaseModel"
+	"FenixTesterGui/testSuites/testSuitesModel"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -70,7 +71,7 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) generateSimpleTestSuiteMetaD
 			var domainBitSetExistInMap bool
 
 			// Get BitSets
-			domainBitSet, domainBitSetExistInMap = testCasesModel.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.
+			domainBitSet, domainBitSetExistInMap = testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.UniqueMetaDataBitSets.
 				DomainsBitSetMap[listTestSuiteUIObject.newMandatoryOwnerDomainSelect.dataValueRepresentingVisualizedData]
 
 			if domainBitSetExistInMap == false {
@@ -398,8 +399,8 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) generateSimpleTestSuiteMetaD
 	if len(domainUuidToGetMetaDataFor) > 0 {
 
 		// Check if there are any MetaData for the Domain
-		var testSuiteMetaDataForDomainsForMapPtr *testCaseModel.TestCaseMetaDataForDomainsForMapStruct
-		testSuiteMetaDataForDomainsForMapPtr, existInMap = testCasesModel.TestCaseMetaDataForDomains.TestCaseMetaDataForDomainsMap[domainUuidToGetMetaDataFor]
+		var testSuiteMetaDataForDomainsForMapPtr *testSuitesModel.TestSuiteMetaDataForDomainsForMapStruct
+		testSuiteMetaDataForDomainsForMapPtr, existInMap = testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.TestSuiteMetaDataForDomainsMap[domainUuidToGetMetaDataFor]
 		if existInMap == false {
 			metaDataFilterArea = container.NewVBox(widget.NewLabel(
 				fmt.Sprintf("MetaData is not available for Domain having Uuid '%s'",
@@ -409,9 +410,9 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) generateSimpleTestSuiteMetaD
 		}
 
 		// Get the MetaDataGroups depending on Domain
-		var metaDataGroupsPtr *map[string]*testCaseModel.MetaDataGroupStruct
+		var metaDataGroupsPtr *map[string]*testSuitesModel.MetaDataGroupStruct
 		var tempMetaDataGroupsOrder []string
-		metaDataGroupsPtr, tempMetaDataGroupsOrder = testCaseModel.ConvertTestCaseMetaData(testSuiteMetaDataForDomainsForMapPtr.TestCaseMetaDataForDomainPtr)
+		metaDataGroupsPtr, tempMetaDataGroupsOrder = testSuitesModel.ConvertTestSuiteMetaData(testSuiteMetaDataForDomainsForMapPtr.TestSuiteMetaDataForDomainPtr)
 
 		// Generate TestCaseMeta-UI-object
 		var metaDataGroupsContainer *fyne.Container
@@ -419,8 +420,7 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) generateSimpleTestSuiteMetaD
 		metaDataGroupsContainer = listTestSuiteUIObject.buildGUIFromMetaDataGroupsMap(
 			domainUuidToGetMetaDataFor,
 			tempMetaDataGroupsOrder,
-			metaDataGroupsPtr,
-			testCasesModel)
+			metaDataGroupsPtr)
 
 		metaDataGroupsScroll = container.NewScroll(metaDataGroupsContainer)
 
@@ -439,13 +439,12 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) generateSimpleTestSuiteMetaD
 func (listTestSuiteUIObject *ListTestSuiteUIStruct) buildGUIFromMetaDataGroupsMap(
 	domainUUid string,
 	metaDataGroupsOrder []string,
-	metaDataGroupsSourceMapPtr *map[string]*testCaseModel.MetaDataGroupStruct,
-	testCasesModels *testCaseModel.TestCasesModelsStruct) *fyne.Container {
+	metaDataGroupsSourceMapPtr *map[string]*testSuitesModel.MetaDataGroupStruct) *fyne.Container {
 
 	var err error
 
 	// Get the 'metaDataGroupsSourceMap'
-	var metaDataGroupsSourceMap map[string]*testCaseModel.MetaDataGroupStruct
+	var metaDataGroupsSourceMap map[string]*testSuitesModel.MetaDataGroupStruct
 	metaDataGroupsSourceMap = *metaDataGroupsSourceMapPtr
 
 	if len(*metaDataGroupsSourceMapPtr) != len(metaDataGroupsOrder) {
@@ -467,18 +466,18 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) buildGUIFromMetaDataGroupsMa
 	// Loop all MetaData-groups
 	for _, metaDataGroupName := range metaDataGroupsOrder {
 
-		var metaDataGroupPtr *testCaseModel.MetaDataGroupStruct
+		var metaDataGroupPtr *testSuitesModel.MetaDataGroupStruct
 		metaDataGroupPtr = metaDataGroupsSourceMap[metaDataGroupName]
 
 		// Get the MetaDataGroupName from the TestSuite
 		//metaDataGroupFromTestSuite, metaDataGroupFromSourceExistInTestSuiteMap = convertMetaDataToMapMap[metaDataGroupPtr.MetaDataGroupName]
 
 		// unpack the slice of *MetaDataInGroupStruct
-		var metaDataItemsInGroupPtr *map[string]*testCaseModel.MetaDataInGroupStruct
+		var metaDataItemsInGroupPtr *map[string]*testSuitesModel.MetaDataInGroupStruct
 		metaDataItemsInGroupPtr = metaDataGroupPtr.MetaDataInGroupMapPtr
 
 		// Get the metaDataItemsInGroupMap
-		var metaDataItemsInGroupMap map[string]*testCaseModel.MetaDataInGroupStruct
+		var metaDataItemsInGroupMap map[string]*testSuitesModel.MetaDataInGroupStruct
 		metaDataItemsInGroupMap = *metaDataItemsInGroupPtr
 
 		var metaDataItemsAsCanvasObject []fyne.CanvasObject
@@ -489,14 +488,14 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) buildGUIFromMetaDataGroupsMa
 
 			//metaDataGroupPtr.MetaDataInGroupOrder är tom
 
-			var metaDataItemPtr *testCaseModel.MetaDataInGroupStruct
+			var metaDataItemPtr *testSuitesModel.MetaDataInGroupStruct
 			metaDataItemPtr = metaDataItemsInGroupMap[metaDataItemName]
 
 			if metaDataGroupFromSourceExistInTestSuiteMap == true {
 				newMetaDataItemInGroup, metaDataGroupItemFromSourceExistInTestSuiteMap = metaDataGroupFromTestSuite[metaDataItemPtr.MetaDataName]
 			}
 
-			var metaDataItem testCaseModel.MetaDataInGroupStruct
+			var metaDataItem testSuitesModel.MetaDataInGroupStruct
 			metaDataItem = *metaDataItemPtr
 			// append '*' to the label if it's mandatory
 			label := metaDataItem.MetaDataName
@@ -507,7 +506,7 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) buildGUIFromMetaDataGroupsMa
 			// Create correct widget depending on if the item is SingleSelect or MultiSelect
 			switch metaDataItem.SelectType {
 
-			case testCaseModel.MetaDataSelectType_SingleSelect:
+			case testSuitesModel.MetaDataSelectType_SingleSelect:
 
 				var valueIsValidWarningBox *canvas.Rectangle
 
@@ -550,10 +549,10 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) buildGUIFromMetaDataGroupsMa
 						var valueEntryListToBeProcessedWithBooleanOrSlice []*boolbits.Entry
 
 						// Get BitSet-parts for the Selected MetaData
-						domainBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.DomainsBitSetMap[domainUUid]
-						groupBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupsBitSetMap[metaDataItem.MetaDataGroupName]
-						nameBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupItemsBitSetMap[metaDataItem.MetaDataName]
-						valueBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupItemValuesBitSetMap[val]
+						domainBitSet = testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.UniqueMetaDataBitSets.DomainsBitSetMap[domainUUid]
+						groupBitSet = testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupsBitSetMap[metaDataItem.MetaDataGroupName]
+						nameBitSet = testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupItemsBitSetMap[metaDataItem.MetaDataName]
+						valueBitSet = testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupItemValuesBitSetMap[val]
 
 						metaDataEntry, err = boolbits.NewEntry(domainBitSet, groupBitSet, nameBitSet, valueBitSet)
 
@@ -634,7 +633,7 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) buildGUIFromMetaDataGroupsMa
 					),
 				)
 
-			case testCaseModel.MetaDataSelectType_MultiSelect:
+			case testSuitesModel.MetaDataSelectType_MultiSelect:
 
 				var valueIsValidWarningBox *canvas.Rectangle
 
@@ -684,10 +683,10 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) buildGUIFromMetaDataGroupsMa
 						var valueEntryListToBeProcessedWithBooleanOrSlice []*boolbits.Entry
 						for _, value := range vals {
 							// Get BitSet-parts for the Selected MetaData
-							domainBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.DomainsBitSetMap[domainUUid]
-							groupBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupsBitSetMap[metaDataItem.MetaDataGroupName]
-							nameBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupItemsBitSetMap[metaDataItem.MetaDataName]
-							valueBitSet = testCasesModels.TestCaseMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupItemValuesBitSetMap[value]
+							domainBitSet = testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.UniqueMetaDataBitSets.DomainsBitSetMap[domainUUid]
+							groupBitSet = testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupsBitSetMap[metaDataItem.MetaDataGroupName]
+							nameBitSet = testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupItemsBitSetMap[metaDataItem.MetaDataName]
+							valueBitSet = testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.UniqueMetaDataBitSets.MetaDataGroupItemValuesBitSetMap[value]
 
 							metaDataEntry, err = boolbits.NewEntry(domainBitSet, groupBitSet, nameBitSet, valueBitSet)
 

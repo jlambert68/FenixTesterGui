@@ -67,8 +67,7 @@ type ListTestSuiteUIStruct struct {
 
 	previousHeader *sortableHeaderLabelStruct
 
-	kolla nedanstående
-	// Map holding a pointer to the object in the TestSuite having the selected TestCases for the TestSuite
+	// Map holding a pointer to the object in the TestSuite having the selected TestSuites
 	selectedTestCasesPtr *map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage
 
 	// Header for the TestSuites listings and also deciding number of columns

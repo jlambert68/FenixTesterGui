@@ -155,7 +155,7 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) updateTestSuitesListTable(te
 				listTestSuiteUIObject.openTestSuite(clickable.currentTestSuiteUuid, clickable.testCasesModel)
 
 			} else {
-				// Select or UnSelect TestSuite in TestSuite
+				// Select or UnSelect TestSuite in TestSuiteList
 				var selectedTestSuites map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage
 				//var selectedTestCase *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage
 				var existInMap bool

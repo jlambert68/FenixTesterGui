@@ -20,8 +20,8 @@ import (
 	"FenixTesterGui/testCaseSubscriptionHandler"
 	"FenixTesterGui/testCases/listTestCasesModel"
 	"FenixTesterGui/testCases/listTestCasesUI"
+	"FenixTesterGui/testSuites/listTestSuitesUI"
 	"FenixTesterGui/testSuites/testSuitesTabsUI"
-	"FenixTesterGui/testSuitesList/testSuitesListUI"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -205,7 +205,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	uiServer.AvailableBuildingBlocksModel.loadTemplateRepositoryApiUrls(&uiServer.testCasesModel)
 
 	// Load list with TestCaseMetaData from, GUI-server
-	uiServer.AvailableBuildingBlocksModel.loadTestCaseMetaData(&uiServer.testCasesModel)
+	uiServer.AvailableBuildingBlocksModel.loadTestCaseAndTestSuiteMetaData(&uiServer.testCasesModel)
 
 	// Load available TestData for the User
 	uiServer.AvailableBuildingBlocksModel.loadTestData(&uiServer.testCasesModel)
@@ -331,8 +331,11 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	buildTestSuiteUI = testSuitesTabsUI.GenerateTestSuiteTabObject(&uiServer.testCasesModel)
 
 	// Create the UI for List TestSuites
-	var listTestSuitesUI fyne.CanvasObject
-	listTestSuitesUI = testSuitesListUI.GenerateListTestSuitesUI(&uiServer.testCasesModel)
+	listTestSuitesUI.StandardListTesSuitesUIObject = listTestSuitesUI.
+		InitiateListTestSuiteUIObject(listTestSuitesUI.UsedForTestSuitesList, nil)
+
+	var tempListTestSuitesUIContainer *fyne.Container
+	tempListTestSuitesUIContainer = listTestSuitesUI.StandardListTesSuitesUIObject.GenerateListTestSuitesUI(&uiServer.testCasesModel, nil)
 
 	// Create the TabObject used to show TestCaseExecutions-list with Execution-PreView and all TestCaseExecutions-tabs
 	var detailedTestCaseExecutionsUITabObject *container.DocTabs
@@ -434,7 +437,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 		container.NewTabItem("Build TestCase", buildTestCasesUI),
 		container.NewTabItem("List TestCases", tempListTestCasesUIContainer),
 		container.NewTabItem("Build TestSuite", buildTestSuiteUI),
-		container.NewTabItem("List TestSuites", listTestSuitesUI),
+		container.NewTabItem("List TestSuites", tempListTestSuitesUIContainer),
 		container.NewTabItem("Executions (Subscriptions)", subscriptionExecutionsUITab),
 		container.NewTabItem("Executions", executionsUITab),
 		container.NewTabItem("Detailed TestCaseExecutions - short summary", detailedTestCaseExecutionSummaryTab),
@@ -739,7 +742,7 @@ func (uiServer *UIServerStruct) loadCompleteAvailableTestCaseBuildingBlocksUI() 
 			uiServer.AvailableBuildingBlocksModel.loadTemplateRepositoryApiUrls(&uiServer.testCasesModel)
 
 			// Load list with TestCaseMetaData from, GUI-server
-			uiServer.AvailableBuildingBlocksModel.loadTestCaseMetaData(&uiServer.testCasesModel)
+			uiServer.AvailableBuildingBlocksModel.loadTestCaseAndTestSuiteMetaData(&uiServer.testCasesModel)
 
 			// Load available TestData for the User
 			uiServer.AvailableBuildingBlocksModel.loadTestData(&uiServer.testCasesModel)

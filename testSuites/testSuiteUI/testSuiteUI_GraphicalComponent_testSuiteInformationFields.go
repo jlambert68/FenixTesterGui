@@ -32,6 +32,21 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteInformationFieldsAre
 	// Add "space" between Information parts
 	testSuiteInformationContainer.Add(widget.NewLabel(spaceBetweenInformationBoxes))
 
+	// Add "Version" to the Information container ***********************
+	var versionLabel *widget.Label
+	versionLabel = widget.NewLabel("Version:")
+	versionLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testSuiteInformationContainer.Add(versionLabel)
+
+	var versionCopyableLabel *copyableLabelStruct
+	versionCopyableLabel = newCopyableLabel(
+		testSuiteUiModel.TestSuiteModelPtr.GetTestSuiteVersion(), true, testSuiteUiModel)
+	versionCopyableLabel.TextStyle = fyne.TextStyle{Italic: true}
+	testSuiteInformationContainer.Add(versionCopyableLabel)
+
+	// Add "space" between Information parts
+	testSuiteInformationContainer.Add(widget.NewLabel(spaceBetweenInformationBoxes))
+
 	// Add "Created By Gcp-Login" to the Information container ***********************
 	var createdByGcpLoginLabel *widget.Label
 	createdByGcpLoginLabel = widget.NewLabel("Created By - GCP Login:")

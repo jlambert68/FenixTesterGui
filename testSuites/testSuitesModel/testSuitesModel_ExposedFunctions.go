@@ -7,6 +7,7 @@ import (
 	"github.com/jlambert68/Fast_BitFilter_MetaData/boolbits/boolbits"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"github.com/jlambert68/FenixScriptEngine/testDataEngine"
+	"strconv"
 )
 
 // GetTestSuiteUuid
@@ -14,6 +15,14 @@ import (
 func (testSuiteModel *TestSuiteModelStruct) GetTestSuiteUuid() string {
 
 	return testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteUuid
+
+}
+
+// GetTestSuiteVersion
+// Gets the TestSuites Version
+func (testSuiteModel *TestSuiteModelStruct) GetTestSuiteVersion() string {
+
+	return strconv.Itoa(int(testSuiteModel.testSuiteModelDataThatCanNotBeChangedFromUI.testSuiteVersion))
 
 }
 

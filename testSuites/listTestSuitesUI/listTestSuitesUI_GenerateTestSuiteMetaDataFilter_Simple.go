@@ -20,7 +20,9 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) generateSimpleTestSuiteMetaD
 	testCasesModel *testCaseModel.TestCasesModelsStruct) *fyne.Container {
 
 	// Generate the filter function used when user clicks on filter-button or when auto-filter is turned on
-	listTestSuiteUIObject.filterOnMetaDataFunction = func(resultEntry *boolbits.Entry, testCasesModel *testCaseModel.TestCasesModelsStruct) {
+	listTestSuiteUIObject.filterOnMetaDataFunction = func(
+		resultEntry *boolbits.Entry,
+		testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
 		// Load a filtered list into the TestSuites-list-table
 		listTestSuiteUIObject.loadTestSuiteListTableTable(resultEntry)
@@ -71,8 +73,9 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) generateSimpleTestSuiteMetaD
 			var domainBitSetExistInMap bool
 
 			// Get BitSets
-			domainBitSet, domainBitSetExistInMap = testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.UniqueMetaDataBitSets.
-				DomainsBitSetMap[listTestSuiteUIObject.newMandatoryOwnerDomainSelect.dataValueRepresentingVisualizedData]
+			domainBitSet, domainBitSetExistInMap = testSuitesModel.TestSuitesModelPtr.TestSuiteMetaDataForDomains.
+				UniqueMetaDataBitSets.DomainsBitSetMap[listTestSuiteUIObject.newMandatoryOwnerDomainSelect.
+				dataValueRepresentingVisualizedData]
 
 			if domainBitSetExistInMap == false {
 
@@ -119,7 +122,8 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) generateSimpleTestSuiteMetaD
 			}
 
 			var metaDataOnlyDomainEntry *boolbits.Entry
-			metaDataOnlyDomainEntry, err = boolbits.NewEntry(domainBitSet, metaDataGroupBitSet, metaDataItemBitSet, metaDataValueBitSet)
+			metaDataOnlyDomainEntry, err = boolbits.NewEntry(
+				domainBitSet, metaDataGroupBitSet, metaDataItemBitSet, metaDataValueBitSet)
 			if err != nil {
 				errorID := "9015af8a-94e5-4341-824c-a636567bb13a"
 				errorMessage := fmt.Sprintf("could not create Domain-Entry [ErrorID=%s, err='%s']",
@@ -147,7 +151,7 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) generateSimpleTestSuiteMetaD
 			// Loop all Simple MetaDataEntry and make boolean 'OR' between all of them
 			for _, simpleMetaDataEntry := range listTestSuiteUIObject.simpleMetaDataFilterEntryMap {
 
-				// If multiple values per MEtaDataItem exist then process them with boolean OR
+				// If multiple values per MetaDataItem exist then process them with boolean OR
 				var booleanOrResultsEntry *boolbits.Entry
 				for valueIndex, tempValueEntryListToBeProcessedWithBooleanOr := range simpleMetaDataEntry.valueEntryListToBeProcessedWithBooleanOrSlice {
 
@@ -192,21 +196,24 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) generateSimpleTestSuiteMetaD
 
 	// Generate the Top container, having the Domain Filter DropDown
 	var testSuiteMetaDataDomainFilterTopContainer *fyne.Container
-	testSuiteMetaDataDomainFilterTopContainer = listTestSuiteUIObject.generateSimpleTestSuiteMetaDataDomainFilterTopContainer(testCasesModel)
+	testSuiteMetaDataDomainFilterTopContainer = listTestSuiteUIObject.
+		generateSimpleTestSuiteMetaDataDomainFilterTopContainer(testCasesModel)
 
 	// Generate the Bottom container, having buttons for Filter TestCases-list- and clear MetaData-s
 	var testSuiteMetaDataDomainFilterBottomContainer *fyne.Container
-	testSuiteMetaDataDomainFilterBottomContainer = listTestSuiteUIObject.generateSimpleTestSuiteMetaDataDomainFilterBottomContainer(testCasesModel)
+	testSuiteMetaDataDomainFilterBottomContainer = listTestSuiteUIObject.
+		generateSimpleTestSuiteMetaDataDomainFilterBottomContainer(testCasesModel)
 
 	// Set selected Domain
 	listTestSuiteUIObject.simpleTestSuiteMetaDataSelectedDomainUuid = ""
 	listTestSuiteUIObject.simpleTestSuiteMetaDataSelectedDomainDisplayName = ""
 
 	// Generate the main MetaData-filter area
-	listTestSuiteUIObject.testSuiteMainAreaForMetaDataFilterContainer = listTestSuiteUIObject.generateSimpleTestSuiteMetaDataMainFilterContainer(
-		listTestSuiteUIObject.simpleTestSuiteMetaDataSelectedDomainUuid,
-		listTestSuiteUIObject.simpleTestSuiteMetaDataSelectedDomainDisplayName,
-		testCasesModel)
+	listTestSuiteUIObject.testSuiteMainAreaForMetaDataFilterContainer = listTestSuiteUIObject.
+		generateSimpleTestSuiteMetaDataMainFilterContainer(
+			listTestSuiteUIObject.simpleTestSuiteMetaDataSelectedDomainUuid,
+			listTestSuiteUIObject.simpleTestSuiteMetaDataSelectedDomainDisplayName,
+			testCasesModel)
 
 	// Generate the full MetaDataFilter-container
 

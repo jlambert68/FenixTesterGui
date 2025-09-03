@@ -17,7 +17,7 @@ require (
 	// github.com/gorilla/sessions v1.2.2 // v1.3.0 gives session error when trying to get token from GCP
 	github.com/gorilla/sessions v1.2.2 // v1.3.0 gives session error when trying to get token from GCP
 	github.com/jlambert68/Fast_BitFilter_MetaData v0.0.0-20250605163932-fd0b06c97ef3
-	github.com/jlambert68/FenixGrpcApi v0.0.0-20250825124548-69c562a0ffad
+	github.com/jlambert68/FenixGrpcApi v0.0.0-20250902140851-911661139dec
 	github.com/jlambert68/FenixScriptEngine v0.0.0-20241104143504-8f37e95bc346
 	github.com/markbates/goth v1.81.0
 	github.com/rs/zerolog v1.34.0

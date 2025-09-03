@@ -525,10 +525,14 @@ func (testSuiteModel *TestSuiteModelStruct) generateTestSuitePreviewMessageWhenS
 		DomainUuidThatOwnTheTestSuite:      testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainUuid,
 		DomainNameThatOwnTheTestSuite:      testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteOwnerDomainName,
 		TestSuiteDescription:               testSuiteModel.NoneSavedTestSuiteUIModelBinding.TestSuiteDescription,
-		TestSuiteStructureObjects:          nil,
+		TestCasesInTestSuite:               nil,
+		CreatedByGcpLoginUser:              testSuiteModel.GetLastChangedByGcpLogin(),
+		CreatedByComputerLoginUser:         testSuiteModel.GetLastChangedByComputerLogin(),
+		CreatedDate:                        testSuiteModel.GetCreatedDate(),
 		LastSavedByUserOnComputer:          testSuiteModel.GetLastChangedByComputerLogin(),
 		LastSavedByUserGCPAuthorization:    testSuiteModel.GetLastChangedByGcpLogin(),
 		LastSavedTimeStamp:                 "",
+		TestSuiteType:                      nil,
 		SelectedTestSuiteMetaDataValuesMap: selectedTestSuiteMetaDataValuesMap,
 	}
 

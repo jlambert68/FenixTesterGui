@@ -229,7 +229,7 @@ func (l *clickableTableLabel) MouseIn(*desktop.MouseEvent) {
 
 	l.TextStyle = fyne.TextStyle{Bold: true}
 	l.Refresh()
-	testCaseExecutionsListTable.Refresh()
+	//testCaseExecutionsListTable.Refresh()
 
 }
 func (l *clickableTableLabel) MouseMoved(*desktop.MouseEvent) {}
@@ -254,6 +254,6 @@ func (l *clickableTableLabel) MouseOut() {
 
 	l.TextStyle = fyne.TextStyle{Bold: false}
 	l.Refresh()
-	testCaseExecutionsListTable.Refresh()
+	//testCaseExecutionsListTable.Refresh()
 
 }

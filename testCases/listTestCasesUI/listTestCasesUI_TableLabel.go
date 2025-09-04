@@ -85,7 +85,12 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 
 	// Update TestCase Preview
 	l.listTestCaseUIPtr.preViewAndFilterTabs.Select(l.listTestCaseUIPtr.preViewTab)
-	l.listTestCaseUIPtr.GenerateTestCasePreviewContainer(l.currentTestCaseUuid, l.testCasesModel)
+	l.listTestCaseUIPtr.GenerateTestCasePreviewContainer(
+		l.currentTestCaseUuid,
+		StandardListTesCasesUIObject.testCasePreviewContainer,
+		l.testCasesModel,
+		true)
+
 	l.listTestCaseUIPtr.testCaseThatIsShownInPreview = l.currentTestCaseUuid
 	l.listTestCaseUIPtr.testCaseListTable.Refresh()
 
@@ -139,7 +144,7 @@ func (l *clickableTableLabel) MouseIn(*desktop.MouseEvent) {
 
 	l.TextStyle = fyne.TextStyle{Bold: true}
 	l.Refresh()
-	l.listTestCaseUIPtr.testCaseListTable.Refresh()
+	//l.listTestCaseUIPtr.testCaseListTable.Refresh()
 
 }
 func (l *clickableTableLabel) MouseMoved(*desktop.MouseEvent) {}
@@ -160,6 +165,6 @@ func (l *clickableTableLabel) MouseOut() {
 
 	l.TextStyle = fyne.TextStyle{Bold: false}
 	l.Refresh()
-	l.listTestCaseUIPtr.testCaseListTable.Refresh()
+	//l.listTestCaseUIPtr.testCaseListTable.Refresh()
 
 }

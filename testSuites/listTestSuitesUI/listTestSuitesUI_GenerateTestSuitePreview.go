@@ -1,6 +1,7 @@
 package listTestSuitesUI
 
 import (
+	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/testCase/testCaseModel"
 	"FenixTesterGui/testCases/listTestCasesUI"
 	"FenixTesterGui/testSuites/listTestSuitesModel"
@@ -21,16 +22,7 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) GenerateTestSuitePreviewCont
 
 	var testSuitePreviewTopContainer *fyne.Container
 	var testSuitePreviewBottomContainer *fyne.Container
-	//var testSuitePreviewScrollContainer *container.Scroll
-	//var testSuiteMainAreaForPreviewContainer *fyne.Container
-	//var testCasesListAreaForPreviewContainer *fyne.Container
-	//var testCasesListAreaForPreviewContainerScroll *container.Scroll
 	var testCasePreviewAreaForPreviewContainer *fyne.Container
-	//var testCasePreviewAreaForPreviewContainerScroll *container.Scroll
-
-	//
-
-	//var err error
 
 	var tempTestSuitePreviewStructureMessage *fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewStructureMessage
 
@@ -97,24 +89,14 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) GenerateTestSuitePreviewCont
 	testSuitePreviewBottomContainer.Add(tempLastSavedTimeStamp)
 	testSuitePreviewBottomContainer.Add(widget.NewLabel(tempTestSuitePreviewStructureMessage.GetLastSavedTimeStamp()))
 
-	// Create the area used for TIC, TI and the attributes
-	//testSuiteMainAreaForPreviewContainer = container.NewVBox()
-
 	// Create the Temporary container that should be shown
 	temporaryContainer := container.NewCenter(widget.NewLabel("Select a TestCase to get the Preview"))
-
 	testCasePreviewAreaForPreviewContainer = container.NewBorder(nil, nil, nil, nil, temporaryContainer)
-
-	// Generate the container for the Preview, 'testCasePreviewContainer'
-	//listTestCaseUIObject.testCasePreviewContainerScroll = container.NewScroll(listTestCaseUIObject.testCasePreviewContainer)
 
 	// Generate List with TestCases. User can click TestCase and its Preview is shown
 	var testCasesWidgetList *widget.List
-	//var testCaseListScroll *container.Scroll
-	//var testCasePreviews []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseThatCanBeEditedByUserMessage
-	//var existInMap bool
 
-	// Create a short name to use
+	// Create a short name to use in list
 	testCasesList := tempTestSuitePreviewStructureMessage.TestCasesInTestSuite.TestCasesInTestSuite
 
 	// Create and configure the list-component of all TestDataPoints
@@ -127,8 +109,9 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) GenerateTestSuitePreviewCont
 		func(id widget.ListItemID, obj fyne.CanvasObject) {
 
 			obj.(*widget.Label).SetText(fmt.Sprintf(
-				"%s",
-				testCasesList[id].TestCaseUuid))
+				"%s [%s]",
+				testCasesList[id].TestCaseName,
+				sharedCode.GenerateShortUuidFromFullUuid(testCasesList[id].TestCaseUuid)))
 		},
 	)
 
@@ -142,12 +125,6 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) GenerateTestSuitePreviewCont
 			false)
 	}
 
-	// Create the TestCases-List-container
-	//testCasesListAreaForPreviewContainer = container.NewBorder(container.NewHBox(testCaseListHeaderLabel), nil, nil, nil, testCasesWidgetList)
-	//testCasesListAreaForPreviewContainerScroll = container.NewVScroll(testCasesListAreaForPreviewContainer)
-	//testCasesListAreaForPreviewContainerScroll.Resize(fyne.NewSize(testCasesWidgetList.Size().Width, 200))
-	//testCasesListAreaForPreviewContainerScrollBorder := container.NewBorder(nil, nil, nil, nil, testCasesListAreaForPreviewContainerScroll)
-
 	// Calculate a sensible minimum height for ~5 rows
 	template := widget.NewLabel("template")
 	rowH := template.MinSize().Height
@@ -156,10 +133,6 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) GenerateTestSuitePreviewCont
 
 	// Wrap the list so it can't shrink below ~5 rows
 	wrap := container.New(layout.NewGridWrapLayout(fyne.NewSize(320, minH)), testCasesWidgetList)
-
-	// Add
-	//testSuiteMainAreaForPreviewContainer.Add(wrap)
-	//testSuiteMainAreaForPreviewContainer.Add(testCasePreviewAreaForPreviewContainer)
 
 	testSuiteMainAreaForPreviewBorderContainer := container.NewBorder(wrap, nil, nil, nil, testCasePreviewAreaForPreviewContainer)
 	testSuiteMainAreaForPreviewScrollContainer := container.NewScroll(testSuiteMainAreaForPreviewBorderContainer)

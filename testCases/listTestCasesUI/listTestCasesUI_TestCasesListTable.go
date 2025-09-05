@@ -195,12 +195,18 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) updateTestCasesListTable(testC
 					})
 
 				} else {
+
+					// Get the TestCase
+					var tempTestCasePtr *fenixGuiTestCaseBuilderServerGrpcApi.TestCaseThatCanBeEditedByUserMessage
+
+					tempTestCasePtr, _ = listTestCasesModel.TestCasesThatCanBeEditedByUserMap[clickable.currentTestCaseUuid]
+
 					// Select TestCase
 					selectedTestCases[clickable.currentTestCaseUuid] = &fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage{
-						DomainUuid:   "",
-						DomainName:   "",
+						DomainUuid:   tempTestCasePtr.GetDomainUuid(),
+						DomainName:   tempTestCasePtr.GetDomainName(),
 						TestCaseUuid: clickable.currentTestCaseUuid,
-						TestCaseName: "",
+						TestCaseName: tempTestCasePtr.GetTestCaseName(),
 					}
 
 					// Trigger System Notification sound

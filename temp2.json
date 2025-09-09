@@ -1,0 +1,339 @@
+{
+  "TestSuitePreview": {
+    "TestSuiteName": "Name....v7d",
+    "TestSuiteUuid": "975364d5-157b-4926-a2b7-b5260b7826b1",
+    "TestSuiteVersion": "11",
+    "LastSavedTimeStamp": "2025-08-21 13:58:58.876382",
+    "TestSuiteDescription": "desc\n\nrow3",
+    "LastSavedByUserOnComputer": "jlambert",
+    "TestSuiteStructureObjects": {
+      "TestCasePreViews": [
+        {
+          "TestCasePreview": {
+            "TestCaseName": "<New TestCase> v2e",
+            "TestCaseUuid": "d86b72e2-7669-44a8-90a5-3345e428a934",
+            "TestCaseVersion": "6",
+            "LastSavedTimeStamp": "2025-05-30 15:25:46.826296",
+            "DomainThatOwnTheTestCase": "SubCustody [7edf2269]",
+            "TestCaseStructureObjects": [
+              {
+                "IndentationLevel": 1,
+                "TestCaseStructureObjectType": "TestInstructionContainer",
+                "TestInstructionContainerName": "Fenix Standard Serial TestInstructionsContainer [3b4adf9]",
+                "TestInstructionContainerUuid": "3b4adf91-ca02-4ff6-a819-6a940ce1e194",
+                "TestInstructionIsSerialProcessed": true
+              },
+              {
+                "IndentationLevel": 3,
+                "TestCaseStructureObjectType": "TestInstructionContainer",
+                "TestInstructionContainerName": "Fenix Standard Parallel TestInstructionsContainer [9aa651a]",
+                "TestInstructionContainerUuid": "9aa651a4-ab38-4124-ad88-968985ad134e"
+              },
+              {
+                "IndentationLevel": 5,
+                "TestInstructionName": "SendMT540 [edc2147]",
+                "TestInstructionUuid": "edc2147e-f3fa-4de9-acc7-bda4c3d5154a",
+                "TestInstructionColor": "#09AA4DAA",
+                "TestInstructionAttributes": [
+                  {
+                    "AttributeName": "ExpectedToBePassed",
+                    "AttributeValue": "true",
+                    "AttributeGroupName": "ExpectedToPass"
+                  }
+                ],
+                "TestCaseStructureObjectType": "TestInstruction"
+              },
+              {
+                "IndentationLevel": 5,
+                "TestInstructionName": "SendMT542 [348558d]",
+                "TestInstructionUuid": "348558d4-4fee-450a-b1a1-12d1cb4c5f3a",
+                "TestInstructionColor": "#09AA4DAA",
+                "TestInstructionAttributes": [
+                  {
+                    "AttributeName": "ExpectedToBePassed",
+                    "AttributeValue": "true",
+                    "AttributeGroupName": "ExpectedToPass"
+                  }
+                ],
+                "TestCaseStructureObjectType": "TestInstruction"
+              },
+              {
+                "IndentationLevel": 3,
+                "TestCaseStructureObjectType": "TestInstructionContainer",
+                "TestInstructionContainerName": "Fenix Standard Parallel TestInstructionsContainer [8f80ee7]",
+                "TestInstructionContainerUuid": "8f80ee75-7a4e-4211-8b7c-046f566d9926"
+              },
+              {
+                "IndentationLevel": 5,
+                "TestInstructionName": "ValidateMT544 [f1861d7]",
+                "TestInstructionUuid": "f1861d71-ada0-416f-a24e-f2d0a7345161",
+                "TestInstructionColor": "#0DF36EAA",
+                "TestInstructionAttributes": [
+                  {
+                    "AttributeName": "ExpectedToBePassed",
+                    "AttributeValue": "true",
+                    "AttributeGroupName": "ExpectedToPass"
+                  },
+                  {
+                    "AttributeName": "RelatedReference_54x_20CRELA",
+                    "AttributeValue": "SendMT540 [edc2147]",
+                    "AttributeGroupName": "Standard"
+                  }
+                ],
+                "TestCaseStructureObjectType": "TestInstruction"
+              },
+              {
+                "IndentationLevel": 5,
+                "TestInstructionName": "ValidateMT546 [88d86a3]",
+                "TestInstructionUuid": "88d86a3d-f460-4850-bf9d-29458d9be0ba",
+                "TestInstructionColor": "#0DF36EAA",
+                "TestInstructionAttributes": [
+                  {
+                    "AttributeName": "ExpectedToBePassed",
+                    "AttributeValue": "true",
+                    "AttributeGroupName": "ExpectedToPass"
+                  },
+                  {
+                    "AttributeName": "RelatedReference_54x_20CRELA",
+                    "AttributeValue": "SendMT542 [348558d]",
+                    "AttributeGroupName": "Standard"
+                  }
+                ],
+                "TestCaseStructureObjectType": "TestInstruction"
+              },
+              {
+                "IndentationLevel": 5,
+                "TestInstructionName": "ValidateMT548 [62981a6]",
+                "TestInstructionUuid": "62981a6b-86e9-442b-9c2b-02bc13750aae",
+                "TestInstructionColor": "#0DF36EAA",
+                "TestInstructionAttributes": [
+                  {
+                    "AttributeName": "ExpectedToBePassed",
+                    "AttributeValue": "true",
+                    "AttributeGroupName": "ExpectedToPass"
+                  },
+                  {
+                    "AttributeName": "RelatedReference_54x_20CRELA",
+                    "AttributeValue": "SendMT540 [edc2147]",
+                    "AttributeGroupName": "Standard"
+                  }
+                ],
+                "TestCaseStructureObjectType": "TestInstruction"
+              },
+              {
+                "IndentationLevel": 5,
+                "TestInstructionName": "ValidateMT548 [e2889e0]",
+                "TestInstructionUuid": "e2889e00-427b-4ccf-98a8-590e581fcc27",
+                "TestInstructionColor": "#0DF36EAA",
+                "TestInstructionAttributes": [
+                  {
+                    "AttributeName": "RelatedReference_54x_20CRELA",
+                    "AttributeValue": "SendMT542 [348558d]",
+                    "AttributeGroupName": "Standard"
+                  },
+                  {
+                    "AttributeName": "ExpectedToBePassed",
+                    "AttributeValue": "true",
+                    "AttributeGroupName": "ExpectedToPass"
+                  }
+                ],
+                "TestCaseStructureObjectType": "TestInstruction"
+              }
+            ],
+            "ComplexTextualDescription": "{B1f-TIC(B11f-TIC(B11f-TI-B12-TI-B11l)-B12-TIC(B11f-TI-B12-TI-B12-TI-B12-TI-B11l)-B11l)-B1l}",
+            "LastSavedByUserOnComputer": "jlambert",
+            "LastSavedByUserGCPAuthorization": "jonas.lambert68@gmail.com"
+          },
+          "TestCasePreviewHash": "0609a34f3464d0fbb97786b26f49a46fde49d6fbee0c333ca77d8ff6a26633bf"
+        },
+        {
+          "TestCasePreview": {
+            "TestCaseName": "New TC with MEtaData, v2d",
+            "TestCaseUuid": "dec06a9e-1b33-4648-b250-573dd272aa34",
+            "TestCaseVersion": "8",
+            "LastSavedTimeStamp": "2025-07-04 15:52:39.932690",
+            "DomainThatOwnTheTestCase": "SubCustody [7edf2269]",
+            "TestCaseStructureObjects": [
+              {
+                "IndentationLevel": 1,
+                "TestCaseStructureObjectType": "TestInstructionContainer",
+                "TestInstructionContainerName": "Fenix Standard Serial TestInstructionsContainer [e622285]",
+                "TestInstructionContainerUuid": "e6222856-84b3-44f2-8b11-37004b988d02",
+                "TestInstructionIsSerialProcessed": true
+              },
+              {
+                "IndentationLevel": 3,
+                "TestCaseStructureObjectType": "TestInstructionContainer",
+                "TestInstructionContainerName": "Fenix Standard Parallel TestInstructionsContainer [67b4dc9]",
+                "TestInstructionContainerUuid": "67b4dc94-b82a-4c0b-999f-98186b713f4c"
+              },
+              {
+                "IndentationLevel": 5,
+                "TestInstructionName": "SendMT540 [8f982a8]",
+                "TestInstructionUuid": "8f982a80-b2e0-45d0-98da-0cc12858e3ac",
+                "TestInstructionColor": "#09AA4DAA",
+                "TestInstructionAttributes": [
+                  {
+                    "AttributeName": "ExpectedToBePassed",
+                    "AttributeValue": "true",
+                    "AttributeGroupName": "ExpectedToPass"
+                  }
+                ],
+                "TestCaseStructureObjectType": "TestInstruction"
+              },
+              {
+                "IndentationLevel": 5,
+                "TestInstructionName": "SendMT542 [df34aae]",
+                "TestInstructionUuid": "df34aaeb-6a25-4a35-968b-3246abc7ccd3",
+                "TestInstructionColor": "#09AA4DAA",
+                "TestInstructionAttributes": [
+                  {
+                    "AttributeName": "ExpectedToBePassed",
+                    "AttributeValue": "true",
+                    "AttributeGroupName": "ExpectedToPass"
+                  }
+                ],
+                "TestCaseStructureObjectType": "TestInstruction"
+              }
+            ],
+            "ComplexTextualDescription": "{B1f-TIC(B11f-TIC(B11f-TI-B12-TI-B11l)-B11l)-B1l}",
+            "LastSavedByUserOnComputer": "jlambert",
+            "SelectedMetaDataValuesMap": {
+              "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae.FX.Has FX.Yes": {
+                "SelectType": "MetaDataSelectType_SingleSelect",
+                "IsMandatory": true,
+                "MetaDataName": "Has FX",
+                "OwnerDomainName": "SubCustody [7edf2269]",
+                "OwnerDomainUuid": "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae",
+                "MetaDataGroupName": "FX",
+                "MetaDataNameValue": "Yes"
+              },
+              "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae.FX.FX details.2nd FX": {
+                "SelectType": "MetaDataSelectType_MultiSelect",
+                "MetaDataName": "FX details",
+                "OwnerDomainName": "SubCustody [7edf2269]",
+                "OwnerDomainUuid": "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae",
+                "MetaDataGroupName": "FX",
+                "MetaDataNameValue": "2nd FX"
+              },
+              "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae.TestCase.Status.Blocked": {
+                "SelectType": "MetaDataSelectType_SingleSelect",
+                "IsMandatory": true,
+                "MetaDataName": "Status",
+                "OwnerDomainName": "SubCustody [7edf2269]",
+                "OwnerDomainUuid": "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae",
+                "MetaDataGroupName": "TestCase",
+                "MetaDataNameValue": "Blocked"
+              },
+              "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae.TestCase.Finish Time.T+0": {
+                "SelectType": "MetaDataSelectType_SingleSelect",
+                "IsMandatory": true,
+                "MetaDataName": "Finish Time",
+                "OwnerDomainName": "SubCustody [7edf2269]",
+                "OwnerDomainUuid": "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae",
+                "MetaDataGroupName": "TestCase",
+                "MetaDataNameValue": "T+0"
+              },
+              "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae.TestCase.Semi Manual.Yes": {
+                "SelectType": "MetaDataSelectType_SingleSelect",
+                "IsMandatory": true,
+                "MetaDataName": "Semi Manual",
+                "OwnerDomainName": "SubCustody [7edf2269]",
+                "OwnerDomainUuid": "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae",
+                "MetaDataGroupName": "TestCase",
+                "MetaDataNameValue": "Yes"
+              },
+              "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae.TestCase Type.Semi Manual.Yes": {
+                "SelectType": "MetaDataSelectType_SingleSelect",
+                "IsMandatory": true,
+                "MetaDataName": "Semi Manual",
+                "OwnerDomainName": "SubCustody [7edf2269]",
+                "OwnerDomainUuid": "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae",
+                "MetaDataGroupName": "TestCase Type",
+                "MetaDataNameValue": "Yes"
+              },
+              "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae.FX.FX Program.SEB (Unrestricted)": {
+                "SelectType": "MetaDataSelectType_SingleSelect",
+                "IsMandatory": true,
+                "MetaDataName": "FX Program",
+                "OwnerDomainName": "SubCustody [7edf2269]",
+                "OwnerDomainUuid": "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae",
+                "MetaDataGroupName": "FX",
+                "MetaDataNameValue": "SEB (Unrestricted)"
+              },
+              "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae.FX.FX Trigger Event.Upon Projection": {
+                "SelectType": "MetaDataSelectType_SingleSelect",
+                "IsMandatory": true,
+                "MetaDataName": "FX Trigger Event",
+                "OwnerDomainName": "SubCustody [7edf2269]",
+                "OwnerDomainUuid": "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae",
+                "MetaDataGroupName": "FX",
+                "MetaDataNameValue": "Upon Projection"
+              },
+              "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae.TestCase Type.Product.Clearing & Settlement": {
+                "SelectType": "MetaDataSelectType_SingleSelect",
+                "IsMandatory": true,
+                "MetaDataName": "Product",
+                "OwnerDomainName": "SubCustody [7edf2269]",
+                "OwnerDomainUuid": "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae",
+                "MetaDataGroupName": "TestCase Type",
+                "MetaDataNameValue": "Clearing & Settlement"
+              },
+              "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae.TestCase Type.MoneyTransfer Reversal Types.No Reversals": {
+                "SelectType": "MetaDataSelectType_MultiSelect",
+                "IsMandatory": true,
+                "MetaDataName": "MoneyTransfer Reversal Types",
+                "OwnerDomainName": "SubCustody [7edf2269]",
+                "OwnerDomainUuid": "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae",
+                "MetaDataGroupName": "TestCase Type",
+                "MetaDataNameValue": "No Reversals"
+              },
+              "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae.TestCase.Can Execute in.SysTest & AccTest - In All Suites": {
+                "SelectType": "MetaDataSelectType_SingleSelect",
+                "IsMandatory": true,
+                "MetaDataName": "Can Execute in",
+                "OwnerDomainName": "SubCustody [7edf2269]",
+                "OwnerDomainUuid": "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae",
+                "MetaDataGroupName": "TestCase",
+                "MetaDataNameValue": "SysTest & AccTest - In All Suites"
+              }
+            },
+            "LastSavedByUserGCPAuthorization": "jonas.lambert68@gmail.com"
+          },
+          "TestCasePreviewHash": "daeef57cb3ea72f464f7631a47080a133fc331c4beada1195bbd2c6376e956c2"
+        }
+      ]
+    },
+    "DomainNameThatOwnTheTestSuite": "SubCustody",
+    "DomainUuidThatOwnTheTestSuite": "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae",
+    "LastSavedByUserGCPAuthorization": "jonas.lambert68@gmail.com",
+    "SelectedTestSuiteMetaDataValuesMap": {
+      "FX": {
+        "MetaDataName": "FX",
+        "MetaDataGroupName": "TestSuite Type",
+        "MetaDataNameValue": "BBH"
+      },
+      "Ledger": {
+        "MetaDataName": "Ledger",
+        "MetaDataGroupName": "TestSuite Type",
+        "MetaDataNameValue": "ISAT"
+      },
+      "Status": {
+        "MetaDataName": "Status",
+        "MetaDataGroupName": "TestSuite",
+        "MetaDataNameValue": "Draft"
+      },
+      "Finish Time": {
+        "MetaDataName": "Finish Time",
+        "MetaDataGroupName": "TestSuite",
+        "MetaDataNameValue": "T+1"
+      },
+      "TestEnvironment": {
+        "MetaDataName": "TestEnvironment",
+        "MetaDataGroupName": "TestSuite",
+        "MetaDataNameValue": "SysTest"
+      }
+    }
+  },
+  "TestSuitePreviewHash": "b3ab76daa977a2292939676a20dbfa8666143e89dab24b37211d8276183c1d58"
+}

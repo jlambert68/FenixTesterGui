@@ -211,7 +211,10 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	uiServer.AvailableBuildingBlocksModel.loadTestData(&uiServer.testCasesModel)
 
 	// Load list with TestCasesMapPtr that the user can edit
-	listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(&uiServer.testCasesModel, time.Now().Add(-time.Hour*1000), time.Now().Add(-time.Hour*1000))
+	listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(
+		&uiServer.testCasesModel,
+		time.Now().Add(-time.Hour*10000),
+		time.Now().Add(-time.Hour*10000))
 
 	// Initiate TestCaseExecutionModel
 	testCaseExecutionsModel.InitiateTestCaseExecutionModel()

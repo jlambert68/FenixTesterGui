@@ -389,6 +389,10 @@ func loadTestCaseExecutionListTableTable(
 			GetAllTestCaseExecutionsForOneTestCaseUuid(testCaseExecutionsModel.TestCaseUuidType(specificTestCaseUuid))
 	}
 
+	if testCaseExecutionsListMessage == nil {
+		testCaseExecutionsListMessage = &[]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage{}
+	}
+
 	// Loop all TestCaseExecutions and add to '[][]string'-object for the Table
 	for _, tempTestCaseExecution := range *testCaseExecutionsListMessage {
 

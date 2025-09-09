@@ -1,8 +1,8 @@
 module FenixTesterGui
 
-go 1.24
+go 1.24.0
 
-toolchain go1.24.2
+toolchain go1.24.6
 
 require (
 	cloud.google.com/go/pubsub v1.50.0
@@ -22,13 +22,13 @@ require (
 	github.com/markbates/goth v1.81.0
 	github.com/rs/zerolog v1.34.0
 	github.com/sirupsen/logrus v1.9.3
-	github.com/stretchr/testify v1.11.0
+	github.com/stretchr/testify v1.11.1
 	github.com/toqueteos/webbrowser v1.2.1
 	golang.org/x/net v0.43.0
-	golang.org/x/oauth2 v0.30.0
-	google.golang.org/api v0.248.0
+	golang.org/x/oauth2 v0.31.0
+	google.golang.org/api v0.249.0
 	google.golang.org/grpc v1.75.0
-	google.golang.org/protobuf v1.36.8
+	google.golang.org/protobuf v1.36.9
 )
 
 require (

@@ -14,7 +14,6 @@ import (
 	"image"
 	"strconv"
 	"sync"
-	"time"
 )
 
 //go:embed resources/TIC-Horizontal_32x32.png
@@ -119,7 +118,10 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateListTestCasesUI(
 		fmt.Println("'loadTestCaseFromDataBaseButton' was pressed")
 		listTestCasesModel.LoadTestCaseThatCanBeEditedByUser(
 			testCasesModel,
-			time.Now().Add(-time.Hour*10000), time.Now().Add(-time.Hour*10000)) //TODO fixa denna på något sätt
+			listTestCasesModel.LatestTestCaseUpdatedMinTimeStampForDatabaseCall,
+			listTestCasesModel.LatestTestCaseExecutionUpdatedMinTimeStampForDatabaseCall)
+		//time.Now().Add(-time.Hour*10000),
+		//time.Now().Add(-time.Hour*10000)) //TODO fixa denna på något sätt
 
 		filterTestCasesButtonFunction()
 		//sortTestCasesTable()

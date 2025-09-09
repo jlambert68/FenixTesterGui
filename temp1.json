@@ -1,0 +1,214 @@
+{
+  "TestSuitePreview": {
+    "TestSuiteName": "Name....v7c",
+    "TestSuiteUuid": "975364d5-157b-4926-a2b7-b5260b7826b1",
+    "TestSuiteVersion": "10",
+    "LastSavedTimeStamp": "2025-08-20 14:05:53.112782",
+    "TestSuiteDescription": "desc\n\nrow3",
+    "DomainThatOwnTheTestSuite": "7edf2269-a8d3-472c-aed6-8cdcc4a8b6ae",
+    "LastSavedByUserOnComputer": "jlambert",
+    "TestSuiteStructureObjects": [
+      {
+        "TestCasePreViews": [
+          {
+            "IndentationLevel": 1,
+            "TestCaseStructureObjectType": "TestInstructionContainer",
+            "TestInstructionContainerName": "Fenix Standard Serial TestInstructionsContainer [3b4adf9]",
+            "TestInstructionContainerUuid": "3b4adf91-ca02-4ff6-a819-6a940ce1e194",
+            "TestInstructionIsSerialProcessed": true
+          },
+          {
+            "IndentationLevel": 3,
+            "TestCaseStructureObjectType": "TestInstructionContainer",
+            "TestInstructionContainerName": "Fenix Standard Parallel TestInstructionsContainer [9aa651a]",
+            "TestInstructionContainerUuid": "9aa651a4-ab38-4124-ad88-968985ad134e"
+          },
+          {
+            "IndentationLevel": 5,
+            "TestInstructionName": "SendMT540 [edc2147]",
+            "TestInstructionUuid": "edc2147e-f3fa-4de9-acc7-bda4c3d5154a",
+            "TestInstructionColor": "#09AA4DAA",
+            "TestInstructionAttributes": [
+              {
+                "AttributeName": "ExpectedToBePassed",
+                "AttributeValue": "true",
+                "AttributeGroupName": "ExpectedToPass"
+              }
+            ],
+            "TestCaseStructureObjectType": "TestInstruction"
+          },
+          {
+            "IndentationLevel": 5,
+            "TestInstructionName": "SendMT542 [348558d]",
+            "TestInstructionUuid": "348558d4-4fee-450a-b1a1-12d1cb4c5f3a",
+            "TestInstructionColor": "#09AA4DAA",
+            "TestInstructionAttributes": [
+              {
+                "AttributeName": "ExpectedToBePassed",
+                "AttributeValue": "true",
+                "AttributeGroupName": "ExpectedToPass"
+              }
+            ],
+            "TestCaseStructureObjectType": "TestInstruction"
+          },
+          {
+            "IndentationLevel": 3,
+            "TestCaseStructureObjectType": "TestInstructionContainer",
+            "TestInstructionContainerName": "Fenix Standard Parallel TestInstructionsContainer [8f80ee7]",
+            "TestInstructionContainerUuid": "8f80ee75-7a4e-4211-8b7c-046f566d9926"
+          },
+          {
+            "IndentationLevel": 5,
+            "TestInstructionName": "ValidateMT544 [f1861d7]",
+            "TestInstructionUuid": "f1861d71-ada0-416f-a24e-f2d0a7345161",
+            "TestInstructionColor": "#0DF36EAA",
+            "TestInstructionAttributes": [
+              {
+                "AttributeName": "ExpectedToBePassed",
+                "AttributeValue": "true",
+                "AttributeGroupName": "ExpectedToPass"
+              },
+              {
+                "AttributeName": "RelatedReference_54x_20CRELA",
+                "AttributeValue": "SendMT540 [edc2147]",
+                "AttributeGroupName": "Standard"
+              }
+            ],
+            "TestCaseStructureObjectType": "TestInstruction"
+          },
+          {
+            "IndentationLevel": 5,
+            "TestInstructionName": "ValidateMT546 [88d86a3]",
+            "TestInstructionUuid": "88d86a3d-f460-4850-bf9d-29458d9be0ba",
+            "TestInstructionColor": "#0DF36EAA",
+            "TestInstructionAttributes": [
+              {
+                "AttributeName": "ExpectedToBePassed",
+                "AttributeValue": "true",
+                "AttributeGroupName": "ExpectedToPass"
+              },
+              {
+                "AttributeName": "RelatedReference_54x_20CRELA",
+                "AttributeValue": "SendMT542 [348558d]",
+                "AttributeGroupName": "Standard"
+              }
+            ],
+            "TestCaseStructureObjectType": "TestInstruction"
+          },
+          {
+            "IndentationLevel": 5,
+            "TestInstructionName": "ValidateMT548 [62981a6]",
+            "TestInstructionUuid": "62981a6b-86e9-442b-9c2b-02bc13750aae",
+            "TestInstructionColor": "#0DF36EAA",
+            "TestInstructionAttributes": [
+              {
+                "AttributeName": "ExpectedToBePassed",
+                "AttributeValue": "true",
+                "AttributeGroupName": "ExpectedToPass"
+              },
+              {
+                "AttributeName": "RelatedReference_54x_20CRELA",
+                "AttributeValue": "SendMT540 [edc2147]",
+                "AttributeGroupName": "Standard"
+              }
+            ],
+            "TestCaseStructureObjectType": "TestInstruction"
+          },
+          {
+            "IndentationLevel": 5,
+            "TestInstructionName": "ValidateMT548 [e2889e0]",
+            "TestInstructionUuid": "e2889e00-427b-4ccf-98a8-590e581fcc27",
+            "TestInstructionColor": "#0DF36EAA",
+            "TestInstructionAttributes": [
+              {
+                "AttributeName": "RelatedReference_54x_20CRELA",
+                "AttributeValue": "SendMT542 [348558d]",
+                "AttributeGroupName": "Standard"
+              },
+              {
+                "AttributeName": "ExpectedToBePassed",
+                "AttributeValue": "true",
+                "AttributeGroupName": "ExpectedToPass"
+              }
+            ],
+            "TestCaseStructureObjectType": "TestInstruction"
+          }
+        ]
+      },
+      {
+        "TestCasePreViews": [
+          {
+            "IndentationLevel": 1,
+            "TestCaseStructureObjectType": "TestInstructionContainer",
+            "TestInstructionContainerName": "Fenix Standard Serial TestInstructionsContainer [e622285]",
+            "TestInstructionContainerUuid": "e6222856-84b3-44f2-8b11-37004b988d02",
+            "TestInstructionIsSerialProcessed": true
+          },
+          {
+            "IndentationLevel": 3,
+            "TestCaseStructureObjectType": "TestInstructionContainer",
+            "TestInstructionContainerName": "Fenix Standard Parallel TestInstructionsContainer [67b4dc9]",
+            "TestInstructionContainerUuid": "67b4dc94-b82a-4c0b-999f-98186b713f4c"
+          },
+          {
+            "IndentationLevel": 5,
+            "TestInstructionName": "SendMT540 [8f982a8]",
+            "TestInstructionUuid": "8f982a80-b2e0-45d0-98da-0cc12858e3ac",
+            "TestInstructionColor": "#09AA4DAA",
+            "TestInstructionAttributes": [
+              {
+                "AttributeName": "ExpectedToBePassed",
+                "AttributeValue": "true",
+                "AttributeGroupName": "ExpectedToPass"
+              }
+            ],
+            "TestCaseStructureObjectType": "TestInstruction"
+          },
+          {
+            "IndentationLevel": 5,
+            "TestInstructionName": "SendMT542 [df34aae]",
+            "TestInstructionUuid": "df34aaeb-6a25-4a35-968b-3246abc7ccd3",
+            "TestInstructionColor": "#09AA4DAA",
+            "TestInstructionAttributes": [
+              {
+                "AttributeName": "ExpectedToBePassed",
+                "AttributeValue": "true",
+                "AttributeGroupName": "ExpectedToPass"
+              }
+            ],
+            "TestCaseStructureObjectType": "TestInstruction"
+          }
+        ]
+      }
+    ],
+    "LastSavedByUserGCPAuthorization": "jonas.lambert68@gmail.com",
+    "SelectedTestSuiteMetaDataValuesMap": {
+      "FX": {
+        "MetaDataName": "FX",
+        "MetaDataGroupName": "TestSuite Type",
+        "MetaDataNameValue": "BBH"
+      },
+      "Ledger": {
+        "MetaDataName": "Ledger",
+        "MetaDataGroupName": "TestSuite Type",
+        "MetaDataNameValue": "ISAT"
+      },
+      "Status": {
+        "MetaDataName": "Status",
+        "MetaDataGroupName": "TestSuite",
+        "MetaDataNameValue": "Draft"
+      },
+      "Finish Time": {
+        "MetaDataName": "Finish Time",
+        "MetaDataGroupName": "TestSuite",
+        "MetaDataNameValue": "T+1"
+      },
+      "TestEnvironment": {
+        "MetaDataName": "TestEnvironment",
+        "MetaDataGroupName": "TestSuite",
+        "MetaDataNameValue": "SysTest"
+      }
+    }
+  },
+  "TestSuitePreviewHash": "944a44d96e02da18edb151bda1627c61e156ff9a198ea5d972ff664da5d00e17"
+}

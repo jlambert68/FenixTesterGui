@@ -17,7 +17,7 @@ import (
 )
 
 // GenerateTestCasePreviewContainer
-// Generates the PreViewContiner for the TestCase
+// Generates the PreViewContainer for the TestCase
 func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateTestCasePreviewContainer(
 	testCaseUuid string,
 	testCasePreviewContainer *fyne.Container,

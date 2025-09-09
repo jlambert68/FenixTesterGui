@@ -58,6 +58,8 @@ func storeTestCaseThatCanBeEditedByUser(
 	var groupBitSetExistInMap bool
 	var itemBitSetExistInMap bool
 	var valueBitSetExistInMap bool
+	var latestTestCaseUpdatedMinTimeStamp time.Time
+	var latestTestCaseExecutionUpdatedMinTimeStamp time.Time
 
 	// Store the TestCaseThatCanBeEditedByUser-list in the TestCaseModel
 	TestCasesThatCanBeEditedByUserMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
@@ -65,6 +67,16 @@ func storeTestCaseThatCanBeEditedByUser(
 
 	// Store the Available TemplateRepositoryApiUrls as a map structure in TestCase-struct
 	for _, testCaseThatCanBeEditedByUser := range testCasesThatCanBeEditedByUserAsSlice {
+
+		// Check for later 'latestTestCaseUpdatedMinTimeStamp'
+		if latestTestCaseUpdatedMinTimeStamp.Before(testCaseThatCanBeEditedByUser.GetLastSavedTimeStamp().AsTime()) {
+			latestTestCaseUpdatedMinTimeStamp = testCaseThatCanBeEditedByUser.GetLastSavedTimeStamp().AsTime()
+		}
+
+		// Check for later 'latestTestCaseExecutionUpdatedMinTimeStamp'
+		if latestTestCaseExecutionUpdatedMinTimeStamp.Before(testCaseThatCanBeEditedByUser.GetLatestTestCaseExecutionStatusInsertTimeStamp().AsTime()) {
+			latestTestCaseExecutionUpdatedMinTimeStamp = testCaseThatCanBeEditedByUser.GetLatestTestCaseExecutionStatusInsertTimeStamp().AsTime()
+		}
 
 		TestCasesThatCanBeEditedByUserMap[testCaseThatCanBeEditedByUser.GetTestCaseUuid()] =
 			testCaseThatCanBeEditedByUser
@@ -148,5 +160,9 @@ func storeTestCaseThatCanBeEditedByUser(
 		SimpleTestCaseMetaDataFilterEntryMap[testCaseThatCanBeEditedByUser.GetTestCaseUuid()] = resultsEntry
 
 	}
+
+	// Store 'latestTestCaseUpdatedMinTimeStamp' & 'latestTestCaseExecutionUpdatedMinTimeStamp' to be used with next Database-call
+	LatestTestCaseUpdatedMinTimeStampForDatabaseCall = latestTestCaseUpdatedMinTimeStamp
+	LatestTestCaseExecutionUpdatedMinTimeStampForDatabaseCall = latestTestCaseExecutionUpdatedMinTimeStamp
 
 }

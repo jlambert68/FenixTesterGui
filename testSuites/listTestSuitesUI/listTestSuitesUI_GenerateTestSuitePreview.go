@@ -123,6 +123,7 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) GenerateTestSuitePreviewCont
 			testCasePreviewAreaForPreviewContainer,
 			testCasesModel,
 			false)
+
 	}
 
 	// Calculate a sensible minimum height for ~5 rows

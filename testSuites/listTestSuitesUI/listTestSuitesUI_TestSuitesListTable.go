@@ -546,7 +546,7 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) loadTestSuiteListTableTable(
 
 		// Column 1:
 		// TestSuiteName
-		tempRowslice = append(tempRowslice, tempTestSuite.NonEditableInformation.GetDomainName())
+		tempRowslice = append(tempRowslice, tempTestSuite.GetEditableInformation().GetTestSuiteName())
 
 		// Column 2:
 		// TestSuiteUuid

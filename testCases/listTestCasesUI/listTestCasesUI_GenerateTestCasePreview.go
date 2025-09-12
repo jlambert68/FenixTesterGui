@@ -262,6 +262,7 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateTestCasePreviewContain
 			container.NewVBox(container.NewHBox(tempTopHeaderLabel), testCasePreviewTopContainer, widget.NewSeparator()),
 			container.NewVBox(widget.NewSeparator(), testCasePreviewBottomContainer), nil, nil,
 			testCaseMainAreaForPreviewScrollContainer)
+
 	}
 
 	// Refresh the 'testCasePreviewContainer'

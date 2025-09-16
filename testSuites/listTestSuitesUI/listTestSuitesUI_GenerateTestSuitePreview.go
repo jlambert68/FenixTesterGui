@@ -121,8 +121,7 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) GenerateTestSuitePreviewCont
 		listTestCasesUI.StandardListTesCasesUIObject.GenerateTestCasePreviewContainer(
 			testCasesList[id].TestCaseUuid,
 			testCasePreviewAreaForPreviewContainer,
-			testCasesModel,
-			false)
+			testCasesModel)
 
 	}
 

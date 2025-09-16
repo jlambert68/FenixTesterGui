@@ -21,8 +21,7 @@ import (
 func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateTestCasePreviewContainer(
 	testCaseUuid string,
 	testCasePreviewContainer *fyne.Container,
-	testCasesModel *testCaseModel.TestCasesModelsStruct,
-	fromTestCaseList bool) {
+	testCasesModel *testCaseModel.TestCasesModelsStruct) {
 
 	var testCasePreviewTopContainer *fyne.Container
 	var testCasePreviewBottomContainer *fyne.Container
@@ -249,23 +248,26 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateTestCasePreviewContain
 	tempTopHeaderLabel := widget.NewLabel("TestCase Preview")
 	tempTopHeaderLabel.TextStyle = fyne.TextStyle{Bold: true}
 
-	if fromTestCaseList == true {
+	if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
 
 		testCasePreviewContainer.Objects[0] = container.NewBorder(
 			container.NewVBox(container.NewCenter(tempTopHeaderLabel), testCasePreviewTopContainer, widget.NewSeparator()),
 			container.NewVBox(widget.NewSeparator(), testCasePreviewBottomContainer), nil, nil,
 			testCaseMainAreaForPreviewScrollContainer)
 
+		// Refresh the 'testCasePreviewContainer'
+		testCasePreviewContainer.Refresh()
+
 	} else {
 
-		testCasePreviewContainer.Objects[0] = container.NewBorder(
+		listTestCaseUIObject.testCasePreviewContainer.Objects[0] = container.NewBorder(
 			container.NewVBox(container.NewHBox(tempTopHeaderLabel), testCasePreviewTopContainer, widget.NewSeparator()),
 			container.NewVBox(widget.NewSeparator(), testCasePreviewBottomContainer), nil, nil,
 			testCaseMainAreaForPreviewScrollContainer)
 
-	}
+		// Refresh the 'testCasePreviewContainer'
+		listTestCaseUIObject.testCasePreviewContainer.Refresh()
 
-	// Refresh the 'testCasePreviewContainer'
-	testCasePreviewContainer.Refresh()
+	}
 
 }

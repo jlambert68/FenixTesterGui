@@ -75,7 +75,7 @@ func (testSuiteUiModel TestSuiteUiStruct) generateLeftSideBuildTestSuiteContaine
 	leftTopSideBuildTestSuiteContainer.Add(testSuiteNameAreaContainer)
 
 	// Generate TestSuite-Description-area
-	testSuiteDescriptionAreaContainer, err = testSuiteUiModel.generateTestCaseDescriptionArea(testSuiteUuid)
+	testSuiteDescriptionAreaContainer, err = testSuiteUiModel.generateTestSuiteDescriptionArea(testSuiteUuid)
 	if err != nil {
 
 		errorId := "84aae5d4-d081-48f6-aee9-c25bdae7ddd4"

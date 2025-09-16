@@ -226,9 +226,13 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateListTestCasesUI(
 	// Generate the AppTabsContainer, depending on from where it was initiated
 	if listTestCaseUIObject.howShouldItBeUsed == UsedForTestCasesList {
 		// We are in standard List TestCases
-		listTestCaseUIObject.preViewAndFilterTabs = container.NewAppTabs(listTestCaseUIObject.filterTab, listTestCaseUIObject.preViewTab)
+		listTestCaseUIObject.preViewAndFilterTabs = container.NewAppTabs(
+			listTestCaseUIObject.filterTab,
+			listTestCaseUIObject.preViewTab)
 
-		tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(testCasesListScrollContainer2, listTestCaseUIObject.preViewAndFilterTabs)
+		tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(
+			testCasesListScrollContainer2,
+			listTestCaseUIObject.preViewAndFilterTabs)
 		tempTestCaseListAndTestCasePreviewSplitContainer.Offset = 0.75
 
 		//TestCaseListAndTestCasePreviewSplitContainer = tempTestCaseListAndTestCasePreviewSplitContainer
@@ -236,6 +240,7 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateListTestCasesUI(
 		return container.NewBorder(nil, nil, nil, nil, tempTestCaseListAndTestCasePreviewSplitContainer)
 
 	} else {
+
 		// We are in Create TestSuite
 		listTestCaseUIObject.preViewAndFilterTabs = preViewAndFilterTabsUsedForCreateTestSuite
 		listTestCaseUIObject.preViewAndFilterTabs.Append(listTestCaseUIObject.filterTab)

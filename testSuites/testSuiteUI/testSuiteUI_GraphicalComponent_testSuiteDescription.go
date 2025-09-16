@@ -12,7 +12,7 @@ import (
 )
 
 // Generate the TestCaseDescription Area for the TestCase
-func (testSuiteUiModel *TestSuiteUiStruct) generateTestCaseDescriptionArea(
+func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteDescriptionArea(
 	testSuiteUuid string) (
 	testCaseDescriptionAreaContainer *fyne.Container,
 	err error) {

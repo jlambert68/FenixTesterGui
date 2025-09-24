@@ -226,14 +226,14 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 		// Load list with TestCasesExecutions that can be viewed by used
 
-		listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
+		listTestSuiteExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
 			0,
 			true,
-			testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
+			testSuiteExecutionsModel.StandardTestCaseExecutionsBatchSize,
 			false,
 			"",
-			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
-			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
+			testSuiteExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
+			testSuiteExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 			true,
 			&updateGuiChannel)
 
@@ -408,7 +408,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	// Create the UI for List Detailed TestCaseExecutions-UI
 	//var detailedTestCaseExecutionsTab fyne.CanvasObject
 	//detailedTestCaseExecutionsTab = listTestCaseExecutionsUI.GenerateDetailedTestCaseExecutionsTabUI(
-	//	&testCaseExecutionsModel.TestCaseExecutionsModel)
+	//	&testSuiteExecutionsModel.TestCaseExecutionsModel)
 
 	mySliderDataAsString := binding.NewString()
 

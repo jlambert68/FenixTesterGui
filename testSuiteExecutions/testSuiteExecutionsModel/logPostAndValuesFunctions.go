@@ -10,20 +10,20 @@ import (
 // ListLogPostsAndValuesForTestInstructionExecutions
 // List all LogPosts and Values for supplied TestInstructionExecutions. Log-posts are sorted on Logging DateTime
 func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ListLogPostsAndValuesForTestInstructionExecutions(
-	detailedTestCaseExecutionMapKey DetailedTestCaseExecutionMapKeyType,
+	detailedTestSuiteExecutionMapKey DetailedTestSuiteExecutionMapKeyType,
 	testInstructionLogPostMapKeys []TestInstructionExecutionLogPostMapKeyType) (
 	logPostAndValuesMessagesPtr *[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "ff572b43-297f-410d-931b-f5e5ea2aae53",
+		"id": "a82fb158-878e-4423-8150-348bc2403962",
 	}).Debug("Incoming - 'ListLogPostsAndValuesForTestInstructionExecutions'")
 
 	defer sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "422691a7-9e68-447a-85f1-dfca07567606",
+		"id": "94e8749a-50a1-4a58-b0da-aa45e56903d0",
 	}).Debug("Outgoing - 'ListLogPostsAndValuesForTestInstructionExecutions'")
 
 	// Check input keys for values
-	if len(detailedTestCaseExecutionMapKey) == 0 {
+	if len(detailedTestSuiteExecutionMapKey) == 0 {
 		return
 	}
 	//if logPostAndValuesMessagesPtr == nil || len(*logPostAndValuesMessagesPtr) == 0 {
@@ -36,41 +36,41 @@ func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ListLogPostsAndVa
 	}
 
 	// Lock Map for Writing
-	detailedTestCaseExecutionsMapMutex.Lock()
+	detailedTestSuiteExecutionsMapMutex.Lock()
 
 	//UnLock Map
-	defer detailedTestCaseExecutionsMapMutex.Unlock()
+	defer detailedTestSuiteExecutionsMapMutex.Unlock()
 
 	var existInMap bool
 
-	// Extract map with DetailedTestCaseExecutionsMapObjects
-	var detailedTestCaseExecutionsObjectsMapPtr *map[DetailedTestCaseExecutionMapKeyType]*DetailedTestCaseExecutionsMapObjectStruct
-	var detailedTestCaseExecutionsObjectsMap map[DetailedTestCaseExecutionMapKeyType]*DetailedTestCaseExecutionsMapObjectStruct
+	// Extract map with DetailedTestSuiteExecutionsMapObjects
+	var detailedTestSuiteExecutionsObjectsMapPtr *map[DetailedTestSuiteExecutionMapKeyType]*DetailedTestSuiteExecutionsMapObjectStruct
+	var detailedTestSuiteExecutionsObjectsMap map[DetailedTestSuiteExecutionMapKeyType]*DetailedTestSuiteExecutionsMapObjectStruct
 
-	detailedTestCaseExecutionsObjectsMapPtr = testCaseExecutionsModel.DetailedTestCaseExecutionsObjectsMapPtr
-	detailedTestCaseExecutionsObjectsMap = *detailedTestCaseExecutionsObjectsMapPtr
+	detailedTestSuiteExecutionsObjectsMapPtr = testSuiteExecutionsModel.DetailedTestSuiteExecutionsObjectsMapPtr
+	detailedTestSuiteExecutionsObjectsMap = *detailedTestSuiteExecutionsObjectsMapPtr
 
-	// Extract specificDetailedTestCaseExecutionsMapObject
-	var detailedTestCaseExecutionsMapObjectPtr *DetailedTestCaseExecutionsMapObjectStruct
-	var detailedTestCaseExecutionsMapObject DetailedTestCaseExecutionsMapObjectStruct
-	detailedTestCaseExecutionsMapObjectPtr, existInMap = detailedTestCaseExecutionsObjectsMap[detailedTestCaseExecutionMapKey]
+	// Extract specificDetailedTestSuiteExecutionsMapObject
+	var detailedTestSuiteExecutionsMapObjectPtr *DetailedTestSuiteExecutionsMapObjectStruct
+	var detailedTestSuiteExecutionsMapObject DetailedTestSuiteExecutionsMapObjectStruct
+	detailedTestSuiteExecutionsMapObjectPtr, existInMap = detailedTestSuiteExecutionsObjectsMap[detailedTestSuiteExecutionMapKey]
 
 	// If it isn't initialized then exist
 	if existInMap == false {
 		return
 	}
 
-	detailedTestCaseExecutionsMapObject = *detailedTestCaseExecutionsMapObjectPtr
+	detailedTestSuiteExecutionsMapObject = *detailedTestSuiteExecutionsMapObjectPtr
 
 	// Check if TestInstructionNExecutionMap is nil, then exist
-	if detailedTestCaseExecutionsMapObjectPtr.TestInstructionExecutionLogPostMapPtr == nil {
+	if detailedTestSuiteExecutionsMapObjectPtr.TestInstructionExecutionLogPostMapPtr == nil {
 		return
 	}
 
 	// Get the LogPostMap
 	var testInstructionExecutionLogPostMapPtr *map[TestInstructionExecutionLogPostMapKeyType]*[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage
 	var testInstructionExecutionLogPostMap map[TestInstructionExecutionLogPostMapKeyType]*[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage
-	testInstructionExecutionLogPostMapPtr = detailedTestCaseExecutionsMapObject.TestInstructionExecutionLogPostMapPtr
+	testInstructionExecutionLogPostMapPtr = detailedTestSuiteExecutionsMapObject.TestInstructionExecutionLogPostMapPtr
 	testInstructionExecutionLogPostMap = *testInstructionExecutionLogPostMapPtr
 
 	// Get logPost from Map by loop the Map-keys and add the final result slice
@@ -79,9 +79,9 @@ func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ListLogPostsAndVa
 	for _, tempTestInstructionLogPostMapKey := range testInstructionLogPostMapKeys {
 
 		// Convert to TestInstructionExecutionLogPostKey
-		tempTestInstructionExecutionLogPostKey, existInMap = testCaseExecutionsModel.
+		tempTestInstructionExecutionLogPostKey, existInMap = testSuiteExecutionsModel.
 			GetTestInstructionExecutionUuidFromTestInstructionUuid(
-				TestCaseExecutionUuidType(detailedTestCaseExecutionMapKey),
+				TestSuiteExecutionUuidType(detailedTestSuiteExecutionMapKey),
 				RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType(tempTestInstructionLogPostMapKey))
 
 		if existInMap == false {

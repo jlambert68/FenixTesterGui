@@ -37,7 +37,7 @@ type clickableTInTICNameLabelInPreviewStruct struct {
 	RightClicked                        func()
 	LabelType                           labelTypeType
 	lastTapTime                         time.Time
-	testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct
+	testCaseInstructionPreViewObjectRef *TestSuiteInstructionPreViewStruct
 }
 
 // Used for creating a new TestInstructionName label
@@ -49,7 +49,7 @@ func newClickableTestInstructionNameLabelInPreview(
 	leftClicked func(),
 	rightClicked func(),
 	labelType labelTypeType,
-	testCaseInstructionPreViewObject *TestCaseInstructionPreViewStruct,
+	testCaseInstructionPreViewObject *TestSuiteInstructionPreViewStruct,
 ) *clickableTInTICNameLabelInPreviewStruct {
 
 	clickableTInTICNameLabelInPreview := &clickableTInTICNameLabelInPreviewStruct{
@@ -79,11 +79,11 @@ func (c *clickableTInTICNameLabelInPreviewStruct) CreateRenderer() fyne.WidgetRe
 // Tapped interface implementation
 func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 
-	if mouseHasLeftTestCaseExecutionPreviewTree == true {
+	if mouseHasLeftTestSuiteExecutionPreviewTree == true {
 		return
 	}
 
-	testCaseExecutionAttributesForPreviewMapMutex.Lock()
+	testSuiteExecutionAttributesForPreviewMapMutex.Lock()
 
 	var existInMap bool
 	var attributesContainerPtr *fyne.Container
@@ -99,11 +99,11 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 
 		// Should never happen
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"ID":                   "765dd5e9-0f00-4494-8128-33c986c5b13d",
+			"ID":                   "898051fd-48f5-4aa0-801b-31c8a7879c89",
 			"c.TInTICExecutionKey": c.TInTICExecutionKey,
 		}).Error("Couldn't find object in  for 'testCaseExecutionAttributesForPreviewMap', should never happen")
 
-		testCaseExecutionAttributesForPreviewMapMutex.Unlock()
+		testSuiteExecutionAttributesForPreviewMapMutex.Unlock()
 		return
 	}
 
@@ -135,11 +135,11 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 
 				// Should never happen
 				sharedCode.Logger.WithFields(logrus.Fields{
-					"ID":             "222087c5-1c93-4e8f-8862-af6baf1ae2ae",
+					"ID":             "47773371-8fb4-44e9-b17f-277bbeae35d7",
 					"childObjectKey": childObjectKey,
 				}).Error("Couldn't find child for TestInstructionAttributes, should never happen")
 
-				testCaseExecutionAttributesForPreviewMapMutex.Unlock()
+				testSuiteExecutionAttributesForPreviewMapMutex.Unlock()
 
 				return
 			}
@@ -170,11 +170,11 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 
 				// Should never happen
 				sharedCode.Logger.WithFields(logrus.Fields{
-					"ID":             "75369175-4406-4127-95e6-6171a73aae27",
+					"ID":             "f1286e67-c356-4d46-8db5-ce2d64e362fd",
 					"childObjectKey": childObjectKey,
 				}).Error("Couldn't find child for TestInstructionAttributes, should never happen")
 
-				testCaseExecutionAttributesForPreviewMapMutex.Unlock()
+				testSuiteExecutionAttributesForPreviewMapMutex.Unlock()
 
 				return
 			}
@@ -192,7 +192,7 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 
 	}
 
-	c.testCaseInstructionPreViewObjectRef.testCaseExecutionPreviewContainerScroll.Refresh()
+	c.testCaseInstructionPreViewObjectRef.testSuiteExecutionPreviewContainerScroll.Refresh()
 
 	if testCaseExecutionAttributesForPreviewObjectPtr.testInstructionExecutionAttributesContainer != nil {
 		attributesContainerPtr.Refresh()
@@ -676,7 +676,7 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 		c.testCaseInstructionPreViewObjectRef.testInstructionsExecutionLogContainer.Refresh()
 	}
 
-	testCaseExecutionAttributesForPreviewMapMutex.Unlock()
+	testSuiteExecutionAttributesForPreviewMapMutex.Unlock()
 
 	if c.LeftClicked != nil {
 
@@ -688,7 +688,7 @@ func (c *clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent) {
 // Optional: Handle secondary tap (right-click)
 func (c *clickableTInTICNameLabelInPreviewStruct) TappedSecondary(*fyne.PointEvent) {
 
-	if mouseHasLeftTestCaseExecutionPreviewTree == true {
+	if mouseHasLeftTestSuiteExecutionPreviewTree == true {
 		return
 	}
 

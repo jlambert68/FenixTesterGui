@@ -3,7 +3,7 @@ package listTestSuiteExecutionsUI
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/detailedExecutionsModel"
-	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
+	"FenixTesterGui/testSuiteExecutions/testSuiteExecutionsModel"
 	"bytes"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -19,20 +19,20 @@ import (
 	"strconv"
 )
 
-func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) GenerateTestCaseExecutionPreviewContainer(
-	testCaseExecutionUuid string,
-	testCaseExecutionVersion uint32,
-	testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct,
-	openedTestCaseExecutionFrom openedTestCaseExecutionFromType,
+func (testSuiteInstructionPreViewObjectRef *TestSuiteInstructionPreViewStruct) GenerateTestSuiteExecutionPreviewContainer(
+	testSuiteExecutionUuid string,
+	testSuiteExecutionVersion uint32,
+	testSuiteExecutionsModelRef *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct,
+	openedTestSuiteExecutionFrom openedTestSuiteExecutionFromType,
 	currentWindowPtr *fyne.Window) {
 
 	var currentWindow fyne.Window
 	currentWindow = *currentWindowPtr
 
-	var testCaseExecutionPreviewTopContainer *fyne.Container
-	var testCaseExecutionPreviewBottomContainer *fyne.Container
+	var testSuiteExecutionPreviewTopContainer *fyne.Container
+	var testSuiteExecutionPreviewBottomContainer *fyne.Container
 	//var testCasePreviewScrollContainer *container.Scroll
-	var testCaseExecutionMainAreaForPreviewContainer *fyne.Container
+	var testSuiteExecutionMainAreaForPreviewContainer *fyne.Container
 
 	var err error
 	var existInMap bool
@@ -40,94 +40,94 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 	var runTimeValueExists bool
 
 	// Lock Map
-	testCaseExecutionAttributesForPreviewMapMutex.Lock()
+	testSuiteExecutionAttributesForPreviewMapMutex.Lock()
 
 	// Unlock map
-	defer testCaseExecutionAttributesForPreviewMapMutex.Unlock()
+	defer testSuiteExecutionAttributesForPreviewMapMutex.Unlock()
 
-	// Clear out 'testCaseExecutionAttributesForPreviewMapPtr'
-	var testCaseExecutionAttributesForPreviewMap map[testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType]*testCaseExecutionAttributesForPreviewStruct
-	testCaseExecutionAttributesForPreviewMap = make(map[testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType]*testCaseExecutionAttributesForPreviewStruct)
+	// Clear out 'testSuiteExecutionAttributesForPreviewMapPtr'
+	var testSuiteExecutionAttributesForPreviewMap map[testSuiteExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType]*testCaseExecutionAttributesForPreviewStruct
+	testSuiteExecutionAttributesForPreviewMap = make(map[testSuiteExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType]*testCaseExecutionAttributesForPreviewStruct)
 
-	testCaseExecutionAttributesForPreviewMapPtr = &testCaseExecutionAttributesForPreviewMap
+	testSuiteExecutionAttributesForPreviewMapPtr = &testSuiteExecutionAttributesForPreviewMap
 
-	// Verify that number Headers match number of columns, constant 'numberColumnsInTestCaseExecutionsListUI'
-	if len(testCaseExecutionsListTableHeader) != numberColumnsInTestCaseExecutionsListUI {
-		log.Fatalln(fmt.Sprintf("Number of elements in 'tempRowslice' missmatch contant 'numberColumnsInTestCaseExecutionsListUI'. %d vs %d. ID: %s",
-			testCaseExecutionsListTableHeader,
-			numberColumnsInTestCaseExecutionsListUI,
+	// Verify that number Headers match number of columns, constant 'numberColumnsInTestSuiteExecutionsListUI'
+	if len(testSuiteExecutionsListTableHeader) != numberColumnsInTestSuiteExecutionsListUI {
+		log.Fatalln(fmt.Sprintf("Number of elements in 'tempRowslice' missmatch contant 'numberColumnsInTestSuiteExecutionsListUI'. %d vs %d. ID: %s",
+			testSuiteExecutionsListTableHeader,
+			numberColumnsInTestSuiteExecutionsListUI,
 			"c2b8a13c-ec20-46c2-adf9-965247732e07"))
 	}
 
 	// Get Data for the Preview
-	var tempTestCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+	var tempTestSuiteExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage
 
-	// Can preview be found in Map for "One TestCaseExecution per TestCase" or "All TestCaseExecutions per TestCase"
-	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+	// Can preview be found in Map for "One TestSuiteExecution per TestCase" or "All TestSuiteExecutions per TestCase"
+	switch selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType {
 
-	case AllExecutionsForOneTestCase:
-		tempTestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.GetSpecificTestCaseExecutionForOneTestCaseUuid(
-			testCaseExecutionsModel.TestCaseUuidType(selectedTestCaseExecutionObjected.
-				allExecutionsFoOneTestCaseListObject.testCaseUuidForTestCaseExecutionThatIsShownInPreview),
-			testCaseExecutionsModel.TestCaseExecutionUuidType(selectedTestCaseExecutionObjected.
-				allExecutionsFoOneTestCaseListObject.testCaseExecutionUuidThatIsShownInPreview))
+	case AllExecutionsForOneTestSuite:
+		tempTestSuiteExecutionsListMessage, _ = testSuiteExecutionsModelRef.GetSpecificTestSuiteExecutionForOneTestSuiteUuid(
+			testSuiteExecutionsModel.TestSuiteUuidType(selectedTestSuiteExecutionObjected.
+				allExecutionsFoOneTestSuiteListObject.testSuiteUuidForTestSuiteExecutionThatIsShownInPreview),
+			testSuiteExecutionsModel.TestSuiteExecutionUuidType(selectedTestSuiteExecutionObjected.
+				allExecutionsFoOneTestSuiteListObject.testSuiteExecutionUuidThatIsShownInPreview))
 
-	case OneExecutionPerTestCase:
-		tempTestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.ReadFromTestCaseExecutionsMap(
-			testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionUuid))
+	case OneExecutionPerTestSuite:
+		tempTestSuiteExecutionsListMessage, _ = testSuiteExecutionsModelRef.ReadFromTestSuiteExecutionsMap(
+			testSuiteExecutionsModel.TestSuiteExecutionUuidType(testSuiteExecutionUuid))
 
 	case NotDefined:
 
-		tempTestCaseExecutionsListMessage = &fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage{}
+		tempTestSuiteExecutionsListMessage = &fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage{}
 
 	}
 
-	// Read from the TestCaseExecutions-Map to Get object holding Logs, RunTimeAtributes and ...
+	// Read from the TestSuiteExecutions-Map to Get object holding Logs, RunTimeAtributes and ...
 
-	//var detailedTestCaseExecutionsMapObject testSuiteExecutionsModel.DetailedTestCaseExecutionsMapObjectStruct
+	//var detailedTestSuiteExecutionsMapObject testSuiteExecutionsModel.DetailedTestSuiteExecutionsMapObjectStruct
 
-	var detailedTestCaseExecutionsObjectsMapPtr *map[testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType]*testCaseExecutionsModel.DetailedTestCaseExecutionsMapObjectStruct
-	var detailedTestCaseExecutionsObjectsMap map[testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType]*testCaseExecutionsModel.DetailedTestCaseExecutionsMapObjectStruct
-	detailedTestCaseExecutionsObjectsMapPtr = testCaseExecutionsModelRef.DetailedTestCaseExecutionsObjectsMapPtr
-	detailedTestCaseExecutionsObjectsMap = *detailedTestCaseExecutionsObjectsMapPtr
+	var detailedTestSuiteExecutionsObjectsMapPtr *map[testSuiteExecutionsModel.DetailedTestSuiteExecutionMapKeyType]*testSuiteExecutionsModel.DetailedTestSuiteExecutionsMapObjectStruct
+	var detailedTestSuiteExecutionsObjectsMap map[testSuiteExecutionsModel.DetailedTestSuiteExecutionMapKeyType]*testSuiteExecutionsModel.DetailedTestSuiteExecutionsMapObjectStruct
+	detailedTestSuiteExecutionsObjectsMapPtr = testSuiteExecutionsModelRef.DetailedTestSuiteExecutionsObjectsMapPtr
+	detailedTestSuiteExecutionsObjectsMap = *detailedTestSuiteExecutionsObjectsMapPtr
 
-	var detailedTestCaseExecutionsObjectPtr *testCaseExecutionsModel.DetailedTestCaseExecutionsMapObjectStruct
-	var detailedTestCaseExecutionMapKey testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType
-	detailedTestCaseExecutionMapKey = testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType(
-		testCaseExecutionUuid + strconv.Itoa(int(testCaseExecutionVersion)))
+	var detailedTestSuiteExecutionsObjectPtr *testSuiteExecutionsModel.DetailedTestSuiteExecutionsMapObjectStruct
+	var detailedTestSuiteExecutionMapKey testSuiteExecutionsModel.DetailedTestSuiteExecutionMapKeyType
+	detailedTestSuiteExecutionMapKey = testSuiteExecutionsModel.DetailedTestSuiteExecutionMapKeyType(
+		testSuiteExecutionUuid + strconv.Itoa(int(testSuiteExecutionVersion)))
 
-	detailedTestCaseExecutionsObjectPtr, existInMap = detailedTestCaseExecutionsObjectsMap[detailedTestCaseExecutionMapKey]
+	detailedTestSuiteExecutionsObjectPtr, existInMap = detailedTestSuiteExecutionsObjectsMap[detailedTestSuiteExecutionMapKey]
 
 	if existInMap == false {
 
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"id":                              "98ac73f4-2b99-4fc8-826d-0f3282ca9870",
-			"detailedTestCaseExecutionMapKey": detailedTestCaseExecutionMapKey,
-		}).Fatalln("Couldn't find TestCaseExecution in 'detailedTestCaseExecutionMap', should never happen!")
+			"id":                               "b245a7c7-ac7c-4958-a4ab-70d8a672bcd9",
+			"detailedTestSuiteExecutionMapKey": detailedTestSuiteExecutionMapKey,
+		}).Fatalln("Couldn't find TestSuiteExecution in 'detailedTestSuiteExecutionMap', should never happen!")
 	}
 
 	// Extract the run-time variables map
-	var runTimeUpdatedAttributesMapPtr *map[testCaseExecutionsModel.TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType]*map[testCaseExecutionsModel.AttributeNameMapKeyType]testCaseExecutionsModel.
+	var runTimeUpdatedAttributesMapPtr *map[testSuiteExecutionsModel.TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType]*map[testSuiteExecutionsModel.AttributeNameMapKeyType]testSuiteExecutionsModel.
 		RunTimeUpdatedAttributeValueType
-	var testInstructionExecutionsRunTimeUpdatedAttributesMap map[testCaseExecutionsModel.TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType]*map[testCaseExecutionsModel.AttributeNameMapKeyType]testCaseExecutionsModel.
+	var testInstructionExecutionsRunTimeUpdatedAttributesMap map[testSuiteExecutionsModel.TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType]*map[testSuiteExecutionsModel.AttributeNameMapKeyType]testSuiteExecutionsModel.
 		RunTimeUpdatedAttributeValueType
 
-	runTimeUpdatedAttributesMapPtr = detailedTestCaseExecutionsObjectPtr.RunTimeUpdatedAttributesMapPtr
+	runTimeUpdatedAttributesMapPtr = detailedTestSuiteExecutionsObjectPtr.RunTimeUpdatedAttributesMapPtr
 	testInstructionExecutionsRunTimeUpdatedAttributesMap = *runTimeUpdatedAttributesMapPtr
 
 	// Create the Top container
-	testCaseExecutionPreviewTopContainer = container.New(layout.NewFormLayout())
+	testSuiteExecutionPreviewTopContainer = container.New(layout.NewFormLayout())
 
-	// Create the ExecutionStatus Rectangle for TestCaseExecution-status
-	var tempTestCaseExecutionStatusRectangle *canvas.Rectangle
-	tempTestCaseExecutionStatusRectangle = canvas.NewRectangle(color.Transparent)
+	// Create the ExecutionStatus Rectangle for TestSuiteExecution-status
+	var tempTestSuiteExecutionStatusRectangle *canvas.Rectangle
+	tempTestSuiteExecutionStatusRectangle = canvas.NewRectangle(color.Transparent)
 
 	// Resize the ExecutionStatus rectangle
-	tempTestCaseExecutionStatusRectangle.SetMinSize(fyne.Size{
+	tempTestSuiteExecutionStatusRectangle.SetMinSize(fyne.Size{
 		Width:  testCaseExecutionStatusRectangleWidth,
 		Height: testCaseExecutionStatusRectangleHeight,
 	})
-	tempTestCaseExecutionStatusRectangle.Resize(fyne.Size{
+	tempTestSuiteExecutionStatusRectangle.Resize(fyne.Size{
 		Width:  testCaseExecutionStatusRectangleWidth,
 		Height: testCaseExecutionStatusRectangleHeight,
 	})
@@ -135,22 +135,22 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 	// Set correct color on ExecutionStatus Rectangle
 	var statusId uint8
 
-	// Extract TestCaseExecution-status
-	var tempTestCaseExecutionStatusEnum string
-	tempTestCaseExecutionStatusEnum = tempTestCaseExecutionsListMessage.GetTestCaseExecutionStatus().String()[4:]
+	// Extract TestSuiteExecution-status
+	var tempTestSuiteExecutionStatusEnum string
+	tempTestSuiteExecutionStatusEnum = tempTestSuiteExecutionsListMessage.GetTestSuiteExecutionStatus().String()[4:]
 
 	statusId = detailedExecutionsModel.
-		ExecutionStatusColorNameToNumberMap[tempTestCaseExecutionStatusEnum].ExecutionStatusNumber
+		ExecutionStatusColorNameToNumberMap[tempTestSuiteExecutionStatusEnum].ExecutionStatusNumber
 
-	var executionStatusColorMapObjectForTestCaseExecution detailedExecutionsModel.ExecutionStatusColorMapStruct
-	executionStatusColorMapObjectForTestCaseExecution, existInMap = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)]
+	var executionStatusColorMapObjectForTestSuiteExecution detailedExecutionsModel.ExecutionStatusColorMapStruct
+	executionStatusColorMapObjectForTestSuiteExecution, existInMap = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)]
 	if existInMap == false {
 		// No matching Status color exist due to that TestInstruction exists in ExecutionQueue
 		// 'INITIATED = 1'
-		executionStatusColorMapObjectForTestCaseExecution, _ = detailedExecutionsModel.ExecutionStatusColorMap[1]
+		executionStatusColorMapObjectForTestSuiteExecution, _ = detailedExecutionsModel.ExecutionStatusColorMap[1]
 		/*
-			tempTestCaseExecutionStatusRectangle.StrokeWidth = 2
-			tempTestCaseExecutionStatusRectangle.StrokeColor = color.NRGBA{
+			tempTestSuiteExecutionStatusRectangle.StrokeWidth = 2
+			tempTestSuiteExecutionStatusRectangle.StrokeColor = color.NRGBA{
 				R: 0xFF,
 				G: 0x00,
 				B: 0x00,
@@ -160,139 +160,139 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 
 	} else {
 		// Status color found
-		tempTestCaseExecutionStatusRectangle.FillColor = executionStatusColorMapObjectForTestCaseExecution.BackgroundColor
+		tempTestSuiteExecutionStatusRectangle.FillColor = executionStatusColorMapObjectForTestSuiteExecution.BackgroundColor
 
-		if executionStatusColorMapObjectForTestCaseExecution.UseStroke == true {
-			tempTestCaseExecutionStatusRectangle.StrokeWidth = 2
-			tempTestCaseExecutionStatusRectangle.StrokeColor = executionStatusColorMapObjectForTestCaseExecution.StrokeColor
+		if executionStatusColorMapObjectForTestSuiteExecution.UseStroke == true {
+			tempTestSuiteExecutionStatusRectangle.StrokeWidth = 2
+			tempTestSuiteExecutionStatusRectangle.StrokeColor = executionStatusColorMapObjectForTestSuiteExecution.StrokeColor
 		}
 	}
 
-	// Add TestCaseName to Top container
-	tempTestCaseNameLabel := widget.NewLabel("TestCaseName:")
+	// Add TestSuiteName to Top container
+	tempTestCaseNameLabel := widget.NewLabel("TestSuiteName:")
 	tempTestCaseNameLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCaseExecutionPreviewTopContainer.Add(tempTestCaseNameLabel)
-	copyableTestCaseNameLabel := newCopyableLabel(tempTestCaseExecutionsListMessage.GetTestCaseName(), true)
-	testCaseExecutionPreviewTopContainer.Add(copyableTestCaseNameLabel)
+	testSuiteExecutionPreviewTopContainer.Add(tempTestCaseNameLabel)
+	copyableTestCaseNameLabel := newCopyableLabel(tempTestSuiteExecutionsListMessage.GetTestSuiteName(), true)
+	testSuiteExecutionPreviewTopContainer.Add(copyableTestCaseNameLabel)
 
-	// Add TestCaseExecutionStatus
-	tempTestCaseExecutionStatusLabel := widget.NewLabel("TestCaseExecution-status:")
-	tempTestCaseExecutionStatusLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCaseExecutionPreviewTopContainer.Add(tempTestCaseExecutionStatusLabel)
+	// Add TestSuiteExecutionStatus
+	tempTestSuiteExecutionStatusLabel := widget.NewLabel("TestSuiteExecution-status:")
+	tempTestSuiteExecutionStatusLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testSuiteExecutionPreviewTopContainer.Add(tempTestSuiteExecutionStatusLabel)
 
-	var testCaseExecutionStatusStackContainer *fyne.Container
-	var testCaseExecutionStatusHBoxContainer *fyne.Container
-	var testCaseExecutionStatusOuterHBoxContainer *fyne.Container
-	testCaseExecutionStatusStackContainer = container.NewStack()
-	testCaseExecutionStatusHBoxContainer = container.NewHBox(
+	var testSuiteExecutionStatusStackContainer *fyne.Container
+	var testSuiteExecutionStatusHBoxContainer *fyne.Container
+	var testSuiteExecutionStatusOuterHBoxContainer *fyne.Container
+	testSuiteExecutionStatusStackContainer = container.NewStack()
+	testSuiteExecutionStatusHBoxContainer = container.NewHBox(
 		widget.NewLabel(" "),
-		canvas.NewText(executionStatusColorMapObjectForTestCaseExecution.ExecutionStatusName, color.Black),
+		canvas.NewText(executionStatusColorMapObjectForTestSuiteExecution.ExecutionStatusName, color.Black),
 		widget.NewLabel(" "))
-	testCaseExecutionStatusStackContainer.Add(tempTestCaseExecutionStatusRectangle)
-	testCaseExecutionStatusStackContainer.Add(testCaseExecutionStatusHBoxContainer)
-	testCaseExecutionStatusOuterHBoxContainer = container.NewHBox(
-		testCaseExecutionStatusStackContainer,
+	testSuiteExecutionStatusStackContainer.Add(tempTestSuiteExecutionStatusRectangle)
+	testSuiteExecutionStatusStackContainer.Add(testSuiteExecutionStatusHBoxContainer)
+	testSuiteExecutionStatusOuterHBoxContainer = container.NewHBox(
+		testSuiteExecutionStatusStackContainer,
 		layout.NewSpacer())
 
-	testCaseExecutionPreviewTopContainer.Add(testCaseExecutionStatusOuterHBoxContainer)
+	testSuiteExecutionPreviewTopContainer.Add(testSuiteExecutionStatusOuterHBoxContainer)
 
-	// Add TestCaseOwner Domain Top container
+	// Add TestSuiteOwner Domain Top container
 	tempOwnerDomainLabel := widget.NewLabel("OwnerDomain:")
 	tempOwnerDomainLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCaseExecutionPreviewTopContainer.Add(tempOwnerDomainLabel)
+	testSuiteExecutionPreviewTopContainer.Add(tempOwnerDomainLabel)
 	copyableDomainThatOwnTheTestCaseLabel := newCopyableLabel(
-		tempTestCaseExecutionsListMessage.GetTestCasePreview().GetDomainThatOwnTheTestCase(), true)
-	testCaseExecutionPreviewTopContainer.Add(copyableDomainThatOwnTheTestCaseLabel)
+		tempTestSuiteExecutionsListMessage.TestSuitePreview.GetTestSuitePreview().GetDomainNameThatOwnTheTestSuite(), true)
+	testSuiteExecutionPreviewTopContainer.Add(copyableDomainThatOwnTheTestCaseLabel)
 
 	// Add empty row
-	testCaseExecutionPreviewTopContainer.Add(widget.NewLabel(""))
-	testCaseExecutionPreviewTopContainer.Add(widget.NewLabel(""))
+	testSuiteExecutionPreviewTopContainer.Add(widget.NewLabel(""))
+	testSuiteExecutionPreviewTopContainer.Add(widget.NewLabel(""))
 
 	// Add TestCase
 	tempTestCaseLabel := widget.NewLabel("TestCase with execution status:")
 	tempTestCaseLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCaseExecutionPreviewTopContainer.Add(tempTestCaseLabel)
-	testCaseExecutionPreviewTopContainer.Add(widget.NewLabel(""))
+	testSuiteExecutionPreviewTopContainer.Add(tempTestCaseLabel)
+	testSuiteExecutionPreviewTopContainer.Add(widget.NewLabel(""))
 
 	/*
 		// Add Description Top container
 		tempTestCaseDescription := widget.NewLabel("Description:")
 		tempTestCaseDescription.TextStyle = fyne.TextStyle{Bold: true}
-		testCaseExecutionPreviewTopContainer.Add(tempTestCaseDescription)
-		testCaseExecutionPreviewTopContainer.Add(widget.NewRichTextWithText(tempTestCaseExecutionsListMessage.GetTestCaseDescription()))
+		testSuiteExecutionPreviewTopContainer.Add(tempTestCaseDescription)
+		testSuiteExecutionPreviewTopContainer.Add(widget.NewRichTextWithText(tempTestSuiteExecutionsListMessage.GetTestCaseDescription()))
 
 		// Create the Bottom container
-		testCaseExecutionPreviewBottomContainer = container.New(layout.NewFormLayout())
+		testSuiteExecutionPreviewBottomContainer = container.New(layout.NewFormLayout())
 
 		// Add ComplexTextualDescription to Bottom container
 		tempComplexTextualDescriptionLabel := widget.NewLabel("ComplexTextualDescription:")
 		tempComplexTextualDescriptionLabel.TextStyle = fyne.TextStyle{Bold: true}
-		testCaseExecutionPreviewBottomContainer.Add(tempComplexTextualDescriptionLabel)
-		testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestCaseExecutionsListMessage.GetComplexTextualDescription()))
+		testSuiteExecutionPreviewBottomContainer.Add(tempComplexTextualDescriptionLabel)
+		testSuiteExecutionPreviewBottomContainer.Add(widget.NewLabel(tempTestSuiteExecutionsListMessage.GetComplexTextualDescription()))
 
 
 	*/
 
 	// Create the Bottom container
-	testCaseExecutionPreviewBottomContainer = container.New(layout.NewFormLayout())
+	testSuiteExecutionPreviewBottomContainer = container.New(layout.NewFormLayout())
 
-	// Add TestCaseExecutionVersion to Bottom container
-	tempTestCaseExecutionVersionLabel := widget.NewLabel("TestCaseExecutionVersion:")
-	tempTestCaseExecutionVersionLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCaseExecutionPreviewBottomContainer.Add(tempTestCaseExecutionVersionLabel)
-	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(strconv.Itoa(int(tempTestCaseExecutionsListMessage.
-		GetTestCaseExecutionVersion()))))
+	// Add TestSuiteExecutionVersion to Bottom container
+	tempTestSuiteExecutionVersionLabel := widget.NewLabel("TestSuiteExecutionVersion:")
+	tempTestSuiteExecutionVersionLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testSuiteExecutionPreviewBottomContainer.Add(tempTestSuiteExecutionVersionLabel)
+	testSuiteExecutionPreviewBottomContainer.Add(widget.NewLabel(strconv.Itoa(int(tempTestSuiteExecutionsListMessage.
+		GetTestSuiteExecutionVersion()))))
 
 	// Add ExecutionStartTimeStamp to Bottom container
 	tempExecutionStartTimeStampLabel := widget.NewLabel("TestCase Execution Start TimeStamp:")
 	tempExecutionStartTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStartTimeStampLabel)
+	testSuiteExecutionPreviewBottomContainer.Add(tempExecutionStartTimeStampLabel)
 	copyableExecutionStartTimeStampLabel := newCopyableLabel(
-		tempTestCaseExecutionsListMessage.
+		tempTestSuiteExecutionsListMessage.
 			GetExecutionStartTimeStamp().AsTime().String(), true)
-	testCaseExecutionPreviewBottomContainer.Add(copyableExecutionStartTimeStampLabel)
+	testSuiteExecutionPreviewBottomContainer.Add(copyableExecutionStartTimeStampLabel)
 
 	// Add ExecutionStopTimeStamp to Bottom container
 	tempExecutionStopTimeStampLabel := widget.NewLabel("TestCase Execution Stop TimeStamp:")
 	tempExecutionStopTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStopTimeStampLabel)
+	testSuiteExecutionPreviewBottomContainer.Add(tempExecutionStopTimeStampLabel)
 	copyableExecutionStopTimeStampLabel := newCopyableLabel(
-		tempTestCaseExecutionsListMessage.
+		tempTestSuiteExecutionsListMessage.
 			GetExecutionStopTimeStamp().AsTime().String(), true)
-	testCaseExecutionPreviewBottomContainer.Add(copyableExecutionStopTimeStampLabel)
+	testSuiteExecutionPreviewBottomContainer.Add(copyableExecutionStopTimeStampLabel)
 
 	// Add ExecutionStatusUpdateTimeStamp to Bottom container
 	tempExecutionStatusUpdateTimeStampLabel := widget.NewLabel("TestCase Execution Status Update TimeStamp:")
 	tempExecutionStatusUpdateTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
-	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStatusUpdateTimeStampLabel)
+	testSuiteExecutionPreviewBottomContainer.Add(tempExecutionStatusUpdateTimeStampLabel)
 	copyableExecutionStatusUpdateTimeStampLabel := newCopyableLabel(
-		tempTestCaseExecutionsListMessage.
+		tempTestSuiteExecutionsListMessage.
 			GetExecutionStatusUpdateTimeStamp().AsTime().String(), true)
-	testCaseExecutionPreviewBottomContainer.Add(copyableExecutionStatusUpdateTimeStampLabel)
+	testSuiteExecutionPreviewBottomContainer.Add(copyableExecutionStatusUpdateTimeStampLabel)
 
 	// Add LastSavedByUserGCPAuthorization to Bottom container
 	/*
 		tempLastSavedByUserGCPAuthorizationLabel := widget.NewLabel("Last saved by this GCP-user:")
 		tempLastSavedByUserGCPAuthorizationLabel.TextStyle = fyne.TextStyle{Bold: true}
-		testCaseExecutionPreviewBottomContainer.Add(tempLastSavedByUserGCPAuthorizationLabel)
+		testSuiteExecutionPreviewBottomContainer.Add(tempLastSavedByUserGCPAuthorizationLabel)
 		copyableExecutionStatusUpdateTimeStampLabel := newCopyableLabel(
-			tempTestCaseExecutionsListMessage..
+			tempTestSuiteExecutionsListMessage..
 				Get().AsTime().String(),true)
-		testCaseExecutionPreviewBottomContainer.Add(copyableExecutionStatusUpdateTimeStampLabel)
+		testSuiteExecutionPreviewBottomContainer.Add(copyableExecutionStatusUpdateTimeStampLabel)
 
 	*/
 	// Create the area used for TIC, TI and the attributes
-	testCaseExecutionMainAreaForPreviewContainer = container.NewVBox()
+	testSuiteExecutionMainAreaForPreviewContainer = container.NewVBox()
 
 	// Check if there is TestCase Preview information
-	if tempTestCaseExecutionsListMessage.GetTestCasePreview() == nil {
+	if tempTestSuiteExecutionsListMessage.GetTestCasePreview() == nil {
 
-		testCaseExecutionMainAreaForPreviewContainer.Add(widget.NewLabel("No Preview information found in database!"))
+		testSuiteExecutionMainAreaForPreviewContainer.Add(widget.NewLabel("No Preview information found in database!"))
 
 	} else {
 
 		// Loop the preview objects and to container
-		for previewObjectIndex, previewObject := range tempTestCaseExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects {
+		for previewObjectIndex, previewObject := range tempTestSuiteExecutionsListMessage.TestCasesPreviews.TestCasePreviews {
 
 			// Create the Indentation rectangle
 			var tempIndentationLevelRectangle *canvas.Rectangle
@@ -341,10 +341,10 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 					}
 
 					serialOrParallelRectangleImage = canvas.NewImageFromImage(imageData_tic_serialImage)
-					serialOrParallelRectangleImage.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize-4),
-						float32(testCaseNodeRectangleSize-4)))
-					serialOrParallelRectangleImage.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize-4),
-						float32(testCaseNodeRectangleSize-4)))
+					serialOrParallelRectangleImage.SetMinSize(fyne.NewSize(float32(testSuiteNodeRectangleSize-4),
+						float32(testSuiteNodeRectangleSize-4)))
+					serialOrParallelRectangleImage.Resize(fyne.NewSize(float32(testSuiteNodeRectangleSize-4),
+						float32(testSuiteNodeRectangleSize-4)))
 
 				} else {
 					// Convert the byte slice into an image.Image object
@@ -355,17 +355,17 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 						}
 					}
 					serialOrParallelRectangleImage = canvas.NewImageFromImage(imageData_tic_parallellImage)
-					serialOrParallelRectangleImage.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize-4),
-						float32(testCaseNodeRectangleSize-4)))
-					serialOrParallelRectangleImage.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize-4),
-						float32(testCaseNodeRectangleSize-4)))
+					serialOrParallelRectangleImage.SetMinSize(fyne.NewSize(float32(testSuiteNodeRectangleSize-4),
+						float32(testSuiteNodeRectangleSize-4)))
+					serialOrParallelRectangleImage.Resize(fyne.NewSize(float32(testSuiteNodeRectangleSize-4),
+						float32(testSuiteNodeRectangleSize-4)))
 
 				}
 
 				// Create Map-key; TCEoTICoTIEAttributesContainerMapKeyType
-				var tempTIEAttributesContainerMapKey testCaseExecutionsModel.
+				var tempTIEAttributesContainerMapKey testSuiteExecutionsModel.
 					TCEoTICoTIEAttributesContainerMapKeyType
-				tempTIEAttributesContainerMapKey = testCaseExecutionsModel.
+				tempTIEAttributesContainerMapKey = testSuiteExecutionsModel.
 					TCEoTICoTIEAttributesContainerMapKeyType(previewObject.GetTestInstructionContainerUuid())
 
 				// Create the Name for the TestInstructionContainer
@@ -374,13 +374,13 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 				var tempTestInstructionContainerNameWidget *clickableTInTICNameLabelInPreviewStruct
 				tempTestInstructionContainerNameWidget = newClickableTestInstructionNameLabelInPreview(
 					previewObject.GetTestInstructionContainerName(),
-					testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType(testCaseExecutionUuid+
-						strconv.Itoa(int(testCaseExecutionVersion))),
+					testSuiteExecutionsModel.DetailedTestSuiteExecutionMapKeyType(testSuiteExecutionUuid+
+						strconv.Itoa(int(testSuiteExecutionVersion))),
 					tempTIEAttributesContainerMapKey,
 					nil,
 					nil,
 					labelIsTestInstructionContainer,
-					testCaseInstructionPreViewObjectRef)
+					testSuiteInstructionPreViewObjectRef)
 
 				// Create the container containing the TestInstructionContainer
 				var tempTestInstructionContainerContainer *fyne.Container
@@ -391,13 +391,13 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 					tempTestInstructionContainerNameWidget)
 
 				// Add the TestInstructionContainerContainer to the main Area
-				testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionContainerContainer)
+				testSuiteExecutionMainAreaForPreviewContainer.Add(tempTestInstructionContainerContainer)
 
-				// Create testCaseExecutionAttributesForPreview-object to be placed in the map
-				var tempTestCaseExecutionAttributesForPreview testCaseExecutionAttributesForPreviewStruct
+				// Create testSuiteExecutionAttributesForPreview-object to be placed in the map
+				var tempTestSuiteExecutionAttributesForPreview testCaseExecutionAttributesForPreviewStruct
 
-				// Create testCaseExecutionAttributesForPreview-object to be placed in the map
-				tempTestCaseExecutionAttributesForPreview = testCaseExecutionAttributesForPreviewStruct{
+				// Create testSuiteExecutionAttributesForPreview-object to be placed in the map
+				tempTestSuiteExecutionAttributesForPreview = testCaseExecutionAttributesForPreviewStruct{
 					LabelType:                          labelIsTestInstructionContainer,
 					LabelText:                          previewObject.GetTestInstructionContainerName(),
 					attributesContainerShouldBeVisible: false,
@@ -406,45 +406,45 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 				}
 
 				// Create Map-key; TCEoTICoTIEAttributesContainerMapKeyType
-				var testInstructionContainerExecutionAttributesContainerMapKey testCaseExecutionsModel.
+				var testInstructionContainerExecutionAttributesContainerMapKey testSuiteExecutionsModel.
 					TCEoTICoTIEAttributesContainerMapKeyType
-				testInstructionContainerExecutionAttributesContainerMapKey = testCaseExecutionsModel.
+				testInstructionContainerExecutionAttributesContainerMapKey = testSuiteExecutionsModel.
 					TCEoTICoTIEAttributesContainerMapKeyType(previewObject.GetTestInstructionContainerUuid())
 
 				// Loop rest of PreView-Objects up until we get back to same 'previewObject.IndentationLevel'
 				// and add all references to all TestInstructionAttributes-map
 				// Do this if we are not at the end of the slice
-				if previewObjectIndex+1 < len(tempTestCaseExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects) {
+				if previewObjectIndex+1 < len(tempTestSuiteExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects) {
 
-					var tempChildObjectsWithAttributes []testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType
+					var tempChildObjectsWithAttributes []testSuiteExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType
 
-					for counter := previewObjectIndex + 1; counter < len(tempTestCaseExecutionsListMessage.
+					for counter := previewObjectIndex + 1; counter < len(tempTestSuiteExecutionsListMessage.
 						GetTestCasePreview().TestCaseStructureObjects); counter++ {
 
 						// Check if IndentationLevel for next object is same ur higher than current AttributeObjects IndentationLevel
-						if tempTestCaseExecutionsListMessage.GetTestCasePreview().
+						if tempTestSuiteExecutionsListMessage.GetTestCasePreview().
 							TestCaseStructureObjects[counter].IndentationLevel > previewObject.IndentationLevel {
 
 							// Add Object to slice of object within this TestInstructionExecution-container-object
-							switch tempTestCaseExecutionsListMessage.GetTestCasePreview().
+							switch tempTestSuiteExecutionsListMessage.GetTestCasePreview().
 								TestCaseStructureObjects[counter].GetTestCaseStructureObjectType() {
 
 							case fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage_TestInstructionContainer:
 								tempChildObjectsWithAttributes = append(tempChildObjectsWithAttributes,
-									testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType(
-										tempTestCaseExecutionsListMessage.GetTestCasePreview().
+									testSuiteExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType(
+										tempTestSuiteExecutionsListMessage.GetTestCasePreview().
 											TestCaseStructureObjects[counter].GetTestInstructionContainerUuid()))
 
 							case fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage_TestInstruction:
 								tempChildObjectsWithAttributes = append(tempChildObjectsWithAttributes,
-									testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType(
-										tempTestCaseExecutionsListMessage.GetTestCasePreview().
+									testSuiteExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType(
+										tempTestSuiteExecutionsListMessage.GetTestCasePreview().
 											TestCaseStructureObjects[counter].GetTestInstructionUuid()))
 
 							default:
 								sharedCode.Logger.WithFields(logrus.Fields{
-									"id": "5607884d-8884-48b0-8636-2ad3ca7046f9",
-									"GetTestCaseStructureObjectType": tempTestCaseExecutionsListMessage.GetTestCasePreview().
+									"id": "81a17228-8355-47a7-9446-8a0cd6b1755e",
+									"GetTestCaseStructureObjectType": tempTestSuiteExecutionsListMessage.GetTestCasePreview().
 										TestCaseStructureObjects[counter].GetTestCaseStructureObjectType(),
 								}).Error("Unknown 'GetTestCaseStructureObjectType'")
 
@@ -456,10 +456,10 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 					}
 
 					// Add objects with higher, or equal, Indentation-level to map-object
-					tempTestCaseExecutionAttributesForPreview.childObjectsWithAttributes = tempChildObjectsWithAttributes
+					tempTestSuiteExecutionAttributesForPreview.childObjectsWithAttributes = tempChildObjectsWithAttributes
 
 					// Add attributes-container struct to attributes-container-map
-					testCaseExecutionAttributesForPreviewMap[testInstructionContainerExecutionAttributesContainerMapKey] = &tempTestCaseExecutionAttributesForPreview
+					testSuiteExecutionAttributesForPreviewMap[testInstructionContainerExecutionAttributesContainerMapKey] = &tempTestSuiteExecutionAttributesForPreview
 				}
 
 			case fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage_TestInstruction:
@@ -476,15 +476,15 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 				testInstructionColorRectangle = canvas.NewRectangle(rectangleColor)
 
 				// Set the size of the color rectangle
-				testInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testCaseNodeRectangleSize-14),
-					float32(testCaseNodeRectangleSize-14)))
-				testInstructionColorRectangle.Resize(fyne.NewSize(float32(testCaseNodeRectangleSize-14),
-					float32(testCaseNodeRectangleSize-14)))
+				testInstructionColorRectangle.SetMinSize(fyne.NewSize(float32(testSuiteNodeRectangleSize-14),
+					float32(testSuiteNodeRectangleSize-14)))
+				testInstructionColorRectangle.Resize(fyne.NewSize(float32(testSuiteNodeRectangleSize-14),
+					float32(testSuiteNodeRectangleSize-14)))
 
 				// Create Map-key; TCEoTICoTIEAttributesContainerMapKeyType
-				var tempTIEAttributesContainerMapKey testCaseExecutionsModel.
+				var tempTIEAttributesContainerMapKey testSuiteExecutionsModel.
 					TCEoTICoTIEAttributesContainerMapKeyType
-				tempTIEAttributesContainerMapKey = testCaseExecutionsModel.
+				tempTIEAttributesContainerMapKey = testSuiteExecutionsModel.
 					TCEoTICoTIEAttributesContainerMapKeyType(previewObject.GetTestInstructionUuid())
 
 				// Create the Name for the TestInstruction
@@ -493,13 +493,13 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 				var tempTestInstructionNameWidget *clickableTInTICNameLabelInPreviewStruct
 				tempTestInstructionNameWidget = newClickableTestInstructionNameLabelInPreview(
 					previewObject.GetTestInstructionName(),
-					testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType(testCaseExecutionUuid+
-						strconv.Itoa(int(testCaseExecutionVersion))),
+					testSuiteExecutionsModel.DetailedTestSuiteExecutionMapKeyType(testSuiteExecutionUuid+
+						strconv.Itoa(int(testSuiteExecutionVersion))),
 					tempTIEAttributesContainerMapKey,
 					nil,
 					nil,
 					labelIsTestInstruction,
-					testCaseInstructionPreViewObjectRef)
+					testSuiteInstructionPreViewObjectRef)
 
 				// Set correct color on ExecutionStatus Rectangle
 				var statusId uint8
@@ -508,24 +508,24 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 				var useStroke bool
 
 				// Extract TestInstructionExecution from TestInstruction
-				var temp2TestCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
-				// Can preview be found in Map for "One TestCaseExecution per TestCase" or "All TestCaseExecutions per TestCase"
-				switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+				var temp2TestSuiteExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage
+				// Can preview be found in Map for "One TestSuiteExecution per TestCase" or "All TestSuiteExecutions per TestCase"
+				switch selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType {
 
-				case AllExecutionsForOneTestCase:
-					temp2TestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.GetSpecificTestCaseExecutionForOneTestCaseUuid(
-						testCaseExecutionsModel.TestCaseUuidType(selectedTestCaseExecutionObjected.
-							allExecutionsFoOneTestCaseListObject.testCaseUuidForTestCaseExecutionThatIsShownInPreview),
-						testCaseExecutionsModel.TestCaseExecutionUuidType(selectedTestCaseExecutionObjected.
-							allExecutionsFoOneTestCaseListObject.testCaseExecutionUuidThatIsShownInPreview))
+				case AllExecutionsForOneTestSuite:
+					temp2TestSuiteExecutionsListMessage, _ = testSuiteExecutionsModelRef.GetSpecificTestSuiteExecutionForOneTestCaseUuid(
+						testSuiteExecutionsModel.TestSuiteUuidType(selectedTestSuiteExecutionObjected.
+							allExecutionsFoOneTestSuiteListObject.testSuiteUuidForTestSuiteExecutionThatIsShownInPreview),
+						testSuiteExecutionsModel.TestSuiteExecutionUuidType(selectedTestSuiteExecutionObjected.
+							allExecutionsFoOneTestSuiteListObject.testSuiteExecutionUuidThatIsShownInPreview))
 
-				case OneExecutionPerTestCase:
-					temp2TestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.ReadFromTestCaseExecutionsMap(
-						testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionUuid))
+				case OneExecutionPerTestSuite:
+					temp2TestSuiteExecutionsListMessage, _ = testSuiteExecutionsModelRef.ReadFromTestSuiteExecutionsMap(
+						testSuiteExecutionsModel.TestSuiteExecutionUuidType(testSuiteExecutionUuid))
 
 				case NotDefined:
 
-					temp2TestCaseExecutionsListMessage = &fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage{}
+					temp2TestSuiteExecutionsListMessage = &fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage{}
 
 				}
 
@@ -533,10 +533,10 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 					if existInMap == false {
 						var id string
 						id = "7945551e-5e4d-41d3-8faf-54f1501daac9"
-						log.Fatalf(fmt.Sprintf("Couldn't find testCaseExecutionUuidThatIsShownInPreview '%s' in "+
-							"TestCaseExecutionsThatCanBeViewedByUserMap. ID='%s'",
-							selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-								testCaseExecutionUuidThatIsShownInPreview,
+						log.Fatalf(fmt.Sprintf("Couldn't find testSuiteExecutionUuidThatIsShownInPreview '%s' in "+
+							"TestSuiteExecutionsThatCanBeViewedByUserMap. ID='%s'",
+							selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
+								testSuiteExecutionUuidThatIsShownInPreview,
 							id))
 					}
 
@@ -544,7 +544,7 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 				*/
 				var tempTestInstructionExecutionsStatusPreviewValues []*fenixExecutionServerGuiGrpcApi.
 					TestInstructionExecutionStatusPreviewValueMessage
-				tempTestInstructionExecutionsStatusPreviewValues = temp2TestCaseExecutionsListMessage.
+				tempTestInstructionExecutionsStatusPreviewValues = temp2TestSuiteExecutionsListMessage.
 					TestInstructionsExecutionStatusPreviewValues.GetTestInstructionExecutionStatusPreviewValues()
 
 				// Loop to find correct TestInstructionExecution
@@ -593,7 +593,7 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 						id = "e12c6be8-614c-4379-b482-165ff18dd68d"
 						log.Fatalf(fmt.Sprintf("Couldn't find TestInstruction '%s' in TestInstructionsExecution-data for TIE '%s'. ID='%s'",
 							previewObject.GetTestInstructionUuid,
-							testCaseExecutionUuidThatIsShownInPreview,
+							testSuiteExecutionUuidThatIsShownInPreview,
 							id))
 					*/
 				} else {
@@ -628,13 +628,13 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 					tempTestInstructionNameWidget)
 
 				// Add the TestInstructionContainer to the main Area
-				testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionContainer)
+				testSuiteExecutionMainAreaForPreviewContainer.Add(tempTestInstructionContainer)
 
-				// Create testCaseExecutionAttributesForPreview-object to be placed in the map
-				var tempTestCaseExecutionAttributesForPreview testCaseExecutionAttributesForPreviewStruct
+				// Create testSuiteExecutionAttributesForPreview-object to be placed in the map
+				var tempTestSuiteExecutionAttributesForPreview testCaseExecutionAttributesForPreviewStruct
 
-				// Create testCaseExecutionAttributesForPreview-object to be placed in the map
-				tempTestCaseExecutionAttributesForPreview = testCaseExecutionAttributesForPreviewStruct{
+				// Create testSuiteExecutionAttributesForPreview-object to be placed in the map
+				tempTestSuiteExecutionAttributesForPreview = testCaseExecutionAttributesForPreviewStruct{
 					LabelType:                          notDefined,
 					LabelText:                          "",
 					attributesContainerShouldBeVisible: false,
@@ -643,9 +643,9 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 				}
 
 				// Create Map-key; TCEoTICoTIEAttributesContainerMapKeyType
-				var testInstructionExecutionAttributesContainerMapKey testCaseExecutionsModel.
+				var testInstructionExecutionAttributesContainerMapKey testSuiteExecutionsModel.
 					TCEoTICoTIEAttributesContainerMapKeyType
-				testInstructionExecutionAttributesContainerMapKey = testCaseExecutionsModel.
+				testInstructionExecutionAttributesContainerMapKey = testSuiteExecutionsModel.
 					TCEoTICoTIEAttributesContainerMapKeyType(previewObject.GetTestInstructionUuid())
 
 				// Add Attributes if there are any
@@ -685,26 +685,26 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 							nil,
 							nil,
 							attributeIsOriginal,
-							testCaseInstructionPreViewObjectRef)
+							testSuiteInstructionPreViewObjectRef)
 
 						// Create the RunTime-changed value for the attribute, if is changed
 						var runtTimeChangedAttributeValue *clickableAttributeInPreviewStruct
 
 						// Extract Attributes for TestInstructionExecution
 
-						var runTimeUpdatedAttributesNameMapPtr *map[testCaseExecutionsModel.AttributeNameMapKeyType]testCaseExecutionsModel.
+						var runTimeUpdatedAttributesNameMapPtr *map[testSuiteExecutionsModel.AttributeNameMapKeyType]testSuiteExecutionsModel.
 							RunTimeUpdatedAttributeValueType
-						var runTimeUpdatedAttributesMap map[testCaseExecutionsModel.AttributeNameMapKeyType]testCaseExecutionsModel.
+						var runTimeUpdatedAttributesMap map[testSuiteExecutionsModel.AttributeNameMapKeyType]testSuiteExecutionsModel.
 							RunTimeUpdatedAttributeValueType
 
 						// Convert TestInstructionUuid into TestInstructionExecutionMapKey
-						var testInstructionExecutionAttributeRunTimeUpdatedMapKey testCaseExecutionsModel.TestInstructionExecutionUuidType
-						testInstructionExecutionAttributeRunTimeUpdatedMapKey, existInMap = testCaseExecutionsModel.TestCaseExecutionsModel.
+						var testInstructionExecutionAttributeRunTimeUpdatedMapKey testSuiteExecutionsModel.TestInstructionExecutionUuidType
+						testInstructionExecutionAttributeRunTimeUpdatedMapKey, existInMap = testSuiteExecutionsModel.TestSuiteExecutionsModel.
 							GetTestInstructionExecutionUuidFromTestInstructionUuid(
-								testCaseExecutionsModel.TestCaseExecutionUuidType(detailedTestCaseExecutionMapKey),
-								testCaseExecutionsModel.RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType(previewObject.GetTestInstructionUuid()))
+								testSuiteExecutionsModel.TestSuiteExecutionUuidType(detailedTestSuiteExecutionMapKey),
+								testSuiteExecutionsModel.RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType(previewObject.GetTestInstructionUuid()))
 
-						runTimeUpdatedAttributesNameMapPtr, existInMap = testInstructionExecutionsRunTimeUpdatedAttributesMap[testCaseExecutionsModel.TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType(
+						runTimeUpdatedAttributesNameMapPtr, existInMap = testInstructionExecutionsRunTimeUpdatedAttributesMap[testSuiteExecutionsModel.TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType(
 							testInstructionExecutionAttributeRunTimeUpdatedMapKey)]
 
 						if existInMap == false {
@@ -723,8 +723,8 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 
 							runTimeUpdatedAttributesMap = *runTimeUpdatedAttributesNameMapPtr
 
-							var attributeNameMapKey testCaseExecutionsModel.AttributeNameMapKeyType
-							attributeNameMapKey = testCaseExecutionsModel.AttributeNameMapKeyType(attribute.AttributeName)
+							var attributeNameMapKey testSuiteExecutionsModel.AttributeNameMapKeyType
+							attributeNameMapKey = testSuiteExecutionsModel.AttributeNameMapKeyType(attribute.AttributeName)
 
 							var attributeRunTimeValue, existInMap = runTimeUpdatedAttributesMap[attributeNameMapKey]
 
@@ -738,7 +738,7 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 									nil,
 									nil,
 									attributeIsRunTimeChanged,
-									testCaseInstructionPreViewObjectRef)
+									testSuiteInstructionPreViewObjectRef)
 
 								runTimeValueExists = true
 
@@ -783,8 +783,8 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 					// Make attributes container invisible
 					tempTestInstructionAttributesContainer.Hide()
 
-					// Create testCaseExecutionAttributesForPreview-object to be placed in the map
-					tempTestCaseExecutionAttributesForPreview = testCaseExecutionAttributesForPreviewStruct{
+					// Create testSuiteExecutionAttributesForPreview-object to be placed in the map
+					tempTestSuiteExecutionAttributesForPreview = testCaseExecutionAttributesForPreviewStruct{
 						LabelType:                          labelIsTestInstruction,
 						LabelText:                          previewObject.GetTestInstructionName(),
 						attributesContainerShouldBeVisible: false,
@@ -793,40 +793,40 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 					}
 
 					// Add the TestInstructionContainerContainer to the main Area
-					testCaseExecutionMainAreaForPreviewContainer.Add(tempTestInstructionAttributesContainer)
+					testSuiteExecutionMainAreaForPreviewContainer.Add(tempTestInstructionAttributesContainer)
 				}
 
 				// Loop rest of PreView-Objects up until we get back to same 'previewObject.IndentationLevel' and add all references to all TestInstructionAttributes-map
-				if previewObjectIndex < len(tempTestCaseExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects) {
+				if previewObjectIndex < len(tempTestSuiteExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects) {
 
-					var tempChildObjectsWithAttributes []testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType
+					var tempChildObjectsWithAttributes []testSuiteExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType
 
-					for counter := previewObjectIndex + 1; counter < len(tempTestCaseExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects); counter++ {
+					for counter := previewObjectIndex + 1; counter < len(tempTestSuiteExecutionsListMessage.GetTestCasePreview().TestCaseStructureObjects); counter++ {
 
 						// Check if IndentationLevel for next object is same ur higher than current AttributeObjects IndentationLevel
-						if tempTestCaseExecutionsListMessage.GetTestCasePreview().
+						if tempTestSuiteExecutionsListMessage.GetTestCasePreview().
 							TestCaseStructureObjects[counter].IndentationLevel > previewObject.IndentationLevel {
 
 							// Add Object to slice of object within this TestInstructionExecution-container-object
-							switch tempTestCaseExecutionsListMessage.GetTestCasePreview().
+							switch tempTestSuiteExecutionsListMessage.GetTestCasePreview().
 								TestCaseStructureObjects[counter].GetTestCaseStructureObjectType() {
 
 							case fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage_TestInstructionContainer:
 								tempChildObjectsWithAttributes = append(tempChildObjectsWithAttributes,
-									testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType(
-										tempTestCaseExecutionsListMessage.GetTestCasePreview().
+									testSuiteExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType(
+										tempTestSuiteExecutionsListMessage.GetTestCasePreview().
 											TestCaseStructureObjects[counter].GetTestInstructionContainerUuid()))
 
 							case fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage_TestInstruction:
 								tempChildObjectsWithAttributes = append(tempChildObjectsWithAttributes,
-									testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType(
-										tempTestCaseExecutionsListMessage.GetTestCasePreview().
+									testSuiteExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType(
+										tempTestSuiteExecutionsListMessage.GetTestCasePreview().
 											TestCaseStructureObjects[counter].GetTestInstructionUuid()))
 
 							default:
 								sharedCode.Logger.WithFields(logrus.Fields{
-									"id": "5607884d-8884-48b0-8636-2ad3ca7046f9",
-									"GetTestCaseStructureObjectType": tempTestCaseExecutionsListMessage.GetTestCasePreview().
+									"id": "d8b796bd-6fdd-4f58-bb57-9848c565ac2f",
+									"GetTestCaseStructureObjectType": tempTestSuiteExecutionsListMessage.GetTestCasePreview().
 										TestCaseStructureObjects[counter].GetTestCaseStructureObjectType(),
 								}).Error("Unknown 'GetTestCaseStructureObjectType'")
 
@@ -835,10 +835,10 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 					}
 
 					// Add objects with higher, or equal, Indentation-level to map-object
-					tempTestCaseExecutionAttributesForPreview.childObjectsWithAttributes = tempChildObjectsWithAttributes
+					tempTestSuiteExecutionAttributesForPreview.childObjectsWithAttributes = tempChildObjectsWithAttributes
 
 					// Add attributes-container struct to attributes-container-map
-					testCaseExecutionAttributesForPreviewMap[testInstructionExecutionAttributesContainerMapKey] = &tempTestCaseExecutionAttributesForPreview
+					testSuiteExecutionAttributesForPreviewMap[testInstructionExecutionAttributesContainerMapKey] = &tempTestSuiteExecutionAttributesForPreview
 				}
 
 			default:
@@ -847,26 +847,26 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 		}
 	}
 
-	testCaseMainAreaForPreviewBorderContainer := container.NewBorder(nil, nil, nil, nil, testCaseExecutionMainAreaForPreviewContainer)
+	testCaseMainAreaForPreviewBorderContainer := container.NewBorder(nil, nil, nil, nil, testSuiteExecutionMainAreaForPreviewContainer)
 	testCaseMainAreaForPreviewScrollContainer := container.NewScroll(testCaseMainAreaForPreviewBorderContainer)
 
 	// Create the container used for the TestCase, with TIC, TI and Attributes
 	//testCasePreviewScrollContainer = container.NewScroll(tempContainer)
 
 	// Create Top header for Preview
-	tempTopHeaderLabel := widget.NewLabel("TestCaseExecution Preview")
+	tempTopHeaderLabel := widget.NewLabel("TestSuiteExecution Preview")
 	tempTopHeaderLabel.TextStyle = fyne.TextStyle{Bold: true}
 	tempTopHeaderContainer := container.NewHBox(tempTopHeaderLabel)
 
 	// Extract if row is selected or not
 	var tempRowIsSelected bool
-	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+	switch selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType {
 
-	case AllExecutionsForOneTestCase:
-		tempRowIsSelected = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.isAnyRowSelected
+	case AllExecutionsForOneTestSuite:
+		tempRowIsSelected = selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.isAnyRowSelected
 
-	case OneExecutionPerTestCase:
-		tempRowIsSelected = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.isAnyRowSelected
+	case OneExecutionPerTestSuite:
+		tempRowIsSelected = selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.isAnyRowSelected
 
 	case NotDefined:
 
@@ -877,54 +877,54 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 		// A row is selected and Preview should be shown
 
 		/*container.NewHSplit(container.NewBorder(
-		container.NewVBox(container.NewCenter(tempTopHeaderLabel), testCaseExecutionPreviewTopContainer, widget.NewSeparator()),
-		container.NewVBox(widget.NewSeparator(), testCaseExecutionPreviewBottomContainer), nil, nil,
+		container.NewVBox(container.NewCenter(tempTopHeaderLabel), testSuiteExecutionPreviewTopContainer, widget.NewSeparator()),
+		container.NewVBox(widget.NewSeparator(), testSuiteExecutionPreviewBottomContainer), nil, nil,
 		testCaseMainAreaForPreviewScrollContainer))
 
 
 		*/
 
-		var openedDetailedTestCaseExecutionsMap map[openedDetailedTestCaseExecutionsMapKeyType]*openedDetailedTestCaseExecutionStruct
-		// Check if Map with Open TestCaseExecutions, map or Window has been initialized
-		if openedDetailedTestCaseExecutionsMapPtr == nil {
-			openedDetailedTestCaseExecutionsMap = make(map[openedDetailedTestCaseExecutionsMapKeyType]*openedDetailedTestCaseExecutionStruct)
-			openedDetailedTestCaseExecutionsMapPtr = &openedDetailedTestCaseExecutionsMap
+		var openedDetailedTestSuiteExecutionsMap map[openedDetailedTestSuiteExecutionsMapKeyType]*openedDetailedTestSuiteExecutionStruct
+		// Check if Map with Open TestSuiteExecutions, map or Window has been initialized
+		if openedDetailedTestSuiteExecutionsMapPtr == nil {
+			openedDetailedTestSuiteExecutionsMap = make(map[openedDetailedTestSuiteExecutionsMapKeyType]*openedDetailedTestSuiteExecutionStruct)
+			openedDetailedTestSuiteExecutionsMapPtr = &openedDetailedTestSuiteExecutionsMap
 		} else {
-			openedDetailedTestCaseExecutionsMap = *openedDetailedTestCaseExecutionsMapPtr
+			openedDetailedTestSuiteExecutionsMap = *openedDetailedTestSuiteExecutionsMapPtr
 		}
 
 		// Generate map-key
-		var openedDetailedTestCaseExecutionsMapKey openedDetailedTestCaseExecutionsMapKeyType
-		openedDetailedTestCaseExecutionsMapKey = openedDetailedTestCaseExecutionsMapKeyType(testCaseExecutionUuid + strconv.Itoa(int(testCaseExecutionVersion)))
+		var openedDetailedTestSuiteExecutionsMapKey openedDetailedTestSuiteExecutionsMapKeyType
+		openedDetailedTestSuiteExecutionsMapKey = openedDetailedTestSuiteExecutionsMapKeyType(testSuiteExecutionUuid + strconv.Itoa(int(testSuiteExecutionVersion)))
 
 		// Get Object if is open
-		//var openedDetailedTestCaseExecution openedDetailedTestCaseExecutionStruct
-		//var openedDetailedTestCaseExecutionPtr *openedDetailedTestCaseExecutionStruct
+		//var openedDetailedTestSuiteExecution openedDetailedTestSuiteExecutionStruct
+		//var openedDetailedTestSuiteExecutionPtr *openedDetailedTestSuiteExecutionStruct
 
-		// Extract the Object holding all information for Tab/Window-container for the TestCaseExecution
-		var openedDetailedTestCaseExecutionPtr *openedDetailedTestCaseExecutionStruct
-		openedDetailedTestCaseExecutionPtr, existInMap = openedDetailedTestCaseExecutionsMap[openedDetailedTestCaseExecutionsMapKey]
+		// Extract the Object holding all information for Tab/Window-container for the TestSuiteExecution
+		var openedDetailedTestSuiteExecutionPtr *openedDetailedTestSuiteExecutionStruct
+		openedDetailedTestSuiteExecutionPtr, existInMap = openedDetailedTestSuiteExecutionsMap[openedDetailedTestSuiteExecutionsMapKey]
 		if existInMap == false {
 
 			// Object doesn't exist som create a new one
-			openedDetailedTestCaseExecutionPtr = &openedDetailedTestCaseExecutionStruct{
-				isTestCaseExecutionOpenInTab: false,
-				TestCaseInstructionPreViewObjectInTab: &TestCaseInstructionPreViewStruct{
-					testCasePreviewTestInstructionExecutionLogSplitContainer: nil,
-					testCaseExecutionPreviewContainerScroll:                  nil,
-					testCaseExecutionPreviewContainer:                        container.New(layout.NewVBoxLayout()),
-					testInstructionsExecutionDetailsContainerScroll:          nil,
-					testInstructionsExecutionLogContainer:                    nil,
-					testInstructionsExecutionAttributesContainerScroll:       nil,
-					testInstructionsExecutionAttributesContainer:             nil,
-					testInstructionsExecutionDetailsContainer:                nil,
+			openedDetailedTestSuiteExecutionPtr = &openedDetailedTestSuiteExecutionStruct{
+				isTestSuiteExecutionOpenInTab: false,
+				TestSuiteInstructionPreViewObjectInTab: &TestSuiteInstructionPreViewStruct{
+					testSuitePreviewTestInstructionExecutionLogSplitContainer: nil,
+					testSuiteExecutionPreviewContainerScroll:                  nil,
+					testSuiteExecutionPreviewContainer:                        container.New(layout.NewVBoxLayout()),
+					testInstructionsExecutionDetailsContainerScroll:           nil,
+					testInstructionsExecutionLogContainer:                     nil,
+					testInstructionsExecutionAttributesContainerScroll:        nil,
+					testInstructionsExecutionAttributesContainer:              nil,
+					testInstructionsExecutionDetailsContainer:                 nil,
 					preViewTabs:                       nil,
 					attributeExplorerTab:              nil,
 					logsExplorerTab:                   nil,
 					testInstructionDetailsExplorerTab: nil,
 				},
-				isTestCaseExecutionOpenInExternalWindow:          false,
-				TestCaseInstructionPreViewObjectInExternalWindow: nil,
+				isTestSuiteExecutionOpenInExternalWindow:          false,
+				TestSuiteInstructionPreViewObjectInExternalWindow: nil,
 
 				externalWindow: nil,
 				tabItem:        nil,
@@ -933,132 +933,132 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 
 		// Reference to current window
 
-		// Define function to open a TestCaseExecution in a external window
-		var openTestCaseExecutionInExternalWindowFunction func()
-		openTestCaseExecutionInExternalWindowFunction = func() {
+		// Define function to open a TestSuiteExecution in a external window
+		var openTestSuiteExecutionInExternalWindowFunction func()
+		openTestSuiteExecutionInExternalWindowFunction = func() {
 
 			var fenixApp fyne.App
 			fenixApp = *sharedCode.FenixAppPtr
 
 			// Object exist, but check if the window is open
-			if openedDetailedTestCaseExecutionPtr.isTestCaseExecutionOpenInExternalWindow == true {
+			if openedDetailedTestSuiteExecutionPtr.isTestSuiteExecutionOpenInExternalWindow == true {
 				// Window is open, so get the existing window so make it the top window
-				openedDetailedTestCaseExecutionPtr.externalWindow.RequestFocus()
+				openedDetailedTestSuiteExecutionPtr.externalWindow.RequestFocus()
 
 			} else {
 
 				// Initialize Window-object
-				openedDetailedTestCaseExecutionPtr.
-					TestCaseInstructionPreViewObjectInExternalWindow = &TestCaseInstructionPreViewStruct{
-					testCasePreviewTestInstructionExecutionLogSplitContainer: nil,
-					testCaseExecutionPreviewContainerScroll:                  nil,
-					testCaseExecutionPreviewContainer:                        container.New(layout.NewVBoxLayout()),
-					testInstructionsExecutionDetailsContainerScroll:          nil,
-					testInstructionsExecutionLogContainer:                    nil,
-					testInstructionsExecutionAttributesContainerScroll:       nil,
-					testInstructionsExecutionAttributesContainer:             nil,
-					testInstructionsExecutionDetailsContainer:                nil,
+				openedDetailedTestSuiteExecutionPtr.
+					TestSuiteInstructionPreViewObjectInExternalWindow = &TestSuiteInstructionPreViewStruct{
+					testSuitePreviewTestInstructionExecutionLogSplitContainer: nil,
+					testSuiteExecutionPreviewContainerScroll:                  nil,
+					testSuiteExecutionPreviewContainer:                        container.New(layout.NewVBoxLayout()),
+					testInstructionsExecutionDetailsContainerScroll:           nil,
+					testInstructionsExecutionLogContainer:                     nil,
+					testInstructionsExecutionAttributesContainerScroll:        nil,
+					testInstructionsExecutionAttributesContainer:              nil,
+					testInstructionsExecutionDetailsContainer:                 nil,
 					preViewTabs:                       nil,
 					attributeExplorerTab:              nil,
 					logsExplorerTab:                   nil,
 					testInstructionDetailsExplorerTab: nil,
 				}
 
-				// Create a new window for the TestCaseExecution
-				openedDetailedTestCaseExecutionPtr.externalWindow = fenixApp.NewWindow(fmt.Sprintf(
-					"TestCaseExecution '%s'", testCaseExecutionUuid))
+				// Create a new window for the TestSuiteExecution
+				openedDetailedTestSuiteExecutionPtr.externalWindow = fenixApp.NewWindow(fmt.Sprintf(
+					"TestSuiteExecution '%s'", testSuiteExecutionUuid))
 
 				// Set boolean to indicate that window is open
-				openedDetailedTestCaseExecutionPtr.isTestCaseExecutionOpenInExternalWindow = true
+				openedDetailedTestSuiteExecutionPtr.isTestSuiteExecutionOpenInExternalWindow = true
 
 				// Catch the close action
-				openedDetailedTestCaseExecutionPtr.externalWindow.SetOnClosed(func() {
+				openedDetailedTestSuiteExecutionPtr.externalWindow.SetOnClosed(func() {
 
 					// Remove Content container object from map and mark not there
 					defer func() {
-						openedDetailedTestCaseExecutionPtr.isTestCaseExecutionOpenInExternalWindow = false
-						openedDetailedTestCaseExecutionPtr.
-							TestCaseInstructionPreViewObjectInExternalWindow = &TestCaseInstructionPreViewStruct{
-							testCasePreviewTestInstructionExecutionLogSplitContainer: nil,
-							testCaseExecutionPreviewContainerScroll:                  nil,
-							testCaseExecutionPreviewContainer:                        container.New(layout.NewVBoxLayout()),
-							testInstructionsExecutionDetailsContainerScroll:          nil,
-							testInstructionsExecutionLogContainer:                    nil,
-							testInstructionsExecutionAttributesContainerScroll:       nil,
-							testInstructionsExecutionAttributesContainer:             nil,
-							testInstructionsExecutionDetailsContainer:                nil,
+						openedDetailedTestSuiteExecutionPtr.isTestSuiteExecutionOpenInExternalWindow = false
+						openedDetailedTestSuiteExecutionPtr.
+							TestSuiteInstructionPreViewObjectInExternalWindow = &TestSuiteInstructionPreViewStruct{
+							testSuitePreviewTestInstructionExecutionLogSplitContainer: nil,
+							testSuiteExecutionPreviewContainerScroll:                  nil,
+							testSuiteExecutionPreviewContainer:                        container.New(layout.NewVBoxLayout()),
+							testInstructionsExecutionDetailsContainerScroll:           nil,
+							testInstructionsExecutionLogContainer:                     nil,
+							testInstructionsExecutionAttributesContainerScroll:        nil,
+							testInstructionsExecutionAttributesContainer:              nil,
+							testInstructionsExecutionDetailsContainer:                 nil,
 							preViewTabs:                       nil,
 							attributeExplorerTab:              nil,
 							logsExplorerTab:                   nil,
 							testInstructionDetailsExplorerTab: nil,
 						}
-						openedDetailedTestCaseExecutionPtr.externalWindow = nil
+						openedDetailedTestSuiteExecutionPtr.externalWindow = nil
 					}()
 
-					//openedDetailedTestCaseExecutionPtr.externalWindow.Close()
+					//openedDetailedTestSuiteExecutionPtr.externalWindow.Close()
 
 				})
 
 				// Generate base objects for the PreView
-				openedDetailedTestCaseExecutionPtr.TestCaseInstructionPreViewObjectInExternalWindow.
-					testCasePreviewTestInstructionExecutionLogSplitContainer = generatePreViewObject(
-					openedDetailedTestCaseExecutionPtr.TestCaseInstructionPreViewObjectInExternalWindow)
+				openedDetailedTestSuiteExecutionPtr.TestSuiteInstructionPreViewObjectInExternalWindow.
+					testSuitePreviewTestInstructionExecutionLogSplitContainer = generatePreViewObject(
+					openedDetailedTestSuiteExecutionPtr.TestSuiteInstructionPreViewObjectInExternalWindow)
 
-				// Generate a copy of the TestCaseExecutionPreview
-				openedDetailedTestCaseExecutionPtr.TestCaseInstructionPreViewObjectInExternalWindow.
-					GenerateTestCaseExecutionPreviewContainer(
-						testCaseExecutionUuid,
-						testCaseExecutionVersion,
-						testCaseExecutionsModelRef,
+				// Generate a copy of the TestSuiteExecutionPreview
+				openedDetailedTestSuiteExecutionPtr.TestSuiteInstructionPreViewObjectInExternalWindow.
+					GenerateTestSuiteExecutionPreviewContainer(
+						testSuiteExecutionUuid,
+						testSuiteExecutionVersion,
+						testSuiteExecutionsModelRef,
 						fromExternalWindow,
-						&openedDetailedTestCaseExecutionPtr.externalWindow)
+						&openedDetailedTestSuiteExecutionPtr.externalWindow)
 
 				// Save the Object back to the Map
-				openedDetailedTestCaseExecutionsMap[openedDetailedTestCaseExecutionsMapKey] = openedDetailedTestCaseExecutionPtr
+				openedDetailedTestSuiteExecutionsMap[openedDetailedTestSuiteExecutionsMapKey] = openedDetailedTestSuiteExecutionPtr
 
-				// Set TestCaseExecution as content
+				// Set TestSuiteExecution as content
 				var externalWindowCanvas fyne.Canvas
-				externalWindowCanvas = openedDetailedTestCaseExecutionPtr.externalWindow.Canvas()
+				externalWindowCanvas = openedDetailedTestSuiteExecutionPtr.externalWindow.Canvas()
 
 				externalWindowCanvas.SetContent(container.NewBorder(
 					nil,
-					widget.NewButton("Close TestCaseExecution", func() {
-						openedDetailedTestCaseExecutionPtr.externalWindow.Close()
+					widget.NewButton("Close TestSuiteExecution", func() {
+						openedDetailedTestSuiteExecutionPtr.externalWindow.Close()
 					}),
 					nil, nil,
-					openedDetailedTestCaseExecutionPtr.TestCaseInstructionPreViewObjectInExternalWindow.
-						testCasePreviewTestInstructionExecutionLogSplitContainer,
+					openedDetailedTestSuiteExecutionPtr.TestSuiteInstructionPreViewObjectInExternalWindow.
+						testSuitePreviewTestInstructionExecutionLogSplitContainer,
 				))
 
 				// Set size and show
-				openedDetailedTestCaseExecutionPtr.externalWindow.Resize(fyne.NewSize(1000, 800))
-				openedDetailedTestCaseExecutionPtr.externalWindow.Show()
+				openedDetailedTestSuiteExecutionPtr.externalWindow.Resize(fyne.NewSize(1000, 800))
+				openedDetailedTestSuiteExecutionPtr.externalWindow.Show()
 			}
 
 		}
 
-		// Define function to open a TestCaseExecution in a Tab
-		var openTestCaseExecutionInTabFunction func()
-		openTestCaseExecutionInTabFunction = func() {
+		// Define function to open a TestSuiteExecution in a Tab
+		var openTestSuiteExecutionInTabFunction func()
+		openTestSuiteExecutionInTabFunction = func() {
 
 			// Object exist, but check if the Tab already exist
-			if openedDetailedTestCaseExecutionPtr.isTestCaseExecutionOpenInTab == true {
+			if openedDetailedTestSuiteExecutionPtr.isTestSuiteExecutionOpenInTab == true {
 				// Tab exist, so get the tab so make it the visible one
-				detailedTestCaseExecutionsUITabObjectRef.Select(openedDetailedTestCaseExecutionPtr.tabItem)
+				detailedTestSuiteExecutionsUITabObjectRef.Select(openedDetailedTestSuiteExecutionPtr.tabItem)
 
 			} else {
 
 				// Initialize Tab-object
-				openedDetailedTestCaseExecutionPtr.
-					TestCaseInstructionPreViewObjectInTab = &TestCaseInstructionPreViewStruct{
-					testCasePreviewTestInstructionExecutionLogSplitContainer: nil,
-					testCaseExecutionPreviewContainerScroll:                  nil,
-					testCaseExecutionPreviewContainer:                        container.New(layout.NewVBoxLayout()),
-					testInstructionsExecutionDetailsContainerScroll:          nil,
-					testInstructionsExecutionLogContainer:                    nil,
-					testInstructionsExecutionAttributesContainerScroll:       nil,
-					testInstructionsExecutionAttributesContainer:             nil,
-					testInstructionsExecutionDetailsContainer:                nil,
+				openedDetailedTestSuiteExecutionPtr.
+					TestSuiteInstructionPreViewObjectInTab = &TestSuiteInstructionPreViewStruct{
+					testSuitePreviewTestInstructionExecutionLogSplitContainer: nil,
+					testSuiteExecutionPreviewContainerScroll:                  nil,
+					testSuiteExecutionPreviewContainer:                        container.New(layout.NewVBoxLayout()),
+					testInstructionsExecutionDetailsContainerScroll:           nil,
+					testInstructionsExecutionLogContainer:                     nil,
+					testInstructionsExecutionAttributesContainerScroll:        nil,
+					testInstructionsExecutionAttributesContainer:              nil,
+					testInstructionsExecutionDetailsContainer:                 nil,
 					preViewTabs:                       nil,
 					attributeExplorerTab:              nil,
 					logsExplorerTab:                   nil,
@@ -1066,101 +1066,101 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 				}
 
 				// Generate base objects for the PreView
-				openedDetailedTestCaseExecutionPtr.TestCaseInstructionPreViewObjectInTab.
-					testCasePreviewTestInstructionExecutionLogSplitContainer = generatePreViewObject(
-					openedDetailedTestCaseExecutionPtr.TestCaseInstructionPreViewObjectInTab)
+				openedDetailedTestSuiteExecutionPtr.TestSuiteInstructionPreViewObjectInTab.
+					testSuitePreviewTestInstructionExecutionLogSplitContainer = generatePreViewObject(
+					openedDetailedTestSuiteExecutionPtr.TestSuiteInstructionPreViewObjectInTab)
 
-				// Generate a copy of the TestCaseExecutionPreview
-				openedDetailedTestCaseExecutionPtr.TestCaseInstructionPreViewObjectInTab.
-					GenerateTestCaseExecutionPreviewContainer(
-						testCaseExecutionUuid,
-						testCaseExecutionVersion,
-						testCaseExecutionsModelRef,
+				// Generate a copy of the TestSuiteExecutionPreview
+				openedDetailedTestSuiteExecutionPtr.TestSuiteInstructionPreViewObjectInTab.
+					GenerateTestSuiteExecutionPreviewContainer(
+						testSuiteExecutionUuid,
+						testSuiteExecutionVersion,
+						testSuiteExecutionsModelRef,
 						fromTab,
 						sharedCode.FenixMasterWindowPtr)
 
 				// Save the Object back to the Map
-				openedDetailedTestCaseExecutionsMap[openedDetailedTestCaseExecutionsMapKey] = openedDetailedTestCaseExecutionPtr
+				openedDetailedTestSuiteExecutionsMap[openedDetailedTestSuiteExecutionsMapKey] = openedDetailedTestSuiteExecutionPtr
 
-				// Create a new Tab used for a specific TestCaseExecution
-				var newDetailedTestCaseExecutionsTab *container.TabItem
-				newDetailedTestCaseExecutionsTab = container.NewTabItem(
-					testCaseExecutionUuid,
+				// Create a new Tab used for a specific TestSuiteExecution
+				var newDetailedTestSuiteExecutionsTab *container.TabItem
+				newDetailedTestSuiteExecutionsTab = container.NewTabItem(
+					testSuiteExecutionUuid,
 					container.NewBorder(
 						nil,
 						nil,
 						nil,
 						nil,
-						openedDetailedTestCaseExecutionPtr.TestCaseInstructionPreViewObjectInTab.
-							testCasePreviewTestInstructionExecutionLogSplitContainer))
+						openedDetailedTestSuiteExecutionPtr.TestSuiteInstructionPreViewObjectInTab.
+							testSuitePreviewTestInstructionExecutionLogSplitContainer))
 
-				// Add Tab to TabObjects TestCaseExecutions
-				detailedTestCaseExecutionsUITabObjectRef.Append(newDetailedTestCaseExecutionsTab)
+				// Add Tab to TabObjects TestSuiteExecutions
+				detailedTestSuiteExecutionsUITabObjectRef.Append(newDetailedTestSuiteExecutionsTab)
 
 				// Extract Map with exit-functions for Tabs
-				var exitFunctionsForDetailedTestCaseExecutionsUITabObject map[*container.TabItem]func()
-				exitFunctionsForDetailedTestCaseExecutionsUITabObject = *exitFunctionsForDetailedTestCaseExecutionsUITabObjectPtr
+				var exitFunctionsForDetailedTestSuiteExecutionsUITabObject map[*container.TabItem]func()
+				exitFunctionsForDetailedTestSuiteExecutionsUITabObject = *exitFunctionsForDetailedTestSuiteExecutionsUITabObjectPtr
 
 				// Add Close function to TabItem
-				exitFunctionsForDetailedTestCaseExecutionsUITabObject[newDetailedTestCaseExecutionsTab] = func() {
+				exitFunctionsForDetailedTestSuiteExecutionsUITabObject[newDetailedTestSuiteExecutionsTab] = func() {
 
 					// Remove and indicate that no Tab is onpen
-					openedDetailedTestCaseExecutionPtr.isTestCaseExecutionOpenInTab = false
-					openedDetailedTestCaseExecutionPtr.TestCaseInstructionPreViewObjectInTab = nil
+					openedDetailedTestSuiteExecutionPtr.isTestSuiteExecutionOpenInTab = false
+					openedDetailedTestSuiteExecutionPtr.TestSuiteInstructionPreViewObjectInTab = nil
 
 					// Delete the Exit-function for the Tab
 					defer func() {
-						delete(exitFunctionsForDetailedTestCaseExecutionsUITabObject, newDetailedTestCaseExecutionsTab)
+						delete(exitFunctionsForDetailedTestSuiteExecutionsUITabObject, newDetailedTestSuiteExecutionsTab)
 					}()
 
 				}
 
 				// Select the newly created TabItem
-				detailedTestCaseExecutionsUITabObjectRef.Select(newDetailedTestCaseExecutionsTab)
+				detailedTestSuiteExecutionsUITabObjectRef.Select(newDetailedTestSuiteExecutionsTab)
 
 				// Refresh the Tab
-				detailedTestCaseExecutionsUITabObjectRef.Refresh()
+				detailedTestSuiteExecutionsUITabObjectRef.Refresh()
 
 				// Store the pointer to the TabItem
-				openedDetailedTestCaseExecutionPtr.tabItem = newDetailedTestCaseExecutionsTab
+				openedDetailedTestSuiteExecutionPtr.tabItem = newDetailedTestSuiteExecutionsTab
 
 				// Set boolean to indicate that window is open
-				openedDetailedTestCaseExecutionPtr.isTestCaseExecutionOpenInTab = true
+				openedDetailedTestSuiteExecutionPtr.isTestSuiteExecutionOpenInTab = true
 
 			}
 
 		}
 
-		// Define the menu items to open TestCaseExecution in Tab/External Window
+		// Define the menu items to open TestSuiteExecution in Tab/External Window
 		var items []*fyne.MenuItem
 
-		// From where is the opening of the TestCaseExecution initiated; FromExecutionList, FromExternalWindow, FromTab
-		switch openedTestCaseExecutionFrom {
+		// From where is the opening of the TestSuiteExecution initiated; FromExecutionList, FromExternalWindow, FromTab
+		switch openedTestSuiteExecutionFrom {
 
 		case fromExecutionList:
 			// Define the popup menu
 			items = []*fyne.MenuItem{
-				fyne.NewMenuItem("Open TestCaseExecution in Tab", openTestCaseExecutionInTabFunction),
-				fyne.NewMenuItem("Open TestCaseExecution in separate window", openTestCaseExecutionInExternalWindowFunction),
+				fyne.NewMenuItem("Open TestSuiteExecution in Tab", openTestSuiteExecutionInTabFunction),
+				fyne.NewMenuItem("Open TestSuiteExecution in separate window", openTestSuiteExecutionInExternalWindowFunction),
 			}
 
 		case fromExternalWindow:
 			// Define the popup menu
 			items = []*fyne.MenuItem{
-				fyne.NewMenuItem("Open TestCaseExecution in Tab", openTestCaseExecutionInTabFunction),
+				fyne.NewMenuItem("Open TestSuiteExecution in Tab", openTestSuiteExecutionInTabFunction),
 			}
 
 		case fromTab:
 			// Define the popup menu
 			items = []*fyne.MenuItem{
-				fyne.NewMenuItem("Open TestCaseExecution in separate window", openTestCaseExecutionInExternalWindowFunction),
+				fyne.NewMenuItem("Open TestSuiteExecution in separate window", openTestSuiteExecutionInExternalWindowFunction),
 			}
 
 		default:
 			sharedCode.Logger.WithFields(logrus.Fields{
-				"Id":                          "f6c3f4ec-91c3-4b2a-dab-0aef96453a2a",
-				"openedTestCaseExecutionFrom": openedTestCaseExecutionFrom,
-			}).Fatalln("Unhandled 'openedTestCaseExecutionFrom', should never happen")
+				"Id":                           "c4cb778e-6b4f-4a94-8cc6-88fde16de276",
+				"openedTestSuiteExecutionFrom": openedTestSuiteExecutionFrom,
+			}).Fatalln("Unhandled 'openedTestSuiteExecutionFrom', should never happen")
 
 		}
 
@@ -1180,35 +1180,35 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 		tempTopHeaderContainer.Add(btn)
 
 		// Create the new Execution-Preview
-		testCaseInstructionPreViewObjectRef.testCaseExecutionPreviewContainer.Objects[0] = container.NewBorder(
-			container.NewVBox(container.NewCenter(tempTopHeaderContainer), testCaseExecutionPreviewTopContainer, widget.NewSeparator()),
-			container.NewVBox(widget.NewSeparator(), testCaseExecutionPreviewBottomContainer), nil, nil,
+		testSuiteInstructionPreViewObjectRef.testSuiteExecutionPreviewContainer.Objects[0] = container.NewBorder(
+			container.NewVBox(container.NewCenter(tempTopHeaderContainer), testSuiteExecutionPreviewTopContainer, widget.NewSeparator()),
+			container.NewVBox(widget.NewSeparator(), testSuiteExecutionPreviewBottomContainer), nil, nil,
 			testCaseMainAreaForPreviewScrollContainer)
 
 		// Create a new temporary container for the logs
-		testCaseInstructionPreViewObjectRef.testInstructionsExecutionLogContainer.Objects[0] = container.NewCenter(
+		testSuiteInstructionPreViewObjectRef.testInstructionsExecutionLogContainer.Objects[0] = container.NewCenter(
 			widget.NewLabel("Select a TestInstructionExecution or a TesInstructionContainer to get the Logs"))
 
 	} else {
 
 		// No row is selected and only an info text should be shown
-		testCaseInstructionPreViewObjectRef.testCaseExecutionPreviewContainer.Objects[0] = container.NewCenter(widget.NewLabel("Select a TestCaseExecution to get the Preview"))
+		testSuiteInstructionPreViewObjectRef.testSuiteExecutionPreviewContainer.Objects[0] = container.NewCenter(widget.NewLabel("Select a TestSuiteExecution to get the Preview"))
 
 		// Create a new temporary container for the logs
-		testCaseInstructionPreViewObjectRef.testInstructionsExecutionLogContainer.Objects[0] = container.NewCenter(
+		testSuiteInstructionPreViewObjectRef.testInstructionsExecutionLogContainer.Objects[0] = container.NewCenter(
 			widget.NewLabel("Select a TestInstructionExecution or a TesInstructionContainer to get the Logs"))
 	}
 
 	// Add attributes container to attributes-container-map-ptr
-	testCaseExecutionAttributesForPreviewMapPtr = &testCaseExecutionAttributesForPreviewMap
+	testSuiteExecutionAttributesForPreviewMapPtr = &testSuiteExecutionAttributesForPreviewMap
 
-	// Refresh the 'testCaseExecutionPreviewContainer'
-	testCaseInstructionPreViewObjectRef.testCaseExecutionPreviewContainer.Refresh()
+	// Refresh the 'testSuiteExecutionPreviewContainer'
+	testSuiteInstructionPreViewObjectRef.testSuiteExecutionPreviewContainer.Refresh()
 
 }
 
-// ClearTestCaseExecutionPreviewContainer
-// Clears the preview area for the TestCaseExecution
-func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) ClearTestCaseExecutionPreviewContainer() {
-	testCaseInstructionPreViewObjectRef.testCaseExecutionPreviewContainer.Objects[0] = container.NewCenter(widget.NewLabel("Select a TestCaseExecution to get the Preview"))
+// ClearTestSuiteExecutionPreviewContainer
+// Clears the preview area for the TestSuiteExecution
+func (testCaseInstructionPreViewObjectRef *TestSuiteInstructionPreViewStruct) ClearTestSuiteExecutionPreviewContainer() {
+	testCaseInstructionPreViewObjectRef.testSuiteExecutionPreviewContainer.Objects[0] = container.NewCenter(widget.NewLabel("Select a TestSuiteExecution to get the Preview"))
 }

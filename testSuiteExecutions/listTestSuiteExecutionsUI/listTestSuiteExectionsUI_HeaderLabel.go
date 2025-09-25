@@ -40,26 +40,26 @@ func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNu
 				var previousSortColumn int
 				var currentHeader *sortableHeaderLabelStruct
 				var previousHeader *sortableHeaderLabelStruct
-				switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+				switch selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType {
 
-				case AllExecutionsForOneTestCase:
-					currentSortColumn = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+				case AllExecutionsForOneTestSuite:
+					currentSortColumn = selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
 						currentSortColumn
-					previousSortColumn = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+					previousSortColumn = selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
 						previousSortColumn
-					currentHeader = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+					currentHeader = selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
 						currentHeader
-					previousHeader = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+					previousHeader = selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
 						previousHeader
 
-				case OneExecutionPerTestCase:
-					currentSortColumn = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+				case OneExecutionPerTestSuite:
+					currentSortColumn = selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
 						currentSortColumn
-					previousSortColumn = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+					previousSortColumn = selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
 						previousSortColumn
-					currentHeader = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+					currentHeader = selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
 						currentHeader
-					previousHeader = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+					previousHeader = selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
 						previousHeader
 
 				case NotDefined:
@@ -140,30 +140,30 @@ func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNu
 				tempSortableHeaderLabel.sortImage.Refresh()
 				tempSortableHeaderLabel.Refresh()
 
-				sort2DStringSlice(testCaseExecutionsListTableTable, currentSortColumn, tempSortableHeaderLabel.latestSelectedSortOrder)
-				testCaseExecutionsListTable.Refresh()
+				sort2DStringSlice(testSuiteExecutionsListTableTable, currentSortColumn, tempSortableHeaderLabel.latestSelectedSortOrder)
+				testSuiteExecutionsListTable.Refresh()
 
 				// Move back Header and Sort column information
-				switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+				switch selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType {
 
-				case AllExecutionsForOneTestCase:
-					selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+				case AllExecutionsForOneTestSuite:
+					selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
 						currentSortColumn = currentSortColumn
-					selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+					selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
 						previousSortColumn = previousSortColumn
-					selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+					selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
 						currentHeader = currentHeader
-					selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+					selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
 						previousHeader = previousHeader
 
-				case OneExecutionPerTestCase:
-					selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+				case OneExecutionPerTestSuite:
+					selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
 						currentSortColumn = currentSortColumn
-					selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+					selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
 						previousSortColumn = previousSortColumn
-					selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+					selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
 						currentHeader = currentHeader
-					selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+					selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
 						previousHeader = previousHeader
 
 				case NotDefined:

@@ -3,7 +3,7 @@ package listTestSuiteExecutionsUI
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/soundEngine"
-	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
+	"FenixTesterGui/testSuiteExecutions/testSuiteExecutionsModel"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -17,21 +17,21 @@ import (
 
 type clickableTableLabel struct {
 	widget.Label
-	onDoubleTap                     func()
-	lastTapTime                     time.Time
-	isClickable                     bool
-	currentRow                      int16
-	currentTestCaseExecutionUuid    string
-	currentTestCaseExecutionVersion uint32
-	currentTestCaseUuid             string
-	currentTestCaseName             string
-	background                      *canvas.Rectangle
-	testCaseExecutionsModel         *testCaseExecutionsModel.TestCaseExecutionsModelStruct
-	textInsteadOfLabel              *canvas.Text
+	onDoubleTap                      func()
+	lastTapTime                      time.Time
+	isClickable                      bool
+	currentRow                       int16
+	currentTestSuiteExecutionUuid    string
+	currentTestSuiteExecutionVersion uint32
+	currentTestSuiteUuid             string
+	currentTestSuiteName             string
+	background                       *canvas.Rectangle
+	testSuiteExecutionsModel         *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct
+	textInsteadOfLabel               *canvas.Text
 }
 
 func newClickableTableLabel(text string, onDoubleTap func(), tempIsClickable bool,
-	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) *clickableTableLabel {
+	testSuiteExecutionsModel *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct) *clickableTableLabel {
 
 	l := &clickableTableLabel{
 		Label:       widget.Label{Text: text},
@@ -41,11 +41,11 @@ func newClickableTableLabel(text string, onDoubleTap func(), tempIsClickable boo
 		currentRow:  -1}
 
 	l.background = canvas.NewRectangle(color.Transparent)
-	l.testCaseExecutionsModel = testCaseExecutionsModel
-	l.currentTestCaseExecutionUuid = ""
-	l.currentTestCaseExecutionVersion = 0
-	l.currentTestCaseUuid = ""
-	l.currentTestCaseName = ""
+	l.testSuiteExecutionsModel = testSuiteExecutionsModel
+	l.currentTestSuiteExecutionUuid = ""
+	l.currentTestSuiteExecutionVersion = 0
+	l.currentTestSuiteUuid = ""
+	l.currentTestSuiteName = ""
 
 	l.ExtendBaseWidget(l)
 
@@ -94,80 +94,80 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 
 	l.lastTapTime = time.Now()
 
-	// Raw data for DetailedTestCaseExecutionMapKey
-	var testCaseExecutionUuid string
-	var testCaseExecutionVersion uint32
+	// Raw data for DetailedTestSuiteExecutionMapKey
+	var testSuiteExecutionUuid string
+	var testSuiteExecutionVersion uint32
 
-	// Decide mode 'AllExecutionsForOneTestCase' or 'OneExecutionPerTestCase'
-	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+	// Decide mode 'AllExecutionsForOneTestSuite' or 'OneExecutionPerTestSuite'
+	switch selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType {
 
-	case AllExecutionsForOneTestCase:
+	case AllExecutionsForOneTestSuite:
 
-		// Save TestCaseExecutionUuid for TestCaseExecution shown in preview
-		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.isAnyRowSelected = true
-		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
-			testCaseExecutionUuidThatIsShownInPreview = l.currentTestCaseExecutionUuid
-		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
-			testCaseExecutionVersionThatIsShownInPreview = l.currentTestCaseExecutionVersion
+		// Save TestSuiteExecutionUuid for TestSuiteExecution shown in preview
+		selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.isAnyRowSelected = true
+		selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
+			testSuiteExecutionUuidThatIsShownInPreview = l.currentTestSuiteExecutionUuid
+		selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
+			testSuiteExecutionVersionThatIsShownInPreview = l.currentTestSuiteExecutionVersion
 
-		testCaseExecutionUuid = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
-			testCaseExecutionUuidThatIsShownInPreview
-		testCaseExecutionVersion = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
-			testCaseExecutionVersionThatIsShownInPreview
+		testSuiteExecutionUuid = selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
+			testSuiteExecutionUuidThatIsShownInPreview
+		testSuiteExecutionVersion = selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
+			testSuiteExecutionVersionThatIsShownInPreview
 
-		// Save TestCaseUuid for TestCaseExecution shown in preview
-		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
-			testCaseUuidForTestCaseExecutionThatIsShownInPreview = l.currentTestCaseUuid
+		// Save TestSuiteUuid for TestSuiteExecution shown in preview
+		selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
+			testSuiteUuidForTestSuiteExecutionThatIsShownInPreview = l.currentTestSuiteUuid
 
-	case OneExecutionPerTestCase:
+	case OneExecutionPerTestSuite:
 
-		// Save TestCaseExecutionUuid for TestCaseExecution shown in preview
-		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.isAnyRowSelected = true
-		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-			testCaseExecutionUuidThatIsShownInPreview = l.currentTestCaseExecutionUuid
-		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-			testCaseExecutionVersionThatIsShownInPreview = l.currentTestCaseExecutionVersion
+		// Save TestSuiteExecutionUuid for TestSuiteExecution shown in preview
+		selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.isAnyRowSelected = true
+		selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
+			testSuiteExecutionUuidThatIsShownInPreview = l.currentTestSuiteExecutionUuid
+		selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
+			testSuiteExecutionVersionThatIsShownInPreview = l.currentTestSuiteExecutionVersion
 
-		testCaseExecutionUuid = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-			testCaseExecutionUuidThatIsShownInPreview
-		testCaseExecutionVersion = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-			testCaseExecutionVersionThatIsShownInPreview
+		testSuiteExecutionUuid = selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
+			testSuiteExecutionUuidThatIsShownInPreview
+		testSuiteExecutionVersion = selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
+			testSuiteExecutionVersionThatIsShownInPreview
 
-		// Save TestCaseUuid for TestCaseExecution shown in preview
-		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-			testCaseUuidForTestCaseExecutionThatIsShownInPreview = l.currentTestCaseUuid
+		// Save TestSuiteUuid for TestSuiteExecution shown in preview
+		selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
+			testSuiteUuidForTestSuiteExecutionThatIsShownInPreview = l.currentTestSuiteUuid
 
 	case NotDefined:
 
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"id": "bdf5a9dd-9f02-4592-b0db-3e23bf587692",
-			"selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType": selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType,
-		}).Error("Unhandled 'selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType', should not happen")
+			"id": "4136c74f-65c9-4ebc-977f-1c727b3a47a9",
+			"selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType": selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType,
+		}).Error("Unhandled 'selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType', should not happen")
 
 		return
 
 	}
 
-	// Load Detailed TestCaseExecution from Database
-	testCaseExecutionsModel.LoadDetailedTestCaseExecutionFromDatabase(testCaseExecutionUuid, testCaseExecutionVersion)
+	// Load Detailed TestSuiteExecution from Database
+	testSuiteExecutionsModel.LoadDetailedTestSuiteExecutionFromDatabase(testSuiteExecutionUuid, testSuiteExecutionVersion)
 
-	// Update TestCase Preview
-	TestCaseInstructionPreViewObject.GenerateTestCaseExecutionPreviewContainer(
-		l.currentTestCaseExecutionUuid,
-		l.currentTestCaseExecutionVersion,
-		l.testCaseExecutionsModel,
+	// Update TestSuite Preview
+	TestSuiteInstructionPreViewObject.GenerateTestSuiteExecutionPreviewContainer(
+		l.currentTestSuiteExecutionUuid,
+		l.currentTestSuiteExecutionVersion,
+		l.testSuiteExecutionsModel,
 		fromExecutionList,
 		sharedCode.FenixMasterWindowPtr)
 
-	testCaseExecutionsListTable.Refresh()
+	testSuiteExecutionsListTable.Refresh()
 
-	// Update 'loadAllTestCaseExecutionsForOneTestCaseButton' with correct text, if we are in 'OneExecutionPerTestCase'
-	if selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType == OneExecutionPerTestCase {
-		loadAllTestCaseExecutionsForOneTestCaseButtonReference.
-			Text = loadAllTestCaseExecutionsForOneTestCaseButtonTextPart1 +
-			l.currentTestCaseName
-		loadAllTestCaseExecutionsForOneTestCaseButtonReference.Enable()
-		loadAllTestCaseExecutionsForOneTestCaseButtonReference.Refresh()
+	// Update 'loadAllTestSuiteExecutionsForOneTestSuiteButton' with correct text, if we are in 'OneExecutionPerTestSuite'
+	if selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType == OneExecutionPerTestSuite {
+		loadAllTestSuiteExecutionsForOneTestSuiteButtonReference.
+			Text = loadAllTestSuiteExecutionsForOneTestSuiteButtonTextPart1 +
+			l.currentTestSuiteName
+		loadAllTestSuiteExecutionsForOneTestSuiteButtonReference.Enable()
+		loadAllTestSuiteExecutionsForOneTestSuiteButtonReference.Refresh()
 
 	}
 
@@ -221,7 +221,7 @@ func (l *clickableTableLabel) MouseIn(*desktop.MouseEvent) {
 	// Hinder concurrent setting of variable
 	currentRowThatMouseIsHoveringAboveMutex.Lock()
 
-	// Set current TestCaseUuid to be highlighted
+	// Set current TestSuiteUuid to be highlighted
 	currentRowThatMouseIsHoveringAbove = l.currentRow
 
 	// Release variable
@@ -229,7 +229,7 @@ func (l *clickableTableLabel) MouseIn(*desktop.MouseEvent) {
 
 	l.TextStyle = fyne.TextStyle{Bold: true}
 	l.Refresh()
-	//testCaseExecutionsListTable.Refresh()
+	//testSuiteExecutionsListTable.Refresh()
 
 }
 func (l *clickableTableLabel) MouseMoved(*desktop.MouseEvent) {}
@@ -246,7 +246,7 @@ func (l *clickableTableLabel) MouseOut() {
 	// Hinder concurrent setting of variable
 	currentRowThatMouseIsHoveringAboveMutex.Lock()
 
-	// Set current TestCaseUuid to be highlighted
+	// Set current TestSuiteUuid to be highlighted
 	currentRowThatMouseIsHoveringAbove = -1
 
 	// Release variable
@@ -254,6 +254,6 @@ func (l *clickableTableLabel) MouseOut() {
 
 	l.TextStyle = fyne.TextStyle{Bold: false}
 	l.Refresh()
-	//testCaseExecutionsListTable.Refresh()
+	//testSuiteExecutionsListTable.Refresh()
 
 }

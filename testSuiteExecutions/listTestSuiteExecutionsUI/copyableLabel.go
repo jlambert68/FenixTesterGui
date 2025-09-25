@@ -48,7 +48,7 @@ func (c *copyableLabelStruct) Tapped(*fyne.PointEvent) {
 func (c *copyableLabelStruct) TappedSecondary(*fyne.PointEvent) {
 
 	// Check if mouse has left TestCaseExecutionTree-container
-	if mouseHasLeftTestCaseExecutionPreviewTree == true {
+	if mouseHasLeftTestSuiteExecutionPreviewTree == true {
 		return
 	}
 

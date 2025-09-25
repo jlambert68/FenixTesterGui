@@ -7,242 +7,242 @@ import (
 	"sync"
 )
 
-var allTestCaseExecutionsMapMutex = &sync.RWMutex{}
+var allTestSuiteExecutionsMapMutex = &sync.RWMutex{}
 
 /*
-// InitiateAllTestCaseExecutionsForOneTestCaseMap
-// Add to the InitiateAllTestCaseExecutionsForOneTestCaseMap-Map
-func (testSuiteExecutionsModel TestCaseExecutionsModelStruct) InitiateAllTestCaseExecutionsForOneTestCaseMap() {
+// InitiateAllTestSuiteExecutionsForOneTestSuiteMap
+// Add to the InitiateAllTestSuiteExecutionsForOneTestSuiteMap-Map
+func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) InitiateAllTestSuiteExecutionsForOneTestSuiteMap() {
 
 	// Lock Map for Writing
-	allTestCaseExecutionsMapMutex.Lock()
+	allTestSuiteExecutionsMapMutex.Lock()
 
 	// Initiate map if it is not already done
-	if testSuiteExecutionsModel.allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap == nil {
+	if testSuiteExecutionsModel.allTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap == nil {
 
-		testSuiteExecutionsModel.allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap =
-			make(map[TestCaseUuidType]*AllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUserMapType)
+		testSuiteExecutionsModel.allTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap =
+			make(map[TestSuiteUuidType]*AllTestSuiteExecutionsForOneTestSuiteThatCanBeViewedByUserMapType)
 	}
 
 	//UnLock Map
-	allTestCaseExecutionsMapMutex.Unlock()
+	allTestSuiteExecutionsMapMutex.Unlock()
 }
 
 */
 
-// GetAllTestCaseExecutionsForOneTestCaseUuid
-// Get all TestCaseExecutions for one TestCaseUuid
-func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) GetAllTestCaseExecutionsForOneTestCaseUuid(
-	testCaseUuidMapKey TestCaseUuidType) (
-	tempTestCaseExecutionsList *[]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage,
+// GetAllTestSuiteExecutionsForOneTestSuiteUuid
+// Get all TestSuiteExecutions for one TestSuiteUuid
+func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) GetAllTestSuiteExecutionsForOneTestSuiteUuid(
+	testSuiteUuidMapKey TestSuiteUuidType) (
+	tempTestSuiteExecutionsList *[]*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage,
 	existInMap bool) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "09bd03e2-843a-4b33-a735-a44c1c4d7076",
-	}).Debug("Incoming - 'GetAllTestCaseExecutionsForOneTestCaseUuid'")
+		"id": "1c2f2b96-1077-40ee-8615-07ff6b9d612c",
+	}).Debug("Incoming - 'GetAllTestSuiteExecutionsForOneTestSuiteUuid'")
 
 	defer sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "b7dc1fac-62bd-4f0e-b363-02ac7d9ae4af",
-	}).Debug("Outgoing - 'GetAllTestCaseExecutionsForOneTestCaseUuid'")
+		"id": "ebe287d0-953d-4b72-8dfc-b4c1dc763a06",
+	}).Debug("Outgoing - 'GetAllTestSuiteExecutionsForOneTestSuiteUuid'")
 
-	var testCaseExecutions []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+	var testSuiteExecutions []*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage
 
 	// Lock Map for Reading
-	allTestCaseExecutionsMapMutex.RLock()
+	allTestSuiteExecutionsMapMutex.RLock()
 
 	//UnLock Map
-	defer allTestCaseExecutionsMapMutex.RUnlock()
+	defer allTestSuiteExecutionsMapMutex.RUnlock()
 
-	// Check if Outer Map i nil, then no TestCasesMapPtr with no TestCaseExecutions
-	if TestCaseExecutionsModel.AllTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap == nil {
+	// Check if Outer Map i nil, then no TestSuitesMapPtr with no TestSuiteExecutions
+	if TestSuiteExecutionsModel.AllTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap == nil {
 		return nil, false
 	}
 
-	var tempTestCaseExecutionsForOneTestCasePtr *allTestCaseExecutionsForOneTestCaseUuidStruct
-	var tempTestCaseExecutionsForOneTestCase allTestCaseExecutionsForOneTestCaseUuidStruct
-	tempTestCaseExecutionsForOneTestCasePtr, existInMap = testCaseExecutionsModel.
-		AllTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap[testCaseUuidMapKey]
+	var tempTestSuiteExecutionsForOneTestSuitePtr *allTestSuiteExecutionsForOneTestSuiteUuidStruct
+	var tempTestSuiteExecutionsForOneTestSuite allTestSuiteExecutionsForOneTestSuiteUuidStruct
+	tempTestSuiteExecutionsForOneTestSuitePtr, existInMap = testSuiteExecutionsModel.
+		AllTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap[testSuiteUuidMapKey]
 
 	if existInMap == true {
-		// TestCase exists in map
-		tempTestCaseExecutionsForOneTestCase = *tempTestCaseExecutionsForOneTestCasePtr
+		// TestSuite exists in map
+		tempTestSuiteExecutionsForOneTestSuite = *tempTestSuiteExecutionsForOneTestSuitePtr
 
 	} else {
 
-		// TestCase doesn't exist within map
+		// TestSuite doesn't exist within map
 		return nil, false
 	}
 
-	// Check if 'allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap' is initiated
-	// If nil then TestCase has no TestCaseExecutions
-	if tempTestCaseExecutionsForOneTestCase.allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap == nil {
+	// Check if 'allTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap' is initiated
+	// If nil then TestSuite has no TestSuiteExecutions
+	if tempTestSuiteExecutionsForOneTestSuite.allTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap == nil {
 
 		return nil, false
 	}
 
-	// Extract all TestCaseExecutions for the TestCaseUuid
-	for _, tempTestCaseExecution := range tempTestCaseExecutionsForOneTestCase.
-		allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap {
+	// Extract all TestSuiteExecutions for the TestSuiteUuid
+	for _, tempTestSuiteExecution := range tempTestSuiteExecutionsForOneTestSuite.
+		allTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap {
 
-		testCaseExecutions = append(testCaseExecutions, tempTestCaseExecution)
+		testSuiteExecutions = append(testSuiteExecutions, tempTestSuiteExecution)
 
 	}
 
-	return &testCaseExecutions, existInMap
+	return &testSuiteExecutions, existInMap
 }
 
-// GetSpecificTestCaseExecutionForOneTestCaseUuid
-// Get one specific TestCaseExecutions for one TestCaseUuid
-func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) GetSpecificTestCaseExecutionForOneTestCaseUuid(
-	testCaseUuidMapKey TestCaseUuidType,
-	testCaseExecutionUuidMapKey TestCaseExecutionUuidType) (
-	tempTestCaseExecution *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage,
+// GetSpecificTestSuiteExecutionForOneTestSuiteUuid
+// Get one specific TestSuiteExecutions for one TestSuiteUuid
+func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) GetSpecificTestSuiteExecutionForOneTestSuiteUuid(
+	testSuiteUuidMapKey TestSuiteUuidType,
+	testSuiteExecutionUuidMapKey TestSuiteExecutionUuidType) (
+	tempTestSuiteExecution *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage,
 	existInMap bool) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "25a958cd-1301-44c2-9724-3749d3b1dc9f",
-	}).Debug("Incoming - 'GetSpecificTestCaseExecutionForOneTestCaseUuid'")
+		"id": "f95a4685-34f9-4c10-996f-d9220a8fb7db",
+	}).Debug("Incoming - 'GetSpecificTestSuiteExecutionForOneTestSuiteUuid'")
 
 	defer sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "76d25456-3da0-4e7e-bbec-251e49c66d70",
-	}).Debug("Outgoing - 'GetSpecificTestCaseExecutionForOneTestCaseUuid'")
+		"id": "a984570b-81fb-45ca-b186-4d70ce3f1817",
+	}).Debug("Outgoing - 'GetSpecificTestSuiteExecutionForOneTestSuiteUuid'")
 
 	// Lock Map for Reading
-	allTestCaseExecutionsMapMutex.RLock()
+	allTestSuiteExecutionsMapMutex.RLock()
 
 	//UnLock Map
-	defer allTestCaseExecutionsMapMutex.RUnlock()
+	defer allTestSuiteExecutionsMapMutex.RUnlock()
 
-	// Check if Outer Map i nil, then no TestCasesMapPtr with no TestCaseExecutions
-	if TestCaseExecutionsModel.AllTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap == nil {
+	// Check if Outer Map i nil, then no TestSuitesMapPtr with no TestSuiteExecutions
+	if TestSuiteExecutionsModel.AllTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap == nil {
 		return nil, false
 	}
 
-	var tempTestCaseExecutionsForOneTestCasePtr *allTestCaseExecutionsForOneTestCaseUuidStruct
-	var tempTestCaseExecutionsForOneTestCase allTestCaseExecutionsForOneTestCaseUuidStruct
-	tempTestCaseExecutionsForOneTestCasePtr, existInMap = testCaseExecutionsModel.
-		AllTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap[testCaseUuidMapKey]
+	var tempTestSuiteExecutionsForOneTestSuitePtr *allTestSuiteExecutionsForOneTestSuiteUuidStruct
+	var tempTestSuiteExecutionsForOneTestSuite allTestSuiteExecutionsForOneTestSuiteUuidStruct
+	tempTestSuiteExecutionsForOneTestSuitePtr, existInMap = testSuiteExecutionsModel.
+		AllTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap[testSuiteUuidMapKey]
 
 	if existInMap == true {
-		// TestCase exists in map
-		tempTestCaseExecutionsForOneTestCase = *tempTestCaseExecutionsForOneTestCasePtr
+		// TestSuite exists in map
+		tempTestSuiteExecutionsForOneTestSuite = *tempTestSuiteExecutionsForOneTestSuitePtr
 
 	} else {
 
-		// TestCase doesn't exist within map
+		// TestSuite doesn't exist within map
 		return nil, false
 	}
 
-	// Check if 'allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap' is initiated
-	// If nil then TestCase has no TestCaseExecutions
-	if tempTestCaseExecutionsForOneTestCase.allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap == nil {
+	// Check if 'allTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap' is initiated
+	// If nil then TestSuite has no TestSuiteExecutions
+	if tempTestSuiteExecutionsForOneTestSuite.allTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap == nil {
 
 		return nil, false
 	}
 
-	// Extract the specific TestCaseExecution for the TestCaseUuid
-	tempTestCaseExecution, existInMap = tempTestCaseExecutionsForOneTestCase.
-		allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap[testCaseExecutionUuidMapKey]
+	// Extract the specific TestSuiteExecution for the TestSuiteUuid
+	tempTestSuiteExecution, existInMap = tempTestSuiteExecutionsForOneTestSuite.
+		allTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap[testSuiteExecutionUuidMapKey]
 
-	return tempTestCaseExecution, existInMap
+	return tempTestSuiteExecution, existInMap
 }
 
-// AddTestCaseExecutionsForOneTestCaseUuid
-// Add a TestCaseExecution to the map for TestCaseExecutions per TestCaseUuid
-func AddTestCaseExecutionsForOneTestCaseUuid(
-	testCaseExecutionsModelRef *TestCaseExecutionsModelStruct,
-	testCaseUuidMapKey TestCaseUuidType,
-	testCaseExecutionUuidMapKey TestCaseExecutionUuidType,
-	testCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage,
-	latestUniqueTestCaseExecutionDatabaseRowId int32,
+// AddTestSuiteExecutionsForOneTestSuiteUuid
+// Add a TestSuiteExecution to the map for TestSuiteExecutions per TestSuiteUuid
+func AddTestSuiteExecutionsForOneTestSuiteUuid(
+	testSuiteExecutionsModelRef *TestSuiteExecutionsModelStruct,
+	testSuiteUuidMapKey TestSuiteUuidType,
+	testSuiteExecutionUuidMapKey TestSuiteExecutionUuidType,
+	testSuiteExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage,
+	latestUniqueTestSuiteExecutionDatabaseRowId int32,
 	moreRowsExists bool) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "0ec6baee-3788-4634-82b6-c6f3e83af25e",
-	}).Debug("Incoming - 'AddTestCaseExecutionsForOneTestCaseUuid'")
+		"id": "b5393735-1b8b-4112-8196-6ea478c0781a",
+	}).Debug("Incoming - 'AddTestSuiteExecutionsForOneTestSuiteUuid'")
 
 	defer sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "7add4c25-89ae-46ec-9f4d-89df07c59a36",
-	}).Debug("Outgoing - 'AddTestCaseExecutionsForOneTestCaseUuid'")
+		"id": "b2689f4c-f09f-4c8d-9cf2-c0075eb69008",
+	}).Debug("Outgoing - 'AddTestSuiteExecutionsForOneTestSuiteUuid'")
 
 	var existInMap bool
 
 	// Lock Map for Writing
-	allTestCaseExecutionsMapMutex.Lock()
+	allTestSuiteExecutionsMapMutex.Lock()
 
 	//UnLock Map
-	defer allTestCaseExecutionsMapMutex.Unlock()
+	defer allTestSuiteExecutionsMapMutex.Unlock()
 
 	// Check if Map i nil
-	if testCaseExecutionsModelRef.AllTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap == nil {
+	if testSuiteExecutionsModelRef.AllTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap == nil {
 
-		testCaseExecutionsModelRef.AllTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap =
-			make(map[TestCaseUuidType]*allTestCaseExecutionsForOneTestCaseUuidStruct)
+		testSuiteExecutionsModelRef.AllTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap =
+			make(map[TestSuiteUuidType]*allTestSuiteExecutionsForOneTestSuiteUuidStruct)
 	}
 
-	// Get saved TestCaseExecutions for the TestCaseUuid
-	var tempTestCaseExecutionsForOneTestCasePtr *allTestCaseExecutionsForOneTestCaseUuidStruct
-	var tempTestCaseExecutionsForOneTestCase allTestCaseExecutionsForOneTestCaseUuidStruct
-	tempTestCaseExecutionsForOneTestCasePtr, existInMap = testCaseExecutionsModelRef.
-		AllTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap[testCaseUuidMapKey]
+	// Get saved TestSuiteExecutions for the TestSuiteUuid
+	var tempTestSuiteExecutionsForOneTestSuitePtr *allTestSuiteExecutionsForOneTestSuiteUuidStruct
+	var tempTestSuiteExecutionsForOneTestSuite allTestSuiteExecutionsForOneTestSuiteUuidStruct
+	tempTestSuiteExecutionsForOneTestSuitePtr, existInMap = testSuiteExecutionsModelRef.
+		AllTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap[testSuiteUuidMapKey]
 
 	if existInMap == true {
-		// Add to the existing TestCaseExecutions for the TestCaseUuid
-		tempTestCaseExecutionsForOneTestCase = *tempTestCaseExecutionsForOneTestCasePtr
+		// Add to the existing TestSuiteExecutions for the TestSuiteUuid
+		tempTestSuiteExecutionsForOneTestSuite = *tempTestSuiteExecutionsForOneTestSuitePtr
 
 	} else {
-		// Initiate a new 'allTestCaseExecutionsForOneTestCaseUuidStruct'
-		tempTestCaseExecutionsForOneTestCase = allTestCaseExecutionsForOneTestCaseUuidStruct{}
+		// Initiate a new 'allTestSuiteExecutionsForOneTestSuiteUuidStruct'
+		tempTestSuiteExecutionsForOneTestSuite = allTestSuiteExecutionsForOneTestSuiteUuidStruct{}
 	}
 
-	// Check if 'allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap' is initated
-	if tempTestCaseExecutionsForOneTestCase.allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap == nil {
+	// Check if 'allTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap' is initated
+	if tempTestSuiteExecutionsForOneTestSuite.allTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap == nil {
 		// Initiate the map
-		tempTestCaseExecutionsForOneTestCase.allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap =
-			make(map[TestCaseExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage)
+		tempTestSuiteExecutionsForOneTestSuite.allTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap =
+			make(map[TestSuiteExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage)
 	}
 
-	// Save 'testCaseExecutionsListMessage' for TestCase
-	tempTestCaseExecutionsForOneTestCase.
-		allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap[testCaseExecutionUuidMapKey] =
-		testCaseExecutionsListMessage
+	// Save 'testSuiteExecutionsListMessage' for TestSuite
+	tempTestSuiteExecutionsForOneTestSuite.
+		allTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap[testSuiteExecutionUuidMapKey] =
+		testSuiteExecutionsListMessage
 
-	// Save 'latestUniqueTestCaseExecutionDatabaseRowId' & 'moreRowsExists'
-	tempTestCaseExecutionsForOneTestCase.latestUniqueTestCaseExecutionDatabaseRowId =
-		latestUniqueTestCaseExecutionDatabaseRowId
-	tempTestCaseExecutionsForOneTestCase.moreRowsExists = moreRowsExists
+	// Save 'latestUniqueTestSuiteExecutionDatabaseRowId' & 'moreRowsExists'
+	tempTestSuiteExecutionsForOneTestSuite.latestUniqueTestSuiteExecutionDatabaseRowId =
+		latestUniqueTestSuiteExecutionDatabaseRowId
+	tempTestSuiteExecutionsForOneTestSuite.moreRowsExists = moreRowsExists
 
-	// Store the execution back into TestCaseUuid-map
-	testCaseExecutionsModelRef.
-		AllTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap[testCaseUuidMapKey] =
-		&tempTestCaseExecutionsForOneTestCase
+	// Store the execution back into TestSuiteUuid-map
+	testSuiteExecutionsModelRef.
+		AllTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap[testSuiteUuidMapKey] =
+		&tempTestSuiteExecutionsForOneTestSuite
 
 }
 
 /*
-// DeleteFromAllTestCaseExecutionsForOneTestCaseMap
-// Delete from the DeleteFromAllTestCaseExecutionsForOneTestCase-Map
-func (testSuiteExecutionsModel TestCaseExecutionsModelStruct) DeleteFromAllTestCaseExecutionsForOneTestCaseMap(
-	testCaseExecutionsMapKey TestCaseExecutionUuidType) {
+// DeleteFromAllTestSuiteExecutionsForOneTestSuiteMap
+// Delete from the DeleteFromAllTestSuiteExecutionsForOneTestSuite-Map
+func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) DeleteFromAllTestSuiteExecutionsForOneTestSuiteMap(
+	testSuiteExecutionsMapKey TestSuiteExecutionUuidType) {
 
 	// Lock Map for Writing
-	allTestCaseExecutionsMapMutex.Lock()
+	allTestSuiteExecutionsMapMutex.Lock()
 
 	// Check if Map i nil
-	if TestCaseExecutionsModel.allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap == nil {
+	if TestSuiteExecutionsModel.allTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap == nil {
 
-		testSuiteExecutionsModel.allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap =
-			make(map[TestCaseUuidType]*AllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUserMapType)
+		testSuiteExecutionsModel.allTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap =
+			make(map[TestSuiteUuidType]*AllTestSuiteExecutionsForOneTestSuiteThatCanBeViewedByUserMapType)
 
 		return
 	}
 
-	// Save to TestCaseExecutions-Map
-	delete(TestCaseExecutionsModel.AllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUserMap,
-		testCaseExecutionsMapKey)
+	// Save to TestSuiteExecutions-Map
+	delete(TestSuiteExecutionsModel.AllTestSuiteExecutionsForOneTestSuiteThatCanBeViewedByUserMap,
+		testSuiteExecutionsMapKey)
 
 	//UnLock Map
-	allTestCaseExecutionsMapMutex.Unlock()
+	allTestSuiteExecutionsMapMutex.Unlock()
 
 }
 

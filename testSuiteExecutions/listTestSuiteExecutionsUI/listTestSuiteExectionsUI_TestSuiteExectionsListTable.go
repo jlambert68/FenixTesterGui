@@ -3,7 +3,7 @@ package listTestSuiteExecutionsUI
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/executions/detailedExecutionsModel"
-	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
+	"FenixTesterGui/testSuiteExecutions/testSuiteExecutionsModel"
 	"bytes"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -21,26 +21,26 @@ import (
 	"sync"
 )
 
-// RemoveTestCaseExecutionFromList
-// Remove a TestCaseExecution from the List
-func RemoveTestCaseExecutionFromList(testCaseExecutionUuidToBeRemoved string,
-	testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
+// RemoveTestSuiteExecutionFromList
+// Remove a TestSuiteExecution from the List
+func RemoveTestSuiteExecutionFromList(testSuiteExecutionUuidToBeRemoved string,
+	testSuiteExecutionsModelRef *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct) {
 
-	// Delete TestCaseExecution from 'testCaseExecutionsThatCanBeViewedByUserMap'
-	testCaseExecutionsModelRef.DeleteFromTestCaseExecutionsMap(
-		testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionUuidToBeRemoved))
+	// Delete TestSuiteExecution from 'testSuiteExecutionsThatCanBeViewedByUserMap'
+	testSuiteExecutionsModelRef.DeleteFromTestSuiteExecutionsMap(
+		testSuiteExecutionsModel.TestSuiteExecutionUuidType(testSuiteExecutionUuidToBeRemoved))
 
-	// Delete TestCase from 'TestCasesThatCanBeEditedByUserSlice'
+	// Delete TestSuite from 'TestSuitesThatCanBeEditedByUserSlice'
 	/*
-			for index, tempTestCasesThatCanBeEditedByUser := range testCasesModel.TestCasesThatCanBeEditedByUserSlice {
+			for index, tempTestSuitesThatCanBeEditedByUser := range testSuitesModel.TestSuitesThatCanBeEditedByUserSlice {
 
-				// Is this the TestCase to be removed from slice
-				if tempTestCasesThatCanBeEditedByUser.TestCaseUuid == testCaseExecutionUuidToBeRemoved {
+				// Is this the TestSuite to be removed from slice
+				if tempTestSuitesThatCanBeEditedByUser.TestSuiteUuid == testSuiteExecutionUuidToBeRemoved {
 
-					// Remove TestCase at index
-					testCasesModel.TestCasesThatCanBeEditedByUserSlice = append(
-						testCasesModel.TestCasesThatCanBeEditedByUserSlice[:index],
-						testCasesModel.TestCasesThatCanBeEditedByUserSlice[index+1:]...)
+					// Remove TestSuite at index
+					testSuitesModel.TestSuitesThatCanBeEditedByUserSlice = append(
+						testSuitesModel.TestSuitesThatCanBeEditedByUserSlice[:index],
+						testSuitesModel.TestSuitesThatCanBeEditedByUserSlice[index+1:]...)
 
 					break
 				}
@@ -49,18 +49,18 @@ func RemoveTestCaseExecutionFromList(testCaseExecutionUuidToBeRemoved string,
 
 
 		// Update table-list and update Table
-		loadTestCaseExecutionListTableTable(testCaseExecutionsModelRef)
+		loadTestSuiteExecutionListTableTable(testSuiteExecutionsModelRef)
 		calculateAndSetCorrectColumnWidths()
-		updateTestCaseExecutionsListTable(testCaseExecutionsModelRef)
+		updateTestSuiteExecutionsListTable(testSuiteExecutionsModelRef)
 	*/
 }
 
-// Create the UI-list that holds the list of TestCasesMapPtr that the user can edit
-func generateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
+// Create the UI-list that holds the list of TestSuitesMapPtr that the user can edit
+func generateTestSuiteExecutionsListTable(testSuiteExecutionsModel *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct) {
 
 	// Correctly initialize the selectedFilesTable as a new table
-	testCaseExecutionsListTable = widget.NewTable(
-		func() (int, int) { return 0, numberColumnsInTestCaseExecutionsListUI }, // Start with zero rows, 8 columns
+	testSuiteExecutionsListTable = widget.NewTable(
+		func() (int, int) { return 0, numberColumnsInTestSuiteExecutionsListUI }, // Start with zero rows, 8 columns
 		func() fyne.CanvasObject {
 			return widget.NewLabel("") // Create cells as labels
 		},
@@ -76,7 +76,7 @@ func generateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecut
 		sortImageUnspecifiedAsImage, err = png.Decode(bytes.NewReader(sortUnspecifiedImageAsByteArray))
 		if err != nil {
 			sharedCode.Logger.WithFields(logrus.Fields{
-				"Id":  "7b887b6e-9c90-4b4c-bc53-a5a750a463cb",
+				"Id":  "a65d2e66-614d-4570-bed2-976d11eca6e9",
 				"err": err,
 			}).Fatalln("Failed to decode 'sortUnspecifiedImageAsByteArray'")
 		}
@@ -87,7 +87,7 @@ func generateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecut
 		sortImageAscendingAsImage, err = png.Decode(bytes.NewReader(sortImageAscendingAsByteArray))
 		if err != nil {
 			sharedCode.Logger.WithFields(logrus.Fields{
-				"Id":  "1e2e622c-afe1-45af-ac01-e2f0ef716b20",
+				"Id":  "5850cbe4-1aad-4079-a0c1-6c82961f870f",
 				"err": err,
 			}).Fatalln("Failed to decode 'sortImageAscendingAsByteArray'")
 		}
@@ -98,15 +98,15 @@ func generateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecut
 		sortImageDescendingAsImage, err = png.Decode(bytes.NewReader(sortImageDescendingAsByteArray))
 		if err != nil {
 			sharedCode.Logger.WithFields(logrus.Fields{
-				"Id":  "a3826074-308d-4504-8695-85c95aba5eb3",
+				"Id":  "5ef92c4a-f98e-4b47-bddf-bdc9fd076c6b",
 				"err": err,
 			}).Fatalln("Failed to decode 'sortImageDescendingAsByteArray'")
 		}
 	}
 
 	// Define the Header
-	testCaseExecutionsListTable.ShowHeaderRow = true
-	testCaseExecutionsListTable.CreateHeader = func() fyne.CanvasObject {
+	testSuiteExecutionsListTable.ShowHeaderRow = true
+	testSuiteExecutionsListTable.CreateHeader = func() fyne.CanvasObject {
 		//return widget.NewLabel("") // Create cells as labels
 
 		var tempNewSortableHeaderLabel *sortableHeaderLabelStruct
@@ -124,50 +124,50 @@ func generateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecut
 
 	}
 
-	updateTestCaseExecutionsListTable(testCaseExecutionsModel)
+	updateTestSuiteExecutionsListTable(testSuiteExecutionsModel)
 	calculateAndSetCorrectColumnWidths()
 
 }
 
-var updateTestCaseExecutionsListTableMutex = &sync.RWMutex{}
+var updateTestSuiteExecutionsListTableMutex = &sync.RWMutex{}
 
 // Update the Table
-func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
+func updateTestSuiteExecutionsListTable(testSuiteExecutionsModel *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct) {
 
 	// Lock function
-	updateTestCaseExecutionsListTableMutex.Lock()
+	updateTestSuiteExecutionsListTableMutex.Lock()
 
 	// UnLock function
-	defer updateTestCaseExecutionsListTableMutex.Unlock()
+	defer updateTestSuiteExecutionsListTableMutex.Unlock()
 
-	testCaseExecutionsListTable.Length = func() (int, int) {
-		return len(testCaseExecutionsListTableTable), numberColumnsInTestCaseExecutionsListUI
+	testSuiteExecutionsListTable.Length = func() (int, int) {
+		return len(testSuiteExecutionsListTableTable), numberColumnsInTestSuiteExecutionsListUI
 	}
-	testCaseExecutionsListTable.CreateCell = func() fyne.CanvasObject {
+	testSuiteExecutionsListTable.CreateCell = func() fyne.CanvasObject {
 
-		tempNewClickableLabel := newClickableTableLabel("", func() {}, false, testCaseExecutionsModel)
+		tempNewClickableLabel := newClickableTableLabel("", func() {}, false, testSuiteExecutionsModel)
 		tempContainer := container.NewStack(canvas.NewRectangle(color.Transparent), tempNewClickableLabel, tempNewClickableLabel.textInsteadOfLabel)
 
 		return tempContainer
 
 	}
-	testCaseExecutionsListTable.UpdateCell = func(id widget.TableCellID, cell fyne.CanvasObject) {
+	testSuiteExecutionsListTable.UpdateCell = func(id widget.TableCellID, cell fyne.CanvasObject) {
 
 		clickableContainer := cell.(*fyne.Container)
 		clickable := clickableContainer.Objects[1].(*clickableTableLabel)
 		rectangle := clickableContainer.Objects[0].(*canvas.Rectangle)
-		clickable.SetText(testCaseExecutionsListTableTable[id.Row][id.Col])
+		clickable.SetText(testSuiteExecutionsListTableTable[id.Row][id.Col])
 		clickable.isClickable = true
 		clickable.currentRow = int16(id.Row)
-		clickable.currentTestCaseExecutionUuid = testCaseExecutionsListTableTable[id.Row][testCaseExecutionUuidColumnNumber]
-		clickable.currentTestCaseExecutionVersion = 1 //TODO HArdcoded  for now testCaseExecutionsListTableTable[id.Row][testCaseExecutionVersionColumnNumber]
-		clickable.currentTestCaseUuid = testCaseExecutionsListTableTable[id.Row][testCaseUuidColumnNumber]
-		clickable.currentTestCaseName = testCaseExecutionsListTableTable[id.Row][testCaseNameColumnNumber]
+		clickable.currentTestSuiteExecutionUuid = testSuiteExecutionsListTableTable[id.Row][testSuiteExecutionUuidColumnNumber]
+		clickable.currentTestSuiteExecutionVersion = 1 //TODO HArdcoded  for now testSuiteExecutionsListTableTable[id.Row][testSuiteExecutionVersionColumnNumber]
+		clickable.currentTestSuiteUuid = testSuiteExecutionsListTableTable[id.Row][testSuiteUuidColumnNumber]
+		clickable.currentTestSuiteName = testSuiteExecutionsListTableTable[id.Row][testSuiteNameColumnNumber]
 
 		clickable.onDoubleTap = func() {
 
-			// Open TestCaseExecution
-			//openTestCaseExecution(clickable.currentTestCaseExecutionUuid, clickable.testSuiteExecutionsModel)
+			// Open TestSuiteExecution
+			//openTestSuiteExecution(clickable.currentTestSuiteExecutionUuid, clickable.testSuiteExecutionsModel)
 
 		}
 
@@ -184,7 +184,7 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 			// Special handling for certain Columns for Status color and Timestamps
 			switch uint8(id.Col) {
 
-			case latestTestCaseExecutionStatus:
+			case latestTestSuiteExecutionStatus:
 
 				clickable.textInsteadOfLabel.Text = clickable.Text
 				clickable.Text = ""
@@ -199,23 +199,23 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 
 		} else {
 
-			// Extract if this row is the one that is shown in TestCase preview window
+			// Extract if this row is the one that is shown in TestSuite preview window
 			var tempRowIsSelected bool
-			switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+			switch selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType {
 
-			case AllExecutionsForOneTestCase:
-				tempRowIsSelected = clickable.currentTestCaseExecutionUuid == selectedTestCaseExecutionObjected.
-					allExecutionsFoOneTestCaseListObject.testCaseExecutionUuidThatIsShownInPreview
+			case AllExecutionsForOneTestSuite:
+				tempRowIsSelected = clickable.currentTestSuiteExecutionUuid == selectedTestSuiteExecutionObjected.
+					allExecutionsFoOneTestSuiteListObject.testSuiteExecutionUuidThatIsShownInPreview
 
-			case OneExecutionPerTestCase:
-				tempRowIsSelected = clickable.currentTestCaseExecutionUuid == selectedTestCaseExecutionObjected.
-					oneExecutionPerTestCaseListObject.testCaseExecutionUuidThatIsShownInPreview
+			case OneExecutionPerTestSuite:
+				tempRowIsSelected = clickable.currentTestSuiteExecutionUuid == selectedTestSuiteExecutionObjected.
+					oneExecutionPerTestSuiteListObject.testSuiteExecutionUuidThatIsShownInPreview
 
 			case NotDefined:
 
 			}
 
-			// If this row is the one that is shown in TestCase preview window
+			// If this row is the one that is shown in TestSuite preview window
 			if tempRowIsSelected {
 
 				clickable.TextStyle = fyne.TextStyle{Bold: false}
@@ -239,7 +239,7 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 			// Special handling for certain Columns for Status color and Timestamps
 			switch uint8(id.Col) {
 
-			case latestTestCaseExecutionStatus:
+			case latestTestSuiteExecutionStatus:
 				var statusId uint8
 				var statusBackgroundColor color.RGBA
 				var statusStrokeColor color.RGBA
@@ -282,22 +282,22 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 	}
 
 	// Update the Header
-	testCaseExecutionsListTable.UpdateHeader = func(id widget.TableCellID, cell fyne.CanvasObject) {
+	testSuiteExecutionsListTable.UpdateHeader = func(id widget.TableCellID, cell fyne.CanvasObject) {
 		tempSortableHeaderLabel := cell.(*sortableHeaderLabelStruct)
-		tempSortableHeaderLabel.label.SetText(testCaseExecutionsListTableHeader[id.Col])
+		tempSortableHeaderLabel.label.SetText(testSuiteExecutionsListTableHeader[id.Col])
 		tempSortableHeaderLabel.label.TextStyle = fyne.TextStyle{Bold: true}
 
 		// Set Column number
 		tempSortableHeaderLabel.columnNumber = id.Col
 		tempSortableHeaderLabel.sortImage.headerColumnNumber = id.Col
 
-		// If this Header is 'latestTestCaseExecutionTimeStampColumnNumber' then save reference to it
-		//if id.Col == int(latestTestCaseExecutionTimeStampColumnNumber) {
+		// If this Header is 'latestTestSuiteExecutionTimeStampColumnNumber' then save reference to it
+		//if id.Col == int(latestTestSuiteExecutionTimeStampColumnNumber) {
 		//	sortableHeaderReference = tempSortableHeaderLabel
 		//}
 
 		// Save a reference to the Header in the Header-map
-		testCaseExecutionsListTableHeadersMapRef[id.Col] = tempSortableHeaderLabel
+		testSuiteExecutionsListTableHeadersMapRef[id.Col] = tempSortableHeaderLabel
 
 		//tempSortableHeaderLabel.latestSelectedSortOrder = SortingDirectionAscending
 		//tempSortableHeaderLabel.updateColumnNumberFunction()
@@ -306,26 +306,26 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 		tempSortableHeaderLabel.Refresh()
 	}
 
-	testCaseExecutionsListTable.Refresh()
+	testSuiteExecutionsListTable.Refresh()
 }
 
-// TestCaseUuid
-// TestCaseVersion
-// LatestTestCaseExecutionStatus
-// LatestTestCaseExecutionStatusInsertTimeStamp
-// LatestFinishedOkTestCaseExecutionStatusInsertTimeStamp
+// TestSuiteUuid
+// TestSuiteVersion
+// LatestTestSuiteExecutionStatus
+// LatestTestSuiteExecutionStatusInsertTimeStamp
+// LatestFinishedOkTestSuiteExecutionStatusInsertTimeStamp
 // DomainUuid
 
 func calculateAndSetCorrectColumnWidths() {
 
 	// Initiate slice for keeping track of max column width size
 	var columnsMaxSizeSlice []float32
-	columnsMaxSizeSlice = make([]float32, numberColumnsInTestCaseExecutionsListUI)
+	columnsMaxSizeSlice = make([]float32, numberColumnsInTestSuiteExecutionsListUI)
 
 	var columnWidth float32
 
 	// Set initial value for max width size
-	for index, headerValue := range testCaseExecutionsListTableHeader {
+	for index, headerValue := range testSuiteExecutionsListTableHeader {
 
 		// Calculate the column width base on this value. Add  'float32(30)' to give room for sort direction icon
 		columnWidth = fyne.MeasureText(headerValue, theme.TextSize(), fyne.TextStyle{Bold: true}).Width + float32(30) //
@@ -333,7 +333,7 @@ func calculateAndSetCorrectColumnWidths() {
 	}
 
 	// Loop all rows
-	for _, tempRow := range testCaseExecutionsListTableTable {
+	for _, tempRow := range testSuiteExecutionsListTableTable {
 
 		// Loop columns for a row to get column width
 		for columnIndex, tempColumnValue := range tempRow {
@@ -352,49 +352,49 @@ func calculateAndSetCorrectColumnWidths() {
 
 	// Loop columns in table and set column width including some Padding
 	for columnIndex, columnWidth := range columnsMaxSizeSlice {
-		testCaseExecutionsListTable.SetColumnWidth(columnIndex, columnWidth+theme.Padding()*4)
+		testSuiteExecutionsListTable.SetColumnWidth(columnIndex, columnWidth+theme.Padding()*4)
 	}
 
 	// Refresh the table
-	testCaseExecutionsListTable.Refresh()
+	testSuiteExecutionsListTable.Refresh()
 
 }
 
-var loadTestCaseExecutionListTableTableMutex = &sync.RWMutex{}
+var loadTestSuiteExecutionListTableTableMutex = &sync.RWMutex{}
 
-func loadTestCaseExecutionListTableTable(
-	testCaseExecutionsModelObject *testCaseExecutionsModel.TestCaseExecutionsModelStruct,
-	retrieveAllExecutionsForSpecificTestCaseUuid bool,
-	specificTestCaseUuid string) {
+func loadTestSuiteExecutionListTableTable(
+	testSuiteExecutionsModelObject *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct,
+	retrieveAllExecutionsForSpecificTestSuiteUuid bool,
+	specificTestSuiteUuid string) {
 
 	// Lock function
-	loadTestCaseExecutionListTableTableMutex.Lock()
+	loadTestSuiteExecutionListTableTableMutex.Lock()
 
 	// Unlock function
-	defer loadTestCaseExecutionListTableTableMutex.Unlock()
+	defer loadTestSuiteExecutionListTableTableMutex.Unlock()
 
-	testCaseExecutionsListTableTable = nil
+	testSuiteExecutionsListTableTable = nil
 
-	// Get all TestCaseExecutions form 'testCaseExecutionsThatCanBeViewedByUserMap' or from 'allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap'
-	var testCaseExecutionsListMessage *[]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
-	if selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType == OneExecutionPerTestCase {
+	// Get all TestSuiteExecutions form 'testSuiteExecutionsThatCanBeViewedByUserMap' or from 'allTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap'
+	var testSuiteExecutionsListMessage *[]*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage
+	if selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType == OneExecutionPerTestSuite {
 
 		// Retrieve latest TestExecutions
-		testCaseExecutionsListMessage = testCaseExecutionsModelObject.ReadAllFromTestCaseExecutionsMap()
+		testSuiteExecutionsListMessage = testSuiteExecutionsModelObject.ReadAllFromTestSuiteExecutionsMap()
 	} else {
 
-		// Retrieve all TestCaseExecutions for one TestCase
+		// Retrieve all TestSuiteExecutions for one TestSuite
 
-		testCaseExecutionsListMessage, _ = testCaseExecutionsModelObject.
-			GetAllTestCaseExecutionsForOneTestCaseUuid(testCaseExecutionsModel.TestCaseUuidType(specificTestCaseUuid))
+		testSuiteExecutionsListMessage, _ = testSuiteExecutionsModelObject.
+			GetAllTestSuiteExecutionsForOneTestSuiteUuid(testSuiteExecutionsModel.TestSuiteUuidType(specificTestSuiteUuid))
 	}
 
-	if testCaseExecutionsListMessage == nil {
-		testCaseExecutionsListMessage = &[]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage{}
+	if testSuiteExecutionsListMessage == nil {
+		testSuiteExecutionsListMessage = &[]*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage{}
 	}
 
-	// Loop all TestCaseExecutions and add to '[][]string'-object for the Table
-	for _, tempTestCaseExecution := range *testCaseExecutionsListMessage {
+	// Loop all TestSuiteExecutions and add to '[][]string'-object for the Table
+	for _, tempTestSuiteExecution := range *testSuiteExecutionsListMessage {
 
 		// Create temporary Row-object for the table
 		var tempRowSlice []string
@@ -405,8 +405,8 @@ func loadTestCaseExecutionListTableTable(
 		// DomainName
 		var domainNameForTable string
 		domainNameForTable = fmt.Sprintf("%s [%s]",
-			tempTestCaseExecution.GetDomainName(),
-			tempTestCaseExecution.GetDomainUUID()[0:8])
+			tempTestSuiteExecution.GetDomainName(),
+			tempTestSuiteExecution.GetDomainUUID()[0:8])
 
 		tempRowSlice = append(tempRowSlice, domainNameForTable)
 
@@ -414,124 +414,124 @@ func loadTestCaseExecutionListTableTable(
 		// SuiteName
 		var suiteNameForTable string
 		suiteNameForTable = fmt.Sprintf("%s [%s]",
-			tempTestCaseExecution.GetTestSuiteName(),
-			tempTestCaseExecution.GetTestSuiteUuid()[0:8])
+			tempTestSuiteExecution.GetTestSuiteName(),
+			tempTestSuiteExecution.GetTestSuiteUuid()[0:8])
 
 		tempRowSlice = append(tempRowSlice, suiteNameForTable)
 
 		// Column 2:
-		// TestCaseName
-		var testCaseNameTable string
-		testCaseNameTable = fmt.Sprintf("%s [%s]",
-			tempTestCaseExecution.GetTestCaseName(),
-			tempTestCaseExecution.GetTestCaseUuid()[0:8])
+		// TestSuiteName
+		var testSuiteNameTable string
+		testSuiteNameTable = fmt.Sprintf("%s [%s]",
+			tempTestSuiteExecution.GetTestSuiteName(),
+			tempTestSuiteExecution.GetTestSuiteUuid()[0:8])
 
-		tempRowSlice = append(tempRowSlice, testCaseNameTable)
+		tempRowSlice = append(tempRowSlice, testSuiteNameTable)
 
 		// Column 3:
-		// TestCaseVersion
-		tempRowSlice = append(tempRowSlice, strconv.Itoa(int(tempTestCaseExecution.GetTestCaseVersion())))
+		// TestSuiteVersion
+		tempRowSlice = append(tempRowSlice, strconv.Itoa(int(tempTestSuiteExecution.GetTestSuiteVersion())))
 
 		// Column 4:
-		// TestCaseExecutionUuid
-		tempRowSlice = append(tempRowSlice, tempTestCaseExecution.GetTestCaseExecutionUuid())
+		// TestSuiteExecutionUuid
+		tempRowSlice = append(tempRowSlice, tempTestSuiteExecution.GetTestSuiteExecutionUuid())
 
 		// Column 5:
-		// LatestTestCaseExecutionStatus
-		var tempTestCaseExecutionStatus string
+		// LatestTestSuiteExecutionStatus
+		var tempTestSuiteExecutionStatus string
 
-		if tempTestCaseExecution.GetTestCaseExecutionStatus() > 0 {
+		if tempTestSuiteExecution.GetTestSuiteExecutionStatus() > 0 {
 
-			tempTestCaseExecutionStatus = detailedExecutionsModel.ExecutionStatusColorMap[int32(tempTestCaseExecution.GetTestCaseExecutionStatus())].ExecutionStatusName
+			tempTestSuiteExecutionStatus = detailedExecutionsModel.ExecutionStatusColorMap[int32(tempTestSuiteExecution.GetTestSuiteExecutionStatus())].ExecutionStatusName
 		} else {
-			tempTestCaseExecutionStatus = "<no execution>"
+			tempTestSuiteExecutionStatus = "<no execution>"
 		}
 
-		tempRowSlice = append(tempRowSlice, tempTestCaseExecutionStatus)
+		tempRowSlice = append(tempRowSlice, tempTestSuiteExecutionStatus)
 
 		// Column 6:
-		// TestCaseExecutionStatusStartTimeStamp
-		var tempTestCaseExecutionStatusStartTimeStamp string
+		// TestSuiteExecutionStatusStartTimeStamp
+		var tempTestSuiteExecutionStatusStartTimeStamp string
 
-		if tempTestCaseExecution.GetExecutionStartTimeStamp() != nil {
-			tempTestCaseExecutionStatusStartTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestCaseExecution.
+		if tempTestSuiteExecution.GetExecutionStartTimeStamp() != nil {
+			tempTestSuiteExecutionStatusStartTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestSuiteExecution.
 				GetExecutionStartTimeStamp())
 		} else {
-			tempTestCaseExecutionStatusStartTimeStamp = "<no execution>"
+			tempTestSuiteExecutionStatusStartTimeStamp = "<no execution>"
 		}
-		tempRowSlice = append(tempRowSlice, tempTestCaseExecutionStatusStartTimeStamp)
+		tempRowSlice = append(tempRowSlice, tempTestSuiteExecutionStatusStartTimeStamp)
 
 		// Column 7:
-		// TestCaseExecutionStatusUpdateTimeStamp
-		var tempTestCaseExecutionFinishTimeStamp string
+		// TestSuiteExecutionStatusUpdateTimeStamp
+		var tempTestSuiteExecutionFinishTimeStamp string
 
-		if tempTestCaseExecution.GetExecutionStatusUpdateTimeStamp() != nil {
-			tempTestCaseExecutionFinishTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(
-				tempTestCaseExecution.GetExecutionStatusUpdateTimeStamp())
+		if tempTestSuiteExecution.GetExecutionStatusUpdateTimeStamp() != nil {
+			tempTestSuiteExecutionFinishTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(
+				tempTestSuiteExecution.GetExecutionStatusUpdateTimeStamp())
 		} else {
-			tempTestCaseExecutionFinishTimeStamp = "<no successful execution yet>"
+			tempTestSuiteExecutionFinishTimeStamp = "<no successful execution yet>"
 		}
-		tempRowSlice = append(tempRowSlice, tempTestCaseExecutionFinishTimeStamp)
+		tempRowSlice = append(tempRowSlice, tempTestSuiteExecutionFinishTimeStamp)
 
 		// Column 8:
-		// TestCaseExecutionStatusStopTimeStamp
-		var tempTestCaseExecutionStatusStopTimeStamp string
+		// TestSuiteExecutionStatusStopTimeStamp
+		var tempTestSuiteExecutionStatusStopTimeStamp string
 
-		if tempTestCaseExecution.GetExecutionStartTimeStamp() != nil {
-			tempTestCaseExecutionStatusStopTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestCaseExecution.
+		if tempTestSuiteExecution.GetExecutionStartTimeStamp() != nil {
+			tempTestSuiteExecutionStatusStopTimeStamp = sharedCode.ConvertGrpcTimeStampToStringForDB(tempTestSuiteExecution.
 				GetExecutionStartTimeStamp())
 		} else {
-			tempTestCaseExecutionStatusStopTimeStamp = "<TestCase is not not finished>"
+			tempTestSuiteExecutionStatusStopTimeStamp = "<TestSuite is not not finished>"
 		}
-		tempRowSlice = append(tempRowSlice, tempTestCaseExecutionStatusStopTimeStamp)
+		tempRowSlice = append(tempRowSlice, tempTestSuiteExecutionStatusStopTimeStamp)
 
 		// Column 9:
-		// TestCaseUuid
-		tempRowSlice = append(tempRowSlice, tempTestCaseExecution.GetTestCaseUuid())
+		// TestSuiteUuid
+		tempRowSlice = append(tempRowSlice, tempTestSuiteExecution.GetTestSuiteUuid())
 
 		// Column 10:
 		// DomainUuid
-		tempRowSlice = append(tempRowSlice, tempTestCaseExecution.GetDomainUUID())
+		tempRowSlice = append(tempRowSlice, tempTestSuiteExecution.GetDomainUUID())
 
 		// Column 11:
 		// TestSuiteUuid
-		tempRowSlice = append(tempRowSlice, tempTestCaseExecution.GetTestSuiteUuid())
+		tempRowSlice = append(tempRowSlice, tempTestSuiteExecution.GetTestSuiteUuid())
 
 		// Column 12:
 		// TestSuiteExecutionUuid
-		tempRowSlice = append(tempRowSlice, tempTestCaseExecution.GetTestSuiteExecutionUuid())
+		tempRowSlice = append(tempRowSlice, tempTestSuiteExecution.GetTestSuiteExecutionUuid())
 
 		// Add Row to slice of rows for the table
-		testCaseExecutionsListTableTable = append(testCaseExecutionsListTableTable, tempRowSlice)
+		testSuiteExecutionsListTableTable = append(testSuiteExecutionsListTableTable, tempRowSlice)
 
-		// Verify number columns match constant 'numberColumnsInTestCaseExecutionsListUI'
-		if len(tempRowSlice) != numberColumnsInTestCaseExecutionsListUI {
-			log.Fatalln(fmt.Sprintf("Number of elements in 'tempRowSlice' missmatch contant 'numberColumnsInTestCaseExecutionsListUI'. %d vs %d. ID: %s",
+		// Verify number columns match constant 'numberColumnsInTestSuiteExecutionsListUI'
+		if len(tempRowSlice) != numberColumnsInTestSuiteExecutionsListUI {
+			log.Fatalln(fmt.Sprintf("Number of elements in 'tempRowSlice' missmatch contant 'numberColumnsInTestSuiteExecutionsListUI'. %d vs %d. ID: %s",
 				tempRowSlice,
-				numberColumnsInTestCaseExecutionsListUI,
+				numberColumnsInTestSuiteExecutionsListUI,
 				"0e3edfa7-52b8-4fcc-8243-51494463c641"))
 		}
 
 	}
 
-	// Do an initial sort 'testCaseExecutionsListTableTable' descending on 'LastSavedTimeStamp'
-	if testCaseExecutionsListMessage != nil && len(*testCaseExecutionsListMessage) > 0 {
+	// Do an initial sort 'testSuiteExecutionsListTableTable' descending on 'LastSavedTimeStamp'
+	if testSuiteExecutionsListMessage != nil && len(*testSuiteExecutionsListMessage) > 0 {
 
-		switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+		switch selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType {
 
-		case AllExecutionsForOneTestCase:
-			selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+		case AllExecutionsForOneTestSuite:
+			selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
 				currentSortColumn = initialColumnToSortOn
 
-		case OneExecutionPerTestCase:
-			selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+		case OneExecutionPerTestSuite:
+			selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
 				currentSortColumn = initialColumnToSortOn
 
 		case NotDefined:
 
 		}
 
-		sort2DStringSlice(testCaseExecutionsListTableTable, initialColumnToSortOn, initialSortDirectionForInitialColumnToSortOn)
+		sort2DStringSlice(testSuiteExecutionsListTableTable, initialColumnToSortOn, initialSortDirectionForInitialColumnToSortOn)
 
 	}
 
@@ -542,88 +542,88 @@ func sortGuiTableOnColumn(columnNumber uint8, sortDirection SortingDirectionType
 
 	// Update the Gui table with the newly sorted data
 	// Update the GUI
-	loadTestCaseExecutionListTableTable(
-		&testCaseExecutionsModel.TestCaseExecutionsModel,
+	loadTestSuiteExecutionListTableTable(
+		&testSuiteExecutionsModel.TestSuiteExecutionsModel,
 		true,
-		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-			testCaseUuidForTestCaseExecutionThatIsShownInPreview)
+		selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
+			testSuiteUuidForTestSuiteExecutionThatIsShownInPreview)
 
 	// Sort matrix
-	sort2DStringSlice(testCaseExecutionsListTableTable, int(columnNumber), sortDirection)
+	sort2DStringSlice(testSuiteExecutionsListTableTable, int(columnNumber), sortDirection)
 
 	calculateAndSetCorrectColumnWidths()
-	updateTestCaseExecutionsListTable(&testCaseExecutionsModel.TestCaseExecutionsModel)
+	updateTestSuiteExecutionsListTable(&testSuiteExecutionsModel.TestSuiteExecutionsModel)
 
 	// Set current sorted column
-	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
-	case OneExecutionPerTestCase:
-		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-			previousSortColumn = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumn
-		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumn = int(columnNumber)
-		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-			previousHeader = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentHeader
-		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-			currentHeader = testCaseExecutionsListTableHeadersMapRef[int(columnNumber)]
+	switch selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType {
+	case OneExecutionPerTestSuite:
+		selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
+			previousSortColumn = selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.currentSortColumn
+		selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.currentSortColumn = int(columnNumber)
+		selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
+			previousHeader = selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.currentHeader
+		selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
+			currentHeader = testSuiteExecutionsListTableHeadersMapRef[int(columnNumber)]
 
-		selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+		selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
 			currentSortColumnsSortDirection = sortDirection
 
-	case AllExecutionsForOneTestCase:
+	case AllExecutionsForOneTestSuite:
 
-		for _, testCaseExecutionsListTableHeaderRef := range testCaseExecutionsListTableHeadersMapRef {
-			testCaseExecutionsListTableHeaderRef.sortImage.unspecifiedImageContainer.Hide()
-			testCaseExecutionsListTableHeaderRef.sortImage.ascendingImageContainer.Hide()
-			testCaseExecutionsListTableHeaderRef.sortImage.descendingImageContainer.Hide()
+		for _, testSuiteExecutionsListTableHeaderRef := range testSuiteExecutionsListTableHeadersMapRef {
+			testSuiteExecutionsListTableHeaderRef.sortImage.unspecifiedImageContainer.Hide()
+			testSuiteExecutionsListTableHeaderRef.sortImage.ascendingImageContainer.Hide()
+			testSuiteExecutionsListTableHeaderRef.sortImage.descendingImageContainer.Hide()
 
-			testCaseExecutionsListTableHeaderRef.sortImage.latestSelectedSortOrder = SortingDirectionUnSpecified
+			testSuiteExecutionsListTableHeaderRef.sortImage.latestSelectedSortOrder = SortingDirectionUnSpecified
 
 		}
 
-		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.previousSortColumn = -1
-		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.currentSortColumn = int(columnNumber)
+		selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.previousSortColumn = -1
+		selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.currentSortColumn = int(columnNumber)
 
-		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.previousHeader = nil
-		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
-			currentHeader = testCaseExecutionsListTableHeadersMapRef[int(columnNumber)]
+		selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.previousHeader = nil
+		selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
+			currentHeader = testSuiteExecutionsListTableHeadersMapRef[int(columnNumber)]
 
-		selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+		selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
 			currentSortColumnsSortDirection = sortDirection
 
 	default:
 		// Handle unexpected cases
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"Id": "8fd5ae9a-9cfe-42d9-91c1-6b7c084cbc90",
-			"selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType": selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType,
-		}).Fatalln("Unhandled 'selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType'")
+			"Id": "a78d2b95-f8c2-41fb-89d2-873815c8745f",
+			"selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType": selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType,
+		}).Fatalln("Unhandled 'selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType'")
 
 	}
 
 	// Set correct sorting for the header
-	testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.latestSelectedSortOrder = sortDirection
+	testSuiteExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.latestSelectedSortOrder = sortDirection
 
 	// Hide all images first
-	testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.unspecifiedImageContainer.Hide()
-	testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.ascendingImageContainer.Hide()
-	testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.descendingImageContainer.Hide()
+	testSuiteExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.unspecifiedImageContainer.Hide()
+	testSuiteExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.ascendingImageContainer.Hide()
+	testSuiteExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.descendingImageContainer.Hide()
 
 	// Show the appropriate image
-	if testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.isSortable {
+	if testSuiteExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.isSortable {
 
-		switch testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.latestSelectedSortOrder {
+		switch testSuiteExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.latestSelectedSortOrder {
 
 		case SortingDirectionUnSpecified:
-			testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.unspecifiedImageContainer.Show()
+			testSuiteExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.unspecifiedImageContainer.Show()
 
 		case SortingDirectionAscending:
-			testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.ascendingImageContainer.Show()
+			testSuiteExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.ascendingImageContainer.Show()
 
 		case SortingDirectionDescending:
-			testCaseExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.descendingImageContainer.Show()
+			testSuiteExecutionsListTableHeadersMapRef[int(columnNumber)].sortImage.descendingImageContainer.Show()
 
 		default:
 			// Handle unexpected cases
 			sharedCode.Logger.WithFields(logrus.Fields{
-				"Id":            "0eb8808b-6314-4160-b923-1e2ec5e4b4f2",
+				"Id":            "72a579d0-4886-4865-a251-efb7d9eefa93",
 				"sortDirection": sortDirection,
 			}).Fatalln("Unhandled 'sortDirection'")
 		}
@@ -631,34 +631,34 @@ func sortGuiTableOnColumn(columnNumber uint8, sortDirection SortingDirectionType
 	} else {
 		// Handle unexpected cases
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"Id":           "7e0d2caf-c57b-45a1-8031-d71755338e94",
+			"Id":           "6b26dfa6-b188-4ca7-a489-b91fe6ff68ee",
 			"columnNumber": columnNumber,
 		}).Error("Column is not sortable")
 
 	}
 
 	// Refresh table
-	testCaseExecutionsListTable.Refresh()
+	testSuiteExecutionsListTable.Refresh()
 
 }
 
-// Sort the matrix, ascending, for GUI table, update the Gui for 'latestTestCaseExecutionTimeStampColumnNumber'
-func sortGuiTableAscendingOnTestCaseExecutionTimeStamp() {
+// Sort the matrix, ascending, for GUI table, update the Gui for 'latestTestSuiteExecutionTimeStampColumnNumber'
+func sortGuiTableAscendingOnTestSuiteExecutionTimeStamp() {
 
-	sortGuiTableOnColumn(latestTestCaseExecutionTimeStampColumnNumber, SortingDirectionAscending)
+	sortGuiTableOnColumn(latestTestSuiteExecutionTimeStampColumnNumber, SortingDirectionAscending)
 
 }
 
-// Sort the matrix, ascending, for GUI table, update the Gui for 'latestTestCaseExecutionTimeStampColumnNumber'
+// Sort the matrix, ascending, for GUI table, update the Gui for 'latestTestSuiteExecutionTimeStampColumnNumber'
 func SortOrReverseSortGuiTable(sortInThisColumn uint8) {
 
-	// Which TestCaseExecutions table is shown
-	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
-	case OneExecutionPerTestCase:
-		if selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumn == int(sortInThisColumn) {
+	// Which TestSuiteExecutions table is shown
+	switch selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType {
+	case OneExecutionPerTestSuite:
+		if selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.currentSortColumn == int(sortInThisColumn) {
 
 			// Switch sort order
-			switch selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumnsSortDirection {
+			switch selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.currentSortColumnsSortDirection {
 			case SortingDirectionAscending:
 				// Set new column to be sorted ascending
 				sortGuiTableOnColumn(sortInThisColumn, SortingDirectionDescending)
@@ -670,9 +670,9 @@ func SortOrReverseSortGuiTable(sortInThisColumn uint8) {
 			case SortingDirectionUnSpecified:
 				// Handle unexpected cases
 				sharedCode.Logger.WithFields(logrus.Fields{
-					"Id": "3fa1a246-2a0d-4bcb-ba51-9d0d2c56c0a6",
-					"selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumnsSortDirection": selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumnsSortDirection,
-				}).Fatalln("Unhandled 'selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumnsSortDirection'")
+					"Id": "ec1069fd-f8eb-4bae-a3e3-91b536a558e3",
+					"selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.currentSortColumnsSortDirection": selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.currentSortColumnsSortDirection,
+				}).Fatalln("Unhandled 'selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.currentSortColumnsSortDirection'")
 
 			}
 
@@ -681,12 +681,12 @@ func SortOrReverseSortGuiTable(sortInThisColumn uint8) {
 			sortGuiTableOnColumn(sortInThisColumn, SortingDirectionAscending)
 		}
 
-	case AllExecutionsForOneTestCase:
+	case AllExecutionsForOneTestSuite:
 
-		if selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.currentSortColumn == int(sortInThisColumn) {
+		if selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.currentSortColumn == int(sortInThisColumn) {
 
 			// Switch sort order
-			switch selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.currentSortColumnsSortDirection {
+			switch selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.currentSortColumnsSortDirection {
 			case SortingDirectionAscending:
 				// Set new column to be sorted ascending
 				sortGuiTableOnColumn(sortInThisColumn, SortingDirectionDescending)
@@ -698,9 +698,9 @@ func SortOrReverseSortGuiTable(sortInThisColumn uint8) {
 			case SortingDirectionUnSpecified:
 				// Handle unexpected cases
 				sharedCode.Logger.WithFields(logrus.Fields{
-					"Id": "a2faa1b5-3b5d-40bd-8749-93054145756e",
-					"selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumnsSortDirection": selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumnsSortDirection,
-				}).Fatalln("Unhandled 'selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumnsSortDirection'")
+					"Id": "169f8fef-942b-45e3-b9a8-1af88d74c1ed",
+					"selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.currentSortColumnsSortDirection": selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.currentSortColumnsSortDirection,
+				}).Fatalln("Unhandled 'selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.currentSortColumnsSortDirection'")
 
 			}
 
@@ -712,9 +712,9 @@ func SortOrReverseSortGuiTable(sortInThisColumn uint8) {
 	default:
 		// Handle unexpected cases
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"Id": "8fd5ae9a-9cfe-42d9-91c1-6b7c084cbc90",
-			"selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType": selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType,
-		}).Fatalln("Unhandled 'selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType'")
+			"Id": "4d165016-4494-47a6-9525-681bee77ee83",
+			"selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType": selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType,
+		}).Fatalln("Unhandled 'selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType'")
 	}
 
 }
@@ -722,44 +722,44 @@ func SortOrReverseSortGuiTable(sortInThisColumn uint8) {
 // Sort the matrix, for GUI table, update the Gui. Use current table sorting and column, if exist
 func SortGuiTableOnCurrentColumnAndSorting() {
 
-	// Which TestCaseExecutions table is shown
-	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
-	case OneExecutionPerTestCase:
+	// Which TestSuiteExecutions table is shown
+	switch selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType {
+	case OneExecutionPerTestSuite:
 
 		// Sort table on current column and sort order, if exist
-		switch selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumnsSortDirection {
+		switch selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.currentSortColumnsSortDirection {
 		case SortingDirectionAscending, SortingDirectionDescending:
 			// Set on current column and use current sort direction
 			sortGuiTableOnColumn(
-				uint8(selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumn),
-				selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumnsSortDirection)
+				uint8(selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.currentSortColumn),
+				selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.currentSortColumnsSortDirection)
 
 		case SortingDirectionUnSpecified:
-			// Unspecified sort order, then sort on TestCaseExecutionTimeStamp
-			sortGuiTableAscendingOnTestCaseExecutionTimeStamp()
+			// Unspecified sort order, then sort on TestSuiteExecutionTimeStamp
+			sortGuiTableAscendingOnTestSuiteExecutionTimeStamp()
 		}
 
-	case AllExecutionsForOneTestCase:
+	case AllExecutionsForOneTestSuite:
 
 		// Sort table on current column and sort order, if exist
-		switch selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.currentSortColumnsSortDirection {
+		switch selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.currentSortColumnsSortDirection {
 		case SortingDirectionAscending, SortingDirectionDescending:
 			// Set on current column and use current sort direction
 			sortGuiTableOnColumn(
-				uint8(selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.currentSortColumn),
-				selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.currentSortColumnsSortDirection)
+				uint8(selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.currentSortColumn),
+				selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.currentSortColumnsSortDirection)
 
 		case SortingDirectionUnSpecified:
-			// Unspecified sort order, then sort on TestCaseExecutionTimeStamp
-			sortGuiTableAscendingOnTestCaseExecutionTimeStamp()
+			// Unspecified sort order, then sort on TestSuiteExecutionTimeStamp
+			sortGuiTableAscendingOnTestSuiteExecutionTimeStamp()
 		}
 
 	default:
 		// Handle unexpected cases
 		sharedCode.Logger.WithFields(logrus.Fields{
-			"Id": "9d0e08e7-c547-42e6-ae7c-ee80601b24b5",
-			"selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType": selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType,
-		}).Fatalln("Unhandled 'selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType'")
+			"Id": "4a450af6-6a7c-49b0-b50e-1923c406978c",
+			"selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType": selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType,
+		}).Fatalln("Unhandled 'selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType'")
 	}
 
 }

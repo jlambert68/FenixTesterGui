@@ -34,7 +34,7 @@ type clickableAttributeInPreviewStruct struct {
 	RightClicked                        func()
 	lastTapTime                         time.Time
 	AttributeType                       attributeTypeType
-	testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct
+	testCaseInstructionPreViewObjectRef *TestSuiteInstructionPreViewStruct
 }
 
 // Used for creating a new Attribute label
@@ -45,7 +45,7 @@ func newClickableAttributeInPreview(
 	leftClicked func(),
 	rightClicked func(),
 	attributeType attributeTypeType,
-	testCaseInstructionPreViewObject *TestCaseInstructionPreViewStruct,
+	testCaseInstructionPreViewObject *TestSuiteInstructionPreViewStruct,
 ) *clickableAttributeInPreviewStruct {
 
 	clickableAttributeInPreview := &clickableAttributeInPreviewStruct{
@@ -136,7 +136,7 @@ func (c *clickableAttributeInPreviewStruct) CreateRenderer() fyne.WidgetRenderer
 func (c *clickableAttributeInPreviewStruct) Tapped(*fyne.PointEvent) {
 
 	// Check if mouse has left TestCaseExecutionTree-container
-	if mouseHasLeftTestCaseExecutionPreviewTree == true {
+	if mouseHasLeftTestSuiteExecutionPreviewTree == true {
 		return
 	}
 
@@ -211,7 +211,7 @@ func (c *clickableAttributeInPreviewStruct) Tapped(*fyne.PointEvent) {
 func (c *clickableAttributeInPreviewStruct) TappedSecondary(*fyne.PointEvent) {
 
 	// Check if mouse has left TestCaseExecutionTree-container
-	if mouseHasLeftTestCaseExecutionPreviewTree == true {
+	if mouseHasLeftTestSuiteExecutionPreviewTree == true {
 		return
 	}
 

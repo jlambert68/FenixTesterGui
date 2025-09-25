@@ -1,10 +1,10 @@
 package listTestSuiteExecutionsUI
 
 import (
-	detailedTestCaseExecutionsUI "FenixTesterGui/executions/detailedExecutionsUI"
+	detailedTestSuiteExecutionsUI "FenixTesterGui/executions/detailedExecutionsUI"
 	"FenixTesterGui/soundEngine"
-	"FenixTesterGui/testCaseExecutions/listTestCaseExecutionsModel"
-	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
+	"FenixTesterGui/testSuiteExecutions/listTestSuiteExecutionsModel"
+	"FenixTesterGui/testSuiteExecutions/testSuiteExecutionsModel"
 	_ "embed"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -38,18 +38,18 @@ var sortImageAscendingAsImage image.Image
 var sortImageDescendingAsByteArray []byte
 var sortImageDescendingAsImage image.Image
 
-// Define the function to be executed to load TestCaseExecutions from that Database that the user can view
-// Only loads one TestCaseExecution per TestCase
-func LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction(
-	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct,
+// Define the function to be executed to load TestSuiteExecutions from that Database that the user can view
+// Only loads one TestSuiteExecution per TestCase
+func LoadOneTestSuiteExecutionPerTestCaseFromDataBaseFunction(
+	testSuiteExecutionsModel *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct,
 	updateGui bool,
-	testCaseInstructionPreViewObject *TestCaseInstructionPreViewStruct) {
+	testSuiteInstructionPreViewObject *TestSuiteInstructionPreViewStruct) { // ***
 
-	// If previously data set is of other kind then 'OneExecutionPerTestCase' then no selection should be made
-	if selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType != OneExecutionPerTestCase {
-		//selectedTestCaseExecutionObjected.isAnyRowSelected = false
-		testCaseInstructionPreViewObject.ClearTestCaseExecutionPreviewContainer()
-		loadAllTestCaseExecutionsForOneTestCaseButtonReference.Disable()
+	// If previously data set is of other kind then 'OneExecutionPerTestSuite' then no selection should be made
+	if selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType != OneExecutionPerTestSuite {
+		//selectedTestSuiteExecutionObjected.isAnyRowSelected = false
+		testSuiteInstructionPreViewObject.ClearTestSuiteExecutionPreviewContainer() // ***
+		loadAllTestSuiteExecutionsForOneTestSuiteButtonReference.Disable()
 
 	}
 
@@ -57,10 +57,10 @@ func LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction(
 	//var beforeNumberOfRowsRetrievedFromDatabase int
 	//var afterNumberOfRowsRetrievedFromDatabase int
 	//beforeNumberOfRowsRetrievedFromDatabase = testSuiteExecutionsModel.
-	//	GetNumberOfTestCaseExecutionsRetrievedFromDatabase()
+	//	GetNumberOfTestSuiteExecutionsRetrievedFromDatabase()
 
 	// Specify from were Executions in the GUI comes from
-	selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType = OneExecutionPerTestCase
+	selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType = OneExecutionPerTestSuite
 
 	// Channel used to trigger update of Gui
 	var updateGuiChannelStep1 chan bool
@@ -68,14 +68,14 @@ func LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction(
 	updateGuiChannelStep1 = make(chan bool)
 	updateGuiChannelStep2 = make(chan bool)
 
-	listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
-		testCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.LatestUniqueTestCaseExecutionDatabaseRowId,
+	listTestSuiteExecutionsModel.LoadTestSuiteExecutionsThatCanBeViewedByUser(
+		testSuiteExecutionsModel.LatestTestSuiteExecutionForEachTestSuiteUuid.LatestUniqueTestSuiteExecutionDatabaseRowId,
 		true,
-		testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
+		testSuiteExecutionsModel.StandardTestSuiteExecutionsBatchSize,
 		false,
 		"",
-		testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
-		testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
+		testSuiteExecutionsModel.NullTimeStampForTestSuiteExecutionsSearch,
+		testSuiteExecutionsModel.NullTimeStampForTestSuiteExecutionsSearch,
 		true,
 		&updateGuiChannelStep1)
 
@@ -94,12 +94,12 @@ func LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction(
 		/*
 			// Get number of TestCase retrieved from Database after loading more data
 			afterNumberOfRowsRetrievedFromDatabase = testSuiteExecutionsModel.
-				GetNumberOfTestCaseExecutionsRetrievedFromDatabase()
+				GetNumberOfTestSuiteExecutionsRetrievedFromDatabase()
 
 			// If they are different then sort the table
 			if beforeNumberOfRowsRetrievedFromDatabase != afterNumberOfRowsRetrievedFromDatabase {
 				//sortableHeaderReference.sortImage.onTapped()
-				testCaseExecutionsListTableHeadersMapRef[int(latestTestCaseExecutionTimeStampColumnNumber)].sortImage.onTapped()
+				testSuiteExecutionsListTableHeadersMapRef[int(latestTestSuiteExecutionTimeStampColumnNumber)].sortImage.onTapped()
 
 			}
 
@@ -108,62 +108,62 @@ func LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction(
 	}()
 
 	updateGuiChannelStep2 <- true
-	//filterTestCaseExcutionsButtonFunction()
+	//filterTestSuiteExcutionsButtonFunction()
 
 }
 
 // Create the UI used for list all TestCasesMapPtr that the User can edit
-func GenerateListTestCaseExecutionsUI(
-	testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct,
-	detailedTestCaseExecutionsUITabObject *container.DocTabs,
-	exitFunctionsForDetailedTestCaseExecutionsUITabObject *map[*container.TabItem]func(),
-	testCaseInstructionPreViewObject *TestCaseInstructionPreViewStruct) (
+func GenerateListTestSuiteExecutionsUI(
+	testSuiteExecutionsModel *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct,
+	detailedTestSuiteExecutionsUITabObject *container.DocTabs,
+	exitFunctionsForDetailedTestSuiteExecutionsUITabObject *map[*container.TabItem]func(),
+	testCaseInstructionPreViewObject *TestSuiteInstructionPreViewStruct) ( // ***
 	listTestCasesUI fyne.CanvasObject) {
 
-	// save reference to 'detailedTestCaseExecutionsUITabObject'
-	detailedTestCaseExecutionsUITabObjectRef = detailedTestCaseExecutionsUITabObject
+	// save reference to 'detailedTestSuiteExecutionsUITabObject'
+	detailedTestSuiteExecutionsUITabObjectRef = detailedTestSuiteExecutionsUITabObject
 
-	// save Reference to Map over Exit-functions for the Tabs in 'detailedTestCaseExecutionsUITabObject'
-	exitFunctionsForDetailedTestCaseExecutionsUITabObjectPtr = exitFunctionsForDetailedTestCaseExecutionsUITabObject
+	// save Reference to Map over Exit-functions for the Tabs in 'detailedTestSuiteExecutionsUITabObject'
+	exitFunctionsForDetailedTestSuiteExecutionsUITabObjectPtr = exitFunctionsForDetailedTestSuiteExecutionsUITabObject
 
 	//var testCaseTable *widget.Table
 
 	var tempTestCaseListAndTestCasePreviewSplitContainer *container.Split
 	//var tempTestCasePreviewTestInstructionExecutionLogSplitContainer *container.Split
 
-	var testCaseExecutionsListContainer *fyne.Container
-	var testCaseExecutionsListScrollContainer *container.Scroll
+	var testSuiteExecutionsListContainer *fyne.Container
+	var testSuiteExecutionsListScrollContainer *container.Scroll
 	var statisticsContainer *fyne.Container
 	var executionColorPaletteContainer *fyne.Container
 	var statisticsAndColorPaletteContainer *fyne.Container
 
-	// Button used for Retrieving all TestCaseExecutions
-	var loadTestCaseExecutionsFromDataBaseButton *widget.Button
-	var loadOneTestCaseExecutionPerTestCaseFromDataBaseFunction func()
+	// Button used for Retrieving all TestSuiteExecutions
+	var loadTestSuiteExecutionsFromDataBaseButton *widget.Button
+	var loadOneTestSuiteExecutionPerTestCaseFromDataBaseFunction func()
 
-	var filterTestCaseExcutionsButton *widget.Button
-	var filterTestCaseExcutionsButtonFunction func()
+	var filterTestSuiteExcutionsButton *widget.Button
+	var filterTestSuiteExcutionsButtonFunction func()
 	var clearFiltersButton *widget.Button
 	var clearFiltersButtonFunction func()
-	var loadAllTestCaseExecutionsForOneTestCaseButton *widget.Button
-	var loadAllTestCaseExecutionsForOneTestCaseButtonFunction func()
+	var loadAllTestSuiteExecutionsForOneTestCaseButton *widget.Button
+	var loadAllTestSuiteExecutionsForOneTestCaseButtonFunction func()
 	var buttonsContainer *fyne.Container
 
-	var numberOfTestCaseExecutionsAfterLocalFilterLabel *widget.Label
-	var numberOfTestCaseExecutionsRetrievedFromDatabaseLabel *widget.Label
+	var numberOfTestSuiteExecutionsAfterLocalFilterLabel *widget.Label
+	var numberOfTestSuiteExecutionsRetrievedFromDatabaseLabel *widget.Label
 
 	var filterAndButtonsContainer *fyne.Container
 
 	// Initiate map for Header-references
-	testCaseExecutionsListTableHeadersMapRef = make(map[int]*sortableHeaderLabelStruct)
+	testSuiteExecutionsListTableHeadersMapRef = make(map[int]*sortableHeaderLabelStruct)
 
-	// Initiate 'selectedTestCaseExecutionObjected' used for keep track of source of executions and what row is selected
-	selectedTestCaseExecutionObjected = selectedTestCaseExecutionStruct{
-		oneExecutionPerTestCaseListObject: oneExecutionPerTestCaseListObjectStruct{
-			lastSelectedTestCaseExecutionForOneExecutionPerTestCase: "",
-			testCaseUuidForTestCaseExecutionThatIsShownInPreview:    "",
-			testCaseExecutionUuidThatIsShownInPreview:               "",
-			testCaseExecutionVersionThatIsShownInPreview:            0,
+	// Initiate 'selectedTestSuiteExecutionObjected' used for keep track of source of executions and what row is selected
+	selectedTestSuiteExecutionObjected = selectedTestSuiteExecutionStruct{
+		oneExecutionPerTestSuiteListObject: oneExecutionPerTestSuiteListObjectStruct{
+			lastSelectedTestSuiteExecutionForOneExecutionPerTestSuite: "",
+			testSuiteUuidForTestSuiteExecutionThatIsShownInPreview:    "",
+			testSuiteExecutionUuidThatIsShownInPreview:                "",
+			testSuiteExecutionVersionThatIsShownInPreview:             0,
 			isAnyRowSelected:                false,
 			currentSortColumn:               0,
 			previousSortColumn:              0,
@@ -171,11 +171,11 @@ func GenerateListTestCaseExecutionsUI(
 			previousHeader:                  nil,
 			currentSortColumnsSortDirection: 0,
 		},
-		allExecutionsFoOneTestCaseListObject: allExecutionsFoOneTestCaseListObjectStruct{
-			lastSelectedTestCaseExecutionForAllExecutionsForOneTestCase: "",
-			testCaseUuidForTestCaseExecutionThatIsShownInPreview:        "",
-			testCaseExecutionUuidThatIsShownInPreview:                   "",
-			testCaseExecutionVersionThatIsShownInPreview:                0,
+		allExecutionsFoOneTestSuiteListObject: allExecutionsFoOneTestSuiteListObjectStruct{
+			lastSelectedTestSuiteExecutionForAllExecutionsForOneTestSuite: "",
+			testSuiteUuidForTestSuiteExecutionThatIsShownInPreview:        "",
+			testSuiteExecutionUuidThatIsShownInPreview:                    "",
+			testSuiteExecutionVersionThatIsShownInPreview:                 0,
 			isAnyRowSelected:                false,
 			currentSortColumn:               0,
 			previousSortColumn:              0,
@@ -186,50 +186,50 @@ func GenerateListTestCaseExecutionsUI(
 		ExecutionsInGuiIsOfType: 0,
 	}
 
-	// Local function - Define the function to be executed to load TestCaseExecutions from that Database that the user can view
-	// Only loads one TestCaseExecution per TestCase
-	loadOneTestCaseExecutionPerTestCaseFromDataBaseFunction = func() {
+	// Local function - Define the function to be executed to load TestSuiteExecutions from that Database that the user can view
+	// Only loads one TestSuiteExecution per TestCase
+	loadOneTestSuiteExecutionPerTestCaseFromDataBaseFunction = func() {
 
 		// Call public load-function
-		LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction(testCaseExecutionsModel,
+		LoadOneTestSuiteExecutionPerTestCaseFromDataBaseFunction(testSuiteExecutionsModel,
 			true,
-			testCaseInstructionPreViewObject)
+			testCaseInstructionPreViewObject) // ***
 
 	}
 
-	// Define the 'loadTestCaseExecutionsFromDataBaseButton'
-	loadTestCaseExecutionsFromDataBaseButton = widget.NewButton("Load one TestCaseExecution per TestCase",
-		loadOneTestCaseExecutionPerTestCaseFromDataBaseFunction)
+	// Define the 'loadTestSuiteExecutionsFromDataBaseButton'
+	loadTestSuiteExecutionsFromDataBaseButton = widget.NewButton("Load one TestSuiteExecution per TestCase",
+		loadOneTestSuiteExecutionPerTestCaseFromDataBaseFunction)
 
 	// Define the function to be executed to filter TestCasesMapPtr that the user can edit
-	filterTestCaseExcutionsButtonFunction = func() {
-		fmt.Println("'filterTestCaseExcutionButton' was pressed")
+	filterTestSuiteExcutionsButtonFunction = func() {
+		fmt.Println("'filterTestSuiteExcutionButton' was pressed")
 
-		loadTestCaseExecutionListTableTable(
-			testCaseExecutionsModel,
+		loadTestSuiteExecutionListTableTable(
+			testSuiteExecutionsModel,
 			false,
 			"")
 		calculateAndSetCorrectColumnWidths()
-		updateTestCaseExecutionsListTable(testCaseExecutionsModel)
+		updateTestSuiteExecutionsListTable(testSuiteExecutionsModel)
 
-		// Update the number TestCaseExcutionss in the list
+		// Update the number TestSuiteExcutionss in the list
 		var numberOfRowsAsString string
-		numberOfRowsAsString = strconv.Itoa(len(testCaseExecutionsListTableTable))
-		numberOfTestCaseExecutionsAfterLocalFilters.Set(
+		numberOfRowsAsString = strconv.Itoa(len(testSuiteExecutionsListTableTable))
+		numberOfTestSuiteExecutionsAfterLocalFilters.Set(
 			fmt.Sprintf("Number of TestCasesMapPtr after local filters was applied: %s",
 				numberOfRowsAsString))
 
 		// Update the number TestCasesMapPtr retrieved from Database
 		var numberOfRowsFromDatabaseAsString string
-		numberOfRowsFromDatabaseAsString = strconv.Itoa(len(testCaseExecutionsListTableTable))
-		numberOfTestCaseExecutionsInTheDatabaseSearch.Set(
+		numberOfRowsFromDatabaseAsString = strconv.Itoa(len(testSuiteExecutionsListTableTable))
+		numberOfTestSuiteExecutionsInTheDatabaseSearch.Set(
 			fmt.Sprintf("Number of TestCasesMapPtr retrieved from the Database: %s",
 				numberOfRowsFromDatabaseAsString))
 
 	}
 
-	// Define the 'filterTestCaseExcutionsButton'
-	filterTestCaseExcutionsButton = widget.NewButton("Filter TestCasesMapPtr", filterTestCaseExcutionsButtonFunction)
+	// Define the 'filterTestSuiteExcutionsButton'
+	filterTestSuiteExcutionsButton = widget.NewButton("Filter TestCasesMapPtr", filterTestSuiteExcutionsButtonFunction)
 
 	// Define the function to be executed to list TestCasesMapPtr that the user can edit
 	clearFiltersButtonFunction = func() {
@@ -239,42 +239,42 @@ func GenerateListTestCaseExecutionsUI(
 	// Define the 'clearFiltersButton'
 	clearFiltersButton = widget.NewButton("Clear all search filters", clearFiltersButtonFunction)
 
-	// Set initial button text for 'loadAllTestCaseExecutionsForOneTestCaseButton'
-	loadAllTestCaseExecutionsForOneTestCaseButtonText = loadAllTestCaseExecutionsForOneTestCaseButtonTextPart1 + "_"
+	// Set initial button text for 'loadAllTestSuiteExecutionsForOneTestCaseButton'
+	loadAllTestSuiteExecutionsForOneTestSuiteButtonText = loadAllTestSuiteExecutionsForOneTestSuiteButtonTextPart1 + "_"
 
-	// Define the function to be executed to load all TestCaseExecutions for a specific TestCase. Executions are shown in list
-	loadAllTestCaseExecutionsForOneTestCaseButtonFunction = func() {
+	// Define the function to be executed to load all TestSuiteExecutions for a specific TestCase. Executions are shown in list
+	loadAllTestSuiteExecutionsForOneTestCaseButtonFunction = func() {
 
-		// When no TestCaseExecution is selected then inform the user
-		if len(selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-			testCaseExecutionUuidThatIsShownInPreview) == 0 ||
-			selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+		// When no TestSuiteExecution is selected then inform the user
+		if len(selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
+			testSuiteExecutionUuidThatIsShownInPreview) == 0 ||
+			selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
 				isAnyRowSelected == false {
 
 			// Trigger System Notification sound
 			soundEngine.PlaySoundChannel <- soundEngine.SystemNotificationSound
 
 			fyne.CurrentApp().SendNotification(&fyne.Notification{
-				Title:   "Load TestCaseExecutions",
-				Content: "Select a TestCaseExecution before loading alla executions for the TestCase",
+				Title:   "Load TestSuiteExecutions",
+				Content: "Select a TestSuiteExecution before loading alla executions for the TestCase",
 			})
 
 			return
 
 		}
 
-		fmt.Println("'loadAllTestCaseExecutionsForOneTestCaseButton' was pressed")
+		fmt.Println("'loadAllTestSuiteExecutionsForOneTestCaseButton' was pressed")
 
-		// If previously data set is of other kind then 'AllExecutionsForOneTestCase' then no selection should be made
-		if selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType != AllExecutionsForOneTestCase {
-			selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+		// If previously data set is of other kind then 'AllExecutionsForOneTestSuite' then no selection should be made
+		if selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType != AllExecutionsForOneTestSuite {
+			selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
 				isAnyRowSelected = false
-			testCaseInstructionPreViewObject.ClearTestCaseExecutionPreviewContainer()
-			loadAllTestCaseExecutionsForOneTestCaseButtonReference.Disable()
+			testCaseInstructionPreViewObject.ClearTestSuiteExecutionPreviewContainer()
+			loadAllTestSuiteExecutionsForOneTestSuiteButtonReference.Disable()
 		}
 
 		// Specify from were Executions in the GUI comes from
-		selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType = AllExecutionsForOneTestCase
+		selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType = AllExecutionsForOneTestSuite
 
 		// Channel used to trigger update of Gui
 		var updateGuiChannelStep1 chan bool
@@ -282,15 +282,15 @@ func GenerateListTestCaseExecutionsUI(
 		updateGuiChannelStep1 = make(chan bool)
 		updateGuiChannelStep2 = make(chan bool)
 
-		listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
-			testCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.LatestUniqueTestCaseExecutionDatabaseRowId,
+		listTestSuiteExecutionsModel.LoadTestSuiteExecutionsThatCanBeViewedByUser(
+			testSuiteExecutionsModel.LatestTestSuiteExecutionForEachTestSuiteUuid.LatestUniqueTestSuiteExecutionDatabaseRowId,
 			true,
-			testCaseExecutionsModel.StandardTestCaseExecutionsBatchSize,
+			testSuiteExecutionsModel.StandardTestSuiteExecutionsBatchSize,
 			true,
-			selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
-				testCaseUuidForTestCaseExecutionThatIsShownInPreview,
-			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
-			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
+			selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
+				testSuiteUuidForTestSuiteExecutionThatIsShownInPreview,
+			testSuiteExecutionsModel.NullTimeStampForTestSuiteExecutionsSearch,
+			testSuiteExecutionsModel.NullTimeStampForTestSuiteExecutionsSearch,
 			true,
 			&updateGuiChannelStep1)
 
@@ -302,79 +302,79 @@ func GenerateListTestCaseExecutionsUI(
 			<-updateGuiChannelStep2
 
 			// Update the GUI
-			sortGuiTableAscendingOnTestCaseExecutionTimeStamp()
+			sortGuiTableAscendingOnTestSuiteExecutionTimeStamp()
 
 		}()
 
 		// Update the GUI
-		sortGuiTableAscendingOnTestCaseExecutionTimeStamp()
+		sortGuiTableAscendingOnTestSuiteExecutionTimeStamp()
 		updateGuiChannelStep2 <- true
 
 	}
 
-	// Define the 'loadAllTestCaseExecutionsForOneTestCaseButton'
-	loadAllTestCaseExecutionsForOneTestCaseButton = widget.NewButton(loadAllTestCaseExecutionsForOneTestCaseButtonText,
-		loadAllTestCaseExecutionsForOneTestCaseButtonFunction)
+	// Define the 'loadAllTestSuiteExecutionsForOneTestCaseButton'
+	loadAllTestSuiteExecutionsForOneTestCaseButton = widget.NewButton(loadAllTestSuiteExecutionsForOneTestSuiteButtonText,
+		loadAllTestSuiteExecutionsForOneTestCaseButtonFunction)
 
 	// Disable button from the beginning
-	loadAllTestCaseExecutionsForOneTestCaseButton.Disable()
+	loadAllTestSuiteExecutionsForOneTestCaseButton.Disable()
 
 	// Store reference to button
-	loadAllTestCaseExecutionsForOneTestCaseButtonReference = loadAllTestCaseExecutionsForOneTestCaseButton
+	loadAllTestSuiteExecutionsForOneTestSuiteButtonReference = loadAllTestSuiteExecutionsForOneTestCaseButton
 
 	// Add the buttons to the buttonsContainer
 	buttonsContainer = container.NewHBox(
-		loadTestCaseExecutionsFromDataBaseButton,
-		filterTestCaseExcutionsButton,
+		loadTestSuiteExecutionsFromDataBaseButton,
+		filterTestSuiteExcutionsButton,
 		clearFiltersButton,
-		loadAllTestCaseExecutionsForOneTestCaseButton)
+		loadAllTestSuiteExecutionsForOneTestCaseButton)
 
 	// Add objects to the 'filterAndButtonsContainer'
 	filterAndButtonsContainer = container.NewVBox(buttonsContainer)
 
 	// Generate the ExecutionColorPaletteContainer
-	executionColorPaletteContainer = detailedTestCaseExecutionsUI.GenerateExecutionColorPalette()
+	executionColorPaletteContainer = detailedTestSuiteExecutionsUI.GenerateExecutionColorPalette()
 
 	// Initiate the Table
-	generateTestCaseExecutionsListTable(testCaseExecutionsModel)
-	testCaseTableContainer := container.NewBorder(nil, nil, nil, nil, testCaseExecutionsListTable)
+	generateTestSuiteExecutionsListTable(testSuiteExecutionsModel)
+	testCaseTableContainer := container.NewBorder(nil, nil, nil, nil, testSuiteExecutionsListTable)
 
 	// Create the Scroll container for the List
-	testCaseExecutionsListScrollContainer = container.NewScroll(testCaseTableContainer)
+	testSuiteExecutionsListScrollContainer = container.NewScroll(testCaseTableContainer)
 
 	// Create the label used for showing number of TestCasesMapPtr in the local filter
-	numberOfTestCaseExecutionsAfterLocalFilters = binding.NewString()
-	_ = numberOfTestCaseExecutionsAfterLocalFilters.Set("No TestCasesMapPtr in the List")
-	numberOfTestCaseExecutionsAfterLocalFilterLabel = widget.NewLabelWithData(numberOfTestCaseExecutionsAfterLocalFilters)
+	numberOfTestSuiteExecutionsAfterLocalFilters = binding.NewString()
+	_ = numberOfTestSuiteExecutionsAfterLocalFilters.Set("No TestCasesMapPtr in the List")
+	numberOfTestSuiteExecutionsAfterLocalFilterLabel = widget.NewLabelWithData(numberOfTestSuiteExecutionsAfterLocalFilters)
 
 	// Create the label used for showing number of TestCasesMapPtr retrieved from the Database
-	numberOfTestCaseExecutionsInTheDatabaseSearch = binding.NewString()
-	_ = numberOfTestCaseExecutionsInTheDatabaseSearch.Set("No TestCasesMapPtr retrieved from the Database")
-	numberOfTestCaseExecutionsRetrievedFromDatabaseLabel = widget.NewLabelWithData(numberOfTestCaseExecutionsInTheDatabaseSearch)
+	numberOfTestSuiteExecutionsInTheDatabaseSearch = binding.NewString()
+	_ = numberOfTestSuiteExecutionsInTheDatabaseSearch.Set("No TestCasesMapPtr retrieved from the Database")
+	numberOfTestSuiteExecutionsRetrievedFromDatabaseLabel = widget.NewLabelWithData(numberOfTestSuiteExecutionsInTheDatabaseSearch)
 
 	// Initiate 'statisticsContainer'
-	statisticsContainer = container.NewHBox(numberOfTestCaseExecutionsAfterLocalFilterLabel, numberOfTestCaseExecutionsRetrievedFromDatabaseLabel)
+	statisticsContainer = container.NewHBox(numberOfTestSuiteExecutionsAfterLocalFilterLabel, numberOfTestSuiteExecutionsRetrievedFromDatabaseLabel)
 
 	statisticsAndColorPaletteContainer = container.NewVBox(executionColorPaletteContainer, statisticsContainer)
 
-	// Add 'testCaseExecutionsListScrollContainer' to 'testCaseExecutionsListContainer'
-	testCaseExecutionsListContainer = container.NewBorder(filterAndButtonsContainer, statisticsAndColorPaletteContainer, nil, nil, testCaseExecutionsListScrollContainer)
-	testCasesListScrollContainer2 := container.NewScroll(testCaseExecutionsListContainer)
+	// Add 'testSuiteExecutionsListScrollContainer' to 'testSuiteExecutionsListContainer'
+	testSuiteExecutionsListContainer = container.NewBorder(filterAndButtonsContainer, statisticsAndColorPaletteContainer, nil, nil, testSuiteExecutionsListScrollContainer)
+	testCasesListScrollContainer2 := container.NewScroll(testSuiteExecutionsListContainer)
 
 	// ***********
 	/*
 
 
 		// Create the Temporary container that should be shown
-		temporaryContainer := container.NewCenter(widget.NewLabel("Select a TestCaseExecution to get the Preview"))
+		temporaryContainer := container.NewCenter(widget.NewLabel("Select a TestSuiteExecution to get the Preview"))
 
 		testCaseInstructionPreViewObject.
-			testCaseExecutionPreviewContainer = container.NewBorder(nil, nil, nil, nil, temporaryContainer)
+			testSuiteExecutionPreviewContainer = container.NewBorder(nil, nil, nil, nil, temporaryContainer)
 
-		// Generate the container for the Preview, 'testCaseExecutionPreviewContainer'
+		// Generate the container for the Preview, 'testSuiteExecutionPreviewContainer'
 		testCaseInstructionPreViewObject.
-			testCaseExecutionPreviewContainerScroll = container.NewScroll(testCaseInstructionPreViewObject.
-			testCaseExecutionPreviewContainer)
+			testSuiteExecutionPreviewContainerScroll = container.NewScroll(testCaseInstructionPreViewObject.
+			testSuiteExecutionPreviewContainer)
 
 		// Create the temporary container for the logs
 		tempTestInstructionsExecutionLogContainer := container.NewCenter(
@@ -436,11 +436,11 @@ func GenerateListTestCaseExecutionsUI(
 		testCaseInstructionPreViewObject.
 			preViewTabs.SetTabLocation(container.TabLocationTop)
 
-		// make a hoverable transparent Execution-tree-overlay, to stop TestCaseExecution-nodes to be clickable
+		// make a hoverable transparent Execution-tree-overlay, to stop TestSuiteExecution-nodes to be clickable
 		testCaseTreePreViewOverlay := NewHoverableRect(color.Transparent, nil)
 		testCaseTreePreViewOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
 
-			mouseHasLeftTestCaseExecutionPreviewTree = false
+			mouseHasLeftTestSuiteExecutionPreviewTree = false
 			testCaseTreePreViewOverlay.Hide()
 			testCaseTreePreViewOverlay.OtherHoverableRect.Show()
 		}
@@ -448,11 +448,11 @@ func GenerateListTestCaseExecutionsUI(
 
 		}
 
-		// make a hoverable transparent preViewTab-overlay, to stop TestCaseExecution-nodes to be clickable
+		// make a hoverable transparent preViewTab-overlay, to stop TestSuiteExecution-nodes to be clickable
 		explorerTabOverlay := NewHoverableRect(color.Transparent, nil)
 		explorerTabOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
 
-			mouseHasLeftTestCaseExecutionPreviewTree = true
+			mouseHasLeftTestSuiteExecutionPreviewTree = true
 			explorerTabOverlay.Hide()
 			explorerTabOverlay.OtherHoverableRect.Show()
 		}
@@ -464,14 +464,14 @@ func GenerateListTestCaseExecutionsUI(
 		testCaseTreePreViewOverlay.OtherHoverableRect = explorerTabOverlay
 		explorerTabOverlay.OtherHoverableRect = testCaseTreePreViewOverlay
 
-		testCaseExecutionPreviewAndOverlayContainer := container.New(layout.NewStackLayout(), testCaseInstructionPreViewObject.
-			testCaseExecutionPreviewContainerScroll, testCaseTreePreViewOverlay)
+		testSuiteExecutionPreviewAndOverlayContainer := container.New(layout.NewStackLayout(), testCaseInstructionPreViewObject.
+			testSuiteExecutionPreviewContainerScroll, testCaseTreePreViewOverlay)
 		preViewTabsAndOverlayContainer := container.New(layout.NewStackLayout(), testCaseInstructionPreViewObject.
 			preViewTabs, explorerTabOverlay)
 
 		// Create the split-container that has the Execution-preview to the left and Logs/Attribute to the right
 		tempTestCasePreviewTestInstructionExecutionLogSplitContainer = container.NewHSplit(
-			testCaseExecutionPreviewAndOverlayContainer, preViewTabsAndOverlayContainer)
+			testSuiteExecutionPreviewAndOverlayContainer, preViewTabsAndOverlayContainer)
 		tempTestCasePreviewTestInstructionExecutionLogSplitContainer.Offset = 0.60
 
 	*/
@@ -479,7 +479,7 @@ func GenerateListTestCaseExecutionsUI(
 
 	// Generates the Container structure for the PreView-container
 	testCaseInstructionPreViewObject.
-		testCasePreviewTestInstructionExecutionLogSplitContainer = generatePreViewObject(testCaseInstructionPreViewObject)
+		testSuitePreviewTestInstructionExecutionLogSplitContainer = generatePreViewObject(testCaseInstructionPreViewObject)
 
 	// make a hoverable transparent PreView-overlay, to stop table-row hovering in left Table
 	preViewOverlay := NewHoverableRect(color.Transparent, nil)
@@ -510,33 +510,33 @@ func GenerateListTestCaseExecutionsUI(
 	executionListViewOverlay.OtherHoverableRect = preViewOverlay
 
 	preViewAndOverlayContainer := container.New(layout.NewStackLayout(), testCaseInstructionPreViewObject.
-		testCasePreviewTestInstructionExecutionLogSplitContainer, preViewOverlay)
+		testSuitePreviewTestInstructionExecutionLogSplitContainer, preViewOverlay)
 	executionListAndOverlayContainer := container.New(layout.NewStackLayout(), testCasesListScrollContainer2, executionListViewOverlay)
 
-	// Generate the split-container holding the TestCaseExecution-list and the Execution-Preview
+	// Generate the split-container holding the TestSuiteExecution-list and the Execution-Preview
 	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(executionListAndOverlayContainer, preViewAndOverlayContainer)
 	tempTestCaseListAndTestCasePreviewSplitContainer.Offset = 0.60
 
-	TestCaseExecutionListAndTestCaseExecutionPreviewSplitContainer = tempTestCaseListAndTestCasePreviewSplitContainer
+	testSuiteExecutionListAndTestSuiteExecutionPreviewSplitContainer = tempTestCaseListAndTestCasePreviewSplitContainer
 
 	return tempTestCaseListAndTestCasePreviewSplitContainer
 }
 
 // Generates the Container structure for the PreView-container
 func generatePreViewObject(
-	testCaseInstructionPreViewObject *TestCaseInstructionPreViewStruct) (
+	testCaseInstructionPreViewObject *TestSuiteInstructionPreViewStruct) (
 	tempTestCasePreviewTestInstructionExecutionLogSplitContainer *container.Split) {
 
 	// Create the Temporary container that should be shown
-	temporaryContainer := container.NewCenter(widget.NewLabel("Select a TestCaseExecution to get the Preview"))
+	temporaryContainer := container.NewCenter(widget.NewLabel("Select a TestSuiteExecution to get the Preview"))
 
 	testCaseInstructionPreViewObject.
-		testCaseExecutionPreviewContainer = container.NewBorder(nil, nil, nil, nil, temporaryContainer)
+		testSuiteExecutionPreviewContainer = container.NewBorder(nil, nil, nil, nil, temporaryContainer)
 
-	// Generate the container for the Preview, 'testCaseExecutionPreviewContainer'
+	// Generate the container for the Preview, 'testSuiteExecutionPreviewContainer'
 	testCaseInstructionPreViewObject.
-		testCaseExecutionPreviewContainerScroll = container.NewScroll(testCaseInstructionPreViewObject.
-		testCaseExecutionPreviewContainer)
+		testSuiteExecutionPreviewContainerScroll = container.NewScroll(testCaseInstructionPreViewObject.
+		testSuiteExecutionPreviewContainer)
 
 	// Create the temporary container for the logs
 	tempTestInstructionsExecutionLogContainer := container.NewCenter(
@@ -598,11 +598,11 @@ func generatePreViewObject(
 	testCaseInstructionPreViewObject.
 		preViewTabs.SetTabLocation(container.TabLocationTop)
 
-	// make a hoverable transparent Execution-tree-overlay, to stop TestCaseExecution-nodes to be clickable
+	// make a hoverable transparent Execution-tree-overlay, to stop TestSuiteExecution-nodes to be clickable
 	testCaseTreePreViewOverlay := NewHoverableRect(color.Transparent, nil)
 	testCaseTreePreViewOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
 
-		mouseHasLeftTestCaseExecutionPreviewTree = false
+		mouseHasLeftTestSuiteExecutionPreviewTree = false
 		testCaseTreePreViewOverlay.Hide()
 		testCaseTreePreViewOverlay.OtherHoverableRect.Show()
 	}
@@ -610,11 +610,11 @@ func generatePreViewObject(
 
 	}
 
-	// make a hoverable transparent preViewTab-overlay, to stop TestCaseExecution-nodes to be clickable
+	// make a hoverable transparent preViewTab-overlay, to stop TestSuiteExecution-nodes to be clickable
 	explorerTabOverlay := NewHoverableRect(color.Transparent, nil)
 	explorerTabOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
 
-		mouseHasLeftTestCaseExecutionPreviewTree = true
+		mouseHasLeftTestSuiteExecutionPreviewTree = true
 		explorerTabOverlay.Hide()
 		explorerTabOverlay.OtherHoverableRect.Show()
 	}
@@ -626,14 +626,14 @@ func generatePreViewObject(
 	testCaseTreePreViewOverlay.OtherHoverableRect = explorerTabOverlay
 	explorerTabOverlay.OtherHoverableRect = testCaseTreePreViewOverlay
 
-	testCaseExecutionPreviewAndOverlayContainer := container.New(layout.NewStackLayout(), testCaseInstructionPreViewObject.
-		testCaseExecutionPreviewContainerScroll, testCaseTreePreViewOverlay)
+	testSuiteExecutionPreviewAndOverlayContainer := container.New(layout.NewStackLayout(), testCaseInstructionPreViewObject.
+		testSuiteExecutionPreviewContainerScroll, testCaseTreePreViewOverlay)
 	preViewTabsAndOverlayContainer := container.New(layout.NewStackLayout(), testCaseInstructionPreViewObject.
 		preViewTabs, explorerTabOverlay)
 
 	// Create the split-container that has the Execution-preview to the left and Logs/Attribute to the right
 	tempTestCasePreviewTestInstructionExecutionLogSplitContainer = container.NewHSplit(
-		testCaseExecutionPreviewAndOverlayContainer, preViewTabsAndOverlayContainer)
+		testSuiteExecutionPreviewAndOverlayContainer, preViewTabsAndOverlayContainer)
 	tempTestCasePreviewTestInstructionExecutionLogSplitContainer.Offset = 0.60
 
 	return tempTestCasePreviewTestInstructionExecutionLogSplitContainer

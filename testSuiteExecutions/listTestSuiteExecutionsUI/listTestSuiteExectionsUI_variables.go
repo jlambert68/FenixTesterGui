@@ -9,58 +9,58 @@ import (
 	"sync"
 )
 
-// The UI-table for the List with TestCaseExecutions
-var testCaseExecutionsListTable *widget.Table
+// The UI-table for the List with TestSuiteExecutions
+var testSuiteExecutionsListTable *widget.Table
 
-var testCaseExecutionsListTableHeadersMapRef map[int]*sortableHeaderLabelStruct
+var testSuiteExecutionsListTableHeadersMapRef map[int]*sortableHeaderLabelStruct
 
-// The data source used to produce the UI-table for the List with TestCaseExecutions
-var testCaseExecutionsListTableTable [][]string
+// The data source used to produce the UI-table for the List with TestSuiteExecutions
+var testSuiteExecutionsListTableTable [][]string
 
-// Keeps the number of TestCaseExecutions that is shown in the list, after local filter is applied
-var numberOfTestCaseExecutionsAfterLocalFilters binding.String
+// Keeps the number of TestSuiteExecutions that is shown in the list, after local filter is applied
+var numberOfTestSuiteExecutionsAfterLocalFilters binding.String
 
-// Keeps the number of TestCaseExecutions that have been retrieved from the Database
-var numberOfTestCaseExecutionsInTheDatabaseSearch binding.String
+// Keeps the number of TestSuiteExecutions that have been retrieved from the Database
+var numberOfTestSuiteExecutionsInTheDatabaseSearch binding.String
 
-var testCaseExecutionsListTableHeader = []string{
-	"DomainName", "TestSuiteName", "TestCaseName", "TestCaseVersion", "TestCaseExecutionUuid", "Latest TestCaseExecution Status",
-	"TestCaseExecution Start TimeStamp", "TestCaseExecution Status Update TimeStamp", "TestCaseExecution Finished TimeStamp",
-	"TestCaseUuid", "DomainUuid", "TestSuiteUuid", "TestSuiteExecutionUuid"}
+var testSuiteExecutionsListTableHeader = []string{
+	"DomainName", "TestSuiteName", "TestSuiteName", "TestSuiteVersion", "TestSuiteExecutionUuid", "Latest TestSuiteExecution Status",
+	"TestSuiteExecution Start TimeStamp", "TestSuiteExecution Status Update TimeStamp", "TestSuiteExecution Finished TimeStamp",
+	"TestSuiteUuid", "DomainUuid", "TestSuiteUuid", "TestSuiteExecutionUuid"}
 
-const loadAllTestCaseExecutionsForOneTestCaseButtonTextPart1 = "Load all executions for TestCase: "
+const loadAllTestSuiteExecutionsForOneTestSuiteButtonTextPart1 = "Load all executions for TestSuite: "
 
-var loadAllTestCaseExecutionsForOneTestCaseButtonText string
+var loadAllTestSuiteExecutionsForOneTestSuiteButtonText string
 
-var loadAllTestCaseExecutionsForOneTestCaseButtonReference *widget.Button
+var loadAllTestSuiteExecutionsForOneTestSuiteButtonReference *widget.Button
 
-// The number of visible columns in UI-table for TestCaseExecutions
-const numberColumnsInTestCaseExecutionsListUI int = 13
+// The number of visible columns in UI-table for TestSuiteExecutions
+const numberColumnsInTestSuiteExecutionsListUI int = 13
 
-// Keeps track of the in which column the TestCaseExecutionUUID exist in the data source for the UI-table
-const testCaseExecutionUuidColumnNumber uint8 = 4
+// Keeps track of the in which column the TestSuiteExecutionUUID exist in the data source for the UI-table
+const testSuiteExecutionUuidColumnNumber uint8 = 4
 
-// const testCaseExecutionVersionColumnNumber uint8 = xxx
+// const testSuiteExecutionVersionColumnNumber uint8 = xxx
 
-// Keeps track of the in which column the TestCaseUUID exist in the data source for the UI-table
-const testCaseUuidColumnNumber uint8 = 9
+// Keeps track of the in which column the TestSuiteUUID exist in the data source for the UI-table
+const testSuiteUuidColumnNumber uint8 = 9
 
-// Keeps track of the in which column the TestCaseName exist in the data source for the UI-table
-const testCaseNameColumnNumber uint8 = 2
+// Keeps track of the in which column the TestSuiteName exist in the data source for the UI-table
+const testSuiteNameColumnNumber uint8 = 2
 
-// Keeps track of the in which column the "Latest TestCaseExecution Status" exist in the data source for the UI-table
-const latestTestCaseExecutionStatus uint8 = 5
+// Keeps track of the in which column the "Latest TestSuiteExecution Status" exist in the data source for the UI-table
+const latestTestSuiteExecutionStatus uint8 = 5
 
-// Keeps track of the in which column the ""Latest TestCaseExecution TimeStamp"" exist in the data source for the UI-table
-const latestTestCaseExecutionTimeStamp uint8 = 6
+// Keeps track of the in which column the "Latest TestSuiteExecution TimeStamp" exist in the data source for the UI-table
+const latestTestSuiteExecutionTimeStamp uint8 = 6
 
-// Keeps track of the in which column the ""Latest TestCaseExecution TimeStamp"" exist in the data source for the UI-table
-const latestOkFinishedTestCaseExecutionTimeStamp uint8 = 6
+// Keeps track of the in which column the ""Latest TestSuiteExecution TimeStamp"" exist in the data source for the UI-table
+const latestOkFinishedTestSuiteExecutionTimeStamp uint8 = 6
 
-// Keeps track of the in which column the ""Latest TestCaseExecution TimeStamp"" exist in the data source for the UI-table
-const latestTestCaseExecutionTimeStampColumnNumber uint8 = 6
+// Keeps track of the in which column the ""Latest TestSuiteExecution TimeStamp"" exist in the data source for the UI-table
+const latestTestSuiteExecutionTimeStampColumnNumber uint8 = 6
 
-// Reference to Header for column for "Latest TestCaseExecution TimeStamp"
+// Reference to Header for column for "Latest TestSuiteExecution TimeStamp"
 //var sortableHeaderReference *sortableHeaderLabelStruct
 
 // The row that the mouse is currently hovering above. Used for highlight that row in the UI-Table
@@ -72,11 +72,11 @@ var currentRowThatMouseIsHoveringAboveMutex sync.Mutex
 // Indicate of mouse left table for the Preview-area
 var mouseHasLeftTable bool = true
 
-// Indicate of mouse left TestCaseExecutionPreview for the Tab-explorer area
-var mouseHasLeftTestCaseExecutionPreviewTree bool = true
+// Indicate of mouse left TestSuiteExecutionPreview for the Tab-explorer area
+var mouseHasLeftTestSuiteExecutionPreviewTree bool = true
 
 // The size of the rectangles used for TestInstructionContainers-processing type and the color of the TestInstruction
-const testCaseNodeRectangleSize = 40
+const testSuiteNodeRectangleSize = 40
 
 // The size of the rectangles used for indicate status of a TestInstructionExecution
 const testCaseExecutionStatusRectangleHeight = 30
@@ -87,13 +87,13 @@ const logStatusRectangleHeight = 25
 const logStatusRectangleWidth = 25
 
 // Struct holding all variables needed for the PreView
-type TestCaseInstructionPreViewStruct struct {
-	// Split container holding TestCase-PreView, to the left, and Explorer-Tabs to the Right
-	testCasePreviewTestInstructionExecutionLogSplitContainer *container.Split
+type TestSuiteInstructionPreViewStruct struct {
+	// Split container holding TestSuite-PreView, to the left, and Explorer-Tabs to the Right
+	testSuitePreviewTestInstructionExecutionLogSplitContainer *container.Split
 
-	// The TestCase Preview-container
-	testCaseExecutionPreviewContainerScroll *container.Scroll
-	testCaseExecutionPreviewContainer       *fyne.Container
+	// The TestSuite Preview-container
+	testSuiteExecutionPreviewContainerScroll *container.Scroll
+	testSuiteExecutionPreviewContainer       *fyne.Container
 
 	testInstructionsExecutionDetailsContainerScroll    *container.Scroll
 	testInstructionsExecutionLogContainer              *fyne.Container
@@ -106,44 +106,44 @@ type TestCaseInstructionPreViewStruct struct {
 	testInstructionDetailsExplorerTab                  *container.TabItem
 }
 
-// Variables holding all objects used in PreView to the right of the TestCaseExecutions-list
-var TestCaseInstructionPreViewObject *TestCaseInstructionPreViewStruct
+// Variables holding all objects used in PreView to the right of the TestSuiteExecutions-list
+var TestSuiteInstructionPreViewObject *TestSuiteInstructionPreViewStruct
 
-// Reference to the TabObject that hold TestCaseExecutions
-var detailedTestCaseExecutionsUITabObjectRef *container.DocTabs
+// Reference to the TabObject that hold TestSuiteExecutions
+var detailedTestSuiteExecutionsUITabObjectRef *container.DocTabs
 
-// Reference to the Exit-functions for the Tabs in 'detailedTestCaseExecutionsUITabObjectRef'
-var exitFunctionsForDetailedTestCaseExecutionsUITabObjectPtr *map[*container.TabItem]func()
+// Reference to the Exit-functions for the Tabs in 'detailedTestSuiteExecutionsUITabObjectRef'
+var exitFunctionsForDetailedTestSuiteExecutionsUITabObjectPtr *map[*container.TabItem]func()
 
-type openedDetailedTestCaseExecutionsMapKeyType string // TestCaseExecutionUuid + TestCaseExecutionVersion
+type openedDetailedTestSuiteExecutionsMapKeyType string // TestSuiteExecutionUuid + TestSuiteExecutionVersion
 
-// Keeps track if a TestCaseExecution is open in Tab and/or Window
-type openedDetailedTestCaseExecutionStruct struct {
-	isTestCaseExecutionOpenInTab                     bool
-	TestCaseInstructionPreViewObjectInTab            *TestCaseInstructionPreViewStruct
-	isTestCaseExecutionOpenInExternalWindow          bool
-	TestCaseInstructionPreViewObjectInExternalWindow *TestCaseInstructionPreViewStruct
-	externalWindow                                   fyne.Window
-	tabItem                                          *container.TabItem
+// Keeps track if a TestSuiteExecution is open in Tab and/or Window
+type openedDetailedTestSuiteExecutionStruct struct {
+	isTestSuiteExecutionOpenInTab                     bool
+	TestSuiteInstructionPreViewObjectInTab            *TestSuiteInstructionPreViewStruct
+	isTestSuiteExecutionOpenInExternalWindow          bool
+	TestSuiteInstructionPreViewObjectInExternalWindow *TestSuiteInstructionPreViewStruct
+	externalWindow                                    fyne.Window
+	tabItem                                           *container.TabItem
 }
 
-// Map keeping track of all opened TestCaseExecutions, in Tabs and/or Separate windows
-var openedDetailedTestCaseExecutionsMapPtr *map[openedDetailedTestCaseExecutionsMapKeyType]*openedDetailedTestCaseExecutionStruct
+// Map keeping track of all opened TestSuiteExecutions, in Tabs and/or Separate windows
+var openedDetailedTestSuiteExecutionsMapPtr *map[openedDetailedTestSuiteExecutionsMapKeyType]*openedDetailedTestSuiteExecutionStruct
 
-// From where is the opening of the TestCaseExecution initiated; FromExecutionList, FromExternalWindow, FromTab
-type openedTestCaseExecutionFromType uint8
+// From where is the opening of the TestSuiteExecution initiated; FromExecutionList, FromExternalWindow, FromTab
+type openedTestSuiteExecutionFromType uint8
 
 const (
-	fromNotDefined    openedTestCaseExecutionFromType = iota
-	fromExecutionList openedTestCaseExecutionFromType = iota
+	fromNotDefined    openedTestSuiteExecutionFromType = iota
+	fromExecutionList openedTestSuiteExecutionFromType = iota
 	fromExternalWindow
 	fromTab
 )
 
-//var tempTestCasePreviewTestInstructionExecutionLogSplitContainer
+//var tempTestSuitePreviewTestInstructionExecutionLogSplitContainer
 
 // Mutex for Attributes-map below
-var testCaseExecutionAttributesForPreviewMapMutex = &sync.Mutex{}
+var testSuiteExecutionAttributesForPreviewMapMutex = &sync.Mutex{}
 
 // Struct holding all attribute-containers for one TestInstructionsExecution and a list with Objects (TI or TIC)
 // that is placed below this TestInstruction in indentation level
@@ -158,32 +158,32 @@ type testCaseExecutionAttributesForPreviewStruct struct {
 // The map holding all TestInstructions and their Attributes-containers
 var testCaseExecutionAttributesForPreviewMapPtr *map[testCaseExecutionsModel.TCEoTICoTIEAttributesContainerMapKeyType]*testCaseExecutionAttributesForPreviewStruct
 
-// TestCaseExecutionListAndTestCaseExecutionPreviewSplitContainer
-// The Split container have both the TestCaseExecutions-list and the Preview-container in it
-var TestCaseExecutionListAndTestCaseExecutionPreviewSplitContainer *container.Split
+// TestSuiteExecutionListAndTestSuiteExecutionPreviewSplitContainer
+// The Split container have both the TestSuiteExecutions-list and the Preview-container in it
+var testSuiteExecutionListAndTestSuiteExecutionPreviewSplitContainer *container.Split
 
-// Struct for holding all data for the Execution-list when data belongs  "One Execution per TestCase"
-type oneExecutionPerTestCaseListObjectStruct struct {
+// Struct for holding all data for the Execution-list when data belongs  "One Execution per TestSuite"
+type oneExecutionPerTestSuiteListObjectStruct struct {
 
-	// The last TestCaseExecution that was picked when we are in "One Execution per TestCase"
-	lastSelectedTestCaseExecutionForOneExecutionPerTestCase string
+	// The last TestSuiteExecution that was picked when we are in "One Execution per TestSuite
+	lastSelectedTestSuiteExecutionForOneExecutionPerTestSuite string
 
-	// The TestCaseUuid for TestCaseExecutions that is shown in Preview
-	testCaseUuidForTestCaseExecutionThatIsShownInPreview string
+	// The TestSuiteUuid for TestSuiteExecutions that is shown in Preview
+	testSuiteUuidForTestSuiteExecutionThatIsShownInPreview string
 
-	// The TestCaseExecutions that is shown in Preview
-	testCaseExecutionUuidThatIsShownInPreview string
+	// The TestSuiteExecutions that is shown in Preview
+	testSuiteExecutionUuidThatIsShownInPreview string
 
-	// The TestCaseExecutionVersion that is shown in Preview
-	testCaseExecutionVersionThatIsShownInPreview uint32
+	// The TestSuiteExecutionVersion that is shown in Preview
+	testSuiteExecutionVersionThatIsShownInPreview uint32
 
 	// Is a row selected or not
 	isAnyRowSelected bool
 
-	// The current column that the TestCaseExecutions-list is sorted on
+	// The current column that the TestSuiteExecutions-list is sorted on
 	currentSortColumn int
 
-	// The previous column that the TestCaseExecution-list was sorted on
+	// The previous column that the TestSuiteExecution-list was sorted on
 	previousSortColumn int
 
 	currentHeader *sortableHeaderLabelStruct
@@ -194,28 +194,28 @@ type oneExecutionPerTestCaseListObjectStruct struct {
 	currentSortColumnsSortDirection SortingDirectionType
 }
 
-// Struct for holding all data for the Execution-list when data belongs "All Executions for one TestCase"
-type allExecutionsFoOneTestCaseListObjectStruct struct {
+// Struct for holding all data for the Execution-list when data belongs "All Executions for one TestSuite"
+type allExecutionsFoOneTestSuiteListObjectStruct struct {
 
-	// The last TestCaseExecution that was picked when we are in "All Executions for one TestCase"
-	lastSelectedTestCaseExecutionForAllExecutionsForOneTestCase string
+	// The last TestSuiteExecution that was picked when we are in "All Executions for one TestSuite"
+	lastSelectedTestSuiteExecutionForAllExecutionsForOneTestSuite string
 
-	// The TestCaseUuid for TestCaseExecutions that is shown in Preview
-	testCaseUuidForTestCaseExecutionThatIsShownInPreview string
+	// The TestSuiteUuid for TestSuiteExecutions that is shown in Preview
+	testSuiteUuidForTestSuiteExecutionThatIsShownInPreview string
 
-	// The TestCaseExecutionUuid that is shown in Preview
-	testCaseExecutionUuidThatIsShownInPreview string
+	// The TestSuiteExecutionUuid that is shown in Preview
+	testSuiteExecutionUuidThatIsShownInPreview string
 
-	// The TestCaseExecutionVersion that is shown in Preview
-	testCaseExecutionVersionThatIsShownInPreview uint32
+	// The TestSuiteExecutionVersion that is shown in Preview
+	testSuiteExecutionVersionThatIsShownInPreview uint32
 
 	// Is a row selected or not
 	isAnyRowSelected bool
 
-	// The current column that the TestCaseExecutions-list is sorted on
+	// The current column that the TestSuiteExecutions-list is sorted on
 	currentSortColumn int
 
-	// The previous column that the TestCaseExecution-list was sorted on
+	// The previous column that the TestSuiteExecution-list was sorted on
 	previousSortColumn int
 
 	currentHeader *sortableHeaderLabelStruct
@@ -226,35 +226,35 @@ type allExecutionsFoOneTestCaseListObjectStruct struct {
 	currentSortColumnsSortDirection SortingDirectionType
 }
 
-// Object for keeping if a row is selected and which TestCase/Execution that should be shown
-var selectedTestCaseExecutionObjected selectedTestCaseExecutionStruct
+// Object for keeping if a row is selected and which TestSuite/Execution that should be shown
+var selectedTestSuiteExecutionObjected selectedTestSuiteExecutionStruct
 
-// Struct for keeping if a row is selected and which TestCase/Execution that should be shown
-type selectedTestCaseExecutionStruct struct {
+// Struct for keeping if a row is selected and which TestSuite/Execution that should be shown
+type selectedTestSuiteExecutionStruct struct {
 
-	// Hold all data for the Execution-list when data belongs 'One Execution per TestCase'
-	oneExecutionPerTestCaseListObject oneExecutionPerTestCaseListObjectStruct
+	// Hold all data for the Execution-list when data belongs 'One Execution per TestSuite'
+	oneExecutionPerTestSuiteListObject oneExecutionPerTestSuiteListObjectStruct
 
-	// Hold all data for the Execution-list when data belongs "All Executions for one TestCase"
-	allExecutionsFoOneTestCaseListObject allExecutionsFoOneTestCaseListObjectStruct
+	// Hold all data for the Execution-list when data belongs "All Executions for one TestSuite"
+	allExecutionsFoOneTestSuiteListObject allExecutionsFoOneTestSuiteListObjectStruct
 
 	// ExecutionsInGuiIsOfType
-	// The variable that keeps track on if TestCasesExecutions in the GUI-list comes from
-	// "One Execution per TestCase" or "All Executions for one TestCase"
+	// The variable that keeps track on if TestSuitesExecutions in the GUI-list comes from
+	// "One Execution per TestSuite" or "All Executions for one TestSuite"
 	ExecutionsInGuiIsOfType CurrenExecutionListType
 }
 
 // CurrenExecutionListType
-// The type that defines if TestCasesExecutions in the GUI-list comes from
-// "One Execution per TestCase" or "All Executions for one TestCase"
+// The type that defines if TestSuitesExecutions in the GUI-list comes from
+// "One Execution per TestSuite" or "All Executions for one TestSuite"
 type CurrenExecutionListType uint8
 
-// The constants that defines if TestCasesExecutions in the GUI-list comes from
-// "One Execution per TestCase" or "All Executions for one TestCase"
+// The constants that defines if TestSuitesExecutions in the GUI-list comes from
+// "One Execution per TestSuite" or "All Executions for one TestSuite"
 const (
 	NotDefined CurrenExecutionListType = iota
-	OneExecutionPerTestCase
-	AllExecutionsForOneTestCase
+	OneExecutionPerTestSuite
+	AllExecutionsForOneTestSuite
 )
 
 // SortingDirectionType

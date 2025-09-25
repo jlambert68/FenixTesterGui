@@ -7,49 +7,49 @@ import (
 	"strconv"
 )
 
-// ExtractAndStoreLogPostsAndValuesFromDetailedTestCaseExecution
+// ExtractAndStoreLogPostsAndValuesFromDetailedtestSuiteExecution
 // Extracts all extra data that will be presented to the user in GUI, ie the explorer-tabs
-func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ExtractAndStoreLogPostsAndValuesFromDetailedTestCaseExecution(
-	detailedTestCaseExecutionMapKey DetailedTestCaseExecutionMapKeyType) (
+func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ExtractAndStoreLogPostsAndValuesFromDetailedtestSuiteExecution(
+	detailedTestSuiteExecutionMapKey DetailedTestSuiteExecutionMapKeyType) (
 	err error) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "d93737d7-3025-48c4-b683-bcc96a86024d",
-	}).Debug("Incoming - 'ExtractAndStoreLogPostsAndValuesFromDetailedTestCaseExecution'")
+		"id": "64c02558-b28f-4dba-a085-1c52b42d320f",
+	}).Debug("Incoming - 'ExtractAndStoreLogPostsAndValuesFromDetailedtestSuiteExecution'")
 
 	defer sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "000a3353-3fc2-44d8-9e22-8e7542fcad3f",
-	}).Debug("Outgoing - 'ExtractAndStoreLogPostsAndValuesFromDetailedTestCaseExecution'")
+		"id": "3895b37e-e8f4-4e98-b9cc-9e111d4523d5",
+	}).Debug("Outgoing - 'ExtractAndStoreLogPostsAndValuesFromDetailedtestSuiteExecution'")
 
-	// Extract the raw detailedTestCaseExecution-message
-	var detailedTestCaseExecution *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage
+	// Extract the raw detailedTestSuiteExecution-message
+	var detailedTestSuiteExecution *fenixExecutionServerGuiGrpcApi.testSuiteExecutionResponseMessage
 	var existInMap bool
-	detailedTestCaseExecution, existInMap = testCaseExecutionsModel.
-		ReadFromDetailedTestCaseExecutionsMap(detailedTestCaseExecutionMapKey)
+	detailedTestSuiteExecution, existInMap = testSuiteExecutionsModel.
+		ReadFromDetailedTestSuiteExecutionsMap(detailedTestSuiteExecutionMapKey)
 
 	// Lock Map for Writing
-	detailedTestCaseExecutionsMapMutex.Lock()
+	detailedTestSuiteExecutionsMapMutex.Lock()
 
 	//UnLock Map
-	defer detailedTestCaseExecutionsMapMutex.Unlock()
+	defer detailedTestSuiteExecutionsMapMutex.Unlock()
 
 	if existInMap == false {
 
 		return err
 	}
 
-	// Extract map with DetailedTestCaseExecutionsMapObjects
-	var detailedTestCaseExecutionsObjectsMapPtr *map[DetailedTestCaseExecutionMapKeyType]*DetailedTestCaseExecutionsMapObjectStruct
-	var detailedTestCaseExecutionsObjectsMap map[DetailedTestCaseExecutionMapKeyType]*DetailedTestCaseExecutionsMapObjectStruct
+	// Extract map with DetailedTestSuiteExecutionsMapObjects
+	var detailedTestSuiteExecutionsObjectsMapPtr *map[DetailedTestSuiteExecutionMapKeyType]*DetailedTestSuiteExecutionsMapObjectStruct
+	var detailedTestSuiteExecutionsObjectsMap map[DetailedTestSuiteExecutionMapKeyType]*DetailedTestSuiteExecutionsMapObjectStruct
 
-	detailedTestCaseExecutionsObjectsMapPtr = testCaseExecutionsModel.DetailedTestCaseExecutionsObjectsMapPtr
-	detailedTestCaseExecutionsObjectsMap = *detailedTestCaseExecutionsObjectsMapPtr
+	detailedTestSuiteExecutionsObjectsMapPtr = testSuiteExecutionsModel.DetailedTestSuiteExecutionsObjectsMapPtr
+	detailedTestSuiteExecutionsObjectsMap = *detailedTestSuiteExecutionsObjectsMapPtr
 
-	// Extract specificDetailedTestCaseExecutionsMapObject
-	var detailedTestCaseExecutionsMapObjectPtr *DetailedTestCaseExecutionsMapObjectStruct
-	var detailedTestCaseExecutionsMapObject DetailedTestCaseExecutionsMapObjectStruct
-	detailedTestCaseExecutionsMapObjectPtr, existInMap = detailedTestCaseExecutionsObjectsMap[detailedTestCaseExecutionMapKey]
-	detailedTestCaseExecutionsMapObject = *detailedTestCaseExecutionsMapObjectPtr
+	// Extract specificDetailedTestSuiteExecutionsMapObject
+	var detailedTestSuiteExecutionsMapObjectPtr *DetailedTestSuiteExecutionsMapObjectStruct
+	var detailedTestSuiteExecutionsMapObject DetailedTestSuiteExecutionsMapObjectStruct
+	detailedTestSuiteExecutionsMapObjectPtr, existInMap = detailedTestSuiteExecutionsObjectsMap[detailedTestSuiteExecutionMapKey]
+	detailedTestSuiteExecutionsMapObject = *detailedTestSuiteExecutionsMapObjectPtr
 
 	if existInMap == false {
 		return err
@@ -60,39 +60,39 @@ func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ExtractAndStoreLo
 	//var tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr *map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
 	tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap = make(map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType)
 
-	detailedTestCaseExecutionsMapObjectPtr.RelationBetweenTestInstructionUuidAndTestInstructionExecutionUuidMapPtr = &tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap
+	detailedTestSuiteExecutionsMapObjectPtr.RelationBetweenTestInstructionUuidAndTestInstructionExecutionUuidMapPtr = &tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap
 
 	// Always reInitialized TestInstructionExecutionLogPostMapPtr
 	var tempTestInstructionExecutionLogPostMap map[TestInstructionExecutionLogPostMapKeyType]*[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage
 	tempTestInstructionExecutionLogPostMap = make(map[TestInstructionExecutionLogPostMapKeyType]*[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage)
-	detailedTestCaseExecutionsMapObjectPtr.TestInstructionExecutionLogPostMapPtr = &tempTestInstructionExecutionLogPostMap
+	detailedTestSuiteExecutionsMapObjectPtr.TestInstructionExecutionLogPostMapPtr = &tempTestInstructionExecutionLogPostMap
 
 	// Always reInitialized RunTimeUpdatedAttributesMapPtr
 	var tempRunTimeUpdatedAttributesMap map[TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType]*map[AttributeNameMapKeyType]RunTimeUpdatedAttributeValueType
 	tempRunTimeUpdatedAttributesMap = make(map[TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType]*map[AttributeNameMapKeyType]RunTimeUpdatedAttributeValueType)
-	detailedTestCaseExecutionsMapObjectPtr.RunTimeUpdatedAttributesMapPtr = &tempRunTimeUpdatedAttributesMap
+	detailedTestSuiteExecutionsMapObjectPtr.RunTimeUpdatedAttributesMapPtr = &tempRunTimeUpdatedAttributesMap
 
-	detailedTestCaseExecutionsMapObject = *detailedTestCaseExecutionsMapObjectPtr
+	detailedTestSuiteExecutionsMapObject = *detailedTestSuiteExecutionsMapObjectPtr
 
 	// Always reInitialized RelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMapPtr
 	var tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap map[TestInstructionExecutionUuidType]RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct
 	tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap = make(map[TestInstructionExecutionUuidType]RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct)
 
-	detailedTestCaseExecutionsMapObjectPtr.RelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMapPtr = &tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap
+	detailedTestSuiteExecutionsMapObjectPtr.RelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMapPtr = &tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap
 
 	// Always reInitialized TestInstructionExecutionDetailsMapPtr
 	var tempTestInstructionExecutionDetailsMap map[TestInstructionExecutionDetailsMapKeyType]*TestInstructionExecutionDetailsStruct
 	tempTestInstructionExecutionDetailsMap = make(map[TestInstructionExecutionDetailsMapKeyType]*TestInstructionExecutionDetailsStruct)
-	detailedTestCaseExecutionsMapObjectPtr.TestInstructionExecutionDetailsMapPtr = &tempTestInstructionExecutionDetailsMap
+	detailedTestSuiteExecutionsMapObjectPtr.TestInstructionExecutionDetailsMapPtr = &tempTestInstructionExecutionDetailsMap
 
 	// Get the LogPostMap
 	var testInstructionExecutionLogPostMapPtr *map[TestInstructionExecutionLogPostMapKeyType]*[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage
 	var testInstructionExecutionLogPostMap map[TestInstructionExecutionLogPostMapKeyType]*[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage
-	testInstructionExecutionLogPostMapPtr = detailedTestCaseExecutionsMapObject.TestInstructionExecutionLogPostMapPtr
+	testInstructionExecutionLogPostMapPtr = detailedTestSuiteExecutionsMapObject.TestInstructionExecutionLogPostMapPtr
 	testInstructionExecutionLogPostMap = *testInstructionExecutionLogPostMapPtr
 
 	// Loop all TestInstructionExecutions and extract logPost-message, RuntTimeAttribute-data and TestInstructionExecution-data
-	for _, testInstructionExecution := range detailedTestCaseExecution.TestInstructionExecutions {
+	for _, testInstructionExecution := range detailedTestSuiteExecution.TestInstructionExecutions {
 
 		// Generate the TestInstructionExecutionLogPostMapKey
 		var testInstructionExecutionLogPostMapKey TestInstructionExecutionLogPostMapKeyType
@@ -186,11 +186,11 @@ func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ExtractAndStoreLo
 
 	}
 
-	// Add Maps back to 'detailedTestCaseExecutionsMapObject'
-	detailedTestCaseExecutionsMapObjectPtr.RelationBetweenTestInstructionUuidAndTestInstructionExecutionUuidMapPtr = &tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap
-	detailedTestCaseExecutionsMapObjectPtr.RelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMapPtr = &tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap
-	detailedTestCaseExecutionsMapObjectPtr.RunTimeUpdatedAttributesMapPtr = &tempRunTimeUpdatedAttributesMap
-	detailedTestCaseExecutionsMapObjectPtr.TestInstructionExecutionDetailsMapPtr = &tempTestInstructionExecutionDetailsMap
+	// Add Maps back to 'detailedTestSuiteExecutionsMapObject'
+	detailedTestSuiteExecutionsMapObjectPtr.RelationBetweenTestInstructionUuidAndTestInstructionExecutionUuidMapPtr = &tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap
+	detailedTestSuiteExecutionsMapObjectPtr.RelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMapPtr = &tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap
+	detailedTestSuiteExecutionsMapObjectPtr.RunTimeUpdatedAttributesMapPtr = &tempRunTimeUpdatedAttributesMap
+	detailedTestSuiteExecutionsMapObjectPtr.TestInstructionExecutionDetailsMapPtr = &tempTestInstructionExecutionDetailsMap
 
 	return err
 }

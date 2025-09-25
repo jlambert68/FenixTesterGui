@@ -9,20 +9,20 @@ import (
 // ListExecutionDataForTestInstructionExecutions
 // List all Execution-data for supplied TestInstructionExecutions. Posts are sorted on UpdateTimeStamp
 func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ListExecutionDataForTestInstructionExecutions(
-	detailedTestCaseExecutionMapKey DetailedTestCaseExecutionMapKeyType,
+	detailedTestSuiteExecutionMapKey DetailedTestSuiteExecutionMapKeyType,
 	testInstructionExecutionDetailsMapKeys []TestInstructionExecutionDetailsMapKeyType) (
 	testInstructionExecutionDetailsForExplorerPtr *[]*TestInstructionExecutionDetailsForExplorerStruct) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "1e3f1544-1f9b-448f-a629-3f6256bbe6b7",
+		"id": "422a0e0e-4ab4-46d1-a74c-787758c454fa",
 	}).Debug("Incoming - 'ListExecutionDataForTestInstructionExecutions'")
 
 	defer sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "b254edaf-6868-4014-9681-55b19e6a169f",
+		"id": "d3b00f2e-cb30-46dd-adae-96ce80e106b4",
 	}).Debug("Outgoing - 'ListExecutionDataForTestInstructionExecutions'")
 
 	// Check input keys for values
-	if len(detailedTestCaseExecutionMapKey) == 0 {
+	if len(detailedTestSuiteExecutionMapKey) == 0 {
 		return
 	}
 	for _, tempTestInstructionExecutionLogPostMapKey := range testInstructionExecutionDetailsMapKeys {
@@ -32,41 +32,41 @@ func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ListExecutionData
 	}
 
 	// Lock Map for Writing
-	detailedTestCaseExecutionsMapMutex.Lock()
+	detailedTestSuiteExecutionsMapMutex.Lock()
 
 	//UnLock Map
-	defer detailedTestCaseExecutionsMapMutex.Unlock()
+	defer detailedTestSuiteExecutionsMapMutex.Unlock()
 
 	var existInMap bool
 
-	// Extract map with DetailedTestCaseExecutionsMapObjects
-	var detailedTestCaseExecutionsObjectsMapPtr *map[DetailedTestCaseExecutionMapKeyType]*DetailedTestCaseExecutionsMapObjectStruct
-	var detailedTestCaseExecutionsObjectsMap map[DetailedTestCaseExecutionMapKeyType]*DetailedTestCaseExecutionsMapObjectStruct
+	// Extract map with DetailedTestSuiteExecutionsMapObjects
+	var detailedTestSuiteExecutionsObjectsMapPtr *map[DetailedTestSuiteExecutionMapKeyType]*DetailedTestSuiteExecutionsMapObjectStruct
+	var detailedTestSuiteExecutionsObjectsMap map[DetailedTestSuiteExecutionMapKeyType]*DetailedTestSuiteExecutionsMapObjectStruct
 
-	detailedTestCaseExecutionsObjectsMapPtr = testCaseExecutionsModel.DetailedTestCaseExecutionsObjectsMapPtr
-	detailedTestCaseExecutionsObjectsMap = *detailedTestCaseExecutionsObjectsMapPtr
+	detailedTestSuiteExecutionsObjectsMapPtr = testSuiteExecutionsModel.DetailedTestSuiteExecutionsObjectsMapPtr
+	detailedTestSuiteExecutionsObjectsMap = *detailedTestSuiteExecutionsObjectsMapPtr
 
-	// Extract specificDetailedTestCaseExecutionsMapObject
-	var detailedTestCaseExecutionsMapObjectPtr *DetailedTestCaseExecutionsMapObjectStruct
-	var detailedTestCaseExecutionsMapObject DetailedTestCaseExecutionsMapObjectStruct
-	detailedTestCaseExecutionsMapObjectPtr, existInMap = detailedTestCaseExecutionsObjectsMap[detailedTestCaseExecutionMapKey]
+	// Extract specificDetailedTestSuiteExecutionsMapObject
+	var detailedTestSuiteExecutionsMapObjectPtr *DetailedTestSuiteExecutionsMapObjectStruct
+	var detailedTestSuiteExecutionsMapObject DetailedTestSuiteExecutionsMapObjectStruct
+	detailedTestSuiteExecutionsMapObjectPtr, existInMap = detailedTestSuiteExecutionsObjectsMap[detailedTestSuiteExecutionMapKey]
 
 	// If it isn't initialized then exist
 	if existInMap == false {
 		return
 	}
 
-	detailedTestCaseExecutionsMapObject = *detailedTestCaseExecutionsMapObjectPtr
+	detailedTestSuiteExecutionsMapObject = *detailedTestSuiteExecutionsMapObjectPtr
 
 	// Check if TestInstructionnExecutionMap is nil, then exist
-	if detailedTestCaseExecutionsMapObjectPtr.TestInstructionExecutionLogPostMapPtr == nil {
+	if detailedTestSuiteExecutionsMapObjectPtr.TestInstructionExecutionLogPostMapPtr == nil {
 		return
 	}
 
 	// Get the TestInstructionExecutionDetailsMap
 	var testInstructionExecutionDetailsMapPtr *map[TestInstructionExecutionDetailsMapKeyType]*TestInstructionExecutionDetailsStruct
 	var testInstructionExecutionDetailsMap map[TestInstructionExecutionDetailsMapKeyType]*TestInstructionExecutionDetailsStruct
-	testInstructionExecutionDetailsMapPtr = detailedTestCaseExecutionsMapObject.TestInstructionExecutionDetailsMapPtr
+	testInstructionExecutionDetailsMapPtr = detailedTestSuiteExecutionsMapObject.TestInstructionExecutionDetailsMapPtr
 	testInstructionExecutionDetailsMap = *testInstructionExecutionDetailsMapPtr
 
 	// Get TestInstructionExecutions from Map by loop the Map-keys and add the final result slice
@@ -75,15 +75,15 @@ func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ListExecutionData
 	for _, testInstructionExecutionDetailsMapKey := range testInstructionExecutionDetailsMapKeys {
 
 		// Convert to TestInstructionExecutionLogPostKey
-		tempTestInstructionExecutionLogPostKey, existInMap = testCaseExecutionsModel.
+		tempTestInstructionExecutionLogPostKey, existInMap = testSuiteExecutionsModel.
 			GetTestInstructionExecutionUuidFromTestInstructionUuid(
-				TestCaseExecutionUuidType(detailedTestCaseExecutionMapKey),
+				TestSuiteExecutionUuidType(detailedTestSuiteExecutionMapKey),
 				RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType(testInstructionExecutionDetailsMapKey))
 
 		if existInMap == false {
 
 			sharedCode.Logger.WithFields(logrus.Fields{
-				"id":                                    "4ef4595b-5ddf-406e-b09c-7b2eb628400c",
+				"id":                                    "31bc3351-7fe7-4c1b-8625-1c60c8627e6f",
 				"testInstructionExecutionDetailsMapKey": testInstructionExecutionDetailsMapKey,
 			}).Fatalln("Should never happen - Couldn't get tempTestInstructionExecutionLogPostKey from TestInstructionUuid")
 
@@ -97,7 +97,7 @@ func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ListExecutionData
 		if existInMap == false {
 
 			sharedCode.Logger.WithFields(logrus.Fields{
-				"id": "a37f358c-68a4-47e4-81ba-183c0f191f62",
+				"id": "f284e78e-1b12-4834-86a4-2105f8865c6b",
 			}).Fatalln("TestInstructionExecutionDetailsMapKey doesn't exist in 'testInstructionExecutionDetailsMap', should never happen")
 		}
 

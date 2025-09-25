@@ -208,18 +208,18 @@ func (r *clickableSortImage) updateImageVisibility() {
 
 	var currentSortedColumn int
 	var currentSortingDirection SortingDirectionType
-	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+	switch selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType {
 
-	case AllExecutionsForOneTestCase:
-		currentSortedColumn = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+	case AllExecutionsForOneTestSuite:
+		currentSortedColumn = selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
 			currentSortColumn
-		currentSortingDirection = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+		currentSortingDirection = selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
 			currentSortColumnsSortDirection
 
-	case OneExecutionPerTestCase:
-		currentSortedColumn = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+	case OneExecutionPerTestSuite:
+		currentSortedColumn = selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
 			currentSortColumn
-		currentSortingDirection = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+		currentSortingDirection = selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
 			currentSortColumnsSortDirection
 
 	case NotDefined:

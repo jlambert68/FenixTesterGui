@@ -6,45 +6,45 @@ import (
 	"time"
 )
 
-// StandardTestCaseExecutionsBatchSize
+// StandardTestSuiteExecutionsBatchSize
 // The number if rows to be retrieved in one batch
-const StandardTestCaseExecutionsBatchSize = 100
+const StandardTestSuiteExecutionsBatchSize = 100
 
-// NullTimeStampForTestCaseExecutionsSearch
-// Null timestamp used in Search/Load of TestCaseExecutions
-var NullTimeStampForTestCaseExecutionsSearch time.Time = time.Date(1970, 1, 1, 0, 0, 0, 0, time.UTC)
+// NullTimeStampForTestSuiteExecutionsSearch
+// Null timestamp used in Search/Load of TestSuiteExecutions
+var NullTimeStampForTestSuiteExecutionsSearch time.Time = time.Date(1970, 1, 1, 0, 0, 0, 0, time.UTC)
 
-// TestCaseExecutionsModel
+// TestSuiteExecutionsModel
 // Holding all data around Executions
-var TestCaseExecutionsModel TestCaseExecutionsModelStruct
+var TestSuiteExecutionsModel TestSuiteExecutionsModelStruct
 
-// TestCaseExecutionUuidType
-// The type for key of the 'TestCaseExecutionsThatCanBeViewedByUserMap'
-type TestCaseExecutionUuidType string
+// TestSuiteExecutionUuidType
+// The type for key of the 'TestSuiteExecutionsThatCanBeViewedByUserMap'
+type TestSuiteExecutionUuidType string
 
-type latestTestCaseExecutionForEachTestCaseUuidStruct struct {
-	latestTestCaseExecutionForEachTestCaseUuidMap map[TestCaseExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
-	LatestUniqueTestCaseExecutionDatabaseRowId    int32
-	MoreRowsExists                                bool
+type latestTestSuiteExecutionForEachTestSuiteUuidStruct struct {
+	latestTestSuiteExecutionForEachTestSuiteUuidMap map[TestSuiteExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage
+	LatestUniqueTestSuiteExecutionDatabaseRowId     int32
+	MoreRowsExists                                  bool
 }
 
-// TestCaseUuidType
-// The type for key of the 'AllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUserMap'
-type TestCaseUuidType string
+// TestSuiteUuidType
+// The type for key of the 'AllTestSuiteExecutionsForOneTestSuiteThatCanBeViewedByUserMap'
+type TestSuiteUuidType string
 
-type AllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUserMapType map[TestCaseExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
+type AllTestSuiteExecutionsForOneTestSuiteThatCanBeViewedByUserMapType map[TestSuiteExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage
 
-type allTestCaseExecutionsForOneTestCaseUuidStruct struct {
-	allTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap map[TestCaseExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
-	latestUniqueTestCaseExecutionDatabaseRowId                   int32
-	moreRowsExists                                               bool
+type allTestSuiteExecutionsForOneTestSuiteUuidStruct struct {
+	allTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap map[TestSuiteExecutionUuidType]*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage
+	latestUniqueTestSuiteExecutionDatabaseRowId                    int32
+	moreRowsExists                                                 bool
 }
 
-type DetailedTestCaseExecutionMapKeyType string // TestCaseExecutionUuid + TestCaseExecutionVersion
+type DetailedTestSuiteExecutionMapKeyType string // TestSuiteExecutionUuid + TestSuiteExecutionVersion
 
 type TestInstructionExecutionLogPostMapKeyType string // TestInstructionExecutionUuid + TestInstructionExecutionVersion
 
-type TCEoTICoTIEAttributesContainerMapKeyType string // TestInstructionExecutionUuid || TestInstructionContainerUuid || TestCaseExecutionUuid
+type TCEoTICoTIEAttributesContainerMapKeyType string // TestInstructionExecutionUuid || TestInstructionContainerUuid || TestSuiteExecutionUuid
 
 type RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType string // TestInstructionUuid
 
@@ -76,8 +76,8 @@ type RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct struct 
 
 type TestInstructionExecutionUuidType string // TestInstructionExecutionUuid
 
-type DetailedTestCaseExecutionsMapObjectStruct struct {
-	DetailedTestCaseExecution                                               *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage
+type DetailedTestSuiteExecutionsMapObjectStruct struct {
+	DetailedTestSuiteExecution                                              *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionResponseMessage
 	TestInstructionExecutionLogPostMapPtr                                   *map[TestInstructionExecutionLogPostMapKeyType]*[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage
 	RelationBetweenTestInstructionUuidAndTestInstructionExecutionUuidMapPtr *map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
 	RelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMapPtr *map[TestInstructionExecutionUuidType]RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct
@@ -88,13 +88,13 @@ type DetailedTestCaseExecutionsMapObjectStruct struct {
 	WaitingForDatabaseUpdateMutex *sync.RWMutex
 }
 
-// TestCaseExecutionsModelStruct
+// TestSuiteExecutionsModelStruct
 // Type for holding all data around Executions
-type TestCaseExecutionsModelStruct struct {
-	LatestTestCaseExecutionForEachTestCaseUuid                   latestTestCaseExecutionForEachTestCaseUuidStruct
-	AllTestCaseExecutionsForAllTestCasesThatCanBeViewedByUserMap map[TestCaseUuidType]*allTestCaseExecutionsForOneTestCaseUuidStruct
-	DetailedTestCaseExecutionsObjectsMapPtr                      *map[DetailedTestCaseExecutionMapKeyType]*DetailedTestCaseExecutionsMapObjectStruct
+type TestSuiteExecutionsModelStruct struct {
+	LatestTestSuiteExecutionForEachTestSuiteUuid                   latestTestSuiteExecutionForEachTestSuiteUuidStruct
+	AllTestSuiteExecutionsForAllTestSuitesThatCanBeViewedByUserMap map[TestSuiteUuidType]*allTestSuiteExecutionsForOneTestSuiteUuidStruct
+	DetailedTestSuiteExecutionsObjectsMapPtr                       *map[DetailedTestSuiteExecutionMapKeyType]*DetailedTestSuiteExecutionsMapObjectStruct
 
-	StandardTestCaseExecutionsBatchSize      int32 // The number if rows to be retrieved in one batch
-	NullTimeStampForTestCaseExecutionsSearch time.Time
+	StandardTestSuiteExecutionsBatchSize      int32 // The number if rows to be retrieved in one batch
+	NullTimeStampForTestSuiteExecutionsSearch time.Time
 }

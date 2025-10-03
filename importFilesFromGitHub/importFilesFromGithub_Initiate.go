@@ -28,7 +28,7 @@ func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) InitiateImportFi
 	// Disable the main window
 	mainWindow.Hide()
 
-	// Store Channel reference in local varaible
+	// Store Channel reference in local variable
 	sharedResponseChannel = responseChannel
 
 	// Store reference to Fenix Main Window
@@ -126,6 +126,11 @@ func (importFilesFromGitHubObject *ImportFilesFromGitHubStruct) InitiateImportFi
 	})
 
 	// Show the githubFileImporterWindow
+	//go githubFileImporterWindow.Show()
+	//fyne.Do(func() {
 	githubFileImporterWindow.Show()
+	//})
+
+	//githubFileImporterWindow.Close()
 
 }

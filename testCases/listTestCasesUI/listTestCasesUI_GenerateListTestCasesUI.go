@@ -9,9 +9,12 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
+	"fyne.io/fyne/v2/driver/desktop"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"image"
+	"image/color"
 	"strconv"
 	"sync"
 )
@@ -230,9 +233,40 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateListTestCasesUI(
 			listTestCaseUIObject.filterTab,
 			listTestCaseUIObject.preViewTab)
 
+		// make a hoverable transparent PreView-overlay, to stop table-row hovering in left Table
+		preViewOverlay := NewHoverableRect(color.Transparent, nil)
+		preViewOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
+
+			mouseHasLeftTable = true
+			preViewOverlay.Hide()
+			preViewOverlay.OtherHoverableRect.Show()
+		}
+		preViewOverlay.OnMouseOut = func() {
+
+		}
+
+		// make a hoverable transparent TestCaseList-overlay, to stop table-row hovering in left Table
+		testCaseListViewOverlay := NewHoverableRect(color.Transparent, nil)
+		testCaseListViewOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
+
+			mouseHasLeftTable = false
+			testCaseListViewOverlay.Hide()
+			testCaseListViewOverlay.OtherHoverableRect.Show()
+		}
+		testCaseListViewOverlay.OnMouseOut = func() {
+
+		}
+
+		// Cross connect the two overlays
+		preViewOverlay.OtherHoverableRect = testCaseListViewOverlay
+		testCaseListViewOverlay.OtherHoverableRect = preViewOverlay
+
+		preViewAndOverlayContainer := container.New(layout.NewStackLayout(), listTestCaseUIObject.preViewAndFilterTabs, preViewOverlay)
+		testCaseListAndOverlayContainer := container.New(layout.NewStackLayout(), testCasesListScrollContainer2, testCaseListViewOverlay)
+
 		tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(
-			testCasesListScrollContainer2,
-			listTestCaseUIObject.preViewAndFilterTabs)
+			testCaseListAndOverlayContainer,
+			preViewAndOverlayContainer)
 		tempTestCaseListAndTestCasePreviewSplitContainer.Offset = 0.75
 
 		//TestCaseListAndTestCasePreviewSplitContainer = tempTestCaseListAndTestCasePreviewSplitContainer

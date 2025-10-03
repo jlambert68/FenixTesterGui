@@ -71,67 +71,70 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) generateTemplateListForTe
 	// Import the Template-files
 	githubFilesImporterButton = widget.NewButton("Import files from GitHub", func() {
 
-		currentTestCasePtr, existInMap = testCasesMap[testCaseUuid]
-		if existInMap == false {
-			sharedCode.Logger.WithFields(logrus.Fields{
-				"ID":           "59fab568-2da4-43f9-8300-6858eae73431",
-				"testCaseUuid": testCaseUuid,
-			}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
-		}
+		go func() {
 
-		var tempFenixMasterWindow fyne.Window
-		tempFenixMasterWindow = *sharedCode.FenixMasterWindowPtr
-		tempFenixMasterWindow.Hide()
+			currentTestCasePtr, existInMap = testCasesMap[testCaseUuid]
+			if existInMap == false {
+				sharedCode.Logger.WithFields(logrus.Fields{
+					"ID":           "59fab568-2da4-43f9-8300-6858eae73431",
+					"testCaseUuid": testCaseUuid,
+				}).Fatal("TestCase doesn't exist in TestCaseMap. This should not happen")
+			}
 
-		var localImportFilesFromGitHubObject *importFilesFromGitHub.ImportFilesFromGitHubStruct
-		localImportFilesFromGitHubObject = &importFilesFromGitHub.ImportFilesFromGitHubStruct{}
+			var tempFenixMasterWindow fyne.Window
+			tempFenixMasterWindow = *sharedCode.FenixMasterWindowPtr
+			tempFenixMasterWindow.Hide()
 
-		localImportFilesFromGitHubObject.InitiateImportFilesFromGitHubWindow(
-			*sharedCode.TemplateRepositoryApiUrlsPtr,
-			*sharedCode.FenixMasterWindowPtr,
-			*sharedCode.FenixAppPtr,
-			&responseChannel,
-			currentTestCasePtr.ImportedTemplateFilesFromGitHub)
+			var localImportFilesFromGitHubObject *importFilesFromGitHub.ImportFilesFromGitHubStruct
+			localImportFilesFromGitHubObject = &importFilesFromGitHub.ImportFilesFromGitHubStruct{}
 
-		// Wait for response from Files Selector Window to close
-		var channelResponseForSelectedFiles importFilesFromGitHub.SharedResponseChannelStruct
+			go localImportFilesFromGitHubObject.InitiateImportFilesFromGitHubWindow(
+				*sharedCode.TemplateRepositoryApiUrlsPtr,
+				*sharedCode.FenixMasterWindowPtr,
+				*sharedCode.FenixAppPtr,
+				&responseChannel,
+				currentTestCasePtr.ImportedTemplateFilesFromGitHub)
 
-		channelResponseForSelectedFiles = <-responseChannel
+			// Wait for response from Files Selector Window to close
+			var channelResponseForSelectedFiles importFilesFromGitHub.SharedResponseChannelStruct
 
-		var localCopyForSelectedFiles []importFilesFromGitHub.GitHubFile
-		localCopyForSelectedFiles = *channelResponseForSelectedFiles.SelectedFilesPtr
+			channelResponseForSelectedFiles = <-responseChannel
 
-		// Update Template files for TestCase
-		currentTestCasePtr.ImportedTemplateFilesFromGitHub = localCopyForSelectedFiles
+			var localCopyForSelectedFiles []importFilesFromGitHub.GitHubFile
+			localCopyForSelectedFiles = *channelResponseForSelectedFiles.SelectedFilesPtr
 
-		// Store back TestCase
-		//testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
+			// Update Template files for TestCase
+			currentTestCasePtr.ImportedTemplateFilesFromGitHub = localCopyForSelectedFiles
 
-		//updateTemplateFilesTable(templatesFilesInTestCaseTable,
-		//	testCaseUuid,
-		//	false,
-		//	testCasesUiCanvasObject)
+			// Store back TestCase
+			//testCasesUiCanvasObject.TestCasesModelReference.TestCasesMapPtr[testCaseUuid] = currentTestCasePtr
 
-		//		accordion.Resize(fyne.NewSize(accordion.Size().Width, templatesFilesInTestCaseTable.Size().Height))
-		// tableAndButtonContainer.Refresh()
-		// accordion.Refresh()
+			//updateTemplateFilesTable(templatesFilesInTestCaseTable,
+			//	testCaseUuid,
+			//	false,
+			//	testCasesUiCanvasObject)
 
-		// Update size of Columns and rows
-		templatesFilesInTestCaseTable.updateColumnAndRowSizes(
-			testCaseUuid,
-			testCasesUiCanvasObject,
-			checkIfTemplatesAreChangedButton,
-			viewTemplateButton)
+			//		accordion.Resize(fyne.NewSize(accordion.Size().Width, templatesFilesInTestCaseTable.Size().Height))
+			// tableAndButtonContainer.Refresh()
+			// accordion.Refresh()
 
-		templateListArea.Refresh()
+			// Update size of Columns and rows
+			templatesFilesInTestCaseTable.updateColumnAndRowSizes(
+				testCaseUuid,
+				testCasesUiCanvasObject,
+				checkIfTemplatesAreChangedButton,
+				viewTemplateButton)
 
-		// Update Attributes area of TestCase
-		if testCasesUiCanvasObject.CurrentSelectedTestCaseUIElement != nil {
-			testCasesUiCanvasObject.CurrentSelectedTestCaseUIElement.ForceClick()
-		}
+			templateListArea.Refresh()
 
-		// Update ComboBox, if exists, for available Templates to chose from
+			// Update Attributes area of TestCase
+			if testCasesUiCanvasObject.CurrentSelectedTestCaseUIElement != nil {
+				testCasesUiCanvasObject.CurrentSelectedTestCaseUIElement.ForceClick()
+			}
 
+			// Update ComboBox, if exists, for available Templates to chose from
+
+		}()
 	})
 
 	// Create Button to be able to check which Templates that are updated

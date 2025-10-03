@@ -1,7 +1,0 @@
-package testSuiteExecutionsModel
-
-func InitiateTestSuiteExecutionModel() {
-
-	TestSuiteExecutionsModel.NullTimeStampForTestSuiteExecutionsSearch = NullTimeStampForTestSuiteExecutionsSearch
-
-}

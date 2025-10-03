@@ -277,14 +277,20 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 			}
 
 		}
-		clickableContainer.Refresh()
+		fyne.Do(func() {
+			clickable.Refresh()
+		})
+		//clickableContainer.Refresh()
 
 	}
 
 	// Update the Header
 	testCaseExecutionsListTable.UpdateHeader = func(id widget.TableCellID, cell fyne.CanvasObject) {
 		tempSortableHeaderLabel := cell.(*sortableHeaderLabelStruct)
-		tempSortableHeaderLabel.label.SetText(testCaseExecutionsListTableHeader[id.Col])
+		fyne.Do(func() {
+			tempSortableHeaderLabel.label.SetText(testCaseExecutionsListTableHeader[id.Col])
+		})
+		//tempSortableHeaderLabel.label.SetText(testCaseExecutionsListTableHeader[id.Col])
 		tempSortableHeaderLabel.label.TextStyle = fyne.TextStyle{Bold: true}
 
 		// Set Column number

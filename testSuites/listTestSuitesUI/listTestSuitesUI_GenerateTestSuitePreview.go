@@ -52,7 +52,7 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) GenerateTestSuitePreviewCont
 
 	// Create Header for TestCase-list area
 	testCaseListHeaderLabel := widget.NewLabel("TestCases in TestSuite")
-	testCaseListHeaderLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testCaseListHeaderLabel.TextStyle = fyne.TextStyle{Bold: true, Italic: true}
 	testSuitePreviewTopContainer.Add(testCaseListHeaderLabel)
 	testSuitePreviewTopContainer.Add(widget.NewLabel(""))
 

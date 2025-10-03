@@ -511,7 +511,9 @@ func GenerateListTestCaseExecutionsUI(
 
 	preViewAndOverlayContainer := container.New(layout.NewStackLayout(), testCaseInstructionPreViewObject.
 		testCasePreviewTestInstructionExecutionLogSplitContainer, preViewOverlay)
-	executionListAndOverlayContainer := container.New(layout.NewStackLayout(), testCasesListScrollContainer2, executionListViewOverlay)
+	executionListAndOverlayContainer := container.New(layout.NewStackLayout(),
+		testCasesListScrollContainer2,
+		executionListViewOverlay)
 
 	// Generate the split-container holding the TestCaseExecution-list and the Execution-Preview
 	tempTestCaseListAndTestCasePreviewSplitContainer = container.NewHSplit(executionListAndOverlayContainer, preViewAndOverlayContainer)

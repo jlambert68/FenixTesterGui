@@ -9,9 +9,12 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
+	"fyne.io/fyne/v2/driver/desktop"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	fenixGuiTestCaseBuilderServerGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api"
 	"image"
+	"image/color"
 	"strconv"
 	"sync"
 	"time"
@@ -225,7 +228,40 @@ func (listTestSuiteUIObject *ListTestSuiteUIStruct) GenerateListTestSuitesUI(
 		// We are in standard List TestSuites
 		listTestSuiteUIObject.preViewAndFilterTabs = container.NewAppTabs(listTestSuiteUIObject.filterTab, listTestSuiteUIObject.preViewTab)
 
-		tempTestSuiteListAndTestSuitePreviewSplitContainer = container.NewHSplit(testSuitesListScrollContainer2, listTestSuiteUIObject.preViewAndFilterTabs)
+		// make a hoverable transparent PreView-overlay, to stop table-row hovering in left Table
+		preViewOverlay := NewHoverableRect(color.Transparent, nil)
+		preViewOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
+
+			mouseHasLeftTable = true
+			preViewOverlay.Hide()
+			preViewOverlay.OtherHoverableRect.Show()
+		}
+		preViewOverlay.OnMouseOut = func() {
+
+		}
+
+		// make a hoverable transparent TestCaseList-overlay, to stop table-row hovering in left Table
+		testSuiteListViewOverlay := NewHoverableRect(color.Transparent, nil)
+		testSuiteListViewOverlay.OnMouseIn = func(ev *desktop.MouseEvent) {
+
+			mouseHasLeftTable = false
+			testSuiteListViewOverlay.Hide()
+			testSuiteListViewOverlay.OtherHoverableRect.Show()
+		}
+		testSuiteListViewOverlay.OnMouseOut = func() {
+
+		}
+
+		// Cross connect the two overlays
+		preViewOverlay.OtherHoverableRect = testSuiteListViewOverlay
+		testSuiteListViewOverlay.OtherHoverableRect = preViewOverlay
+
+		preViewAndOverlayContainer := container.New(layout.NewStackLayout(), listTestSuiteUIObject.preViewAndFilterTabs, preViewOverlay)
+		testSuiteListAndOverlayContainer := container.New(layout.NewStackLayout(), testSuitesListScrollContainer2, testSuiteListViewOverlay)
+
+		tempTestSuiteListAndTestSuitePreviewSplitContainer = container.NewHSplit(
+			testSuiteListAndOverlayContainer,
+			preViewAndOverlayContainer)
 		tempTestSuiteListAndTestSuitePreviewSplitContainer.Offset = 0.75
 
 		//TestSuiteListAndTestSuitePreviewSplitContainer = tempTestSuiteListAndTestSuitePreviewSplitContainer

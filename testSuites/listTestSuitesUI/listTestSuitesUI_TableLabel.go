@@ -71,6 +71,10 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 		return
 	}
 
+	if mouseHasLeftTable == true {
+		return
+	}
+
 	if time.Since(l.lastTapTime) < 500*time.Millisecond {
 		if l.onDoubleTap != nil {
 			l.onDoubleTap()
@@ -95,6 +99,10 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 // Implement if you need right-click (secondary tap) actions.
 func (l *clickableTableLabel) TappedSecondary(*fyne.PointEvent) {
 	if l.isClickable == false {
+		return
+	}
+
+	if mouseHasLeftTable == true {
 		return
 	}
 
@@ -128,6 +136,10 @@ func (l *clickableTableLabel) MouseIn(*desktop.MouseEvent) {
 		return
 	}
 
+	if mouseHasLeftTable == true {
+		return
+	}
+
 	// Hinder concurrent setting of variable
 	l.listTestSuiteUIPtr.currentRowThatMouseIsHoveringAboveMutex.Lock()
 
@@ -146,6 +158,10 @@ func (l *clickableTableLabel) MouseMoved(*desktop.MouseEvent) {}
 func (l *clickableTableLabel) MouseOut() {
 
 	if l.isClickable == false {
+		return
+	}
+
+	if mouseHasLeftTable == true {
 		return
 	}
 

@@ -13,6 +13,9 @@ import (
 
 var StandardListTesSuitesUIObject *ListTestSuiteUIStruct
 
+// Indicate of mouse left table for the Preview-area
+var mouseHasLeftTable bool = true
+
 type ListTestSuiteUIStruct struct {
 	howShouldItBeUsed UsedForTestSuitesListType
 

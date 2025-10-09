@@ -62,8 +62,12 @@ func storeTestCaseThatCanBeEditedByUser(
 	var latestTestCaseExecutionUpdatedMinTimeStamp time.Time
 
 	// Store the TestCaseThatCanBeEditedByUser-list in the TestCaseModel
-	TestCasesThatCanBeEditedByUserMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
-		TestCaseThatCanBeEditedByUserMessage)
+
+	// Initiate Model if it hasn't been initialized
+	if TestCasesThatCanBeEditedByUserMap == nil {
+		TestCasesThatCanBeEditedByUserMap = make(map[string]*fenixGuiTestCaseBuilderServerGrpcApi.
+			TestCaseThatCanBeEditedByUserMessage)
+	}
 
 	// Store the Available TemplateRepositoryApiUrls as a map structure in TestCase-struct
 	for _, testCaseThatCanBeEditedByUser := range testCasesThatCanBeEditedByUserAsSlice {

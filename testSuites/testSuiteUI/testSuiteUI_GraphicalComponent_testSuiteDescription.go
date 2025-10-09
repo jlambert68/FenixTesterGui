@@ -44,7 +44,7 @@ func (testSuiteUiModel *TestSuiteUiStruct) generateTestSuiteDescriptionArea(
 
 	// Add Header to the Forms-container
 	var headerLabel *widget.Label
-	headerLabel = widget.NewLabel("TestCaseDescription")
+	headerLabel = widget.NewLabel("TestSuiteDescription")
 	headerLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseDescriptionFormContainer.Add(headerLabel)
 

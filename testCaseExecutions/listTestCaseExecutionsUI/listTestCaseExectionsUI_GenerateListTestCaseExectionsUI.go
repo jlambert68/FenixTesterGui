@@ -16,6 +16,7 @@ import (
 	"image"
 	"image/color"
 	"strconv"
+	"time"
 )
 
 //go:embed resources/TIC-Horizontal_32x32.png
@@ -301,10 +302,14 @@ func GenerateListTestCaseExecutionsUI(
 			<-updateGuiChannelStep1
 			<-updateGuiChannelStep2
 
+			fmt.Println("Finished loading all TestCaseExecutions for the TestCase 2", time.Now().String())
+
 			// Update the GUI
 			sortGuiTableAscendingOnTestCaseExecutionTimeStamp()
 
 		}()
+
+		fmt.Println("Finished loading all TestCaseExecutions for the TestCase 1", time.Now().String())
 
 		// Update the GUI
 		sortGuiTableAscendingOnTestCaseExecutionTimeStamp()

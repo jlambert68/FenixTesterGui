@@ -156,7 +156,10 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 		clickableContainer := cell.(*fyne.Container)
 		clickable := clickableContainer.Objects[1].(*clickableTableLabel)
 		rectangle := clickableContainer.Objects[0].(*canvas.Rectangle)
-		clickable.SetText(testCaseExecutionsListTableTable[id.Row][id.Col])
+		fyne.Do(func() {
+			clickable.SetText(testCaseExecutionsListTableTable[id.Row][id.Col])
+		})
+
 		clickable.isClickable = true
 		clickable.currentRow = int16(id.Row)
 		clickable.currentTestCaseExecutionUuid = testCaseExecutionsListTableTable[id.Row][testCaseExecutionUuidColumnNumber]

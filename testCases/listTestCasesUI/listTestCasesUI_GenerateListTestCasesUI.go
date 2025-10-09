@@ -135,7 +135,9 @@ func (listTestCaseUIObject *ListTestCaseUIStruct) GenerateListTestCasesUI(
 
 	// Define the function to be executed to filter TestCasesMapPtr that the user can edit
 	filterTestCasesButtonFunction = func() {
+
 		fmt.Println("'filterTestCasesButton' was pressed")
+
 		listTestCaseUIObject.loadTestCaseListTableTable(nil)
 		listTestCaseUIObject.calculateAndSetCorrectColumnWidths()
 		listTestCaseUIObject.updateTestCasesListTable(testCasesModel)

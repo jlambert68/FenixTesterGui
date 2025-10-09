@@ -4,6 +4,7 @@ import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/gcp"
 	"context"
+	"fmt"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -173,6 +174,8 @@ func (grpcOut *GRPCOutGuiExecutionServerStruct) SendListTestCaseExecutionsThatCa
 			"Message from FenixGuiExecutionServer": listTestCaseExecutionsResponse.AckNackResponse.Comments,
 		}).Error("Problem to do gRPC-call to FenixGuiExecutionServer for 'SendListTestCaseExecutionsThatCanBeViewed'")
 	}
+
+	fmt.Println("listTestCaseExecutionsResponse.TestCaseExecutionsList", len(listTestCaseExecutionsResponse.TestCaseExecutionsList))
 
 	return listTestCaseExecutionsResponse
 

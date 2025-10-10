@@ -59,7 +59,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) startGUICommandChannelRea
 
 }
 
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) updateTestCaseGraphics(incomingChannelCommandGraphicsUpdatedData sharedCode.ChannelCommandGraphicsUpdatedStruct) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) updateTestCaseGraphics(
+	incomingChannelCommandGraphicsUpdatedData sharedCode.ChannelCommandGraphicsUpdatedStruct) {
 
 	// Generate UI for New TestCase
 	if incomingChannelCommandGraphicsUpdatedData.CreateNewTestCaseUI == true {
@@ -99,6 +100,9 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) updateTestCaseGraphics(in
 	// Set the active TestCase, from UI-perspective
 	testCasesUiCanvasObject.TestCasesModelReference.CurrentActiveTestCaseUuid = incomingChannelCommandGraphicsUpdatedData.ActiveTestCase
 
+	// Switch to new active TestCase-tab
+	testCasesUiCanvasObject.selectTestCaseTabBasedOnTestCaseUuid(incomingChannelCommandGraphicsUpdatedData)
+
 }
 
 // Select TestInstruction in Active TestCase
@@ -111,7 +115,8 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) selectTestInstructionInTe
 }
 
 // Select tab that have TestCase
-func (testCasesUiCanvasObject *TestCasesUiModelStruct) selectTestCaseTabBasedOnTestCaseUuid(incomingChannelCommandGraphicsUpdatedData sharedCode.ChannelCommandGraphicsUpdatedStruct) {
+func (testCasesUiCanvasObject *TestCasesUiModelStruct) selectTestCaseTabBasedOnTestCaseUuid(
+	incomingChannelCommandGraphicsUpdatedData sharedCode.ChannelCommandGraphicsUpdatedStruct) {
 
 	var foundTestCase bool
 	var tabReference *container.TabItem
@@ -129,7 +134,10 @@ func (testCasesUiCanvasObject *TestCasesUiModelStruct) selectTestCaseTabBasedOnT
 
 	// When TestCase was found then switch tab
 	if foundTestCase == true {
-		testCasesUiCanvasObject.TestCasesTabs.Select(tabReference)
+		fyne.Do(func() {
+			testCasesUiCanvasObject.TestCasesTabs.Select(tabReference)
+		})
+
 		//testCasesUiCanvasObject.TestCasesTabs.Refresh()
 
 		return

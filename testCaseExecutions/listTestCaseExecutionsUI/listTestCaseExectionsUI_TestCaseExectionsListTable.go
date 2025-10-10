@@ -271,7 +271,9 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 					clickable.textInsteadOfLabel.TextStyle = clickable.TextStyle
 					clickable.Text = ""
 					clickable.textInsteadOfLabel.Show()
-					clickable.Hide()
+					fyne.Do(func() {
+						clickable.Hide()
+					})
 
 				}
 
@@ -315,7 +317,10 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 		tempSortableHeaderLabel.Refresh()
 	}
 
-	testCaseExecutionsListTable.Refresh()
+	fyne.Do(func() {
+		testCaseExecutionsListTable.Refresh()
+	})
+
 }
 
 // TestCaseUuid
@@ -361,11 +366,16 @@ func calculateAndSetCorrectColumnWidths() {
 
 	// Loop columns in table and set column width including some Padding
 	for columnIndex, columnWidth := range columnsMaxSizeSlice {
-		testCaseExecutionsListTable.SetColumnWidth(columnIndex, columnWidth+theme.Padding()*4)
+		fyne.Do(func() {
+			testCaseExecutionsListTable.SetColumnWidth(columnIndex, columnWidth+theme.Padding()*4)
+		})
+
 	}
 
 	// Refresh the table
-	testCaseExecutionsListTable.Refresh()
+	fyne.Do(func() {
+		testCaseExecutionsListTable.Refresh()
+	})
 
 }
 
@@ -647,7 +657,9 @@ func sortGuiTableOnColumn(columnNumber uint8, sortDirection SortingDirectionType
 	}
 
 	// Refresh table
-	testCaseExecutionsListTable.Refresh()
+	fyne.Do(func() {
+		testCaseExecutionsListTable.Refresh()
+	})
 
 }
 

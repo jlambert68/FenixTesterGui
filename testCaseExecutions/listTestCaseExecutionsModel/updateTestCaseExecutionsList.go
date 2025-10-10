@@ -4,6 +4,7 @@ import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/grpc_out_GuiExecutionServer"
 	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
+	"fmt"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"github.com/sirupsen/logrus"
 	"time"
@@ -21,6 +22,8 @@ func LoadTestCaseExecutionsThatCanBeViewedByUser(
 	testCaseExecutionToTimeStamp time.Time,
 	loadAllDataFromDatabase bool,
 	updateGuiChannel *chan bool) {
+
+	fmt.Println("batchSize", batchSize)
 
 	// Secure that the user has picked a TestCaseExecution in the list before loading all executions for that TestCase
 	if retrieveAllExecutionsForSpecificTestCaseUuid == true && len(specificTestCaseUuid) == 0 {

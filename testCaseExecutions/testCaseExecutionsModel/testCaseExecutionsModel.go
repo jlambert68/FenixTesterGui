@@ -2,6 +2,7 @@ package testCaseExecutionsModel
 
 func InitiateTestCaseExecutionModel() {
 
+	TestCaseExecutionsModel.StandardTestCaseExecutionsBatchSize = StandardTestCaseExecutionsBatchSize
 	TestCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch = NullTimeStampForTestCaseExecutionsSearch
 
 }

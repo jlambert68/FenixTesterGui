@@ -278,10 +278,18 @@ func GenerateListTestCaseExecutionsUI(
 		selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType = AllExecutionsForOneTestCase
 
 		// Channel used to trigger update of Gui
-		var updateGuiChannelStep1 chan bool
-		var updateGuiChannelStep2 chan bool
-		updateGuiChannelStep1 = make(chan bool)
-		updateGuiChannelStep2 = make(chan bool)
+		/*
+			var updateGuiChannelStep1 chan bool
+			var updateGuiChannelStep2 chan bool
+			updateGuiChannelStep1 = make(chan bool)
+			updateGuiChannelStep2 = make(chan bool)
+
+
+		*/
+		// Use one buffered channel to handle both batch updates
+		updateGuiChannel := make(chan bool, 2)
+
+		fmt.Println("Finished loading all TestCaseExecutions for the TestCase 1a", time.Now().String())
 
 		listTestCaseExecutionsModel.LoadTestCaseExecutionsThatCanBeViewedByUser(
 			testCaseExecutionsModel.LatestTestCaseExecutionForEachTestCaseUuid.LatestUniqueTestCaseExecutionDatabaseRowId,
@@ -293,27 +301,52 @@ func GenerateListTestCaseExecutionsUI(
 			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 			testCaseExecutionsModel.NullTimeStampForTestCaseExecutionsSearch,
 			true,
-			&updateGuiChannelStep1)
+			&updateGuiChannel)
 
-		// Update the UI with the new data
+		// ✅ Listen for refresh triggers
 		go func() {
+			for i := 0; i < 2; i++ {
+				<-updateGuiChannel
+				fmt.Printf("Refreshing GUI after batch %d at %s\n", i+1, time.Now().String())
 
-			// Wait for trigger to update GUI
-			<-updateGuiChannelStep1
-			<-updateGuiChannelStep2
+				fyne.Do(func() {
+					sortGuiTableAscendingOnTestCaseExecutionTimeStamp()
+				})
+			}
 
 			fmt.Println("Finished loading all TestCaseExecutions for the TestCase 2", time.Now().String())
+		}()
+
+		/*
+				// Update the UI with the new data
+				go func() {
+
+					// Wait for trigger to update GUI
+					<-updateGuiChannelStep1
+					<-updateGuiChannelStep2
+
+					fmt.Println("Finished loading all TestCaseExecutions for the TestCase 2", time.Now().String())
+
+					// Update the GUI
+					sortGuiTableAscendingOnTestCaseExecutionTimeStamp()
+
+				}()
+
+
+
+			fmt.Println("Finished loading all TestCaseExecutions for the TestCase 1b", time.Now().String())
 
 			// Update the GUI
 			sortGuiTableAscendingOnTestCaseExecutionTimeStamp()
+			updateGuiChannelStep2 <- true
 
-		}()
+		*/
 
-		fmt.Println("Finished loading all TestCaseExecutions for the TestCase 1", time.Now().String())
-
-		// Update the GUI
-		sortGuiTableAscendingOnTestCaseExecutionTimeStamp()
-		updateGuiChannelStep2 <- true
+		// Immediate first refresh
+		fmt.Println("Finished loading all TestCaseExecutions for the TestCase 1b", time.Now().String())
+		fyne.Do(func() {
+			sortGuiTableAscendingOnTestCaseExecutionTimeStamp()
+		})
 
 	}
 

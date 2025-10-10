@@ -8,7 +8,7 @@ import (
 
 // StandardTestCaseExecutionsBatchSize
 // The number if rows to be retrieved in one batch
-const StandardTestCaseExecutionsBatchSize = 20
+const StandardTestCaseExecutionsBatchSize = 30
 
 // NullTimeStampForTestCaseExecutionsSearch
 // Null timestamp used in Search/Load of TestCaseExecutions

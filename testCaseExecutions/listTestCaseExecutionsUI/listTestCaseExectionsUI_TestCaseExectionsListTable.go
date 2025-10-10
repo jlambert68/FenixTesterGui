@@ -132,6 +132,163 @@ func generateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecut
 var updateTestCaseExecutionsListTableMutex = &sync.RWMutex{}
 
 // Update the Table
+// Update the Table
+func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
+	updateTestCaseExecutionsListTableMutex.Lock()
+	defer updateTestCaseExecutionsListTableMutex.Unlock()
+
+	testCaseExecutionsListTable.Length = func() (int, int) {
+		return len(testCaseExecutionsListTableTable), numberColumnsInTestCaseExecutionsListUI
+	}
+
+	testCaseExecutionsListTable.CreateCell = func() fyne.CanvasObject {
+		lbl := newClickableTableLabel("", func() {}, false, testCaseExecutionsModel)
+		// Stack order: background rect (0), primary label (1), alternate text (2)
+		return container.NewStack(canvas.NewRectangle(color.Transparent), lbl, lbl.textInsteadOfLabel)
+	}
+
+	testCaseExecutionsListTable.UpdateCell = func(id widget.TableCellID, cell fyne.CanvasObject) {
+		cont := cell.(*fyne.Container)
+		bg := cont.Objects[0].(*canvas.Rectangle)
+		lbl := cont.Objects[1].(*clickableTableLabel)
+		alt := cont.Objects[2].(*canvas.Text)
+
+		// --- 1) BASELINE RESET (CRITICAL FOR CELL REUSE) ---
+		// Visibility
+		lbl.Show()
+		alt.Hide()
+
+		// Content
+		text := ""
+		if id.Row >= 0 && id.Row < len(testCaseExecutionsListTableTable) &&
+			id.Col >= 0 && id.Col < len(testCaseExecutionsListTableTable[id.Row]) {
+			text = testCaseExecutionsListTableTable[id.Row][id.Col]
+		}
+		lbl.SetText(text)
+		alt.Text = text
+
+		// Text defaults
+		lbl.Alignment = fyne.TextAlignLeading
+		lbl.TextStyle = fyne.TextStyle{}
+		alt.Alignment = fyne.TextAlignLeading
+		alt.TextStyle = lbl.TextStyle
+		lbl.Truncation = fyne.TextTruncateEllipsis
+
+		// Background defaults
+		bg.FillColor = color.Transparent
+		bg.StrokeColor = color.Transparent
+		bg.StrokeWidth = 0
+
+		// Click/metadata defaults
+		lbl.isClickable = true
+		lbl.onDoubleTap = nil
+		lbl.currentRow = int16(id.Row)
+		lbl.currentTestCaseExecutionUuid = ""
+		lbl.currentTestCaseExecutionVersion = 0
+		lbl.currentTestCaseUuid = ""
+		lbl.currentTestCaseName = ""
+
+		// --- 2) ASSIGN METADATA FOR THIS ROW (used by clicks/selection coloring) ---
+		if id.Row >= 0 && id.Row < len(testCaseExecutionsListTableTable) {
+			row := testCaseExecutionsListTableTable[id.Row]
+			// Guard against out-of-range
+			if len(row) > int(testCaseExecutionUuidColumnNumber) {
+				lbl.currentTestCaseExecutionUuid = row[testCaseExecutionUuidColumnNumber]
+			}
+			if len(row) > int(testCaseUuidColumnNumber) {
+				lbl.currentTestCaseUuid = row[testCaseUuidColumnNumber]
+			}
+			if len(row) > int(testCaseNameColumnNumber) {
+				lbl.currentTestCaseName = row[testCaseNameColumnNumber]
+			}
+			lbl.currentTestCaseExecutionVersion = 1 // TODO: use real version if/when available
+		}
+
+		// Optional double-tap action
+		lbl.onDoubleTap = func() {
+			// openTestCaseExecution(lbl.currentTestCaseExecutionUuid, lbl.testCaseExecutionsModel)
+		}
+
+		// --- 3) HOVER/SELECTION BACKGROUNDS (reset-safe) ---
+		if int16(id.Row) == currentRowThatMouseIsHoveringAbove {
+			bg.FillColor = color.RGBA{R: 0x4A, G: 0x4B, B: 0x4D, A: 0xFF}
+			// For hover, keep label visible unless column overrides below
+		} else {
+			// Highlight selected row (depends on which list is active)
+			var isSelected bool
+			switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+			case AllExecutionsForOneTestCase:
+				isSelected = lbl.currentTestCaseExecutionUuid ==
+					selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.
+						testCaseExecutionUuidThatIsShownInPreview
+			case OneExecutionPerTestCase:
+				isSelected = lbl.currentTestCaseExecutionUuid ==
+					selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.
+						testCaseExecutionUuidThatIsShownInPreview
+			}
+			if isSelected {
+				bg.FillColor = color.RGBA{R: 0x08, G: 0x5C, B: 0x04, A: 0xFF}
+				bg.StrokeColor = color.Transparent
+				bg.StrokeWidth = 3
+			}
+		}
+
+		// --- 4) PER-COLUMN SPECIALISATION (always AFTER baseline reset) ---
+		switch uint8(id.Col) {
+		case latestTestCaseExecutionStatus:
+			// Status color block with centered text via 'alt'
+			// (use your existing maps; guard against missing keys)
+			if cdef, ok := detailedExecutionsModel.ExecutionStatusColorNameToNumberMap[lbl.Text]; ok {
+				if cmap, ok2 := detailedExecutionsModel.ExecutionStatusColorMap[int32(cdef.ExecutionStatusNumber)]; ok2 {
+					bg.FillColor = cmap.BackgroundColor
+					if cmap.UseStroke {
+						bg.StrokeColor = cmap.StrokeColor
+						bg.StrokeWidth = 1
+					} else {
+						bg.StrokeColor = color.Transparent
+						bg.StrokeWidth = 0
+					}
+				}
+			}
+			alt.Alignment = fyne.TextAlignCenter
+			alt.TextStyle = lbl.TextStyle
+			lbl.Hide()
+			alt.Show()
+
+		// Add other column-specific tweaks here if needed:
+		// case someTimestampColumn:
+		//     lbl.Alignment = fyne.TextAlignCenter
+
+		default:
+			// nothing special
+		}
+
+		// Final repaint
+		cont.Refresh()
+	}
+
+	// Header updater unchanged except: don’t forget headers are also reused.
+	testCaseExecutionsListTable.UpdateHeader = func(id widget.TableCellID, cell fyne.CanvasObject) {
+		h := cell.(*sortableHeaderLabelStruct)
+		// Baseline reset for header (important for reuse)
+		h.label.Alignment = fyne.TextAlignLeading
+		h.label.TextStyle = fyne.TextStyle{Bold: true}
+		h.sortImage.unspecifiedImageContainer.Hide()
+		h.sortImage.ascendingImageContainer.Hide()
+		h.sortImage.descendingImageContainer.Hide()
+
+		h.label.SetText(testCaseExecutionsListTableHeader[id.Col])
+		h.columnNumber = id.Col
+		h.sortImage.headerColumnNumber = id.Col
+
+		testCaseExecutionsListTableHeadersMapRef[id.Col] = h
+		h.Refresh()
+	}
+
+	testCaseExecutionsListTable.Refresh()
+}
+
+/*
 func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
 
 	// Lock function
@@ -323,6 +480,8 @@ func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutio
 
 }
 
+
+*/
 // TestCaseUuid
 // TestCaseVersion
 // LatestTestCaseExecutionStatus

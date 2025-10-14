@@ -9,7 +9,7 @@ import (
 
 // ExtractAndStoreLogPostsAndValuesFromDetailedtestSuiteExecution
 // Extracts all extra data that will be presented to the user in GUI, ie the explorer-tabs
-func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ExtractAndStoreLogPostsAndValuesFromDetailedtestSuiteExecution(
+func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ExtractAndStoreLogPostsAndValuesFromDetailedTestSuiteExecution(
 	detailedTestSuiteExecutionMapKey DetailedTestSuiteExecutionMapKeyType) (
 	err error) {
 
@@ -22,7 +22,7 @@ func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ExtractAndStoreLo
 	}).Debug("Outgoing - 'ExtractAndStoreLogPostsAndValuesFromDetailedtestSuiteExecution'")
 
 	// Extract the raw detailedTestSuiteExecution-message
-	var detailedTestSuiteExecution *fenixExecutionServerGuiGrpcApi.testSuiteExecutionResponseMessage
+	var detailedTestSuiteExecution *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionResponseMessage
 	var existInMap bool
 	detailedTestSuiteExecution, existInMap = testSuiteExecutionsModel.
 		ReadFromDetailedTestSuiteExecutionsMap(detailedTestSuiteExecutionMapKey)
@@ -91,99 +91,103 @@ func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ExtractAndStoreLo
 	testInstructionExecutionLogPostMapPtr = detailedTestSuiteExecutionsMapObject.TestInstructionExecutionLogPostMapPtr
 	testInstructionExecutionLogPostMap = *testInstructionExecutionLogPostMapPtr
 
-	// Loop all TestInstructionExecutions and extract logPost-message, RuntTimeAttribute-data and TestInstructionExecution-data
-	for _, testInstructionExecution := range detailedTestSuiteExecution.TestInstructionExecutions {
+	// Loop all TestCaseExecution to get all TestInstructionExecutions to then get all LogPostAndValues
+	for _, testCaseExecution := range detailedTestSuiteExecution.TestCaseExecutions {
 
-		// Generate the TestInstructionExecutionLogPostMapKey
-		var testInstructionExecutionLogPostMapKey TestInstructionExecutionLogPostMapKeyType
-		testInstructionExecutionLogPostMapKey = TestInstructionExecutionLogPostMapKeyType(testInstructionExecution.GetTestInstructionExecutionBasicInformation().
-			TestInstructionExecutionUuid +
-			strconv.Itoa(int(testInstructionExecution.GetTestInstructionExecutionBasicInformation().GetTestInstructionExecutionVersion())))
+		// Loop all TestInstructionExecutions and extract logPost-message, RuntTimeAttribute-data and TestInstructionExecution-data
+		for _, testInstructionExecution := range testCaseExecution.TestInstructionExecutions {
 
-		// Get the TestInstructionExecutionLogPOstAndValuesSLice
-		var logPostAndValuesMessageSlicePtr *[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage
-		logPostAndValuesMessageSlicePtr, existInMap = testInstructionExecutionLogPostMap[testInstructionExecutionLogPostMapKey]
+			// Generate the TestInstructionExecutionLogPostMapKey
+			var testInstructionExecutionLogPostMapKey TestInstructionExecutionLogPostMapKeyType
+			testInstructionExecutionLogPostMapKey = TestInstructionExecutionLogPostMapKeyType(testInstructionExecution.GetTestInstructionExecutionBasicInformation().
+				TestInstructionExecutionUuid +
+				strconv.Itoa(int(testInstructionExecution.GetTestInstructionExecutionBasicInformation().GetTestInstructionExecutionVersion())))
 
-		if existInMap == false {
+			// Get the TestInstructionExecutionLogPostAndValuesSLice
+			var logPostAndValuesMessageSlicePtr *[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage
+			logPostAndValuesMessageSlicePtr, existInMap = testInstructionExecutionLogPostMap[testInstructionExecutionLogPostMapKey]
 
-			// No existing logs exist
-			testInstructionExecutionLogPostMap[testInstructionExecutionLogPostMapKey] = &testInstructionExecution.ExecutionLogPostsAndValues
+			if existInMap == false {
 
-		} else {
+				// No existing logs exist
+				testInstructionExecutionLogPostMap[testInstructionExecutionLogPostMapKey] = &testInstructionExecution.ExecutionLogPostsAndValues
 
-			// Append to existing logs
-			*logPostAndValuesMessageSlicePtr = append(*logPostAndValuesMessageSlicePtr, testInstructionExecution.ExecutionLogPostsAndValues...)
+			} else {
+
+				// Append to existing logs
+				*logPostAndValuesMessageSlicePtr = append(*logPostAndValuesMessageSlicePtr, testInstructionExecution.ExecutionLogPostsAndValues...)
+			}
+
+			// Generate the relationBetweenTestInstructionUuidAndTestInstructionExecutionMapKey
+			var relationBetweenTestInstructionUuidAndTestInstructionExecutionMapKey RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType
+			relationBetweenTestInstructionUuidAndTestInstructionExecutionMapKey = RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType(
+				testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionUuid)
+			var testInstructionExecutionUuid TestInstructionExecutionUuidType
+			testInstructionExecutionUuid = TestInstructionExecutionUuidType(testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionExecutionUuid +
+				strconv.Itoa(int(testInstructionExecution.GetTestInstructionExecutionBasicInformation().GetTestInstructionExecutionVersion())))
+
+			tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap[relationBetweenTestInstructionUuidAndTestInstructionExecutionMapKey] = testInstructionExecutionUuid
+
+			tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap[testInstructionExecutionUuid] = RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct{
+				TestInstructionUuid: relationBetweenTestInstructionUuidAndTestInstructionExecutionMapKey,
+				TestInstructionName: testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionName +
+					" [" + string(relationBetweenTestInstructionUuidAndTestInstructionExecutionMapKey[:8]) + "]"}
+
+			// Generate the relation between Attribute and runtime changed data for Attribute
+			var testInstructionExecutionAttributeRunTimeUpdatedMapKey TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType
+			var attributeNameMapKey AttributeNameMapKeyType
+
+			var tempRunTimeUpdatedAttributeMap map[AttributeNameMapKeyType]RunTimeUpdatedAttributeValueType
+			var tempRunTimeUpdatedAttributeMapPtr *map[AttributeNameMapKeyType]RunTimeUpdatedAttributeValueType
+
+			// Generate map key for TestInstructionExecution
+			testInstructionExecutionAttributeRunTimeUpdatedMapKey = TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType(testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionExecutionUuid +
+				strconv.Itoa(int(testInstructionExecution.GetTestInstructionExecutionBasicInformation().GetTestInstructionExecutionVersion())))
+
+			// Check if TestInstructionUuid exist in Map
+			tempRunTimeUpdatedAttributeMapPtr, existInMap = tempRunTimeUpdatedAttributesMap[testInstructionExecutionAttributeRunTimeUpdatedMapKey]
+			if existInMap == false {
+
+				// Doesn't exist so initiate
+				tempRunTimeUpdatedAttributeMap = make(map[AttributeNameMapKeyType]RunTimeUpdatedAttributeValueType)
+
+			} else {
+
+				// Use the existing map
+				tempRunTimeUpdatedAttributeMap = *tempRunTimeUpdatedAttributeMapPtr
+			}
+
+			// Loop all RunTimeChangedAttributes
+			for _, runTimeUpdatedAttribute := range testInstructionExecution.RunTimeUpdatedAttributes {
+
+				// Generate map key for Attribute
+				attributeNameMapKey = AttributeNameMapKeyType(runTimeUpdatedAttribute.TestInstructionAttributeName)
+
+				// Add Attributes RunTime-value to Attribute-map
+				tempRunTimeUpdatedAttributeMap[attributeNameMapKey] = RunTimeUpdatedAttributeValueType(
+					runTimeUpdatedAttribute.AttributeValueAsString)
+
+			}
+
+			// Add Attributes-map back to 'tempRunTimeUpdatedAttributesMap' if there were any attributes
+			if len(testInstructionExecution.RunTimeUpdatedAttributes) > 0 {
+
+				tempRunTimeUpdatedAttributesMap[testInstructionExecutionAttributeRunTimeUpdatedMapKey] = &tempRunTimeUpdatedAttributeMap
+
+			}
+
+			// Generate TestInstructionExecution-base information
+			var tempTestInstructionExecutionDetailsStruct *TestInstructionExecutionDetailsStruct
+			tempTestInstructionExecutionDetailsStruct = &TestInstructionExecutionDetailsStruct{
+				TestInstructionExecutionDetails:          testInstructionExecution.GetTestInstructionExecutionsInformation(),
+				TestInstructionExecutionBasicInformation: testInstructionExecution.GetTestInstructionExecutionBasicInformation(),
+			}
+
+			// Add TestInstructionExecution-map 'tempTestInstructionExecutionDetailsMap'
+			tempTestInstructionExecutionDetailsMap[TestInstructionExecutionDetailsMapKeyType(testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionExecutionUuid+
+				strconv.Itoa(int(testInstructionExecution.GetTestInstructionExecutionBasicInformation().GetTestInstructionExecutionVersion())))] = tempTestInstructionExecutionDetailsStruct
+
 		}
-
-		// Generate the relationBetweenTestInstructionUuidAndTestInstructionExecutionMapKey
-		var relationBetweenTestInstructionUuidAndTestInstructionExecutionMapKey RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType
-		relationBetweenTestInstructionUuidAndTestInstructionExecutionMapKey = RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType(
-			testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionUuid)
-		var testInstructionExecutionUuid TestInstructionExecutionUuidType
-		testInstructionExecutionUuid = TestInstructionExecutionUuidType(testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionExecutionUuid +
-			strconv.Itoa(int(testInstructionExecution.GetTestInstructionExecutionBasicInformation().GetTestInstructionExecutionVersion())))
-
-		tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap[relationBetweenTestInstructionUuidAndTestInstructionExecutionMapKey] = testInstructionExecutionUuid
-
-		tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap[testInstructionExecutionUuid] = RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct{
-			TestInstructionUuid: relationBetweenTestInstructionUuidAndTestInstructionExecutionMapKey,
-			TestInstructionName: testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionName +
-				" [" + string(relationBetweenTestInstructionUuidAndTestInstructionExecutionMapKey[:8]) + "]"}
-
-		// Generate the relation between Attribute and runtime changed data for Attribute
-		var testInstructionExecutionAttributeRunTimeUpdatedMapKey TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType
-		var attributeNameMapKey AttributeNameMapKeyType
-
-		var tempRunTimeUpdatedAttributeMap map[AttributeNameMapKeyType]RunTimeUpdatedAttributeValueType
-		var tempRunTimeUpdatedAttributeMapPtr *map[AttributeNameMapKeyType]RunTimeUpdatedAttributeValueType
-
-		// Generate map key for TestInstructionExecution
-		testInstructionExecutionAttributeRunTimeUpdatedMapKey = TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType(testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionExecutionUuid +
-			strconv.Itoa(int(testInstructionExecution.GetTestInstructionExecutionBasicInformation().GetTestInstructionExecutionVersion())))
-
-		// Check if TestInstructionUuid exist in Map
-		tempRunTimeUpdatedAttributeMapPtr, existInMap = tempRunTimeUpdatedAttributesMap[testInstructionExecutionAttributeRunTimeUpdatedMapKey]
-		if existInMap == false {
-
-			// Doesn't exist so initiate
-			tempRunTimeUpdatedAttributeMap = make(map[AttributeNameMapKeyType]RunTimeUpdatedAttributeValueType)
-
-		} else {
-
-			// Use the existing map
-			tempRunTimeUpdatedAttributeMap = *tempRunTimeUpdatedAttributeMapPtr
-		}
-
-		// Loop all RunTimeChangedAttributes
-		for _, runTimeUpdatedAttribute := range testInstructionExecution.RunTimeUpdatedAttributes {
-
-			// Generate map key for Attribute
-			attributeNameMapKey = AttributeNameMapKeyType(runTimeUpdatedAttribute.TestInstructionAttributeName)
-
-			// Add Attributes RunTime-value to Attribute-map
-			tempRunTimeUpdatedAttributeMap[attributeNameMapKey] = RunTimeUpdatedAttributeValueType(
-				runTimeUpdatedAttribute.AttributeValueAsString)
-
-		}
-
-		// Add Attributes-map back to 'tempRunTimeUpdatedAttributesMap' if there were any attributes
-		if len(testInstructionExecution.RunTimeUpdatedAttributes) > 0 {
-
-			tempRunTimeUpdatedAttributesMap[testInstructionExecutionAttributeRunTimeUpdatedMapKey] = &tempRunTimeUpdatedAttributeMap
-
-		}
-
-		// Generate TestInstructionExecution-base information
-		var tempTestInstructionExecutionDetailsStruct *TestInstructionExecutionDetailsStruct
-		tempTestInstructionExecutionDetailsStruct = &TestInstructionExecutionDetailsStruct{
-			TestInstructionExecutionDetails:          testInstructionExecution.GetTestInstructionExecutionsInformation(),
-			TestInstructionExecutionBasicInformation: testInstructionExecution.GetTestInstructionExecutionBasicInformation(),
-		}
-
-		// Add TestInstructionExecution-map 'tempTestInstructionExecutionDetailsMap'
-		tempTestInstructionExecutionDetailsMap[TestInstructionExecutionDetailsMapKeyType(testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionExecutionUuid+
-			strconv.Itoa(int(testInstructionExecution.GetTestInstructionExecutionBasicInformation().GetTestInstructionExecutionVersion())))] = tempTestInstructionExecutionDetailsStruct
-
 	}
 
 	// Add Maps back to 'detailedTestSuiteExecutionsMapObject'

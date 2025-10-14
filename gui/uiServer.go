@@ -20,6 +20,8 @@ import (
 	"FenixTesterGui/testCaseSubscriptionHandler"
 	"FenixTesterGui/testCases/listTestCasesModel"
 	"FenixTesterGui/testCases/listTestCasesUI"
+	"FenixTesterGui/testSuiteExecutions/listTestSuiteExecutionsUI"
+	"FenixTesterGui/testSuiteExecutions/testSuiteExecutionsModel"
 	"FenixTesterGui/testSuites/listTestSuitesUI"
 	"FenixTesterGui/testSuites/testSuitesTabsUI"
 	"fmt"
@@ -340,6 +342,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 	var tempListTestSuitesUIContainer *fyne.Container
 	tempListTestSuitesUIContainer = listTestSuitesUI.StandardListTesSuitesUIObject.GenerateListTestSuitesUI(&uiServer.testCasesModel, nil)
 
+	// START - TestCaseExecutions-list - START
 	// Create the TabObject used to show TestCaseExecutions-list with Execution-PreView and all TestCaseExecutions-tabs
 	var detailedTestCaseExecutionsUITabObject *container.DocTabs
 	detailedTestCaseExecutionsUITabObject = container.NewDocTabs()
@@ -375,6 +378,45 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 
 	// Add TestCaseExecutionList-tab to TabObject
 	detailedTestCaseExecutionsUITabObject.Append(detailedTestCaseExecutionsUITab)
+	// END - TestCaseExecutions-list - END
+
+	// START - TestSuiteExecutions-list - START
+	// Create the TabObject used to show TestSuiteExecutions-list with Execution-PreView and all TestSuiteExecutions-tabs
+	var detailedTestSuiteExecutionsUITabObject *container.DocTabs
+	detailedTestSuiteExecutionsUITabObject = container.NewDocTabs()
+
+	// Prepare a map to hold per‐tab exit functions
+	var exitFunctionsForDetailedTestSuiteExecutionsUITabObjectPtr *map[*container.TabItem]func()
+	var exitFunctionsForDetailedTestSuiteExecutionsUITabObject map[*container.TabItem]func()
+	exitFunctionsForDetailedTestSuiteExecutionsUITabObject = make(map[*container.TabItem]func())
+	exitFunctionsForDetailedTestSuiteExecutionsUITabObjectPtr = &exitFunctionsForDetailedTestSuiteExecutionsUITabObject
+
+	// Initiate the 'TestSuiteInstructionPreViewObject' holding all UI for the PreView to the right of the TestSuiteExecution-list
+	listTestSuiteExecutionsUI.TestSuiteInstructionPreViewObject = &listTestSuiteExecutionsUI.
+		TestSuiteInstructionPreViewStruct{}
+
+	// Create the UI for List TestSuiteExecutions-UI
+	var tempListTestSuiteExecutionsUI fyne.CanvasObject
+	tempListTestSuiteExecutionsUI = listTestSuiteExecutionsUI.GenerateListTestSuiteExecutionsUI(
+		&testSuiteExecutionsModel.TestSuiteExecutionsModel,
+		detailedTestSuiteExecutionsUITabObject,
+		exitFunctionsForDetailedTestSuiteExecutionsUITabObjectPtr,
+		listTestSuiteExecutionsUI.TestSuiteInstructionPreViewObject)
+
+	// Load list with TestSuitesExecutions
+	listTestSuiteExecutionsUI.LoadOneTestSuiteExecutionPerTestSuiteFromDataBaseFunction(
+		&testSuiteExecutionsModel.TestSuiteExecutionsModel,
+		false,
+		listTestSuiteExecutionsUI.TestSuiteInstructionPreViewObject,
+	)
+
+	// Create the Tab used for TestSuiteExecutions-list with Execution-PreView
+	var detailedTestSuiteExecutionsUITab *container.TabItem
+	detailedTestSuiteExecutionsUITab = container.NewTabItem("TestSuiteExecutions List", tempListTestSuiteExecutionsUI)
+
+	// Add TestSuiteExecutionList-tab to TabObject
+	detailedTestSuiteExecutionsUITabObject.Append(detailedTestSuiteExecutionsUITab)
+	// END - TestSuiteExecutions-list - END
 
 	// Set Tabs to be shown at top
 	detailedTestCaseExecutionsUITabObject.SetTabLocation(container.TabLocationTop)

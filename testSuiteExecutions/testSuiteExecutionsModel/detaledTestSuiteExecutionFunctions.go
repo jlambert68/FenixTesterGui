@@ -74,24 +74,28 @@ func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ExtractAndStoreRe
 
 
 	*/
-	// Loop all TestInstructionExecutions and extract relation between TestInstruction and TestInstructionExecution
-	for _, testInstructionExecution := range detailedTestSuiteExecution.TestInstructionExecutions {
 
-		// Generate the relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey
-		var relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType
-		relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey = RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType(
-			testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionUuid)
-		var testInstructionExecutionUuid TestInstructionExecutionUuidType
-		testInstructionExecutionUuid = TestInstructionExecutionUuidType(testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionExecutionUuid +
-			strconv.Itoa(int(testInstructionExecution.GetTestInstructionExecutionBasicInformation().GetTestInstructionExecutionVersion())))
+	// Loop all TestCaseExecutions to get all TestInstructionExecutions
+	for _, testCaseExecution := range detailedTestSuiteExecution.TestCaseExecutions {
 
-		tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap[relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey] = testInstructionExecutionUuid
+		// Loop all TestInstructionExecutions and extract relation between TestInstruction and TestInstructionExecution
+		for _, testInstructionExecution := range testCaseExecution.TestInstructionExecutions {
 
-		tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap[testInstructionExecutionUuid] = RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct{
-			TestInstructionUuid: relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey,
-			TestInstructionName: testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionName +
-				" [" + string(relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey[:7]) + "]"}
+			// Generate the relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey
+			var relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType
+			relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey = RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType(
+				testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionUuid)
+			var testInstructionExecutionUuid TestInstructionExecutionUuidType
+			testInstructionExecutionUuid = TestInstructionExecutionUuidType(testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionExecutionUuid +
+				strconv.Itoa(int(testInstructionExecution.GetTestInstructionExecutionBasicInformation().GetTestInstructionExecutionVersion())))
 
+			tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap[relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey] = testInstructionExecutionUuid
+
+			tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap[testInstructionExecutionUuid] = RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct{
+				TestInstructionUuid: relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey,
+				TestInstructionName: testInstructionExecution.GetTestInstructionExecutionBasicInformation().TestInstructionName +
+					" [" + string(relationBetweenTestInstructionUuidAndTestInstructionExectuionMapKey[:7]) + "]"}
+		}
 	}
 
 	detailedTestSuiteExecutionsMapObjectPtr.RelationBetweenTestInstructionUuidAndTestInstructionExecutionUuidMapPtr = &tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap

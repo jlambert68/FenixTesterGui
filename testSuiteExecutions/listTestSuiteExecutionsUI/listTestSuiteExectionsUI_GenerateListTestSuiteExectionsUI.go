@@ -40,7 +40,7 @@ var sortImageDescendingAsImage image.Image
 
 // Define the function to be executed to load TestSuiteExecutions from that Database that the user can view
 // Only loads one TestSuiteExecution per TestCase
-func LoadOneTestSuiteExecutionPerTestCaseFromDataBaseFunction(
+func LoadOneTestSuiteExecutionPerTestSuiteFromDataBaseFunction(
 	testSuiteExecutionsModel *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct,
 	updateGui bool,
 	testSuiteInstructionPreViewObject *TestSuiteInstructionPreViewStruct) { // ***
@@ -145,8 +145,8 @@ func GenerateListTestSuiteExecutionsUI(
 	var filterTestSuiteExcutionsButtonFunction func()
 	var clearFiltersButton *widget.Button
 	var clearFiltersButtonFunction func()
-	var loadAllTestSuiteExecutionsForOneTestCaseButton *widget.Button
-	var loadAllTestSuiteExecutionsForOneTestCaseButtonFunction func()
+	var loadAllTestSuiteExecutionsForOneTestSuiteButton *widget.Button
+	var loadAllTestSuiteExecutionsForOneTestSuiteButtonFunction func()
 	var buttonsContainer *fyne.Container
 
 	var numberOfTestSuiteExecutionsAfterLocalFilterLabel *widget.Label
@@ -191,7 +191,7 @@ func GenerateListTestSuiteExecutionsUI(
 	loadOneTestSuiteExecutionPerTestCaseFromDataBaseFunction = func() {
 
 		// Call public load-function
-		LoadOneTestSuiteExecutionPerTestCaseFromDataBaseFunction(testSuiteExecutionsModel,
+		LoadOneTestSuiteExecutionPerTestSuiteFromDataBaseFunction(testSuiteExecutionsModel,
 			true,
 			testCaseInstructionPreViewObject) // ***
 
@@ -239,11 +239,11 @@ func GenerateListTestSuiteExecutionsUI(
 	// Define the 'clearFiltersButton'
 	clearFiltersButton = widget.NewButton("Clear all search filters", clearFiltersButtonFunction)
 
-	// Set initial button text for 'loadAllTestSuiteExecutionsForOneTestCaseButton'
+	// Set initial button text for 'loadAllTestSuiteExecutionsForOneTestSuiteButton'
 	loadAllTestSuiteExecutionsForOneTestSuiteButtonText = loadAllTestSuiteExecutionsForOneTestSuiteButtonTextPart1 + "_"
 
 	// Define the function to be executed to load all TestSuiteExecutions for a specific TestCase. Executions are shown in list
-	loadAllTestSuiteExecutionsForOneTestCaseButtonFunction = func() {
+	loadAllTestSuiteExecutionsForOneTestSuiteButtonFunction = func() {
 
 		// When no TestSuiteExecution is selected then inform the user
 		if len(selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
@@ -263,7 +263,7 @@ func GenerateListTestSuiteExecutionsUI(
 
 		}
 
-		fmt.Println("'loadAllTestSuiteExecutionsForOneTestCaseButton' was pressed")
+		fmt.Println("'loadAllTestSuiteExecutionsForOneTestSuiteButton' was pressed")
 
 		// If previously data set is of other kind then 'AllExecutionsForOneTestSuite' then no selection should be made
 		if selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType != AllExecutionsForOneTestSuite {
@@ -312,22 +312,22 @@ func GenerateListTestSuiteExecutionsUI(
 
 	}
 
-	// Define the 'loadAllTestSuiteExecutionsForOneTestCaseButton'
-	loadAllTestSuiteExecutionsForOneTestCaseButton = widget.NewButton(loadAllTestSuiteExecutionsForOneTestSuiteButtonText,
-		loadAllTestSuiteExecutionsForOneTestCaseButtonFunction)
+	// Define the 'loadAllTestSuiteExecutionsForOneTestSuiteButton'
+	loadAllTestSuiteExecutionsForOneTestSuiteButton = widget.NewButton(loadAllTestSuiteExecutionsForOneTestSuiteButtonText,
+		loadAllTestSuiteExecutionsForOneTestSuiteButtonFunction)
 
 	// Disable button from the beginning
-	loadAllTestSuiteExecutionsForOneTestCaseButton.Disable()
+	loadAllTestSuiteExecutionsForOneTestSuiteButton.Disable()
 
 	// Store reference to button
-	loadAllTestSuiteExecutionsForOneTestSuiteButtonReference = loadAllTestSuiteExecutionsForOneTestCaseButton
+	loadAllTestSuiteExecutionsForOneTestSuiteButtonReference = loadAllTestSuiteExecutionsForOneTestSuiteButton
 
 	// Add the buttons to the buttonsContainer
 	buttonsContainer = container.NewHBox(
 		loadTestSuiteExecutionsFromDataBaseButton,
 		filterTestSuiteExcutionsButton,
 		clearFiltersButton,
-		loadAllTestSuiteExecutionsForOneTestCaseButton)
+		loadAllTestSuiteExecutionsForOneTestSuiteButton)
 
 	// Add objects to the 'filterAndButtonsContainer'
 	filterAndButtonsContainer = container.NewVBox(buttonsContainer)

@@ -58,7 +58,7 @@ func LoadDetailedTestSuiteExecutionFromDatabase(testSuiteExecutionUuid string, t
 		}).Warning("Nothing to store in 'DetailedTestSuiteExecutionsMap', should not happen")
 
 		// Clear the flag there is an ongoing refresh of the DetailedTestSuiteExecution-data
-		defer TestSuiteExecutionsModel.ClearFlagRefreshOngoingOfDetailedTestSuiteExecution(detailedTestSuiteExecutionMapKey)
+		//defer TestSuiteExecutionsModel.ClearFlagRefreshOngoingOfDetailedTestSuiteExecution(detailedTestSuiteExecutionMapKey)
 
 		return
 

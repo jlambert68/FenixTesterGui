@@ -488,6 +488,7 @@ func (uiServer *UIServerStruct) startTestCaseUIServer() {
 		container.NewTabItem("Detailed TestCaseExecutions - short summary", detailedTestCaseExecutionSummaryTab),
 		//container.NewTabItem("Detailed TestCaseExecutions", detailedTestCaseExecutionsTab),
 		container.NewTabItem("TestCaseExecutions List", detailedTestCaseExecutionsUITabObject),
+		container.NewTabItem("TestSuiteExecutions List", detailedTestSuiteExecutionsUITabObject),
 		container.NewTabItem("Config", configContainerGrid),
 	)
 

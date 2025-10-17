@@ -190,9 +190,11 @@ func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNu
 }
 
 func (s *sortableHeaderLabelStruct) Refresh() {
-	s.label.Refresh()
-	s.sortImage.Refresh()
-	s.BaseWidget.Refresh()
+	fyne.Do(func() {
+		s.label.Refresh()
+		s.sortImage.Refresh()
+		s.BaseWidget.Refresh()
+	})
 }
 
 func (s *sortableHeaderLabelStruct) CreateRenderer() fyne.WidgetRenderer {

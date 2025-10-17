@@ -58,7 +58,7 @@ func LoadDetailedTestCaseExecutionFromDatabase(testCaseExecutionUuid string, tes
 		}).Warning("Nothing to store in 'DetailedTestCaseExecutionsMap', should not happen")
 
 		// Clear the flag there is an ongoing refresh of the DetailedTestCaseExecution-data
-		defer TestCaseExecutionsModel.ClearFlagRefreshOngoingOfDetailedTestCaseExecution(detailedTestCaseExecutionMapKey)
+		//defer TestCaseExecutionsModel.ClearFlagRefreshOngoingOfDetailedTestCaseExecution(detailedTestCaseExecutionMapKey)
 
 		return
 

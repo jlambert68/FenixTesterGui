@@ -12,7 +12,7 @@ const StandardTestSuiteExecutionsBatchSize = 100
 
 // NullTimeStampForTestSuiteExecutionsSearch
 // Null timestamp used in Search/Load of TestSuiteExecutions
-var NullTimeStampForTestSuiteExecutionsSearch time.Time = time.Date(1970, 1, 1, 0, 0, 0, 0, time.UTC)
+var NullTimeStampForTestSuiteExecutionsSearch time.Time = time.Date(0, 1, 1, 0, 0, 0, 0, time.UTC)
 
 // TestSuiteExecutionsModel
 // Holding all data around Executions

@@ -1,7 +1,6 @@
 package listTestSuiteExecutionsModel
 
 import (
-	"FenixTesterGui/TestSuiteExecutions/TestSuiteExecutionsModel"
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/grpc_out_GuiExecutionServer"
 	"FenixTesterGui/testSuiteExecutions/testSuiteExecutionsModel"
@@ -62,14 +61,14 @@ func LoadTestSuiteExecutionsThatCanBeViewedByUser(
 		if retrieveAllExecutionsForSpecificTestSuiteUuid == true {
 			storeAllTestSuiteExecutionsForOneTestSuiteThatCanBeViewedByUser(
 				listTestSuiteExecutionsResponse.GetTestSuiteExecutionsList(),
-				&TestSuiteExecutionsModel.TestSuiteExecutionsModel,
+				&testSuiteExecutionsModel.TestSuiteExecutionsModel,
 				listTestSuiteExecutionsResponse.
 					GetLatestUniqueTestSuiteExecutionDatabaseRowId(),
 				listTestSuiteExecutionsResponse.GetMoreRowsExists())
 		} else {
 			storeOneTestSuiteExecutionPerTestSuiteThatCanBeViewedByUser(
 				listTestSuiteExecutionsResponse.GetTestSuiteExecutionsList(),
-				&TestSuiteExecutionsModel.TestSuiteExecutionsModel,
+				&testSuiteExecutionsModel.TestSuiteExecutionsModel,
 				listTestSuiteExecutionsResponse.
 					GetLatestUniqueTestSuiteExecutionDatabaseRowId(),
 				listTestSuiteExecutionsResponse.GetMoreRowsExists())
@@ -102,14 +101,14 @@ func LoadTestSuiteExecutionsThatCanBeViewedByUser(
 		if retrieveAllExecutionsForSpecificTestSuiteUuid == true {
 			storeAllTestSuiteExecutionsForOneTestSuiteThatCanBeViewedByUser(
 				listTestSuiteExecutionsResponse.GetTestSuiteExecutionsList(),
-				&TestSuiteExecutionsModel.TestSuiteExecutionsModel,
+				&testSuiteExecutionsModel.TestSuiteExecutionsModel,
 				listTestSuiteExecutionsResponse.
 					GetLatestUniqueTestSuiteExecutionDatabaseRowId(),
 				listTestSuiteExecutionsResponse.GetMoreRowsExists())
 		} else {
 			storeOneTestSuiteExecutionPerTestSuiteThatCanBeViewedByUser(
 				listTestSuiteExecutionsResponse.GetTestSuiteExecutionsList(),
-				&TestSuiteExecutionsModel.TestSuiteExecutionsModel,
+				&testSuiteExecutionsModel.TestSuiteExecutionsModel,
 				listTestSuiteExecutionsResponse.
 					GetLatestUniqueTestSuiteExecutionDatabaseRowId(),
 				listTestSuiteExecutionsResponse.GetMoreRowsExists())
@@ -119,14 +118,14 @@ func LoadTestSuiteExecutionsThatCanBeViewedByUser(
 		go func(updateGuiChannel *chan bool) {
 			listTestSuiteExecutionsResponse = grpc_out_GuiExecutionServer.GrpcOutGuiExecutionServerObject.
 				SendListTestSuiteExecutionsThatCanBeViewed(
-					TestSuiteExecutionsModel.TestSuiteExecutionsModel.LatestTestSuiteExecutionForEachTestSuiteUuid.
+					testSuiteExecutionsModel.TestSuiteExecutionsModel.LatestTestSuiteExecutionForEachTestSuiteUuid.
 						LatestUniqueTestSuiteExecutionDatabaseRowId,
 					false,
 					0,
 					retrieveAllExecutionsForSpecificTestSuiteUuid,
 					specificTestSuiteUuid,
-					TestSuiteExecutionFromTimeStamp,
-					TestSuiteExecutionToTimeStamp)
+					testSuiteExecutionFromTimeStamp,
+					testSuiteExecutionToTimeStamp)
 
 			if listTestSuiteExecutionsResponse.GetAckNackResponse().AckNack == false {
 				sharedCode.Logger.WithFields(logrus.Fields{
@@ -141,14 +140,14 @@ func LoadTestSuiteExecutionsThatCanBeViewedByUser(
 			if retrieveAllExecutionsForSpecificTestSuiteUuid == true {
 				storeAllTestSuiteExecutionsForOneTestSuiteThatCanBeViewedByUser(
 					listTestSuiteExecutionsResponse.GetTestSuiteExecutionsList(),
-					&TestSuiteExecutionsModel.TestSuiteExecutionsModel,
+					&testSuiteExecutionsModel.TestSuiteExecutionsModel,
 					listTestSuiteExecutionsResponse.
 						GetLatestUniqueTestSuiteExecutionDatabaseRowId(),
 					listTestSuiteExecutionsResponse.GetMoreRowsExists())
 			} else {
 				storeOneTestSuiteExecutionPerTestSuiteThatCanBeViewedByUser(
 					listTestSuiteExecutionsResponse.GetTestSuiteExecutionsList(),
-					&TestSuiteExecutionsModel.TestSuiteExecutionsModel,
+					&testSuiteExecutionsModel.TestSuiteExecutionsModel,
 					listTestSuiteExecutionsResponse.
 						GetLatestUniqueTestSuiteExecutionDatabaseRowId(),
 					listTestSuiteExecutionsResponse.GetMoreRowsExists())

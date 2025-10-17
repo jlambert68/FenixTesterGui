@@ -151,11 +151,170 @@ func updateTestSuiteExecutionsListTable(testSuiteExecutionsModel *testSuiteExecu
 		return tempContainer
 
 	}
+
+	testSuiteExecutionsListTable.UpdateCell = func(id widget.TableCellID, cell fyne.CanvasObject) {
+		cont := cell.(*fyne.Container)
+		bg := cont.Objects[0].(*canvas.Rectangle)
+		lbl := cont.Objects[1].(*clickableTableLabel)
+		alt := cont.Objects[2].(*canvas.Text)
+
+		// --- 1) BASELINE RESET (CRITICAL FOR CELL REUSE) ---
+		// Visibility
+		lbl.Show()
+		alt.Hide()
+
+		// Content
+		text := ""
+		if id.Row >= 0 && id.Row < len(testSuiteExecutionsListTableTable) &&
+			id.Col >= 0 && id.Col < len(testSuiteExecutionsListTableTable[id.Row]) {
+			text = testSuiteExecutionsListTableTable[id.Row][id.Col]
+		}
+		fyne.Do(
+			func() {
+				lbl.SetText(text)
+			})
+
+		alt.Text = text
+
+		// Text defaults
+		lbl.Alignment = fyne.TextAlignLeading
+		lbl.TextStyle = fyne.TextStyle{}
+		alt.Alignment = fyne.TextAlignLeading
+		alt.TextStyle = lbl.TextStyle
+		lbl.Truncation = fyne.TextTruncateEllipsis
+
+		// Background defaults
+		bg.FillColor = color.Transparent
+		bg.StrokeColor = color.Transparent
+		bg.StrokeWidth = 0
+
+		// Click/metadata defaults
+		lbl.isClickable = true
+		lbl.onDoubleTap = nil
+		lbl.currentRow = int16(id.Row)
+		lbl.currentTestSuiteExecutionUuid = ""
+		lbl.currentTestSuiteExecutionVersion = 0
+		lbl.currentTestSuiteUuid = ""
+		lbl.currentTestSuiteName = ""
+
+		// --- 2) ASSIGN METADATA FOR THIS ROW (used by clicks/selection coloring) ---
+		if id.Row >= 0 && id.Row < len(testSuiteExecutionsListTableTable) {
+			row := testSuiteExecutionsListTableTable[id.Row]
+			// Guard against out-of-range
+			if len(row) > int(testSuiteExecutionUuidColumnNumber) {
+				lbl.currentTestSuiteExecutionUuid = row[testSuiteExecutionUuidColumnNumber]
+			}
+			if len(row) > int(testSuiteUuidColumnNumber) {
+				lbl.currentTestSuiteUuid = row[testSuiteUuidColumnNumber]
+			}
+			if len(row) > int(testSuiteNameColumnNumber) {
+				lbl.currentTestSuiteName = row[testSuiteNameColumnNumber]
+			}
+			lbl.currentTestSuiteExecutionVersion = 1 // TODO: use real version if/when available
+		}
+
+		// Optional double-tap action
+		lbl.onDoubleTap = func() {
+			// opentestSuiteExecution(lbl.currentTestSuiteExecutionUuid, lbl.testSuiteExecutionsModel)
+		}
+
+		// --- 3) HOVER/SELECTION BACKGROUNDS (reset-safe) ---
+		if int16(id.Row) == currentRowThatMouseIsHoveringAbove {
+			bg.FillColor = color.RGBA{R: 0x4A, G: 0x4B, B: 0x4D, A: 0xFF}
+			// For hover, keep label visible unless column overrides below
+		} else {
+			// Highlight selected row (depends on which list is active)
+			var isSelected bool
+			switch selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType {
+			case AllExecutionsForOneTestSuite:
+				isSelected = lbl.currentTestSuiteExecutionUuid ==
+					selectedTestSuiteExecutionObjected.allExecutionsFoOneTestSuiteListObject.
+						testSuiteExecutionUuidThatIsShownInPreview
+			case OneExecutionPerTestSuite:
+				isSelected = lbl.currentTestSuiteExecutionUuid ==
+					selectedTestSuiteExecutionObjected.oneExecutionPerTestSuiteListObject.
+						testSuiteExecutionUuidThatIsShownInPreview
+			}
+			if isSelected {
+				bg.FillColor = color.RGBA{R: 0x08, G: 0x5C, B: 0x04, A: 0xFF}
+				bg.StrokeColor = color.Transparent
+				bg.StrokeWidth = 3
+			}
+		}
+
+		// --- 4) PER-COLUMN SPECIALISATION (always AFTER baseline reset) ---
+		switch uint8(id.Col) {
+		case latestTestSuiteExecutionStatus:
+			// Status color block with centered text via 'alt'
+			// (use your existing maps; guard against missing keys)
+			if cdef, ok := detailedExecutionsModel.ExecutionStatusColorNameToNumberMap[lbl.Text]; ok {
+				if cmap, ok2 := detailedExecutionsModel.ExecutionStatusColorMap[int32(cdef.ExecutionStatusNumber)]; ok2 {
+					bg.FillColor = cmap.BackgroundColor
+					if cmap.UseStroke {
+						bg.StrokeColor = cmap.StrokeColor
+						bg.StrokeWidth = 1
+					} else {
+						bg.StrokeColor = color.Transparent
+						bg.StrokeWidth = 0
+					}
+				}
+			}
+			alt.Alignment = fyne.TextAlignCenter
+			alt.TextStyle = lbl.TextStyle
+			lbl.Hide()
+			alt.Show()
+
+		// Add other column-specific tweaks here if needed:
+		// case someTimestampColumn:
+		//     lbl.Alignment = fyne.TextAlignCenter
+
+		default:
+			// nothing special
+		}
+
+		// Final repaint
+		fyne.Do(
+			func() {
+				cont.Refresh()
+			})
+
+	}
+
+	// Header updater unchanged except: don’t forget headers are also reused.
+	testSuiteExecutionsListTable.UpdateHeader = func(id widget.TableCellID, cell fyne.CanvasObject) {
+		h := cell.(*sortableHeaderLabelStruct)
+		// Baseline reset for header (important for reuse)
+		h.label.Alignment = fyne.TextAlignLeading
+		h.label.TextStyle = fyne.TextStyle{Bold: true}
+		h.sortImage.unspecifiedImageContainer.Hide()
+		h.sortImage.ascendingImageContainer.Hide()
+		h.sortImage.descendingImageContainer.Hide()
+
+		fyne.Do(
+			func() {
+				h.label.SetText(testSuiteExecutionsListTableHeader[id.Col])
+			})
+		h.columnNumber = id.Col
+		h.sortImage.headerColumnNumber = id.Col
+
+		testSuiteExecutionsListTableHeadersMapRef[id.Col] = h
+		h.Refresh()
+	}
+
+	fyne.Do(
+		func() {
+			testSuiteExecutionsListTable.Refresh()
+		})
+
+}
+
+/*
 	testSuiteExecutionsListTable.UpdateCell = func(id widget.TableCellID, cell fyne.CanvasObject) {
 
 		clickableContainer := cell.(*fyne.Container)
 		clickable := clickableContainer.Objects[1].(*clickableTableLabel)
 		rectangle := clickableContainer.Objects[0].(*canvas.Rectangle)
+
 		clickable.SetText(testSuiteExecutionsListTableTable[id.Row][id.Col])
 		clickable.isClickable = true
 		clickable.currentRow = int16(id.Row)
@@ -281,6 +440,8 @@ func updateTestSuiteExecutionsListTable(testSuiteExecutionsModel *testSuiteExecu
 
 	}
 
+
+
 	// Update the Header
 	testSuiteExecutionsListTable.UpdateHeader = func(id widget.TableCellID, cell fyne.CanvasObject) {
 		tempSortableHeaderLabel := cell.(*sortableHeaderLabelStruct)
@@ -306,8 +467,11 @@ func updateTestSuiteExecutionsListTable(testSuiteExecutionsModel *testSuiteExecu
 		tempSortableHeaderLabel.Refresh()
 	}
 
+
+
 	testSuiteExecutionsListTable.Refresh()
 }
+*/
 
 // TestSuiteUuid
 // TestSuiteVersion
@@ -352,11 +516,17 @@ func calculateAndSetCorrectColumnWidths() {
 
 	// Loop columns in table and set column width including some Padding
 	for columnIndex, columnWidth := range columnsMaxSizeSlice {
-		testSuiteExecutionsListTable.SetColumnWidth(columnIndex, columnWidth+theme.Padding()*4)
+		fyne.Do(
+			func() {
+				testSuiteExecutionsListTable.SetColumnWidth(columnIndex, columnWidth+theme.Padding()*4)
+			})
 	}
 
 	// Refresh the table
-	testSuiteExecutionsListTable.Refresh()
+	fyne.Do(
+		func() {
+			testSuiteExecutionsListTable.Refresh()
+		})
 
 }
 
@@ -638,7 +808,10 @@ func sortGuiTableOnColumn(columnNumber uint8, sortDirection SortingDirectionType
 	}
 
 	// Refresh table
-	testSuiteExecutionsListTable.Refresh()
+	fyne.Do(
+		func() {
+			testSuiteExecutionsListTable.Refresh()
+		})
 
 }
 

@@ -282,7 +282,10 @@ func (renderer *clickableSortImageRenderer) MinSize() fyne.Size {
 
 func (renderer *clickableSortImageRenderer) Refresh() {
 	renderer.clickableSortImage.updateImageVisibility()
-	renderer.imageContainer.Refresh()
+	fyne.Do(func() {
+		renderer.imageContainer.Refresh()
+	})
+
 }
 
 func (renderer *clickableSortImageRenderer) BackgroundColor() color.Color {

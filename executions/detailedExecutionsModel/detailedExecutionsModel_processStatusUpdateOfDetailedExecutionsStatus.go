@@ -392,7 +392,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 
 			// Is the 'TestCaseExecutionStatus' an end-status?
 			var isEndStatus bool
-			isEndStatus = isTestCaseExecutionStatusAnEndStatus(tempTestCaseExecutionStatusMessage.
+			isEndStatus = IsTestCaseExecutionStatusAnEndStatus(tempTestCaseExecutionStatusMessage.
 				TestCaseExecutionDetails.GetTestCaseExecutionStatus())
 
 			// When TestCaseExecutionStatus is an EndStatus then retrieve Full TestCaseExecution Result
@@ -577,7 +577,7 @@ func (detailedExecutionsModelObject *DetailedExecutionsModelObjectStruct) proces
 }
 
 // Check of the TestCaseExecutionStatus is classified as an EndStatus
-func isTestCaseExecutionStatusAnEndStatus(testCaseExecutionStatus fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum) (isTestCaseEndStatus bool) {
+func IsTestCaseExecutionStatusAnEndStatus(testCaseExecutionStatus fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum) (isTestCaseEndStatus bool) {
 	switch testCaseExecutionStatus {
 
 	case fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum_TCE_CONTROLLED_INTERRUPTION,

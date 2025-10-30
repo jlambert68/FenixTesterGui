@@ -151,13 +151,15 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 	// Load Detailed TestCaseExecution from Database
 	testCaseExecutionsModel.LoadDetailedTestCaseExecutionFromDatabase(testCaseExecutionUuid, testCaseExecutionVersion)
 
-	// Update TestCase Preview
+	// Update TestCaseExecution Preview
 	TestCaseInstructionPreViewObject.GenerateTestCaseExecutionPreviewContainer(
 		l.currentTestCaseExecutionUuid,
 		l.currentTestCaseExecutionVersion,
 		l.testCaseExecutionsModel,
-		fromExecutionList,
-		sharedCode.FenixMasterWindowPtr)
+		FromExecutionListForTestCases,
+		sharedCode.FenixMasterWindowPtr,
+		nil,
+		nil)
 
 	testCaseExecutionsListTable.Refresh()
 

@@ -1,6 +1,7 @@
 package listTestSuiteExecutionsUI
 
 import (
+	"FenixTesterGui/testCaseExecutions/listTestCaseExecutionsUI"
 	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -79,12 +80,15 @@ var mouseHasLeftTestSuiteExecutionPreviewTree bool = true
 const testSuiteNodeRectangleSize = 40
 
 // The size of the rectangles used for indicate status of a TestInstructionExecution
-const testCaseExecutionStatusRectangleHeight = 30
-const testCaseExecutionStatusRectangleWidth = 15
+const testSuiteExecutionStatusRectangleHeight = 30
+const testSuiteExecutionStatusRectangleWidth = 15
 
 // The size of the rectangles used for log-status in execution log
 const logStatusRectangleHeight = 25
 const logStatusRectangleWidth = 25
+
+// Variables holding all objects used in executionPreView for a full TestCase
+var testCaseExecutionPreViewObjectInTestSuiteExecution *listTestCaseExecutionsUI.TestCaseInstructionPreViewStruct
 
 // Struct holding all variables needed for the PreView
 type TestSuiteInstructionPreViewStruct struct {
@@ -129,16 +133,6 @@ type openedDetailedTestSuiteExecutionStruct struct {
 
 // Map keeping track of all opened TestSuiteExecutions, in Tabs and/or Separate windows
 var openedDetailedTestSuiteExecutionsMapPtr *map[openedDetailedTestSuiteExecutionsMapKeyType]*openedDetailedTestSuiteExecutionStruct
-
-// From where is the opening of the TestSuiteExecution initiated; FromExecutionList, FromExternalWindow, FromTab
-type openedTestSuiteExecutionFromType uint8
-
-const (
-	fromNotDefined    openedTestSuiteExecutionFromType = iota
-	fromExecutionList openedTestSuiteExecutionFromType = iota
-	fromExternalWindow
-	fromTab
-)
 
 //var tempTestSuitePreviewTestInstructionExecutionLogSplitContainer
 

@@ -145,7 +145,11 @@ func updateTestSuiteExecutionsListTable(testSuiteExecutionsModel *testSuiteExecu
 	}
 	testSuiteExecutionsListTable.CreateCell = func() fyne.CanvasObject {
 
-		tempNewClickableLabel := newClickableTableLabel("", func() {}, false, testSuiteExecutionsModel)
+		tempNewClickableLabel := newClickableTableLabel(
+			"",
+			func() {},
+			false,
+			testSuiteExecutionsModel)
 		tempContainer := container.NewStack(canvas.NewRectangle(color.Transparent), tempNewClickableLabel, tempNewClickableLabel.textInsteadOfLabel)
 
 		return tempContainer
@@ -550,7 +554,7 @@ func loadTestSuiteExecutionListTableTable(
 	if selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType == OneExecutionPerTestSuite {
 
 		// Retrieve latest TestExecutions
-		testSuiteExecutionsListMessage = testSuiteExecutionsModelObject.ReadAllFromTestSuiteExecutionsMap()
+		testSuiteExecutionsListMessage, _ = testSuiteExecutionsModelObject.ReadAllFromTestSuiteExecutionsMap(testSuiteExecutionsModel.ReadListMessages)
 	} else {
 
 		// Retrieve all TestSuiteExecutions for one TestSuite

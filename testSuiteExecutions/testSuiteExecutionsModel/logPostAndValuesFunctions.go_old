@@ -82,7 +82,7 @@ func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ListLogPostsAndVa
 		tempTestInstructionExecutionLogPostKey, existInMap = testSuiteExecutionsModel.
 			GetTestInstructionExecutionUuidFromTestInstructionUuid(
 				TestSuiteExecutionUuidType(detailedTestSuiteExecutionMapKey),
-				RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType(tempTestInstructionLogPostMapKey))
+				RelationBetweenTestInstructionUuidAndTestInstructionExecutionMapKeyType(tempTestInstructionLogPostMapKey))
 
 		if existInMap == false {
 			// TestInstructionContainer or that there are not attributes

@@ -3,6 +3,8 @@ package listTestSuiteExecutionsUI
 import (
 	sharedCode "FenixTesterGui/common_code"
 	"FenixTesterGui/soundEngine"
+	"FenixTesterGui/testCaseExecutions/listTestCaseExecutionsUI"
+	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
 	"FenixTesterGui/testSuiteExecutions/testSuiteExecutionsModel"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -30,8 +32,12 @@ type clickableTableLabel struct {
 	textInsteadOfLabel               *canvas.Text
 }
 
-func newClickableTableLabel(text string, onDoubleTap func(), tempIsClickable bool,
-	testSuiteExecutionsModel *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct) *clickableTableLabel {
+func newClickableTableLabel(
+	text string,
+	onDoubleTap func(),
+	tempIsClickable bool,
+	testSuiteExecutionsModel *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct,
+) *clickableTableLabel {
 
 	l := &clickableTableLabel{
 		Label:       widget.Label{Text: text},
@@ -149,15 +155,18 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 	}
 
 	// Load Detailed TestSuiteExecution from Database
-	testSuiteExecutionsModel.LoadDetailedTestSuiteExecutionFromDatabase(testSuiteExecutionUuid, testSuiteExecutionVersion)
+	fmt.Println(testSuiteExecutionUuid, testSuiteExecutionVersion)
+	// FIXA
+	//testSuiteExecutionsModel.LoadDetailedTestSuiteExecutionFromDatabase(testSuiteExecutionUuid, testSuiteExecutionVersion)
 
 	// Update TestSuite Preview
 	TestSuiteInstructionPreViewObject.GenerateTestSuiteExecutionPreviewContainer(
 		l.currentTestSuiteExecutionUuid,
 		l.currentTestSuiteExecutionVersion,
 		l.testSuiteExecutionsModel,
-		fromExecutionList,
-		sharedCode.FenixMasterWindowPtr)
+		listTestCaseExecutionsUI.FromExecutionListForTestSuites,
+		sharedCode.FenixMasterWindowPtr,
+		&testCaseExecutionsModel.TestCaseExecutionsModel)
 
 	testSuiteExecutionsListTable.Refresh()
 

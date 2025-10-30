@@ -78,7 +78,7 @@ func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ListExecutionData
 		tempTestInstructionExecutionLogPostKey, existInMap = testSuiteExecutionsModel.
 			GetTestInstructionExecutionUuidFromTestInstructionUuid(
 				TestSuiteExecutionUuidType(detailedTestSuiteExecutionMapKey),
-				RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType(testInstructionExecutionDetailsMapKey))
+				RelationBetweenTestInstructionUuidAndTestInstructionExecutionMapKeyType(testInstructionExecutionDetailsMapKey))
 
 		if existInMap == false {
 

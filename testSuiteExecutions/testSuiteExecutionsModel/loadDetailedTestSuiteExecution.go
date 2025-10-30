@@ -65,10 +65,10 @@ func LoadDetailedTestSuiteExecutionFromDatabase(testSuiteExecutionUuid string, t
 	}
 
 	// Clear the flag there is an ongoing refresh of the DetailedTestSuiteExecution-data
-	TestSuiteExecutionsModel.ClearFlagRefreshOngoingOfDetailedTestSuiteExecution(detailedTestSuiteExecutionMapKey)
+	//TestSuiteExecutionsModel.ClearFlagRefreshOngoingOfDetailedTestSuiteExecution(detailedTestSuiteExecutionMapKey)
 
 	// Extracts all LogPost-messages from a TestSuiteExecution and store them in a map per TInTICExecutionKey
-	_ = TestSuiteExecutionsModel.ExtractAndStoreLogPostsAndValuesFromDetailedTestSuiteExecution(detailedTestSuiteExecutionMapKey)
+	//_ = TestSuiteExecutionsModel.ExtractAndStoreLogPostsAndValuesFromDetailedTestSuiteExecution(detailedTestSuiteExecutionMapKey)
 
 	// Extract relation between TestInstructionUuid and TestSuiteExecutionUuid
 	//_ = TestSuiteExecutionsModel.ExtractAndStoreRelationBetweenTestInstructionUuidAndTestSuiteExecutionUuid(detailedTestSuiteExecutionMapKey)

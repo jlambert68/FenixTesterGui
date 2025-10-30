@@ -9,12 +9,21 @@ import (
 
 var testSuiteExecutionsMapMutex = &sync.RWMutex{}
 
+// readListOrDetailedMessagesType
+// Type defining if messages should be read for TableList or for DetailedPreview
+type readListOrDetailedMessagesTypeType uint8
+
+const (
+	readDetailedMessages readListOrDetailedMessagesTypeType = iota
+	ReadListMessages
+)
+
 // InitiateTestSuiteExecutionsMap
 // Add to the TestSuiteExecutions-Map
 func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) InitiateTestSuiteExecutionsMap() {
 
 	sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "a52f6fd8-8b67-493f-8d08-0d957ba35170",
+		"id": "6a689fe7-0459-477e-a117-032bf48ae88c",
 	}).Debug("Incoming - 'InitiateTestSuiteExecutionsMap'")
 
 	defer sharedCode.Logger.WithFields(logrus.Fields{
@@ -36,15 +45,41 @@ func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) InitiateTestSuite
 	testSuiteExecutionsMapMutex.Unlock()
 }
 
-// ReadFromTestSuiteExecutionsMap
-// Read from the TestSuiteExecutions-Map
-func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ReadFromTestSuiteExecutionsMap(
+// ReadFromTestSuiteExecutionsMapForTableList
+// Read from the TestSuiteExecutions-Map for the TableList for TestSuiteExecutions
+func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ReadFromTestSuiteExecutionsMapForTableList(
 	testSuiteExecutionsMapKey TestSuiteExecutionUuidType) (
 	testSuiteExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage,
 	existInMap bool) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "01698693-b50e-4eeb-9057-326c70f52e5e",
+		"id": "c31a6352-9d51-428b-8215-02792ce8cd71",
+	}).Debug("Incoming - 'ReadFromTestSuiteExecutionsMapForTableList'")
+
+	defer sharedCode.Logger.WithFields(logrus.Fields{
+		"id": "98ac2743-7da3-4ee1-8c36-6daf6784119c",
+	}).Debug("Outgoing - 'ReadFromTestSuiteExecutionsMapForTableList'")
+
+	testSuiteExecutionsListMessage, _, existInMap = testSuiteExecutionsModel.ReadFromTestSuiteExecutionsMap(
+		ReadListMessages,
+		testSuiteExecutionsMapKey)
+
+	return testSuiteExecutionsListMessage, existInMap
+
+}
+
+// ReadFromTestSuiteExecutionsMap
+// Read from the TestSuiteExecutions-Map
+func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ReadFromTestSuiteExecutionsMap(
+	readListOrDetailedMessagesType readListOrDetailedMessagesTypeType,
+	testSuiteExecutionsMapKey TestSuiteExecutionUuidType) (
+	testSuiteExecutionsListMessages *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage,
+	testSuiteExecutionResponseMessage *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionResponseMessage,
+	existInMap bool) {
+
+	sharedCode.Logger.WithFields(logrus.Fields{
+		"id":                             "01698693-b50e-4eeb-9057-326c70f52e5e",
+		"readListOrDetailedMessagesType": readListOrDetailedMessagesType,
 	}).Debug("Incoming - 'ReadFromTestSuiteExecutionsMap'")
 
 	defer sharedCode.Logger.WithFields(logrus.Fields{
@@ -57,26 +92,84 @@ func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ReadFromTestSuite
 	//UnLock Map
 	defer testSuiteExecutionsMapMutex.RUnlock()
 
-	// Check if Map i nil
-	if TestSuiteExecutionsModel.LatestTestSuiteExecutionForEachTestSuiteUuid.
-		latestTestSuiteExecutionForEachTestSuiteUuidMap == nil {
-		return nil, false
+	// Different logic depending on if call is for TestSuiteExecutionsList or for Detailed TestSuiteExecutionPreview
+	switch readListOrDetailedMessagesType {
+
+	// Messages for TestSuiteExecutionsListTable
+	case ReadListMessages:
+
+		// Check if Map i nil
+		if TestSuiteExecutionsModel.LatestTestSuiteExecutionForEachTestSuiteUuid.
+			latestTestSuiteExecutionForEachTestSuiteUuidMap == nil {
+			return nil, nil, false
+		}
+
+		// Read Map
+		testSuiteExecutionsListMessages, existInMap = TestSuiteExecutionsModel.LatestTestSuiteExecutionForEachTestSuiteUuid.
+			latestTestSuiteExecutionForEachTestSuiteUuidMap[testSuiteExecutionsMapKey]
+
+		return testSuiteExecutionsListMessages, nil, existInMap
+
+	case readDetailedMessages:
+
+		// Check if Map i nil
+		if TestSuiteExecutionsModel.LatestTestSuiteExecutionForEachTestSuiteUuid.
+			latestTestSuiteExecutionForEachTestSuiteUuidMap == nil {
+			return nil, nil, false
+		}
+
+		// Read Map
+		var tempDetailedTestSuiteExecutionsObjectsMap map[DetailedTestSuiteExecutionMapKeyType]*DetailedTestSuiteExecutionsMapObjectStruct
+		tempDetailedTestSuiteExecutionsObjectsMap = *TestSuiteExecutionsModel.DetailedTestSuiteExecutionsObjectsMapPtr
+		var tempDetailedTestSuiteExecutionsMapObjectPtr *DetailedTestSuiteExecutionsMapObjectStruct
+		tempDetailedTestSuiteExecutionsMapObjectPtr, existInMap = tempDetailedTestSuiteExecutionsObjectsMap[DetailedTestSuiteExecutionMapKeyType(testSuiteExecutionsMapKey)] //LatestTestSuiteExecutionForEachTestSuiteUuid.latestTestSuiteExecutionForEachTestSuiteUuidMap[testSuiteExecutionsMapKey]
+
+		if existInMap == true {
+			testSuiteExecutionResponseMessage = tempDetailedTestSuiteExecutionsMapObjectPtr.DetailedTestSuiteExecution
+		}
+
+		return nil, testSuiteExecutionResponseMessage, existInMap
+
+	default:
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"id":                             "2e3a6094-118b-4e2b-8fc3-34e415b6c27e",
+			"readListOrDetailedMessagesType": readListOrDetailedMessagesType,
+		}).Fatalln("Unhandled incoming 'readListOrDetailedMessagesType'")
+
 	}
+	return nil, nil, false
 
-	// Read Map
-	testSuiteExecutionsListMessage, existInMap = TestSuiteExecutionsModel.LatestTestSuiteExecutionForEachTestSuiteUuid.
-		latestTestSuiteExecutionForEachTestSuiteUuidMap[testSuiteExecutionsMapKey]
+}
 
-	return testSuiteExecutionsListMessage, existInMap
+// ReadAllFromTestSuiteExecutionsMapForTableList
+// Read all from the TestSuiteExecutions-Map for the TableList for TestSuiteExecutions
+func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ReadAllFromTestSuiteExecutionsMapForTableList() (
+	testSuiteExecutionsListMessages *[]*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage) {
+
+	sharedCode.Logger.WithFields(logrus.Fields{
+		"id": "61403cf9-30ef-4e27-ab68-b294fbbfbd45",
+	}).Debug("Incoming - 'ReadAllFromTestSuiteExecutionsMapForTableList'")
+
+	defer sharedCode.Logger.WithFields(logrus.Fields{
+		"id": "1cefa358-c352-4acd-a437-49eb1bf95595",
+	}).Debug("Outgoing - 'ReadAllFromTestSuiteExecutionsMapForTableList'")
+
+	testSuiteExecutionsListMessages, _ = testSuiteExecutionsModel.ReadAllFromTestSuiteExecutionsMap(ReadListMessages)
+
+	return testSuiteExecutionsListMessages
+
 }
 
 // ReadAllFromTestSuiteExecutionsMap
 // Read all from the TestSuiteExecutions-Map
-func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ReadAllFromTestSuiteExecutionsMap() (
-	testSuiteExecutionsListMessage *[]*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage) {
+func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ReadAllFromTestSuiteExecutionsMap(
+	readListOrDetailedMessagesType readListOrDetailedMessagesTypeType) (
+	testSuiteExecutionsListMessages *[]*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage,
+	testSuiteExecutionResponseMessages *[]*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionResponseMessage) {
 
 	sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "f11158ad-3495-42ab-85aa-68c7c2272c00",
+		"id":                             "f11158ad-3495-42ab-85aa-68c7c2272c00",
+		"readListOrDetailedMessagesType": readListOrDetailedMessagesType,
 	}).Debug("Incoming - 'ReadAllFromTestSuiteExecutionsMap'")
 
 	defer sharedCode.Logger.WithFields(logrus.Fields{
@@ -89,21 +182,48 @@ func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) ReadAllFromTestSu
 	//UnLock Map
 	defer testSuiteExecutionsMapMutex.RUnlock()
 
-	// Check if Map i nil
-	if TestSuiteExecutionsModel.LatestTestSuiteExecutionForEachTestSuiteUuid.
-		latestTestSuiteExecutionForEachTestSuiteUuidMap == nil {
-		return nil
+	// Different logic depending on if call is for TestSuiteExecutionsList or for Detailed TestSuiteExecutionPreview
+	switch readListOrDetailedMessagesType {
+
+	// Messages for TestSuiteExecutionsListTable
+	case ReadListMessages:
+
+		// Check if Map i nil
+		if TestSuiteExecutionsModel.LatestTestSuiteExecutionForEachTestSuiteUuid.
+			latestTestSuiteExecutionForEachTestSuiteUuidMap == nil {
+			return nil, nil
+		}
+
+		var tempTestSuiteExecutionsListMessage []*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage
+
+		// Loop all items in map and add to response slice
+		for _, testSuiteExecutionListMessage := range TestSuiteExecutionsModel.LatestTestSuiteExecutionForEachTestSuiteUuid.
+			latestTestSuiteExecutionForEachTestSuiteUuidMap {
+			tempTestSuiteExecutionsListMessage = append(tempTestSuiteExecutionsListMessage, testSuiteExecutionListMessage)
+		}
+
+		return &tempTestSuiteExecutionsListMessage, nil
+
+	case readDetailedMessages:
+
+		// Not implemented should never be called
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"id":                             "e158a5b3-573a-4e65-92ba-09e29bf5f075",
+			"readListOrDetailedMessagesType": readListOrDetailedMessagesType,
+		}).Fatalln("Not implemented should never be called")
+
+		return nil, nil
+
+	default:
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"id":                             "728024b3-65ce-4b9f-8fd6-769e7787e524",
+			"readListOrDetailedMessagesType": readListOrDetailedMessagesType,
+		}).Fatalln("Unhandled incoming 'readListOrDetailedMessagesType'")
+
 	}
 
-	var tempTestSuiteExecutionsListMessage []*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage
+	return nil, nil
 
-	// Loop all items in map and add to response slice
-	for _, testSuiteExecutionListMessage := range TestSuiteExecutionsModel.LatestTestSuiteExecutionForEachTestSuiteUuid.
-		latestTestSuiteExecutionForEachTestSuiteUuidMap {
-		tempTestSuiteExecutionsListMessage = append(tempTestSuiteExecutionsListMessage, testSuiteExecutionListMessage)
-	}
-
-	return &tempTestSuiteExecutionsListMessage
 }
 
 // GetNumberOfTestSuiteExecutionsRetrievedFromDatabase
@@ -128,7 +248,7 @@ func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) GetNumberOfTestSu
 	var testSuiteExecutionsListMessage *[]*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage
 
 	// Get all data retrieved and get hwo many they are
-	testSuiteExecutionsListMessage = testSuiteExecutionsModel.ReadAllFromTestSuiteExecutionsMap()
+	testSuiteExecutionsListMessage = testSuiteExecutionsModel.ReadAllFromTestSuiteExecutionsMapForTableList()
 
 	numberOfTestSuiteExecutionsRetrievedFromDatabase = len(*testSuiteExecutionsListMessage)
 
@@ -205,152 +325,4 @@ func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) DeleteFromTestSui
 		latestTestSuiteExecutionForEachTestSuiteUuidMap,
 		testSuiteExecutionsMapKey)
 
-}
-
-// GetTestInstructionExecutionUuidFromTestInstructionUuid
-// Read from the TestSuiteExecutions-Map and get the TestInstructionExecutionUuid + Version (mpKey) based on TestInstructionUuid
-func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) GetTestInstructionExecutionUuidFromTestInstructionUuid(
-	testSuiteExecutionsMapKey TestSuiteExecutionUuidType,
-	testInstructionUuid RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType) (
-	testInstructionExecutionUuid TestInstructionExecutionUuidType,
-	existInMap bool) {
-
-	sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "8e69f6fe-f077-4403-832a-041abe690724",
-	}).Debug("Incoming - 'GetTestInstructionExecutionUuidFromTestInstructionUuid'")
-
-	defer sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "94b61a49-6506-4081-bcc6-b9776dd99b8c",
-	}).Debug("Outgoing - 'GetTestInstructionExecutionUuidFromTestInstructionUuid'")
-
-	// Lock Map for Reading
-	//testSuiteExecutionsMapMutex.RLock()
-
-	//UnLock Map
-	//defer testSuiteExecutionsMapMutex.RUnlock()
-
-	// Check if Map i nil
-	if TestSuiteExecutionsModel.LatestTestSuiteExecutionForEachTestSuiteUuid.
-		latestTestSuiteExecutionForEachTestSuiteUuidMap == nil {
-		return "", false
-	}
-
-	// Read Map
-	var tempDetailedTestSuiteExecutionsObjectsMapPtr *map[DetailedTestSuiteExecutionMapKeyType]*DetailedTestSuiteExecutionsMapObjectStruct
-	var tempDetailedTestSuiteExecutionsObjectsMap map[DetailedTestSuiteExecutionMapKeyType]*DetailedTestSuiteExecutionsMapObjectStruct
-	tempDetailedTestSuiteExecutionsObjectsMapPtr = TestSuiteExecutionsModel.DetailedTestSuiteExecutionsObjectsMapPtr
-	tempDetailedTestSuiteExecutionsObjectsMap = *tempDetailedTestSuiteExecutionsObjectsMapPtr
-
-	var tempdetailedTestSuiteExecutionsMapObjectPtr *DetailedTestSuiteExecutionsMapObjectStruct
-	var tempdetailedTestSuiteExecutionsMapObject DetailedTestSuiteExecutionsMapObjectStruct
-	tempdetailedTestSuiteExecutionsMapObjectPtr, existInMap = tempDetailedTestSuiteExecutionsObjectsMap[DetailedTestSuiteExecutionMapKeyType(testSuiteExecutionsMapKey)]
-	if existInMap == false {
-
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"id":                        "89affc07-9efe-42ab-b7cf-d39a01525365",
-			"testSuiteExecutionsMapKey": testSuiteExecutionsMapKey,
-		}).Error("Should never happen - 'testSuiteExecutionsMapKey' could not be found in 'DetailedTestSuiteExecutionsObjectsMap")
-
-		return "", false
-	}
-
-	tempdetailedTestSuiteExecutionsMapObject = *tempdetailedTestSuiteExecutionsMapObjectPtr
-
-	// Extract map with relation between TestInstruction and TestInstructionExecution for TestSuiteExecution
-	var tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr *map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
-	var tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
-
-	tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr = tempdetailedTestSuiteExecutionsMapObject.RelationBetweenTestInstructionUuidAndTestInstructionExecutionUuidMapPtr
-	tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap = *tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMapPtr
-
-	testInstructionExecutionUuid, existInMap = tempRelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap[testInstructionUuid]
-	if existInMap == false {
-
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"id":                        "4630f29e-b9b6-4ca1-a977-21114663ba88",
-			"testInstructionUuid":       testInstructionUuid,
-			"testSuiteExecutionsMapKey": testSuiteExecutionsMapKey,
-		}).Error("Should never happen - 'testInstructionUuid' could not be found in 'RelationBetweenTestInstructionUuidAndTestInstructionExectuionUuidMap")
-
-		return "", false
-	}
-
-	return testInstructionExecutionUuid, existInMap
-}
-
-// GetTestInstructionFromTestInstructionExecutionUuid
-// Read from the TestSuiteExecutions-Map and get the TestInstruction Uuid and Name based on TestInstructionExecutionUuid + Version (mapKey)
-func (testSuiteExecutionsModel TestSuiteExecutionsModelStruct) GetTestInstructionFromTestInstructionExecutionUuid(
-	testSuiteExecutionsMapKey TestSuiteExecutionUuidType,
-	testInstructionExecutionUuid TestInstructionExecutionUuidType,
-	lockMap bool) (
-	testInstructionUuid RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType,
-	testInstructionName string,
-	existInMap bool) {
-
-	sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "8c70226a-f65c-4c77-a04c-2c044235961e",
-	}).Debug("Incoming - 'GetTestInstructionFromTestInstructionExecutionUuid'")
-
-	defer sharedCode.Logger.WithFields(logrus.Fields{
-		"id": "488c3fd4-90c4-4b5b-9224-f4f35f4cde68",
-	}).Debug("Outgoing - 'GetTestInstructionFromTestInstructionExecutionUuid'")
-
-	if lockMap == true {
-		// Lock Map for Reading
-		testSuiteExecutionsMapMutex.RLock()
-
-		//UnLock Map
-		defer testSuiteExecutionsMapMutex.RUnlock()
-	}
-
-	// Check if Map i nil
-	if TestSuiteExecutionsModel.LatestTestSuiteExecutionForEachTestSuiteUuid.
-		latestTestSuiteExecutionForEachTestSuiteUuidMap == nil {
-		return "", "", false
-	}
-
-	// Read Map
-	var tempDetailedTestSuiteExecutionsObjectsMapPtr *map[DetailedTestSuiteExecutionMapKeyType]*DetailedTestSuiteExecutionsMapObjectStruct
-	var tempDetailedTestSuiteExecutionsObjectsMap map[DetailedTestSuiteExecutionMapKeyType]*DetailedTestSuiteExecutionsMapObjectStruct
-	tempDetailedTestSuiteExecutionsObjectsMapPtr = TestSuiteExecutionsModel.DetailedTestSuiteExecutionsObjectsMapPtr
-	tempDetailedTestSuiteExecutionsObjectsMap = *tempDetailedTestSuiteExecutionsObjectsMapPtr
-
-	var tempdetailedTestSuiteExecutionsMapObjectPtr *DetailedTestSuiteExecutionsMapObjectStruct
-	var tempdetailedTestSuiteExecutionsMapObject DetailedTestSuiteExecutionsMapObjectStruct
-	tempdetailedTestSuiteExecutionsMapObjectPtr, existInMap = tempDetailedTestSuiteExecutionsObjectsMap[DetailedTestSuiteExecutionMapKeyType(testSuiteExecutionsMapKey)]
-	if existInMap == false {
-
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"id":                        "7d35b326-73d0-4d04-9352-9c10281026ea",
-			"testSuiteExecutionsMapKey": testSuiteExecutionsMapKey,
-		}).Error("Should never happen - 'testSuiteExecutionsMapKey' could not be found in 'DetailedTestSuiteExecutionsObjectsMap")
-
-		return "", "", false
-	}
-
-	tempdetailedTestSuiteExecutionsMapObject = *tempdetailedTestSuiteExecutionsMapObjectPtr
-
-	// Extract map with relation between TestInstructionExecution and TestInstruction for TestSuiteExecution
-	var tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMapPtr *map[TestInstructionExecutionUuidType]RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct
-	var tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap map[TestInstructionExecutionUuidType]RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct
-
-	tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMapPtr = tempdetailedTestSuiteExecutionsMapObject.RelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMapPtr
-	tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap = *tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMapPtr
-
-	var testInstructionObject RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct
-
-	testInstructionObject, existInMap = tempRelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMap[testInstructionExecutionUuid]
-	if existInMap == false {
-
-		sharedCode.Logger.WithFields(logrus.Fields{
-			"id":                           "fad82e9d-470d-4b8e-9cbf-746e45029362",
-			"testSuiteExecutionsMapKey":    testSuiteExecutionsMapKey,
-			"testInstructionExecutionUuid": testInstructionExecutionUuid,
-		}).Error("Should never happen - 'testInstructionExecutionUuid' could not be found in 'RelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMapPtr")
-
-		return "", "", false
-	}
-
-	return testInstructionObject.TestInstructionUuid, testInstructionObject.TestInstructionName, existInMap
 }

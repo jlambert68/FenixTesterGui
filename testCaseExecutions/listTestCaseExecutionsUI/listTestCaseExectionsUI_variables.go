@@ -131,13 +131,16 @@ type openedDetailedTestCaseExecutionStruct struct {
 var openedDetailedTestCaseExecutionsMapPtr *map[openedDetailedTestCaseExecutionsMapKeyType]*openedDetailedTestCaseExecutionStruct
 
 // From where is the opening of the TestCaseExecution initiated; FromExecutionList, FromExternalWindow, FromTab
-type openedTestCaseExecutionFromType uint8
+type OpenedTestCaseExecutionOrTestSuiteExecutionFromType uint8
 
 const (
-	fromNotDefined    openedTestCaseExecutionFromType = iota
-	fromExecutionList openedTestCaseExecutionFromType = iota
-	fromExternalWindow
-	fromTab
+	FromNotDefined OpenedTestCaseExecutionOrTestSuiteExecutionFromType = iota
+	FromExecutionListForTestCases
+	FromExternalWindowForTestCaseExecution
+	FromTabForTestCaseExecution
+	FromExecutionListForTestSuites
+	FromExternalWindowForTestSuiteExecution
+	FromTabForTestSuiteExecution
 )
 
 //var tempTestCasePreviewTestInstructionExecutionLogSplitContainer

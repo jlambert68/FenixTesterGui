@@ -1,6 +1,7 @@
 package testSuiteExecutionsModel
 
 import (
+	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
 	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
 	"sync"
 	"time"
@@ -44,9 +45,7 @@ type DetailedTestSuiteExecutionMapKeyType string // TestSuiteExecutionUuid + Tes
 
 type TestInstructionExecutionLogPostMapKeyType string // TestInstructionExecutionUuid + TestInstructionExecutionVersion
 
-type TCEoTICoTIEAttributesContainerMapKeyType string // TestInstructionExecutionUuid || TestInstructionContainerUuid || TestSuiteExecutionUuid
-
-type RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType string // TestInstructionUuid
+type RelationBetweenTestInstructionUuidAndTestInstructionExecutionMapKeyType string // TestInstructionUuid
 
 type TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType string // TestInstructionExecutionUuid + TestInstructionExecutionVersion
 
@@ -70,19 +69,15 @@ type TestInstructionExecutionDetailsForExplorerStruct struct {
 }
 
 type RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct struct {
-	TestInstructionUuid RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType
+	TestInstructionUuid RelationBetweenTestInstructionUuidAndTestInstructionExecutionMapKeyType
 	TestInstructionName string
 }
 
 type TestInstructionExecutionUuidType string // TestInstructionExecutionUuid
 
 type DetailedTestSuiteExecutionsMapObjectStruct struct {
-	DetailedTestSuiteExecution                                              *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionResponseMessage
-	TestInstructionExecutionLogPostMapPtr                                   *map[TestInstructionExecutionLogPostMapKeyType]*[]*fenixExecutionServerGuiGrpcApi.LogPostAndValuesMessage
-	RelationBetweenTestInstructionUuidAndTestInstructionExecutionUuidMapPtr *map[RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType]TestInstructionExecutionUuidType
-	RelationBetweenTestInstructionExecutionUuidAndTestInstructionUuidMapPtr *map[TestInstructionExecutionUuidType]RelationBetweenTestInstructionUuidAndTestInstructionExecutionStruct
-	RunTimeUpdatedAttributesMapPtr                                          *map[TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType]*map[AttributeNameMapKeyType]RunTimeUpdatedAttributeValueType
-	TestInstructionExecutionDetailsMapPtr                                   *map[TestInstructionExecutionDetailsMapKeyType]*TestInstructionExecutionDetailsStruct
+	DetailedTestSuiteExecution       *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionResponseMessage
+	DetailedTestCaseExecutionsMapPtr *map[testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType]*testCaseExecutionsModel.DetailedTestCaseExecutionsMapObjectStruct
 
 	WaitingForDatabaseUpdate      bool
 	WaitingForDatabaseUpdateMutex *sync.RWMutex

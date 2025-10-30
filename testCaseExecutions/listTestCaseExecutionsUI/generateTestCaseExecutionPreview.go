@@ -23,8 +23,11 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 	testCaseExecutionUuid string,
 	testCaseExecutionVersion uint32,
 	testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct,
-	openedTestCaseExecutionFrom openedTestCaseExecutionFromType,
-	currentWindowPtr *fyne.Window) {
+	openedTestCaseExecutionFrom OpenedTestCaseExecutionOrTestSuiteExecutionFromType,
+	currentWindowPtr *fyne.Window,
+	testCasePreviewStructureMessageFromTestSuiteExecution *fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage,
+	testTestInstructionsExecutionStatusPreviewValuesFromTestSuiteExecution *fenixExecutionServerGuiGrpcApi.
+		TestInstructionsExecutionStatusPreviewValuesMessage) {
 
 	var currentWindow fyne.Window
 	currentWindow = *currentWindowPtr
@@ -62,24 +65,43 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 	// Get Data for the Preview
 	var tempTestCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
 
-	// Can preview be found in Map for "One TestCaseExecution per TestCase" or "All TestCaseExecutions per TestCase"
-	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
+	// From where comes the call
+	switch openedTestCaseExecutionFrom {
 
-	case AllExecutionsForOneTestCase:
-		tempTestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.GetSpecificTestCaseExecutionForOneTestCaseUuid(
-			testCaseExecutionsModel.TestCaseUuidType(selectedTestCaseExecutionObjected.
-				allExecutionsFoOneTestCaseListObject.testCaseUuidForTestCaseExecutionThatIsShownInPreview),
-			testCaseExecutionsModel.TestCaseExecutionUuidType(selectedTestCaseExecutionObjected.
-				allExecutionsFoOneTestCaseListObject.testCaseExecutionUuidThatIsShownInPreview))
+	case FromExecutionListForTestCases, FromExternalWindowForTestCaseExecution, FromTabForTestCaseExecution:
 
-	case OneExecutionPerTestCase:
-		tempTestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.ReadFromTestCaseExecutionsMap(
-			testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionUuid))
+		// Can preview be found in Map for "One TestCaseExecution per TestCase" or "All TestCaseExecutions per TestCase"
+		switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
 
-	case NotDefined:
+		case AllExecutionsForOneTestCase:
+			tempTestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.GetSpecificTestCaseExecutionForOneTestCaseUuid(
+				testCaseExecutionsModel.TestCaseUuidType(selectedTestCaseExecutionObjected.
+					allExecutionsFoOneTestCaseListObject.testCaseUuidForTestCaseExecutionThatIsShownInPreview),
+				testCaseExecutionsModel.TestCaseExecutionUuidType(selectedTestCaseExecutionObjected.
+					allExecutionsFoOneTestCaseListObject.testCaseExecutionUuidThatIsShownInPreview))
 
-		tempTestCaseExecutionsListMessage = &fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage{}
+		case OneExecutionPerTestCase:
+			tempTestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.ReadFromTestCaseExecutionsMap(
+				testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionUuid))
 
+		case NotDefined:
+
+			tempTestCaseExecutionsListMessage = &fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage{}
+
+		}
+
+	case FromExecutionListForTestSuites:
+
+		tempTestCaseExecutionsListMessage = &fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage{
+			TestCasePreview: testCasePreviewStructureMessageFromTestSuiteExecution,
+			TestInstructionsExecutionStatusPreviewValues: testTestInstructionsExecutionStatusPreviewValuesFromTestSuiteExecution,
+		}
+
+	default:
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"id":                          "91eacd02-7412-4704-a710-905129b0cd52",
+			"openedTestCaseExecutionFrom": openedTestCaseExecutionFrom,
+		}).Fatalln("Unhandled 'openedTestCaseExecutionFrom'")
 	}
 
 	// Read from the TestCaseExecutions-Map to Get object holding Logs, RunTimeAtributes and ...
@@ -137,7 +159,10 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 
 	// Extract TestCaseExecution-status
 	var tempTestCaseExecutionStatusEnum string
-	tempTestCaseExecutionStatusEnum = tempTestCaseExecutionsListMessage.GetTestCaseExecutionStatus().String()[4:]
+	// tempTestCaseExecutionStatusEnum = tempTestCaseExecutionsListMessage.GetTestCaseExecutionStatus().String()[4:]
+	tempTestCaseExecutionStatusEnum = detailedTestCaseExecutionsObjectPtr.DetailedTestCaseExecution.
+		TestCaseExecutionDetails[len(detailedTestCaseExecutionsObjectPtr.DetailedTestCaseExecution.
+		TestCaseExecutionDetails)-1].TestCaseExecutionStatus.String()[4:]
 
 	statusId = detailedExecutionsModel.
 		ExecutionStatusColorNameToNumberMap[tempTestCaseExecutionStatusEnum].ExecutionStatusNumber
@@ -172,7 +197,9 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 	tempTestCaseNameLabel := widget.NewLabel("TestCaseName:")
 	tempTestCaseNameLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewTopContainer.Add(tempTestCaseNameLabel)
-	copyableTestCaseNameLabel := newCopyableLabel(tempTestCaseExecutionsListMessage.GetTestCaseName(), true)
+	// copyableTestCaseNameLabel := newCopyableLabel(tempTestCaseExecutionsListMessage.GetTestCaseName(), true)
+	copyableTestCaseNameLabel := newCopyableLabel(detailedTestCaseExecutionsObjectPtr.DetailedTestCaseExecution.
+		TestCaseExecutionBasicInformation.GetTestCaseName(), true)
 	testCaseExecutionPreviewTopContainer.Add(copyableTestCaseNameLabel)
 
 	// Add TestCaseExecutionStatus
@@ -200,8 +227,11 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 	tempOwnerDomainLabel := widget.NewLabel("OwnerDomain:")
 	tempOwnerDomainLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewTopContainer.Add(tempOwnerDomainLabel)
+	//copyableDomainThatOwnTheTestCaseLabel := newCopyableLabel(
+	//	tempTestCaseExecutionsListMessage.GetTestCasePreview().GetDomainThatOwnTheTestCase(), true)
 	copyableDomainThatOwnTheTestCaseLabel := newCopyableLabel(
-		tempTestCaseExecutionsListMessage.GetTestCasePreview().GetDomainThatOwnTheTestCase(), true)
+		detailedTestCaseExecutionsObjectPtr.DetailedTestCaseExecution.
+			TestCaseExecutionBasicInformation.GetDomainName(), true)
 	testCaseExecutionPreviewTopContainer.Add(copyableDomainThatOwnTheTestCaseLabel)
 
 	// Add empty row
@@ -240,34 +270,47 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 	tempTestCaseExecutionVersionLabel := widget.NewLabel("TestCaseExecutionVersion:")
 	tempTestCaseExecutionVersionLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewBottomContainer.Add(tempTestCaseExecutionVersionLabel)
-	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(strconv.Itoa(int(tempTestCaseExecutionsListMessage.
-		GetTestCaseExecutionVersion()))))
+	// testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(strconv.Itoa(int(empTestCaseExecutionsListMessage.
+	//	GetTestCaseExecutionVersion()))))
+	testCaseExecutionPreviewBottomContainer.Add(widget.NewLabel(strconv.Itoa(int(detailedTestCaseExecutionsObjectPtr.
+		DetailedTestCaseExecution.TestCaseExecutionBasicInformation.GetTestCaseExecutionVersion()))))
 
 	// Add ExecutionStartTimeStamp to Bottom container
 	tempExecutionStartTimeStampLabel := widget.NewLabel("TestCase Execution Start TimeStamp:")
 	tempExecutionStartTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStartTimeStampLabel)
+	//copyableExecutionStartTimeStampLabel := newCopyableLabel(
+	//	tempTestCaseExecutionsListMessage.
+	//		GetExecutionStartTimeStamp().AsTime().String(), true)
 	copyableExecutionStartTimeStampLabel := newCopyableLabel(
-		tempTestCaseExecutionsListMessage.
-			GetExecutionStartTimeStamp().AsTime().String(), true)
+		detailedTestCaseExecutionsObjectPtr.
+			DetailedTestCaseExecution.TestCaseExecutionDetails[0].ExecutionStartTimeStamp.AsTime().String(), true)
 	testCaseExecutionPreviewBottomContainer.Add(copyableExecutionStartTimeStampLabel)
 
 	// Add ExecutionStopTimeStamp to Bottom container
 	tempExecutionStopTimeStampLabel := widget.NewLabel("TestCase Execution Stop TimeStamp:")
 	tempExecutionStopTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStopTimeStampLabel)
+	//copyableExecutionStopTimeStampLabel := newCopyableLabel(
+	//	tempTestCaseExecutionsListMessage.
+	//		GetExecutionStopTimeStamp().AsTime().String(), true)
 	copyableExecutionStopTimeStampLabel := newCopyableLabel(
-		tempTestCaseExecutionsListMessage.
-			GetExecutionStopTimeStamp().AsTime().String(), true)
+		detailedTestCaseExecutionsObjectPtr.
+			DetailedTestCaseExecution.TestCaseExecutionDetails[len(detailedTestCaseExecutionsObjectPtr.
+			DetailedTestCaseExecution.TestCaseExecutionDetails)-1].ExecutionStopTimeStamp.AsTime().String(), true)
 	testCaseExecutionPreviewBottomContainer.Add(copyableExecutionStopTimeStampLabel)
 
 	// Add ExecutionStatusUpdateTimeStamp to Bottom container
 	tempExecutionStatusUpdateTimeStampLabel := widget.NewLabel("TestCase Execution Status Update TimeStamp:")
 	tempExecutionStatusUpdateTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
 	testCaseExecutionPreviewBottomContainer.Add(tempExecutionStatusUpdateTimeStampLabel)
+	//copyableExecutionStatusUpdateTimeStampLabel := newCopyableLabel(
+	//	tempTestCaseExecutionsListMessage.
+	//		GetExecutionStatusUpdateTimeStamp().AsTime().String(), true)
 	copyableExecutionStatusUpdateTimeStampLabel := newCopyableLabel(
-		tempTestCaseExecutionsListMessage.
-			GetExecutionStatusUpdateTimeStamp().AsTime().String(), true)
+		detailedTestCaseExecutionsObjectPtr.
+			DetailedTestCaseExecution.TestCaseExecutionDetails[len(detailedTestCaseExecutionsObjectPtr.
+			DetailedTestCaseExecution.TestCaseExecutionDetails)-1].ExecutionStatusUpdateTimeStamp.AsTime().String(), true)
 	testCaseExecutionPreviewBottomContainer.Add(copyableExecutionStatusUpdateTimeStampLabel)
 
 	// Add LastSavedByUserGCPAuthorization to Bottom container
@@ -509,24 +552,44 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 
 				// Extract TestInstructionExecution from TestInstruction
 				var temp2TestCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage
-				// Can preview be found in Map for "One TestCaseExecution per TestCase" or "All TestCaseExecutions per TestCase"
-				switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
 
-				case AllExecutionsForOneTestCase:
-					temp2TestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.GetSpecificTestCaseExecutionForOneTestCaseUuid(
-						testCaseExecutionsModel.TestCaseUuidType(selectedTestCaseExecutionObjected.
-							allExecutionsFoOneTestCaseListObject.testCaseUuidForTestCaseExecutionThatIsShownInPreview),
-						testCaseExecutionsModel.TestCaseExecutionUuidType(selectedTestCaseExecutionObjected.
-							allExecutionsFoOneTestCaseListObject.testCaseExecutionUuidThatIsShownInPreview))
+				// From where was it initiated
+				switch openedTestCaseExecutionFrom {
 
-				case OneExecutionPerTestCase:
-					temp2TestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.ReadFromTestCaseExecutionsMap(
-						testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionUuid))
+				case FromExecutionListForTestCases, FromExternalWindowForTestCaseExecution, FromTabForTestCaseExecution:
 
-				case NotDefined:
+					// Can preview be found in Map for "One TestCaseExecution per TestCase" or "All TestCaseExecutions per TestCase"
+					switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
 
-					temp2TestCaseExecutionsListMessage = &fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage{}
+					case AllExecutionsForOneTestCase:
+						temp2TestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.GetSpecificTestCaseExecutionForOneTestCaseUuid(
+							testCaseExecutionsModel.TestCaseUuidType(selectedTestCaseExecutionObjected.
+								allExecutionsFoOneTestCaseListObject.testCaseUuidForTestCaseExecutionThatIsShownInPreview),
+							testCaseExecutionsModel.TestCaseExecutionUuidType(selectedTestCaseExecutionObjected.
+								allExecutionsFoOneTestCaseListObject.testCaseExecutionUuidThatIsShownInPreview))
 
+					case OneExecutionPerTestCase:
+						temp2TestCaseExecutionsListMessage, _ = testCaseExecutionsModelRef.ReadFromTestCaseExecutionsMap(
+							testCaseExecutionsModel.TestCaseExecutionUuidType(testCaseExecutionUuid))
+
+					case NotDefined:
+
+						temp2TestCaseExecutionsListMessage = &fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage{}
+
+					}
+
+				case FromExecutionListForTestSuites:
+
+					temp2TestCaseExecutionsListMessage = &fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage{
+						TestCasePreview: testCasePreviewStructureMessageFromTestSuiteExecution,
+						TestInstructionsExecutionStatusPreviewValues: testTestInstructionsExecutionStatusPreviewValuesFromTestSuiteExecution,
+					}
+
+				default:
+					sharedCode.Logger.WithFields(logrus.Fields{
+						"id":                          "5e8c492b-8fc0-46f2-92a0-88b8cfe2c50a",
+						"openedTestCaseExecutionFrom": openedTestCaseExecutionFrom,
+					}).Fatalln("Unhandled 'openedTestCaseExecutionFrom'")
 				}
 
 				/*
@@ -860,16 +923,33 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 
 	// Extract if row is selected or not
 	var tempRowIsSelected bool
-	switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
 
-	case AllExecutionsForOneTestCase:
-		tempRowIsSelected = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.isAnyRowSelected
+	// From where comes the call
+	switch openedTestCaseExecutionFrom {
 
-	case OneExecutionPerTestCase:
-		tempRowIsSelected = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.isAnyRowSelected
+	case FromExecutionListForTestCases, FromExternalWindowForTestCaseExecution, FromTabForTestCaseExecution:
 
-	case NotDefined:
+		switch selectedTestCaseExecutionObjected.ExecutionsInGuiIsOfType {
 
+		case AllExecutionsForOneTestCase:
+			tempRowIsSelected = selectedTestCaseExecutionObjected.allExecutionsFoOneTestCaseListObject.isAnyRowSelected
+
+		case OneExecutionPerTestCase:
+			tempRowIsSelected = selectedTestCaseExecutionObjected.oneExecutionPerTestCaseListObject.isAnyRowSelected
+
+		case NotDefined:
+
+		}
+
+	case FromExecutionListForTestSuites:
+
+		tempRowIsSelected = true
+
+	default:
+		sharedCode.Logger.WithFields(logrus.Fields{
+			"id":                          "3bd27e87-27e3-45fc-ac85-5b1ddc44f70e",
+			"openedTestCaseExecutionFrom": openedTestCaseExecutionFrom,
+		}).Fatalln("Unhandled 'openedTestCaseExecutionFrom'")
 	}
 
 	if tempRowIsSelected == true {
@@ -1010,8 +1090,10 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 						testCaseExecutionUuid,
 						testCaseExecutionVersion,
 						testCaseExecutionsModelRef,
-						fromExternalWindow,
-						&openedDetailedTestCaseExecutionPtr.externalWindow)
+						FromExternalWindowForTestCaseExecution,
+						&openedDetailedTestCaseExecutionPtr.externalWindow,
+						nil,
+						nil)
 
 				// Save the Object back to the Map
 				openedDetailedTestCaseExecutionsMap[openedDetailedTestCaseExecutionsMapKey] = openedDetailedTestCaseExecutionPtr
@@ -1076,8 +1158,10 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 						testCaseExecutionUuid,
 						testCaseExecutionVersion,
 						testCaseExecutionsModelRef,
-						fromTab,
-						sharedCode.FenixMasterWindowPtr)
+						FromTabForTestCaseExecution,
+						sharedCode.FenixMasterWindowPtr,
+						nil,
+						nil)
 
 				// Save the Object back to the Map
 				openedDetailedTestCaseExecutionsMap[openedDetailedTestCaseExecutionsMapKey] = openedDetailedTestCaseExecutionPtr
@@ -1137,22 +1221,28 @@ func (testCaseInstructionPreViewObjectRef *TestCaseInstructionPreViewStruct) Gen
 		// From where is the opening of the TestCaseExecution initiated; FromExecutionList, FromExternalWindow, FromTab
 		switch openedTestCaseExecutionFrom {
 
-		case fromExecutionList:
+		case FromExecutionListForTestCases:
 			// Define the popup menu
 			items = []*fyne.MenuItem{
 				fyne.NewMenuItem("Open TestCaseExecution in Tab", openTestCaseExecutionInTabFunction),
 				fyne.NewMenuItem("Open TestCaseExecution in separate window", openTestCaseExecutionInExternalWindowFunction),
 			}
 
-		case fromExternalWindow:
+		case FromExternalWindowForTestCaseExecution:
 			// Define the popup menu
 			items = []*fyne.MenuItem{
 				fyne.NewMenuItem("Open TestCaseExecution in Tab", openTestCaseExecutionInTabFunction),
 			}
 
-		case fromTab:
+		case FromTabForTestCaseExecution:
 			// Define the popup menu
 			items = []*fyne.MenuItem{
+				fyne.NewMenuItem("Open TestCaseExecution in separate window", openTestCaseExecutionInExternalWindowFunction),
+			}
+
+		case FromExecutionListForTestSuites:
+			items = []*fyne.MenuItem{
+				fyne.NewMenuItem("Open TestCaseExecution in Tab", openTestCaseExecutionInTabFunction),
 				fyne.NewMenuItem("Open TestCaseExecution in separate window", openTestCaseExecutionInExternalWindowFunction),
 			}
 

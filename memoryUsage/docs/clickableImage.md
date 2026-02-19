@@ -36,36 +36,17 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
+### NewClickableImage
+- Signature: `func NewClickableImage(image *canvas.Image, tapped func(clickableContainer *ClickableImageStruct)) *ClickableImageStruct`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Selector calls: `canvas.NewRectangle`, `rectangleOverLay.Resize`, `image.Size`, `cc.ExtendBaseWidget`
+
 ### CreateRenderer (method on `*ClickableImageStruct`)
 - Signature: `func (*ClickableImageStruct) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Selector calls: `container.NewStack`, `widget.NewSimpleRenderer`
-
-### MouseIn (method on `*ClickableImageStruct`)
-- Signature: `func (*ClickableImageStruct) MouseIn(ev *desktop.MouseEvent)`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Doc: MouseIn is called when a desktop pointer enters the widget
-- Selector calls: `c.Refresh`
-
-### MouseMoved (method on `*ClickableImageStruct`)
-- Signature: `func (*ClickableImageStruct) MouseMoved(ev *desktop.MouseEvent)`
-- Exported: `true`
-- Control-flow features: `none detected`
-
-### MouseOut (method on `*ClickableImageStruct`)
-- Signature: `func (*ClickableImageStruct) MouseOut()`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Doc: MouseOut is called when a desktop pointer exits the widget
-- Selector calls: `c.Refresh`
-
-### NewClickableImage
-- Signature: `func NewClickableImage(image *canvas.Image, tapped func(clickableContainer *ClickableImageStruct)) *ClickableImageStruct`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Selector calls: `canvas.NewRectangle`, `cc.ExtendBaseWidget`, `image.Size`, `rectangleOverLay.Resize`
 
 ### Tapped (method on `*ClickableImageStruct`)
 - Signature: `func (*ClickableImageStruct) Tapped(_ *fyne.PointEvent)`
@@ -75,6 +56,25 @@ No concise file-level comment detected. Purpose inferred from declarations below
 
 ### TappedSecondary (method on `*ClickableImageStruct`)
 - Signature: `func (*ClickableImageStruct) TappedSecondary(_ *fyne.PointEvent)`
+- Exported: `true`
+- Control-flow features: `none detected`
+
+### MouseIn (method on `*ClickableImageStruct`)
+- Signature: `func (*ClickableImageStruct) MouseIn(ev *desktop.MouseEvent)`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Doc: MouseIn is called when a desktop pointer enters the widget
+- Selector calls: `c.Refresh`
+
+### MouseOut (method on `*ClickableImageStruct`)
+- Signature: `func (*ClickableImageStruct) MouseOut()`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Doc: MouseOut is called when a desktop pointer exits the widget
+- Selector calls: `c.Refresh`
+
+### MouseMoved (method on `*ClickableImageStruct`)
+- Signature: `func (*ClickableImageStruct) MouseMoved(ev *desktop.MouseEvent)`
 - Exported: `true`
 - Control-flow features: `none detected`
 

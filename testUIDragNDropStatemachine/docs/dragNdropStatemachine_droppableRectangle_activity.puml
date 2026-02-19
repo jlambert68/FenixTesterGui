@@ -2,31 +2,31 @@
 title Activity Diagram - dragNdropStatemachine_droppableRectangle.go
 start
 :Load testUIDragNDropStatemachine/dragNdropStatemachine_droppableRectangle.go;
-:1. CreateRenderer [method on *DroppableRectangle];
-:2. Destroy [method on *droppableRectRenderer];
-:3. Layout [method on *droppableRectRenderer];
-:4. MinSize [method on *droppableRectRenderer];
-:5. MouseIn [method on *DroppableRectangle];
+:1. NewDroppableRectangle [method on *StateMachineDragAndDropStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:6. MouseMoved [method on *DroppableRectangle];
-:7. MouseOut [method on *DroppableRectangle];
+:2. CreateRenderer [method on *DroppableRectangle];
+:3. Destroy [method on *droppableRectRenderer];
+:4. Layout [method on *droppableRectRenderer];
+:5. MinSize [method on *droppableRectRenderer];
+:6. Objects [method on *droppableRectRenderer];
+:7. Refresh [method on *droppableRectRenderer];
+:8. Tapped [method on *DroppableRectangle];
+:9. MouseIn [method on *DroppableRectangle];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:8. NewDroppableRectangle [method on *StateMachineDragAndDropStruct];
+:10. MouseOut [method on *DroppableRectangle];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:9. Objects [method on *droppableRectRenderer];
-:10. Refresh [method on *droppableRectRenderer];
-:11. Tapped [method on *DroppableRectangle];
+:11. MouseMoved [method on *DroppableRectangle];
 stop
 @enduml

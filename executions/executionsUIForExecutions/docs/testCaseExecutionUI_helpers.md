@@ -30,18 +30,18 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
-### ResizeTableColumns
-- Signature: `func ResizeTableColumns(t *headertable.SortingHeaderTable)`
-- Exported: `true`
-- Control-flow features: `if, for/range`
-- Internal calls: `float32`
-- Selector calls: `b1.GetItem`, `fyne.NewSize`, `widget.NewLabel`
-
 ### remove
 - Signature: `func remove(slice []binding.DataMap, s int) []binding.DataMap`
 - Exported: `false`
 - Control-flow features: `none detected`
 - Doc: Remove item from the DataItem-slice and keep order
+
+### ResizeTableColumns
+- Signature: `func ResizeTableColumns(t *headertable.SortingHeaderTable)`
+- Exported: `true`
+- Control-flow features: `if, for/range`
+- Internal calls: `float32`
+- Selector calls: `b1.GetItem`, `widget.NewLabel`, `fyne.NewSize`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -34,7 +34,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `returns error`
 - Doc: Generate the TestSuiteInformation Area for the TestSuite Uuid, Created By, Created Date, Last Changed Date, Last Changed By
 - Internal calls: `newCopyableLabel`
-- Selector calls: `container.New`, `container.NewHScroll`, `container.NewVBox`, `layout.NewHBoxLayout`, `testSuiteInformationContainer.Add`, `widget.NewLabel`, `widget.NewSeparator`
+- Selector calls: `container.New`, `layout.NewHBoxLayout`, `widget.NewLabel`, `testSuiteInformationContainer.Add`, `container.NewVBox`, `widget.NewSeparator`, `container.NewHScroll`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -3,44 +3,44 @@ title Sequence Diagram - ruleEngine_swap.go
 actor Caller
 participant "ruleEngine_swap.go" as File
 participant "commandAndRuleEngine" as commandAndRuleEngine
-participant "err" as err
 participant "errors" as errors
-participant "fenixGuiTestCaseBuilderServerGrpcApi" as fenixGuiTestCaseBuilderServerGrpcApi
 participant "fmt" as fmt
+participant "err" as err
 participant "tempExecutionDomain" as tempExecutionDomain
 participant "timestamppb" as timestamppb
-Caller -> File: addTestInstructionContainerDataToTestCaseModel(...)
-activate File
-File -> err: Error(...)
-File -> errors: New(...)
-File -> fmt: Println(...)
-File --> Caller: return
-deactivate File
-Caller -> File: addTestInstructionDataToTestCaseModel(...)
-activate File
-File -> err: Error(...)
-File -> errors: New(...)
-File -> fenixGuiTestCaseBuilderServerGrpcApi: TestInstructionAttributeTypeEnum(...)
-File --> Caller: return
-deactivate File
-Caller -> File: executeSwapElement(...)
-activate File
-File -> commandAndRuleEngine: executeSwapElementBasedOnRule(...)
-File -> commandAndRuleEngine: verifyIfElementCanBeSwapped(...)
-File -> errors: New(...)
-File --> Caller: return
-deactivate File
-Caller -> File: executeSwapElementBasedOnRule(...)
-activate File
-File -> commandAndRuleEngine: addTestInstructionContainerDataToTestCaseModel(...)
-File -> commandAndRuleEngine: addTestInstructionDataToTestCaseModel(...)
-File -> commandAndRuleEngine: executeTCRuleSwap101(...)
-File --> Caller: return
-deactivate File
+participant "fenixGuiTestCaseBuilderServerGrpcApi" as fenixGuiTestCaseBuilderServerGrpcApi
 Caller -> File: verifyIfElementCanBeSwapped(...)
 activate File
 File -> commandAndRuleEngine: verifyIfComponentCanBeSwappedSimpleRules(...)
 File -> commandAndRuleEngine: verifyIfComponentCanBeSwappedWithComplexRules(...)
+File --> Caller: return
+deactivate File
+Caller -> File: executeSwapElement(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> commandAndRuleEngine: verifyIfElementCanBeSwapped(...)
+File --> Caller: return
+deactivate File
+Caller -> File: executeSwapElementBasedOnRule(...)
+activate File
+File -> commandAndRuleEngine: executeTCRuleSwap101(...)
+File -> commandAndRuleEngine: executeTCRuleSwap102(...)
+File -> commandAndRuleEngine: executeTCRuleSwap103(...)
+File --> Caller: return
+deactivate File
+Caller -> File: addTestInstructionDataToTestCaseModel(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+Caller -> File: addTestInstructionContainerDataToTestCaseModel(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> fmt: Println(...)
 File --> Caller: return
 deactivate File
 @enduml

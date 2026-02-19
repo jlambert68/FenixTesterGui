@@ -35,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*ImportFilesFromGitHubStruct) InitiateImportFilesFromGitHubWindow(templateRepositoryApiUrls []*fenixGuiTestCaseBuilderServerGrpcApi.RepositoryApiUrlResponseMessage, mainWindow fyne.Window, myApp fyne.App, responseChannel *chan SharedResponseChannelStruct, tempSelectedFiles []GitHubFile)`
 - Exported: `true`
 - Control-flow features: `if, for/range`
-- Selector calls: `binding.NewString`, `container.NewBorder`, `container.NewHBox`, `container.NewHSplit`, `container.NewStack`, `container.NewVBox`, `fenixMainWindow.Show`, `fyne.NewSize`
+- Selector calls: `mainWindow.Hide`, `myApp.NewWindow`, `githubFileImporterWindow.CenterOnScreen`, `binding.NewString`, `strings.Split`, `importFilesFromGitHubObject.getFileListFromGitHub`, `importFilesFromGitHubObject.filterFileListFromGitHub`, `importFilesFromGitHubObject.generateSelectedFilesListTable`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

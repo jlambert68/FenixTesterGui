@@ -5,11 +5,17 @@ participant "ruleEngine_delete.go" as File
 participant "commandAndRuleEngine" as commandAndRuleEngine
 participant "errors" as errors
 participant "fmt" as fmt
+Caller -> File: verifyIfElementCanBeDeleted(...)
+activate File
+File -> commandAndRuleEngine: verifyIfComponentCanBeDeletedSimpleRules(...)
+File -> commandAndRuleEngine: verifyIfComponentCanBeDeletedWithComplexRules(...)
+File --> Caller: return
+deactivate File
 Caller -> File: executeDeleteElement(...)
 activate File
-File -> commandAndRuleEngine: executeDeleteElementBasedOnRule(...)
 File -> commandAndRuleEngine: verifyIfElementCanBeDeleted(...)
 File -> errors: New(...)
+File -> fmt: Sprintf(...)
 File --> Caller: return
 deactivate File
 Caller -> File: executeDeleteElementBasedOnRule(...)
@@ -17,12 +23,6 @@ activate File
 File -> commandAndRuleEngine: executeTCRuleDeletion101(...)
 File -> commandAndRuleEngine: executeTCRuleDeletion102(...)
 File -> commandAndRuleEngine: executeTCRuleDeletion103(...)
-File --> Caller: return
-deactivate File
-Caller -> File: verifyIfElementCanBeDeleted(...)
-activate File
-File -> commandAndRuleEngine: verifyIfComponentCanBeDeletedSimpleRules(...)
-File -> commandAndRuleEngine: verifyIfComponentCanBeDeletedWithComplexRules(...)
 File --> Caller: return
 deactivate File
 @enduml

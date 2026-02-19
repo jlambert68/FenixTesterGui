@@ -2,38 +2,24 @@
 title Sequence Diagram - clickableImage.go
 actor Caller
 participant "clickableImage.go" as File
-participant "c" as c
 participant "canvas" as canvas
+participant "rectangleOverLay" as rectangleOverLay
+participant "image" as image
 participant "cc" as cc
 participant "container" as container
-participant "image" as image
-participant "rectangleOverLay" as rectangleOverLay
 participant "widget" as widget
+participant "c" as c
+Caller -> File: NewClickableImage(...)
+activate File
+File -> canvas: NewRectangle(...)
+File -> rectangleOverLay: Resize(...)
+File -> image: Size(...)
+File --> Caller: return
+deactivate File
 Caller -> File: CreateRenderer(...)
 activate File
 File -> container: NewStack(...)
 File -> widget: NewSimpleRenderer(...)
-File --> Caller: return
-deactivate File
-Caller -> File: MouseIn(...)
-activate File
-File -> c: Refresh(...)
-File --> Caller: return
-deactivate File
-Caller -> File: MouseMoved(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: MouseOut(...)
-activate File
-File -> c: Refresh(...)
-File --> Caller: return
-deactivate File
-Caller -> File: NewClickableImage(...)
-activate File
-File -> canvas: NewRectangle(...)
-File -> cc: ExtendBaseWidget(...)
-File -> image: Size(...)
 File --> Caller: return
 deactivate File
 Caller -> File: Tapped(...)
@@ -42,6 +28,20 @@ File -> c: OnTapped(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TappedSecondary(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MouseIn(...)
+activate File
+File -> c: Refresh(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseOut(...)
+activate File
+File -> c: Refresh(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseMoved(...)
 activate File
 File --> Caller: return
 deactivate File

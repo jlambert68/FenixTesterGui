@@ -36,40 +36,40 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
-### TestThatAlreadyPinnedBuildingBlockNotCanBePinned
-- Signature: `func TestThatAlreadyPinnedBuildingBlockNotCanBePinned(t *testing.T)`
-- Exported: `true`
-- Control-flow features: `if`
-- Doc: Checks that an already pinned Building Block can be pinned
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `assert.Equal`, `availableBuildingBlocksModel.getPinnedBuildingBlocksTreeNamesFromModel`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks`, `availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer`, `fmt.Sprint`
-
 ### TestThatNonExistingBuildBlockCanBePinned
 - Signature: `func TestThatNonExistingBuildBlockCanBePinned(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: Checks that a non-existing Building Block can't be pinned
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `assert.Equal`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructions`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructions`, `availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer`, `fmt.Sprint`, `jsonpb.UnmarshalString`
+- Selector calls: `jsonpb.UnmarshalString`, `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `myLogger.WithFields`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructions`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructions`, `availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer`, `assert.Equal`
 
-### TestThatNonExistingBuildingBlockCanNotBeUnPinned
-- Signature: `func TestThatNonExistingBuildingBlockCanNotBeUnPinned(t *testing.T)`
+### TestThatAlreadyPinnedBuildingBlockNotCanBePinned
+- Signature: `func TestThatAlreadyPinnedBuildingBlockNotCanBePinned(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `if`
-- Doc: Checks that a non-existing Building Block can't be unpinned
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `assert.Equal`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructions`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructions`, `availableBuildingBlocksModel.unPinTestInstructionOrTestInstructionContainer`, `fmt.Sprint`, `jsonpb.UnmarshalString`
+- Doc: Checks that an already pinned Building Block can be pinned
+- Selector calls: `jsonpb.UnmarshalString`, `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `myLogger.WithFields`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks`, `availableBuildingBlocksModel.getPinnedBuildingBlocksTreeNamesFromModel`, `availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer`
 
 ### TestToPinBuildingBlockCanBePinned
 - Signature: `func TestToPinBuildingBlockCanBePinned(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: Checks that a non-pinned Building Block can be pinned
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `assert.Equal`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks`, `availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer`, `fmt.Sprint`, `jsonpb.UnmarshalString`
+- Selector calls: `jsonpb.UnmarshalString`, `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `myLogger.WithFields`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks`, `availableBuildingBlocksModel.pinTestInstructionOrTestInstructionContainer`, `assert.Equal`
+
+### TestThatNonExistingBuildingBlockCanNotBeUnPinned
+- Signature: `func TestThatNonExistingBuildingBlockCanNotBeUnPinned(t *testing.T)`
+- Exported: `true`
+- Control-flow features: `if`
+- Doc: Checks that a non-existing Building Block can't be unpinned
+- Selector calls: `jsonpb.UnmarshalString`, `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `myLogger.WithFields`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructions`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructions`, `availableBuildingBlocksModel.unPinTestInstructionOrTestInstructionContainer`, `assert.Equal`
 
 ### TestUnPinBuildingBlockThatIsPinned
 - Signature: `func TestUnPinBuildingBlockThatIsPinned(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `if`
-- Doc: Checks that an pinned Building Block exist among pinned building blocks func TestThatBuildingBlockToBeUnPinnedExistsAmongPinned(t *testing.T) {
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `assert.Equal`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks`, `availableBuildingBlocksModel.unPinTestInstructionOrTestInstructionContainer`, `fmt.Sprint`, `jsonpb.UnmarshalString`
+- Doc: Checks that an pinned Building Block exist among pinned building blocks Needed to support test
+- Selector calls: `jsonpb.UnmarshalString`, `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `myLogger.WithFields`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks`, `availableBuildingBlocksModel.unPinTestInstructionOrTestInstructionContainer`, `assert.Equal`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

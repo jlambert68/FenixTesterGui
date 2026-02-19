@@ -2,11 +2,11 @@
 title Sequence Diagram - ruleHelpers.go
 actor Caller
 participant "ruleHelpers.go" as File
-Caller -> File: SetAvailableBondsMap(...)
+Caller -> File: SetLogger(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: SetLogger(...)
+Caller -> File: SetAvailableBondsMap(...)
 activate File
 File --> Caller: return
 deactivate File

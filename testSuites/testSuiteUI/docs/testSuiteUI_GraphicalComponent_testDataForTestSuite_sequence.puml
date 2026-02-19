@@ -3,18 +3,18 @@ title Sequence Diagram - testSuiteUI_GraphicalComponent_testDataForTestSuite.go
 actor Caller
 participant "testSuiteUI_GraphicalComponent_testDataForTestSuite.go" as File
 participant "container" as container
-participant "fmt" as fmt
-participant "generateRichTextTestDataRadioGroup" as generateRichTextTestDataRadioGroup
 participant "layout" as layout
-participant "log" as log
-participant "richTextContainer" as richTextContainer
-participant "selectorAndButtonContainer" as selectorAndButtonContainer
-participant "testDataAccordion" as testDataAccordion
+participant "testDataContainer" as testDataContainer
+participant "widget" as widget
+participant "testDataPointsForAGroupSelect" as testDataPointsForAGroupSelect
+participant "testDataRowsForTestDataPointsSelect" as testDataRowsForTestDataPointsSelect
+participant "testDataSelectorForTestSuite" as testDataSelectorForTestSuite
+participant "testDataAsRichTextBuilder" as testDataAsRichTextBuilder
 Caller -> File: generateSelectedTestDataForTestSuiteArea(...)
 activate File
 File -> container: New(...)
-File -> container: NewBorder(...)
-File -> container: NewHBox(...)
+File -> layout: NewFormLayout(...)
+File -> container: NewVBox(...)
 File --> Caller: return
 deactivate File
 @enduml

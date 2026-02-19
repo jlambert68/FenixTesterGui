@@ -43,22 +43,22 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `for/range`
 - Doc: CreateTableForTestCaseExecutionsWithFinishedExecution Create bindings to the data used by the table and then create the UI-table itself
-- Selector calls: `binding.BindStruct`, `container.NewMax`, `headertable.NewSortingHeaderTable`
+- Selector calls: `binding.BindStruct`, `headertable.NewSortingHeaderTable`, `container.NewMax`
+
+### RemoveTestCaseExecutionFromFinishedTable
+- Signature: `func RemoveTestCaseExecutionFromFinishedTable(testCaseExecutionsFinishedDataRowAdaptedForUiTableReference *executionsModelForSubscriptions.TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct, finishedExecutionsTableChannelCommand executionsModelForSubscriptions.FinishedExecutionsTableChannelCommandType) err error`
+- Exported: `true`
+- Control-flow features: `if, for/range, switch, go, returns error`
+- Internal calls: `remove`, `ResizeTableColumns`
+- Selector calls: `executionsModelForSubscriptions.TestCaseExecutionMapKeyType`, `fmt.Println`, `dataMapBinding.GetItem`, `errors.New`, `fmt.Sprintf`, `headertable.LoadFromFlashingTableCellsReferenceMap`, `headertable.FlashRowToBeRemoved`, `time.Sleep`
 
 ### MoveTestCaseExecutionFromUnderExecutionToFinishedExecution
 - Signature: `func MoveTestCaseExecutionFromUnderExecutionToFinishedExecution(testCaseExecutionsUnderExecutionDataRowAdaptedForUiTableReference *executionsModelForSubscriptions.TestCaseExecutionsUnderExecutionAdaptedForUiTableStruct, testCaseExecutionDetails *fenixExecutionServerGuiGrpcApi.TestCaseExecutionDetailsMessage) err error`
 - Exported: `true`
 - Control-flow features: `if, for/range, returns error`
 - Doc: MoveTestCaseExecutionFromUnderExecutionToFinishedExecution Move TestCaseExecution from UnderExecution-table to FinishedExecutions-table
-- Internal calls: `ResizeTableColumns`, `verifyThatTestCaseExecutionIsNotInUse`
-- Selector calls: `binding.BindStruct`, `errors.New`, `executionsModelForSubscriptions.TestCaseExecutionMapKeyType`, `fmt.Println`, `fmt.Sprintf`, `headertable.FlashAddedRow`, `headertable.LoadFromFlashingTableCellsReferenceMap`, `strconv.FormatBool`
-
-### RemoveTestCaseExecutionFromFinishedTable
-- Signature: `func RemoveTestCaseExecutionFromFinishedTable(testCaseExecutionsFinishedDataRowAdaptedForUiTableReference *executionsModelForSubscriptions.TestCaseExecutionsFinishedExecutionAdaptedForUiTableStruct, finishedExecutionsTableChannelCommand executionsModelForSubscriptions.FinishedExecutionsTableChannelCommandType) err error`
-- Exported: `true`
-- Control-flow features: `if, for/range, switch, go, returns error`
-- Internal calls: `ResizeTableColumns`, `remove`
-- Selector calls: `dataMapBinding.GetItem`, `errors.New`, `executionsModelForSubscriptions.TestCaseExecutionMapKeyType`, `fmt.Println`, `fmt.Sprintf`, `headertable.FlashRowToBeRemoved`, `headertable.LoadFromFlashingTableCellsReferenceMap`, `time.Sleep`
+- Internal calls: `verifyThatTestCaseExecutionIsNotInUse`, `ResizeTableColumns`
+- Selector calls: `executionsModelForSubscriptions.TestCaseExecutionMapKeyType`, `fmt.Println`, `errors.New`, `fmt.Sprintf`, `strconv.FormatBool`, `binding.BindStruct`, `headertable.LoadFromFlashingTableCellsReferenceMap`, `headertable.FlashAddedRow`
 
 ### StartFinishedExecutionsTableAddRemoveChannelReader
 - Signature: `func StartFinishedExecutionsTableAddRemoveChannelReader()`
@@ -66,7 +66,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `for/range, switch`
 - Doc: StartFinishedExecutionsTableAddRemoveChannelReader Start the channel reader and process messages from the channel
 - Internal calls: `MoveTestCaseExecutionFromUnderExecutionToFinishedExecution`, `RemoveTestCaseExecutionFromFinishedTable`
-- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fmt.Println`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

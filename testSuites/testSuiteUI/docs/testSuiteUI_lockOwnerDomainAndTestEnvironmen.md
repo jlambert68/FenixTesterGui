@@ -35,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Internal calls: `lockButtonFunction`
-- Selector calls: `container.NewHBox`, `container.NewVBox`, `dialog.ShowCustomConfirm`, `layout.NewSpacer`, `lockButton.Disable`, `lockButton.SetText`, `testSuiteUiModel.lockUIUntilOwnerDomainAndTestEnvironmenIsSelected`, `widget.NewButton`
+- Selector calls: `lockButton.Disable`, `lockButton.SetText`, `testSuiteUiModel.lockUIUntilOwnerDomainAndTestEnvironmenIsSelected`, `widget.NewButton`, `widget.NewLabel`, `dialog.ShowCustomConfirm`, `container.NewVBox`, `container.NewHBox`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

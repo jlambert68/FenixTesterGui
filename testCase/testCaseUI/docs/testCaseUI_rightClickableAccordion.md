@@ -28,28 +28,28 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
+### newClickableAccordion (method on `*TestCasesUiModelStruct`)
+- Signature: `func (*TestCasesUiModelStruct) newClickableAccordion(accordionItem *widget.AccordionItem, isClickable bool, testCaseUuid, testInstructionUuid string) *clickableAccordion`
+- Exported: `false`
+- Control-flow features: `none detected`
+- Selector calls: `accordion.ExtendBaseWidget`, `accordion.Append`
+
 ### TappedSecondary (method on `*clickableAccordion`)
 - Signature: `func (*clickableAccordion) TappedSecondary(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `if`
 - Selector calls: `log.Println`
 
+### newClickableAccordionItem (method on `*TestCasesUiModelStruct`)
+- Signature: `func (*TestCasesUiModelStruct) newClickableAccordionItem(title string, detail fyne.CanvasObject) *clickableAccordionItem`
+- Exported: `false`
+- Control-flow features: `none detected`
+
 ### TappedSecondary (method on `*clickableAccordionItem`)
 - Signature: `func (*clickableAccordionItem) TappedSecondary(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `if`
 - Selector calls: `log.Println`
-
-### newClickableAccordion (method on `*TestCasesUiModelStruct`)
-- Signature: `func (*TestCasesUiModelStruct) newClickableAccordion(accordionItem *widget.AccordionItem, isClickable bool, testCaseUuid, testInstructionUuid string) *clickableAccordion`
-- Exported: `false`
-- Control-flow features: `none detected`
-- Selector calls: `accordion.Append`, `accordion.ExtendBaseWidget`
-
-### newClickableAccordionItem (method on `*TestCasesUiModelStruct`)
-- Signature: `func (*TestCasesUiModelStruct) newClickableAccordionItem(title string, detail fyne.CanvasObject) *clickableAccordionItem`
-- Exported: `false`
-- Control-flow features: `none detected`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

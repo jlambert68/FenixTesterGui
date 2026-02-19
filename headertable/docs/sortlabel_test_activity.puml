@@ -9,15 +9,15 @@ else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:2. TestSortingLabel_OnTapped_CyclesSortStates;
-:3. TestSortingLabel_SetState;
-:Iterate loop/range logic;
-:4. TestSortingLabel_nextState;
+:2. TestSortingLabel_nextState;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
+:3. TestSortingLabel_SetState;
+:Iterate loop/range logic;
+:4. TestSortingLabel_OnTapped_CyclesSortStates;
 stop
 @enduml

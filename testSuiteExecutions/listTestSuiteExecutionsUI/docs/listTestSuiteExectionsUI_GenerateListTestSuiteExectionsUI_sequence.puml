@@ -2,26 +2,26 @@
 title Sequence Diagram - listTestSuiteExectionsUI_GenerateListTestSuiteExectionsUI.go
 actor Caller
 participant "listTestSuiteExectionsUI_GenerateListTestSuiteExectionsUI.go" as File
-participant "binding" as binding
-participant "container" as container
-participant "detailedTestSuiteExecutionsUI" as detailedTestSuiteExecutionsUI
-participant "executionListViewOverlay" as executionListViewOverlay
-participant "explorerTabOverlay" as explorerTabOverlay
+participant "testSuiteInstructionPreViewObject" as testSuiteInstructionPreViewObject
+participant "loadAllTestSuiteExecutionsForOneTestSuiteButtonReference" as loadAllTestSuiteExecutionsForOneTestSuiteButtonReference
+participant "listTestSuiteExecutionsModel" as listTestSuiteExecutionsModel
+participant "widget" as widget
 participant "fmt" as fmt
-participant "fyne" as fyne
-participant "layout" as layout
-Caller -> File: GenerateListTestSuiteExecutionsUI(...)
-activate File
-File -> binding: NewString(...)
-File -> container: New(...)
-File -> container: NewBorder(...)
-File --> Caller: return
-deactivate File
+participant "strconv" as strconv
+participant "numberOfTestSuiteExecutionsAfterLocalFilters" as numberOfTestSuiteExecutionsAfterLocalFilters
+participant "numberOfTestSuiteExecutionsInTheDatabaseSearch" as numberOfTestSuiteExecutionsInTheDatabaseSearch
 Caller -> File: LoadOneTestSuiteExecutionPerTestSuiteFromDataBaseFunction(...)
 activate File
-File -> listTestSuiteExecutionsModel: LoadTestSuiteExecutionsThatCanBeViewedByUser(...)
-File -> loadAllTestSuiteExecutionsForOneTestSuiteButtonReference: Disable(...)
 File -> testSuiteInstructionPreViewObject: ClearTestSuiteExecutionPreviewContainer(...)
+File -> loadAllTestSuiteExecutionsForOneTestSuiteButtonReference: Disable(...)
+File -> listTestSuiteExecutionsModel: LoadTestSuiteExecutionsThatCanBeViewedByUser(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GenerateListTestSuiteExecutionsUI(...)
+activate File
+File -> widget: NewButton(...)
+File -> fmt: Println(...)
+File -> strconv: Itoa(...)
 File --> Caller: return
 deactivate File
 @enduml

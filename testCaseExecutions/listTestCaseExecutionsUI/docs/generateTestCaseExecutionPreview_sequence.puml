@@ -2,25 +2,25 @@
 title Sequence Diagram - generateTestCaseExecutionPreview.go
 actor Caller
 participant "generateTestCaseExecutionPreview.go" as File
-participant "btn" as btn
-participant "bytes" as bytes
-participant "canvas" as canvas
+participant "testCaseExecutionAttributesForPreviewMapMutex" as testCaseExecutionAttributesForPreviewMapMutex
+participant "log" as log
+participant "fmt" as fmt
+participant "testCaseExecutionsModelRef" as testCaseExecutionsModelRef
+participant "testCaseExecutionsModel" as testCaseExecutionsModel
+participant "strconv" as strconv
 participant "container" as container
-participant "currentWindow" as currentWindow
-participant "detailedTestCaseExecutionsUITabObjectRef" as detailedTestCaseExecutionsUITabObjectRef
-participant "err" as err
-participant "externalWindowCanvas" as externalWindowCanvas
+participant "layout" as layout
+Caller -> File: GenerateTestCaseExecutionPreviewContainer(...)
+activate File
+File -> testCaseExecutionAttributesForPreviewMapMutex: Lock(...)
+File -> testCaseExecutionAttributesForPreviewMapMutex: Unlock(...)
+File -> log: Fatalln(...)
+File --> Caller: return
+deactivate File
 Caller -> File: ClearTestCaseExecutionPreviewContainer(...)
 activate File
 File -> container: NewCenter(...)
 File -> widget: NewLabel(...)
-File --> Caller: return
-deactivate File
-Caller -> File: GenerateTestCaseExecutionPreviewContainer(...)
-activate File
-File -> btn: Size(...)
-File -> bytes: NewReader(...)
-File -> canvas: NewImageFromImage(...)
 File --> Caller: return
 deactivate File
 @enduml

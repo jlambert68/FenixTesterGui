@@ -37,21 +37,21 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, go`
 - Doc: LoadTestCaseExecutionsThatCanBeViewedByUser Load list with TestCaseExecutions that the user can view
 - Internal calls: `storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser`, `storeOneTestCaseExecutionPerTestCaseThatCanBeViewedByUser`
-- Selector calls: `fmt.Println`, `listTestCaseExecutionsResponse.GetAckNackResponse`, `listTestCaseExecutionsResponse.GetLatestUniqueTestCaseExecutionDatabaseRowId`, `listTestCaseExecutionsResponse.GetMoreRowsExists`, `listTestCaseExecutionsResponse.GetTestCaseExecutionsList`
-
-### storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser
-- Signature: `func storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser(testCaseExecutionsList []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage, testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct, latestUniqueTestCaseExecutionDatabaseRowId int32, moreRowsExists bool)`
-- Exported: `false`
-- Control-flow features: `for/range`
-- Doc: Store All TestCaseExecutions for one TestCase, That Can Be Viewed By User
-- Selector calls: `testCaseExecution.GetTestCaseExecutionUuid`, `testCaseExecution.GetTestCaseUuid`, `testCaseExecutionsModel.AddTestCaseExecutionsForOneTestCaseUuid`, `testCaseExecutionsModel.TestCaseExecutionUuidType`, `testCaseExecutionsModel.TestCaseUuidType`
+- Selector calls: `fmt.Println`, `listTestCaseExecutionsResponse.GetAckNackResponse`, `listTestCaseExecutionsResponse.GetTestCaseExecutionsList`, `listTestCaseExecutionsResponse.GetLatestUniqueTestCaseExecutionDatabaseRowId`, `listTestCaseExecutionsResponse.GetMoreRowsExists`
 
 ### storeOneTestCaseExecutionPerTestCaseThatCanBeViewedByUser
 - Signature: `func storeOneTestCaseExecutionPerTestCaseThatCanBeViewedByUser(testCaseExecutionsList []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage, testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct, latestUniqueTestCaseExecutionDatabaseRowId int32, moreRowsExists bool)`
 - Exported: `false`
 - Control-flow features: `for/range`
 - Doc: Store TestCaseExecutions That Can Be Viewed By User
-- Selector calls: `testCaseExecutions.GetTestCaseExecutionUuid`, `testCaseExecutionsModel.TestCaseExecutionUuidType`, `testCaseExecutionsModelRef.AddToTestCaseExecutionsMap`
+- Selector calls: `testCaseExecutionsModelRef.AddToTestCaseExecutionsMap`, `testCaseExecutionsModel.TestCaseExecutionUuidType`, `testCaseExecutions.GetTestCaseExecutionUuid`
+
+### storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser
+- Signature: `func storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser(testCaseExecutionsList []*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage, testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct, latestUniqueTestCaseExecutionDatabaseRowId int32, moreRowsExists bool)`
+- Exported: `false`
+- Control-flow features: `for/range`
+- Doc: Store All TestCaseExecutions for one TestCase, That Can Be Viewed By User
+- Selector calls: `testCaseExecution.GetTestCaseUuid`, `testCaseExecution.GetTestCaseExecutionUuid`, `testCaseExecutionsModel.AddTestCaseExecutionsForOneTestCaseUuid`, `testCaseExecutionsModel.TestCaseUuidType`, `testCaseExecutionsModel.TestCaseExecutionUuidType`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

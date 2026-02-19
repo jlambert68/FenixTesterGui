@@ -2,15 +2,15 @@
 title Sequence Diagram - extractExtraDataFunctions.go
 actor Caller
 participant "extractExtraDataFunctions.go" as File
-participant "detailedTestCaseExecutionsMapMutex" as detailedTestCaseExecutionsMapMutex
-participant "strconv" as strconv
 participant "testCaseExecutionsModel" as testCaseExecutionsModel
+participant "detailedTestCaseExecutionsMapMutex" as detailedTestCaseExecutionsMapMutex
 participant "testInstructionExecution" as testInstructionExecution
+participant "strconv" as strconv
 Caller -> File: ExtractAndStoreLogPostsAndValuesFromDetailedTestCaseExecution(...)
 activate File
+File -> testCaseExecutionsModel: ReadFromDetailedTestCaseExecutionsMap(...)
 File -> detailedTestCaseExecutionsMapMutex: Lock(...)
 File -> detailedTestCaseExecutionsMapMutex: Unlock(...)
-File -> strconv: Itoa(...)
 File --> Caller: return
 deactivate File
 @enduml

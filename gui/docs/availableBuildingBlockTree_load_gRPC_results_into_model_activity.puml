@@ -2,34 +2,39 @@
 title Activity Diagram - availableBuildingBlockTree_load_gRPC_results_into_model.go
 start
 :Load gui/availableBuildingBlockTree_load_gRPC_results_into_model.go;
-:1. convertGrpcElementModelIntoTestCaseElementModel [method on *AvailableBuildingBlocksModelStruct];
-:Iterate loop/range logic;
-:2. loadModelWithAvailableBuildingBlocks [method on *AvailableBuildingBlocksModelStruct];
+:1. loadModelWithAvailableBuildingBlocks [method on *AvailableBuildingBlocksModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:3. loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers [method on *AvailableBuildingBlocksModelStruct];
+:2. loadModelWithPinnedBuildingBlocks [method on *AvailableBuildingBlocksModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:Iterate loop/range logic;
-:4. loadModelWithAvailableBuildingBlocksRegardingTestInstructions [method on *AvailableBuildingBlocksModelStruct];
+:3. loadModelWithAvailableBuildingBlocksRegardingTestInstructions [method on *AvailableBuildingBlocksModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:5. loadModelWithPinnedBuildingBlocks [method on *AvailableBuildingBlocksModelStruct];
+:4. loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers [method on *AvailableBuildingBlocksModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
+:Iterate loop/range logic;
+:5. loadModelWithPinnedBuildingBlocksRegardingTestInstructions [method on *AvailableBuildingBlocksModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
 :6. loadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers [method on *AvailableBuildingBlocksModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
@@ -37,7 +42,7 @@ else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:7. loadModelWithPinnedBuildingBlocksRegardingTestInstructions [method on *AvailableBuildingBlocksModelStruct];
+:7. storeFullGrpcStructureForAvailableBuildingBlocks [method on *AvailableBuildingBlocksModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -46,21 +51,21 @@ endif
 :Iterate loop/range logic;
 :8. storeDomainsThatCanOwnTestCases [method on *AvailableBuildingBlocksModelStruct];
 :Iterate loop/range logic;
-:9. storeFullGrpcStructureForAvailableBuildingBlocks [method on *AvailableBuildingBlocksModelStruct];
+:9. storeTestCaseMetaDataPerDomain [method on *AvailableBuildingBlocksModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:10. storeTemplateRepositoryApiUrls [method on *AvailableBuildingBlocksModelStruct];
-:Iterate loop/range logic;
-:11. storeTestCaseMetaDataPerDomain [method on *AvailableBuildingBlocksModelStruct];
+:10. storeTestSuiteMetaDataPerDomain [method on *AvailableBuildingBlocksModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
+:Iterate loop/range logic;
+:11. storeTemplateRepositoryApiUrls [method on *AvailableBuildingBlocksModelStruct];
 :Iterate loop/range logic;
 :12. storeTestData [method on *AvailableBuildingBlocksModelStruct];
 :Iterate loop/range logic;

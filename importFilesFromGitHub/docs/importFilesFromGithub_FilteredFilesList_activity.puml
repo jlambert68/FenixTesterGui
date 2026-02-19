@@ -2,9 +2,21 @@
 title Activity Diagram - importFilesFromGithub_FilteredFilesList.go
 start
 :Load importFilesFromGitHub/importFilesFromGithub_FilteredFilesList.go;
-:1. MouseIn [method on *customFilteredLabel];
-:2. MouseMoved [method on *customFilteredLabel];
-:3. MouseOut [method on *customFilteredLabel];
+:1. generateFilteredList [method on *ImportFilesFromGitHubStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. filterFileListFromGitHub [method on *ImportFilesFromGitHubStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:3. newCustomFilteredLabel [method on *ImportFilesFromGitHubStruct];
 :4. Tapped [method on *customFilteredLabel];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
@@ -12,20 +24,8 @@ else (no)
 :Continue primary flow;
 endif
 :5. TappedSecondary [method on *customFilteredLabel];
-:6. filterFileListFromGitHub [method on *ImportFilesFromGitHubStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:Iterate loop/range logic;
-:7. generateFilteredList [method on *ImportFilesFromGitHubStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:Iterate loop/range logic;
-:8. newCustomFilteredLabel [method on *ImportFilesFromGitHubStruct];
+:6. MouseIn [method on *customFilteredLabel];
+:7. MouseMoved [method on *customFilteredLabel];
+:8. MouseOut [method on *customFilteredLabel];
 stop
 @enduml

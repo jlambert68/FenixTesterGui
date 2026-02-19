@@ -2,18 +2,18 @@
 title Activity Diagram - detailedExecutionsModel_RepaintSummaryTableForExecutions.go
 start
 :Load executions/detailedExecutionsModel/detailedExecutionsModel_RepaintSummaryTableForExecutions.go;
-:1. RequestRefreshTestCasesSummaryTable [method on *refreshTestCasesSummaryTableThrottler];
+:1. refreshTestCasesSummaryTable;
+:2. newRefreshTestCasesSummaryTableThrottler;
+:Start goroutine/asynchronous work;
+:3. run [method on *refreshTestCasesSummaryTableThrottler];
+:Iterate loop/range logic;
+:Schedule deferred cleanup;
+:4. RequestRefreshTestCasesSummaryTable [method on *refreshTestCasesSummaryTableThrottler];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:2. Stop [method on *refreshTestCasesSummaryTableThrottler];
-:3. newRefreshTestCasesSummaryTableThrottler;
-:Start goroutine/asynchronous work;
-:4. refreshTestCasesSummaryTable;
-:5. run [method on *refreshTestCasesSummaryTableThrottler];
-:Iterate loop/range logic;
-:Schedule deferred cleanup;
+:5. Stop [method on *refreshTestCasesSummaryTableThrottler];
 stop
 @enduml

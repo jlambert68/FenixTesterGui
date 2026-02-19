@@ -2,16 +2,19 @@
 title Sequence Diagram - importFilesFromGithub_ImportSelectedFilesFromGithubButton.go
 actor Caller
 participant "importFilesFromGithub_ImportSelectedFilesFromGithubButton.go" as File
-participant "dialog" as dialog
-participant "fenixMainWindow" as fenixMainWindow
-participant "fenixSyncShared" as fenixSyncShared
-participant "importFilesFromGitHubObject" as importFilesFromGitHubObject
-participant "json" as json
-participant "log" as log
-participant "parentWindow" as parentWindow
 participant "widget" as widget
-Caller -> File: decodeBase64Content(...)
+participant "importFilesFromGitHubObject" as importFilesFromGitHubObject
+participant "dialog" as dialog
+participant "log" as log
+participant "fenixSyncShared" as fenixSyncShared
+participant "fenixMainWindow" as fenixMainWindow
+participant "parentWindow" as parentWindow
+participant "json" as json
+Caller -> File: generateImportSelectedFilesFromGithubButton(...)
 activate File
+File -> widget: NewButton(...)
+File -> importFilesFromGitHubObject: loadFileContent(...)
+File -> dialog: ShowError(...)
 File --> Caller: return
 deactivate File
 Caller -> File: extractContentFromJson(...)
@@ -19,11 +22,8 @@ activate File
 File -> json: Unmarshal(...)
 File --> Caller: return
 deactivate File
-Caller -> File: generateImportSelectedFilesFromGithubButton(...)
+Caller -> File: decodeBase64Content(...)
 activate File
-File -> dialog: ShowError(...)
-File -> fenixMainWindow: Show(...)
-File -> fenixSyncShared: HashSingleValue(...)
 File --> Caller: return
 deactivate File
 @enduml

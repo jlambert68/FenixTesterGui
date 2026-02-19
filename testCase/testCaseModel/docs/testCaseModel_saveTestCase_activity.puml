@@ -2,19 +2,19 @@
 title Activity Diagram - testCaseModel_saveTestCase.go
 start
 :Load testCase/testCaseModel/testCaseModel_saveTestCase.go;
-:1. SaveChangedTestCaseAttributeInTestCase [method on *TestCasesModelsStruct];
+:1. SaveFullTestCase [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. generateMatureTestInstructionsForGrpc [method on *TestCasesModelsStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:2. SaveFullTestCase [method on *TestCasesModelsStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
 :3. generateMatureTestInstructionContainersForGrpc [method on *TestCasesModelsStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
@@ -22,7 +22,7 @@ else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:4. generateMatureTestInstructionsForGrpc [method on *TestCasesModelsStruct];
+:4. generateTestCaseModelElementsForGrpc [method on *TestCasesModelsStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -36,15 +36,14 @@ else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:6. generateTestCaseForGrpcAndHash [method on *TestCasesModelsStruct];
+:6. generateTestCaseTemplateFilesForGrpc [method on *TestCasesModelsStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:Schedule deferred cleanup;
-:7. generateTestCaseModelElementsForGrpc [method on *TestCasesModelsStruct];
+:7. generateTestCaseTestDataForGrpc [method on *TestCasesModelsStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -58,21 +57,22 @@ else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:9. generateTestCaseTemplateFilesForGrpc [method on *TestCasesModelsStruct];
+:9. generateUserSpecifiedTestCaseMetaDataMessageForGrpc [method on *TestCasesModelsStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:10. generateTestCaseTestDataForGrpc [method on *TestCasesModelsStruct];
+:10. generateTestCaseForGrpcAndHash [method on *TestCasesModelsStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:11. generateUserSpecifiedTestCaseMetaDataMessageForGrpc [method on *TestCasesModelsStruct];
+:Schedule deferred cleanup;
+:11. SaveChangedTestCaseAttributeInTestCase [method on *TestCasesModelsStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

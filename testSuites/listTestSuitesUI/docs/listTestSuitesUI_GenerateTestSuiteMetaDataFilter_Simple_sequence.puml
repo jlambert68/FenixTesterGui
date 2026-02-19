@@ -2,14 +2,14 @@
 title Sequence Diagram - listTestSuitesUI_GenerateTestSuiteMetaDataFilter_Simple.go
 actor Caller
 participant "listTestSuitesUI_GenerateTestSuiteMetaDataFilter_Simple.go" as File
-participant "autoFilterRadioGroup" as autoFilterRadioGroup
+participant "listTestSuiteUIObject" as listTestSuiteUIObject
 participant "boolbits" as boolbits
+participant "fmt" as fmt
+participant "err" as err
+participant "log" as log
 participant "booleanANDResultsEntry" as booleanANDResultsEntry
 participant "booleanOrResultsEntry" as booleanOrResultsEntry
-participant "canvas" as canvas
-participant "chk" as chk
-participant "container" as container
-participant "err" as err
+participant "resultEntry" as resultEntry
 Caller -> File: ConvertMetaDataToNewMap(...)
 activate File
 File --> Caller: return

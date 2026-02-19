@@ -2,10 +2,10 @@
 title Activity Diagram - commandEngine_executeCommandsOnTestCaseModel_test.go
 start
 :Load commandAndRuleEngine/commandEngine_executeCommandsOnTestCaseModel_test.go;
-:1. TestCopyElementCommandOnTestCaseModel;
-:2. TestNewTestCaseModelCommand;
-:3. TestRemoveElementCommandOnTestCaseModel;
-:4. TestSwapElementCommandOnTestCaseModel;
+:1. TestNewTestCaseModelCommand;
+:2. TestRemoveElementCommandOnTestCaseModel;
+:3. TestSwapElementCommandOnTestCaseModel;
+:4. TestCopyElementCommandOnTestCaseModel;
 :5. TestSwapElementFromCopyBufferCommandOnTestCaseModel;
 :6. TestSwapElementFromCutBufferCommandOnTestCaseModel;
 stop

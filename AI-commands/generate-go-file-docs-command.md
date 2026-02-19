@@ -182,7 +182,6 @@ func extractFileInfo(fset *token.FileSet, f *ast.File, path string) FileInfo {
 	types := setToSortedSlice(typesSet)
 	constants := setToSortedSlice(constSet)
 	variables := setToSortedSlice(varSet)
-	sort.Slice(funcs, func(i, j int) bool { return funcs[i].Name < funcs[j].Name })
 
 	fileDoc := ""
 	if f.Doc != nil {
@@ -219,8 +218,10 @@ func extractFuncInfo(fset *token.FileSet, d *ast.FuncDecl) FuncInfo {
 		fi.Receiver = exprString(fset, d.Recv.List[0].Type)
 	}
 
-	internalSet := map[string]struct{}{}
-	externalSet := map[string]struct{}{}
+	internalSeen := map[string]struct{}{}
+	externalSeen := map[string]struct{}{}
+	internalCalls := make([]string, 0, 8)
+	externalCalls := make([]string, 0, 8)
 
 	if d.Type.Results != nil {
 		for _, r := range d.Type.Results.List {
@@ -250,11 +251,11 @@ func extractFuncInfo(fset *token.FileSet, d *ast.FuncDecl) FuncInfo {
 				switch fun := x.Fun.(type) {
 				case *ast.Ident:
 					if !isBuiltin(fun.Name) {
-						internalSet[fun.Name] = struct{}{}
+						internalCalls = appendUnique(internalCalls, internalSeen, fun.Name)
 					}
 				case *ast.SelectorExpr:
 					if pkg, sel, ok := simpleSelector(fun); ok {
-						externalSet[pkg+"."+sel] = struct{}{}
+						externalCalls = appendUnique(externalCalls, externalSeen, pkg+"."+sel)
 					}
 				}
 			}
@@ -262,8 +263,8 @@ func extractFuncInfo(fset *token.FileSet, d *ast.FuncDecl) FuncInfo {
 		})
 	}
 
-	fi.CallsInternal = setToSortedSlice(internalSet)
-	fi.CallsExternal = setToSortedSlice(externalSet)
+	fi.CallsInternal = internalCalls
+	fi.CallsExternal = externalCalls
 	return fi
 }
 
@@ -363,6 +364,12 @@ func cleanDoc(s string) string {
 		if strings.HasPrefix(line, "//") {
 			line = strings.TrimSpace(strings.TrimPrefix(line, "//"))
 		}
+		line = strings.TrimSpace(strings.TrimPrefix(line, "/*"))
+		line = strings.TrimSpace(strings.TrimSuffix(line, "*/"))
+		line = strings.TrimSpace(strings.TrimPrefix(line, "*"))
+		if line == "" || isLikelyCodeLine(line) {
+			continue
+		}
 		out = append(out, line)
 		if len(out) == 2 {
 			break
@@ -376,6 +383,41 @@ func cleanDoc(s string) string {
 		text = text[:240] + "..."
 	}
 	return text
+}
+
+func isLikelyCodeLine(line string) bool {
+	l := strings.TrimSpace(line)
+	if l == "" {
+		return false
+	}
+	lower := strings.ToLower(l)
+	codePrefixes := []string{
+		"func ", "if ", "for ", "switch ", "case ", "select ", "return ",
+		"var ", "const ", "type ", "go ", "defer ", "package ", "import ",
+	}
+	for _, p := range codePrefixes {
+		if strings.HasPrefix(lower, p) {
+			return true
+		}
+	}
+	codeTokens := []string{"{", "}", ":=", "==", "!=", "&&", "||", ";", "().", "struct{"}
+	for _, t := range codeTokens {
+		if strings.Contains(l, t) {
+			return true
+		}
+	}
+	return false
+}
+
+func appendUnique(dst []string, seen map[string]struct{}, value string) []string {
+	if value == "" {
+		return dst
+	}
+	if _, exists := seen[value]; exists {
+		return dst
+	}
+	seen[value] = struct{}{}
+	return append(dst, value)
 }
 
 func setToSortedSlice(m map[string]struct{}) []string {
@@ -455,16 +497,16 @@ func buildSequenceDiagram(fi FileInfo) string {
 	b.WriteString("actor Caller\n")
 	b.WriteString("participant \"" + fi.Base + ".go\" as File\n")
 
-	extSet := map[string]struct{}{}
+	extSeen := map[string]struct{}{}
+	exts := make([]string, 0, 8)
 	for _, f := range fi.Funcs {
 		for _, c := range f.CallsExternal {
 			left := strings.SplitN(c, ".", 2)[0]
 			if left != "" {
-				extSet[left] = struct{}{}
+				exts = appendUnique(exts, extSeen, left)
 			}
 		}
 	}
-	exts := setToSortedSlice(extSet)
 	if len(exts) > 8 {
 		exts = exts[:8]
 	}

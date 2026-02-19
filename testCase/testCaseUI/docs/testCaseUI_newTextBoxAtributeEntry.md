@@ -29,6 +29,12 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
+### NewAttributeEntry (method on `*TestCasesUiModelStruct`)
+- Signature: `func (*TestCasesUiModelStruct) NewAttributeEntry(attributeUuid string) *AttributeEntry`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Selector calls: `myAttributeEntry.ExtendBaseWidget`, `widget.NewEntry`
+
 ### FocusGained (method on `*AttributeEntry`)
 - Signature: `func (*AttributeEntry) FocusGained(x fyne.Focusable)`
 - Exported: `true`
@@ -42,12 +48,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Doc: FocusLost - Single Click on colorRectangle
 - Selector calls: `fmt.Println`, `x.FocusLost`
-
-### NewAttributeEntry (method on `*TestCasesUiModelStruct`)
-- Signature: `func (*TestCasesUiModelStruct) NewAttributeEntry(attributeUuid string) *AttributeEntry`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Selector calls: `myAttributeEntry.ExtendBaseWidget`, `widget.NewEntry`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

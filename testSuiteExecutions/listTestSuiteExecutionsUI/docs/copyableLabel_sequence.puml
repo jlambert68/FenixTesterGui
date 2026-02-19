@@ -2,12 +2,12 @@
 title Sequence Diagram - copyableLabel.go
 actor Caller
 participant "copyableLabel.go" as File
-participant "clipboard" as clipboard
 participant "copyableLabel" as copyableLabel
-participant "fenixMasterWindow" as fenixMasterWindow
-participant "fmt" as fmt
-participant "fyne" as fyne
 participant "widget" as widget
+participant "fenixMasterWindow" as fenixMasterWindow
+participant "clipboard" as clipboard
+participant "fyne" as fyne
+participant "fmt" as fmt
 Caller -> File: CreateRenderer(...)
 activate File
 File -> widget: NewLabel(...)
@@ -20,9 +20,9 @@ File --> Caller: return
 deactivate File
 Caller -> File: TappedSecondary(...)
 activate File
-File -> clipboard: SetContent(...)
 File -> fenixMasterWindow: Clipboard(...)
-File -> fmt: Sprintf(...)
+File -> clipboard: SetContent(...)
+File -> fyne: CurrentApp(...)
 File --> Caller: return
 deactivate File
 @enduml

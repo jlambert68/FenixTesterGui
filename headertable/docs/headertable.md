@@ -37,21 +37,18 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - `_`
 
 ## Functions and Methods
+### NewHeaderTable
+- Signature: `func NewHeaderTable(tableOpts *TableOpts) *HeaderTable`
+- Exported: `true`
+- Control-flow features: `if, for/range`
+- Internal calls: `float32`
+- Selector calls: `widget.NewTable`, `widget.NewLabel`, `l.SetText`, `l.Refresh`, `b.GetItem`, `log.Fatalf`, `t.ExtendBaseWidget`
+
 ### CreateRenderer (method on `*HeaderTable`)
 - Signature: `func (*HeaderTable) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Selector calls: `container.NewBorder`
-
-### Destroy (method on `headerTableRenderer`)
-- Signature: `func (headerTableRenderer) Destroy()`
-- Exported: `true`
-- Control-flow features: `none detected`
-
-### Layout (method on `headerTableRenderer`)
-- Signature: `func (headerTableRenderer) Layout(s fyne.Size)`
-- Exported: `true`
-- Control-flow features: `none detected`
 
 ### MinSize (method on `headerTableRenderer`)
 - Signature: `func (headerTableRenderer) MinSize() fyne.Size`
@@ -60,20 +57,23 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Internal calls: `float32`, `float64`
 - Selector calls: `fyne.NewSize`, `math.Max`
 
-### NewHeaderTable
-- Signature: `func NewHeaderTable(tableOpts *TableOpts) *HeaderTable`
+### Layout (method on `headerTableRenderer`)
+- Signature: `func (headerTableRenderer) Layout(s fyne.Size)`
 - Exported: `true`
-- Control-flow features: `if, for/range`
-- Internal calls: `float32`
-- Selector calls: `b.GetItem`, `l.Refresh`, `l.SetText`, `log.Fatalf`, `t.ExtendBaseWidget`, `widget.NewLabel`, `widget.NewTable`
+- Control-flow features: `none detected`
 
-### Objects (method on `headerTableRenderer`)
-- Signature: `func (headerTableRenderer) Objects() []fyne.CanvasObject`
+### Destroy (method on `headerTableRenderer`)
+- Signature: `func (headerTableRenderer) Destroy()`
 - Exported: `true`
 - Control-flow features: `none detected`
 
 ### Refresh (method on `headerTableRenderer`)
 - Signature: `func (headerTableRenderer) Refresh()`
+- Exported: `true`
+- Control-flow features: `none detected`
+
+### Objects (method on `headerTableRenderer`)
+- Signature: `func (headerTableRenderer) Objects() []fyne.CanvasObject`
 - Exported: `true`
 - Control-flow features: `none detected`
 

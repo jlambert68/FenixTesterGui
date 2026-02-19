@@ -2,21 +2,21 @@
 title Sequence Diagram - ruleEngine_swapFromCopyBuffer.go
 actor Caller
 participant "ruleEngine_swapFromCopyBuffer.go" as File
-participant "commandAndRuleEngine" as commandAndRuleEngine
 participant "errors" as errors
 participant "fmt" as fmt
-Caller -> File: executeSwapElementForCopyBuffer(...)
-activate File
-File -> commandAndRuleEngine: executeSwapElementBasedOnRule(...)
-File -> commandAndRuleEngine: verifyIfElementCanBeSwapped(...)
-File -> errors: New(...)
-File --> Caller: return
-deactivate File
+participant "commandAndRuleEngine" as commandAndRuleEngine
 Caller -> File: verifyIfElementCanBeSwappedForCopyBuffer(...)
 activate File
-File -> commandAndRuleEngine: verifyIfComponentCanBeSwappedSimpleRules(...)
-File -> commandAndRuleEngine: verifyIfComponentCanBeSwappedWithComplexRules(...)
 File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> commandAndRuleEngine: verifyIfComponentCanBeSwappedSimpleRules(...)
+File --> Caller: return
+deactivate File
+Caller -> File: executeSwapElementForCopyBuffer(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> commandAndRuleEngine: verifyIfElementCanBeSwapped(...)
 File --> Caller: return
 deactivate File
 @enduml

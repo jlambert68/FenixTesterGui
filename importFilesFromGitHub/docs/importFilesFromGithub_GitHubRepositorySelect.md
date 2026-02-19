@@ -34,7 +34,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: Create Domain-Select-DropDown
-- Selector calls: `importFilesFromGitHubObject.filterFileListFromGitHub`, `importFilesFromGitHubObject.getFileListFromGitHub`, `strings.Split`, `widget.NewSelect`
+- Selector calls: `widget.NewSelect`, `strings.Split`, `importFilesFromGitHubObject.getFileListFromGitHub`, `importFilesFromGitHubObject.filterFileListFromGitHub`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

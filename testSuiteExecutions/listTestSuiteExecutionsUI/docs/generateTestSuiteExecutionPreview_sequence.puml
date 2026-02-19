@@ -2,11 +2,11 @@
 title Sequence Diagram - generateTestSuiteExecutionPreview.go
 actor Caller
 participant "generateTestSuiteExecutionPreview.go" as File
-Caller -> File: ClearTestSuiteExecutionPreviewContainer(...)
+Caller -> File: GenerateTestSuiteExecutionPreviewContainer(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: GenerateTestSuiteExecutionPreviewContainer(...)
+Caller -> File: ClearTestSuiteExecutionPreviewContainer(...)
 activate File
 File --> Caller: return
 deactivate File

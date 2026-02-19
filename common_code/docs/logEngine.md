@@ -39,23 +39,19 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Doc: InitiateLoggerEngine Initiate and start up the "logger engine"
 - Internal calls: `startLoggerEngine`
 
+### startLoggerEngine
+- Signature: `func startLoggerEngine()`
+- Exported: `false`
+- Control-flow features: `for/range, switch`
+- Doc: Run the logger engine
+- Internal calls: `LogFatalLevel`
+- Selector calls: `zerolog.New`, `log.Debug`, `log.Info`, `log.Warn`, `log.Error`, `log.Fatal`
+
 ### LogDebugLevel
 - Signature: `func LogDebugLevel(messageUuid string, message string, context map[string]interface{})`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: LogDebugLevel Puts one log message of type 'DebugLevel' on the log channel
-
-### LogErrorLevel
-- Signature: `func LogErrorLevel(messageUuid string, message string, context map[string]interface{})`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Doc: LogErrorLevel Puts one log message of type 'ErrorLevel' on the log channel
-
-### LogFatalLevel
-- Signature: `func LogFatalLevel(messageUuid string, message string, context map[string]interface{})`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Doc: LogFatalLevel Puts one log message of type 'FatalLevel' on the log channel
 
 ### LogInfoLevel
 - Signature: `func LogInfoLevel(messageUuid string, message string, context map[string]interface{})`
@@ -69,13 +65,17 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Doc: LogWarningLevel Puts one log message of type 'WarnLevel' on the log channel
 
-### startLoggerEngine
-- Signature: `func startLoggerEngine()`
-- Exported: `false`
-- Control-flow features: `for/range, switch`
-- Doc: Run the logger engine
-- Internal calls: `LogFatalLevel`
-- Selector calls: `log.Debug`, `log.Error`, `log.Fatal`, `log.Info`, `log.Warn`, `zerolog.New`
+### LogErrorLevel
+- Signature: `func LogErrorLevel(messageUuid string, message string, context map[string]interface{})`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Doc: LogErrorLevel Puts one log message of type 'ErrorLevel' on the log channel
+
+### LogFatalLevel
+- Signature: `func LogFatalLevel(messageUuid string, message string, context map[string]interface{})`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Doc: LogFatalLevel Puts one log message of type 'FatalLevel' on the log channel
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

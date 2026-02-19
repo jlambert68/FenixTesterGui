@@ -39,7 +39,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range`
 - Doc: ExecuteOneTestSuiteWithOneTestDataSet Execute one TestSuit's all TestCases with one TestDataSet
 - Internal calls: `string`
-- Selector calls: `dialog.ShowConfirm`, `errors.New`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `fmt.Println`, `fmt.Sprintf`, `fyne.CurrentApp`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `testDataEngine.TestDataAreaUuidType`
+- Selector calls: `dialog.ShowConfirm`, `testDataEngine.TestDataDomainUuidType`, `testDataEngine.TestDataAreaUuidType`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `testSuiteModel.GetTestSuiteUuid`, `errors.New`, `fmt.Sprintf`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -42,14 +42,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, for/range`
 - Doc: GenerateBaseCanvasObjectForTestCaseUI Create the Base-UI-canvas-object for the TestCasesMapPtr object. This base doesn't contain any specific TestCase-parts, and they will be added in other function
-- Selector calls: `container.New`, `container.NewAppTabs`, `container.NewTabItemWithIcon`, `dialog.ShowConfirm`, `fmt.Println`, `layout.NewBorderLayout`, `sharedCode.BuildingBlock`, `theme.ContentCopyIcon`
+- Selector calls: `widget.NewToolbar`, `widget.NewToolbarAction`, `theme.ContentRedoIcon`, `fmt.Println`, `theme.DocumentIcon`, `sharedCode.BuildingBlock`, `theme.FolderOpenIcon`, `theme.DocumentSaveIcon`
 
 ### GenerateNewTestCaseTabObject (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) GenerateNewTestCaseTabObject(testCaseToBeAddedUuid string) err error`
 - Exported: `true`
 - Control-flow features: `if, returns error`
 - Internal calls: `newAdaptiveSplit`
-- Selector calls: `container.NewBorder`, `container.NewTabItem`, `container.NewVBox`, `container.NewWithoutLayout`, `errors.New`, `fmt.Sprintf`, `fyne.Do`, `sharedCode.BuildingBlock`
+- Selector calls: `testCasesUiCanvasObject.generateNewTextualRepresentationAreaForTestCase`, `testCasesUiCanvasObject.generateGraphicalRepresentationAreaForTestCase`, `testCasesUiCanvasObject.GenerateMetaDataAreaForTestCase`, `testCasesUiCanvasObject.generateBaseInformationAreaForTestCase`, `testCasesUiCanvasObject.generateTestCaseAttributesAreaForTestCase`, `errors.New`, `fmt.Sprintf`, `container.NewBorder`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

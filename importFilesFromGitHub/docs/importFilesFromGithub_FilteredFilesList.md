@@ -36,6 +36,35 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
+### generateFilteredList (method on `*ImportFilesFromGitHubStruct`)
+- Signature: `func (*ImportFilesFromGitHubStruct) generateFilteredList(parentWindow fyne.Window)`
+- Exported: `false`
+- Control-flow features: `if, for/range`
+- Selector calls: `widget.NewList`, `importFilesFromGitHubObject.newCustomFilteredLabel`, `importFilesFromGitHubObject.getFileListFromGitHub`, `importFilesFromGitHubObject.filterFileListFromGitHub`, `strings.Split`, `importFilesFromGitHubObject.UpdateSelectedFilesTable`, `dialog.ShowInformation`, `label.Refresh`
+
+### filterFileListFromGitHub (method on `*ImportFilesFromGitHubStruct`)
+- Signature: `func (*ImportFilesFromGitHubStruct) filterFileListFromGitHub()`
+- Exported: `false`
+- Control-flow features: `if, for/range`
+- Selector calls: `strings.ReplaceAll`, `regexp.Compile`, `log.Fatalln`, `combinedRegex.MatchString`
+
+### newCustomFilteredLabel (method on `*ImportFilesFromGitHubStruct`)
+- Signature: `func (*ImportFilesFromGitHubStruct) newCustomFilteredLabel(text string, onDoubleTap func()) *customFilteredLabel`
+- Exported: `false`
+- Control-flow features: `none detected`
+- Selector calls: `l.ExtendBaseWidget`
+
+### Tapped (method on `*customFilteredLabel`)
+- Signature: `func (*customFilteredLabel) Tapped(e *fyne.PointEvent)`
+- Exported: `true`
+- Control-flow features: `if`
+- Selector calls: `time.Now`, `now.Sub`, `l.onDoubleTap`
+
+### TappedSecondary (method on `*customFilteredLabel`)
+- Signature: `func (*customFilteredLabel) TappedSecondary(*fyne.PointEvent)`
+- Exported: `true`
+- Control-flow features: `none detected`
+
 ### MouseIn (method on `*customFilteredLabel`)
 - Signature: `func (*customFilteredLabel) MouseIn(*desktop.MouseEvent)`
 - Exported: `true`
@@ -52,35 +81,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Selector calls: `l.Refresh`
-
-### Tapped (method on `*customFilteredLabel`)
-- Signature: `func (*customFilteredLabel) Tapped(e *fyne.PointEvent)`
-- Exported: `true`
-- Control-flow features: `if`
-- Selector calls: `l.onDoubleTap`, `now.Sub`, `time.Now`
-
-### TappedSecondary (method on `*customFilteredLabel`)
-- Signature: `func (*customFilteredLabel) TappedSecondary(*fyne.PointEvent)`
-- Exported: `true`
-- Control-flow features: `none detected`
-
-### filterFileListFromGitHub (method on `*ImportFilesFromGitHubStruct`)
-- Signature: `func (*ImportFilesFromGitHubStruct) filterFileListFromGitHub()`
-- Exported: `false`
-- Control-flow features: `if, for/range`
-- Selector calls: `combinedRegex.MatchString`, `log.Fatalln`, `regexp.Compile`, `strings.ReplaceAll`
-
-### generateFilteredList (method on `*ImportFilesFromGitHubStruct`)
-- Signature: `func (*ImportFilesFromGitHubStruct) generateFilteredList(parentWindow fyne.Window)`
-- Exported: `false`
-- Control-flow features: `if, for/range`
-- Selector calls: `dialog.ShowInformation`, `importFilesFromGitHubObject.UpdateSelectedFilesTable`, `importFilesFromGitHubObject.filterFileListFromGitHub`, `importFilesFromGitHubObject.getFileListFromGitHub`, `importFilesFromGitHubObject.newCustomFilteredLabel`, `label.Refresh`, `strings.Split`, `widget.NewList`
-
-### newCustomFilteredLabel (method on `*ImportFilesFromGitHubStruct`)
-- Signature: `func (*ImportFilesFromGitHubStruct) newCustomFilteredLabel(text string, onDoubleTap func()) *customFilteredLabel`
-- Exported: `false`
-- Control-flow features: `none detected`
-- Selector calls: `l.ExtendBaseWidget`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

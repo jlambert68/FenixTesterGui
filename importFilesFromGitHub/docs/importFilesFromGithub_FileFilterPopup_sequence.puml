@@ -2,19 +2,19 @@
 title Sequence Diagram - importFilesFromGithub_FileFilterPopup.go
 actor Caller
 participant "importFilesFromGithub_FileFilterPopup.go" as File
+participant "container" as container
+participant "widget" as widget
+participant "importFilesFromGitHubObject" as importFilesFromGitHubObject
 participant "checkbox" as checkbox
 participant "checkboxList" as checkboxList
-participant "container" as container
-participant "fyne" as fyne
-participant "importFilesFromGitHubObject" as importFilesFromGitHubObject
 participant "parentWindow" as parentWindow
 participant "popUp" as popUp
-participant "widget" as widget
+participant "fyne" as fyne
 Caller -> File: generateFileFilterPopup(...)
 activate File
-File -> checkbox: SetChecked(...)
-File -> checkboxList: Add(...)
 File -> container: NewVBox(...)
+File -> widget: NewCheck(...)
+File -> importFilesFromGitHubObject: filterFileListFromGitHub(...)
 File --> Caller: return
 deactivate File
 @enduml

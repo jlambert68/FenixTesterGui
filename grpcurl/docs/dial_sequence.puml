@@ -2,43 +2,43 @@
 title Sequence Diagram - dial.go
 actor Caller
 participant "dial.go" as File
-participant "c" as c
-participant "certPool" as certPool
 participant "credentials" as credentials
-participant "ctx" as ctx
-participant "errors" as errors
+participant "tls" as tls
 participant "fmt" as fmt
+participant "x509" as x509
+participant "ioutil" as ioutil
+participant "certPool" as certPool
+participant "errors" as errors
 participant "grpc" as grpc
-participant "insecure" as insecure
-Caller -> File: BlockingDial(...)
-activate File
-File -> ctx: Done(...)
-File -> ctx: Err(...)
-File -> grpc: DialContext(...)
-File --> Caller: return
-deactivate File
-Caller -> File: ClientHandshake(...)
-activate File
-File -> c: writeResult(...)
-File --> Caller: return
-deactivate File
-Caller -> File: ClientTLSConfig(...)
-activate File
-File -> certPool: AppendCertsFromPEM(...)
-File -> errors: New(...)
-File -> fmt: Errorf(...)
-File --> Caller: return
-deactivate File
 Caller -> File: ClientTransportCredentials(...)
 activate File
 File -> credentials: NewTLS(...)
 File --> Caller: return
 deactivate File
+Caller -> File: ClientTLSConfig(...)
+activate File
+File -> tls: LoadX509KeyPair(...)
+File -> fmt: Errorf(...)
+File -> x509: NewCertPool(...)
+File --> Caller: return
+deactivate File
 Caller -> File: ServerTransportCredentials(...)
 activate File
-File -> certPool: AppendCertsFromPEM(...)
-File -> credentials: NewTLS(...)
-File -> errors: New(...)
+File -> tls: LoadX509KeyPair(...)
+File -> fmt: Errorf(...)
+File -> x509: NewCertPool(...)
+File --> Caller: return
+deactivate File
+Caller -> File: BlockingDial(...)
+activate File
+File -> grpc: FailOnNonTempDialError(...)
+File -> grpc: WithBlock(...)
+File -> grpc: WithContextDialer(...)
+File --> Caller: return
+deactivate File
+Caller -> File: ClientHandshake(...)
+activate File
+File -> c: writeResult(...)
 File --> Caller: return
 deactivate File
 @enduml

@@ -3,14 +3,14 @@ title Sequence Diagram - activeOutgoingMessages_SendAreYouAliveToGuiExecutionSer
 actor Caller
 participant "activeOutgoingMessages_SendAreYouAliveToGuiExecutionServer.go" as File
 participant "context" as context
+participant "grpcOut" as grpcOut
 participant "err" as err
 participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
 participant "fenixGuiExecutionServerGrpcClient" as fenixGuiExecutionServerGrpcClient
-participant "grpcOut" as grpcOut
 Caller -> File: SendAreYouAliveToGuiExecutionServer(...)
 activate File
 File -> context: Background(...)
-File -> context: WithTimeout(...)
+File -> grpcOut: setConnectionToFenixGuiExecutionMessageServer_new(...)
 File -> err: Error(...)
 File --> Caller: return
 deactivate File

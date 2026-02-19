@@ -2,17 +2,17 @@
 title Sequence Diagram - testSuitesModel_ExecutionTestSuiteWithAllTestDataSets.go
 actor Caller
 participant "testSuitesModel_ExecutionTestSuiteWithAllTestDataSets.go" as File
-participant "errors" as errors
 participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
-participant "fmt" as fmt
-participant "fyne" as fyne
 participant "grpc_out_GuiExecutionServer" as grpc_out_GuiExecutionServer
 participant "testSuiteModel" as testSuiteModel
+participant "errors" as errors
+participant "fmt" as fmt
+participant "fyne" as fyne
 Caller -> File: ExecuteOneTestSuiteWithAllItsTestDataSets(...)
 activate File
-File -> errors: New(...)
 File -> fenixExecutionServerGuiGrpcApi: CurrentFenixExecutionGuiProtoFileVersionEnum(...)
-File -> fmt: Println(...)
+File -> grpc_out_GuiExecutionServer: GetHighestFenixGuiExecutionServerProtoFileVersion(...)
+File -> testSuiteModel: GetTestSuiteUuid(...)
 File --> Caller: return
 deactivate File
 @enduml

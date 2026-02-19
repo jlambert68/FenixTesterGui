@@ -2,18 +2,18 @@
 title Sequence Diagram - testCaseUI_graphicalRepresentation_base.go
 actor Caller
 participant "testCaseUI_graphicalRepresentation_base.go" as File
-participant "canvas" as canvas
-participant "container" as container
-participant "fyne" as fyne
-participant "myRectangle" as myRectangle
-participant "testCaseGraphicalModelAreaAccordion" as testCaseGraphicalModelAreaAccordion
-participant "testCasesUiCanvasObject" as testCasesUiCanvasObject
 participant "widget" as widget
+participant "testCaseGraphicalModelAreaAccordion" as testCaseGraphicalModelAreaAccordion
+participant "canvas" as canvas
+participant "myRectangle" as myRectangle
+participant "fyne" as fyne
+participant "testCasesUiCanvasObject" as testCasesUiCanvasObject
+participant "container" as container
 Caller -> File: generateGraphicalRepresentationAreaForTestCase(...)
 activate File
-File -> canvas: NewRectangle(...)
-File -> container: NewScroll(...)
-File -> container: NewVBox(...)
+File -> widget: NewAccordionItem(...)
+File -> widget: NewLabel(...)
+File -> widget: NewAccordion(...)
 File --> Caller: return
 deactivate File
 @enduml

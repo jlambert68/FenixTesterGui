@@ -2,13 +2,13 @@
 title Activity Diagram - init.go
 start
 :Load init.go;
-:1. init;
+:1. mustGetenv;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:2. mustGetenv;
+:2. init;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

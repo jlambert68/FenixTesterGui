@@ -2,22 +2,22 @@
 title Sequence Diagram - init.go
 actor Caller
 participant "init.go" as File
-participant "fmt" as fmt
 participant "log" as log
 participant "os" as os
+participant "fmt" as fmt
 participant "strconv" as strconv
+Caller -> File: mustGetenv(...)
+activate File
+File -> log: Fatalln(...)
+File -> os: Getenv(...)
+File -> log: Fatalf(...)
+File --> Caller: return
+deactivate File
 Caller -> File: init(...)
 activate File
 File -> fmt: Println(...)
 File -> os: Exit(...)
-File -> strconv: Atoi(...)
-File --> Caller: return
-deactivate File
-Caller -> File: mustGetenv(...)
-activate File
-File -> log: Fatalf(...)
-File -> log: Fatalln(...)
-File -> os: Getenv(...)
+File -> strconv: ParseFloat(...)
 File --> Caller: return
 deactivate File
 @enduml

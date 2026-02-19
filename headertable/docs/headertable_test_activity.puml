@@ -2,14 +2,14 @@
 title Activity Diagram - headertable_test.go
 start
 :Load headertable/headertable_test.go;
-:1. TestHeaderTable;
-:Iterate loop/range logic;
+:1. TestNewHeaderTable;
 :2. TestHeaderTable_CreateRenderer;
-:3. TestNewHeaderTable;
-:4. Test_headerTableRenderer_Destroy;
-:5. Test_headerTableRenderer_Layout;
-:6. Test_headerTableRenderer_MinSize;
+:3. Test_headerTableRenderer_MinSize;
+:4. Test_headerTableRenderer_Layout;
+:5. Test_headerTableRenderer_Destroy;
+:6. Test_headerTableRenderer_Refresh;
 :7. Test_headerTableRenderer_Objects;
-:8. Test_headerTableRenderer_Refresh;
+:8. TestHeaderTable;
+:Iterate loop/range logic;
 stop
 @enduml

@@ -42,48 +42,11 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - `_`
 
 ## Functions and Methods
-### CreateRenderer (method on `*sortingLabel`)
-- Signature: `func (*sortingLabel) CreateRenderer() fyne.WidgetRenderer`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Selector calls: `container.NewHBox`
-
-### Destroy (method on `*sortingLabelRenderer`)
-- Signature: `func (*sortingLabelRenderer) Destroy()`
-- Exported: `true`
-- Control-flow features: `none detected`
-
-### Layout (method on `*sortingLabelRenderer`)
-- Signature: `func (*sortingLabelRenderer) Layout(size fyne.Size)`
-- Exported: `true`
-- Control-flow features: `none detected`
-
-### MinSize (method on `*sortingLabelRenderer`)
-- Signature: `func (*sortingLabelRenderer) MinSize() fyne.Size`
-- Exported: `true`
-- Control-flow features: `none detected`
-
 ### NewSortingLabel
 - Signature: `func NewSortingLabel(text string) *sortingLabel`
 - Exported: `true`
 - Control-flow features: `none detected`
-- Selector calls: `sl.ExtendBaseWidget`, `sl.SetState`, `widget.NewButton`, `widget.NewLabel`
-
-### Objects (method on `*sortingLabelRenderer`)
-- Signature: `func (*sortingLabelRenderer) Objects() []fyne.CanvasObject`
-- Exported: `true`
-- Control-flow features: `none detected`
-
-### OnTapped (method on `*sortingLabel`)
-- Signature: `func (*sortingLabel) OnTapped()`
-- Exported: `true`
-- Control-flow features: `if`
-- Selector calls: `s.OnAfterSort`, `s.SetState`, `s.Sorter`, `s.nextState`
-
-### Refresh (method on `*sortingLabelRenderer`)
-- Signature: `func (*sortingLabelRenderer) Refresh()`
-- Exported: `true`
-- Control-flow features: `none detected`
+- Selector calls: `widget.NewLabel`, `widget.NewButton`, `sl.SetState`, `sl.ExtendBaseWidget`
 
 ### SetState (method on `*sortingLabel`)
 - Signature: `func (*sortingLabel) SetState(state SortState)`
@@ -96,6 +59,43 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `switch`
 - Selector calls: `log.Printf`
+
+### OnTapped (method on `*sortingLabel`)
+- Signature: `func (*sortingLabel) OnTapped()`
+- Exported: `true`
+- Control-flow features: `if`
+- Selector calls: `s.SetState`, `s.nextState`, `s.Sorter`, `s.OnAfterSort`
+
+### CreateRenderer (method on `*sortingLabel`)
+- Signature: `func (*sortingLabel) CreateRenderer() fyne.WidgetRenderer`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Selector calls: `container.NewHBox`
+
+### MinSize (method on `*sortingLabelRenderer`)
+- Signature: `func (*sortingLabelRenderer) MinSize() fyne.Size`
+- Exported: `true`
+- Control-flow features: `none detected`
+
+### Layout (method on `*sortingLabelRenderer`)
+- Signature: `func (*sortingLabelRenderer) Layout(size fyne.Size)`
+- Exported: `true`
+- Control-flow features: `none detected`
+
+### Refresh (method on `*sortingLabelRenderer`)
+- Signature: `func (*sortingLabelRenderer) Refresh()`
+- Exported: `true`
+- Control-flow features: `none detected`
+
+### Objects (method on `*sortingLabelRenderer`)
+- Signature: `func (*sortingLabelRenderer) Objects() []fyne.CanvasObject`
+- Exported: `true`
+- Control-flow features: `none detected`
+
+### Destroy (method on `*sortingLabelRenderer`)
+- Signature: `func (*sortingLabelRenderer) Destroy()`
+- Exported: `true`
+- Control-flow features: `none detected`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

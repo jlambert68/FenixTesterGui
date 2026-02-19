@@ -2,13 +2,13 @@
 title Activity Diagram - testCasesUI_Mandatory_ComboBox_Renderer.go
 start
 :Load testSuites/listTestSuitesUI/testCasesUI_Mandatory_ComboBox_Renderer.go;
-:1. BackgroundColor [method on *customMandatorySelectComboBoxRenderer];
+:1. newCustomMandatorySelectComboBoxWidget;
 :2. CreateRenderer [method on *customMandatorySelectComboBox];
-:3. Destroy [method on *customMandatorySelectComboBoxRenderer];
+:3. MinSize [method on *customMandatorySelectComboBoxRenderer];
 :4. Layout [method on *customMandatorySelectComboBoxRenderer];
-:5. MinSize [method on *customMandatorySelectComboBoxRenderer];
-:6. Objects [method on *customMandatorySelectComboBoxRenderer];
-:7. Refresh [method on *customMandatorySelectComboBoxRenderer];
-:8. newCustomMandatorySelectComboBoxWidget;
+:5. Refresh [method on *customMandatorySelectComboBoxRenderer];
+:6. BackgroundColor [method on *customMandatorySelectComboBoxRenderer];
+:7. Objects [method on *customMandatorySelectComboBoxRenderer];
+:8. Destroy [method on *customMandatorySelectComboBoxRenderer];
 stop
 @enduml

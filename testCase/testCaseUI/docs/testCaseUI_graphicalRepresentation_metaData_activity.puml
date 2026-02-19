@@ -2,20 +2,20 @@
 title Activity Diagram - testCaseUI_graphicalRepresentation_metaData.go
 start
 :Load testCase/testCaseUI/testCaseUI_graphicalRepresentation_metaData.go;
-:1. ConvertMetaDataToNewMap;
+:1. GenerateMetaDataAreaForTestCase [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. buildGUIFromMetaDataGroupsMap;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:2. GenerateMetaDataAreaForTestCase [method on *TestCasesUiModelStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:3. buildGUIFromMetaDataGroupsMap;
+:3. calcSelectWidth;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -23,7 +23,7 @@ else (no)
 endif
 :Iterate loop/range logic;
 :4. calcCheckGroupWidth;
-:5. calcSelectWidth;
+:5. ConvertMetaDataToNewMap;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

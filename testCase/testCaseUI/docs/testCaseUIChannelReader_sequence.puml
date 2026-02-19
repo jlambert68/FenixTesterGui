@@ -2,55 +2,55 @@
 title Sequence Diagram - testCaseUIChannelReader.go
 actor Caller
 participant "testCaseUIChannelReader.go" as File
-participant "enableDeletionCheckbox" as enableDeletionCheckbox
-participant "err" as err
+participant "testCasesUiCanvasObject" as testCasesUiCanvasObject
 participant "errors" as errors
 participant "fmt" as fmt
 participant "fyne" as fyne
-participant "newTestCaseDeletionDateEntry" as newTestCaseDeletionDateEntry
-participant "testCasesUiCanvasObject" as testCasesUiCanvasObject
 participant "time" as time
-Caller -> File: closeTestCaseTabBasedOnTestCaseUuiWithOutSaving(...)
+participant "err" as err
+participant "newTestCaseDeletionDateEntry" as newTestCaseDeletionDateEntry
+participant "enableDeletionCheckbox" as enableDeletionCheckbox
+Caller -> File: startGUICommandChannelReader(...)
 activate File
-File -> fmt: Println(...)
-File -> fmt: Sprintf(...)
-File -> fyne: CurrentApp(...)
+File -> testCasesUiCanvasObject: updateTestCaseGraphics(...)
+File -> testCasesUiCanvasObject: selectTestInstructionInTestCaseGraphics(...)
+File -> testCasesUiCanvasObject: selectTestCaseTabBasedOnTestCaseUuid(...)
 File --> Caller: return
 deactivate File
-Caller -> File: removeTestCaseTabBasedOnTestCaseUuid(...)
+Caller -> File: updateTestCaseGraphics(...)
 activate File
-File -> enableDeletionCheckbox: Disable(...)
-File -> err: Error(...)
-File -> errors: New(...)
-File --> Caller: return
-deactivate File
-Caller -> File: selectTestCaseTabBasedOnTestCaseUuid(...)
-activate File
+File -> testCasesUiCanvasObject: GenerateNewTestCaseTabObject(...)
 File -> fmt: Println(...)
-File -> fyne: Do(...)
+File -> testCasesUiCanvasObject: UpdateTextualStructuresForTestCase(...)
 File --> Caller: return
 deactivate File
 Caller -> File: selectTestInstructionInTestCaseGraphics(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: startGUICommandChannelReader(...)
+Caller -> File: selectTestCaseTabBasedOnTestCaseUuid(...)
 activate File
-File -> errors: New(...)
+File -> fyne: Do(...)
 File -> fmt: Println(...)
-File -> fmt: Sprintf(...)
-File --> Caller: return
-deactivate File
-Caller -> File: updateTestCaseGraphics(...)
-activate File
-File -> fmt: Println(...)
-File -> testCasesUiCanvasObject: GenerateNewTestCaseTabObject(...)
-File -> testCasesUiCanvasObject: UpdateGraphicalRepresentationForTestCase(...)
 File --> Caller: return
 deactivate File
 Caller -> File: updatedUpdateTestCaseTabName(...)
 activate File
 File -> fyne: Do(...)
+File --> Caller: return
+deactivate File
+Caller -> File: removeTestCaseTabBasedOnTestCaseUuid(...)
+activate File
+File -> time: Now(...)
+File -> time: Parse(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: closeTestCaseTabBasedOnTestCaseUuiWithOutSaving(...)
+activate File
+File -> fmt: Println(...)
+File -> fyne: CurrentApp(...)
+File -> fmt: Sprintf(...)
 File --> Caller: return
 deactivate File
 @enduml

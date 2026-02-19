@@ -31,7 +31,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func generateRightSideBuildTestSuiteContainer(testCasesModel *testCaseModel.TestCasesModelsStruct) (rightSideBuildTestSuiteContainer *fyne.Container, preViewAndFilterTabsUsedForCreateTestSuite *container.AppTabs)`
 - Exported: `false`
 - Control-flow features: `none detected`
-- Selector calls: `container.NewAppTabs`, `container.NewBorder`, `container.NewScroll`
+- Selector calls: `container.NewAppTabs`, `container.NewScroll`, `container.NewBorder`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

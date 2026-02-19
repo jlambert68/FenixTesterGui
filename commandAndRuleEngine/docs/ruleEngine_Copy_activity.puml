@@ -2,13 +2,13 @@
 title Activity Diagram - ruleEngine_Copy.go
 start
 :Load commandAndRuleEngine/ruleEngine_Copy.go;
-:1. executeCopyElement [method on *CommandAndRuleEngineObjectStruct];
+:1. verifyIfElementCanBeCopied [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:2. verifyIfElementCanBeCopied [method on *CommandAndRuleEngineObjectStruct];
+:2. executeCopyElement [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

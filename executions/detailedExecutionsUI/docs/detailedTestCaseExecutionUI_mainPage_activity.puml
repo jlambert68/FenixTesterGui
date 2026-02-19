@@ -3,8 +3,8 @@ title Activity Diagram - detailedTestCaseExecutionUI_mainPage.go
 start
 :Load executions/detailedExecutionsUI/detailedTestCaseExecutionUI_mainPage.go;
 :1. CreateDetailedTestCaseExecutionsTabPage [method on *DetailedTestCaseExecutionsUIModelStruct];
-:2. GenerateExecutionColorPalette;
-:3. generateExecutionColorPalette [method on *DetailedTestCaseExecutionsUIModelStruct];
-:4. generateTestCasesSummaryTable [method on *DetailedTestCaseExecutionsUIModelStruct];
+:2. generateTestCasesSummaryTable [method on *DetailedTestCaseExecutionsUIModelStruct];
+:3. GenerateExecutionColorPalette;
+:4. generateExecutionColorPalette [method on *DetailedTestCaseExecutionsUIModelStruct];
 stop
 @enduml

@@ -2,8 +2,8 @@
 title Activity Diagram - threePartAdaptiveSplit.go
 start
 :Load executions/executionsUIForSubscriptions/threePartAdaptiveSplit.go;
-:1. Layout [method on *adaptiveLayout];
-:2. MinSize [method on *adaptiveLayout];
-:3. newThreePartAdaptiveSplit;
+:1. newThreePartAdaptiveSplit;
+:2. Layout [method on *adaptiveLayout];
+:3. MinSize [method on *adaptiveLayout];
 stop
 @enduml

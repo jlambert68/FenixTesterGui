@@ -35,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, for/range, returns error`
 - Internal calls: `string`
-- Selector calls: `executionStatusMessagesPubSubMessage.GetExecutionsStatus`, `fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum`, `fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusEnum`, `protojson.Unmarshal`, `strings.ReplaceAll`, `tempGetTestCaseExecutionsStatusPubSubMessage.GetBroadcastTimeStamp`, `tempGetTestCaseExecutionsStatusPubSubMessage.GetPreviousBroadcastTimeStamp`, `tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionDetails`
+- Selector calls: `strings.ReplaceAll`, `protojson.Unmarshal`, `executionStatusMessagesPubSubMessage.GetExecutionsStatus`, `tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionUuid`, `tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionVersion`, `tempGetTestCaseExecutionsStatusPubSubMessage.GetBroadcastTimeStamp`, `tempGetTestCaseExecutionsStatusPubSubMessage.GetPreviousBroadcastTimeStamp`, `tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionDetails`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -2,31 +2,31 @@
 title Sequence Diagram - availableBuildingBlockTree_ui.go
 actor Caller
 participant "availableBuildingBlockTree_ui.go" as File
-participant "fmt" as fmt
 participant "label" as label
 participant "log" as log
+participant "fmt" as fmt
 participant "t" as t
 participant "widget" as widget
-Caller -> File: DragEnd(...)
+Caller -> File: Tapped(...)
+activate File
+File -> log: Println(...)
+File -> fmt: Println(...)
+File -> t: Position(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TappedSecondary(...)
 activate File
 File -> log: Println(...)
 File --> Caller: return
 deactivate File
 Caller -> File: Dragged(...)
 activate File
-File -> fmt: Println(...)
 File -> log: Println(...)
 File -> t: Position(...)
+File -> widget: NewLabel(...)
 File --> Caller: return
 deactivate File
-Caller -> File: Tapped(...)
-activate File
-File -> fmt: Println(...)
-File -> log: Println(...)
-File -> t: Position(...)
-File --> Caller: return
-deactivate File
-Caller -> File: TappedSecondary(...)
+Caller -> File: DragEnd(...)
 activate File
 File -> log: Println(...)
 File --> Caller: return

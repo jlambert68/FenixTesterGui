@@ -2,14 +2,14 @@
 title Sequence Diagram - detailedExecutionsModel_processStatusUpdateOfDetailedExecutionsStatus.go
 actor Caller
 participant "detailedExecutionsModel_processStatusUpdateOfDetailedExecutionsStatus.go" as File
-participant "detailedExecutionsModelObject" as detailedExecutionsModelObject
+participant "strconv" as strconv
+participant "time" as time
 participant "errors" as errors
 participant "fmt" as fmt
-participant "strconv" as strconv
-participant "tempExecutionStatusUpdateTimeStampMapKey" as tempExecutionStatusUpdateTimeStampMapKey
 participant "tempTestCaseExecutionStatusMessage" as tempTestCaseExecutionStatusMessage
+participant "tempExecutionStatusUpdateTimeStampMapKey" as tempExecutionStatusUpdateTimeStampMapKey
 participant "tempTestInstructionExecutionStatusMessage" as tempTestInstructionExecutionStatusMessage
-participant "time" as time
+participant "detailedExecutionsModelObject" as detailedExecutionsModelObject
 Caller -> File: IsTestCaseExecutionStatusAnEndStatus(...)
 activate File
 File --> Caller: return

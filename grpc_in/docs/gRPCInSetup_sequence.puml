@@ -2,24 +2,24 @@
 title Sequence Diagram - gRPCInSetup.go
 actor Caller
 participant "gRPCInSetup.go" as File
-participant "fenixUserGuiGrpcApi" as fenixUserGuiGrpcApi
-participant "grpc" as grpc
-participant "lis" as lis
 participant "net" as net
+participant "strconv" as strconv
+participant "grpc" as grpc
+participant "fenixUserGuiGrpcApi" as fenixUserGuiGrpcApi
 participant "reflection" as reflection
 participant "registerFenixUserGuiServer" as registerFenixUserGuiServer
-participant "strconv" as strconv
+participant "lis" as lis
 Caller -> File: InitGrpcServer(...)
 activate File
-File -> fenixUserGuiGrpcApi: RegisterFenixUserGuiGrpcServicesServer(...)
-File -> grpc: NewServer(...)
 File -> net: Listen(...)
+File -> strconv: Itoa(...)
+File -> grpc: NewServer(...)
 File --> Caller: return
 deactivate File
 Caller -> File: StopGrpcServer(...)
 activate File
-File -> lis: Close(...)
 File -> registerFenixUserGuiServer: GracefulStop(...)
+File -> lis: Close(...)
 File --> Caller: return
 deactivate File
 @enduml

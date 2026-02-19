@@ -32,6 +32,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
+### newCopyableLabel
+- Signature: `func newCopyableLabel(label string, isCopyable bool, testSuiteUiref *testSuiteUI.TestSuiteUiStruct) *copyableLabelStruct`
+- Exported: `false`
+- Control-flow features: `none detected`
+- Doc: Used for creating a new copyable label
+- Selector calls: `copyableLabel.ExtendBaseWidget`
+
 ### CreateRenderer (method on `*copyableLabelStruct`)
 - Signature: `func (*copyableLabelStruct) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
@@ -50,14 +57,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: TappedSecondary Optional: Handle secondary tap (right-click)
-- Selector calls: `clipboard.SetContent`, `fenixMasterWindow.Clipboard`, `fmt.Sprintf`, `fyne.CurrentApp`
-
-### newCopyableLabel
-- Signature: `func newCopyableLabel(label string, isCopyable bool, testSuiteUiref *testSuiteUI.TestSuiteUiStruct) *copyableLabelStruct`
-- Exported: `false`
-- Control-flow features: `none detected`
-- Doc: Used for creating a new copyable label
-- Selector calls: `copyableLabel.ExtendBaseWidget`
+- Selector calls: `fenixMasterWindow.Clipboard`, `clipboard.SetContent`, `fyne.CurrentApp`, `fmt.Sprintf`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

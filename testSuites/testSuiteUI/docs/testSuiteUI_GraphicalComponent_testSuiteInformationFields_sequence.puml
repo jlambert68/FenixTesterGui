@@ -4,13 +4,13 @@ actor Caller
 participant "testSuiteUI_GraphicalComponent_testSuiteInformationFields.go" as File
 participant "container" as container
 participant "layout" as layout
-participant "testSuiteInformationContainer" as testSuiteInformationContainer
 participant "widget" as widget
+participant "testSuiteInformationContainer" as testSuiteInformationContainer
 Caller -> File: generateTestSuiteInformationFieldsArea(...)
 activate File
 File -> container: New(...)
-File -> container: NewHScroll(...)
-File -> container: NewVBox(...)
+File -> layout: NewHBoxLayout(...)
+File -> widget: NewLabel(...)
 File --> Caller: return
 deactivate File
 @enduml

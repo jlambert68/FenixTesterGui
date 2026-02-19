@@ -2,43 +2,43 @@
 title Sequence Diagram - testSuiteUI_graphicalComponent_general_ComboBox_Renderer.go
 actor Caller
 participant "testSuiteUI_graphicalComponent_general_ComboBox_Renderer.go" as File
-participant "canvas" as canvas
+participant "widget" as widget
 participant "fyne" as fyne
 participant "tempEntry" as tempEntry
 participant "w" as w
-participant "widget" as widget
-Caller -> File: BackgroundColor(...)
-activate File
-File --> Caller: return
-deactivate File
+participant "canvas" as canvas
 Caller -> File: CreateRenderer(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: Destroy(...)
+Caller -> File: MinSize(...)
 activate File
+File -> fyne: NewSize(...)
+File -> fyne: Max(...)
 File --> Caller: return
 deactivate File
 Caller -> File: Layout(...)
 activate File
-File -> fyne: NewPos(...)
 File -> fyne: NewSize(...)
+File -> fyne: NewPos(...)
 File --> Caller: return
 deactivate File
-Caller -> File: MinSize(...)
+Caller -> File: Refresh(...)
 activate File
-File -> fyne: Max(...)
-File -> fyne: NewSize(...)
+File -> fyne: Do(...)
+File -> canvas: Refresh(...)
+File --> Caller: return
+deactivate File
+Caller -> File: BackgroundColor(...)
+activate File
 File --> Caller: return
 deactivate File
 Caller -> File: Objects(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: Refresh(...)
+Caller -> File: Destroy(...)
 activate File
-File -> canvas: Refresh(...)
-File -> fyne: Do(...)
 File --> Caller: return
 deactivate File
 @enduml

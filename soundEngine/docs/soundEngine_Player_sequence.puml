@@ -2,25 +2,25 @@
 title Sequence Diagram - soundEngine_Player.go
 actor Caller
 participant "soundEngine_Player.go" as File
-participant "bytes" as bytes
-participant "err" as err
-participant "invalidNotificationPlayer" as invalidNotificationPlayer
-participant "mp3" as mp3
 participant "oto" as oto
-participant "otoCtx" as otoCtx
+participant "err" as err
 participant "systemNotificationPlayer" as systemNotificationPlayer
+participant "invalidNotificationPlayer" as invalidNotificationPlayer
+participant "bytes" as bytes
+participant "mp3" as mp3
+participant "otoCtx" as otoCtx
 participant "time" as time
-Caller -> File: CloseDownSoundEngine(...)
-activate File
-File -> err: Error(...)
-File -> invalidNotificationPlayer: Close(...)
-File -> systemNotificationPlayer: Close(...)
-File --> Caller: return
-deactivate File
 Caller -> File: InitSoundEngine(...)
 activate File
-File -> err: Error(...)
 File -> oto: NewContext(...)
+File -> err: Error(...)
+File --> Caller: return
+deactivate File
+Caller -> File: CloseDownSoundEngine(...)
+activate File
+File -> systemNotificationPlayer: Close(...)
+File -> err: Error(...)
+File -> invalidNotificationPlayer: Close(...)
 File --> Caller: return
 deactivate File
 @enduml

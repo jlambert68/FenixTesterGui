@@ -2,23 +2,19 @@
 title Sequence Diagram - commandEngineChannelReader.go
 actor Caller
 participant "commandEngineChannelReader.go" as File
-participant "backgroundColorRectangle" as backgroundColorRectangle
-participant "canvas" as canvas
 participant "commandAndRuleEngine" as commandAndRuleEngine
-participant "container" as container
-participant "detailedExecutionsModel" as detailedExecutionsModel
+participant "fmt" as fmt
+participant "errors" as errors
+participant "fyne" as fyne
 participant "dialog" as dialog
-participant "dropZoneButton" as dropZoneButton
-participant "dropZoneButtonContainer3" as dropZoneButtonContainer3
-Caller -> File: channelCommandChangeActiveTestCase(...)
+participant "testDataEngine" as testDataEngine
+participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
+participant "grpc_out_GuiExecutionServer" as grpc_out_GuiExecutionServer
+Caller -> File: startCommandChannelReader(...)
 activate File
-File -> errors: New(...)
-File -> fmt: Println(...)
-File -> fmt: Sprintf(...)
-File --> Caller: return
-deactivate File
-Caller -> File: channelCommandCloseOpenTestCaseWithOutSaving(...)
-activate File
+File -> commandAndRuleEngine: channelCommandCreateNewTestCase(...)
+File -> commandAndRuleEngine: channelCommandSwap(...)
+File -> commandAndRuleEngine: channelCommandRemove(...)
 File --> Caller: return
 deactivate File
 Caller -> File: channelCommandCreateNewTestCase(...)
@@ -27,18 +23,18 @@ File -> commandAndRuleEngine: NewTestCaseModel(...)
 File -> fmt: Println(...)
 File --> Caller: return
 deactivate File
-Caller -> File: channelCommandExecuteTestCase(...)
+Caller -> File: channelCommandSaveTestCase(...)
 activate File
-File -> detailedExecutionsModel: RetrieveSingleTestCaseExecution(...)
-File -> dialog: NewConfirm(...)
 File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> fmt: Println(...)
 File --> Caller: return
 deactivate File
-Caller -> File: channelCommandOpenTestCase(...)
+Caller -> File: channelCommandExecuteTestCase(...)
 activate File
-File -> errors: New(...)
-File -> fmt: Println(...)
-File -> fmt: Sprintf(...)
+File -> dialog: NewConfirm(...)
+File -> testDataEngine: TestDataDomainUuidType(...)
+File -> testDataEngine: TestDataAreaUuidType(...)
 File --> Caller: return
 deactivate File
 Caller -> File: channelCommandRemove(...)
@@ -47,25 +43,32 @@ File -> commandAndRuleEngine: DeleteElementFromTestCaseModel(...)
 File -> fmt: Println(...)
 File --> Caller: return
 deactivate File
+Caller -> File: channelCommandChangeActiveTestCase(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+Caller -> File: runPopUp(...)
+activate File
+File -> widget: NewEntry(...)
+File -> widget: NewButton(...)
+File -> modal: Hide(...)
+File --> Caller: return
+deactivate File
+Caller -> File: channelCommandOpenTestCase(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
 Caller -> File: channelCommandRemoveTestCaseWithOutSaving(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: channelCommandSaveTestCase(...)
-activate File
-File -> errors: New(...)
-File -> fmt: Println(...)
-File -> fmt: Sprintf(...)
-File --> Caller: return
-deactivate File
-Caller -> File: channelCommandSwap(...)
-activate File
-File -> backgroundColorRectangle: SetMinSize(...)
-File -> canvas: NewRectangle(...)
-File -> commandAndRuleEngine: SwapElementsInTestCaseModel(...)
-File --> Caller: return
-deactivate File
-Caller -> File: convertGrpcElementModelIntoTestCaseElementModel(...)
+Caller -> File: channelCommandCloseOpenTestCaseWithOutSaving(...)
 activate File
 File --> Caller: return
 deactivate File

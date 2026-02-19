@@ -37,47 +37,47 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
-### TestLoadModelWithAvailableBuildingBlocks
-- Signature: `func TestLoadModelWithAvailableBuildingBlocks(t *testing.T)`
+### TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions
+- Signature: `func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `if`
-- Doc: Checks that Available TestInstructions & TestInstructionContainers are put in Available Building Blocks-testCaseModel in a correct way
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `assert.Equal`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks`, `fmt.Println`, `fmt.Sprint`, `jsonpb.UnmarshalString`, `myLogger.WithFields`
+- Doc: Checks that Available TestInstructions are put in Available Building Blocks-testCaseModel in a correct way
+- Selector calls: `jsonpb.UnmarshalString`, `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `myLogger.WithFields`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructions`, `assert.Equal`, `fmt.Sprint`, `fmt.Println`
 
 ### TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers
 - Signature: `func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: Checks that Available TestInstructionContainers are put in Available Building Blocks-testCaseModel in a correct way
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `assert.Equal`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers`, `fmt.Println`, `fmt.Sprint`, `jsonpb.UnmarshalString`, `myLogger.WithFields`
+- Selector calls: `jsonpb.UnmarshalString`, `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `myLogger.WithFields`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers`, `assert.Equal`, `fmt.Sprint`, `fmt.Println`
 
-### TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions
-- Signature: `func TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(t *testing.T)`
+### TestLoadModelWithAvailableBuildingBlocks
+- Signature: `func TestLoadModelWithAvailableBuildingBlocks(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `if`
-- Doc: Checks that Available TestInstructions are put in Available Building Blocks-testCaseModel in a correct way
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `assert.Equal`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructions`, `fmt.Println`, `fmt.Sprint`, `jsonpb.UnmarshalString`, `myLogger.WithFields`
-
-### TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionAndTestInstructionContainers
-- Signature: `func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionAndTestInstructionContainers(t *testing.T)`
-- Exported: `true`
-- Control-flow features: `if`
-- Doc: Checks that Pinned TestInstruction And TestInstructionContainers are put in Pinned Building Blocks-testCaseModel in a correct way
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `assert.Equal`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks`, `fmt.Sprint`, `jsonpb.UnmarshalString`, `myLogger.WithFields`
-
-### TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers
-- Signature: `func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(t *testing.T)`
-- Exported: `true`
-- Control-flow features: `if`
-- Doc: Checks that Pinned TestInstructionContainers are put in Pinned Building Blocks-testCaseModel in a correct way
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `assert.Equal`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers`, `fmt.Sprint`, `jsonpb.UnmarshalString`, `myLogger.WithFields`
+- Doc: Checks that Available TestInstructions & TestInstructionContainers are put in Available Building Blocks-testCaseModel in a correct way
+- Selector calls: `jsonpb.UnmarshalString`, `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `myLogger.WithFields`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks`, `assert.Equal`, `fmt.Sprint`, `fmt.Println`
 
 ### TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructions
 - Signature: `func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructions(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: Checks that Pinned TestInstructions are put in Pinned Building Blocks-testCaseModel in a correct way
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `assert.Equal`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructions`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructions`, `fmt.Sprint`, `jsonpb.UnmarshalString`, `myLogger.WithFields`
+- Selector calls: `jsonpb.UnmarshalString`, `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `myLogger.WithFields`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructions`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructions`, `assert.Equal`, `fmt.Sprint`
+
+### TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers
+- Signature: `func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(t *testing.T)`
+- Exported: `true`
+- Control-flow features: `if`
+- Doc: Checks that Pinned TestInstructionContainers are put in Pinned Building Blocks-testCaseModel in a correct way
+- Selector calls: `jsonpb.UnmarshalString`, `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `myLogger.WithFields`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers`, `assert.Equal`, `fmt.Sprint`
+
+### TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionAndTestInstructionContainers
+- Signature: `func TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionAndTestInstructionContainers(t *testing.T)`
+- Exported: `true`
+- Control-flow features: `if`
+- Doc: Checks that Pinned TestInstruction And TestInstructionContainers are put in Pinned Building Blocks-testCaseModel in a correct way
+- Selector calls: `jsonpb.UnmarshalString`, `UnitTestTestData.InitLoggerForTest`, `UnitTestTestData.IsTestDataUsingCorrectTestDataProtoFileVersion`, `myLogger.WithFields`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks`, `assert.Equal`, `fmt.Sprint`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

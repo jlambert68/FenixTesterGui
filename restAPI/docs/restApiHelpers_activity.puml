@@ -2,13 +2,13 @@
 title Activity Diagram - restApiHelpers.go
 start
 :Load restAPI/restApiHelpers.go;
-:1. SetDialAddressString [method on *RestApiStruct];
-:2. SetLogger [method on *RestApiStruct];
-:3. extractAndValidateJsonBody;
+:1. extractAndValidateJsonBody;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
+:2. SetLogger [method on *RestApiStruct];
+:3. SetDialAddressString [method on *RestApiStruct];
 stop
 @enduml

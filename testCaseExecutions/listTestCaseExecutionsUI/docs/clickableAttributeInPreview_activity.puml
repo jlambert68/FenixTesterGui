@@ -2,25 +2,25 @@
 title Activity Diagram - clickableAttributeInPreview.go
 start
 :Load testCaseExecutions/listTestCaseExecutionsUI/clickableAttributeInPreview.go;
-:1. CreateRenderer [method on *clickableAttributeInPreviewStruct];
+:1. newClickableAttributeInPreview;
+:2. CreateRenderer [method on *clickableAttributeInPreviewStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:2. Tapped [method on *clickableAttributeInPreviewStruct];
+:3. Tapped [method on *clickableAttributeInPreviewStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:3. TappedSecondary [method on *clickableAttributeInPreviewStruct];
+:4. TappedSecondary [method on *clickableAttributeInPreviewStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:4. newClickableAttributeInPreview;
 stop
 @enduml

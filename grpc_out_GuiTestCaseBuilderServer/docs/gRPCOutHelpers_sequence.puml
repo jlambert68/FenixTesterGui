@@ -2,23 +2,23 @@
 title Sequence Diagram - gRPCOutHelpers.go
 actor Caller
 participant "gRPCOutHelpers.go" as File
+participant "grpc" as grpc
+participant "fenixTestCaseBuilderServerGrpcApi" as fenixTestCaseBuilderServerGrpcApi
+participant "time" as time
 participant "context" as context
 participant "credentials" as credentials
-participant "err" as err
-participant "fenixTestCaseBuilderServerGrpcApi" as fenixTestCaseBuilderServerGrpcApi
-participant "grpc" as grpc
 participant "grpcurl" as grpcurl
 participant "log" as log
-participant "time" as time
+participant "err" as err
 Caller -> File: GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: SetDialAddressString(...)
+Caller -> File: SetLogger(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: SetLogger(...)
+Caller -> File: SetDialAddressString(...)
 activate File
 File --> Caller: return
 deactivate File

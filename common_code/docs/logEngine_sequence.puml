@@ -2,8 +2,8 @@
 title Sequence Diagram - logEngine.go
 actor Caller
 participant "logEngine.go" as File
-participant "log" as log
 participant "zerolog" as zerolog
+participant "log" as log
 Caller -> File: InitiateLoggerEngine(...)
 activate File
 File --> Caller: return
@@ -12,19 +12,19 @@ Caller -> File: LogDebugLevel(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: LogErrorLevel(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: LogFatalLevel(...)
-activate File
-File --> Caller: return
-deactivate File
 Caller -> File: LogInfoLevel(...)
 activate File
 File --> Caller: return
 deactivate File
 Caller -> File: LogWarningLevel(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: LogErrorLevel(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: LogFatalLevel(...)
 activate File
 File --> Caller: return
 deactivate File

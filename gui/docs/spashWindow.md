@@ -50,7 +50,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func createSplashWindow(splashWindow *fyne.Window, splashWindowProlongedVisibleChannelPtr *chan time.Duration)`
 - Exported: `false`
 - Control-flow features: `if, go`
-- Selector calls: `canvas.NewImageFromResource`, `container.New`, `drv.CreateSplashWindow`, `fyne.CurrentApp`, `fyne.Do`, `layout.NewVBoxLayout`, `time.Sleep`
+- Selector calls: `fyne.CurrentApp`, `drv.CreateSplashWindow`, `canvas.NewImageFromResource`, `container.New`, `layout.NewVBoxLayout`, `fyne.Do`, `time.Sleep`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

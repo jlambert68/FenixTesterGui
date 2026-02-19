@@ -2,52 +2,52 @@
 title Sequence Diagram - availableBuildingBlockTree_load_gRPC_results_into_model_test.go
 actor Caller
 participant "availableBuildingBlockTree_load_gRPC_results_into_model_test.go" as File
-participant "UnitTestTestData" as UnitTestTestData
-participant "assert" as assert
-participant "availableBuildingBlocksModel" as availableBuildingBlocksModel
-participant "fmt" as fmt
 participant "jsonpb" as jsonpb
+participant "UnitTestTestData" as UnitTestTestData
 participant "myLogger" as myLogger
-Caller -> File: TestLoadModelWithAvailableBuildingBlocks(...)
+participant "availableBuildingBlocksModel" as availableBuildingBlocksModel
+participant "assert" as assert
+participant "fmt" as fmt
+Caller -> File: TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(...)
 activate File
+File -> jsonpb: UnmarshalString(...)
 File -> UnitTestTestData: InitLoggerForTest(...)
 File -> UnitTestTestData: IsTestDataUsingCorrectTestDataProtoFileVersion(...)
-File -> assert: Equal(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(...)
 activate File
+File -> jsonpb: UnmarshalString(...)
 File -> UnitTestTestData: InitLoggerForTest(...)
 File -> UnitTestTestData: IsTestDataUsingCorrectTestDataProtoFileVersion(...)
-File -> assert: Equal(...)
 File --> Caller: return
 deactivate File
-Caller -> File: TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions(...)
+Caller -> File: TestLoadModelWithAvailableBuildingBlocks(...)
 activate File
+File -> jsonpb: UnmarshalString(...)
 File -> UnitTestTestData: InitLoggerForTest(...)
 File -> UnitTestTestData: IsTestDataUsingCorrectTestDataProtoFileVersion(...)
-File -> assert: Equal(...)
-File --> Caller: return
-deactivate File
-Caller -> File: TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionAndTestInstructionContainers(...)
-activate File
-File -> UnitTestTestData: InitLoggerForTest(...)
-File -> UnitTestTestData: IsTestDataUsingCorrectTestDataProtoFileVersion(...)
-File -> assert: Equal(...)
-File --> Caller: return
-deactivate File
-Caller -> File: TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(...)
-activate File
-File -> UnitTestTestData: InitLoggerForTest(...)
-File -> UnitTestTestData: IsTestDataUsingCorrectTestDataProtoFileVersion(...)
-File -> assert: Equal(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructions(...)
 activate File
+File -> jsonpb: UnmarshalString(...)
 File -> UnitTestTestData: InitLoggerForTest(...)
 File -> UnitTestTestData: IsTestDataUsingCorrectTestDataProtoFileVersion(...)
-File -> assert: Equal(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(...)
+activate File
+File -> jsonpb: UnmarshalString(...)
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> UnitTestTestData: IsTestDataUsingCorrectTestDataProtoFileVersion(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionAndTestInstructionContainers(...)
+activate File
+File -> jsonpb: UnmarshalString(...)
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> UnitTestTestData: IsTestDataUsingCorrectTestDataProtoFileVersion(...)
 File --> Caller: return
 deactivate File
 @enduml

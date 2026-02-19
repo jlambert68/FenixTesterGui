@@ -37,7 +37,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, go, defer`
 - Doc: TesterGui opens the gPRC-channel to have messages streamed back to TesterGui from GuiExecutionServer
 - Internal calls: `cancel`
-- Selector calls: `context.Background`, `context.WithCancel`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `fenixGuiExecutionServerSubscribeToMessagesClient.SubscribeToMessageStream`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `messageStreamEngineObject.setConnectionToFenixGuiExecutionMessageServer`, `streamClient.Recv`
+- Selector calls: `context.Background`, `messageStreamEngineObject.setConnectionToFenixGuiExecutionMessageServer`, `context.WithCancel`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `fenixGuiExecutionServerSubscribeToMessagesClient.SubscribeToMessageStream`, `streamClient.Recv`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

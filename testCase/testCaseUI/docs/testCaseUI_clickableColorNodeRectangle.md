@@ -43,18 +43,12 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - `tic_serialImage`
 
 ## Functions and Methods
-### ForceClick (method on `*ClickableRectangle`)
-- Signature: `func (*ClickableRectangle) ForceClick()`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Doc: Do a click on the Rectangle
-
 ### NewClickableRectangle (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) NewClickableRectangle(rectangleColor color.Color, testCaseUuid string, testInstructionUuid string, rectangleType rectangleTypeType) *ClickableRectangle`
 - Exported: `true`
 - Control-flow features: `if, switch`
 - Internal calls: `float32`
-- Selector calls: `bytes.NewReader`, `canvas.NewImageFromImage`, `canvas.NewRectangle`, `fyne.NewSize`, `log.Fatalf`, `myClickableRectangle.ExtendBaseWidget`, `myClickableRectangle.SetText`, `myClickableRectangle.updateSelectedUINode`
+- Selector calls: `myClickableRectangle.ExtendBaseWidget`, `myClickableRectangle.SetText`, `canvas.NewRectangle`, `png.Decode`, `bytes.NewReader`, `log.Fatalf`, `canvas.NewImageFromImage`, `fyne.NewSize`
 
 ### Tapped (method on `*ClickableRectangle`)
 - Signature: `func (*ClickableRectangle) Tapped(_ *fyne.PointEvent)`
@@ -74,6 +68,12 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*ClickableRectangle) updateSelectedUINode()`
 - Exported: `false`
 - Control-flow features: `if`
+
+### ForceClick (method on `*ClickableRectangle`)
+- Signature: `func (*ClickableRectangle) ForceClick()`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Doc: Do a click on the Rectangle
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

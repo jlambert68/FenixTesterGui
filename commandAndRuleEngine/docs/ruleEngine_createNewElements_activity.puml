@@ -3,67 +3,67 @@ title Activity Diagram - ruleEngine_createNewElements.go
 start
 :Load commandAndRuleEngine/ruleEngine_createNewElements.go;
 :1. createNewBondB0Element [method on *CommandAndRuleEngineObjectStruct];
-:2. createNewBondB10Element [method on *CommandAndRuleEngineObjectStruct];
+:2. createNewBondB1fElement [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:3. createNewBondB10oxElement [method on *CommandAndRuleEngineObjectStruct];
+:3. createNewBondB1lElement [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:4. createNewBondB10oxoElement [method on *CommandAndRuleEngineObjectStruct];
+:4. createNewBondB10Element [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:5. createNewBondB10xoElement [method on *CommandAndRuleEngineObjectStruct];
+:5. createNewBondB10oxoElement [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:6. createNewBondB11fElement [method on *CommandAndRuleEngineObjectStruct];
+:6. createNewBondB10xoElement [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:7. createNewBondB11fxElement [method on *CommandAndRuleEngineObjectStruct];
+:7. createNewBondB10oxElement [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:8. createNewBondB11lElement [method on *CommandAndRuleEngineObjectStruct];
+:8. createNewBondB11fElement [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:9. createNewBondB11lxElement [method on *CommandAndRuleEngineObjectStruct];
+:9. createNewBondB11lElement [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:10. createNewBondB12Element [method on *CommandAndRuleEngineObjectStruct];
+:10. createNewBondB11fxElement [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:11. createNewBondB12xElement [method on *CommandAndRuleEngineObjectStruct];
+:11. createNewBondB11lxElement [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:12. createNewBondB1fElement [method on *CommandAndRuleEngineObjectStruct];
+:12. createNewBondB12Element [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

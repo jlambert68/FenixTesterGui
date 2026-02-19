@@ -2,14 +2,14 @@
 title Sequence Diagram - ruleEngine_verifyDelete.go
 actor Caller
 participant "ruleEngine_verifyDelete.go" as File
-participant "componentType" as componentType
 participant "errors" as errors
 participant "fmt" as fmt
+participant "componentType" as componentType
 Caller -> File: verifyIfComponentCanBeDeletedSimpleRules(...)
 activate File
-File -> componentType: String(...)
 File -> errors: New(...)
 File -> fmt: Sprintf(...)
+File -> componentType: String(...)
 File --> Caller: return
 deactivate File
 Caller -> File: verifyIfComponentCanBeDeletedWithComplexRules(...)

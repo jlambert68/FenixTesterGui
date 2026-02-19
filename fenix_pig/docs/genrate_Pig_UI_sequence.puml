@@ -2,17 +2,17 @@
 title Sequence Diagram - genrate_Pig_UI.go
 actor Caller
 participant "genrate_Pig_UI.go" as File
-participant "canvas" as canvas
-participant "container" as container
-participant "fenixPig48x48Image" as fenixPig48x48Image
-participant "fmt" as fmt
 participant "fyne" as fyne
+participant "canvas" as canvas
+participant "fenixPig48x48Image" as fenixPig48x48Image
 participant "memoryUsage" as memoryUsage
+participant "fmt" as fmt
+participant "container" as container
 Caller -> File: GeneratePigUI(...)
 activate File
+File -> fyne: NewStaticResource(...)
 File -> canvas: NewImageFromResource(...)
-File -> container: NewBorder(...)
-File -> container: NewVBox(...)
+File -> fenixPig48x48Image: SetMinSize(...)
 File --> Caller: return
 deactivate File
 @enduml

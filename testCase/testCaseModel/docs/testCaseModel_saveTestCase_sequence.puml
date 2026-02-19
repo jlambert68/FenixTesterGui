@@ -2,25 +2,25 @@
 title Sequence Diagram - testCaseModel_saveTestCase.go
 actor Caller
 participant "testCaseModel_saveTestCase.go" as File
+participant "testCaseModel" as testCaseModel
 participant "errors" as errors
-participant "fenixGuiTestCaseBuilderServerGrpcApi" as fenixGuiTestCaseBuilderServerGrpcApi
-participant "file" as file
 participant "fmt" as fmt
-participant "gRPCFullTestCaseMessageToSend" as gRPCFullTestCaseMessageToSend
+participant "timestamppb" as timestamppb
 participant "gRPCTestCaseTestData" as gRPCTestCaseTestData
-participant "gRPCUserSpecifiedTestCaseMetaDataMessage" as gRPCUserSpecifiedTestCaseMetaDataMessage
-participant "log" as log
-Caller -> File: SaveChangedTestCaseAttributeInTestCase(...)
+participant "fenixGuiTestCaseBuilderServerGrpcApi" as fenixGuiTestCaseBuilderServerGrpcApi
+participant "gRPCFullTestCaseMessageToSend" as gRPCFullTestCaseMessageToSend
+participant "protojson" as protojson
+Caller -> File: SaveFullTestCase(...)
 activate File
+File -> testCaseModel: SaveChangedTestCaseAttributeInTestCase(...)
 File -> errors: New(...)
-File -> fmt: Println(...)
 File -> fmt: Sprintf(...)
 File --> Caller: return
 deactivate File
-Caller -> File: SaveFullTestCase(...)
+Caller -> File: SaveChangedTestCaseAttributeInTestCase(...)
 activate File
 File -> errors: New(...)
-File -> fenixGuiTestCaseBuilderServerGrpcApi: CurrentFenixTestCaseBuilderProtoFileVersionEnum(...)
+File -> fmt: Sprintf(...)
 File -> fmt: Println(...)
 File --> Caller: return
 deactivate File

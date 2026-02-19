@@ -49,21 +49,21 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - `tic_serialImage`
 
 ## Functions and Methods
-### GenerateListTestSuiteExecutionsUI
-- Signature: `func GenerateListTestSuiteExecutionsUI(testSuiteExecutionsModel *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct, detailedTestSuiteExecutionsUITabObject *container.DocTabs, exitFunctionsForDetailedTestSuiteExecutionsUITabObject *map[*container.TabItem]func(), testCaseInstructionPreViewObject *TestSuiteInstructionPreViewStruct) listTestCasesUI fyne.CanvasObject`
-- Exported: `true`
-- Control-flow features: `if, go`
-- Doc: Create the UI used for list all TestCasesMapPtr that the User can edit
-- Internal calls: `LoadOneTestSuiteExecutionPerTestSuiteFromDataBaseFunction`, `NewHoverableRect`, `calculateAndSetCorrectColumnWidths`, `generatePreViewObject`, `generateTestSuiteExecutionsListTable`, `loadTestSuiteExecutionListTableTable`, `sortGuiTableAscendingOnTestSuiteExecutionTimeStamp`, `updateTestSuiteExecutionsListTable`
-- Selector calls: `binding.NewString`, `container.New`, `container.NewBorder`, `container.NewHBox`, `container.NewHSplit`, `container.NewScroll`, `container.NewVBox`, `detailedTestSuiteExecutionsUI.GenerateExecutionColorPalette`
-
 ### LoadOneTestSuiteExecutionPerTestSuiteFromDataBaseFunction
 - Signature: `func LoadOneTestSuiteExecutionPerTestSuiteFromDataBaseFunction(testSuiteExecutionsModel *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct, updateGui bool, testSuiteInstructionPreViewObject *TestSuiteInstructionPreViewStruct)`
 - Exported: `true`
 - Control-flow features: `if, go`
 - Doc: Define the function to be executed to load TestSuiteExecutions from that Database that the user can view Only loads one TestSuiteExecution per TestCase
 - Internal calls: `SortGuiTableOnCurrentColumnAndSorting`
-- Selector calls: `listTestSuiteExecutionsModel.LoadTestSuiteExecutionsThatCanBeViewedByUser`, `loadAllTestSuiteExecutionsForOneTestSuiteButtonReference.Disable`, `testSuiteInstructionPreViewObject.ClearTestSuiteExecutionPreviewContainer`
+- Selector calls: `testSuiteInstructionPreViewObject.ClearTestSuiteExecutionPreviewContainer`, `loadAllTestSuiteExecutionsForOneTestSuiteButtonReference.Disable`, `listTestSuiteExecutionsModel.LoadTestSuiteExecutionsThatCanBeViewedByUser`
+
+### GenerateListTestSuiteExecutionsUI
+- Signature: `func GenerateListTestSuiteExecutionsUI(testSuiteExecutionsModel *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct, detailedTestSuiteExecutionsUITabObject *container.DocTabs, exitFunctionsForDetailedTestSuiteExecutionsUITabObject *map[*container.TabItem]func(), testCaseInstructionPreViewObject *TestSuiteInstructionPreViewStruct) listTestCasesUI fyne.CanvasObject`
+- Exported: `true`
+- Control-flow features: `if, go`
+- Doc: Create the UI used for list all TestCasesMapPtr that the User can edit
+- Internal calls: `LoadOneTestSuiteExecutionPerTestSuiteFromDataBaseFunction`, `loadTestSuiteExecutionListTableTable`, `calculateAndSetCorrectColumnWidths`, `updateTestSuiteExecutionsListTable`, `sortGuiTableAscendingOnTestSuiteExecutionTimeStamp`, `generateTestSuiteExecutionsListTable`, `generatePreViewObject`, `NewHoverableRect`
+- Selector calls: `widget.NewButton`, `fmt.Println`, `strconv.Itoa`, `numberOfTestSuiteExecutionsAfterLocalFilters.Set`, `fmt.Sprintf`, `numberOfTestSuiteExecutionsInTheDatabaseSearch.Set`, `fyne.CurrentApp`, `testCaseInstructionPreViewObject.ClearTestSuiteExecutionPreviewContainer`
 
 ### generatePreViewObject
 - Signature: `func generatePreViewObject(testCaseInstructionPreViewObject *TestSuiteInstructionPreViewStruct) tempTestCasePreviewTestInstructionExecutionLogSplitContainer *container.Split`
@@ -71,7 +71,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Doc: Generates the Container structure for the PreView-container
 - Internal calls: `NewHoverableRect`
-- Selector calls: `container.New`, `container.NewAppTabs`, `container.NewBorder`, `container.NewCenter`, `container.NewHSplit`, `container.NewScroll`, `container.NewTabItem`, `explorerTabOverlay.Hide`
+- Selector calls: `container.NewCenter`, `widget.NewLabel`, `container.NewBorder`, `container.NewScroll`, `container.NewTabItem`, `container.NewAppTabs`, `testCaseTreePreViewOverlay.Hide`, `explorerTabOverlay.Hide`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -36,7 +36,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, defer`
 - Doc: Updates all Executions status with information received after direct gRPC-call to GUiExecutionServer
 - Internal calls: `int`, `int32`
-- Selector calls: `detailedExecutionsModelObject.updateTestCaseExecutionsSummaryTable`, `detailedExecutionsModelObject.updateTestInstructionExecutionsSummaryTable`, `strconv.Itoa`, `time.Sleep`
+- Selector calls: `strconv.Itoa`, `time.Sleep`, `detailedExecutionsModelObject.updateTestInstructionExecutionsSummaryTable`, `detailedExecutionsModelObject.updateTestCaseExecutionsSummaryTable`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

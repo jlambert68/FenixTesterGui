@@ -42,56 +42,56 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: Verify that a 'B0' can be swapped into 'B1-TIC(B10)-B1' TCRuleSwap101
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeTCRuleSwap101`, `fmt.Sprint`
+- Selector calls: `UnitTestTestData.InitLoggerForTest`, `commandAndRuleEngine.executeTCRuleSwap101`, `assert.Equal`, `fmt.Sprint`
 
 ### TestTCRuleSwap102
 - Signature: `func TestTCRuleSwap102(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: TCRuleSwap102 What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeTCRuleSwap102`, `fmt.Sprint`
+- Selector calls: `UnitTestTestData.InitLoggerForTest`, `commandAndRuleEngine.executeTCRuleSwap102`, `assert.Equal`, `fmt.Sprint`
 
 ### TestTCRuleSwap103
 - Signature: `func TestTCRuleSwap103(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: TCRuleSwap103 What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeTCRuleSwap103`, `fmt.Sprint`
+- Selector calls: `UnitTestTestData.InitLoggerForTest`, `commandAndRuleEngine.executeTCRuleSwap103`, `assert.Equal`, `fmt.Sprint`
 
 ### TestTCRuleSwap104
 - Signature: `func TestTCRuleSwap104(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: TCRuleSwap104 What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeTCRuleSwap104`, `fmt.Sprint`
+- Selector calls: `UnitTestTestData.InitLoggerForTest`, `commandAndRuleEngine.executeTCRuleSwap104`, `assert.Equal`, `fmt.Sprint`
 
 ### TestTCRuleSwap105
 - Signature: `func TestTCRuleSwap105(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: TCRuleSwap105 What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeTCRuleSwap105`, `fmt.Sprint`
+- Selector calls: `UnitTestTestData.InitLoggerForTest`, `commandAndRuleEngine.executeTCRuleSwap105`, `assert.Equal`, `fmt.Sprint`
 
 ### TestTCRuleSwap106
 - Signature: `func TestTCRuleSwap106(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: TCRuleSwap106 What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeTCRuleSwap106`, `fmt.Sprint`
+- Selector calls: `UnitTestTestData.InitLoggerForTest`, `commandAndRuleEngine.executeTCRuleSwap106`, `assert.Equal`, `fmt.Sprint`
 
 ### TestTCRuleSwap107
 - Signature: `func TestTCRuleSwap107(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: TCRuleSwap107 What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeTCRuleSwap107`, `fmt.Sprint`
+- Selector calls: `UnitTestTestData.InitLoggerForTest`, `commandAndRuleEngine.executeTCRuleSwap107`, `assert.Equal`, `fmt.Sprint`
 
 ### TestTCRuleSwap108
 - Signature: `func TestTCRuleSwap108(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: TCRuleSwap108 What to swap in 	What to swap out	with	In the following structure		Result after swapping	Rule
-- Selector calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeTCRuleSwap108`, `fmt.Sprint`
+- Selector calls: `UnitTestTestData.InitLoggerForTest`, `commandAndRuleEngine.executeTCRuleSwap108`, `assert.Equal`, `fmt.Sprint`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

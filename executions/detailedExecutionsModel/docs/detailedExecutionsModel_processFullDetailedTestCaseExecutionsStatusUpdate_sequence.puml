@@ -2,14 +2,14 @@
 title Sequence Diagram - detailedExecutionsModel_processFullDetailedTestCaseExecutionsStatusUpdate.go
 actor Caller
 participant "detailedExecutionsModel_processFullDetailedTestCaseExecutionsStatusUpdate.go" as File
-participant "detailedExecutionsModelObject" as detailedExecutionsModelObject
 participant "strconv" as strconv
 participant "time" as time
+participant "detailedExecutionsModelObject" as detailedExecutionsModelObject
 Caller -> File: processFullDetailedTestCaseExecutionsStatusUpdate(...)
 activate File
-File -> detailedExecutionsModelObject: updateTestCaseExecutionsSummaryTable(...)
-File -> detailedExecutionsModelObject: updateTestInstructionExecutionsSummaryTable(...)
 File -> strconv: Itoa(...)
+File -> time: Sleep(...)
+File -> detailedExecutionsModelObject: updateTestInstructionExecutionsSummaryTable(...)
 File --> Caller: return
 deactivate File
 @enduml

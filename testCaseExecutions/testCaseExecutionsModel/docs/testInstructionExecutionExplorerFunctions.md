@@ -32,7 +32,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, for/range, defer`
 - Doc: ListExecutionDataForTestInstructionExecutions List all Execution-data for supplied TestInstructionExecutions. Posts are sorted on UpdateTimeStamp
-- Internal calls: `RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType`, `TestCaseExecutionUuidType`, `TestInstructionExecutionDetailsMapKeyType`, `sortTestInstructionExecutionPostsByTimestamp`
+- Internal calls: `TestCaseExecutionUuidType`, `RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType`, `TestInstructionExecutionDetailsMapKeyType`, `sortTestInstructionExecutionPostsByTimestamp`
 - Selector calls: `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`, `testCaseExecutionsModel.GetTestInstructionExecutionUuidFromTestInstructionUuid`
 
 ### sortTestInstructionExecutionPostsByTimestamp
@@ -40,7 +40,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: sortTestInstructionExecutionPostsByTimestamp sorts testInstructionExecutionDetailsForExplorer slice by ExecutionStatusUpdateTimeStamp Set ascending to true for ascending order, false for descending order
-- Selector calls: `sort.SliceStable`, `timeI.After`, `timeI.Before`
+- Selector calls: `sort.SliceStable`, `timeI.Before`, `timeI.After`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

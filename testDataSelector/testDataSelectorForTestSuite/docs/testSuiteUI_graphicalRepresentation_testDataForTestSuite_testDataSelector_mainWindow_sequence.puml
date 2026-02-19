@@ -2,19 +2,19 @@
 title Sequence Diagram - testSuiteUI_graphicalRepresentation_testDataForTestSuite_testDataSelector_mainWindow.go
 actor Caller
 participant "testSuiteUI_graphicalRepresentation_testDataForTestSuite_testDataSelector_mainWindow.go" as File
-participant "app" as app
-participant "container" as container
-participant "dialog" as dialog
-participant "fmt" as fmt
-participant "fyne" as fyne
-participant "myWindow" as myWindow
-participant "newOrEditTestDataPointGroupUI" as newOrEditTestDataPointGroupUI
 participant "parent" as parent
+participant "app" as app
+participant "myWindow" as myWindow
+participant "fyne" as fyne
+participant "widget" as widget
+participant "testDataPointsForAGroupList" as testDataPointsForAGroupList
+participant "testDataPointGroupsList" as testDataPointGroupsList
+participant "container" as container
 Caller -> File: MainTestDataSelector(...)
 activate File
+File -> parent: Hide(...)
 File -> app: NewWindow(...)
-File -> container: NewBorder(...)
-File -> container: NewHBox(...)
+File -> myWindow: Resize(...)
 File --> Caller: return
 deactivate File
 @enduml

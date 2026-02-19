@@ -2,24 +2,24 @@
 title Activity Diagram - testSuiteUI_graphicalComponent_testEnvironmenForTestSuite.go
 start
 :Load testSuites/testSuiteUI/testSuiteUI_graphicalComponent_testEnvironmenForTestSuite.go;
-:1. buildTestEnvironmentGUIContainer [method on *TestSuiteUiStruct];
+:1. generateTestEnvironmentForTestSuite [method on *TestSuiteUiStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. setSelectedTestEnvironmentForTestSuite [method on *TestSuiteUiStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. buildTestEnvironmentGUIContainer [method on *TestSuiteUiStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:2. generateTestEnvironmentForTestSuite [method on *TestSuiteUiStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:3. setSelectedTestEnvironmentForTestSuite [method on *TestSuiteUiStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
 stop
 @enduml

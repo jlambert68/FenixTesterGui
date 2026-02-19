@@ -37,7 +37,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `defer, returns error`
 - Doc: GuiExecutionServerAreYouAlive - ********************************************************************* Anyone can check if 'GuiExecutionServer' is alive with this service
 - Internal calls: `getHighestFenixUserGuiServerProtoFileVersion`
-- Selector calls: `fenixUserGuiGrpcApi.CurrentFenixUserGuiProtoFileVersionEnum`, `fmt.Sprintf`
+- Selector calls: `fmt.Sprintf`, `fenixUserGuiGrpcApi.CurrentFenixUserGuiProtoFileVersionEnum`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

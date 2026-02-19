@@ -7,8 +7,8 @@ participant "fmt" as fmt
 Caller -> File: DeleteTestSuiteAtThisDate(...)
 activate File
 File -> errors: New(...)
-File -> fmt: Println(...)
 File -> fmt: Sprintf(...)
+File -> fmt: Println(...)
 File --> Caller: return
 deactivate File
 @enduml

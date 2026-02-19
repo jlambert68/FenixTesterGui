@@ -3,8 +3,8 @@ title Sequence Diagram - testInstructionExecutionExplorerFunctions.go
 actor Caller
 participant "testInstructionExecutionExplorerFunctions.go" as File
 participant "detailedTestCaseExecutionsMapMutex" as detailedTestCaseExecutionsMapMutex
-participant "sort" as sort
 participant "testCaseExecutionsModel" as testCaseExecutionsModel
+participant "sort" as sort
 participant "timeI" as timeI
 Caller -> File: ListExecutionDataForTestInstructionExecutions(...)
 activate File

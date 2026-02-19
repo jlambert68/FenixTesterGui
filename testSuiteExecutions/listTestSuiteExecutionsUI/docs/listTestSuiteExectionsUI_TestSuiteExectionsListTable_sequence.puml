@@ -2,25 +2,25 @@
 title Sequence Diagram - listTestSuiteExectionsUI_TestSuiteExectionsListTable.go
 actor Caller
 participant "listTestSuiteExectionsUI_TestSuiteExectionsListTable.go" as File
-participant "alt" as alt
+participant "testSuiteExecutionsModelRef" as testSuiteExecutionsModelRef
+participant "testSuiteExecutionsModel" as testSuiteExecutionsModel
+participant "widget" as widget
+participant "png" as png
 participant "bytes" as bytes
-participant "canvas" as canvas
-participant "cont" as cont
+participant "updateTestSuiteExecutionsListTableMutex" as updateTestSuiteExecutionsListTableMutex
 participant "container" as container
-participant "fmt" as fmt
-participant "fyne" as fyne
-participant "h" as h
+participant "canvas" as canvas
 Caller -> File: RemoveTestSuiteExecutionFromList(...)
 activate File
-File -> testSuiteExecutionsModel: TestSuiteExecutionUuidType(...)
 File -> testSuiteExecutionsModelRef: DeleteFromTestSuiteExecutionsMap(...)
-File --> Caller: return
-deactivate File
-Caller -> File: SortGuiTableOnCurrentColumnAndSorting(...)
-activate File
+File -> testSuiteExecutionsModel: TestSuiteExecutionUuidType(...)
 File --> Caller: return
 deactivate File
 Caller -> File: SortOrReverseSortGuiTable(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: SortGuiTableOnCurrentColumnAndSorting(...)
 activate File
 File --> Caller: return
 deactivate File

@@ -2,14 +2,14 @@
 title Sequence Diagram - clickableTInTICNameInPreview.go
 actor Caller
 participant "clickableTInTICNameInPreview.go" as File
-participant "attributesContainerPtr" as attributesContainerPtr
-participant "canvas" as canvas
+participant "time" as time
 participant "clickableTInTICNameLabelInPreview" as clickableTInTICNameLabelInPreview
-participant "clipboard" as clipboard
+participant "widget" as widget
+participant "testSuiteExecutionAttributesForPreviewMapMutex" as testSuiteExecutionAttributesForPreviewMapMutex
+participant "attributesContainerPtr" as attributesContainerPtr
+participant "testCaseExecutionsModel" as testCaseExecutionsModel
 participant "container" as container
-participant "copyLogToClipBoardContainer" as copyLogToClipBoardContainer
-participant "copyTestInstructionExecutionDataToClipBoardContainer" as copyTestInstructionExecutionDataToClipBoardContainer
-participant "fenixMasterWindow" as fenixMasterWindow
+participant "layout" as layout
 Caller -> File: CreateRenderer(...)
 activate File
 File -> widget: NewLabel(...)
@@ -18,16 +18,16 @@ File --> Caller: return
 deactivate File
 Caller -> File: Tapped(...)
 activate File
+File -> testSuiteExecutionAttributesForPreviewMapMutex: Lock(...)
+File -> testSuiteExecutionAttributesForPreviewMapMutex: Unlock(...)
 File -> attributesContainerPtr: Hide(...)
-File -> attributesContainerPtr: Refresh(...)
-File -> attributesContainerPtr: Show(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TappedSecondary(...)
 activate File
-File -> clipboard: SetContent(...)
 File -> fenixMasterWindow: Clipboard(...)
-File -> fmt: Sprintf(...)
+File -> clipboard: SetContent(...)
+File -> fyne: CurrentApp(...)
 File --> Caller: return
 deactivate File
 @enduml

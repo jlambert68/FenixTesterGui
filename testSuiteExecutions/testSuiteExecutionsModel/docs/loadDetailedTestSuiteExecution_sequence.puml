@@ -2,16 +2,16 @@
 title Sequence Diagram - loadDetailedTestSuiteExecution.go
 actor Caller
 participant "loadDetailedTestSuiteExecution.go" as File
+participant "strconv" as strconv
 participant "TestSuiteExecutionsModel" as TestSuiteExecutionsModel
 participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
-participant "getSingleTestSuiteExecutionResponse" as getSingleTestSuiteExecutionResponse
 participant "grpc_out_GuiExecutionServer" as grpc_out_GuiExecutionServer
-participant "strconv" as strconv
+participant "getSingleTestSuiteExecutionResponse" as getSingleTestSuiteExecutionResponse
 Caller -> File: LoadDetailedTestSuiteExecutionFromDatabase(...)
 activate File
-File -> TestSuiteExecutionsModel: AddToDetailedTestSuiteExecutionsMap(...)
-File -> TestSuiteExecutionsModel: ClearFlagRefreshOngoingOfDetailedTestSuiteExecution(...)
+File -> strconv: Itoa(...)
 File -> TestSuiteExecutionsModel: SetFlagRefreshOngoingOfDetailedTestSuiteExecution(...)
+File -> fenixExecutionServerGuiGrpcApi: CurrentFenixExecutionGuiProtoFileVersionEnum(...)
 File --> Caller: return
 deactivate File
 @enduml

@@ -3,13 +3,13 @@ title Sequence Diagram - detailedExecutionsModel_updateTestInstructionExecutions
 actor Caller
 participant "detailedExecutionsModel_updateTestInstructionExecutionsSummaryTable.go" as File
 participant "sharedCode" as sharedCode
-participant "sort" as sort
 participant "strconv" as strconv
+participant "sort" as sort
 Caller -> File: updateTestInstructionExecutionsSummaryTable(...)
 activate File
 File -> sharedCode: GenerateShortUuidFromFullUuid(...)
-File -> sort: Slice(...)
 File -> strconv: Itoa(...)
+File -> sort: Slice(...)
 File --> Caller: return
 deactivate File
 @enduml

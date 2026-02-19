@@ -2,22 +2,21 @@
 title Sequence Diagram - detailedExecutionUI_summaryTableCell.go
 actor Caller
 participant "detailedExecutionUI_summaryTableCell.go" as File
-participant "canvas" as canvas
-participant "container" as container
 participant "fmt" as fmt
-participant "myNewVBox" as myNewVBox
-participant "newtestcaseExecutionSummaryTableCell" as newtestcaseExecutionSummaryTableCell
+participant "canvas" as canvas
 participant "rectangleColorAnimation" as rectangleColorAnimation
 participant "widget" as widget
-Caller -> File: CreateRenderer(...)
+participant "newtestcaseExecutionSummaryTableCell" as newtestcaseExecutionSummaryTableCell
+participant "container" as container
+participant "myNewVBox" as myNewVBox
+Caller -> File: Tapped(...)
 activate File
-File -> container: NewMax(...)
-File -> container: NewVBox(...)
-File -> myNewVBox: Add(...)
+File -> fmt: Println(...)
 File --> Caller: return
 deactivate File
-Caller -> File: Destroy(...)
+Caller -> File: TappedSecondary(...)
 activate File
+File -> fmt: Println(...)
 File --> Caller: return
 deactivate File
 Caller -> File: DoubleTapped(...)
@@ -39,22 +38,25 @@ File -> canvas: Refresh(...)
 File -> rectangleColorAnimation: Start(...)
 File --> Caller: return
 deactivate File
-Caller -> File: Layout(...)
+Caller -> File: NewTestcaseExecutionSummaryTableCell(...)
 activate File
+File -> widget: NewLabel(...)
+File -> canvas: NewRectangle(...)
+File -> canvas: NewImageFromResource(...)
+File --> Caller: return
+deactivate File
+Caller -> File: CreateRenderer(...)
+activate File
+File -> container: NewVBox(...)
+File -> myNewVBox: Add(...)
+File -> container: NewMax(...)
 File --> Caller: return
 deactivate File
 Caller -> File: MinSize(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: NewTestcaseExecutionSummaryTableCell(...)
-activate File
-File -> canvas: NewImageFromResource(...)
-File -> canvas: NewRectangle(...)
-File -> newtestcaseExecutionSummaryTableCell: ExtendBaseWidget(...)
-File --> Caller: return
-deactivate File
-Caller -> File: Objects(...)
+Caller -> File: Layout(...)
 activate File
 File --> Caller: return
 deactivate File

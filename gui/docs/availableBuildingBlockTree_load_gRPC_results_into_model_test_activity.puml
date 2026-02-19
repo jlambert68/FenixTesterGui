@@ -2,7 +2,7 @@
 title Activity Diagram - availableBuildingBlockTree_load_gRPC_results_into_model_test.go
 start
 :Load gui/availableBuildingBlockTree_load_gRPC_results_into_model_test.go;
-:1. TestLoadModelWithAvailableBuildingBlocks;
+:1. TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -14,13 +14,13 @@ if (branch or error path?) then (yes)
 else (no)
 :Continue primary flow;
 endif
-:3. TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions;
+:3. TestLoadModelWithAvailableBuildingBlocks;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:4. TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionAndTestInstructionContainers;
+:4. TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructions;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -32,7 +32,7 @@ if (branch or error path?) then (yes)
 else (no)
 :Continue primary flow;
 endif
-:6. TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructions;
+:6. TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionAndTestInstructionContainers;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

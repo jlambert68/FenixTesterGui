@@ -4,15 +4,15 @@ actor Caller
 participant "testSuiteUI_GraphicalComponent_testSuiteName.go" as File
 participant "container" as container
 participant "layout" as layout
-participant "newTestSuiteNameEntry" as newTestSuiteNameEntry
-participant "sharedCode" as sharedCode
-participant "strings" as strings
-participant "testSuiteNameFormContainer" as testSuiteNameFormContainer
 participant "widget" as widget
+participant "testSuiteNameFormContainer" as testSuiteNameFormContainer
+participant "newTestSuiteNameEntry" as newTestSuiteNameEntry
+participant "strings" as strings
+participant "sharedCode" as sharedCode
 Caller -> File: generateTestSuiteNameArea(...)
 activate File
 File -> container: New(...)
-File -> container: NewVBox(...)
+File -> layout: NewVBoxLayout(...)
 File -> layout: NewFormLayout(...)
 File --> Caller: return
 deactivate File

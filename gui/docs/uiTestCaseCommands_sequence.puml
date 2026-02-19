@@ -2,77 +2,76 @@
 title Sequence Diagram - uiTestCaseCommands.go
 actor Caller
 participant "uiTestCaseCommands.go" as File
-participant "availableBuildingBlocksInTestCaseSelectWidget" as availableBuildingBlocksInTestCaseSelectWidget
-participant "availableBuildingBlocksSelectWidget" as availableBuildingBlocksSelectWidget
-participant "availableTestCasesSelectWidget" as availableTestCasesSelectWidget
-participant "bindedCommandListData" as bindedCommandListData
-participant "container" as container
-participant "errors" as errors
 participant "fmt" as fmt
+participant "container" as container
 participant "layout" as layout
-Caller -> File: copy(...)
-activate File
-File -> bindedCommandListData: Prepend(...)
-File -> fmt: Printf(...)
-File --> Caller: return
-deactivate File
+participant "widget" as widget
+participant "availableBuildingBlocksInTestCaseSelectWidget" as availableBuildingBlocksInTestCaseSelectWidget
+participant "uiServer" as uiServer
+participant "testCaseCommandsUIObject" as testCaseCommandsUIObject
+participant "bindedCommandListData" as bindedCommandListData
 Caller -> File: createTestCaseCommandParametersUI(...)
 activate File
-File -> container: New(...)
-File -> container: NewScroll(...)
+File -> fmt: Println(...)
 File -> fmt: Printf(...)
+File -> container: New(...)
 File --> Caller: return
 deactivate File
 Caller -> File: createTestCaseCommandsUI(...)
 activate File
+File -> widget: NewLabel(...)
+File -> fmt: Println(...)
 File -> availableBuildingBlocksInTestCaseSelectWidget: Refresh(...)
-File -> container: New(...)
-File -> container: NewScroll(...)
-File --> Caller: return
-deactivate File
-Caller -> File: cut(...)
-activate File
-File -> bindedCommandListData: Prepend(...)
-File -> fmt: Printf(...)
-File --> Caller: return
-deactivate File
-Caller -> File: getUuidFromTreeName(...)
-activate File
-File -> errors: New(...)
-File -> fmt: Sprintf(...)
-File -> strings: Index(...)
 File --> Caller: return
 deactivate File
 Caller -> File: newTestCase(...)
 activate File
-File -> availableBuildingBlocksInTestCaseSelectWidget: Refresh(...)
-File -> availableBuildingBlocksSelectWidget: Refresh(...)
-File -> availableTestCasesSelectWidget: Refresh(...)
+File -> fmt: Printf(...)
+File -> bindedCommandListData: Prepend(...)
+File -> fmt: Println(...)
 File --> Caller: return
 deactivate File
 Caller -> File: remove(...)
 activate File
-File -> bindedCommandListData: Prepend(...)
 File -> fmt: Printf(...)
+File -> bindedCommandListData: Prepend(...)
 File -> fmt: Println(...)
-File --> Caller: return
-deactivate File
-Caller -> File: swapFromCopyBuffer(...)
-activate File
-File -> bindedCommandListData: Prepend(...)
-File -> fmt: Printf(...)
-File --> Caller: return
-deactivate File
-Caller -> File: swapFromCutBuffer(...)
-activate File
-File -> bindedCommandListData: Prepend(...)
-File -> fmt: Printf(...)
 File --> Caller: return
 deactivate File
 Caller -> File: swapFromNew(...)
 activate File
-File -> availableBuildingBlocksInTestCaseSelectWidget: Refresh(...)
-File -> availableBuildingBlocksSelectWidget: Refresh(...)
+File -> fmt: Printf(...)
+File -> bindedCommandListData: Prepend(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+Caller -> File: copy(...)
+activate File
+File -> fmt: Printf(...)
+File -> bindedCommandListData: Prepend(...)
+File --> Caller: return
+deactivate File
+Caller -> File: swapFromCopyBuffer(...)
+activate File
+File -> fmt: Printf(...)
+File -> bindedCommandListData: Prepend(...)
+File --> Caller: return
+deactivate File
+Caller -> File: cut(...)
+activate File
+File -> fmt: Printf(...)
+File -> bindedCommandListData: Prepend(...)
+File --> Caller: return
+deactivate File
+Caller -> File: swapFromCutBuffer(...)
+activate File
+File -> fmt: Printf(...)
+File -> bindedCommandListData: Prepend(...)
+File --> Caller: return
+deactivate File
+Caller -> File: undoLastCommandOnStack(...)
+activate File
+File -> fmt: Printf(...)
 File -> bindedCommandListData: Prepend(...)
 File --> Caller: return
 deactivate File

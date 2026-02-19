@@ -34,21 +34,27 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
-### DragEnd (method on `*DraggableLabel`)
-- Signature: `func (*DraggableLabel) DragEnd()`
+### NewDraggableLabel (method on `*StateMachineDragAndDropStruct`)
+- Signature: `func (*StateMachineDragAndDropStruct) NewDraggableLabel(uuid string) *DraggableLabel`
 - Exported: `true`
-- Control-flow features: `if, for/range, switch`
-- Doc: DragEnd When the user release the mouse button this event is triggered
-- Internal calls: `executeDropAction`, `shrinkDropAreas`, `switchStateForSource`, `switchStateForTarget`
-- Selector calls: `containerRef.Hide`, `containerRef.Refresh`, `log.Fatalln`
+- Control-flow features: `none detected`
+- Selector calls: `draggableLabel.ExtendBaseWidget`
 
 ### Dragged (method on `*DraggableLabel`)
 - Signature: `func (*DraggableLabel) Dragged(ev *fyne.DragEvent)`
 - Exported: `true`
 - Control-flow features: `if, switch`
 - Doc: Dragged When the user press down the mouse button this event is triggered
-- Internal calls: `expandDropAreas`, `switchStateForSource`, `switchStateForTarget`
-- Selector calls: `containerRef.Move`, `containerRef.Refresh`, `containerRef.Show`, `fyne.NewSize`, `log.Fatalln`, `rectangle2Ref.SetMinSize`, `rectangleRef.SetMinSize`, `rectangleRef.Size`
+- Internal calls: `switchStateForSource`, `expandDropAreas`, `switchStateForTarget`
+- Selector calls: `log.Fatalln`, `rectangleRef.SetMinSize`, `textRef.Size`, `fyne.NewSize`, `rectangle2Ref.SetMinSize`, `rectangleRef.Size`, `containerRef.Move`, `containerRef.Refresh`
+
+### DragEnd (method on `*DraggableLabel`)
+- Signature: `func (*DraggableLabel) DragEnd()`
+- Exported: `true`
+- Control-flow features: `if, for/range, switch`
+- Doc: DragEnd When the user release the mouse button this event is triggered
+- Internal calls: `switchStateForSource`, `switchStateForTarget`, `shrinkDropAreas`, `executeDropAction`
+- Selector calls: `log.Fatalln`, `containerRef.Hide`, `containerRef.Refresh`
 
 ### MouseIn (method on `*DraggableLabel`)
 - Signature: `func (*DraggableLabel) MouseIn(*desktop.MouseEvent)`
@@ -71,12 +77,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Doc: MouseOut is called when a desktop pointer exits the widget
 - Internal calls: `switchStateForSource`
 - Selector calls: `log.Fatalln`
-
-### NewDraggableLabel (method on `*StateMachineDragAndDropStruct`)
-- Signature: `func (*StateMachineDragAndDropStruct) NewDraggableLabel(uuid string) *DraggableLabel`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Selector calls: `draggableLabel.ExtendBaseWidget`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

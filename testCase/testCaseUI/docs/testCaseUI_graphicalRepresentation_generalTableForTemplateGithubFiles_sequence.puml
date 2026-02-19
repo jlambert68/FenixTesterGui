@@ -2,19 +2,23 @@
 title Sequence Diagram - testCaseUI_graphicalRepresentation_generalTableForTemplateGithubFiles.go
 actor Caller
 participant "testCaseUI_graphicalRepresentation_generalTableForTemplateGithubFiles.go" as File
-participant "checkIfTemplatesAreChangedButton" as checkIfTemplatesAreChangedButton
-participant "clickable" as clickable
-participant "fyne" as fyne
+participant "time" as time
 participant "l" as l
-participant "nonClickable" as nonClickable
-participant "t" as t
-participant "templateFilesTable" as templateFilesTable
+participant "clickable" as clickable
 participant "templateViewer" as templateViewer
-Caller -> File: MinSize(...)
+participant "nonClickable" as nonClickable
+participant "templateFilesTable" as templateFilesTable
+participant "fyne" as fyne
+participant "theme" as theme
+Caller -> File: Tapped(...)
 activate File
-File -> fyne: MeasureText(...)
-File -> fyne: NewSize(...)
-File -> t: Length(...)
+File -> time: Since(...)
+File -> l: onDoubleTap(...)
+File -> time: Now(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TappedSecondary(...)
+activate File
 File --> Caller: return
 deactivate File
 Caller -> File: MouseIn(...)
@@ -29,15 +33,11 @@ Caller -> File: MouseOut(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: Tapped(...)
+Caller -> File: MinSize(...)
 activate File
-File -> l: onDoubleTap(...)
-File -> time: Now(...)
-File -> time: Since(...)
-File --> Caller: return
-deactivate File
-Caller -> File: TappedSecondary(...)
-activate File
+File -> fyne: MeasureText(...)
+File -> theme: TextSize(...)
+File -> t: Length(...)
 File --> Caller: return
 deactivate File
 @enduml

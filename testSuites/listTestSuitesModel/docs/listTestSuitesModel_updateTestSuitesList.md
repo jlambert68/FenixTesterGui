@@ -46,7 +46,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: Store TestSuitesMapPtr That Can Be Edited By User
-- Selector calls: `boolbits.NewAllZerosEntry`, `boolbits.NewEntry`, `err.Error`, `fmt.Sprintf`, `log.Fatalln`, `resultsEntry.Or`, `tempTestSuitePreview.GetSelectedTestSuiteMetaDataValuesMap`, `testSuiteThatCanBeEditedByUser.GetTestSuitePreview`
+- Selector calls: `testSuiteThatCanBeEditedByUser.GetTestSuitePreview`, `tempTestSuitePreview.GetSelectedTestSuiteMetaDataValuesMap`, `boolbits.NewAllZerosEntry`, `fmt.Sprintf`, `err.Error`, `log.Fatalln`, `boolbits.NewEntry`, `resultsEntry.Or`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

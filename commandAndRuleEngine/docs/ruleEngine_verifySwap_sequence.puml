@@ -2,13 +2,13 @@
 title Sequence Diagram - ruleEngine_verifySwap.go
 actor Caller
 participant "ruleEngine_verifySwap.go" as File
-participant "commandAndRuleEngine" as commandAndRuleEngine
-participant "componentType" as componentType
-participant "e" as e
 participant "errors" as errors
-participant "fmt" as fmt
+participant "componentType" as componentType
+participant "commandAndRuleEngine" as commandAndRuleEngine
 participant "reflect" as reflect
+participant "e" as e
 participant "varType" as varType
+participant "fmt" as fmt
 Caller -> File: FindElementInSliceAndRemove(...)
 activate File
 File --> Caller: return

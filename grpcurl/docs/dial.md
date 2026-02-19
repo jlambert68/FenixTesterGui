@@ -39,27 +39,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - `version`
 
 ## Functions and Methods
-### BlockingDial
-- Signature: `func BlockingDial(ctx context.Context, network, address string, creds credentials.TransportCredentials, opts ...grpc.DialOption) (*grpc.ClientConn, error)`
-- Exported: `true`
-- Control-flow features: `if, select, go, returns error`
-- Doc: BlockingDial is a helper method to dial the given address, using optional TLS credentials, and blocking until the returned connection is ready. If the given credentials are nil, the
-- Internal calls: `writeResult`
-- Selector calls: `ctx.Done`, `ctx.Err`, `grpc.DialContext`, `grpc.FailOnNonTempDialError`, `grpc.WithBlock`, `grpc.WithContextDialer`, `grpc.WithTransportCredentials`, `insecure.NewCredentials`
-
-### ClientHandshake (method on `*errSignalingCreds`)
-- Signature: `func (*errSignalingCreds) ClientHandshake(ctx context.Context, addr string, rawConn net.Conn) (net.Conn, credentials.AuthInfo, error)`
-- Exported: `true`
-- Control-flow features: `if, returns error`
-- Selector calls: `c.writeResult`
-
-### ClientTLSConfig
-- Signature: `func ClientTLSConfig(insecureSkipVerify bool, cacertFile, clientCertFile, clientKeyFile string) (*tls.Config, error)`
-- Exported: `true`
-- Control-flow features: `if, returns error`
-- Doc: ClientTLSConfig builds transport-layer config for a gRPC client using the given properties. If cacertFile is blank, only standard trusted certs are used to
-- Selector calls: `certPool.AppendCertsFromPEM`, `errors.New`, `fmt.Errorf`, `ioutil.ReadFile`, `tls.LoadX509KeyPair`, `x509.NewCertPool`
-
 ### ClientTransportCredentials
 - Signature: `func ClientTransportCredentials(insecureSkipVerify bool, cacertFile, clientCertFile, clientKeyFile string) (credentials.TransportCredentials, error)`
 - Exported: `true`
@@ -68,12 +47,33 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Internal calls: `ClientTLSConfig`
 - Selector calls: `credentials.NewTLS`
 
+### ClientTLSConfig
+- Signature: `func ClientTLSConfig(insecureSkipVerify bool, cacertFile, clientCertFile, clientKeyFile string) (*tls.Config, error)`
+- Exported: `true`
+- Control-flow features: `if, returns error`
+- Doc: ClientTLSConfig builds transport-layer config for a gRPC client using the given properties. If cacertFile is blank, only standard trusted certs are used to
+- Selector calls: `tls.LoadX509KeyPair`, `fmt.Errorf`, `x509.NewCertPool`, `ioutil.ReadFile`, `certPool.AppendCertsFromPEM`, `errors.New`
+
 ### ServerTransportCredentials
 - Signature: `func ServerTransportCredentials(cacertFile, serverCertFile, serverKeyFile string, requireClientCerts bool) (credentials.TransportCredentials, error)`
 - Exported: `true`
 - Control-flow features: `if, returns error`
 - Doc: ServerTransportCredentials builds transport credentials for a gRPC server using the given properties. If cacertFile is blank, the server will not request client certs
-- Selector calls: `certPool.AppendCertsFromPEM`, `credentials.NewTLS`, `errors.New`, `fmt.Errorf`, `ioutil.ReadFile`, `tls.LoadX509KeyPair`, `x509.NewCertPool`
+- Selector calls: `tls.LoadX509KeyPair`, `fmt.Errorf`, `x509.NewCertPool`, `ioutil.ReadFile`, `certPool.AppendCertsFromPEM`, `errors.New`, `credentials.NewTLS`
+
+### BlockingDial
+- Signature: `func BlockingDial(ctx context.Context, network, address string, creds credentials.TransportCredentials, opts ...grpc.DialOption) (*grpc.ClientConn, error)`
+- Exported: `true`
+- Control-flow features: `if, select, go, returns error`
+- Doc: BlockingDial is a helper method to dial the given address, using optional TLS credentials, and blocking until the returned connection is ready. If the given credentials are nil, the
+- Internal calls: `writeResult`
+- Selector calls: `grpc.FailOnNonTempDialError`, `grpc.WithBlock`, `grpc.WithContextDialer`, `grpc.WithTransportCredentials`, `insecure.NewCredentials`, `grpc.DialContext`, `ctx.Done`, `ctx.Err`
+
+### ClientHandshake (method on `*errSignalingCreds`)
+- Signature: `func (*errSignalingCreds) ClientHandshake(ctx context.Context, addr string, rawConn net.Conn) (net.Conn, credentials.AuthInfo, error)`
+- Exported: `true`
+- Control-flow features: `if, returns error`
+- Selector calls: `c.writeResult`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

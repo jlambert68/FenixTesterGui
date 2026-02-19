@@ -29,26 +29,26 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
-### TestCaseHashIsChangedSinceLoadedOrSaved (method on `*TestCasesModelsStruct`)
-- Signature: `func (*TestCasesModelsStruct) TestCaseHashIsChangedSinceLoadedOrSaved(testCaseUuid string) (hashIsChanged bool, err error)`
+### VerifyTestCaseHashTowardsDatabase (method on `*TestCasesModelsStruct`)
+- Signature: `func (*TestCasesModelsStruct) VerifyTestCaseHashTowardsDatabase(testCaseUuid string) (hashIsTheSame bool, err error)`
 - Exported: `true`
 - Control-flow features: `if, returns error`
-- Doc: TestCaseHashIsChangedSinceLoadedOrSaved - Verify if the Hash for the TestCase is the same as the one when TestCasesMapPtr was last Loaded or Saved
-- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`, `testCaseModel.generateTestCaseForGrpcAndHash`
+- Doc: VerifyTestCaseHashTowardsDatabase - Verify if the Hash for the TestCase is the same as the one in the database
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fmt.Println`, `testCaseModel.generateTestCaseForGrpcAndHash`
 
 ### VerifyLatestLoadedOrSavedTestCaseHashTowardsDatabase (method on `*TestCasesModelsStruct`)
 - Signature: `func (*TestCasesModelsStruct) VerifyLatestLoadedOrSavedTestCaseHashTowardsDatabase(testCaseUuid string) (hashIsTheSame bool, err error)`
 - Exported: `true`
 - Control-flow features: `if, returns error`
 - Doc: VerifyLatestLoadedOrSavedTestCaseHashTowardsDatabase - Verify if the latest Loaded or Saved Hash for the TestCase is the same as the one in the database
-- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fmt.Println`
 
-### VerifyTestCaseHashTowardsDatabase (method on `*TestCasesModelsStruct`)
-- Signature: `func (*TestCasesModelsStruct) VerifyTestCaseHashTowardsDatabase(testCaseUuid string) (hashIsTheSame bool, err error)`
+### TestCaseHashIsChangedSinceLoadedOrSaved (method on `*TestCasesModelsStruct`)
+- Signature: `func (*TestCasesModelsStruct) TestCaseHashIsChangedSinceLoadedOrSaved(testCaseUuid string) (hashIsChanged bool, err error)`
 - Exported: `true`
 - Control-flow features: `if, returns error`
-- Doc: VerifyTestCaseHashTowardsDatabase - Verify if the Hash for the TestCase is the same as the one in the database
-- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`, `testCaseModel.generateTestCaseForGrpcAndHash`
+- Doc: TestCaseHashIsChangedSinceLoadedOrSaved - Verify if the Hash for the TestCase is the same as the one when TestCasesMapPtr was last Loaded or Saved
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fmt.Println`, `testCaseModel.generateTestCaseForGrpcAndHash`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

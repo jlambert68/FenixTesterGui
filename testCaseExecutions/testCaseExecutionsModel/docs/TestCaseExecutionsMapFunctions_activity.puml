@@ -2,44 +2,21 @@
 title Activity Diagram - TestCaseExecutionsMapFunctions.go
 start
 :Load testCaseExecutions/testCaseExecutionsModel/TestCaseExecutionsMapFunctions.go;
-:1. AddToTestCaseExecutionsMap [method on TestCaseExecutionsModelStruct];
+:1. InitiateTestCaseExecutionsMap [method on TestCaseExecutionsModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
-:2. DeleteFromTestCaseExecutionsMap [method on TestCaseExecutionsModelStruct];
+:2. ReadFromTestCaseExecutionsMap [method on TestCaseExecutionsModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
-:3. GetNumberOfTestCaseExecutionsRetrievedFromDatabase [method on TestCaseExecutionsModelStruct];
-:Schedule deferred cleanup;
-:4. GetTestInstructionExecutionUuidFromTestInstructionUuid [method on TestCaseExecutionsModelStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:Schedule deferred cleanup;
-:5. GetTestInstructionFromTestInstructionExecutionUuid [method on TestCaseExecutionsModelStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:Schedule deferred cleanup;
-:6. InitiateTestCaseExecutionsMap [method on TestCaseExecutionsModelStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:Schedule deferred cleanup;
-:7. ReadAllFromTestCaseExecutionsMap [method on TestCaseExecutionsModelStruct];
+:3. ReadAllFromTestCaseExecutionsMap [method on TestCaseExecutionsModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -47,7 +24,30 @@ else (no)
 endif
 :Iterate loop/range logic;
 :Schedule deferred cleanup;
-:8. ReadFromTestCaseExecutionsMap [method on TestCaseExecutionsModelStruct];
+:4. GetNumberOfTestCaseExecutionsRetrievedFromDatabase [method on TestCaseExecutionsModelStruct];
+:Schedule deferred cleanup;
+:5. AddToTestCaseExecutionsMap [method on TestCaseExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:6. DeleteFromTestCaseExecutionsMap [method on TestCaseExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:7. GetTestInstructionExecutionUuidFromTestInstructionUuid [method on TestCaseExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:8. GetTestInstructionFromTestInstructionExecutionUuid [method on TestCaseExecutionsModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

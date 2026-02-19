@@ -2,18 +2,18 @@
 title Activity Diagram - detailedExecutionUI_summaryTable.go
 start
 :Load executions/detailedTestCaseExecutionUI_summaryTableDefinition/detailedExecutionUI_summaryTable.go;
-:1. CreateRenderer [method on *TestCaseExecutionsSummaryTableStruct];
-:2. Destroy [method on testCaseExecutionSummaryTableRenderer];
-:3. Layout [method on testCaseExecutionSummaryTableRenderer];
-:4. MinSize [method on testCaseExecutionSummaryTableRenderer];
-:5. NewTestCaseExecutionsSummaryTable;
+:1. NewTestCaseExecutionsSummaryTable;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:6. Objects [method on testCaseExecutionSummaryTableRenderer];
-:7. Refresh [method on testCaseExecutionSummaryTableRenderer];
+:2. CreateRenderer [method on *TestCaseExecutionsSummaryTableStruct];
+:3. MinSize [method on testCaseExecutionSummaryTableRenderer];
+:4. Layout [method on testCaseExecutionSummaryTableRenderer];
+:5. Destroy [method on testCaseExecutionSummaryTableRenderer];
+:6. Refresh [method on testCaseExecutionSummaryTableRenderer];
+:7. Objects [method on testCaseExecutionSummaryTableRenderer];
 stop
 @enduml

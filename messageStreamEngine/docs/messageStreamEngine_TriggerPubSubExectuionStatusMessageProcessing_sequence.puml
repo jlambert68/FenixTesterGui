@@ -2,17 +2,17 @@
 title Sequence Diagram - messageStreamEngine_TriggerPubSubExectuionStatusMessageProcessing.go
 actor Caller
 participant "messageStreamEngine_TriggerPubSubExectuionStatusMessageProcessing.go" as File
-participant "executionStatusMessagesPubSubMessage" as executionStatusMessagesPubSubMessage
-participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
-participant "protojson" as protojson
 participant "strings" as strings
+participant "protojson" as protojson
+participant "executionStatusMessagesPubSubMessage" as executionStatusMessagesPubSubMessage
 participant "tempGetTestCaseExecutionsStatusPubSubMessage" as tempGetTestCaseExecutionsStatusPubSubMessage
+participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
 participant "tempTestInstructionExecutionsStatus" as tempTestInstructionExecutionsStatus
 Caller -> File: triggerProcessPubSubExecutionStatusMessage(...)
 activate File
+File -> strings: ReplaceAll(...)
+File -> protojson: Unmarshal(...)
 File -> executionStatusMessagesPubSubMessage: GetExecutionsStatus(...)
-File -> fenixExecutionServerGuiGrpcApi: TestCaseExecutionStatusEnum(...)
-File -> fenixExecutionServerGuiGrpcApi: TestInstructionExecutionStatusEnum(...)
 File --> Caller: return
 deactivate File
 @enduml

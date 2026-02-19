@@ -30,19 +30,19 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
+### generateAllAvailablePointsListUIComponent
+- Signature: `func generateAllAvailablePointsListUIComponent(newOrEditTestDataPointGroupWindow *fyne.Window, testDataModel *testDataEngine.TestDataModelStruct)`
+- Exported: `false`
+- Control-flow features: `none detected`
+- Internal calls: `string`, `buildPopUpTableDataFromTestDataPointName`, `showTable`
+- Selector calls: `widget.NewList`, `widget.NewLabel`, `fmt.Sprintf`, `allAvailablePointsList.UnselectAll`, `allAvailablePointsList.Refresh`, `selectedPointsList.Refresh`
+
 ### filterToRemoveNumberOfSimilarTestDataPointsInName
 - Signature: `func filterToRemoveNumberOfSimilarTestDataPointsInName(dataPointNameToClean string) cleanedName string`
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: Removes the part of the name that specifies the number similar TestDataPoints, i.e. Sub Custody/Main TestData Area/SEK/AccTest/SE/CRDT/CH/Switzerland/BBH/EUR/EUR/SEK [2] ->
-- Selector calls: `fmt.Println`, `fmt.Sprintf`, `re.FindStringSubmatch`, `regexp.MustCompile`, `strings.Trim`
-
-### generateAllAvailablePointsListUIComponent
-- Signature: `func generateAllAvailablePointsListUIComponent(newOrEditTestDataPointGroupWindow *fyne.Window, testDataModel *testDataEngine.TestDataModelStruct)`
-- Exported: `false`
-- Control-flow features: `none detected`
-- Internal calls: `buildPopUpTableDataFromTestDataPointName`, `showTable`, `string`
-- Selector calls: `allAvailablePointsList.Refresh`, `allAvailablePointsList.UnselectAll`, `fmt.Sprintf`, `selectedPointsList.Refresh`, `widget.NewLabel`, `widget.NewList`
+- Selector calls: `regexp.MustCompile`, `re.FindStringSubmatch`, `fmt.Println`, `strings.Trim`, `fmt.Sprintf`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

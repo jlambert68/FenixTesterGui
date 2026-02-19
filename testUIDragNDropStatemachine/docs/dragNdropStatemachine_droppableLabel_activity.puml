@@ -2,20 +2,20 @@
 title Activity Diagram - dragNdropStatemachine_droppableLabel.go
 start
 :Load testUIDragNDropStatemachine/dragNdropStatemachine_droppableLabel.go;
-:1. MouseIn [method on *DroppableLabel];
+:1. NewDroppableLabel [method on *StateMachineDragAndDropStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:2. MouseMoved [method on *DroppableLabel];
-:3. MouseOut [method on *DroppableLabel];
+:2. MouseIn [method on *DroppableLabel];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:4. NewDroppableLabel [method on *StateMachineDragAndDropStruct];
+:3. MouseMoved [method on *DroppableLabel];
+:4. MouseOut [method on *DroppableLabel];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

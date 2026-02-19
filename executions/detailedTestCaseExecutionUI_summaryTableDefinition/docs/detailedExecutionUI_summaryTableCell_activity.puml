@@ -2,25 +2,25 @@
 title Activity Diagram - detailedExecutionUI_summaryTableCell.go
 start
 :Load executions/detailedTestCaseExecutionUI_summaryTableDefinition/detailedExecutionUI_summaryTableCell.go;
-:1. CreateRenderer [method on *TestCaseExecutionSummaryTableCellStruct];
+:1. Tapped [method on *TestCaseExecutionSummaryTableCellStruct];
+:2. TappedSecondary [method on *TestCaseExecutionSummaryTableCellStruct];
+:3. DoubleTapped [method on *TestCaseExecutionSummaryTableCellStruct];
+:4. FlashAddedRow;
+:Start goroutine/asynchronous work;
+:5. FlashRowToBeRemoved;
+:Start goroutine/asynchronous work;
+:6. NewTestcaseExecutionSummaryTableCell;
+:7. CreateRenderer [method on *TestCaseExecutionSummaryTableCellStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:2. Destroy [method on *testcaseExecutionSummaryTableCellRenderer];
-:3. DoubleTapped [method on *TestCaseExecutionSummaryTableCellStruct];
-:4. FlashAddedRow;
-:Start goroutine/asynchronous work;
-:5. FlashRowToBeRemoved;
-:Start goroutine/asynchronous work;
-:6. Layout [method on *testcaseExecutionSummaryTableCellRenderer];
-:7. MinSize [method on *testcaseExecutionSummaryTableCellRenderer];
-:8. NewTestcaseExecutionSummaryTableCell;
-:9. Objects [method on *testcaseExecutionSummaryTableCellRenderer];
+:8. MinSize [method on *testcaseExecutionSummaryTableCellRenderer];
+:9. Layout [method on *testcaseExecutionSummaryTableCellRenderer];
 :10. Refresh [method on *testcaseExecutionSummaryTableCellRenderer];
-:11. Tapped [method on *TestCaseExecutionSummaryTableCellStruct];
-:12. TappedSecondary [method on *TestCaseExecutionSummaryTableCellStruct];
+:11. Objects [method on *testcaseExecutionSummaryTableCellRenderer];
+:12. Destroy [method on *testcaseExecutionSummaryTableCellRenderer];
 stop
 @enduml

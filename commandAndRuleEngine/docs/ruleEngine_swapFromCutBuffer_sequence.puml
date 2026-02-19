@@ -2,19 +2,19 @@
 title Sequence Diagram - ruleEngine_swapFromCutBuffer.go
 actor Caller
 participant "ruleEngine_swapFromCutBuffer.go" as File
-participant "commandAndRuleEngine" as commandAndRuleEngine
 participant "errors" as errors
 participant "fmt" as fmt
+participant "commandAndRuleEngine" as commandAndRuleEngine
+Caller -> File: verifyIfElementCanBeSwappedForCutBuffer(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> commandAndRuleEngine: verifyIfElementCanBeSwapped(...)
+File --> Caller: return
+deactivate File
 Caller -> File: executeSwapElementFromCutBuffer(...)
 activate File
 File -> commandAndRuleEngine: executeSwapElement(...)
-File --> Caller: return
-deactivate File
-Caller -> File: verifyIfElementCanBeSwappedForCutBuffer(...)
-activate File
-File -> commandAndRuleEngine: verifyIfElementCanBeSwapped(...)
-File -> errors: New(...)
-File -> fmt: Sprintf(...)
 File --> Caller: return
 deactivate File
 @enduml

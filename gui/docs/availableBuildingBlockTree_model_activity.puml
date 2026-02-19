@@ -2,35 +2,51 @@
 title Activity Diagram - availableBuildingBlockTree_model.go
 start
 :Load gui/availableBuildingBlockTree_model.go;
-:1. generateUITreeName [method on *AvailableBuildingBlocksModelStruct];
-:2. generateUITreeNameForTestInstructionContainersHeader [method on *AvailableBuildingBlocksModelStruct];
-:3. generateUITreeNameForTestInstructionsHeader [method on *AvailableBuildingBlocksModelStruct];
-:4. getAvailableBuildingBlocksModel [method on *AvailableBuildingBlocksModelStruct];
-:5. getAvailableDomainTreeNamesFromModel [method on *AvailableBuildingBlocksModelStruct];
-:Iterate loop/range logic;
-:6. getAvailableDomainsFromModel [method on *AvailableBuildingBlocksModelStruct];
+:1. getAvailableBuildingBlocksModel [method on *AvailableBuildingBlocksModelStruct];
+:2. makeTreeUIModel [method on *AvailableBuildingBlocksModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:7. getAvailableTestInstructionContainerTypesFromModel [method on *AvailableBuildingBlocksModelStruct];
-:Iterate loop/range logic;
-:8. getAvailableTestInstructionContainersFromModel [method on *AvailableBuildingBlocksModelStruct];
-:Iterate loop/range logic;
-:9. getAvailableTestInstructionTypesFromModel [method on *AvailableBuildingBlocksModelStruct];
-:Iterate loop/range logic;
-:10. getAvailableTestInstructionsFromModel [method on *AvailableBuildingBlocksModelStruct];
-:Iterate loop/range logic;
-:11. getPinnedBuildingBlocksTreeNamesFromModel [method on *AvailableBuildingBlocksModelStruct];
-:Iterate loop/range logic;
-:12. listAllAvailableBuidlingBlocks [method on *AvailableBuildingBlocksModelStruct];
+:3. loadAvailableBuildingBlocksFromServer [method on *AvailableBuildingBlocksModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
+:Iterate loop/range logic;
+:4. loadTemplateRepositoryApiUrls [method on *AvailableBuildingBlocksModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:5. loadTestCaseAndTestSuiteMetaData [method on *AvailableBuildingBlocksModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:6. loadTestData [method on *AvailableBuildingBlocksModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:7. loadPinnedBuildingBlocksFromServer [method on *AvailableBuildingBlocksModelStruct];
+:8. savePinnedBuildingBlocksFromServer [method on *AvailableBuildingBlocksModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:9. generateUITreeName [method on *AvailableBuildingBlocksModelStruct];
+:10. generateUITreeNameForTestInstructionsHeader [method on *AvailableBuildingBlocksModelStruct];
+:11. generateUITreeNameForTestInstructionContainersHeader [method on *AvailableBuildingBlocksModelStruct];
+:12. getAvailableDomainTreeNamesFromModel [method on *AvailableBuildingBlocksModelStruct];
 :Iterate loop/range logic;
 stop
 @enduml

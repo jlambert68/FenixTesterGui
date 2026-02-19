@@ -2,18 +2,18 @@
 title Sequence Diagram - detailedExecutionUI_tabHandler.go
 actor Caller
 participant "detailedExecutionUI_tabHandler.go" as File
-participant "container" as container
-participant "detailedTestCaseExecutionsUIObject" as detailedTestCaseExecutionsUIObject
-participant "fmt" as fmt
-participant "layout" as layout
-participant "testCaseExecutionsTabPage" as testCaseExecutionsTabPage
-participant "theme" as theme
 participant "widget" as widget
+participant "theme" as theme
+participant "fmt" as fmt
+participant "detailedTestCaseExecutionsUIObject" as detailedTestCaseExecutionsUIObject
+participant "testCaseExecutionsTabPage" as testCaseExecutionsTabPage
+participant "layout" as layout
+participant "container" as container
 Caller -> File: GenerateBaseUITabForDetailedTestCaseExecutions(...)
 activate File
-File -> container: New(...)
-File -> detailedTestCaseExecutionsUIObject: CreateDetailedTestCaseExecutionsTabPage(...)
-File -> fmt: Println(...)
+File -> widget: NewToolbar(...)
+File -> widget: NewToolbarAction(...)
+File -> theme: ContentRedoIcon(...)
 File --> Caller: return
 deactivate File
 @enduml

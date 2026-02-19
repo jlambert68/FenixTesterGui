@@ -33,8 +33,8 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func ShowNewOrEditGroupWindow(app fyne.App, parent fyne.Window, isNew bool, responseChannel *chan testDataEngine.ResponseChannelStruct, incomingGroupName testDataEngine.TestDataPointGroupNameType, newOrEditedChosenTestDataPointsThisGroupMapPtr *map[testDataEngine.TestDataPointGroupNameType]*testDataEngine.TestDataPointNameMapType, testDataForGroupObject *testDataEngine.TestDataForGroupObjectStruct)`
 - Exported: `true`
 - Control-flow features: `if`
-- Internal calls: `generateAllAvailablePointsListUIComponent`, `generateSelectedPointsListUIComponent`, `generateTestDataSelectionsUIComponent`
-- Selector calls: `app.NewWindow`, `container.NewBorder`, `container.NewHSplit`, `container.NewVSplit`, `fyne.NewSize`, `newOrEditTestDataPointGroupWindow.CenterOnScreen`, `newOrEditTestDataPointGroupWindow.Resize`, `newOrEditTestDataPointGroupWindow.SetContent`
+- Internal calls: `generateAllAvailablePointsListUIComponent`, `generateTestDataSelectionsUIComponent`, `generateSelectedPointsListUIComponent`
+- Selector calls: `parent.Hide`, `app.NewWindow`, `newOrEditTestDataPointGroupWindow.SetTitle`, `newOrEditTestDataPointGroupWindow.Resize`, `fyne.NewSize`, `newOrEditTestDataPointGroupWindow.CenterOnScreen`, `newOrEditTestDataPointGroupWindow.SetOnClosed`, `parent.Show`
 
 ### testDataPointIntersectionOfTwoSlices
 - Signature: `func testDataPointIntersectionOfTwoSlices(firstSlice, secondSlice []testDataEngine.TestDataPointRowUuidType) []testDataEngine.TestDataPointRowUuidType`

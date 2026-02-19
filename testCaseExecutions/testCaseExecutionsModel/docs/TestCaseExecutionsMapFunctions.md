@@ -35,6 +35,34 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - `testCaseExecutionsMapMutex`
 
 ## Functions and Methods
+### InitiateTestCaseExecutionsMap (method on `TestCaseExecutionsModelStruct`)
+- Signature: `func (TestCaseExecutionsModelStruct) InitiateTestCaseExecutionsMap()`
+- Exported: `true`
+- Control-flow features: `if, defer`
+- Doc: InitiateTestCaseExecutionsMap Add to the TestCaseExecutions-Map
+- Selector calls: `testCaseExecutionsMapMutex.Lock`, `testCaseExecutionsMapMutex.Unlock`
+
+### ReadFromTestCaseExecutionsMap (method on `TestCaseExecutionsModelStruct`)
+- Signature: `func (TestCaseExecutionsModelStruct) ReadFromTestCaseExecutionsMap(testCaseExecutionsMapKey TestCaseExecutionUuidType) (testCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage, existInMap bool)`
+- Exported: `true`
+- Control-flow features: `if, defer`
+- Doc: ReadFromTestCaseExecutionsMap Read from the TestCaseExecutions-Map
+- Selector calls: `testCaseExecutionsMapMutex.RLock`, `testCaseExecutionsMapMutex.RUnlock`
+
+### ReadAllFromTestCaseExecutionsMap (method on `TestCaseExecutionsModelStruct`)
+- Signature: `func (TestCaseExecutionsModelStruct) ReadAllFromTestCaseExecutionsMap() testCaseExecutionsListMessage *[]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage`
+- Exported: `true`
+- Control-flow features: `if, for/range, defer`
+- Doc: ReadAllFromTestCaseExecutionsMap Read all from the TestCaseExecutions-Map
+- Selector calls: `testCaseExecutionsMapMutex.RLock`, `testCaseExecutionsMapMutex.RUnlock`
+
+### GetNumberOfTestCaseExecutionsRetrievedFromDatabase (method on `TestCaseExecutionsModelStruct`)
+- Signature: `func (TestCaseExecutionsModelStruct) GetNumberOfTestCaseExecutionsRetrievedFromDatabase() numberOfTestCaseExecutionsRetrievedFromDatabase int`
+- Exported: `true`
+- Control-flow features: `defer`
+- Doc: GetNumberOfTestCaseExecutionsRetrievedFromDatabase Read all from the TestCaseExecutions-Map
+- Selector calls: `testCaseExecutionsMapMutex.RLock`, `testCaseExecutionsMapMutex.RUnlock`, `testCaseExecutionsModel.ReadAllFromTestCaseExecutionsMap`
+
 ### AddToTestCaseExecutionsMap (method on `TestCaseExecutionsModelStruct`)
 - Signature: `func (TestCaseExecutionsModelStruct) AddToTestCaseExecutionsMap(testCaseExecutionsMapKey TestCaseExecutionUuidType, testCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage)`
 - Exported: `true`
@@ -49,13 +77,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Doc: DeleteFromTestCaseExecutionsMap Delete from the TestCaseExecutions-Map
 - Selector calls: `testCaseExecutionsMapMutex.Lock`, `testCaseExecutionsMapMutex.Unlock`
 
-### GetNumberOfTestCaseExecutionsRetrievedFromDatabase (method on `TestCaseExecutionsModelStruct`)
-- Signature: `func (TestCaseExecutionsModelStruct) GetNumberOfTestCaseExecutionsRetrievedFromDatabase() numberOfTestCaseExecutionsRetrievedFromDatabase int`
-- Exported: `true`
-- Control-flow features: `defer`
-- Doc: GetNumberOfTestCaseExecutionsRetrievedFromDatabase Read all from the TestCaseExecutions-Map
-- Selector calls: `testCaseExecutionsMapMutex.RLock`, `testCaseExecutionsMapMutex.RUnlock`, `testCaseExecutionsModel.ReadAllFromTestCaseExecutionsMap`
-
 ### GetTestInstructionExecutionUuidFromTestInstructionUuid (method on `TestCaseExecutionsModelStruct`)
 - Signature: `func (TestCaseExecutionsModelStruct) GetTestInstructionExecutionUuidFromTestInstructionUuid(testCaseExecutionsMapKey TestCaseExecutionUuidType, testInstructionUuid RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType) (testInstructionExecutionUuid TestInstructionExecutionUuidType, existInMap bool)`
 - Exported: `true`
@@ -69,27 +90,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, defer`
 - Doc: GetTestInstructionFromTestInstructionExecutionUuid Read from the TestCaseExecutions-Map and get the TestInstruction Uuid and Name based on TestInstructionExecutionUuid + Version (mapKey)
 - Internal calls: `DetailedTestCaseExecutionMapKeyType`
-- Selector calls: `testCaseExecutionsMapMutex.RLock`, `testCaseExecutionsMapMutex.RUnlock`
-
-### InitiateTestCaseExecutionsMap (method on `TestCaseExecutionsModelStruct`)
-- Signature: `func (TestCaseExecutionsModelStruct) InitiateTestCaseExecutionsMap()`
-- Exported: `true`
-- Control-flow features: `if, defer`
-- Doc: InitiateTestCaseExecutionsMap Add to the TestCaseExecutions-Map
-- Selector calls: `testCaseExecutionsMapMutex.Lock`, `testCaseExecutionsMapMutex.Unlock`
-
-### ReadAllFromTestCaseExecutionsMap (method on `TestCaseExecutionsModelStruct`)
-- Signature: `func (TestCaseExecutionsModelStruct) ReadAllFromTestCaseExecutionsMap() testCaseExecutionsListMessage *[]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage`
-- Exported: `true`
-- Control-flow features: `if, for/range, defer`
-- Doc: ReadAllFromTestCaseExecutionsMap Read all from the TestCaseExecutions-Map
-- Selector calls: `testCaseExecutionsMapMutex.RLock`, `testCaseExecutionsMapMutex.RUnlock`
-
-### ReadFromTestCaseExecutionsMap (method on `TestCaseExecutionsModelStruct`)
-- Signature: `func (TestCaseExecutionsModelStruct) ReadFromTestCaseExecutionsMap(testCaseExecutionsMapKey TestCaseExecutionUuidType) (testCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage, existInMap bool)`
-- Exported: `true`
-- Control-flow features: `if, defer`
-- Doc: ReadFromTestCaseExecutionsMap Read from the TestCaseExecutions-Map
 - Selector calls: `testCaseExecutionsMapMutex.RLock`, `testCaseExecutionsMapMutex.RUnlock`
 
 ## Behavioral Summary

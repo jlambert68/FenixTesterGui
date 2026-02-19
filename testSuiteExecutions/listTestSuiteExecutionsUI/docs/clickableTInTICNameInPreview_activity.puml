@@ -2,20 +2,20 @@
 title Activity Diagram - clickableTInTICNameInPreview.go
 start
 :Load testSuiteExecutions/listTestSuiteExecutionsUI/clickableTInTICNameInPreview.go;
-:1. CreateRenderer [method on *clickableTInTICNameLabelInPreviewStruct];
-:2. Tapped [method on *clickableTInTICNameLabelInPreviewStruct];
+:1. newClickableTestInstructionNameLabelInPreview;
+:2. CreateRenderer [method on *clickableTInTICNameLabelInPreviewStruct];
+:3. Tapped [method on *clickableTInTICNameLabelInPreviewStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:3. TappedSecondary [method on *clickableTInTICNameLabelInPreviewStruct];
+:4. TappedSecondary [method on *clickableTInTICNameLabelInPreviewStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:4. newClickableTestInstructionNameLabelInPreview;
 stop
 @enduml

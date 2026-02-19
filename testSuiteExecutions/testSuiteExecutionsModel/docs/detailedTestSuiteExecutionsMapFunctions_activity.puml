@@ -2,42 +2,42 @@
 title Activity Diagram - detailedTestSuiteExecutionsMapFunctions.go
 start
 :Load testSuiteExecutions/testSuiteExecutionsModel/detailedTestSuiteExecutionsMapFunctions.go;
-:1. AddToDetailedTestSuiteExecutionsMap [method on TestSuiteExecutionsModelStruct];
+:1. ReadFromDetailedTestSuiteExecutionsMap [method on TestSuiteExecutionsModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
-:2. ClearFlagRefreshOngoingOfDetailedTestSuiteExecution [method on TestSuiteExecutionsModelStruct];
+:2. GetNumberOfDetailedTestSuiteExecutionsRetrievedFromDatabase [method on TestSuiteExecutionsModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
-:3. DeleteFromDetailedTestSuiteExecutionsMap [method on TestSuiteExecutionsModelStruct];
+:3. AddToDetailedTestSuiteExecutionsMap [method on TestSuiteExecutionsModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
-:4. GetNumberOfDetailedTestSuiteExecutionsRetrievedFromDatabase [method on TestSuiteExecutionsModelStruct];
+:4. DeleteFromDetailedTestSuiteExecutionsMap [method on TestSuiteExecutionsModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
-:5. ReadFromDetailedTestSuiteExecutionsMap [method on TestSuiteExecutionsModelStruct];
+:5. SetFlagRefreshOngoingOfDetailedTestSuiteExecution [method on TestSuiteExecutionsModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
-:6. SetFlagRefreshOngoingOfDetailedTestSuiteExecution [method on TestSuiteExecutionsModelStruct];
+:6. ClearFlagRefreshOngoingOfDetailedTestSuiteExecution [method on TestSuiteExecutionsModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

@@ -3,12 +3,6 @@ title Sequence Diagram - AllTestCaseExecutionsForOneTestCaseMapFunctions.go
 actor Caller
 participant "AllTestCaseExecutionsForOneTestCaseMapFunctions.go" as File
 participant "allTestCaseExecutionsMapMutex" as allTestCaseExecutionsMapMutex
-Caller -> File: AddTestCaseExecutionsForOneTestCaseUuid(...)
-activate File
-File -> allTestCaseExecutionsMapMutex: Lock(...)
-File -> allTestCaseExecutionsMapMutex: Unlock(...)
-File --> Caller: return
-deactivate File
 Caller -> File: GetAllTestCaseExecutionsForOneTestCaseUuid(...)
 activate File
 File -> allTestCaseExecutionsMapMutex: RLock(...)
@@ -19,6 +13,12 @@ Caller -> File: GetSpecificTestCaseExecutionForOneTestCaseUuid(...)
 activate File
 File -> allTestCaseExecutionsMapMutex: RLock(...)
 File -> allTestCaseExecutionsMapMutex: RUnlock(...)
+File --> Caller: return
+deactivate File
+Caller -> File: AddTestCaseExecutionsForOneTestCaseUuid(...)
+activate File
+File -> allTestCaseExecutionsMapMutex: Lock(...)
+File -> allTestCaseExecutionsMapMutex: Unlock(...)
 File --> Caller: return
 deactivate File
 @enduml

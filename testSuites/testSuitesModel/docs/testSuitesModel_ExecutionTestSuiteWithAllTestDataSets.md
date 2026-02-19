@@ -36,7 +36,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: ExecuteOneTestSuiteWithAllItsTestDataSets Execute one TestSuit's all TestCases with all its TestDataSets
-- Selector calls: `errors.New`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `fmt.Println`, `fmt.Sprintf`, `fyne.CurrentApp`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `testSuiteModel.GetTestSuiteUuid`
+- Selector calls: `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `testSuiteModel.GetTestSuiteUuid`, `errors.New`, `fmt.Sprintf`, `fmt.Println`, `fyne.CurrentApp`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -2,20 +2,20 @@
 title Activity Diagram - transparentPreviewOverlay.go
 start
 :Load testCaseExecutions/listTestCaseExecutionsUI/transparentPreviewOverlay.go;
-:1. CreateRenderer [method on *HoverableRect];
-:2. MouseIn [method on *HoverableRect];
+:1. NewHoverableRect;
+:2. CreateRenderer [method on *HoverableRect];
+:3. MouseIn [method on *HoverableRect];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:3. MouseMoved [method on *HoverableRect];
 :4. MouseOut [method on *HoverableRect];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:5. NewHoverableRect;
+:5. MouseMoved [method on *HoverableRect];
 stop
 @enduml

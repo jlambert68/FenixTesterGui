@@ -2,23 +2,23 @@
 title Sequence Diagram - listTestSuitesUI_GenerateListTestSuitesUI.go
 actor Caller
 participant "listTestSuitesUI_GenerateListTestSuitesUI.go" as File
-participant "binding" as binding
+participant "fmt" as fmt
+participant "listTestSuitesModel" as listTestSuitesModel
+participant "time" as time
+participant "widget" as widget
+participant "listTestSuiteUIObject" as listTestSuiteUIObject
+participant "strconv" as strconv
 participant "container" as container
 participant "detailedTestCaseExecutionsUI" as detailedTestCaseExecutionsUI
-participant "fmt" as fmt
-participant "layout" as layout
-participant "listTestSuiteUIObject" as listTestSuiteUIObject
-participant "listTestSuitesModel" as listTestSuitesModel
-participant "preViewOverlay" as preViewOverlay
-Caller -> File: GenerateListTestSuitesUI(...)
-activate File
-File -> binding: NewString(...)
-File -> container: New(...)
-File -> container: NewAppTabs(...)
-File --> Caller: return
-deactivate File
 Caller -> File: InitiateListTestSuiteUIObject(...)
 activate File
+File --> Caller: return
+deactivate File
+Caller -> File: GenerateListTestSuitesUI(...)
+activate File
+File -> fmt: Println(...)
+File -> listTestSuitesModel: LoadtestSuiteThatCanBeEditedByUser(...)
+File -> time: Now(...)
 File --> Caller: return
 deactivate File
 @enduml

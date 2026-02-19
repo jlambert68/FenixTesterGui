@@ -27,6 +27,27 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
+### refreshTestCasesSummaryTable
+- Signature: `func refreshTestCasesSummaryTable()`
+- Exported: `false`
+- Control-flow features: `none detected`
+- Doc: Refresh the TestCasesSummaryTable
+- Selector calls: `TestCasesSummaryTable.Refresh`
+
+### newRefreshTestCasesSummaryTableThrottler
+- Signature: `func newRefreshTestCasesSummaryTableThrottler(interval time.Duration) *refreshTestCasesSummaryTableThrottler`
+- Exported: `false`
+- Control-flow features: `go`
+- Doc: newRefreshTestCasesSummaryTableThrottler creates a new refreshTestCasesSummaryTableThrottler
+- Selector calls: `time.NewTicker`, `t.run`
+
+### run (method on `*refreshTestCasesSummaryTableThrottler`)
+- Signature: `func (*refreshTestCasesSummaryTableThrottler) run()`
+- Exported: `false`
+- Control-flow features: `for/range, select, defer`
+- Doc: run processes requests to execute 'refreshTestCasesSummaryTable' at a controlled rate
+- Internal calls: `refreshTestCasesSummaryTable`
+
 ### RequestRefreshTestCasesSummaryTable (method on `*refreshTestCasesSummaryTableThrottler`)
 - Signature: `func (*refreshTestCasesSummaryTableThrottler) RequestRefreshTestCasesSummaryTable()`
 - Exported: `true`
@@ -38,27 +59,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: Stop stops the throttler and waits for it to shut down cleanly
-
-### newRefreshTestCasesSummaryTableThrottler
-- Signature: `func newRefreshTestCasesSummaryTableThrottler(interval time.Duration) *refreshTestCasesSummaryTableThrottler`
-- Exported: `false`
-- Control-flow features: `go`
-- Doc: newRefreshTestCasesSummaryTableThrottler creates a new refreshTestCasesSummaryTableThrottler
-- Selector calls: `t.run`, `time.NewTicker`
-
-### refreshTestCasesSummaryTable
-- Signature: `func refreshTestCasesSummaryTable()`
-- Exported: `false`
-- Control-flow features: `none detected`
-- Doc: Refresh the TestCasesSummaryTable
-- Selector calls: `TestCasesSummaryTable.Refresh`
-
-### run (method on `*refreshTestCasesSummaryTableThrottler`)
-- Signature: `func (*refreshTestCasesSummaryTableThrottler) run()`
-- Exported: `false`
-- Control-flow features: `for/range, select, defer`
-- Doc: run processes requests to execute 'refreshTestCasesSummaryTable' at a controlled rate
-- Internal calls: `refreshTestCasesSummaryTable`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

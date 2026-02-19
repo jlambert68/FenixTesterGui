@@ -41,7 +41,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Doc: GenerateTestSuitePreviewContainer Generates the PreViewContainer for the TestSuite
 - Internal calls: `float32`
-- Selector calls: `container.New`, `container.NewBorder`, `container.NewCenter`, `container.NewScroll`, `container.NewVBox`, `fmt.Sprintf`, `fyne.NewSize`, `layout.NewFormLayout`
+- Selector calls: `container.New`, `layout.NewFormLayout`, `widget.NewLabel`, `testSuitePreviewTopContainer.Add`, `tempTestSuitePreviewStructureMessage.GetTestSuiteName`, `tempTestSuitePreviewStructureMessage.GetDomainNameThatOwnTheTestSuite`, `widget.NewRichTextWithText`, `tempTestSuitePreviewStructureMessage.GetTestSuiteDescription`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

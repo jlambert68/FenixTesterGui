@@ -38,7 +38,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Doc: Generate the TestCaseName Area for the TestCase
-- Selector calls: `container.New`, `container.NewVBox`, `errors.New`, `fmt.Println`, `fmt.Sprintf`, `layout.NewFormLayout`, `layout.NewVBoxLayout`, `newTestCaseNameEntry.SetText`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fmt.Println`, `container.New`, `layout.NewVBoxLayout`, `layout.NewFormLayout`, `widget.NewLabel`, `testCaseNameFormContainer.Add`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

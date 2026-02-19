@@ -2,40 +2,31 @@
 title Sequence Diagram - dragNdropTest.go
 actor Caller
 participant "dragNdropTest.go" as File
-participant "canvas" as canvas
 participant "container" as container
-participant "containerRef" as containerRef
 participant "dragToDrop2Label" as dragToDrop2Label
-participant "draggableLabel" as draggableLabel
-participant "droppableLabel" as droppableLabel
-participant "fmt" as fmt
+participant "widget" as widget
+participant "layout" as layout
+participant "canvas" as canvas
+participant "myrect" as myrect
 participant "fyne" as fyne
-Caller -> File: DragEnd(...)
-activate File
-File -> containerRef: Hide(...)
-File -> containerRef: Refresh(...)
-File -> log: Fatalln(...)
-File --> Caller: return
-deactivate File
+participant "myCanvasObject" as myCanvasObject
 Caller -> File: Dragged(...)
 activate File
-File -> containerRef: Move(...)
-File -> containerRef: Show(...)
-File -> fyne: NewSize(...)
+File -> log: Fatalln(...)
+File -> rectangleRef: SetMinSize(...)
+File -> textRef: Size(...)
+File --> Caller: return
+deactivate File
+Caller -> File: DragEnd(...)
+activate File
+File -> log: Fatalln(...)
+File -> containerRef: Hide(...)
+File -> containerRef: Refresh(...)
 File --> Caller: return
 deactivate File
 Caller -> File: MouseIn(...)
 activate File
 File -> log: Fatalln(...)
-File --> Caller: return
-deactivate File
-Caller -> File: MouseIn(...)
-activate File
-File -> log: Fatalln(...)
-File --> Caller: return
-deactivate File
-Caller -> File: MouseMoved(...)
-activate File
 File --> Caller: return
 deactivate File
 Caller -> File: MouseMoved(...)
@@ -45,6 +36,15 @@ deactivate File
 Caller -> File: MouseOut(...)
 activate File
 File -> log: Fatalln(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseIn(...)
+activate File
+File -> log: Fatalln(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseMoved(...)
+activate File
 File --> Caller: return
 deactivate File
 Caller -> File: MouseOut(...)

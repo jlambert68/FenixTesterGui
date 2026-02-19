@@ -2,17 +2,17 @@
 title Activity Diagram - clickableImage.go
 start
 :Load memoryUsage/clickableImage.go;
-:1. CreateRenderer [method on *ClickableImageStruct];
-:2. MouseIn [method on *ClickableImageStruct];
-:3. MouseMoved [method on *ClickableImageStruct];
-:4. MouseOut [method on *ClickableImageStruct];
-:5. NewClickableImage;
-:6. Tapped [method on *ClickableImageStruct];
+:1. NewClickableImage;
+:2. CreateRenderer [method on *ClickableImageStruct];
+:3. Tapped [method on *ClickableImageStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:7. TappedSecondary [method on *ClickableImageStruct];
+:4. TappedSecondary [method on *ClickableImageStruct];
+:5. MouseIn [method on *ClickableImageStruct];
+:6. MouseOut [method on *ClickableImageStruct];
+:7. MouseMoved [method on *ClickableImageStruct];
 stop
 @enduml

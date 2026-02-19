@@ -26,19 +26,19 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
-### executeCutElement (method on `*CommandAndRuleEngineObjectStruct`)
-- Signature: `func (*CommandAndRuleEngineObjectStruct) executeCutElement(testCaseUuid string, elementUuid string) err error`
-- Exported: `false`
-- Control-flow features: `if, returns error`
-- Doc: Cut an element, but first ensure that rules for cutting are used
-- Selector calls: `commandAndRuleEngine.executeCutFullELementStructure`, `commandAndRuleEngine.verifyIfElementCanBeCutOut`, `errors.New`, `fmt.Sprintf`
-
 ### verifyIfElementCanBeCutOut (method on `*CommandAndRuleEngineObjectStruct`)
 - Signature: `func (*CommandAndRuleEngineObjectStruct) verifyIfElementCanBeCutOut(testCaseUuid string, elementUuid string) (canBeCut bool, matchedSimpldRule string, err error)`
 - Exported: `false`
 - Control-flow features: `returns error`
 - Doc: Verify if an element can be cut out or not, regarding cut rules
 - Selector calls: `commandAndRuleEngine.verifyIfComponentCanBeCutSimpleRules`
+
+### executeCutElement (method on `*CommandAndRuleEngineObjectStruct`)
+- Signature: `func (*CommandAndRuleEngineObjectStruct) executeCutElement(testCaseUuid string, elementUuid string) err error`
+- Exported: `false`
+- Control-flow features: `if, returns error`
+- Doc: Cut an element, but first ensure that rules for cutting are used
+- Selector calls: `commandAndRuleEngine.verifyIfElementCanBeCutOut`, `errors.New`, `fmt.Sprintf`, `commandAndRuleEngine.executeCutFullELementStructure`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

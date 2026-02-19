@@ -9,9 +9,9 @@ else (no)
 :Continue primary flow;
 endif
 :Start goroutine/asynchronous work;
-:2. storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser;
+:2. storeOneTestCaseExecutionPerTestCaseThatCanBeViewedByUser;
 :Iterate loop/range logic;
-:3. storeOneTestCaseExecutionPerTestCaseThatCanBeViewedByUser;
+:3. storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser;
 :Iterate loop/range logic;
 stop
 @enduml

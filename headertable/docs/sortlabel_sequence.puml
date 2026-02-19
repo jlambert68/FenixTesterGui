@@ -2,17 +2,36 @@
 title Sequence Diagram - sortlabel.go
 actor Caller
 participant "sortlabel.go" as File
-participant "container" as container
+participant "widget" as widget
+participant "sl" as sl
 participant "log" as log
 participant "s" as s
-participant "sl" as sl
-participant "widget" as widget
+participant "container" as container
+Caller -> File: NewSortingLabel(...)
+activate File
+File -> widget: NewLabel(...)
+File -> widget: NewButton(...)
+File -> sl: SetState(...)
+File --> Caller: return
+deactivate File
+Caller -> File: SetState(...)
+activate File
+File -> log: Fatalf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: OnTapped(...)
+activate File
+File -> s: SetState(...)
+File -> s: nextState(...)
+File -> s: Sorter(...)
+File --> Caller: return
+deactivate File
 Caller -> File: CreateRenderer(...)
 activate File
 File -> container: NewHBox(...)
 File --> Caller: return
 deactivate File
-Caller -> File: Destroy(...)
+Caller -> File: MinSize(...)
 activate File
 File --> Caller: return
 deactivate File
@@ -20,35 +39,16 @@ Caller -> File: Layout(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: MinSize(...)
+Caller -> File: Refresh(...)
 activate File
-File --> Caller: return
-deactivate File
-Caller -> File: NewSortingLabel(...)
-activate File
-File -> sl: ExtendBaseWidget(...)
-File -> sl: SetState(...)
-File -> widget: NewButton(...)
 File --> Caller: return
 deactivate File
 Caller -> File: Objects(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: OnTapped(...)
+Caller -> File: Destroy(...)
 activate File
-File -> s: OnAfterSort(...)
-File -> s: SetState(...)
-File -> s: Sorter(...)
-File --> Caller: return
-deactivate File
-Caller -> File: Refresh(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: SetState(...)
-activate File
-File -> log: Fatalf(...)
 File --> Caller: return
 deactivate File
 @enduml

@@ -4,14 +4,7 @@ start
 :Load executions/executionsUIForSubscriptions/testCaseExecutionUI_testCaseLExecutionsListForSubscriptions_finishedExecution.go;
 :1. CreateTableForTestCaseExecutionsWithFinishedExecution;
 :Iterate loop/range logic;
-:2. MoveTestCaseExecutionFromUnderExecutionToFinishedExecution;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:Iterate loop/range logic;
-:3. RemoveTestCaseExecutionFromFinishedTable;
+:2. RemoveTestCaseExecutionFromFinishedTable;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -19,6 +12,13 @@ else (no)
 endif
 :Iterate loop/range logic;
 :Start goroutine/asynchronous work;
+:3. MoveTestCaseExecutionFromUnderExecutionToFinishedExecution;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
 :4. StartFinishedExecutionsTableAddRemoveChannelReader;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;

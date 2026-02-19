@@ -37,7 +37,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func main()`
 - Exported: `false`
 - Control-flow features: `for/range, go`
-- Selector calls: `a.NewWindow`, `app.New`, `binding.BindStruct`, `container.NewMax`, `fmt.Sprintf`, `fyne.NewSize`, `headertable.NewHeaderTable`, `ht.Refresh`
+- Selector calls: `binding.BindStruct`, `app.New`, `a.NewWindow`, `w.Resize`, `fyne.NewSize`, `headertable.NewHeaderTable`, `w.SetContent`, `container.NewMax`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

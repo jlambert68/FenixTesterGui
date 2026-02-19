@@ -41,7 +41,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if`
 - Internal calls: `GenerateTestSuiteHomeTab`
-- Selector calls: `container.NewDocTabs`, `dialog.ShowCustomConfirm`, `fmt.Sprintf`, `fyne.CurrentApp`, `testSuitesModel.IsTestSuiteChanged`, `widget.NewLabel`
+- Selector calls: `container.NewDocTabs`, `fyne.CurrentApp`, `fmt.Sprintf`, `testSuitesModel.IsTestSuiteChanged`, `widget.NewLabel`, `dialog.ShowCustomConfirm`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

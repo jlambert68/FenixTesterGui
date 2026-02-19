@@ -34,8 +34,8 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: Create and configure the list-component of selected TestDataPoints
-- Internal calls: `setStateForSaveButtonAndGroupNameTextEntry`, `string`
-- Selector calls: `container.NewBorder`, `container.NewHBox`, `container.NewVBox`, `fmt.Sprintf`, `nameEntry.SetPlaceHolder`, `nameEntry.SetText`, `newOrEditTestDataPointGroupWindow.Close`, `testDataEngine.TestDataPointGroupNameType`
+- Internal calls: `string`, `setStateForSaveButtonAndGroupNameTextEntry`
+- Selector calls: `widget.NewList`, `widget.NewLabel`, `fmt.Sprintf`, `widget.NewEntry`, `widget.NewButton`, `testDataEngine.TestDataPointGroupNameType`, `newOrEditTestDataPointGroupWindow.Close`, `nameEntry.SetPlaceHolder`
 
 ### setStateForSaveButtonAndGroupNameTextEntry
 - Signature: `func setStateForSaveButtonAndGroupNameTextEntry(entryValue string, nameStatusLabel *widget.Label, saveButton *widget.Button, isNew bool, incomingGroupName testDataEngine.TestDataPointGroupNameType, testDataForGroupObject *testDataEngine.TestDataForGroupObjectStruct)`

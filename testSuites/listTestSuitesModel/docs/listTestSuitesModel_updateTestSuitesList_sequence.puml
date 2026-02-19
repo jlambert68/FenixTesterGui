@@ -2,14 +2,14 @@
 title Sequence Diagram - listTestSuitesModel_updateTestSuitesList.go
 actor Caller
 participant "listTestSuitesModel_updateTestSuitesList.go" as File
-participant "boolbits" as boolbits
-participant "err" as err
-participant "fmt" as fmt
 participant "listTestSuitesThatCanBeEditedResponseMessage" as listTestSuitesThatCanBeEditedResponseMessage
+participant "testSuiteThatCanBeEditedByUser" as testSuiteThatCanBeEditedByUser
+participant "tempTestSuitePreview" as tempTestSuitePreview
+participant "boolbits" as boolbits
+participant "fmt" as fmt
+participant "err" as err
 participant "log" as log
 participant "resultsEntry" as resultsEntry
-participant "tempTestSuitePreview" as tempTestSuitePreview
-participant "testSuiteThatCanBeEditedByUser" as testSuiteThatCanBeEditedByUser
 Caller -> File: LoadtestSuiteThatCanBeEditedByUser(...)
 activate File
 File -> listTestSuitesThatCanBeEditedResponseMessage: GetAckNackResponse(...)

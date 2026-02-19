@@ -2,14 +2,29 @@
 title Activity Diagram - testCaseUIChannelReader.go
 start
 :Load testCase/testCaseUI/testCaseUIChannelReader.go;
-:1. closeTestCaseTabBasedOnTestCaseUuiWithOutSaving [method on *TestCasesUiModelStruct];
+:1. startGUICommandChannelReader [method on *TestCasesUiModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:2. removeTestCaseTabBasedOnTestCaseUuid [method on *TestCasesUiModelStruct];
+:2. updateTestCaseGraphics [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. selectTestInstructionInTestCaseGraphics [method on *TestCasesUiModelStruct];
+:4. selectTestCaseTabBasedOnTestCaseUuid [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:5. updatedUpdateTestCaseTabName [method on *TestCasesUiModelStruct];
+:6. removeTestCaseTabBasedOnTestCaseUuid [method on *TestCasesUiModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -17,27 +32,12 @@ else (no)
 endif
 :Iterate loop/range logic;
 :Start goroutine/asynchronous work;
-:3. selectTestCaseTabBasedOnTestCaseUuid [method on *TestCasesUiModelStruct];
+:7. closeTestCaseTabBasedOnTestCaseUuiWithOutSaving [method on *TestCasesUiModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:4. selectTestInstructionInTestCaseGraphics [method on *TestCasesUiModelStruct];
-:5. startGUICommandChannelReader [method on *TestCasesUiModelStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:Iterate loop/range logic;
-:6. updateTestCaseGraphics [method on *TestCasesUiModelStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:7. updatedUpdateTestCaseTabName [method on *TestCasesUiModelStruct];
 stop
 @enduml

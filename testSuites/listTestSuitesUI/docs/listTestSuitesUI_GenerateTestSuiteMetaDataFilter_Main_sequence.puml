@@ -7,9 +7,9 @@ participant "listTestSuiteUIObject" as listTestSuiteUIObject
 participant "widget" as widget
 Caller -> File: GenerateTestSuiteMetaDataFilterContainer(...)
 activate File
-File -> container: NewAppTabs(...)
 File -> container: NewTabItem(...)
 File -> listTestSuiteUIObject: generateSimpleTestSuiteMetaDataFilterContainer(...)
+File -> widget: NewLabel(...)
 File --> Caller: return
 deactivate File
 @enduml

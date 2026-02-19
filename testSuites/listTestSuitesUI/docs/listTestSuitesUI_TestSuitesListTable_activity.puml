@@ -3,33 +3,33 @@ title Activity Diagram - listTestSuitesUI_TestSuitesListTable.go
 start
 :Load testSuites/listTestSuitesUI/listTestSuitesUI_TestSuitesListTable.go;
 :1. RemoveTestSuiteFromList [method on *ListTestSuiteUIStruct];
-:2. calculateAndSetCorrectColumnWidths [method on *ListTestSuiteUIStruct];
+:2. generateTestSuitesListTable [method on *ListTestSuiteUIStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. updateTestSuitesListTable [method on *ListTestSuiteUIStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. calculateAndSetCorrectColumnWidths [method on *ListTestSuiteUIStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:3. generateTestSuitesListTable [method on *ListTestSuiteUIStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:4. loadTestSuiteListTableTable [method on *ListTestSuiteUIStruct];
+:5. loadTestSuiteListTableTable [method on *ListTestSuiteUIStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:5. sort2DStringSlice [method on *ListTestSuiteUIStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:6. updateTestSuitesListTable [method on *ListTestSuiteUIStruct];
+:6. sort2DStringSlice [method on *ListTestSuiteUIStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

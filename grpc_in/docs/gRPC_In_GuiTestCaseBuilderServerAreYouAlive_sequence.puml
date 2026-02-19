@@ -2,12 +2,12 @@
 title Sequence Diagram - gRPC_In_GuiTestCaseBuilderServerAreYouAlive.go
 actor Caller
 participant "gRPC_In_GuiTestCaseBuilderServerAreYouAlive.go" as File
-participant "fenixUserGuiGrpcApi" as fenixUserGuiGrpcApi
 participant "fmt" as fmt
+participant "fenixUserGuiGrpcApi" as fenixUserGuiGrpcApi
 Caller -> File: GuiTestCaseBuilderServerAreYouAlive(...)
 activate File
-File -> fenixUserGuiGrpcApi: CurrentFenixUserGuiProtoFileVersionEnum(...)
 File -> fmt: Sprintf(...)
+File -> fenixUserGuiGrpcApi: CurrentFenixUserGuiProtoFileVersionEnum(...)
 File --> Caller: return
 deactivate File
 @enduml

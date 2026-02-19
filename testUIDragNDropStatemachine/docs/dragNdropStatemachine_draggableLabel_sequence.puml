@@ -2,25 +2,30 @@
 title Sequence Diagram - dragNdropStatemachine_draggableLabel.go
 actor Caller
 participant "dragNdropStatemachine_draggableLabel.go" as File
-participant "containerRef" as containerRef
 participant "draggableLabel" as draggableLabel
-participant "fyne" as fyne
 participant "log" as log
-participant "rectangle2Ref" as rectangle2Ref
 participant "rectangleRef" as rectangleRef
 participant "textRef" as textRef
-Caller -> File: DragEnd(...)
+participant "fyne" as fyne
+participant "rectangle2Ref" as rectangle2Ref
+participant "containerRef" as containerRef
+Caller -> File: NewDraggableLabel(...)
 activate File
-File -> containerRef: Hide(...)
-File -> containerRef: Refresh(...)
-File -> log: Fatalln(...)
+File -> draggableLabel: ExtendBaseWidget(...)
 File --> Caller: return
 deactivate File
 Caller -> File: Dragged(...)
 activate File
-File -> containerRef: Move(...)
+File -> log: Fatalln(...)
+File -> rectangleRef: SetMinSize(...)
+File -> textRef: Size(...)
+File --> Caller: return
+deactivate File
+Caller -> File: DragEnd(...)
+activate File
+File -> log: Fatalln(...)
+File -> containerRef: Hide(...)
 File -> containerRef: Refresh(...)
-File -> containerRef: Show(...)
 File --> Caller: return
 deactivate File
 Caller -> File: MouseIn(...)
@@ -35,11 +40,6 @@ deactivate File
 Caller -> File: MouseOut(...)
 activate File
 File -> log: Fatalln(...)
-File --> Caller: return
-deactivate File
-Caller -> File: NewDraggableLabel(...)
-activate File
-File -> draggableLabel: ExtendBaseWidget(...)
 File --> Caller: return
 deactivate File
 @enduml

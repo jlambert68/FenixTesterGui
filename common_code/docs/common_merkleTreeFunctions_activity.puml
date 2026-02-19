@@ -2,33 +2,37 @@
 title Activity Diagram - common_merkleTreeFunctions.go
 start
 :Load common_code/common_merkleTreeFunctions.go;
-:1. CalculateMerkleHashFromMerkleTree;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:2. ExtractMerkleRootHashFromMerkleTree;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:3. ExtractValuesFromFilterPath;
+:1. HashValues;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:4. HashValues;
+:2. setFromList;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:5. LoadAndProcessFile;
+:3. uniqueGotaSeries;
+:4. uniqueGotaSeriesAsStringArray;
+:5. hashChildrenAndWriteToDataStore;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:6. recursiveTreeCreator;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:7. LoadAndProcessFile;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -36,35 +40,31 @@ else (no)
 endif
 :Iterate loop/range logic;
 :Schedule deferred cleanup;
-:6. calculateMerkleHashFromMerkleTreeLeafNodes;
+:8. calculateMerkleHashFromMerkleTreeLeafNodes;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:7. hashChildrenAndWriteToDataStore;
+:9. CalculateMerkleHashFromMerkleTree;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:10. ExtractMerkleRootHashFromMerkleTree;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:11. ExtractValuesFromFilterPath;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:8. recursiveTreeCreator;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:Iterate loop/range logic;
-:9. setFromList;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:Iterate loop/range logic;
-:10. uniqueGotaSeries;
-:11. uniqueGotaSeriesAsStringArray;
 stop
 @enduml

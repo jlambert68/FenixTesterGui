@@ -15,57 +15,57 @@ else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:3. generateTestCasesInTestSuiteMessageWhenLoading [method on *TestSuiteModelStruct];
+:3. generateTestSuiteBasicInformationMessageWhenLoading [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. generateTestSuiteTestDataMessageWhenLoading [method on *TestSuiteModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:4. generateTestSuiteBasicInformationMessageWhenLoading [method on *TestSuiteModelStruct];
+:5. generateTestSuitePreviewMessageWhenLoading [method on *TestSuiteModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:5. generateTestSuiteDeleteDateMessageWhenLoading [method on *TestSuiteModelStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:6. generateTestSuiteImplementedFunctionsMapWhenLoading [method on *TestSuiteModelStruct];
+:6. generateTestSuiteMetaDataMessageWhenLoading [method on *TestSuiteModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:7. generateTestSuiteMetaDataMessageWhenLoading [method on *TestSuiteModelStruct];
+:7. generateTestCasesInTestSuiteMessageWhenLoading [method on *TestSuiteModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:8. generateTestSuitePreviewMessageWhenLoading [method on *TestSuiteModelStruct];
+:8. generateTestSuiteDeleteDateMessageWhenLoading [method on *TestSuiteModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:9. generateTestSuiteTestDataMessageWhenLoading [method on *TestSuiteModelStruct];
+:9. generateTestSuiteTypeMessageWhenLoading [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:10. generateTestSuiteImplementedFunctionsMapWhenLoading [method on *TestSuiteModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:10. generateTestSuiteTypeMessageWhenLoading [method on *TestSuiteModelStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
 stop
 @enduml

@@ -33,7 +33,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func CreateTableForTestCaseExecutionsOnQueue() *fyne.Container`
 - Exported: `true`
 - Control-flow features: `for/range`
-- Selector calls: `binding.BindStruct`, `container.NewMax`, `headertable.NewSortingHeaderTable`
+- Selector calls: `binding.BindStruct`, `headertable.NewSortingHeaderTable`, `container.NewMax`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

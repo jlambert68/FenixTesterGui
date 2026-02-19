@@ -34,26 +34,12 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - `detailedTestCaseExecutionsMapMutex`
 
 ## Functions and Methods
-### AddToDetailedTestCaseExecutionsMap (method on `TestCaseExecutionsModelStruct`)
-- Signature: `func (TestCaseExecutionsModelStruct) AddToDetailedTestCaseExecutionsMap(detailedTestCaseExecutionMapKey DetailedTestCaseExecutionMapKeyType, detailedTestCaseExecution *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage)`
+### ReadFromDetailedTestCaseExecutionsMap (method on `TestCaseExecutionsModelStruct`)
+- Signature: `func (TestCaseExecutionsModelStruct) ReadFromDetailedTestCaseExecutionsMap(detailedTestCaseExecutionMapKey DetailedTestCaseExecutionMapKeyType) (detailedTestCaseExecution *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage, existInMap bool)`
 - Exported: `true`
 - Control-flow features: `if, defer`
-- Doc: AddToDetailedTestCaseExecutionsMap Add to the DetailedTestCaseExecutions-Map
-- Selector calls: `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`
-
-### ClearFlagRefreshOngoingOfDetailedTestCaseExecution (method on `TestCaseExecutionsModelStruct`)
-- Signature: `func (TestCaseExecutionsModelStruct) ClearFlagRefreshOngoingOfDetailedTestCaseExecution(detailedTestCaseExecutionMapKey DetailedTestCaseExecutionMapKeyType)`
-- Exported: `true`
-- Control-flow features: `if, defer`
-- Doc: ClearFlagRefreshOngoingOfDetailedTestCaseExecution Clear the flag there is an ongoing refresh of the DetailedTestCaseExecution-data
+- Doc: ReadFromDetailedTestCaseExecutionsMap Read from the DetailedTestCaseExecutions-Map
 - Selector calls: `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`, `fmt.Println`
-
-### DeleteFromDetailedTestCaseExecutionsMap (method on `TestCaseExecutionsModelStruct`)
-- Signature: `func (TestCaseExecutionsModelStruct) DeleteFromDetailedTestCaseExecutionsMap(detailedTestCaseExecutionMapKey DetailedTestCaseExecutionMapKeyType)`
-- Exported: `true`
-- Control-flow features: `if, defer`
-- Doc: DeleteFromDetailedTestCaseExecutionsMap Delete from the DetailedTestCaseExecutions-Map
-- Selector calls: `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`
 
 ### GetNumberOfDetailedTestCaseExecutionsRetrievedFromDatabase (method on `TestCaseExecutionsModelStruct`)
 - Signature: `func (TestCaseExecutionsModelStruct) GetNumberOfDetailedTestCaseExecutionsRetrievedFromDatabase() numberOfDetailedTestCaseExecutionsRetrievedFromDatabase int`
@@ -62,18 +48,32 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Doc: GetNumberOfDetailedTestCaseExecutionsRetrievedFromDatabase Read all from the DetailedTestCaseExecutions-Map
 - Selector calls: `detailedTestCaseExecutionsMapMutex.RLock`, `detailedTestCaseExecutionsMapMutex.RUnlock`
 
-### ReadFromDetailedTestCaseExecutionsMap (method on `TestCaseExecutionsModelStruct`)
-- Signature: `func (TestCaseExecutionsModelStruct) ReadFromDetailedTestCaseExecutionsMap(detailedTestCaseExecutionMapKey DetailedTestCaseExecutionMapKeyType) (detailedTestCaseExecution *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage, existInMap bool)`
+### AddToDetailedTestCaseExecutionsMap (method on `TestCaseExecutionsModelStruct`)
+- Signature: `func (TestCaseExecutionsModelStruct) AddToDetailedTestCaseExecutionsMap(detailedTestCaseExecutionMapKey DetailedTestCaseExecutionMapKeyType, detailedTestCaseExecution *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage)`
 - Exported: `true`
 - Control-flow features: `if, defer`
-- Doc: ReadFromDetailedTestCaseExecutionsMap Read from the DetailedTestCaseExecutions-Map
-- Selector calls: `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`, `fmt.Println`
+- Doc: AddToDetailedTestCaseExecutionsMap Add to the DetailedTestCaseExecutions-Map
+- Selector calls: `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`
+
+### DeleteFromDetailedTestCaseExecutionsMap (method on `TestCaseExecutionsModelStruct`)
+- Signature: `func (TestCaseExecutionsModelStruct) DeleteFromDetailedTestCaseExecutionsMap(detailedTestCaseExecutionMapKey DetailedTestCaseExecutionMapKeyType)`
+- Exported: `true`
+- Control-flow features: `if, defer`
+- Doc: DeleteFromDetailedTestCaseExecutionsMap Delete from the DetailedTestCaseExecutions-Map
+- Selector calls: `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`
 
 ### SetFlagRefreshOngoingOfDetailedTestCaseExecution (method on `TestCaseExecutionsModelStruct`)
 - Signature: `func (TestCaseExecutionsModelStruct) SetFlagRefreshOngoingOfDetailedTestCaseExecution(detailedTestCaseExecutionMapKey DetailedTestCaseExecutionMapKeyType)`
 - Exported: `true`
 - Control-flow features: `if, defer`
 - Doc: SetFlagRefreshOngoingOfDetailedTestCaseExecution Set the flag there is an ongoing refresh of the DetailedTestCaseExecution-data
+- Selector calls: `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`, `fmt.Println`
+
+### ClearFlagRefreshOngoingOfDetailedTestCaseExecution (method on `TestCaseExecutionsModelStruct`)
+- Signature: `func (TestCaseExecutionsModelStruct) ClearFlagRefreshOngoingOfDetailedTestCaseExecution(detailedTestCaseExecutionMapKey DetailedTestCaseExecutionMapKeyType)`
+- Exported: `true`
+- Control-flow features: `if, defer`
+- Doc: ClearFlagRefreshOngoingOfDetailedTestCaseExecution Clear the flag there is an ongoing refresh of the DetailedTestCaseExecution-data
 - Selector calls: `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`, `fmt.Println`
 
 ## Behavioral Summary

@@ -34,24 +34,24 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
-### SetDialAddressString (method on `*RestApiStruct`)
-- Signature: `func (*RestApiStruct) SetDialAddressString(dialAddress string)`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Doc: ******************************************************************************** SetDialAddressString
+### extractAndValidateJsonBody
+- Signature: `func extractAndValidateJsonBody(responseWriterPointer *http.ResponseWriter, httpRequest *http.Request, myInputTypeVariable interface{}) err error`
+- Exported: `false`
+- Control-flow features: `if, switch, returns error`
+- Doc: ******************************************************************************* extractAndValidateJsonBody
+- Selector calls: `header.ParseValueAndParams`, `http.Error`, `http.MaxBytesReader`, `json.NewDecoder`, `dec.DisallowUnknownFields`, `dec.Decode`, `errors.As`, `fmt.Sprintf`
 
 ### SetLogger (method on `*RestApiStruct`)
 - Signature: `func (*RestApiStruct) SetLogger(logger *logrus.Logger)`
 - Exported: `true`
 - Control-flow features: `none detected`
-- Doc: ******************************************************************************** SetLogger
+- Doc: ******************************************************************************* SetLogger
 
-### extractAndValidateJsonBody
-- Signature: `func extractAndValidateJsonBody(responseWriterPointer *http.ResponseWriter, httpRequest *http.Request, myInputTypeVariable interface{}) err error`
-- Exported: `false`
-- Control-flow features: `if, switch, returns error`
-- Doc: ******************************************************************************** extractAndValidateJsonBody
-- Selector calls: `dec.Decode`, `dec.DisallowUnknownFields`, `err.Error`, `errors.As`, `errors.Is`, `fmt.Sprintf`, `header.ParseValueAndParams`, `http.Error`
+### SetDialAddressString (method on `*RestApiStruct`)
+- Signature: `func (*RestApiStruct) SetDialAddressString(dialAddress string)`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Doc: ******************************************************************************* SetDialAddressString
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -4,15 +4,15 @@ actor Caller
 participant "testSuiteUI_GraphicalComponent_testSuiteDescription.go" as File
 participant "container" as container
 participant "layout" as layout
+participant "widget" as widget
+participant "testCaseDescriptionFormContainer" as testCaseDescriptionFormContainer
 participant "newTestCaseDescriptionEntry" as newTestCaseDescriptionEntry
 participant "strings" as strings
 participant "testCaseDescriptionContainer" as testCaseDescriptionContainer
-participant "testCaseDescriptionFormContainer" as testCaseDescriptionFormContainer
-participant "widget" as widget
 Caller -> File: generateTestSuiteDescriptionArea(...)
 activate File
 File -> container: New(...)
-File -> container: NewVBox(...)
+File -> layout: NewVBoxLayout(...)
 File -> layout: NewFormLayout(...)
 File --> Caller: return
 deactivate File

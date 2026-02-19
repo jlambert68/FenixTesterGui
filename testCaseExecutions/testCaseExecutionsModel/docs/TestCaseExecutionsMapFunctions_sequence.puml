@@ -4,6 +4,31 @@ actor Caller
 participant "TestCaseExecutionsMapFunctions.go" as File
 participant "testCaseExecutionsMapMutex" as testCaseExecutionsMapMutex
 participant "testCaseExecutionsModel" as testCaseExecutionsModel
+Caller -> File: InitiateTestCaseExecutionsMap(...)
+activate File
+File -> testCaseExecutionsMapMutex: Lock(...)
+File -> testCaseExecutionsMapMutex: Unlock(...)
+File --> Caller: return
+deactivate File
+Caller -> File: ReadFromTestCaseExecutionsMap(...)
+activate File
+File -> testCaseExecutionsMapMutex: RLock(...)
+File -> testCaseExecutionsMapMutex: RUnlock(...)
+File --> Caller: return
+deactivate File
+Caller -> File: ReadAllFromTestCaseExecutionsMap(...)
+activate File
+File -> testCaseExecutionsMapMutex: RLock(...)
+File -> testCaseExecutionsMapMutex: RUnlock(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GetNumberOfTestCaseExecutionsRetrievedFromDatabase(...)
+activate File
+File -> testCaseExecutionsMapMutex: RLock(...)
+File -> testCaseExecutionsMapMutex: RUnlock(...)
+File -> testCaseExecutionsModel: ReadAllFromTestCaseExecutionsMap(...)
+File --> Caller: return
+deactivate File
 Caller -> File: AddToTestCaseExecutionsMap(...)
 activate File
 File -> testCaseExecutionsMapMutex: Lock(...)
@@ -16,36 +41,11 @@ File -> testCaseExecutionsMapMutex: Lock(...)
 File -> testCaseExecutionsMapMutex: Unlock(...)
 File --> Caller: return
 deactivate File
-Caller -> File: GetNumberOfTestCaseExecutionsRetrievedFromDatabase(...)
-activate File
-File -> testCaseExecutionsMapMutex: RLock(...)
-File -> testCaseExecutionsMapMutex: RUnlock(...)
-File -> testCaseExecutionsModel: ReadAllFromTestCaseExecutionsMap(...)
-File --> Caller: return
-deactivate File
 Caller -> File: GetTestInstructionExecutionUuidFromTestInstructionUuid(...)
 activate File
 File --> Caller: return
 deactivate File
 Caller -> File: GetTestInstructionFromTestInstructionExecutionUuid(...)
-activate File
-File -> testCaseExecutionsMapMutex: RLock(...)
-File -> testCaseExecutionsMapMutex: RUnlock(...)
-File --> Caller: return
-deactivate File
-Caller -> File: InitiateTestCaseExecutionsMap(...)
-activate File
-File -> testCaseExecutionsMapMutex: Lock(...)
-File -> testCaseExecutionsMapMutex: Unlock(...)
-File --> Caller: return
-deactivate File
-Caller -> File: ReadAllFromTestCaseExecutionsMap(...)
-activate File
-File -> testCaseExecutionsMapMutex: RLock(...)
-File -> testCaseExecutionsMapMutex: RUnlock(...)
-File --> Caller: return
-deactivate File
-Caller -> File: ReadFromTestCaseExecutionsMap(...)
 activate File
 File -> testCaseExecutionsMapMutex: RLock(...)
 File -> testCaseExecutionsMapMutex: RUnlock(...)

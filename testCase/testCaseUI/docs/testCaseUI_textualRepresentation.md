@@ -31,19 +31,19 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
+### generateNewTextualRepresentationAreaForTestCase (method on `*TestCasesUiModelStruct`)
+- Signature: `func (*TestCasesUiModelStruct) generateNewTextualRepresentationAreaForTestCase(testCaseUuid string) (newTestCaseTextualStructure testCaseTextualStructureStruct, canvasTextualRepresentationAccordionObject fyne.CanvasObject, err error)`
+- Exported: `false`
+- Control-flow features: `if, returns error`
+- Doc: Generate the Textual Representation Area for the TestCase
+- Selector calls: `errors.New`, `fmt.Sprintf`, `binding.NewString`, `widget.NewLabelWithData`, `container.New`, `layout.NewFormLayout`, `widget.NewLabel`, `container.NewVBox`
+
 ### UpdateTextualStructuresForTestCase (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) UpdateTextualStructuresForTestCase(testCaseUuid string, testCaseTextualStructureSimple string, testCaseTextualStructureComplex string, testCaseTextualStructureExtended string) err error`
 - Exported: `true`
 - Control-flow features: `if, returns error`
 - Doc: UpdateTextualStructuresForTestCase Updates hte Textual Structures (Simple, Complex and Extended) for a specific TestCase
 - Selector calls: `errors.New`, `fmt.Sprintf`, `fyne.Do`
-
-### generateNewTextualRepresentationAreaForTestCase (method on `*TestCasesUiModelStruct`)
-- Signature: `func (*TestCasesUiModelStruct) generateNewTextualRepresentationAreaForTestCase(testCaseUuid string) (newTestCaseTextualStructure testCaseTextualStructureStruct, canvasTextualRepresentationAccordionObject fyne.CanvasObject, err error)`
-- Exported: `false`
-- Control-flow features: `if, returns error`
-- Doc: Generate the Textual Representation Area for the TestCase
-- Selector calls: `binding.NewString`, `container.New`, `container.NewHScroll`, `container.NewVBox`, `errors.New`, `fmt.Sprintf`, `layout.NewFormLayout`, `widget.NewAccordion`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

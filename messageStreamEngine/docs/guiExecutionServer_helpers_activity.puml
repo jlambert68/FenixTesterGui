@@ -4,28 +4,28 @@ start
 :Load messageStreamEngine/guiExecutionServer_helpers.go;
 :1. InitiateAndStartMessageStreamChannelReader;
 :Start goroutine/asynchronous work;
-:2. MetadataFromHeaders;
+:2. setConnectionToFenixGuiExecutionMessageServer [method on *MessageStreamEngineStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:3. decode;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:Iterate loop/range logic;
-:4. dialFromGrpcurl;
+:3. dialFromGrpcurl;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
-:5. setConnectionToFenixGuiExecutionMessageServer [method on *MessageStreamEngineStruct];
+:4. MetadataFromHeaders;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:5. decode;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

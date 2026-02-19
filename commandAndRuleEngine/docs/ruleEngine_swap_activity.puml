@@ -2,37 +2,37 @@
 title Activity Diagram - ruleEngine_swap.go
 start
 :Load commandAndRuleEngine/ruleEngine_swap.go;
-:1. addTestInstructionContainerDataToTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
+:1. verifyIfElementCanBeSwapped [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. executeSwapElement [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. executeSwapElementBasedOnRule [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. addTestInstructionDataToTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:2. addTestInstructionDataToTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
+:5. addTestInstructionContainerDataToTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:3. executeSwapElement [method on *CommandAndRuleEngineObjectStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:4. executeSwapElementBasedOnRule [method on *CommandAndRuleEngineObjectStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:5. verifyIfElementCanBeSwapped [method on *CommandAndRuleEngineObjectStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
 stop
 @enduml

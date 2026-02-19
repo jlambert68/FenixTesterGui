@@ -2,15 +2,15 @@
 title Sequence Diagram - newOrEditTestDataPointGroupUI_BuildPopUpTable.go
 actor Caller
 participant "newOrEditTestDataPointGroupUI_BuildPopUpTable.go" as File
-participant "fmt" as fmt
-participant "re" as re
 participant "regexp" as regexp
+participant "re" as re
+participant "fmt" as fmt
 participant "testDataEngine" as testDataEngine
 Caller -> File: buildPopUpTableDataFromTestDataPointName(...)
 activate File
-File -> fmt: Println(...)
-File -> re: FindStringSubmatch(...)
 File -> regexp: MustCompile(...)
+File -> re: FindStringSubmatch(...)
+File -> fmt: Println(...)
 File --> Caller: return
 deactivate File
 @enduml

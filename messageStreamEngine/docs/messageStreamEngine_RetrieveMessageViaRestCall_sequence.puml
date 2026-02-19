@@ -2,26 +2,26 @@
 title Sequence Diagram - messageStreamEngine_RetrieveMessageViaRestCall.go
 actor Caller
 participant "messageStreamEngine_RetrieveMessageViaRestCall.go" as File
+participant "fmt" as fmt
+participant "json" as json
+participant "http" as http
 participant "bytes" as bytes
 participant "client" as client
-participant "decoder" as decoder
-participant "err" as err
-participant "errors" as errors
-participant "fmt" as fmt
-participant "http" as http
 participant "ioutil" as ioutil
+participant "errors" as errors
+participant "decoder" as decoder
 Caller -> File: retrievePubSubMessagesViaRestApi(...)
 activate File
-File -> bytes: NewBuffer(...)
-File -> client: Do(...)
-File -> decoder: Decode(...)
+File -> fmt: Sprintf(...)
+File -> json: Marshal(...)
+File -> http: NewRequest(...)
 File --> Caller: return
 deactivate File
 Caller -> File: sendAcknowledgeMessageViaRestApi(...)
 activate File
-File -> bytes: NewBuffer(...)
-File -> client: Do(...)
-File -> fmt: Errorf(...)
+File -> fmt: Sprintf(...)
+File -> json: Marshal(...)
+File -> http: NewRequest(...)
 File --> Caller: return
 deactivate File
 @enduml

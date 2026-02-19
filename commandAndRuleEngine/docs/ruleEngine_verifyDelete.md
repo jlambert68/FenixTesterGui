@@ -34,7 +34,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, switch, returns error`
 - Doc: Verify the simple rules if a component can be deleted or not
-- Selector calls: `componentType.String`, `errors.New`, `fmt.Sprintf`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `componentType.String`
 
 ### verifyIfComponentCanBeDeletedWithComplexRules (method on `*CommandAndRuleEngineObjectStruct`)
 - Signature: `func (*CommandAndRuleEngineObjectStruct) verifyIfComponentCanBeDeletedWithComplexRules(testCaseUuid string, uuidToDelete string) (matchedRule string, err error)`

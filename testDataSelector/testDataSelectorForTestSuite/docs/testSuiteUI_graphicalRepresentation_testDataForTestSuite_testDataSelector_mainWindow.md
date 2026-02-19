@@ -36,8 +36,8 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func MainTestDataSelector(app fyne.App, parent fyne.Window, currentTestSuitePtr *testSuitesModel.TestSuiteModelStruct, testCaseUuid string, testDataSelectorsContainer *fyne.Container, testDataPointRadioGroupContainer *fyne.Container, generateTestDataAsRichTextCallBackFunctionRef func(), testDataPointGroupsSelectInMainTestSuiteArea *widget.Select, testDataPointsForAGroupSelectInMainTestSuiteArea *widget.Select, testDataRowsForTestDataPointsSelectInMainTestSuiteArea *widget.Select)`
 - Exported: `true`
 - Control-flow features: `if, for/range, go`
-- Internal calls: `generateTestDataAsRichTextCallBackFunctionRef`, `string`, `testDataPointGroupsToStringSliceFunction`, `testDataPointsToStringSliceFunction`, `updateTestDataPointsForAGroupList`
-- Selector calls: `app.NewWindow`, `container.NewBorder`, `container.NewHBox`, `container.NewHSplit`, `dialog.ShowConfirm`, `dialog.ShowInformation`, `fmt.Sprintf`, `fyne.Do`
+- Internal calls: `string`, `updateTestDataPointsForAGroupList`, `testDataPointGroupsToStringSliceFunction`, `testDataPointsToStringSliceFunction`, `generateTestDataAsRichTextCallBackFunctionRef`
+- Selector calls: `parent.Hide`, `app.NewWindow`, `myWindow.Resize`, `fyne.NewSize`, `myWindow.CenterOnScreen`, `myWindow.SetOnClosed`, `parent.Show`, `widget.NewList`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

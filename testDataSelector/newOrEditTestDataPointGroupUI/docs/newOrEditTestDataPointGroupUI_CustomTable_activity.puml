@@ -2,13 +2,13 @@
 title Activity Diagram - newOrEditTestDataPointGroupUI_CustomTable.go
 start
 :Load testDataSelector/newOrEditTestDataPointGroupUI/newOrEditTestDataPointGroupUI_CustomTable.go;
-:1. CreateRenderer [method on *customWidget];
+:1. NewCustomWidget;
+:2. CreateRenderer [method on *customWidget];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:2. Destroy [method on *customWidgetRenderer];
 :3. Layout [method on *customWidgetRenderer];
 :4. MinSize [method on *customWidgetRenderer];
 if (branch or error path?) then (yes)
@@ -16,29 +16,28 @@ if (branch or error path?) then (yes)
 else (no)
 :Continue primary flow;
 endif
-:5. MouseIn [method on *customWidget];
+:5. Refresh [method on *customWidgetRenderer];
+:6. Objects [method on *customWidgetRenderer];
+:7. Destroy [method on *customWidgetRenderer];
+:8. updateVisibility [method on *customWidget];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:6. MouseMoved [method on *customWidget];
-:7. MouseOut [method on *customWidget];
+:9. SetText [method on *customWidget];
+:10. SetCellID [method on *customWidget];
+:11. MouseIn [method on *customWidget];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:8. NewCustomTableWidget;
+:12. MouseOut [method on *customWidget];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:Iterate loop/range logic;
-:9. NewCustomWidget;
-:10. Objects [method on *customWidgetRenderer];
-:11. Refresh [method on *customWidgetRenderer];
-:12. SetCellID [method on *customWidget];
 stop
 @enduml

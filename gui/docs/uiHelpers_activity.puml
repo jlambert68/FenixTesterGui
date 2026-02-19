@@ -2,11 +2,11 @@
 title Activity Diagram - uiHelpers.go
 start
 :Load gui/uiHelpers.go;
-:1. SetDialAddressString [method on *AvailableBuildingBlocksModelStruct];
-:2. SetDialAddressString [method on *GlobalUIServerStruct];
-:3. SetDialAddressString [method on *UIServerStruct];
-:4. SetLogger [method on *AvailableBuildingBlocksModelStruct];
-:5. SetLogger [method on *GlobalUIServerStruct];
-:6. SetLogger [method on *UIServerStruct];
+:1. SetLogger [method on *AvailableBuildingBlocksModelStruct];
+:2. SetDialAddressString [method on *AvailableBuildingBlocksModelStruct];
+:3. SetLogger [method on *GlobalUIServerStruct];
+:4. SetDialAddressString [method on *GlobalUIServerStruct];
+:5. SetLogger [method on *UIServerStruct];
+:6. SetDialAddressString [method on *UIServerStruct];
 stop
 @enduml

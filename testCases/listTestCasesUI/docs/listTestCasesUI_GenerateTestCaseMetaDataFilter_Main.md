@@ -32,7 +32,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: GenerateTestCaseMetaDataFilterContainer Generates the GenerateTestCaseMetaDataFilterContainer containing a simple and an advanced filter version
-- Selector calls: `container.NewAppTabs`, `container.NewTabItem`, `listTestCaseUIObject.generateSimpleTestCaseMetaDataFilterContainer`, `widget.NewLabel`
+- Selector calls: `container.NewTabItem`, `listTestCaseUIObject.generateSimpleTestCaseMetaDataFilterContainer`, `widget.NewLabel`, `container.NewAppTabs`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

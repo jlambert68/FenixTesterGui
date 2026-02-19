@@ -2,19 +2,19 @@
 title Activity Diagram - restAPI.go
 start
 :Load restAPI/restAPI.go;
-:1. HealthCheck [method on *RestApiStruct];
+:1. RestAPIServer [method on *RestApiStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. HealthCheck [method on *RestApiStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
-:2. RestAPIServer [method on *RestApiStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
 :3. RestSendAreYouAliveToFenixGuiBuilderServer [method on *RestApiStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;

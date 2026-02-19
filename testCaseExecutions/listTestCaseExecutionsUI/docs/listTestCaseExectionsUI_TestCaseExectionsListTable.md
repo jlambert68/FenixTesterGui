@@ -50,50 +50,45 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: RemoveTestCaseExecutionFromList Remove a TestCaseExecution from the List
-- Selector calls: `testCaseExecutionsModel.TestCaseExecutionUuidType`, `testCaseExecutionsModelRef.DeleteFromTestCaseExecutionsMap`
-
-### SortGuiTableOnCurrentColumnAndSorting
-- Signature: `func SortGuiTableOnCurrentColumnAndSorting()`
-- Exported: `true`
-- Control-flow features: `switch`
-- Doc: Sort the matrix, for GUI table, update the Gui. Use current table sorting and column, if exist
-- Internal calls: `sortGuiTableAscendingOnTestCaseExecutionTimeStamp`, `sortGuiTableOnColumn`, `uint8`
-
-### SortOrReverseSortGuiTable
-- Signature: `func SortOrReverseSortGuiTable(sortInThisColumn uint8)`
-- Exported: `true`
-- Control-flow features: `if, switch`
-- Doc: Sort the matrix, ascending, for GUI table, update the Gui for 'latestTestCaseExecutionTimeStampColumnNumber'
-- Internal calls: `int`, `sortGuiTableOnColumn`
-
-### calculateAndSetCorrectColumnWidths
-- Signature: `func calculateAndSetCorrectColumnWidths()`
-- Exported: `false`
-- Control-flow features: `if, for/range`
-- Internal calls: `float32`
-- Selector calls: `fyne.Do`, `fyne.MeasureText`, `testCaseExecutionsListTable.Refresh`, `testCaseExecutionsListTable.SetColumnWidth`, `theme.Padding`, `theme.TextSize`
+- Selector calls: `testCaseExecutionsModelRef.DeleteFromTestCaseExecutionsMap`, `testCaseExecutionsModel.TestCaseExecutionUuidType`
 
 ### generateTestCaseExecutionsListTable
 - Signature: `func generateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct)`
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: Create the UI-list that holds the list of TestCasesMapPtr that the user can edit
-- Internal calls: `calculateAndSetCorrectColumnWidths`, `newSortableHeaderLabel`, `updateTestCaseExecutionsListTable`
-- Selector calls: `bytes.NewReader`, `png.Decode`, `widget.NewLabel`, `widget.NewTable`
+- Internal calls: `newSortableHeaderLabel`, `updateTestCaseExecutionsListTable`, `calculateAndSetCorrectColumnWidths`
+- Selector calls: `widget.NewTable`, `widget.NewLabel`, `png.Decode`, `bytes.NewReader`
+
+### updateTestCaseExecutionsListTable
+- Signature: `func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct)`
+- Exported: `false`
+- Control-flow features: `if, switch, defer`
+- Doc: Update the Table Update the Table
+- Internal calls: `newClickableTableLabel`, `int16`, `int`, `uint8`, `int32`
+- Selector calls: `updateTestCaseExecutionsListTableMutex.Lock`, `updateTestCaseExecutionsListTableMutex.Unlock`, `container.NewStack`, `canvas.NewRectangle`, `lbl.Show`, `alt.Hide`, `lbl.SetText`, `lbl.Hide`
+
+### calculateAndSetCorrectColumnWidths
+- Signature: `func calculateAndSetCorrectColumnWidths()`
+- Exported: `false`
+- Control-flow features: `if, for/range`
+- Internal calls: `float32`
+- Selector calls: `fyne.MeasureText`, `theme.TextSize`, `fyne.Do`, `testCaseExecutionsListTable.SetColumnWidth`, `theme.Padding`, `testCaseExecutionsListTable.Refresh`
 
 ### loadTestCaseExecutionListTableTable
 - Signature: `func loadTestCaseExecutionListTableTable(testCaseExecutionsModelObject *testCaseExecutionsModel.TestCaseExecutionsModelStruct, retrieveAllExecutionsForSpecificTestCaseUuid bool, specificTestCaseUuid string)`
 - Exported: `false`
 - Control-flow features: `if, for/range, switch, defer`
 - Internal calls: `int`, `int32`, `sort2DStringSlice`
-- Selector calls: `fmt.Sprintf`, `loadTestCaseExecutionListTableTableMutex.Lock`, `loadTestCaseExecutionListTableTableMutex.Unlock`, `log.Fatalln`, `sharedCode.ConvertGrpcTimeStampToStringForDB`, `strconv.Itoa`, `tempTestCaseExecution.GetDomainName`, `tempTestCaseExecution.GetDomainUUID`
+- Selector calls: `loadTestCaseExecutionListTableTableMutex.Lock`, `loadTestCaseExecutionListTableTableMutex.Unlock`, `testCaseExecutionsModelObject.ReadAllFromTestCaseExecutionsMap`, `testCaseExecutionsModelObject.GetAllTestCaseExecutionsForOneTestCaseUuid`, `testCaseExecutionsModel.TestCaseUuidType`, `fmt.Sprintf`, `tempTestCaseExecution.GetDomainName`, `tempTestCaseExecution.GetDomainUUID`
 
-### sort2DStringSlice
-- Signature: `func sort2DStringSlice(data [][]string, columnToSortOn int, sortingDirection SortingDirectionType)`
+### sortGuiTableOnColumn
+- Signature: `func sortGuiTableOnColumn(columnNumber uint8, sortDirection SortingDirectionType)`
 - Exported: `false`
-- Control-flow features: `if, switch`
-- Doc: Sort2DStringSlice sorts a 2D string slice by a specified column index. It assumes that the column index is valid for all rows in the slice.
-- Selector calls: `sort.Slice`, `strconv.Atoi`
+- Control-flow features: `if, for/range, switch`
+- Doc: Sort the matrix for GUI table, update the Gui and Set correct Sort-icon for sorted Header
+- Internal calls: `loadTestCaseExecutionListTableTable`, `sort2DStringSlice`, `int`, `calculateAndSetCorrectColumnWidths`, `updateTestCaseExecutionsListTable`
+- Selector calls: `fyne.Do`, `testCaseExecutionsListTable.Refresh`
 
 ### sortGuiTableAscendingOnTestCaseExecutionTimeStamp
 - Signature: `func sortGuiTableAscendingOnTestCaseExecutionTimeStamp()`
@@ -102,21 +97,26 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Doc: Sort the matrix, ascending, for GUI table, update the Gui for 'latestTestCaseExecutionTimeStampColumnNumber'
 - Internal calls: `sortGuiTableOnColumn`
 
-### sortGuiTableOnColumn
-- Signature: `func sortGuiTableOnColumn(columnNumber uint8, sortDirection SortingDirectionType)`
-- Exported: `false`
-- Control-flow features: `if, for/range, switch`
-- Doc: Sort the matrix for GUI table, update the Gui and Set correct Sort-icon for sorted Header
-- Internal calls: `calculateAndSetCorrectColumnWidths`, `int`, `loadTestCaseExecutionListTableTable`, `sort2DStringSlice`, `updateTestCaseExecutionsListTable`
-- Selector calls: `fyne.Do`, `testCaseExecutionsListTable.Refresh`
+### SortOrReverseSortGuiTable
+- Signature: `func SortOrReverseSortGuiTable(sortInThisColumn uint8)`
+- Exported: `true`
+- Control-flow features: `if, switch`
+- Doc: Sort the matrix, ascending, for GUI table, update the Gui for 'latestTestCaseExecutionTimeStampColumnNumber'
+- Internal calls: `int`, `sortGuiTableOnColumn`
 
-### updateTestCaseExecutionsListTable
-- Signature: `func updateTestCaseExecutionsListTable(testCaseExecutionsModel *testCaseExecutionsModel.TestCaseExecutionsModelStruct)`
+### SortGuiTableOnCurrentColumnAndSorting
+- Signature: `func SortGuiTableOnCurrentColumnAndSorting()`
+- Exported: `true`
+- Control-flow features: `switch`
+- Doc: Sort the matrix, for GUI table, update the Gui. Use current table sorting and column, if exist
+- Internal calls: `sortGuiTableOnColumn`, `uint8`, `sortGuiTableAscendingOnTestCaseExecutionTimeStamp`
+
+### sort2DStringSlice
+- Signature: `func sort2DStringSlice(data [][]string, columnToSortOn int, sortingDirection SortingDirectionType)`
 - Exported: `false`
-- Control-flow features: `if, switch, defer`
-- Doc: Update the Table Update the Table
-- Internal calls: `int`, `int16`, `int32`, `newClickableTableLabel`, `uint8`
-- Selector calls: `alt.Hide`, `alt.Show`, `canvas.NewRectangle`, `cont.Refresh`, `container.NewStack`, `h.Refresh`, `lbl.Hide`, `lbl.SetText`
+- Control-flow features: `if, switch`
+- Doc: Sort2DStringSlice sorts a 2D string slice by a specified column index. It assumes that the column index is valid for all rows in the slice.
+- Selector calls: `sort.Slice`, `strconv.Atoi`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

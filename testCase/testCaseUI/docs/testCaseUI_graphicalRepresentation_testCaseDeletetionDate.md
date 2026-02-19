@@ -46,22 +46,22 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func countDownTicker()`
 - Exported: `false`
 - Control-flow features: `if, for/range, select, go, defer`
-- Selector calls: `enableDeletionCheckbox.SetChecked`, `fmt.Sprintf`, `ticker.Stop`, `tickerCountDownlabel.Hide`, `tickerCountDownlabel.Show`, `tickerCountDownlabelDataBinding.Set`, `time.NewTicker`
+- Selector calls: `tickerCountDownlabelDataBinding.Set`, `fmt.Sprintf`, `tickerCountDownlabel.Show`, `time.NewTicker`, `ticker.Stop`, `tickerCountDownlabel.Hide`, `enableDeletionCheckbox.SetChecked`
 
 ### flashScreen
 - Signature: `func flashScreen(mainApp fyne.App, mainWindow fyne.Window)`
 - Exported: `false`
 - Control-flow features: `if, for/range, select, go, defer`
 - Doc: Functions that hides the Fenix Screen and the flash the full screen
-- Selector calls: `canvas.NewRectangle`, `fmt.Println`, `fyne.CurrentApp`, `fyne.NewContainerWithLayout`, `layout.NewMaxLayout`, `mainApp.NewWindow`, `mainWindow.Hide`, `mainWindow.Show`
+- Selector calls: `mainWindow.Hide`, `mainApp.NewWindow`, `redWindow.SetFullScreen`, `canvas.NewRectangle`, `fyne.NewContainerWithLayout`, `layout.NewMaxLayout`, `redWindow.SetContent`, `redWindow.Show`
 
 ### generateTestCaseDeletionDateArea (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) generateTestCaseDeletionDateArea(testCaseUuid string) (testCaseDeletionDateArea fyne.CanvasObject, err error)`
 - Exported: `false`
 - Control-flow features: `if, go, returns error`
 - Doc: Generate the TestCaseDeletionDate Area for the TestCase
-- Internal calls: `countDownTicker`, `dateValidatorFunction`
-- Selector calls: `binding.NewString`, `canvas.NewRectangle`, `container.New`, `container.NewBorder`, `container.NewHBox`, `container.NewVBox`, `deleteTestCaseButton.Disable`, `deleteTestCaseButton.Enable`
+- Internal calls: `dateValidatorFunction`, `countDownTicker`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fmt.Println`, `container.New`, `layout.NewVBoxLayout`, `layout.NewFormLayout`, `binding.NewString`, `widget.NewLabelWithData`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

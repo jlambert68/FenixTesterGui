@@ -2,23 +2,23 @@
 title Sequence Diagram - sortingheadertable_test.go
 actor Caller
 participant "sortingheadertable_test.go" as File
+participant "m" as m
+participant "test" as test
 participant "assert" as assert
 participant "binding" as binding
 participant "fmt" as fmt
-participant "m" as m
-participant "test" as test
 Caller -> File: TestSortingLabel_OnTapped_CallsSorterAndUnsortsOthers(...)
 activate File
-File -> assert: Equal(...)
 File -> m: Refresh(...)
 File -> test: Tap(...)
+File -> assert: Equal(...)
 File --> Caller: return
 deactivate File
 Caller -> File: Test_stringSort(...)
 activate File
-File -> assert: Equal(...)
-File -> assert: NoError(...)
 File -> binding: BindStruct(...)
+File -> assert: NoError(...)
+File -> assert: Equal(...)
 File --> Caller: return
 deactivate File
 @enduml

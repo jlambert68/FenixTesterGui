@@ -3,63 +3,63 @@ title Sequence Diagram - ruleEngine_swap_test.go
 actor Caller
 participant "ruleEngine_swap_test.go" as File
 participant "UnitTestTestData" as UnitTestTestData
-participant "assert" as assert
 participant "commandAndRuleEngine" as commandAndRuleEngine
+participant "assert" as assert
 participant "fmt" as fmt
 Caller -> File: TestTCRuleSwap101(...)
 activate File
 File -> UnitTestTestData: InitLoggerForTest(...)
-File -> assert: Equal(...)
 File -> commandAndRuleEngine: executeTCRuleSwap101(...)
+File -> assert: Equal(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TestTCRuleSwap102(...)
 activate File
 File -> UnitTestTestData: InitLoggerForTest(...)
-File -> assert: Equal(...)
 File -> commandAndRuleEngine: executeTCRuleSwap102(...)
+File -> assert: Equal(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TestTCRuleSwap103(...)
 activate File
 File -> UnitTestTestData: InitLoggerForTest(...)
-File -> assert: Equal(...)
 File -> commandAndRuleEngine: executeTCRuleSwap103(...)
+File -> assert: Equal(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TestTCRuleSwap104(...)
 activate File
 File -> UnitTestTestData: InitLoggerForTest(...)
-File -> assert: Equal(...)
 File -> commandAndRuleEngine: executeTCRuleSwap104(...)
+File -> assert: Equal(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TestTCRuleSwap105(...)
 activate File
 File -> UnitTestTestData: InitLoggerForTest(...)
-File -> assert: Equal(...)
 File -> commandAndRuleEngine: executeTCRuleSwap105(...)
+File -> assert: Equal(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TestTCRuleSwap106(...)
 activate File
 File -> UnitTestTestData: InitLoggerForTest(...)
-File -> assert: Equal(...)
 File -> commandAndRuleEngine: executeTCRuleSwap106(...)
+File -> assert: Equal(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TestTCRuleSwap107(...)
 activate File
 File -> UnitTestTestData: InitLoggerForTest(...)
-File -> assert: Equal(...)
 File -> commandAndRuleEngine: executeTCRuleSwap107(...)
+File -> assert: Equal(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TestTCRuleSwap108(...)
 activate File
 File -> UnitTestTestData: InitLoggerForTest(...)
-File -> assert: Equal(...)
 File -> commandAndRuleEngine: executeTCRuleSwap108(...)
+File -> assert: Equal(...)
 File --> Caller: return
 deactivate File
 @enduml

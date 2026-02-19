@@ -31,7 +31,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*ImportFilesFromGitHubStruct) generateFileFilterPopup(parentWindow fyne.Window)`
 - Exported: `false`
 - Control-flow features: `if, for/range`
-- Selector calls: `checkbox.SetChecked`, `checkboxList.Add`, `container.NewVBox`, `fyne.NewSize`, `importFilesFromGitHubObject.filterFileListFromGitHub`, `parentWindow.Canvas`, `popUp.Resize`, `popUp.Show`
+- Selector calls: `container.NewVBox`, `widget.NewCheck`, `importFilesFromGitHubObject.filterFileListFromGitHub`, `checkbox.SetChecked`, `checkboxList.Add`, `widget.NewButton`, `widget.NewPopUp`, `parentWindow.Canvas`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

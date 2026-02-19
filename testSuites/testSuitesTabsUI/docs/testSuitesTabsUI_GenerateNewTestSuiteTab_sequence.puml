@@ -2,19 +2,19 @@
 title Sequence Diagram - testSuitesTabsUI_GenerateNewTestSuiteTab.go
 actor Caller
 participant "testSuitesTabsUI_GenerateNewTestSuiteTab.go" as File
-participant "container" as container
-participant "err" as err
-participant "fmt" as fmt
-participant "newTestSuiteModel" as newTestSuiteModel
-participant "newTestSuiteUiObject" as newTestSuiteUiObject
-participant "sharedCode" as sharedCode
 participant "testSuitesModel" as testSuitesModel
+participant "container" as container
+participant "fmt" as fmt
+participant "newTestSuiteUiObject" as newTestSuiteUiObject
+participant "widget" as widget
+participant "err" as err
 participant "theme" as theme
+participant "newTestSuiteModel" as newTestSuiteModel
 Caller -> File: GenerateNewTestSuiteTab(...)
 activate File
-File -> container: NewBorder(...)
+File -> testSuitesModel: GenerateNewTestSuiteModelObject(...)
 File -> container: NewTabItem(...)
-File -> container: NewVBox(...)
+File -> fmt: Sprintf(...)
 File --> Caller: return
 deactivate File
 @enduml

@@ -4,7 +4,36 @@ actor Caller
 participant "testSuitesModel_ExposedFunctions.go" as File
 participant "strconv" as strconv
 participant "uuidGenerator" as uuidGenerator
-Caller -> File: DoBothOwnerDomainAndTestEnvironmentHaveValues(...)
+Caller -> File: GetTestSuiteUuid(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: GetTestSuiteVersion(...)
+activate File
+File -> strconv: Itoa(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GetCreatedByGcpLogin(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: GetCreatedByComputerLogin(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: GetCreatedDate(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: GetLastChangedByGcpLogin(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: GetLastChangedByComputerLogin(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: GetLastChangedDate(...)
 activate File
 File --> Caller: return
 deactivate File
@@ -13,37 +42,8 @@ activate File
 File -> uuidGenerator: New(...)
 File --> Caller: return
 deactivate File
-Caller -> File: GetCreatedByComputerLogin(...)
+Caller -> File: OwnerDomainHasValue(...)
 activate File
-File --> Caller: return
-deactivate File
-Caller -> File: GetCreatedByGcpLogin(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: GetCreatedDate(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: GetLastChangedByComputerLogin(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: GetLastChangedByGcpLogin(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: GetLastChangedDate(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: GetTestSuiteUuid(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: GetTestSuiteVersion(...)
-activate File
-File -> strconv: Itoa(...)
 File --> Caller: return
 deactivate File
 @enduml

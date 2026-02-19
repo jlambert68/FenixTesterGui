@@ -2,19 +2,19 @@
 title Sequence Diagram - template_Initiate.go
 actor Caller
 participant "template_Initiate.go" as File
-participant "clipboard" as clipboard
-participant "container" as container
-participant "fenixMainWindow" as fenixMainWindow
-participant "fileSelectorDropdown" as fileSelectorDropdown
-participant "fyne" as fyne
-participant "leftContainer" as leftContainer
 participant "mainWindow" as mainWindow
 participant "myApp" as myApp
+participant "templateViewerWindow" as templateViewerWindow
+participant "fyne" as fyne
+participant "widget" as widget
+participant "testDataForGroupObject" as testDataForGroupObject
+participant "urlLabel" as urlLabel
+participant "placeholderReplacementEngine" as placeholderReplacementEngine
 Caller -> File: InitiateTemplateViewer(...)
 activate File
-File -> clipboard: SetContent(...)
-File -> container: NewBorder(...)
-File -> container: NewHSplit(...)
+File -> mainWindow: Hide(...)
+File -> myApp: NewWindow(...)
+File -> templateViewerWindow: Resize(...)
 File --> Caller: return
 deactivate File
 @enduml

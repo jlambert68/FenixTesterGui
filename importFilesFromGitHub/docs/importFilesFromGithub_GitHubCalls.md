@@ -34,14 +34,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, defer`
 - Doc: List files and folders for a certain GitHub url
-- Selector calls: `client.Do`, `err.Error`, `http.NewRequest`, `ioutil.ReadAll`, `json.Unmarshal`, `log.Fatalf`
+- Selector calls: `http.NewRequest`, `log.Fatalf`, `err.Error`, `client.Do`, `ioutil.ReadAll`, `json.Unmarshal`
 
 ### loadFileContent (method on `*ImportFilesFromGitHubStruct`)
 - Signature: `func (*ImportFilesFromGitHubStruct) loadFileContent(file GitHubFile) ([]byte, error)`
 - Exported: `false`
 - Control-flow features: `if, defer, returns error`
 - Doc: Load the files content from GitHub
-- Selector calls: `fmt.Errorf`, `http.Get`, `ioutil.ReadAll`
+- Selector calls: `http.Get`, `fmt.Errorf`, `ioutil.ReadAll`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

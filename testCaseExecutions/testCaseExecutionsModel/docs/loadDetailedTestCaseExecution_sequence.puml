@@ -2,16 +2,16 @@
 title Sequence Diagram - loadDetailedTestCaseExecution.go
 actor Caller
 participant "loadDetailedTestCaseExecution.go" as File
+participant "strconv" as strconv
 participant "TestCaseExecutionsModel" as TestCaseExecutionsModel
 participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
-participant "getSingleTestCaseExecutionResponse" as getSingleTestCaseExecutionResponse
 participant "grpc_out_GuiExecutionServer" as grpc_out_GuiExecutionServer
-participant "strconv" as strconv
+participant "getSingleTestCaseExecutionResponse" as getSingleTestCaseExecutionResponse
 Caller -> File: LoadDetailedTestCaseExecutionFromDatabase(...)
 activate File
-File -> TestCaseExecutionsModel: AddToDetailedTestCaseExecutionsMap(...)
-File -> TestCaseExecutionsModel: ClearFlagRefreshOngoingOfDetailedTestCaseExecution(...)
-File -> TestCaseExecutionsModel: ExtractAndStoreLogPostsAndValuesFromDetailedTestCaseExecution(...)
+File -> strconv: Itoa(...)
+File -> TestCaseExecutionsModel: SetFlagRefreshOngoingOfDetailedTestCaseExecution(...)
+File -> fenixExecutionServerGuiGrpcApi: CurrentFenixExecutionGuiProtoFileVersionEnum(...)
 File --> Caller: return
 deactivate File
 @enduml

@@ -4,15 +4,15 @@ actor Caller
 participant "testCaseModel_generateTestCaseMetaDataStructureForSelectedDomain.go" as File
 participant "errors" as errors
 participant "fmt" as fmt
-Caller -> File: ConvertTestCaseMetaData(...)
-activate File
-File --> Caller: return
-deactivate File
 Caller -> File: GenerateTestCaseMetaDataStructureForSelectedDomain(...)
 activate File
 File -> errors: New(...)
-File -> fmt: Println(...)
 File -> fmt: Sprintf(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+Caller -> File: ConvertTestCaseMetaData(...)
+activate File
 File --> Caller: return
 deactivate File
 @enduml

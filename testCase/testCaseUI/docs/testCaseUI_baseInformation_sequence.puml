@@ -2,17 +2,17 @@
 title Sequence Diagram - testCaseUI_baseInformation.go
 actor Caller
 participant "testCaseUI_baseInformation.go" as File
-participant "container" as container
 participant "errors" as errors
 participant "fmt" as fmt
+participant "container" as container
 participant "layout" as layout
-participant "tempBaseInformationAreaContainer" as tempBaseInformationAreaContainer
 participant "testCasesUiCanvasObject" as testCasesUiCanvasObject
+participant "tempBaseInformationAreaContainer" as tempBaseInformationAreaContainer
 Caller -> File: generateBaseInformationAreaForTestCase(...)
 activate File
-File -> container: New(...)
 File -> errors: New(...)
 File -> fmt: Sprintf(...)
+File -> container: New(...)
 File --> Caller: return
 deactivate File
 @enduml

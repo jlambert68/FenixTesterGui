@@ -33,14 +33,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*CommandAndRuleEngineObjectStruct) executeCutFullELementStructure(testCaseUuid string, uuidToBeCutOut string) err error`
 - Exported: `false`
 - Control-flow features: `if, for/range, returns error`
-- Selector calls: `commandAndRuleEngine.executeDeleteElement`, `commandAndRuleEngine.recursiveCuttingOfFullElementStructure`, `errors.New`, `fmt.Sprintf`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `commandAndRuleEngine.recursiveCuttingOfFullElementStructure`, `commandAndRuleEngine.executeDeleteElement`
 
 ### recursiveCuttingOfFullElementStructure (method on `*CommandAndRuleEngineObjectStruct`)
 - Signature: `func (*CommandAndRuleEngineObjectStruct) recursiveCuttingOfFullElementStructure(currentTestCase *testCaseModel.TestCaseModelStruct, elementsUuid string, copiedElementStructure *testCaseModel.MatureElementStruct) err error`
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Doc: Copy the full structure of all children, in TestCase-model, for specific Element
-- Selector calls: `commandAndRuleEngine.recursiveCuttingOfFullElementStructure`, `errors.New`, `fmt.Sprintf`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `commandAndRuleEngine.recursiveCuttingOfFullElementStructure`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

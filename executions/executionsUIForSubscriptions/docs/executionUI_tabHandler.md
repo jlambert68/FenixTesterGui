@@ -35,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: GenerateBaseUITabForExecutions Create the Base-UI-canvas-object for the TestCasesMapPtr object. This base doesn't contain any specific TestCase-parts, and they will be added in other function
-- Selector calls: `container.New`, `executionsUIObject.CreateExecutionsListTabPageForSubsacriptions`, `fmt.Println`, `layout.NewBorderLayout`, `theme.ContentCopyIcon`, `theme.ContentRedoIcon`, `theme.HomeIcon`, `widget.NewLabel`
+- Selector calls: `widget.NewToolbar`, `widget.NewToolbarAction`, `theme.ContentRedoIcon`, `fmt.Println`, `theme.ContentCopyIcon`, `executionsUIObject.CreateExecutionsListTabPageForSubsacriptions`, `theme.HomeIcon`, `widget.NewLabel`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

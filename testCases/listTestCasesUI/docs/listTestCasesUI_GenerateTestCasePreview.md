@@ -43,7 +43,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, switch`
 - Doc: GenerateTestCasePreviewContainer Generates the PreViewContainer for the TestCase
 - Internal calls: `float32`
-- Selector calls: `bytes.NewReader`, `canvas.NewImageFromImage`, `canvas.NewRectangle`, `container.New`, `container.NewBorder`, `container.NewCenter`, `container.NewHBox`, `container.NewScroll`
+- Selector calls: `container.New`, `layout.NewFormLayout`, `widget.NewLabel`, `testCasePreviewTopContainer.Add`, `tempTestCasePreviewStructureMessage.GetTestCaseName`, `tempTestCasePreviewStructureMessage.GetDomainThatOwnTheTestCase`, `widget.NewRichTextWithText`, `tempTestCasePreviewStructureMessage.GetTestCaseDescription`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

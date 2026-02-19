@@ -4,17 +4,17 @@ actor Caller
 participant "testCaseUI_graphicalRepresentation_testDataForTestCase.go" as File
 participant "container" as container
 participant "layout" as layout
-participant "selectorAndButtonContainer" as selectorAndButtonContainer
-participant "testDataPointGroupsSelectInMainTestCaseArea" as testDataPointGroupsSelectInMainTestCaseArea
+participant "widget" as widget
 participant "testDataPointsForAGroupSelectInMainTestCaseArea" as testDataPointsForAGroupSelectInMainTestCaseArea
 participant "testDataRowsForTestDataPointsSelectInMainTestCaseArea" as testDataRowsForTestDataPointsSelectInMainTestCaseArea
 participant "testDataSelectorForTestCase" as testDataSelectorForTestCase
 participant "testDataSelectorsContainer" as testDataSelectorsContainer
+participant "testDataPointGroupsSelectInMainTestCaseArea" as testDataPointGroupsSelectInMainTestCaseArea
 Caller -> File: generateSelectedTestDataForTestCaseArea(...)
 activate File
 File -> container: New(...)
-File -> container: NewBorder(...)
-File -> container: NewHBox(...)
+File -> layout: NewFormLayout(...)
+File -> widget: NewSelect(...)
 File --> Caller: return
 deactivate File
 @enduml

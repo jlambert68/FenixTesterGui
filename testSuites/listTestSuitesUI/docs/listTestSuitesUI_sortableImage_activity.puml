@@ -2,27 +2,27 @@
 title Activity Diagram - listTestSuitesUI_sortableImage.go
 start
 :Load testSuites/listTestSuitesUI/listTestSuitesUI_sortableImage.go;
-:1. BackgroundColor [method on *clickableSortImageRenderer];
-:2. CreateRenderer [method on *clickableSortImage];
-:3. Destroy [method on *clickableSortImageRenderer];
-:4. Layout [method on *clickableSortImageRenderer];
-:5. MinSize [method on *clickableSortImageRenderer];
-:6. Objects [method on *clickableSortImageRenderer];
-:7. Refresh [method on *clickableSortImage];
-:8. Refresh [method on *clickableSortImageRenderer];
-:9. Tapped [method on *clickableSortImage];
+:1. newClickableSortImage;
+:2. Tapped [method on *clickableSortImage];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:10. TappedSecondary [method on *clickableSortImage];
-:11. newClickableSortImage;
-:12. updateImageVisibility [method on *clickableSortImage];
+:3. TappedSecondary [method on *clickableSortImage];
+:4. updateImageVisibility [method on *clickableSortImage];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
+:5. CreateRenderer [method on *clickableSortImage];
+:6. Refresh [method on *clickableSortImage];
+:7. Layout [method on *clickableSortImageRenderer];
+:8. MinSize [method on *clickableSortImageRenderer];
+:9. Refresh [method on *clickableSortImageRenderer];
+:10. BackgroundColor [method on *clickableSortImageRenderer];
+:11. Objects [method on *clickableSortImageRenderer];
+:12. Destroy [method on *clickableSortImageRenderer];
 stop
 @enduml

@@ -8,13 +8,13 @@ if (branch or error path?) then (yes)
 else (no)
 :Continue primary flow;
 endif
-:2. SetLogger [method on *GRPCInStruct];
-:3. getHighestFenixUserGuiServerProtoFileVersion;
+:2. getHighestFenixUserGuiServerProtoFileVersion;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
+:3. SetLogger [method on *GRPCInStruct];
 stop
 @enduml

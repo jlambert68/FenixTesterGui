@@ -2,36 +2,36 @@
 title Sequence Diagram - sortlabel_test.go
 actor Caller
 participant "sortlabel_test.go" as File
-participant "assert" as assert
+participant "t" as t
 participant "reflect" as reflect
 participant "s" as s
-participant "t" as t
+participant "assert" as assert
 participant "test" as test
 Caller -> File: TestNewSortingLabel(...)
 activate File
+File -> t: Run(...)
 File -> reflect: DeepEqual(...)
 File -> t: Errorf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestSortingLabel_nextState(...)
+activate File
 File -> t: Run(...)
+File -> reflect: DeepEqual(...)
+File -> t: Errorf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestSortingLabel_SetState(...)
+activate File
+File -> t: Run(...)
+File -> s: SetState(...)
+File -> assert: Equal(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TestSortingLabel_OnTapped_CyclesSortStates(...)
 activate File
 File -> assert: Equal(...)
 File -> test: Tap(...)
-File --> Caller: return
-deactivate File
-Caller -> File: TestSortingLabel_SetState(...)
-activate File
-File -> assert: Equal(...)
-File -> s: SetState(...)
-File -> t: Run(...)
-File --> Caller: return
-deactivate File
-Caller -> File: TestSortingLabel_nextState(...)
-activate File
-File -> reflect: DeepEqual(...)
-File -> t: Errorf(...)
-File -> t: Run(...)
 File --> Caller: return
 deactivate File
 @enduml

@@ -2,45 +2,45 @@
 title Activity Diagram - soundEngine_Player.go
 start
 :Load soundEngine/soundEngine_Player.go;
-:1. CloseDownSoundEngine;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:2. InitSoundEngine;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:3. initiateInvalidNotification;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:4. initiatePlayerChannelEngine;
-:Start goroutine/asynchronous work;
-:5. initiateSystemNotification;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:6. initiateUserNeedToRespond;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:7. playInvalidNotification;
+:1. playerChannelReader;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
+:2. initiatePlayerChannelEngine;
+:Start goroutine/asynchronous work;
+:3. InitSoundEngine;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. CloseDownSoundEngine;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:5. initiateSystemNotification;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:6. initiateInvalidNotification;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:7. initiateUserNeedToRespond;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
 :8. playSystemNotification;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
@@ -48,14 +48,14 @@ else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:9. playUserNeedToRespond;
+:9. playInvalidNotification;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:10. playerChannelReader;
+:10. playUserNeedToRespond;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

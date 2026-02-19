@@ -39,7 +39,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*myTheme) Icon(n fyne.ThemeIconName) fyne.Resource`
 - Exported: `true`
 - Control-flow features: `none detected`
-- Doc: func (m *myTheme) Font(s fyne.TextStyle) fyne.Resource { return resourceGochiHandTtf
 - Selector calls: `theme.DefaultTheme`
 
 ### Size (method on `*myTheme`)

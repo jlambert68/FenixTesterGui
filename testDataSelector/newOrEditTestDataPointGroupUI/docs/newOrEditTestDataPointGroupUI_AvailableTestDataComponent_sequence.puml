@@ -2,25 +2,25 @@
 title Sequence Diagram - newOrEditTestDataPointGroupUI_AvailableTestDataComponent.go
 actor Caller
 participant "newOrEditTestDataPointGroupUI_AvailableTestDataComponent.go" as File
-participant "allAvailablePointsList" as allAvailablePointsList
-participant "fmt" as fmt
-participant "re" as re
-participant "regexp" as regexp
-participant "selectedPointsList" as selectedPointsList
-participant "strings" as strings
 participant "widget" as widget
-Caller -> File: filterToRemoveNumberOfSimilarTestDataPointsInName(...)
-activate File
-File -> fmt: Println(...)
-File -> fmt: Sprintf(...)
-File -> re: FindStringSubmatch(...)
-File --> Caller: return
-deactivate File
+participant "fmt" as fmt
+participant "allAvailablePointsList" as allAvailablePointsList
+participant "selectedPointsList" as selectedPointsList
+participant "regexp" as regexp
+participant "re" as re
+participant "strings" as strings
 Caller -> File: generateAllAvailablePointsListUIComponent(...)
 activate File
-File -> allAvailablePointsList: Refresh(...)
-File -> allAvailablePointsList: UnselectAll(...)
+File -> widget: NewList(...)
+File -> widget: NewLabel(...)
 File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: filterToRemoveNumberOfSimilarTestDataPointsInName(...)
+activate File
+File -> regexp: MustCompile(...)
+File -> re: FindStringSubmatch(...)
+File -> fmt: Println(...)
 File --> Caller: return
 deactivate File
 @enduml

@@ -3,31 +3,10 @@ title Sequence Diagram - commandEngine_executeCommandsOnTestCaseModel.go
 actor Caller
 participant "commandEngine_executeCommandsOnTestCaseModel.go" as File
 participant "commandAndRuleEngine" as commandAndRuleEngine
-participant "errors" as errors
-participant "fmt" as fmt
 participant "timestamppb" as timestamppb
 participant "uuidGenerator" as uuidGenerator
-Caller -> File: executeCommandOnTestCaseModel_CopyElementInTestCaseModel(...)
-activate File
-File -> commandAndRuleEngine: executeCopyElement(...)
-File -> errors: New(...)
-File -> fmt: Sprintf(...)
-File --> Caller: return
-deactivate File
-Caller -> File: executeCommandOnTestCaseModel_CutElementInTestCaseModel(...)
-activate File
-File -> commandAndRuleEngine: executeCutElement(...)
-File -> errors: New(...)
-File -> fmt: Sprintf(...)
-File --> Caller: return
-deactivate File
-Caller -> File: executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(...)
-activate File
-File -> commandAndRuleEngine: executeDeleteElement(...)
-File -> errors: New(...)
-File -> fmt: Sprintf(...)
-File --> Caller: return
-deactivate File
+participant "errors" as errors
+participant "fmt" as fmt
 Caller -> File: executeCommandOnTestCaseModel_NewTestCaseModel(...)
 activate File
 File -> commandAndRuleEngine: createNewBondB0Element(...)
@@ -35,25 +14,46 @@ File -> timestamppb: Now(...)
 File -> uuidGenerator: New(...)
 File --> Caller: return
 deactivate File
-Caller -> File: executeCommandOnTestCaseModel_SwapInElementFromCopyBufferInTestCaseModel(...)
+Caller -> File: executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(...)
 activate File
-File -> commandAndRuleEngine: executeSwapElementForCopyBuffer(...)
+File -> commandAndRuleEngine: executeDeleteElement(...)
+File -> timestamppb: Now(...)
 File -> errors: New(...)
-File -> fmt: Sprintf(...)
-File --> Caller: return
-deactivate File
-Caller -> File: executeCommandOnTestCaseModel_SwapInElementFromCutBufferInTestCaseModel(...)
-activate File
-File -> commandAndRuleEngine: executeSwapElementFromCutBuffer(...)
-File -> errors: New(...)
-File -> fmt: Sprintf(...)
 File --> Caller: return
 deactivate File
 Caller -> File: executeCommandOnTestCaseModel_SwapOutElemenAndInNewElementInTestCaseModel(...)
 activate File
 File -> commandAndRuleEngine: executeSwapElement(...)
+File -> timestamppb: Now(...)
 File -> errors: New(...)
-File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: executeCommandOnTestCaseModel_CopyElementInTestCaseModel(...)
+activate File
+File -> commandAndRuleEngine: executeCopyElement(...)
+File -> timestamppb: Now(...)
+File -> errors: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: executeCommandOnTestCaseModel_SwapInElementFromCopyBufferInTestCaseModel(...)
+activate File
+File -> commandAndRuleEngine: executeSwapElementForCopyBuffer(...)
+File -> timestamppb: Now(...)
+File -> errors: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: executeCommandOnTestCaseModel_CutElementInTestCaseModel(...)
+activate File
+File -> commandAndRuleEngine: executeCutElement(...)
+File -> timestamppb: Now(...)
+File -> errors: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: executeCommandOnTestCaseModel_SwapInElementFromCutBufferInTestCaseModel(...)
+activate File
+File -> commandAndRuleEngine: executeSwapElementFromCutBuffer(...)
+File -> timestamppb: Now(...)
+File -> errors: New(...)
 File --> Caller: return
 deactivate File
 @enduml

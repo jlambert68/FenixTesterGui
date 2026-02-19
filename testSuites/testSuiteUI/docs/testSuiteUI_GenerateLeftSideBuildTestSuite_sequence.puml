@@ -3,17 +3,17 @@ title Sequence Diagram - testSuiteUI_GenerateLeftSideBuildTestSuite.go
 actor Caller
 participant "testSuiteUI_GenerateLeftSideBuildTestSuite.go" as File
 participant "container" as container
-participant "err" as err
+participant "widget" as widget
+participant "testSuiteUiModel" as testSuiteUiModel
 participant "fmt" as fmt
-participant "layout" as layout
+participant "err" as err
 participant "leftTopSideBuildTestSuiteContainer" as leftTopSideBuildTestSuiteContainer
-participant "listTestCaseUIObject" as listTestCaseUIObject
-participant "listTestCasesUI" as listTestCasesUI
+participant "layout" as layout
 participant "ownerDomainAndEnvironmentAccordionItemContainer" as ownerDomainAndEnvironmentAccordionItemContainer
 Caller -> File: generateLeftSideBuildTestSuiteContainer(...)
 activate File
-File -> container: NewBorder(...)
-File -> container: NewHBox(...)
+File -> container: NewVBox(...)
+File -> widget: NewLabel(...)
 File -> container: NewStack(...)
 File --> Caller: return
 deactivate File

@@ -31,12 +31,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
-### decodeBase64Content (method on `*ImportFilesFromGitHubStruct`)
-- Signature: `func (*ImportFilesFromGitHubStruct) decodeBase64Content(encodedContent string) (string, error)`
+### generateImportSelectedFilesFromGithubButton (method on `*ImportFilesFromGitHubStruct`)
+- Signature: `func (*ImportFilesFromGitHubStruct) generateImportSelectedFilesFromGithubButton(parentWindow fyne.Window)`
 - Exported: `false`
-- Control-flow features: `if, returns error`
-- Doc: Decode the file content from base64 to string
+- Control-flow features: `if, for/range`
+- Doc: Generate the button that imports the selected files from Github
 - Internal calls: `string`
+- Selector calls: `widget.NewButton`, `importFilesFromGitHubObject.loadFileContent`, `dialog.ShowError`, `importFilesFromGitHubObject.extractContentFromJson`, `log.Fatalf`, `importFilesFromGitHubObject.decodeBase64Content`, `fenixSyncShared.HashSingleValue`, `fenixMainWindow.Show`
 
 ### extractContentFromJson (method on `*ImportFilesFromGitHubStruct`)
 - Signature: `func (*ImportFilesFromGitHubStruct) extractContentFromJson(jsonData string) (string, error)`
@@ -45,13 +46,12 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Doc: Extra the file content from the json
 - Selector calls: `json.Unmarshal`
 
-### generateImportSelectedFilesFromGithubButton (method on `*ImportFilesFromGitHubStruct`)
-- Signature: `func (*ImportFilesFromGitHubStruct) generateImportSelectedFilesFromGithubButton(parentWindow fyne.Window)`
+### decodeBase64Content (method on `*ImportFilesFromGitHubStruct`)
+- Signature: `func (*ImportFilesFromGitHubStruct) decodeBase64Content(encodedContent string) (string, error)`
 - Exported: `false`
-- Control-flow features: `if, for/range`
-- Doc: Generate the button that imports the selected files from Github
+- Control-flow features: `if, returns error`
+- Doc: Decode the file content from base64 to string
 - Internal calls: `string`
-- Selector calls: `dialog.ShowError`, `fenixMainWindow.Show`, `fenixSyncShared.HashSingleValue`, `importFilesFromGitHubObject.decodeBase64Content`, `importFilesFromGitHubObject.extractContentFromJson`, `importFilesFromGitHubObject.loadFileContent`, `log.Fatalf`, `parentWindow.Close`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

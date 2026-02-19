@@ -2,13 +2,13 @@
 title Activity Diagram - testCaseUI_graphicalRepresentation_general_ComboBox_Renderer.go
 start
 :Load testCase/testCaseUI/testCaseUI_graphicalRepresentation_general_ComboBox_Renderer.go;
-:1. BackgroundColor [method on *customSelectComboBoxRenderer];
+:1. newCustomSelectComboBoxWidget;
 :2. CreateRenderer [method on *customSelectComboBox];
-:3. Destroy [method on *customSelectComboBoxRenderer];
+:3. MinSize [method on *customSelectComboBoxRenderer];
 :4. Layout [method on *customSelectComboBoxRenderer];
-:5. MinSize [method on *customSelectComboBoxRenderer];
-:6. Objects [method on *customSelectComboBoxRenderer];
-:7. Refresh [method on *customSelectComboBoxRenderer];
-:8. newCustomSelectComboBoxWidget;
+:5. Refresh [method on *customSelectComboBoxRenderer];
+:6. BackgroundColor [method on *customSelectComboBoxRenderer];
+:7. Objects [method on *customSelectComboBoxRenderer];
+:8. Destroy [method on *customSelectComboBoxRenderer];
 stop
 @enduml

@@ -3,18 +3,18 @@ title Sequence Diagram - testSuitesModel_ExecutionTestSuiteWithOneTestDataSet.go
 actor Caller
 participant "testSuitesModel_ExecutionTestSuiteWithOneTestDataSet.go" as File
 participant "dialog" as dialog
-participant "errors" as errors
+participant "testDataEngine" as testDataEngine
 participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
+participant "grpc_out_GuiExecutionServer" as grpc_out_GuiExecutionServer
+participant "testSuiteModel" as testSuiteModel
+participant "errors" as errors
 participant "fmt" as fmt
 participant "fyne" as fyne
-participant "grpc_out_GuiExecutionServer" as grpc_out_GuiExecutionServer
-participant "testDataEngine" as testDataEngine
-participant "testSuiteModel" as testSuiteModel
 Caller -> File: ExecuteOneTestSuiteWithOneTestDataSet(...)
 activate File
 File -> dialog: ShowConfirm(...)
-File -> errors: New(...)
-File -> fenixExecutionServerGuiGrpcApi: CurrentFenixExecutionGuiProtoFileVersionEnum(...)
+File -> testDataEngine: TestDataDomainUuidType(...)
+File -> testDataEngine: TestDataAreaUuidType(...)
 File --> Caller: return
 deactivate File
 @enduml

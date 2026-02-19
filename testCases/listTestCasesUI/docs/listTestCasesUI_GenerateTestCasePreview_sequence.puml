@@ -2,19 +2,19 @@
 title Sequence Diagram - listTestCasesUI_GenerateTestCasePreview.go
 actor Caller
 participant "listTestCasesUI_GenerateTestCasePreview.go" as File
-participant "bytes" as bytes
-participant "canvas" as canvas
 participant "container" as container
-participant "err" as err
-participant "fyne" as fyne
 participant "layout" as layout
-participant "log" as log
-participant "png" as png
+participant "widget" as widget
+participant "testCasePreviewTopContainer" as testCasePreviewTopContainer
+participant "tempTestCasePreviewStructureMessage" as tempTestCasePreviewStructureMessage
+participant "testCasePreviewBottomContainer" as testCasePreviewBottomContainer
+participant "canvas" as canvas
+participant "tempIndentationLevelRectangle" as tempIndentationLevelRectangle
 Caller -> File: GenerateTestCasePreviewContainer(...)
 activate File
-File -> bytes: NewReader(...)
-File -> canvas: NewImageFromImage(...)
-File -> canvas: NewRectangle(...)
+File -> container: New(...)
+File -> layout: NewFormLayout(...)
+File -> widget: NewLabel(...)
 File --> Caller: return
 deactivate File
 @enduml

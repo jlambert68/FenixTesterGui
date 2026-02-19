@@ -33,6 +33,12 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
+### NewDroppableLabel (method on `*StateMachineDragAndDropStruct`)
+- Signature: `func (*StateMachineDragAndDropStruct) NewDroppableLabel(labelText string, nodeLevel float32, testCaseNodeRectangleSize int, uuid string, testCaseUuid string) *DroppableLabel`
+- Exported: `true`
+- Control-flow features: `if`
+- Selector calls: `droppableLabel.ExtendBaseWidget`, `canvas.NewRectangle`, `droppableLabel.Refresh`, `fyne.NewSize`, `droppableLabel.MinSize`
+
 ### MouseIn (method on `*DroppableLabel`)
 - Signature: `func (*DroppableLabel) MouseIn(*desktop.MouseEvent)`
 - Exported: `true`
@@ -54,12 +60,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Doc: MouseOut is called when a desktop pointer exits the widget
 - Internal calls: `switchStateForSource`, `switchStateForTarget`
 - Selector calls: `log.Fatalln`
-
-### NewDroppableLabel (method on `*StateMachineDragAndDropStruct`)
-- Signature: `func (*StateMachineDragAndDropStruct) NewDroppableLabel(labelText string, nodeLevel float32, testCaseNodeRectangleSize int, uuid string, testCaseUuid string) *DroppableLabel`
-- Exported: `true`
-- Control-flow features: `if`
-- Selector calls: `canvas.NewRectangle`, `droppableLabel.ExtendBaseWidget`, `droppableLabel.MinSize`, `droppableLabel.Refresh`, `fyne.NewSize`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

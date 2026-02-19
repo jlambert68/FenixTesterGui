@@ -46,18 +46,12 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
-### channelCommandChangeActiveTestCase (method on `*CommandAndRuleEngineObjectStruct`)
-- Signature: `func (*CommandAndRuleEngineObjectStruct) channelCommandChangeActiveTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct)`
+### startCommandChannelReader (method on `*CommandAndRuleEngineObjectStruct`)
+- Signature: `func (*CommandAndRuleEngineObjectStruct) startCommandChannelReader()`
 - Exported: `false`
-- Control-flow features: `if`
-- Doc: Change the active TestCase and TestCase-tab
-- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`
-
-### channelCommandCloseOpenTestCaseWithOutSaving (method on `*CommandAndRuleEngineObjectStruct`)
-- Signature: `func (*CommandAndRuleEngineObjectStruct) channelCommandCloseOpenTestCaseWithOutSaving(incomingChannelCommand sharedCode.ChannelCommandStruct)`
-- Exported: `false`
-- Control-flow features: `none detected`
-- Doc: Close open TestCase without saving it to theDatabase
+- Control-flow features: `for/range, switch`
+- Doc: Channel reader which is used for reading out commands to CommandEngine
+- Selector calls: `commandAndRuleEngine.channelCommandCreateNewTestCase`, `commandAndRuleEngine.channelCommandSwap`, `commandAndRuleEngine.channelCommandRemove`, `commandAndRuleEngine.channelCommandSaveTestCase`, `commandAndRuleEngine.channelCommandExecuteTestCase`, `commandAndRuleEngine.channelCommandChangeActiveTestCase`, `commandAndRuleEngine.channelCommandOpenTestCase`, `commandAndRuleEngine.channelCommandRemoveTestCaseWithOutSaving`
 
 ### channelCommandCreateNewTestCase (method on `*CommandAndRuleEngineObjectStruct`)
 - Signature: `func (*CommandAndRuleEngineObjectStruct) channelCommandCreateNewTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct)`
@@ -66,21 +60,20 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Doc: Execute command 'New TestCase' received from Channel reader
 - Selector calls: `commandAndRuleEngine.NewTestCaseModel`, `fmt.Println`
 
+### channelCommandSaveTestCase (method on `*CommandAndRuleEngineObjectStruct`)
+- Signature: `func (*CommandAndRuleEngineObjectStruct) channelCommandSaveTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct)`
+- Exported: `false`
+- Control-flow features: `if`
+- Doc: Execute command 'Save TestCase' received from Channel reader
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fmt.Println`, `fyne.CurrentApp`
+
 ### channelCommandExecuteTestCase (method on `*CommandAndRuleEngineObjectStruct`)
 - Signature: `func (*CommandAndRuleEngineObjectStruct) channelCommandExecuteTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct)`
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: Execute command 'Save TestCase' received from Channel reader
-- Internal calls: `int`, `string`
-- Selector calls: `detailedExecutionsModel.RetrieveSingleTestCaseExecution`, `dialog.NewConfirm`, `errors.New`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `fmt.Println`, `fmt.Sprintf`, `fyne.CurrentApp`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`
-
-### channelCommandOpenTestCase (method on `*CommandAndRuleEngineObjectStruct`)
-- Signature: `func (*CommandAndRuleEngineObjectStruct) channelCommandOpenTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct)`
-- Exported: `false`
-- Control-flow features: `if`
-- Doc: Opens a saved TestCase from Database
-- Internal calls: `runPopUp`
-- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`
+- Internal calls: `string`, `int`
+- Selector calls: `dialog.NewConfirm`, `testDataEngine.TestDataDomainUuidType`, `testDataEngine.TestDataAreaUuidType`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `errors.New`, `fmt.Sprintf`, `fmt.Println`
 
 ### channelCommandRemove (method on `*CommandAndRuleEngineObjectStruct`)
 - Signature: `func (*CommandAndRuleEngineObjectStruct) channelCommandRemove(incomingChannelCommand sharedCode.ChannelCommandStruct)`
@@ -89,31 +82,39 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Doc: Execute command 'Remove Element' received from Channel reader
 - Selector calls: `commandAndRuleEngine.DeleteElementFromTestCaseModel`, `fmt.Println`
 
+### channelCommandChangeActiveTestCase (method on `*CommandAndRuleEngineObjectStruct`)
+- Signature: `func (*CommandAndRuleEngineObjectStruct) channelCommandChangeActiveTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct)`
+- Exported: `false`
+- Control-flow features: `if`
+- Doc: Change the active TestCase and TestCase-tab
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fmt.Println`
+
+### runPopUp
+- Signature: `func runPopUp(w fyne.Window, uuidChannel chan<- string) modal *widget.PopUp`
+- Exported: `false`
+- Control-flow features: `none detected`
+- Doc: PopUp used function 'channelCommandOpenTestCase', below. Generates the ability for user enter Uuid
+- Selector calls: `widget.NewEntry`, `widget.NewButton`, `modal.Hide`, `container.New`, `layout.NewHBoxLayout`, `layout.NewSpacer`, `layout.NewVBoxLayout`, `widget.NewLabel`
+
+### channelCommandOpenTestCase (method on `*CommandAndRuleEngineObjectStruct`)
+- Signature: `func (*CommandAndRuleEngineObjectStruct) channelCommandOpenTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct)`
+- Exported: `false`
+- Control-flow features: `if`
+- Doc: Opens a saved TestCase from Database
+- Internal calls: `runPopUp`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fmt.Println`
+
 ### channelCommandRemoveTestCaseWithOutSaving (method on `*CommandAndRuleEngineObjectStruct`)
 - Signature: `func (*CommandAndRuleEngineObjectStruct) channelCommandRemoveTestCaseWithOutSaving(incomingChannelCommand sharedCode.ChannelCommandStruct)`
 - Exported: `false`
 - Control-flow features: `none detected`
 - Doc: Remove the TestCase without saving it to theDatabase
 
-### channelCommandSaveTestCase (method on `*CommandAndRuleEngineObjectStruct`)
-- Signature: `func (*CommandAndRuleEngineObjectStruct) channelCommandSaveTestCase(incomingChannelCommand sharedCode.ChannelCommandStruct)`
+### channelCommandCloseOpenTestCaseWithOutSaving (method on `*CommandAndRuleEngineObjectStruct`)
+- Signature: `func (*CommandAndRuleEngineObjectStruct) channelCommandCloseOpenTestCaseWithOutSaving(incomingChannelCommand sharedCode.ChannelCommandStruct)`
 - Exported: `false`
-- Control-flow features: `if`
-- Doc: Execute command 'Save TestCase' received from Channel reader
-- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`, `fyne.CurrentApp`
-
-### channelCommandSwap (method on `*CommandAndRuleEngineObjectStruct`)
-- Signature: `func (*CommandAndRuleEngineObjectStruct) channelCommandSwap(incomingChannelCommand sharedCode.ChannelCommandStruct)`
-- Exported: `false`
-- Control-flow features: `if, for/range, switch, defer`
-- Doc: Execute command 'Swap Element' received from Channel reader
-- Selector calls: `backgroundColorRectangle.SetMinSize`, `canvas.NewRectangle`, `commandAndRuleEngine.SwapElementsInTestCaseModel`, `commandAndRuleEngine.convertGrpcElementModelIntoTestCaseElementModel`, `container.NewHBox`, `container.NewMax`, `container.NewVBox`, `dialog.NewCustom`
-
-### convertGrpcElementModelIntoTestCaseElementModel (method on `*CommandAndRuleEngineObjectStruct`)
-- Signature: `func (*CommandAndRuleEngineObjectStruct) convertGrpcElementModelIntoTestCaseElementModel(immatureGrpcElementModelMessage *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureElementModelMessage) immatureTestCaseElementModel testCaseModel.ImmatureElementStruct`
-- Exported: `false`
-- Control-flow features: `for/range`
-- Doc: Convert gRPC-message for TI or TIC into model used within the TestCase-model
+- Control-flow features: `none detected`
+- Doc: Close open TestCase without saving it to theDatabase
 
 ### printDropZone
 - Signature: `func printDropZone(index int)`
@@ -121,19 +122,18 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Selector calls: `log.Println`
 
-### runPopUp
-- Signature: `func runPopUp(w fyne.Window, uuidChannel chan<- string) modal *widget.PopUp`
+### channelCommandSwap (method on `*CommandAndRuleEngineObjectStruct`)
+- Signature: `func (*CommandAndRuleEngineObjectStruct) channelCommandSwap(incomingChannelCommand sharedCode.ChannelCommandStruct)`
 - Exported: `false`
-- Control-flow features: `none detected`
-- Doc: PopUp used function 'channelCommandOpenTestCase', below. Generates the ability for user enter Uuid
-- Selector calls: `container.New`, `layout.NewHBoxLayout`, `layout.NewSpacer`, `layout.NewVBoxLayout`, `modal.Hide`, `modal.Show`, `w.Canvas`, `widget.NewButton`
+- Control-flow features: `if, for/range, switch, defer`
+- Doc: Execute command 'Swap Element' received from Channel reader
+- Selector calls: `commandAndRuleEngine.convertGrpcElementModelIntoTestCaseElementModel`, `container.NewVBox`, `dropZoneWaitGroup.Add`, `sharedCode.ConvertRGBAHexStringIntoRGBAColor`, `canvas.NewRectangle`, `fmt.Println`, `dropZoneWaitGroup.Done`, `container.NewMax`
 
-### startCommandChannelReader (method on `*CommandAndRuleEngineObjectStruct`)
-- Signature: `func (*CommandAndRuleEngineObjectStruct) startCommandChannelReader()`
+### convertGrpcElementModelIntoTestCaseElementModel (method on `*CommandAndRuleEngineObjectStruct`)
+- Signature: `func (*CommandAndRuleEngineObjectStruct) convertGrpcElementModelIntoTestCaseElementModel(immatureGrpcElementModelMessage *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureElementModelMessage) immatureTestCaseElementModel testCaseModel.ImmatureElementStruct`
 - Exported: `false`
-- Control-flow features: `for/range, switch`
-- Doc: Channel reader which is used for reading out commands to CommandEngine
-- Selector calls: `commandAndRuleEngine.channelCommandChangeActiveTestCase`, `commandAndRuleEngine.channelCommandCloseOpenTestCaseWithOutSaving`, `commandAndRuleEngine.channelCommandCreateNewTestCase`, `commandAndRuleEngine.channelCommandExecuteTestCase`, `commandAndRuleEngine.channelCommandOpenTestCase`, `commandAndRuleEngine.channelCommandRemove`, `commandAndRuleEngine.channelCommandRemoveTestCaseWithOutSaving`, `commandAndRuleEngine.channelCommandSaveTestCase`
+- Control-flow features: `for/range`
+- Doc: Convert gRPC-message for TI or TIC into model used within the TestCase-model
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

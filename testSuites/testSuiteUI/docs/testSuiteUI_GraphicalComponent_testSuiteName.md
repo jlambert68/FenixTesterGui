@@ -38,7 +38,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Doc: Generate the TestSuiteName Area for the TestSuite
-- Selector calls: `container.New`, `container.NewVBox`, `layout.NewFormLayout`, `layout.NewVBoxLayout`, `newTestSuiteNameEntry.SetText`, `sharedCode.GenerateShortUuidFromFullUuid`, `strings.Trim`, `testSuiteNameFormContainer.Add`
+- Selector calls: `container.New`, `layout.NewVBoxLayout`, `layout.NewFormLayout`, `widget.NewLabel`, `testSuiteNameFormContainer.Add`, `widget.NewEntry`, `newTestSuiteNameEntry.SetText`, `strings.Trim`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

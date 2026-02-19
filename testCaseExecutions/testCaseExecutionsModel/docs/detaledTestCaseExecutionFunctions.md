@@ -34,7 +34,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, defer, returns error`
 - Doc: ExtractAndStoreRelationBetweenTestInstructionUuidAndTestCaseExecutionUuid Extract relation between TestInstructionUuid and TestCaseExecutionUuid
 - Internal calls: `RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType`, `TestInstructionExecutionUuidType`, `int`, `string`
-- Selector calls: `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`, `strconv.Itoa`, `testCaseExecutionsModel.ReadFromDetailedTestCaseExecutionsMap`, `testInstructionExecution.GetTestInstructionExecutionBasicInformation`
+- Selector calls: `testCaseExecutionsModel.ReadFromDetailedTestCaseExecutionsMap`, `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`, `testInstructionExecution.GetTestInstructionExecutionBasicInformation`, `strconv.Itoa`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

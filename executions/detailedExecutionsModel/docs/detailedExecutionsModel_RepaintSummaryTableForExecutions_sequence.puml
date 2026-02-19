@@ -3,8 +3,8 @@ title Sequence Diagram - detailedExecutionsModel_RepaintSummaryTableForExecution
 actor Caller
 participant "detailedExecutionsModel_RepaintSummaryTableForExecutions.go" as File
 participant "TestCasesSummaryTable" as TestCasesSummaryTable
-participant "t" as t
 participant "time" as time
+participant "t" as t
 Caller -> File: RequestRefreshTestCasesSummaryTable(...)
 activate File
 File --> Caller: return

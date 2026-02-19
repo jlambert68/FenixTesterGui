@@ -55,13 +55,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: Init the logger for UnitTests
-- Selector calls: `log.Println`, `logrus.SetFormatter`, `logrus.SetLevel`, `logrus.StandardLogger`, `os.OpenFile`
+- Selector calls: `logrus.StandardLogger`, `logrus.SetLevel`, `logrus.SetFormatter`, `os.OpenFile`, `log.Println`
 
 ### IsTestDataUsingCorrectTestDataProtoFileVersion
 - Signature: `func IsTestDataUsingCorrectTestDataProtoFileVersion(usedProtoFileVersion fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum) returnMessage *fenixTestCaseBuilderServerGrpcApi.AckNackResponse`
 - Exported: `true`
 - Control-flow features: `if`
-- Doc: ******************************************************************************************************************** Check if testdata is using correct proto-file version
+- Doc: ******************************************************************************************************************* Check if testdata is using correct proto-file version
 - Internal calls: `getHighestFenixTestDataProtoFileVersion`
 - Selector calls: `fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum`, `protoFileExpected.String`, `protoFileUsed.String`
 

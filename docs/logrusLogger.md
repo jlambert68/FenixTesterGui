@@ -33,7 +33,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*fenixGuiBuilderProxyServerObjectStruct) InitLogger(filename string)`
 - Exported: `true`
 - Control-flow features: `if, switch`
-- Selector calls: `log.Println`, `logrus.SetFormatter`, `logrus.SetLevel`, `logrus.StandardLogger`, `os.Exit`, `os.OpenFile`
+- Selector calls: `logrus.StandardLogger`, `log.Println`, `os.Exit`, `logrus.SetLevel`, `logrus.SetFormatter`, `os.OpenFile`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

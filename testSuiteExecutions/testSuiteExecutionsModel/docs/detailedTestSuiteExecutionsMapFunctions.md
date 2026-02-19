@@ -34,26 +34,12 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - `detailedTestSuiteExecutionsMapMutex`
 
 ## Functions and Methods
-### AddToDetailedTestSuiteExecutionsMap (method on `TestSuiteExecutionsModelStruct`)
-- Signature: `func (TestSuiteExecutionsModelStruct) AddToDetailedTestSuiteExecutionsMap(detailedTestSuiteExecutionMapKey DetailedTestSuiteExecutionMapKeyType, detailedTestSuiteExecution *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionResponseMessage)`
+### ReadFromDetailedTestSuiteExecutionsMap (method on `TestSuiteExecutionsModelStruct`)
+- Signature: `func (TestSuiteExecutionsModelStruct) ReadFromDetailedTestSuiteExecutionsMap(detailedTestSuiteExecutionMapKey DetailedTestSuiteExecutionMapKeyType) (detailedTestSuiteExecution *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionResponseMessage, existInMap bool)`
 - Exported: `true`
 - Control-flow features: `if, defer`
-- Doc: AddToDetailedTestSuiteExecutionsMap Add to the DetailedTestSuiteExecutions-Map
-- Selector calls: `detailedTestSuiteExecutionsMapMutex.Lock`, `detailedTestSuiteExecutionsMapMutex.Unlock`
-
-### ClearFlagRefreshOngoingOfDetailedTestSuiteExecution (method on `TestSuiteExecutionsModelStruct`)
-- Signature: `func (TestSuiteExecutionsModelStruct) ClearFlagRefreshOngoingOfDetailedTestSuiteExecution(detailedTestSuiteExecutionMapKey DetailedTestSuiteExecutionMapKeyType)`
-- Exported: `true`
-- Control-flow features: `if, defer`
-- Doc: ClearFlagRefreshOngoingOfDetailedTestSuiteExecution Clear the flag there is an ongoing refresh of the DetailedTestSuiteExecution-data
+- Doc: ReadFromDetailedTestSuiteExecutionsMap Read from the DetailedTestSuiteExecutions-Map
 - Selector calls: `detailedTestSuiteExecutionsMapMutex.Lock`, `detailedTestSuiteExecutionsMapMutex.Unlock`, `fmt.Println`
-
-### DeleteFromDetailedTestSuiteExecutionsMap (method on `TestSuiteExecutionsModelStruct`)
-- Signature: `func (TestSuiteExecutionsModelStruct) DeleteFromDetailedTestSuiteExecutionsMap(detailedTestSuiteExecutionMapKey DetailedTestSuiteExecutionMapKeyType)`
-- Exported: `true`
-- Control-flow features: `if, defer`
-- Doc: DeleteFromDetailedTestSuiteExecutionsMap Delete from the DetailedTestSuiteExecutions-Map
-- Selector calls: `detailedTestSuiteExecutionsMapMutex.Lock`, `detailedTestSuiteExecutionsMapMutex.Unlock`
 
 ### GetNumberOfDetailedTestSuiteExecutionsRetrievedFromDatabase (method on `TestSuiteExecutionsModelStruct`)
 - Signature: `func (TestSuiteExecutionsModelStruct) GetNumberOfDetailedTestSuiteExecutionsRetrievedFromDatabase() numberOfDetailedTestSuiteExecutionsRetrievedFromDatabase int`
@@ -62,18 +48,32 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Doc: GetNumberOfDetailedTestSuiteExecutionsRetrievedFromDatabase Read all from the DetailedTestSuiteExecutions-Map
 - Selector calls: `detailedTestSuiteExecutionsMapMutex.RLock`, `detailedTestSuiteExecutionsMapMutex.RUnlock`
 
-### ReadFromDetailedTestSuiteExecutionsMap (method on `TestSuiteExecutionsModelStruct`)
-- Signature: `func (TestSuiteExecutionsModelStruct) ReadFromDetailedTestSuiteExecutionsMap(detailedTestSuiteExecutionMapKey DetailedTestSuiteExecutionMapKeyType) (detailedTestSuiteExecution *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionResponseMessage, existInMap bool)`
+### AddToDetailedTestSuiteExecutionsMap (method on `TestSuiteExecutionsModelStruct`)
+- Signature: `func (TestSuiteExecutionsModelStruct) AddToDetailedTestSuiteExecutionsMap(detailedTestSuiteExecutionMapKey DetailedTestSuiteExecutionMapKeyType, detailedTestSuiteExecution *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionResponseMessage)`
 - Exported: `true`
 - Control-flow features: `if, defer`
-- Doc: ReadFromDetailedTestSuiteExecutionsMap Read from the DetailedTestSuiteExecutions-Map
-- Selector calls: `detailedTestSuiteExecutionsMapMutex.Lock`, `detailedTestSuiteExecutionsMapMutex.Unlock`, `fmt.Println`
+- Doc: AddToDetailedTestSuiteExecutionsMap Add to the DetailedTestSuiteExecutions-Map
+- Selector calls: `detailedTestSuiteExecutionsMapMutex.Lock`, `detailedTestSuiteExecutionsMapMutex.Unlock`
+
+### DeleteFromDetailedTestSuiteExecutionsMap (method on `TestSuiteExecutionsModelStruct`)
+- Signature: `func (TestSuiteExecutionsModelStruct) DeleteFromDetailedTestSuiteExecutionsMap(detailedTestSuiteExecutionMapKey DetailedTestSuiteExecutionMapKeyType)`
+- Exported: `true`
+- Control-flow features: `if, defer`
+- Doc: DeleteFromDetailedTestSuiteExecutionsMap Delete from the DetailedTestSuiteExecutions-Map
+- Selector calls: `detailedTestSuiteExecutionsMapMutex.Lock`, `detailedTestSuiteExecutionsMapMutex.Unlock`
 
 ### SetFlagRefreshOngoingOfDetailedTestSuiteExecution (method on `TestSuiteExecutionsModelStruct`)
 - Signature: `func (TestSuiteExecutionsModelStruct) SetFlagRefreshOngoingOfDetailedTestSuiteExecution(detailedTestSuiteExecutionMapKey DetailedTestSuiteExecutionMapKeyType)`
 - Exported: `true`
 - Control-flow features: `if, defer`
 - Doc: SetFlagRefreshOngoingOfDetailedTestSuiteExecution Set the flag there is an ongoing refresh of the DetailedTestSuiteExecution-data
+- Selector calls: `detailedTestSuiteExecutionsMapMutex.Lock`, `detailedTestSuiteExecutionsMapMutex.Unlock`, `fmt.Println`
+
+### ClearFlagRefreshOngoingOfDetailedTestSuiteExecution (method on `TestSuiteExecutionsModelStruct`)
+- Signature: `func (TestSuiteExecutionsModelStruct) ClearFlagRefreshOngoingOfDetailedTestSuiteExecution(detailedTestSuiteExecutionMapKey DetailedTestSuiteExecutionMapKeyType)`
+- Exported: `true`
+- Control-flow features: `if, defer`
+- Doc: ClearFlagRefreshOngoingOfDetailedTestSuiteExecution Clear the flag there is an ongoing refresh of the DetailedTestSuiteExecution-data
 - Selector calls: `detailedTestSuiteExecutionsMapMutex.Lock`, `detailedTestSuiteExecutionsMapMutex.Unlock`, `fmt.Println`
 
 ## Behavioral Summary

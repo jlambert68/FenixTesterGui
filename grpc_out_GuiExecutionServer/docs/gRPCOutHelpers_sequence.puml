@@ -2,30 +2,30 @@
 title Sequence Diagram - gRPCOutHelpers.go
 actor Caller
 participant "gRPCOutHelpers.go" as File
-participant "context" as context
-participant "credentials" as credentials
-participant "err" as err
-participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
 participant "gcp" as gcp
 participant "grpc" as grpc
+participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
+participant "time" as time
+participant "context" as context
+participant "credentials" as credentials
 participant "grpcurl" as grpcurl
 participant "log" as log
+Caller -> File: SetConnectionToFenixGuiExecutionServer(...)
+activate File
+File -> credentials: NewTLS(...)
+File -> grpc: WithTransportCredentials(...)
+File -> grpc: Dial(...)
+File --> Caller: return
+deactivate File
 Caller -> File: GetHighestFenixGuiExecutionServerProtoFileVersion(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: SetConnectionToFenixGuiExecutionServer(...)
+Caller -> File: SetLogger(...)
 activate File
-File -> credentials: NewTLS(...)
-File -> fenixExecutionServerGuiGrpcApi: CurrentFenixExecutionGuiProtoFileVersionEnum(...)
-File -> fenixExecutionServerGuiGrpcApi: NewFenixExecutionServerGuiGrpcServicesForGuiClientClient(...)
 File --> Caller: return
 deactivate File
 Caller -> File: SetDialAddressString(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: SetLogger(...)
 activate File
 File --> Caller: return
 deactivate File

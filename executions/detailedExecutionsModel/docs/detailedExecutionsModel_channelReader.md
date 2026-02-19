@@ -41,7 +41,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, switch`
 - Doc: Channel reader which is used secure that status updates are handled in a structured way
 - Internal calls: `int32`
-- Selector calls: `detailedExecutionsModelObject.triggerProcessFullDetailedExecutionsStatusUpdate`, `detailedExecutionsModelObject.triggerProcessRemoveDetailedTestCaseExecution`, `detailedExecutionsModelObject.triggerProcessRetrieveFullDetailedTestCaseExecution`, `detailedExecutionsModelObject.triggerProcessStatusUpdateOfDetailedExecutionsStatus`
+- Selector calls: `detailedExecutionsModelObject.triggerProcessFullDetailedExecutionsStatusUpdate`, `detailedExecutionsModelObject.triggerProcessStatusUpdateOfDetailedExecutionsStatus`, `detailedExecutionsModelObject.triggerProcessRemoveDetailedTestCaseExecution`, `detailedExecutionsModelObject.triggerProcessRetrieveFullDetailedTestCaseExecution`
 
 ### triggerProcessFullDetailedExecutionsStatusUpdate (method on `*DetailedExecutionsModelObjectStruct`)
 - Signature: `func (*DetailedExecutionsModelObjectStruct) triggerProcessFullDetailedExecutionsStatusUpdate(incomingChannelCommandAndMessage ChannelCommandDetailedExecutionsStruct)`
@@ -50,6 +50,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Doc: Updates all Executions status with information received after direct gRPC-call to GUiExecutionServer
 - Internal calls: `CreateSummaryTableForDetailedTestCaseExecutionsList`
 - Selector calls: `detailedExecutionsModelObject.processFullDetailedTestCaseExecutionsStatusUpdate`, `testCasesSummaryTableRefreshThrottler.RequestRefreshTestCasesSummaryTable`
+
+### triggerProcessStatusUpdateOfDetailedExecutionsStatus (method on `*DetailedExecutionsModelObjectStruct`)
+- Signature: `func (*DetailedExecutionsModelObjectStruct) triggerProcessStatusUpdateOfDetailedExecutionsStatus(incomingChannelCommandAndMessage ChannelCommandDetailedExecutionsStruct)`
+- Exported: `false`
+- Control-flow features: `if`
+- Doc: Updates specific status information based on subscriptions updates from GuiExecutionServer
+- Internal calls: `CreateSummaryTableForDetailedTestCaseExecutionsList`
+- Selector calls: `detailedExecutionsModelObject.processStatusUpdateOfDetailedExecutionsStatus`, `testCasesSummaryTableRefreshThrottler.RequestRefreshTestCasesSummaryTable`
 
 ### triggerProcessRemoveDetailedTestCaseExecution (method on `*DetailedExecutionsModelObjectStruct`)
 - Signature: `func (*DetailedExecutionsModelObjectStruct) triggerProcessRemoveDetailedTestCaseExecution(testCaseExecutionKey string)`
@@ -66,14 +74,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Doc: Retrieve a full Detailed TestCaseExecution from GuiExecutionServer
 - Internal calls: `CreateSummaryTableForDetailedTestCaseExecutionsList`
 - Selector calls: `detailedExecutionsModelObject.processRetrieveFullDetailedTestCaseExecution`, `testCasesSummaryTableRefreshThrottler.RequestRefreshTestCasesSummaryTable`
-
-### triggerProcessStatusUpdateOfDetailedExecutionsStatus (method on `*DetailedExecutionsModelObjectStruct`)
-- Signature: `func (*DetailedExecutionsModelObjectStruct) triggerProcessStatusUpdateOfDetailedExecutionsStatus(incomingChannelCommandAndMessage ChannelCommandDetailedExecutionsStruct)`
-- Exported: `false`
-- Control-flow features: `if`
-- Doc: Updates specific status information based on subscriptions updates from GuiExecutionServer
-- Internal calls: `CreateSummaryTableForDetailedTestCaseExecutionsList`
-- Selector calls: `detailedExecutionsModelObject.processStatusUpdateOfDetailedExecutionsStatus`, `testCasesSummaryTableRefreshThrottler.RequestRefreshTestCasesSummaryTable`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

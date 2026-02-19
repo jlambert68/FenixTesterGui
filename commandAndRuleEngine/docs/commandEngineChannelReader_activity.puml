@@ -2,14 +2,20 @@
 title Activity Diagram - commandEngineChannelReader.go
 start
 :Load commandAndRuleEngine/commandEngineChannelReader.go;
-:1. channelCommandChangeActiveTestCase [method on *CommandAndRuleEngineObjectStruct];
+:1. startCommandChannelReader [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:2. channelCommandCloseOpenTestCaseWithOutSaving [method on *CommandAndRuleEngineObjectStruct];
-:3. channelCommandCreateNewTestCase [method on *CommandAndRuleEngineObjectStruct];
+:Iterate loop/range logic;
+:2. channelCommandCreateNewTestCase [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. channelCommandSaveTestCase [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -22,26 +28,29 @@ else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:5. channelCommandOpenTestCase [method on *CommandAndRuleEngineObjectStruct];
+:5. channelCommandRemove [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:6. channelCommandRemove [method on *CommandAndRuleEngineObjectStruct];
+:6. channelCommandChangeActiveTestCase [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:7. channelCommandRemoveTestCaseWithOutSaving [method on *CommandAndRuleEngineObjectStruct];
-:8. channelCommandSaveTestCase [method on *CommandAndRuleEngineObjectStruct];
+:7. runPopUp;
+:8. channelCommandOpenTestCase [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:9. channelCommandSwap [method on *CommandAndRuleEngineObjectStruct];
+:9. channelCommandRemoveTestCaseWithOutSaving [method on *CommandAndRuleEngineObjectStruct];
+:10. channelCommandCloseOpenTestCaseWithOutSaving [method on *CommandAndRuleEngineObjectStruct];
+:11. printDropZone;
+:12. channelCommandSwap [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -49,9 +58,5 @@ else (no)
 endif
 :Iterate loop/range logic;
 :Schedule deferred cleanup;
-:10. convertGrpcElementModelIntoTestCaseElementModel [method on *CommandAndRuleEngineObjectStruct];
-:Iterate loop/range logic;
-:11. printDropZone;
-:12. runPopUp;
 stop
 @enduml

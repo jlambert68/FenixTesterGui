@@ -3,18 +3,19 @@ title Activity Diagram - listTestSuiteExectionsUI_TestSuiteExectionsListTable.go
 start
 :Load testSuiteExecutions/listTestSuiteExecutionsUI/listTestSuiteExectionsUI_TestSuiteExectionsListTable.go;
 :1. RemoveTestSuiteExecutionFromList;
-:2. SortGuiTableOnCurrentColumnAndSorting;
+:2. generateTestSuiteExecutionsListTable;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:3. SortOrReverseSortGuiTable;
+:3. updateTestSuiteExecutionsListTable;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
+:Schedule deferred cleanup;
 :4. calculateAndSetCorrectColumnWidths;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
@@ -22,13 +23,7 @@ else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:5. generateTestSuiteExecutionsListTable;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:6. loadTestSuiteExecutionListTableTable;
+:5. loadTestSuiteExecutionListTableTable;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -36,26 +31,31 @@ else (no)
 endif
 :Iterate loop/range logic;
 :Schedule deferred cleanup;
-:7. sort2DStringSlice;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:8. sortGuiTableAscendingOnTestSuiteExecutionTimeStamp;
-:9. sortGuiTableOnColumn;
+:6. sortGuiTableOnColumn;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:10. updateTestSuiteExecutionsListTable;
+:7. sortGuiTableAscendingOnTestSuiteExecutionTimeStamp;
+:8. SortOrReverseSortGuiTable;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:Schedule deferred cleanup;
+:9. SortGuiTableOnCurrentColumnAndSorting;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:10. sort2DStringSlice;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
 stop
 @enduml

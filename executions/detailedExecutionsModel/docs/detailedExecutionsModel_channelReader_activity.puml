@@ -17,19 +17,19 @@ if (branch or error path?) then (yes)
 else (no)
 :Continue primary flow;
 endif
-:4. triggerProcessRemoveDetailedTestCaseExecution [method on *DetailedExecutionsModelObjectStruct];
+:4. triggerProcessStatusUpdateOfDetailedExecutionsStatus [method on *DetailedExecutionsModelObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:5. triggerProcessRetrieveFullDetailedTestCaseExecution [method on *DetailedExecutionsModelObjectStruct];
+:5. triggerProcessRemoveDetailedTestCaseExecution [method on *DetailedExecutionsModelObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:6. triggerProcessStatusUpdateOfDetailedExecutionsStatus [method on *DetailedExecutionsModelObjectStruct];
+:6. triggerProcessRetrieveFullDetailedTestCaseExecution [method on *DetailedExecutionsModelObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

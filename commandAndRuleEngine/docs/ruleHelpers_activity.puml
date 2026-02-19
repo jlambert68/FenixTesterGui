@@ -2,7 +2,7 @@
 title Activity Diagram - ruleHelpers.go
 start
 :Load commandAndRuleEngine/ruleHelpers.go;
-:1. SetAvailableBondsMap [method on *CommandAndRuleEngineObjectStruct];
-:2. SetLogger [method on *CommandAndRuleEngineObjectStruct];
+:1. SetLogger [method on *CommandAndRuleEngineObjectStruct];
+:2. SetAvailableBondsMap [method on *CommandAndRuleEngineObjectStruct];
 stop
 @enduml

@@ -2,25 +2,32 @@
 title Sequence Diagram - uiServer.go
 actor Caller
 participant "uiServer.go" as File
+participant "uiServer" as uiServer
+participant "detailedExecutionsModel" as detailedExecutionsModel
 participant "app" as app
-participant "backgroundRect" as backgroundRect
-participant "binding" as binding
-participant "c" as c
-participant "canvas" as canvas
-participant "container" as container
-participant "contentGroup" as contentGroup
-participant "contentGroupDragginObject" as contentGroupDragginObject
-Caller -> File: MouseIn(...)
+participant "theme" as theme
+participant "listTestCasesModel" as listTestCasesModel
+participant "time" as time
+participant "testCaseExecutionsModel" as testCaseExecutionsModel
+participant "executionsModelForSubscriptions" as executionsModelForSubscriptions
+Caller -> File: StartUIServer(...)
 activate File
-File -> fmt: Println(...)
-File -> fyne: NewPos(...)
-File -> image: Move(...)
+File -> uiServer: SetLogger(...)
+File -> uiServer: SetDialAddressString(...)
+File -> detailedExecutionsModel: InitiateCommandChannelReaderForDetailedStatusUpdates(...)
 File --> Caller: return
 deactivate File
 Caller -> File: MouseMoved(...)
 activate File
-File -> fmt: Println(...)
 File -> log: Println(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseIn(...)
+activate File
+File -> fmt: Println(...)
+File -> m: Position(...)
+File -> fyne: NewPos(...)
 File --> Caller: return
 deactivate File
 Caller -> File: MouseOut(...)
@@ -28,13 +35,6 @@ activate File
 File -> fmt: Println(...)
 File -> image: Hide(...)
 File -> image: Refresh(...)
-File --> Caller: return
-deactivate File
-Caller -> File: StartUIServer(...)
-activate File
-File -> detailedExecutionsModel: InitiateCommandChannelReaderForDetailedStatusUpdates(...)
-File -> uiServer: SetDialAddressString(...)
-File -> uiServer: SetLogger(...)
 File --> Caller: return
 deactivate File
 @enduml

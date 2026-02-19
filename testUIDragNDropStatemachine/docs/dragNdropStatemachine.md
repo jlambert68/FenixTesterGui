@@ -66,25 +66,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: InitiateStateStateMachine InitiateState State machine
-- Selector calls: `tempLabel.MinSize`, `tempLabel.Refresh`, `widget.NewLabel`
-
-### TestInstructionContainerBondBelongingRectangleToMap
-- Signature: `func TestInstructionContainerBondBelongingRectangleToMap(testInstructionContainerUuid string, rectangle *canvas.Rectangle)`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Doc: Add testInstructionContainerBondBelongingRectangle to map
-
-### executeDropAction
-- Signature: `func executeDropAction()`
-- Exported: `false`
-- Control-flow features: `switch`
-- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`, `sharedCode.BuildingBlock`
-
-### expandDropAreas
-- Signature: `func expandDropAreas()`
-- Exported: `false`
-- Control-flow features: `if, for/range`
-- Selector calls: `fyne.NewSize`, `targetLabel.Resize`
+- Selector calls: `widget.NewLabel`, `tempLabel.Refresh`, `tempLabel.MinSize`
 
 ### newNoneDroppableLabel
 - Signature: `func newNoneDroppableLabel(uuid string) *noneDroppableLabel`
@@ -92,10 +74,11 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Selector calls: `nonDroppableLabel.ExtendBaseWidget`
 
-### shrinkDropAreas
-- Signature: `func shrinkDropAreas()`
-- Exported: `false`
-- Control-flow features: `if, for/range`
+### TestInstructionContainerBondBelongingRectangleToMap
+- Signature: `func TestInstructionContainerBondBelongingRectangleToMap(testInstructionContainerUuid string, rectangle *canvas.Rectangle)`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Doc: Add testInstructionContainerBondBelongingRectangle to map
 
 ### switchStateForSource
 - Signature: `func switchStateForSource(newState int)`
@@ -106,6 +89,23 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func switchStateForTarget(newState int)`
 - Exported: `false`
 - Control-flow features: `none detected`
+
+### expandDropAreas
+- Signature: `func expandDropAreas()`
+- Exported: `false`
+- Control-flow features: `if, for/range`
+- Selector calls: `targetLabel.Resize`, `fyne.NewSize`
+
+### shrinkDropAreas
+- Signature: `func shrinkDropAreas()`
+- Exported: `false`
+- Control-flow features: `if, for/range`
+
+### executeDropAction
+- Signature: `func executeDropAction()`
+- Exported: `false`
+- Control-flow features: `switch`
+- Selector calls: `fmt.Println`, `fmt.Sprintf`, `sharedCode.BuildingBlock`, `errors.New`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

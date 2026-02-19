@@ -2,26 +2,27 @@
 title Sequence Diagram - flashingTableCell.go
 actor Caller
 participant "flashingTableCell.go" as File
-participant "canvas" as canvas
-participant "container" as container
-participant "detailedExecutionsModel" as detailedExecutionsModel
 participant "fmt" as fmt
-participant "newFlashingTableCell" as newFlashingTableCell
+participant "detailedExecutionsModel" as detailedExecutionsModel
+participant "canvas" as canvas
 participant "rectangleColorAnimation" as rectangleColorAnimation
 participant "widget" as widget
-Caller -> File: CreateRenderer(...)
+participant "newFlashingTableCell" as newFlashingTableCell
+participant "container" as container
+Caller -> File: Tapped(...)
 activate File
-File -> container: NewMax(...)
+File -> fmt: Println(...)
 File --> Caller: return
 deactivate File
-Caller -> File: Destroy(...)
+Caller -> File: TappedSecondary(...)
 activate File
+File -> fmt: Println(...)
 File --> Caller: return
 deactivate File
 Caller -> File: DoubleTapped(...)
 activate File
-File -> detailedExecutionsModel: RemoveTestCaseExecutionFromSummaryTable(...)
 File -> detailedExecutionsModel: RetrieveSingleTestCaseExecution(...)
+File -> detailedExecutionsModel: RemoveTestCaseExecutionFromSummaryTable(...)
 File -> fmt: Println(...)
 File --> Caller: return
 deactivate File
@@ -39,22 +40,23 @@ File -> canvas: Refresh(...)
 File -> rectangleColorAnimation: Start(...)
 File --> Caller: return
 deactivate File
-Caller -> File: Layout(...)
+Caller -> File: NewFlashingTableCell(...)
 activate File
+File -> widget: NewLabel(...)
+File -> canvas: NewRectangle(...)
+File -> canvas: NewImageFromResource(...)
+File --> Caller: return
+deactivate File
+Caller -> File: CreateRenderer(...)
+activate File
+File -> container: NewMax(...)
 File --> Caller: return
 deactivate File
 Caller -> File: MinSize(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: NewFlashingTableCell(...)
-activate File
-File -> canvas: NewImageFromResource(...)
-File -> canvas: NewRectangle(...)
-File -> newFlashingTableCell: ExtendBaseWidget(...)
-File --> Caller: return
-deactivate File
-Caller -> File: Objects(...)
+Caller -> File: Layout(...)
 activate File
 File --> Caller: return
 deactivate File

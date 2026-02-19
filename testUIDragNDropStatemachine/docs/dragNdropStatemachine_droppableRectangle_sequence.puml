@@ -3,10 +3,17 @@ title Sequence Diagram - dragNdropStatemachine_droppableRectangle.go
 actor Caller
 participant "dragNdropStatemachine_droppableRectangle.go" as File
 participant "canvas" as canvas
-participant "droppableRectangle" as droppableRectangle
-participant "fyne" as fyne
-participant "log" as log
 participant "rect" as rect
+participant "fyne" as fyne
+participant "droppableRectangle" as droppableRectangle
+participant "log" as log
+Caller -> File: NewDroppableRectangle(...)
+activate File
+File -> canvas: NewRectangle(...)
+File -> rect: SetMinSize(...)
+File -> fyne: NewSize(...)
+File --> Caller: return
+deactivate File
 Caller -> File: CreateRenderer(...)
 activate File
 File --> Caller: return
@@ -24,33 +31,26 @@ activate File
 File -> fyne: NewSize(...)
 File --> Caller: return
 deactivate File
-Caller -> File: MouseIn(...)
-activate File
-File -> log: Fatalln(...)
-File --> Caller: return
-deactivate File
-Caller -> File: MouseMoved(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: MouseOut(...)
-activate File
-File -> log: Fatalln(...)
-File --> Caller: return
-deactivate File
-Caller -> File: NewDroppableRectangle(...)
-activate File
-File -> canvas: NewRectangle(...)
-File -> droppableRectangle: ExtendBaseWidget(...)
-File -> fyne: NewSize(...)
-File --> Caller: return
-deactivate File
 Caller -> File: Objects(...)
 activate File
 File --> Caller: return
 deactivate File
 Caller -> File: Refresh(...)
 activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Tapped(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MouseIn(...)
+activate File
+File -> log: Fatalln(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseOut(...)
+activate File
+File -> log: Fatalln(...)
 File --> Caller: return
 deactivate File
 @enduml

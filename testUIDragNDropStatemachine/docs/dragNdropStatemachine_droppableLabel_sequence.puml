@@ -2,10 +2,17 @@
 title Sequence Diagram - dragNdropStatemachine_droppableLabel.go
 actor Caller
 participant "dragNdropStatemachine_droppableLabel.go" as File
-participant "canvas" as canvas
 participant "droppableLabel" as droppableLabel
+participant "canvas" as canvas
 participant "fyne" as fyne
 participant "log" as log
+Caller -> File: NewDroppableLabel(...)
+activate File
+File -> droppableLabel: ExtendBaseWidget(...)
+File -> canvas: NewRectangle(...)
+File -> droppableLabel: Refresh(...)
+File --> Caller: return
+deactivate File
 Caller -> File: MouseIn(...)
 activate File
 File -> log: Fatalln(...)
@@ -18,13 +25,6 @@ deactivate File
 Caller -> File: MouseOut(...)
 activate File
 File -> log: Fatalln(...)
-File --> Caller: return
-deactivate File
-Caller -> File: NewDroppableLabel(...)
-activate File
-File -> canvas: NewRectangle(...)
-File -> droppableLabel: ExtendBaseWidget(...)
-File -> droppableLabel: MinSize(...)
 File --> Caller: return
 deactivate File
 @enduml

@@ -3,8 +3,8 @@ title Sequence Diagram - logPostAndValuesFunctions.go
 actor Caller
 participant "logPostAndValuesFunctions.go" as File
 participant "detailedTestCaseExecutionsMapMutex" as detailedTestCaseExecutionsMapMutex
-participant "sort" as sort
 participant "testCaseExecutionsModel" as testCaseExecutionsModel
+participant "sort" as sort
 participant "timeI" as timeI
 Caller -> File: ListLogPostsAndValuesForTestInstructionExecutions(...)
 activate File

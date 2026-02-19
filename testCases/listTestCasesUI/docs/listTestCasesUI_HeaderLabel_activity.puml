@@ -2,13 +2,13 @@
 title Activity Diagram - listTestCasesUI_HeaderLabel.go
 start
 :Load testCases/listTestCasesUI/listTestCasesUI_HeaderLabel.go;
-:1. CreateRenderer [method on *sortableHeaderLabelStruct];
-:2. Refresh [method on *sortableHeaderLabelStruct];
-:3. newSortableHeaderLabel;
+:1. newSortableHeaderLabel;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
+:2. Refresh [method on *sortableHeaderLabelStruct];
+:3. CreateRenderer [method on *sortableHeaderLabelStruct];
 stop
 @enduml

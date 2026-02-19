@@ -43,7 +43,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, for/range, defer`
 - Internal calls: `generatePubSubTopicSubscriptionNameForExecutionStatusUpdates`, `string`
-- Selector calls: `atomic.AddInt32`, `clientSubscription.Receive`, `context.Background`, `credentials.NewTLS`, `executionStatusMessagesPubSubMessage.GetExecutionsStatus`, `fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum`, `fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusEnum`, `fmt.Printf`
+- Selector calls: `strings.ReplaceAll`, `context.Background`, `pubsub.NewClient`, `credentials.NewTLS`, `grpc.WithTransportCredentials`, `option.WithGRPCDialOption`, `pubSubClient.Close`, `pubSubClient.Subscription`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

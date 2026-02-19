@@ -2,19 +2,19 @@
 title Sequence Diagram - dragNdropStatemachine.go
 actor Caller
 participant "dragNdropStatemachine.go" as File
-participant "errors" as errors
-participant "fmt" as fmt
-participant "fyne" as fyne
-participant "nonDroppableLabel" as nonDroppableLabel
-participant "sharedCode" as sharedCode
-participant "targetLabel" as targetLabel
-participant "tempLabel" as tempLabel
 participant "widget" as widget
+participant "tempLabel" as tempLabel
+participant "nonDroppableLabel" as nonDroppableLabel
+participant "targetLabel" as targetLabel
+participant "fyne" as fyne
+participant "fmt" as fmt
+participant "sharedCode" as sharedCode
+participant "errors" as errors
 Caller -> File: InitiateStateStateMachine(...)
 activate File
-File -> tempLabel: MinSize(...)
-File -> tempLabel: Refresh(...)
 File -> widget: NewLabel(...)
+File -> tempLabel: Refresh(...)
+File -> tempLabel: MinSize(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TestInstructionContainerBondBelongingRectangleToMap(...)

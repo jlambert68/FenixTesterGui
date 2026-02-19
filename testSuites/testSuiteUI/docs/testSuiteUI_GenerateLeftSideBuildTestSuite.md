@@ -36,7 +36,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Doc: Generate leftSideBuildTestSuite - Main information for TestSuite
-- Selector calls: `container.NewBorder`, `container.NewHBox`, `container.NewStack`, `container.NewVBox`, `err.Error`, `fmt.Sprintf`, `layout.NewSpacer`, `leftTopSideBuildTestSuiteContainer.Add`
+- Selector calls: `container.NewVBox`, `widget.NewLabel`, `container.NewStack`, `container.NewBorder`, `widget.NewAccordionItem`, `widget.NewAccordion`, `testSuiteUiModel.generateTestSuiteDeletionDateArea`, `fmt.Sprintf`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

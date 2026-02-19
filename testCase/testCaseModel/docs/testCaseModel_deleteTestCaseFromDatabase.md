@@ -32,7 +32,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, returns error`
 - Doc: DeleteTestCaseAtThisDate - Mark the TestCase as deletedn by this date, in the Database
-- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`, `testCaseModel.SaveChangedTestCaseAttributeInTestCase`
+- Selector calls: `testCaseModel.SaveChangedTestCaseAttributeInTestCase`, `errors.New`, `fmt.Sprintf`, `fmt.Println`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

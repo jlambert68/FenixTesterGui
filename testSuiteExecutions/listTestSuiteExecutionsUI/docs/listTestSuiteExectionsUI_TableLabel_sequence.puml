@@ -2,14 +2,28 @@
 title Sequence Diagram - listTestSuiteExectionsUI_TableLabel.go
 actor Caller
 participant "listTestSuiteExectionsUI_TableLabel.go" as File
-participant "TestSuiteInstructionPreViewObject" as TestSuiteInstructionPreViewObject
+participant "time" as time
 participant "canvas" as canvas
-participant "clipboard" as clipboard
-participant "currentRowThatMouseIsHoveringAboveMutex" as currentRowThatMouseIsHoveringAboveMutex
-participant "fenixMasterWindow" as fenixMasterWindow
-participant "fmt" as fmt
-participant "fyne" as fyne
 participant "l" as l
+participant "theme" as theme
+participant "fmt" as fmt
+participant "TestSuiteInstructionPreViewObject" as TestSuiteInstructionPreViewObject
+participant "testSuiteExecutionsListTable" as testSuiteExecutionsListTable
+participant "loadAllTestSuiteExecutionsForOneTestSuiteButtonReference" as loadAllTestSuiteExecutionsForOneTestSuiteButtonReference
+Caller -> File: Tapped(...)
+activate File
+File -> time: Since(...)
+File -> l: onDoubleTap(...)
+File -> time: Now(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TappedSecondary(...)
+activate File
+File -> fenixMasterWindow: Clipboard(...)
+File -> clipboard: SetContent(...)
+File -> fyne: CurrentApp(...)
+File --> Caller: return
+deactivate File
 Caller -> File: MouseIn(...)
 activate File
 File -> currentRowThatMouseIsHoveringAboveMutex: Lock(...)
@@ -26,20 +40,6 @@ activate File
 File -> currentRowThatMouseIsHoveringAboveMutex: Lock(...)
 File -> currentRowThatMouseIsHoveringAboveMutex: Unlock(...)
 File -> l: Refresh(...)
-File --> Caller: return
-deactivate File
-Caller -> File: Tapped(...)
-activate File
-File -> TestSuiteInstructionPreViewObject: GenerateTestSuiteExecutionPreviewContainer(...)
-File -> fmt: Println(...)
-File -> l: onDoubleTap(...)
-File --> Caller: return
-deactivate File
-Caller -> File: TappedSecondary(...)
-activate File
-File -> clipboard: SetContent(...)
-File -> fenixMasterWindow: Clipboard(...)
-File -> fmt: Sprintf(...)
 File --> Caller: return
 deactivate File
 @enduml

@@ -2,26 +2,26 @@
 title Activity Diagram - testSuiteUI_graphicalComponent_owerDomainForTestSuite.go
 start
 :Load testSuites/testSuiteUI/testSuiteUI_graphicalComponent_owerDomainForTestSuite.go;
-:1. calcCheckGroupWidth;
-:2. calcSelectWidth;
+:1. generateOwnerDomainForTestSuiteArea [method on *TestSuiteUiStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:3. generateOwnerDomainForTestSuiteArea [method on *TestSuiteUiStruct];
+:2. setSelectedOwnerDomainForTestSuiteArea [method on *TestSuiteUiStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. calcSelectWidth;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:4. setSelectedOwnerDomainForTestSuiteArea [method on *TestSuiteUiStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
+:4. calcCheckGroupWidth;
 stop
 @enduml

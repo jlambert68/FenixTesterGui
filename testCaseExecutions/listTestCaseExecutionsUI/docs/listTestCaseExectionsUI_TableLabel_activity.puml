@@ -2,31 +2,31 @@
 title Activity Diagram - listTestCaseExectionsUI_TableLabel.go
 start
 :Load testCaseExecutions/listTestCaseExecutionsUI/listTestCaseExectionsUI_TableLabel.go;
-:1. MouseIn [method on *clickableTableLabel];
+:1. newClickableTableLabel;
+:2. Tapped [method on *clickableTableLabel];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:2. MouseMoved [method on *clickableTableLabel];
-:3. MouseOut [method on *clickableTableLabel];
+:3. TappedSecondary [method on *clickableTableLabel];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:4. Tapped [method on *clickableTableLabel];
+:4. MouseIn [method on *clickableTableLabel];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:5. TappedSecondary [method on *clickableTableLabel];
+:5. MouseMoved [method on *clickableTableLabel];
+:6. MouseOut [method on *clickableTableLabel];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:6. newClickableTableLabel;
 stop
 @enduml

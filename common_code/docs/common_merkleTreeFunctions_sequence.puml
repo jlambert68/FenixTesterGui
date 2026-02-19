@@ -2,19 +2,33 @@
 title Sequence Diagram - common_merkleTreeFunctions.go
 actor Caller
 participant "common_merkleTreeFunctions.go" as File
-participant "dataFrameToWorkOn" as dataFrameToWorkOn
-participant "dataframe" as dataframe
-participant "df" as df
+participant "strconv" as strconv
+participant "sort" as sort
+participant "sha256" as sha256
 participant "hash" as hash
 participant "hex" as hex
-participant "irisCsv" as irisCsv
-participant "log" as log
-participant "merkleTree" as merkleTree
+participant "series" as series
+participant "s" as s
+participant "dataframe" as dataframe
+Caller -> File: HashValues(...)
+activate File
+File -> strconv: Itoa(...)
+File -> sort: Strings(...)
+File -> sha256: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: LoadAndProcessFile(...)
+activate File
+File -> os: Open(...)
+File -> log: Fatal(...)
+File -> irisCsv: Close(...)
+File --> Caller: return
+deactivate File
 Caller -> File: CalculateMerkleHashFromMerkleTree(...)
 activate File
 File -> merkleTree: Col(...)
 File -> merkleTree: Filter(...)
-File -> merkleTreeLeafNodes: Mutate(...)
+File -> merkleTreeLeafNodes: Nrow(...)
 File --> Caller: return
 deactivate File
 Caller -> File: ExtractMerkleRootHashFromMerkleTree(...)
@@ -27,20 +41,6 @@ deactivate File
 Caller -> File: ExtractValuesFromFilterPath(...)
 activate File
 File -> strings: Index(...)
-File --> Caller: return
-deactivate File
-Caller -> File: HashValues(...)
-activate File
-File -> hash: Sum(...)
-File -> hash: Write(...)
-File -> hex: EncodeToString(...)
-File --> Caller: return
-deactivate File
-Caller -> File: LoadAndProcessFile(...)
-activate File
-File -> dataframe: HasHeader(...)
-File -> dataframe: New(...)
-File -> dataframe: ReadCSV(...)
 File --> Caller: return
 deactivate File
 @enduml

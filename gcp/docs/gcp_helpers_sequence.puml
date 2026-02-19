@@ -2,39 +2,39 @@
 title Sequence Diagram - gcp_helpers.go
 actor Caller
 participant "gcp_helpers.go" as File
-participant "bytes" as bytes
-participant "cmd" as cmd
-participant "context" as context
-participant "err" as err
-participant "exec" as exec
-participant "fmt" as fmt
 participant "gcp" as gcp
-participant "google" as google
+participant "timeToCompareTo" as timeToCompareTo
+participant "time" as time
+participant "idtoken" as idtoken
+participant "tokenSource" as tokenSource
+participant "grpcMetadata" as grpcMetadata
+participant "sessions" as sessions
+participant "store" as store
 Caller -> File: GenerateGCPAccessToken(...)
 activate File
-File -> gcp: GenerateGCPAccessTokenForAuthorizedUserPubSub(...)
 File -> gcp: GenerateGCPAccessTokenForServiceAccount(...)
-File --> Caller: return
-deactivate File
-Caller -> File: GenerateGCPAccessTokenForAuthorizedUser(...)
-activate File
-File -> context: Background(...)
-File -> fmt: Fprintln(...)
-File -> gcp: initiateUserObject(...)
-File --> Caller: return
-deactivate File
-Caller -> File: GenerateGCPAccessTokenForAuthorizedUserPubSub(...)
-activate File
-File -> context: Background(...)
-File -> err: Error(...)
-File -> fmt: Fprintln(...)
+File -> gcp: GenerateGCPAccessTokenForAuthorizedUserPubSub(...)
 File --> Caller: return
 deactivate File
 Caller -> File: GenerateGCPAccessTokenForServiceAccount(...)
 activate File
-File -> grpcMetadata: AppendToOutgoingContext(...)
+File -> timeToCompareTo: After(...)
+File -> time: Now(...)
 File -> idtoken: NewTokenSource(...)
-File -> idtoken: WithCredentialsJSON(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GenerateGCPAccessTokenForAuthorizedUser(...)
+activate File
+File -> gcp: initiateUserObject(...)
+File -> timeToCompareTo: After(...)
+File -> time: Now(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GenerateGCPAccessTokenForAuthorizedUserPubSub(...)
+activate File
+File -> gcp: initiatAccessTokenForAuthorizedAccountsPubSubObject(...)
+File -> pat: New(...)
+File -> timeToCompareTo: After(...)
 File --> Caller: return
 deactivate File
 Caller -> File: GetGcpAccessTokenForAuthorizedAccountsPubSub(...)

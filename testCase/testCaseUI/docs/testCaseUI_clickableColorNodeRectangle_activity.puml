@@ -2,25 +2,25 @@
 title Activity Diagram - testCaseUI_clickableColorNodeRectangle.go
 start
 :Load testCase/testCaseUI/testCaseUI_clickableColorNodeRectangle.go;
-:1. ForceClick [method on *ClickableRectangle];
-:2. NewClickableRectangle [method on *TestCasesUiModelStruct];
+:1. NewClickableRectangle [method on *TestCasesUiModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:3. Tapped [method on *ClickableRectangle];
+:2. Tapped [method on *ClickableRectangle];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:4. TappedSecondary [method on *ClickableRectangle];
-:5. updateSelectedUINode [method on *ClickableRectangle];
+:3. TappedSecondary [method on *ClickableRectangle];
+:4. updateSelectedUINode [method on *ClickableRectangle];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
+:5. ForceClick [method on *ClickableRectangle];
 stop
 @enduml

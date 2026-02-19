@@ -2,23 +2,23 @@
 title Sequence Diagram - testerGuiServer.go
 actor Caller
 participant "testerGuiServer.go" as File
-participant "context" as context
-participant "errors" as errors
-participant "fenixTesterGuiObject" as fenixTesterGuiObject
-participant "filepath" as filepath
+participant "uuidGenerator" as uuidGenerator
 participant "fmt" as fmt
+participant "filepath" as filepath
 participant "log" as log
-participant "messageStreamEngine" as messageStreamEngine
 participant "os" as os
+participant "fenixTesterGuiObject" as fenixTesterGuiObject
+participant "sharedCode" as sharedCode
+participant "context" as context
 Caller -> File: cleanup(...)
 activate File
 File --> Caller: return
 deactivate File
 Caller -> File: fenixGuiBuilderServerMain(...)
 activate File
-File -> context: Background(...)
-File -> context: WithTimeout(...)
-File -> errors: New(...)
+File -> uuidGenerator: New(...)
+File -> fmt: Println(...)
+File -> filepath: Abs(...)
 File --> Caller: return
 deactivate File
 @enduml

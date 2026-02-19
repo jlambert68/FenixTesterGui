@@ -35,37 +35,28 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
-### BackgroundColor (method on `*customAttributeCheckBoxGroupRenderer`)
-- Signature: `func (*customAttributeCheckBoxGroupRenderer) BackgroundColor() color.Color`
-- Exported: `true`
+### newCustomAttributeCheckBoxGroupWidget
+- Signature: `func newCustomAttributeCheckBoxGroupWidget(newCheckGroup *widget.CheckGroup, attributeValueIsValidWarningBox *canvas.Rectangle) *customAttributeCheckBoxGroup`
+- Exported: `false`
 - Control-flow features: `none detected`
+- Selector calls: `widget.NewSelect`, `fyne.NewSize`, `tempEntry.Size`, `w.ExtendBaseWidget`
 
 ### CreateRenderer (method on `*customAttributeCheckBoxGroup`)
 - Signature: `func (*customAttributeCheckBoxGroup) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
 - Control-flow features: `none detected`
 
-### Destroy (method on `*customAttributeCheckBoxGroupRenderer`)
-- Signature: `func (*customAttributeCheckBoxGroupRenderer) Destroy()`
+### MinSize (method on `*customAttributeCheckBoxGroupRenderer`)
+- Signature: `func (*customAttributeCheckBoxGroupRenderer) MinSize() fyne.Size`
 - Exported: `true`
 - Control-flow features: `none detected`
+- Selector calls: `fyne.NewSize`, `fyne.Max`
 
 ### Layout (method on `*customAttributeCheckBoxGroupRenderer`)
 - Signature: `func (*customAttributeCheckBoxGroupRenderer) Layout(size fyne.Size)`
 - Exported: `true`
 - Control-flow features: `none detected`
-- Selector calls: `fyne.NewPos`, `fyne.NewSize`
-
-### MinSize (method on `*customAttributeCheckBoxGroupRenderer`)
-- Signature: `func (*customAttributeCheckBoxGroupRenderer) MinSize() fyne.Size`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Selector calls: `fyne.Max`, `fyne.NewSize`
-
-### Objects (method on `*customAttributeCheckBoxGroupRenderer`)
-- Signature: `func (*customAttributeCheckBoxGroupRenderer) Objects() []fyne.CanvasObject`
-- Exported: `true`
-- Control-flow features: `none detected`
+- Selector calls: `fyne.NewSize`, `fyne.NewPos`
 
 ### Refresh (method on `*customAttributeCheckBoxGroupRenderer`)
 - Signature: `func (*customAttributeCheckBoxGroupRenderer) Refresh()`
@@ -73,11 +64,20 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Selector calls: `canvas.Refresh`
 
-### newCustomAttributeCheckBoxGroupWidget
-- Signature: `func newCustomAttributeCheckBoxGroupWidget(newCheckGroup *widget.CheckGroup, attributeValueIsValidWarningBox *canvas.Rectangle) *customAttributeCheckBoxGroup`
-- Exported: `false`
+### BackgroundColor (method on `*customAttributeCheckBoxGroupRenderer`)
+- Signature: `func (*customAttributeCheckBoxGroupRenderer) BackgroundColor() color.Color`
+- Exported: `true`
 - Control-flow features: `none detected`
-- Selector calls: `fyne.NewSize`, `tempEntry.Size`, `w.ExtendBaseWidget`, `widget.NewSelect`
+
+### Objects (method on `*customAttributeCheckBoxGroupRenderer`)
+- Signature: `func (*customAttributeCheckBoxGroupRenderer) Objects() []fyne.CanvasObject`
+- Exported: `true`
+- Control-flow features: `none detected`
+
+### Destroy (method on `*customAttributeCheckBoxGroupRenderer`)
+- Signature: `func (*customAttributeCheckBoxGroupRenderer) Destroy()`
+- Exported: `true`
+- Control-flow features: `none detected`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

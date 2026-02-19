@@ -56,19 +56,19 @@ if (branch or error path?) then (yes)
 else (no)
 :Continue primary flow;
 endif
-:10. executeTCRuleDeletion110 [method on *CommandAndRuleEngineObjectStruct];
+:10. executeTCRuleDeletion_106_107_108_109 [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:11. executeTCRuleDeletion111 [method on *CommandAndRuleEngineObjectStruct];
+:11. executeTCRuleDeletion110 [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:12. executeTCRuleDeletion112 [method on *CommandAndRuleEngineObjectStruct];
+:12. executeTCRuleDeletion111 [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

@@ -2,27 +2,27 @@
 title Activity Diagram - testCaseModel.go
 start
 :Load testCase/testCaseModel/testCaseModel.go;
-:1. findElementInSliceAndRemove;
+:1. recursiveZombieElementSearchInTestCaseModel [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. findElementInSliceAndRemove;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:2. generateUINameForTestCaseElement [method on *TestCasesModelsStruct];
-:3. recursiveGraphicalTestCaseTreeModelExtractor [method on *TestCasesModelsStruct];
+:3. recursiveTextualTestCaseModelExtractor [method on *TestCasesModelsStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:4. recursiveTextualTestCaseModelExtractor [method on *TestCasesModelsStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:5. recursiveZombieElementSearchInTestCaseModel [method on *TestCasesModelsStruct];
+:4. generateUINameForTestCaseElement [method on *TestCasesModelsStruct];
+:5. recursiveGraphicalTestCaseTreeModelExtractor [method on *TestCasesModelsStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

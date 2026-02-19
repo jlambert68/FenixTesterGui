@@ -3,16 +3,16 @@ title Sequence Diagram - activeOutgoingMessages_SendSaveFullTestSuite.go
 actor Caller
 participant "activeOutgoingMessages_SendSaveFullTestSuite.go" as File
 participant "context" as context
-participant "err" as err
 participant "fenixGuiTestCaseBuilderServerGrpcApi" as fenixGuiTestCaseBuilderServerGrpcApi
-participant "fenixGuiTestCaseCaseBuilderServerGrpcClient" as fenixGuiTestCaseCaseBuilderServerGrpcClient
 participant "grpcOut" as grpcOut
+participant "err" as err
 participant "time" as time
+participant "fenixGuiTestCaseCaseBuilderServerGrpcClient" as fenixGuiTestCaseCaseBuilderServerGrpcClient
 Caller -> File: SendSaveFullTestSuite(...)
 activate File
 File -> context: Background(...)
-File -> context: WithDeadline(...)
-File -> err: Error(...)
+File -> fenixGuiTestCaseBuilderServerGrpcApi: CurrentFenixTestCaseBuilderProtoFileVersionEnum(...)
+File -> grpcOut: GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion(...)
 File --> Caller: return
 deactivate File
 @enduml

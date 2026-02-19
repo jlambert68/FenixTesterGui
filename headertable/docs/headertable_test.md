@@ -37,30 +37,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
-### TestHeaderTable
-- Signature: `func TestHeaderTable(t *testing.T)`
-- Exported: `true`
-- Control-flow features: `for/range`
-- Internal calls: `NewHeaderTable`
-- Selector calls: `assert.Equal`, `binding.BindStruct`, `test.NewApp`
-
-### TestHeaderTable_CreateRenderer
-- Signature: `func TestHeaderTable_CreateRenderer(t *testing.T)`
-- Exported: `true`
-- Control-flow features: `none detected`
-
 ### TestNewHeaderTable
 - Signature: `func TestNewHeaderTable(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `none detected`
 
-### Test_headerTableRenderer_Destroy
-- Signature: `func Test_headerTableRenderer_Destroy(t *testing.T)`
-- Exported: `true`
-- Control-flow features: `none detected`
-
-### Test_headerTableRenderer_Layout
-- Signature: `func Test_headerTableRenderer_Layout(t *testing.T)`
+### TestHeaderTable_CreateRenderer
+- Signature: `func TestHeaderTable_CreateRenderer(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `none detected`
 
@@ -69,8 +52,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 
-### Test_headerTableRenderer_Objects
-- Signature: `func Test_headerTableRenderer_Objects(t *testing.T)`
+### Test_headerTableRenderer_Layout
+- Signature: `func Test_headerTableRenderer_Layout(t *testing.T)`
+- Exported: `true`
+- Control-flow features: `none detected`
+
+### Test_headerTableRenderer_Destroy
+- Signature: `func Test_headerTableRenderer_Destroy(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `none detected`
 
@@ -78,6 +66,18 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func Test_headerTableRenderer_Refresh(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `none detected`
+
+### Test_headerTableRenderer_Objects
+- Signature: `func Test_headerTableRenderer_Objects(t *testing.T)`
+- Exported: `true`
+- Control-flow features: `none detected`
+
+### TestHeaderTable
+- Signature: `func TestHeaderTable(t *testing.T)`
+- Exported: `true`
+- Control-flow features: `for/range`
+- Internal calls: `NewHeaderTable`
+- Selector calls: `binding.BindStruct`, `test.NewApp`, `assert.Equal`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

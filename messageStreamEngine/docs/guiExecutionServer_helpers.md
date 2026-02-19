@@ -48,13 +48,28 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Internal calls: `initiatePubSubFunctionality`
 - Selector calls: `messageStreamEngineObject.startCommandChannelReader`
 
+### setConnectionToFenixGuiExecutionMessageServer (method on `*MessageStreamEngineStruct`)
+- Signature: `func (*MessageStreamEngineStruct) setConnectionToFenixGuiExecutionMessageServer(ctx context.Context) (_ context.Context, err error)`
+- Exported: `false`
+- Control-flow features: `if, for/range, returns error`
+- Doc: SetConnectionToFenixExecutionWorkerServer - Set upp connection and Dial to FenixExecutionServer
+- Internal calls: `dialFromGrpcurl`
+- Selector calls: `grpc.Dial`, `grpc.WithInsecure`, `fenixExecutionServerGuiGrpcApi.NewFenixExecutionServerGuiGrpcServicesForGuiClientClient`, `time.Sleep`, `time.Duration`
+
+### dialFromGrpcurl
+- Signature: `func dialFromGrpcurl(ctx context.Context, target string) (context.Context, *grpc.ClientConn)`
+- Exported: `false`
+- Control-flow features: `if, defer`
+- Internal calls: `cancel`, `isUnixSocket`
+- Selector calls: `context.WithTimeout`, `credentials.NewTLS`, `grpc.WithUserAgent`, `grpcurl.BlockingDial`, `log.Panicln`, `err.Error`
+
 ### MetadataFromHeaders
 - Signature: `func MetadataFromHeaders(headers []string) metadata.MD`
 - Exported: `true`
 - Control-flow features: `if, for/range`
 - Doc: MetadataFromHeaders converts a list of header strings (each string in "Header-Name: Header-Value" form) into metadata. If a string has a header
 - Internal calls: `decode`
-- Selector calls: `strings.HasSuffix`, `strings.SplitN`, `strings.ToLower`, `strings.TrimSpace`
+- Selector calls: `strings.SplitN`, `strings.ToLower`, `strings.TrimSpace`, `strings.HasSuffix`
 
 ### decode
 - Signature: `func decode(val string) (string, error)`
@@ -62,21 +77,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, returns error`
 - Internal calls: `string`
 - Selector calls: `d.DecodeString`
-
-### dialFromGrpcurl
-- Signature: `func dialFromGrpcurl(ctx context.Context, target string) (context.Context, *grpc.ClientConn)`
-- Exported: `false`
-- Control-flow features: `if, defer`
-- Internal calls: `cancel`, `isUnixSocket`
-- Selector calls: `context.WithTimeout`, `credentials.NewTLS`, `err.Error`, `grpc.WithUserAgent`, `grpcurl.BlockingDial`, `log.Panicln`
-
-### setConnectionToFenixGuiExecutionMessageServer (method on `*MessageStreamEngineStruct`)
-- Signature: `func (*MessageStreamEngineStruct) setConnectionToFenixGuiExecutionMessageServer(ctx context.Context) (_ context.Context, err error)`
-- Exported: `false`
-- Control-flow features: `if, for/range, returns error`
-- Doc: SetConnectionToFenixExecutionWorkerServer - Set upp connection and Dial to FenixExecutionServer
-- Internal calls: `dialFromGrpcurl`
-- Selector calls: `fenixExecutionServerGuiGrpcApi.NewFenixExecutionServerGuiGrpcServicesForGuiClientClient`, `grpc.Dial`, `grpc.WithInsecure`, `time.Duration`, `time.Sleep`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

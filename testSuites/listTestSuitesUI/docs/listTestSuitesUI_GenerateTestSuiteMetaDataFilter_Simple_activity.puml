@@ -2,53 +2,53 @@
 title Activity Diagram - listTestSuitesUI_GenerateTestSuiteMetaDataFilter_Simple.go
 start
 :Load testSuites/listTestSuitesUI/listTestSuitesUI_GenerateTestSuiteMetaDataFilter_Simple.go;
-:1. ConvertMetaDataToNewMap [method on *ListTestSuiteUIStruct];
+:1. generateSimpleTestSuiteMetaDataFilterContainer [method on *ListTestSuiteUIStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:2. buildGUIFromMetaDataGroupsMap [method on *ListTestSuiteUIStruct];
+:2. generateSimpleTestSuiteMetaDataDomainFilterTopContainer [method on *ListTestSuiteUIStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:3. calcCheckGroupWidth [method on *ListTestSuiteUIStruct];
-:4. calcSelectWidth [method on *ListTestSuiteUIStruct];
+:3. generateSimpleTestSuiteMetaDataDomainFilterBottomContainer [method on *ListTestSuiteUIStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. generateSimpleTestSuiteMetaDataMainFilterContainer [method on *ListTestSuiteUIStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:5. buildGUIFromMetaDataGroupsMap [method on *ListTestSuiteUIStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:5. generateSimpleTestSuiteMetaDataDomainFilterBottomContainer [method on *ListTestSuiteUIStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:6. generateSimpleTestSuiteMetaDataDomainFilterTopContainer [method on *ListTestSuiteUIStruct];
+:6. calcSelectWidth [method on *ListTestSuiteUIStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:7. generateSimpleTestSuiteMetaDataFilterContainer [method on *ListTestSuiteUIStruct];
+:7. calcCheckGroupWidth [method on *ListTestSuiteUIStruct];
+:8. ConvertMetaDataToNewMap [method on *ListTestSuiteUIStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:8. generateSimpleTestSuiteMetaDataMainFilterContainer [method on *ListTestSuiteUIStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
 stop
 @enduml

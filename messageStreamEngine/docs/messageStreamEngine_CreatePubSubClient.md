@@ -37,7 +37,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func creatNewPubSubClient(ctx context.Context) (pubSubClient *pubsub.Client, err error)`
 - Exported: `false`
 - Control-flow features: `if, returns error`
-- Selector calls: `credentials.NewTLS`, `errors.New`, `grpc.WithTransportCredentials`, `option.WithGRPCDialOption`, `pubsub.NewClient`
+- Selector calls: `errors.New`, `credentials.NewTLS`, `grpc.WithTransportCredentials`, `pubsub.NewClient`, `option.WithGRPCDialOption`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

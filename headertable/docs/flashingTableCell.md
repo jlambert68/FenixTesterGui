@@ -50,23 +50,24 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - `headerBackgroundRectangleBaseColor`
 
 ## Functions and Methods
-### CreateRenderer (method on `*FlashingTableCellStruct`)
-- Signature: `func (*FlashingTableCellStruct) CreateRenderer() fyne.WidgetRenderer`
+### Tapped (method on `*FlashingTableCellStruct`)
+- Signature: `func (*FlashingTableCellStruct) Tapped(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `none detected`
-- Selector calls: `container.NewMax`
+- Selector calls: `fmt.Println`
 
-### Destroy (method on `*flashingTableCellRenderer`)
-- Signature: `func (*flashingTableCellRenderer) Destroy()`
+### TappedSecondary (method on `*FlashingTableCellStruct`)
+- Signature: `func (*FlashingTableCellStruct) TappedSecondary(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `none detected`
+- Selector calls: `fmt.Println`
 
 ### DoubleTapped (method on `*FlashingTableCellStruct`)
 - Signature: `func (*FlashingTableCellStruct) DoubleTapped(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `if`
 - Internal calls: `string`
-- Selector calls: `detailedExecutionsModel.RemoveTestCaseExecutionFromSummaryTable`, `detailedExecutionsModel.RetrieveSingleTestCaseExecution`, `fmt.Println`
+- Selector calls: `detailedExecutionsModel.RetrieveSingleTestCaseExecution`, `detailedExecutionsModel.RemoveTestCaseExecutionFromSummaryTable`, `fmt.Println`
 
 ### FlashAddedRow
 - Signature: `func FlashAddedRow(flashingTableCell *FlashingTableCellStruct)`
@@ -80,24 +81,25 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `go`
 - Selector calls: `canvas.NewColorRGBAAnimation`, `canvas.Refresh`, `rectangleColorAnimation.Start`
 
-### Layout (method on `*flashingTableCellRenderer`)
-- Signature: `func (*flashingTableCellRenderer) Layout(size fyne.Size)`
+### NewFlashingTableCell
+- Signature: `func NewFlashingTableCell(text string) *FlashingTableCellStruct`
 - Exported: `true`
 - Control-flow features: `none detected`
+- Selector calls: `widget.NewLabel`, `canvas.NewRectangle`, `canvas.NewImageFromResource`, `newFlashingTableCell.ExtendBaseWidget`
+
+### CreateRenderer (method on `*FlashingTableCellStruct`)
+- Signature: `func (*FlashingTableCellStruct) CreateRenderer() fyne.WidgetRenderer`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Selector calls: `container.NewMax`
 
 ### MinSize (method on `*flashingTableCellRenderer`)
 - Signature: `func (*flashingTableCellRenderer) MinSize() fyne.Size`
 - Exported: `true`
 - Control-flow features: `none detected`
 
-### NewFlashingTableCell
-- Signature: `func NewFlashingTableCell(text string) *FlashingTableCellStruct`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Selector calls: `canvas.NewImageFromResource`, `canvas.NewRectangle`, `newFlashingTableCell.ExtendBaseWidget`, `widget.NewLabel`
-
-### Objects (method on `*flashingTableCellRenderer`)
-- Signature: `func (*flashingTableCellRenderer) Objects() []fyne.CanvasObject`
+### Layout (method on `*flashingTableCellRenderer`)
+- Signature: `func (*flashingTableCellRenderer) Layout(size fyne.Size)`
 - Exported: `true`
 - Control-flow features: `none detected`
 
@@ -106,17 +108,15 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 
-### Tapped (method on `*FlashingTableCellStruct`)
-- Signature: `func (*FlashingTableCellStruct) Tapped(_ *fyne.PointEvent)`
+### Objects (method on `*flashingTableCellRenderer`)
+- Signature: `func (*flashingTableCellRenderer) Objects() []fyne.CanvasObject`
 - Exported: `true`
 - Control-flow features: `none detected`
-- Selector calls: `fmt.Println`
 
-### TappedSecondary (method on `*FlashingTableCellStruct`)
-- Signature: `func (*FlashingTableCellStruct) TappedSecondary(_ *fyne.PointEvent)`
+### Destroy (method on `*flashingTableCellRenderer`)
+- Signature: `func (*flashingTableCellRenderer) Destroy()`
 - Exported: `true`
 - Control-flow features: `none detected`
-- Selector calls: `fmt.Println`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

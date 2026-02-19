@@ -39,7 +39,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, returns error`
 - Doc: Generate the TestData-table Area for the TestCase
 - Internal calls: `getTestGroupsFromTestDataEngineFunction`, `testDataPointsToStringSliceFunction`, `testDataRowSliceToStringSliceFunction`
-- Selector calls: `container.New`, `container.NewBorder`, `container.NewHBox`, `container.NewVBox`, `layout.NewFormLayout`, `selectorAndButtonContainer.Refresh`, `testDataPointGroupsSelectInMainTestCaseArea.Refresh`, `testDataPointGroupsSelectInMainTestCaseArea.SetOptions`
+- Selector calls: `container.New`, `layout.NewFormLayout`, `widget.NewSelect`, `testDataPointsForAGroupSelectInMainTestCaseArea.SetOptions`, `testDataPointsForAGroupSelectInMainTestCaseArea.Refresh`, `testDataPointsForAGroupSelectInMainTestCaseArea.ClearSelected`, `testDataRowsForTestDataPointsSelectInMainTestCaseArea.SetOptions`, `testDataRowsForTestDataPointsSelectInMainTestCaseArea.Refresh`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

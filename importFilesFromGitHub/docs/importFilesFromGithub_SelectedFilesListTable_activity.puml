@@ -2,43 +2,43 @@
 title Activity Diagram - importFilesFromGithub_SelectedFilesListTable.go
 start
 :Load importFilesFromGitHub/importFilesFromGithub_SelectedFilesListTable.go;
-:1. MouseIn [method on *customLabel];
-:2. MouseIn [method on *clickableLabel];
+:1. newClickableLabel [method on *ImportFilesFromGitHubStruct];
+:2. Tapped [method on *clickableLabel];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:3. MouseMoved [method on *customLabel];
-:4. MouseMoved [method on *clickableLabel];
-:5. MouseOut [method on *customLabel];
+:3. TappedSecondary [method on *clickableLabel];
+:4. MouseIn [method on *clickableLabel];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:5. MouseMoved [method on *clickableLabel];
 :6. MouseOut [method on *clickableLabel];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:7. Tapped [method on *customLabel];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:8. Tapped [method on *clickableLabel];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:9. TappedSecondary [method on *customLabel];
-:10. TappedSecondary [method on *clickableLabel];
-:11. UpdateSelectedFilesTable [method on *ImportFilesFromGitHubStruct];
+:7. generateSelectedFilesListTable [method on *ImportFilesFromGitHubStruct];
+:8. UpdateSelectedFilesTable [method on *ImportFilesFromGitHubStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:12. generateSelectedFilesListTable [method on *ImportFilesFromGitHubStruct];
+:9. newCustomLabel [method on *ImportFilesFromGitHubStruct];
+:10. Tapped [method on *customLabel];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:11. TappedSecondary [method on *customLabel];
+:12. MouseIn [method on *customLabel];
 stop
 @enduml

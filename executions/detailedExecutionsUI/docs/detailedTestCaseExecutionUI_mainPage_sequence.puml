@@ -2,17 +2,17 @@
 title Sequence Diagram - detailedTestCaseExecutionUI_mainPage.go
 actor Caller
 participant "detailedTestCaseExecutionUI_mainPage.go" as File
+participant "detailedTestCaseExecutionsUIObject" as detailedTestCaseExecutionsUIObject
+participant "container" as container
+participant "layout" as layout
+participant "detailedExecutionsModel" as detailedExecutionsModel
 participant "DetailedTestCaseExecutionsUIObject" as DetailedTestCaseExecutionsUIObject
 participant "canvas" as canvas
-participant "container" as container
-participant "detailedExecutionsModel" as detailedExecutionsModel
-participant "detailedTestCaseExecutionsUIObject" as detailedTestCaseExecutionsUIObject
-participant "layout" as layout
 Caller -> File: CreateDetailedTestCaseExecutionsTabPage(...)
 activate File
-File -> container: New(...)
-File -> detailedTestCaseExecutionsUIObject: generateExecutionColorPalette(...)
 File -> detailedTestCaseExecutionsUIObject: generateTestCasesSummaryTable(...)
+File -> container: New(...)
+File -> layout: NewVBoxLayout(...)
 File --> Caller: return
 deactivate File
 Caller -> File: GenerateExecutionColorPalette(...)

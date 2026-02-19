@@ -2,25 +2,25 @@
 title Activity Diagram - availableBuildingBlockTree_model_test.go
 start
 :Load gui/availableBuildingBlockTree_model_test.go;
-:1. TestThatAlreadyPinnedBuildingBlockNotCanBePinned;
+:1. TestThatNonExistingBuildBlockCanBePinned;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:2. TestThatNonExistingBuildBlockCanBePinned;
+:2. TestThatAlreadyPinnedBuildingBlockNotCanBePinned;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:3. TestThatNonExistingBuildingBlockCanNotBeUnPinned;
+:3. TestToPinBuildingBlockCanBePinned;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:4. TestToPinBuildingBlockCanBePinned;
+:4. TestThatNonExistingBuildingBlockCanNotBeUnPinned;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

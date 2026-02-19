@@ -31,7 +31,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `none detected`
 - Doc: Generate the button that cancel everything and closes the window
-- Selector calls: `fenixMainWindow.Show`, `parentWindow.Close`, `widget.NewButton`
+- Selector calls: `widget.NewButton`, `fenixMainWindow.Show`, `parentWindow.Close`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

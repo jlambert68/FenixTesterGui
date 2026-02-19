@@ -2,12 +2,12 @@
 title Activity Diagram - newOrEditTestDataPointGroupUI_AvailableTestDataComponent.go
 start
 :Load testDataSelector/newOrEditTestDataPointGroupUI/newOrEditTestDataPointGroupUI_AvailableTestDataComponent.go;
-:1. filterToRemoveNumberOfSimilarTestDataPointsInName;
+:1. generateAllAvailablePointsListUIComponent;
+:2. filterToRemoveNumberOfSimilarTestDataPointsInName;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:2. generateAllAvailablePointsListUIComponent;
 stop
 @enduml

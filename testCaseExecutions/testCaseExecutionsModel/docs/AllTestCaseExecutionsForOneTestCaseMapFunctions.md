@@ -30,13 +30,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - `allTestCaseExecutionsMapMutex`
 
 ## Functions and Methods
-### AddTestCaseExecutionsForOneTestCaseUuid
-- Signature: `func AddTestCaseExecutionsForOneTestCaseUuid(testCaseExecutionsModelRef *TestCaseExecutionsModelStruct, testCaseUuidMapKey TestCaseUuidType, testCaseExecutionUuidMapKey TestCaseExecutionUuidType, testCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage, latestUniqueTestCaseExecutionDatabaseRowId int32, moreRowsExists bool)`
-- Exported: `true`
-- Control-flow features: `if, defer`
-- Doc: AddTestCaseExecutionsForOneTestCaseUuid Add a TestCaseExecution to the map for TestCaseExecutions per TestCaseUuid
-- Selector calls: `allTestCaseExecutionsMapMutex.Lock`, `allTestCaseExecutionsMapMutex.Unlock`
-
 ### GetAllTestCaseExecutionsForOneTestCaseUuid (method on `TestCaseExecutionsModelStruct`)
 - Signature: `func (TestCaseExecutionsModelStruct) GetAllTestCaseExecutionsForOneTestCaseUuid(testCaseUuidMapKey TestCaseUuidType) (tempTestCaseExecutionsList *[]*fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage, existInMap bool)`
 - Exported: `true`
@@ -50,6 +43,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, defer`
 - Doc: GetSpecificTestCaseExecutionForOneTestCaseUuid Get one specific TestCaseExecutions for one TestCaseUuid
 - Selector calls: `allTestCaseExecutionsMapMutex.RLock`, `allTestCaseExecutionsMapMutex.RUnlock`
+
+### AddTestCaseExecutionsForOneTestCaseUuid
+- Signature: `func AddTestCaseExecutionsForOneTestCaseUuid(testCaseExecutionsModelRef *TestCaseExecutionsModelStruct, testCaseUuidMapKey TestCaseUuidType, testCaseExecutionUuidMapKey TestCaseExecutionUuidType, testCaseExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestCaseExecutionsListMessage, latestUniqueTestCaseExecutionDatabaseRowId int32, moreRowsExists bool)`
+- Exported: `true`
+- Control-flow features: `if, defer`
+- Doc: AddTestCaseExecutionsForOneTestCaseUuid Add a TestCaseExecution to the map for TestCaseExecutions per TestCaseUuid
+- Selector calls: `allTestCaseExecutionsMapMutex.Lock`, `allTestCaseExecutionsMapMutex.Unlock`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

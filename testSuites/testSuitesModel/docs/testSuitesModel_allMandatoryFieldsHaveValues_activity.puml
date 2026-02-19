@@ -8,14 +8,14 @@ if (branch or error path?) then (yes)
 else (no)
 :Continue primary flow;
 endif
-:2. generateMandatoryMetaDataFieldsMap [method on *TestSuiteModelStruct];
+:2. verifyMandatoryFieldsForMetaData [method on *TestSuiteModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:3. verifyMandatoryFieldsForMetaData [method on *TestSuiteModelStruct];
+:3. generateMandatoryMetaDataFieldsMap [method on *TestSuiteModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

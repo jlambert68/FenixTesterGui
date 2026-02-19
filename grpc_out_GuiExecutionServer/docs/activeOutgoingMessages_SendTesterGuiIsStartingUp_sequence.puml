@@ -2,17 +2,17 @@
 title Sequence Diagram - activeOutgoingMessages_SendTesterGuiIsStartingUp.go
 actor Caller
 participant "activeOutgoingMessages_SendTesterGuiIsStartingUp.go" as File
-participant "context" as context
-participant "err" as err
 participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
+participant "context" as context
+participant "grpcOut" as grpcOut
+participant "err" as err
 participant "fenixGuiExecutionServerGrpcClient" as fenixGuiExecutionServerGrpcClient
 participant "fmt" as fmt
-participant "grpcOut" as grpcOut
 Caller -> File: SendTesterGuiIsStartingUp(...)
 activate File
+File -> fenixExecutionServerGuiGrpcApi: CurrentFenixExecutionGuiProtoFileVersionEnum(...)
 File -> context: Background(...)
-File -> context: WithTimeout(...)
-File -> err: Error(...)
+File -> grpcOut: setConnectionToFenixGuiExecutionMessageServer_new(...)
 File --> Caller: return
 deactivate File
 @enduml

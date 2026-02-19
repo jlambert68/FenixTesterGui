@@ -37,8 +37,8 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, returns error`
 - Doc: GenerateBuildNewTestSuiteUI Create the UI used for creating new TestSuites
-- Internal calls: `NewHoverableRect`, `generateRightSideBuildTestSuiteContainer`
-- Selector calls: `container.New`, `container.NewBorder`, `container.NewHSplit`, `container.NewVBox`, `err.Error`, `layout.NewStackLayout`, `leftCreateTestSuiteOverlay.Hide`, `newTestSuiteModel.GetTestSuiteUuid`
+- Internal calls: `generateRightSideBuildTestSuiteContainer`, `NewHoverableRect`
+- Selector calls: `newTestSuiteModel.GetTestSuiteUuid`, `testSuiteUiModel.generateLeftSideBuildTestSuiteContainer`, `container.NewVBox`, `widget.NewLabel`, `err.Error`, `leftCreateTestSuiteOverlay.Hide`, `rightCreateTestSuiteOverlay.Hide`, `container.New`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

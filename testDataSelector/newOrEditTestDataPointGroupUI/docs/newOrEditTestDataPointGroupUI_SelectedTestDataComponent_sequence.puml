@@ -2,19 +2,19 @@
 title Sequence Diagram - newOrEditTestDataPointGroupUI_SelectedTestDataComponent.go
 actor Caller
 participant "newOrEditTestDataPointGroupUI_SelectedTestDataComponent.go" as File
-participant "container" as container
-participant "fmt" as fmt
-participant "nameEntry" as nameEntry
-participant "nameStatusLabel" as nameStatusLabel
-participant "newOrEditTestDataPointGroupWindow" as newOrEditTestDataPointGroupWindow
-participant "saveButton" as saveButton
-participant "testDataEngine" as testDataEngine
 participant "widget" as widget
+participant "fmt" as fmt
+participant "testDataEngine" as testDataEngine
+participant "newOrEditTestDataPointGroupWindow" as newOrEditTestDataPointGroupWindow
+participant "nameEntry" as nameEntry
+participant "container" as container
+participant "nameStatusLabel" as nameStatusLabel
+participant "saveButton" as saveButton
 Caller -> File: generateSelectedPointsListUIComponent(...)
 activate File
-File -> container: NewBorder(...)
-File -> container: NewHBox(...)
-File -> container: NewVBox(...)
+File -> widget: NewList(...)
+File -> widget: NewLabel(...)
+File -> fmt: Sprintf(...)
 File --> Caller: return
 deactivate File
 Caller -> File: setStateForSaveButtonAndGroupNameTextEntry(...)

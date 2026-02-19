@@ -2,19 +2,19 @@
 title Sequence Diagram - testCaseUI_graphicalRepresentation_owerDomainForTestCase.go
 actor Caller
 participant "testCaseUI_graphicalRepresentation_owerDomainForTestCase.go" as File
-participant "canvas" as canvas
-participant "container" as container
 participant "errors" as errors
 participant "fmt" as fmt
+participant "container" as container
 participant "layout" as layout
-participant "log" as log
-participant "metaDataAccordion" as metaDataAccordion
-participant "newOwnerDomainSelect" as newOwnerDomainSelect
+participant "widget" as widget
+participant "testCaseOwnerDomainNameFormContainer" as testCaseOwnerDomainNameFormContainer
+participant "canvas" as canvas
+participant "testCasesUiCanvasObject" as testCasesUiCanvasObject
 Caller -> File: generateOwnerDomainForTestCaseArea(...)
 activate File
-File -> canvas: NewRectangle(...)
-File -> container: New(...)
-File -> container: NewVBox(...)
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> fmt: Println(...)
 File --> Caller: return
 deactivate File
 Caller -> File: setSelectedOwnerDomainForTestCaseArea(...)

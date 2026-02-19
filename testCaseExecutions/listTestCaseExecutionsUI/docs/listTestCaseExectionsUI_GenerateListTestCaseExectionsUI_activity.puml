@@ -2,20 +2,20 @@
 title Activity Diagram - listTestCaseExectionsUI_GenerateListTestCaseExectionsUI.go
 start
 :Load testCaseExecutions/listTestCaseExecutionsUI/listTestCaseExectionsUI_GenerateListTestCaseExectionsUI.go;
-:1. GenerateListTestCaseExecutionsUI;
+:1. LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Start goroutine/asynchronous work;
+:2. GenerateListTestCaseExecutionsUI;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:Start goroutine/asynchronous work;
-:2. LoadOneTestCaseExecutionPerTestCaseFromDataBaseFunction;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
 :Start goroutine/asynchronous work;
 :3. generatePreViewObject;
 stop

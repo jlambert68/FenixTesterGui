@@ -2,20 +2,20 @@
 title Sequence Diagram - listTestSuitesUI_HeaderLabel.go
 actor Caller
 participant "listTestSuitesUI_HeaderLabel.go" as File
-participant "container" as container
-participant "fmt" as fmt
-participant "listTestSuiteUI" as listTestSuiteUI
-participant "tempSortableHeaderLabel" as tempSortableHeaderLabel
 participant "widget" as widget
-Caller -> File: CreateRenderer(...)
-activate File
-File -> container: NewHBox(...)
-File -> container: NewStack(...)
-File -> widget: NewSimpleRenderer(...)
-File --> Caller: return
-deactivate File
+participant "fmt" as fmt
+participant "tempSortableHeaderLabel" as tempSortableHeaderLabel
+participant "listTestSuiteUI" as listTestSuiteUI
+participant "container" as container
 Caller -> File: Refresh(...)
 activate File
+File --> Caller: return
+deactivate File
+Caller -> File: CreateRenderer(...)
+activate File
+File -> container: NewStack(...)
+File -> container: NewHBox(...)
+File -> widget: NewSimpleRenderer(...)
 File --> Caller: return
 deactivate File
 @enduml

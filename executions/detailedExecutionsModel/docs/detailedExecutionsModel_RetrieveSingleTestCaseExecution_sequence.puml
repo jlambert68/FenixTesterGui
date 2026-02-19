@@ -2,14 +2,14 @@
 title Sequence Diagram - detailedExecutionsModel_RetrieveSingleTestCaseExecution.go
 actor Caller
 participant "detailedExecutionsModel_RetrieveSingleTestCaseExecution.go" as File
-participant "errors" as errors
+participant "strconv" as strconv
 participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
 participant "grpc_out_GuiExecutionServer" as grpc_out_GuiExecutionServer
-participant "strconv" as strconv
+participant "errors" as errors
 participant "time" as time
 Caller -> File: RetrieveSingleTestCaseExecution(...)
 activate File
-File -> errors: New(...)
+File -> strconv: Atoi(...)
 File -> fenixExecutionServerGuiGrpcApi: CurrentFenixExecutionGuiProtoFileVersionEnum(...)
 File -> grpc_out_GuiExecutionServer: GetHighestFenixGuiExecutionServerProtoFileVersion(...)
 File --> Caller: return

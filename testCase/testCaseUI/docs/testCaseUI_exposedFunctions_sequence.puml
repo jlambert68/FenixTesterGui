@@ -4,18 +4,18 @@ actor Caller
 participant "testCaseUI_exposedFunctions.go" as File
 participant "errors" as errors
 participant "fmt" as fmt
-participant "fyne" as fyne
 participant "testCasesUiCanvasObject" as testCasesUiCanvasObject
-Caller -> File: InitiateGraphicsUpdateChannelReader(...)
-activate File
-File -> testCasesUiCanvasObject: startGUICommandChannelReader(...)
-File --> Caller: return
-deactivate File
+participant "fyne" as fyne
 Caller -> File: UpdateGraphicalRepresentationForTestCase(...)
 activate File
 File -> errors: New(...)
 File -> fmt: Sprintf(...)
-File -> fyne: Do(...)
+File -> testCasesUiCanvasObject: generateGraphicalRepresentationAreaForTestCase(...)
+File --> Caller: return
+deactivate File
+Caller -> File: InitiateGraphicsUpdateChannelReader(...)
+activate File
+File -> testCasesUiCanvasObject: startGUICommandChannelReader(...)
 File --> Caller: return
 deactivate File
 @enduml

@@ -29,11 +29,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
-### CreateRenderer (method on `*sortableHeaderLabelStruct`)
-- Signature: `func (*sortableHeaderLabelStruct) CreateRenderer() fyne.WidgetRenderer`
-- Exported: `true`
+### newSortableHeaderLabel
+- Signature: `func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNumber int) *sortableHeaderLabelStruct`
+- Exported: `false`
 - Control-flow features: `none detected`
-- Selector calls: `container.NewHBox`, `container.NewStack`, `widget.NewSimpleRenderer`
+- Doc: Used for creating a new Header label
+- Internal calls: `newClickableSortImage`, `SortOrReverseSortGuiTable`, `uint8`
+- Selector calls: `widget.NewLabel`, `fmt.Println`, `tempSortableHeaderLabel.ExtendBaseWidget`
 
 ### Refresh (method on `*sortableHeaderLabelStruct`)
 - Signature: `func (*sortableHeaderLabelStruct) Refresh()`
@@ -41,13 +43,11 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Selector calls: `fyne.Do`
 
-### newSortableHeaderLabel
-- Signature: `func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNumber int) *sortableHeaderLabelStruct`
-- Exported: `false`
+### CreateRenderer (method on `*sortableHeaderLabelStruct`)
+- Signature: `func (*sortableHeaderLabelStruct) CreateRenderer() fyne.WidgetRenderer`
+- Exported: `true`
 - Control-flow features: `none detected`
-- Doc: Used for creating a new Header label
-- Internal calls: `SortOrReverseSortGuiTable`, `newClickableSortImage`, `uint8`
-- Selector calls: `fmt.Println`, `tempSortableHeaderLabel.ExtendBaseWidget`, `widget.NewLabel`
+- Selector calls: `container.NewStack`, `container.NewHBox`, `widget.NewSimpleRenderer`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

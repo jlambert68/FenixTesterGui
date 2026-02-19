@@ -38,11 +38,20 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - `isUnixSocket`
 
 ## Functions and Methods
-### GetHighestFenixGuiExecutionServerProtoFileVersion
-- Signature: `func GetHighestFenixGuiExecutionServerProtoFileVersion() int32`
-- Exported: `true`
-- Control-flow features: `if, for/range`
-- Doc: GetHighestFenixGuiServerProtoFileVersion ******************************************************************************************************************** Get the highest FenixProtoFileVersionEnumeration
+### setConnectionToFenixGuiExecutionMessageServer_new (method on `*GRPCOutGuiExecutionServerStruct`)
+- Signature: `func (*GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecutionMessageServer_new(ctx context.Context) (_ context.Context, err error)`
+- Exported: `false`
+- Control-flow features: `if, for/range, returns error`
+- Doc: SetConnectionToFenixExecutionWorkerServer - Set upp connection and Dial to FenixExecutionServer
+- Internal calls: `dialFromGrpcurl`
+- Selector calls: `gcp.GRPCDialer`, `grpc.Dial`, `grpc.WithInsecure`, `fenixExecutionServerGuiGrpcApi.NewFenixExecutionServerGuiGrpcServicesForGuiClientClient`, `time.Sleep`, `time.Duration`
+
+### dialFromGrpcurl
+- Signature: `func dialFromGrpcurl(ctx context.Context, target string) (context.Context, *grpc.ClientConn)`
+- Exported: `false`
+- Control-flow features: `if, defer`
+- Internal calls: `cancel`, `isUnixSocket`
+- Selector calls: `context.WithTimeout`, `credentials.NewTLS`, `grpc.WithUserAgent`, `grpcurl.BlockingDial`, `log.Panicln`, `err.Error`
 
 ### SetConnectionToFenixGuiExecutionServer (method on `*GRPCOutGuiExecutionServerStruct`)
 - Signature: `func (*GRPCOutGuiExecutionServerStruct) SetConnectionToFenixGuiExecutionServer() returnMessage *fenixExecutionServerGuiGrpcApi.AckNackResponse`
@@ -50,13 +59,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if`
 - Doc: Set upp connection and Dial to FenixGuiExecutionServer
 - Internal calls: `GetHighestFenixGuiExecutionServerProtoFileVersion`
-- Selector calls: `credentials.NewTLS`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `fenixExecutionServerGuiGrpcApi.NewFenixExecutionServerGuiGrpcServicesForGuiClientClient`, `grpc.Dial`, `grpc.WithInsecure`, `grpc.WithTransportCredentials`
+- Selector calls: `credentials.NewTLS`, `grpc.WithTransportCredentials`, `grpc.Dial`, `grpc.WithInsecure`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `fenixExecutionServerGuiGrpcApi.NewFenixExecutionServerGuiGrpcServicesForGuiClientClient`
 
-### SetDialAddressString (method on `*GRPCOutGuiExecutionServerStruct`)
-- Signature: `func (*GRPCOutGuiExecutionServerStruct) SetDialAddressString(dialAddress string)`
+### GetHighestFenixGuiExecutionServerProtoFileVersion
+- Signature: `func GetHighestFenixGuiExecutionServerProtoFileVersion() int32`
 - Exported: `true`
-- Control-flow features: `none detected`
-- Doc: SetDialAddressString Set the Dial Address, which was received from environment variables
+- Control-flow features: `if, for/range`
+- Doc: GetHighestFenixGuiServerProtoFileVersion ******************************************************************************************************************** Get the highest FenixProtoFileVersionEnumeration
 
 ### SetLogger (method on `*GRPCOutGuiExecutionServerStruct`)
 - Signature: `func (*GRPCOutGuiExecutionServerStruct) SetLogger(logger *logrus.Logger)`
@@ -64,20 +73,11 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Doc: SetLogger Set to use the same Logger reference as is used by central part of system
 
-### dialFromGrpcurl
-- Signature: `func dialFromGrpcurl(ctx context.Context, target string) (context.Context, *grpc.ClientConn)`
-- Exported: `false`
-- Control-flow features: `if, defer`
-- Internal calls: `cancel`, `isUnixSocket`
-- Selector calls: `context.WithTimeout`, `credentials.NewTLS`, `err.Error`, `grpc.WithUserAgent`, `grpcurl.BlockingDial`, `log.Panicln`
-
-### setConnectionToFenixGuiExecutionMessageServer_new (method on `*GRPCOutGuiExecutionServerStruct`)
-- Signature: `func (*GRPCOutGuiExecutionServerStruct) setConnectionToFenixGuiExecutionMessageServer_new(ctx context.Context) (_ context.Context, err error)`
-- Exported: `false`
-- Control-flow features: `if, for/range, returns error`
-- Doc: SetConnectionToFenixExecutionWorkerServer - Set upp connection and Dial to FenixExecutionServer
-- Internal calls: `dialFromGrpcurl`
-- Selector calls: `fenixExecutionServerGuiGrpcApi.NewFenixExecutionServerGuiGrpcServicesForGuiClientClient`, `gcp.GRPCDialer`, `grpc.Dial`, `grpc.WithInsecure`, `time.Duration`, `time.Sleep`
+### SetDialAddressString (method on `*GRPCOutGuiExecutionServerStruct`)
+- Signature: `func (*GRPCOutGuiExecutionServerStruct) SetDialAddressString(dialAddress string)`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Doc: SetDialAddressString Set the Dial Address, which was received from environment variables
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

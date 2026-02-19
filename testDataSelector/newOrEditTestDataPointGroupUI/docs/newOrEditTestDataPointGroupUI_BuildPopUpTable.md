@@ -33,7 +33,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range`
 - Doc: Build the Table Data, based on TestDataPointName, to be used when the popup table is shown to the user to pick from
 - Internal calls: `string`
-- Selector calls: `fmt.Println`, `re.FindStringSubmatch`, `regexp.MustCompile`, `testDataEngine.TestDataAreaUuidType`, `testDataEngine.TestDataDomainOrAreaNameType`, `testDataEngine.TestDataDomainUuidType`, `testDataEngine.TestDataValueNameType`
+- Selector calls: `regexp.MustCompile`, `re.FindStringSubmatch`, `fmt.Println`, `testDataEngine.TestDataDomainOrAreaNameType`, `testDataEngine.TestDataDomainUuidType`, `testDataEngine.TestDataAreaUuidType`, `testDataEngine.TestDataValueNameType`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

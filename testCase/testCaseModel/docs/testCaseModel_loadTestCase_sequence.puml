@@ -2,18 +2,18 @@
 title Sequence Diagram - testCaseModel_loadTestCase.go
 actor Caller
 participant "testCaseModel_loadTestCase.go" as File
-participant "detailedTestCaseResponse" as detailedTestCaseResponse
 participant "errors" as errors
 participant "fmt" as fmt
-participant "tempMetaDataGroupFromGrpc" as tempMetaDataGroupFromGrpc
-participant "testCaseModel" as testCaseModel
+participant "detailedTestCaseResponse" as detailedTestCaseResponse
 participant "testDataEngine" as testDataEngine
 participant "testDataPointRowValueSummaryGrpc" as testDataPointRowValueSummaryGrpc
 participant "testDataRowGrpc" as testDataRowGrpc
+participant "tempMetaDataGroupFromGrpc" as tempMetaDataGroupFromGrpc
+participant "testCaseModel" as testCaseModel
 Caller -> File: LoadFullTestCaseFromDatabase(...)
 activate File
-File -> detailedTestCaseResponse: GetDetailedTestCase(...)
 File -> errors: New(...)
+File -> fmt: Sprintf(...)
 File -> fmt: Println(...)
 File --> Caller: return
 deactivate File

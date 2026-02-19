@@ -2,33 +2,33 @@
 title Sequence Diagram - testCaseUI_graphicalRepresentation_tree.go
 actor Caller
 participant "testCaseUI_graphicalRepresentation_tree.go" as File
-participant "canvas" as canvas
-participant "container" as container
+participant "widget" as widget
 participant "err" as err
-participant "errors" as errors
+participant "container" as container
+participant "testCasesUiCanvasObject" as testCasesUiCanvasObject
+participant "sharedCode" as sharedCode
 participant "fmt" as fmt
-participant "fyne" as fyne
-participant "layout" as layout
-participant "newBondBelongingRectangle" as newBondBelongingRectangle
+participant "canvas" as canvas
+participant "newIndentationRectangle" as newIndentationRectangle
+Caller -> File: makeTestCaseGraphicalUIObject(...)
+activate File
+File -> widget: NewLabel(...)
+File -> err: Error(...)
+File -> container: NewVBox(...)
+File --> Caller: return
+deactivate File
+Caller -> File: recursiveMakeTestCaseGraphicalUIObject(...)
+activate File
+File -> sharedCode: GenerateShortUuidFromFullUuid(...)
+File -> fmt: Sprintf(...)
+File -> testCasesUiCanvasObject: convertRGBAHexStringIntoRGBAColor(...)
+File --> Caller: return
+deactivate File
 Caller -> File: convertRGBAHexStringIntoRGBAColor(...)
 activate File
 File -> errors: New(...)
 File -> fmt: Sprintf(...)
 File -> strconv: ParseInt(...)
-File --> Caller: return
-deactivate File
-Caller -> File: makeTestCaseGraphicalUIObject(...)
-activate File
-File -> container: NewVBox(...)
-File -> err: Error(...)
-File -> testCasesUiCanvasObject: recursiveMakeTestCaseGraphicalUIObject(...)
-File --> Caller: return
-deactivate File
-Caller -> File: recursiveMakeTestCaseGraphicalUIObject(...)
-activate File
-File -> canvas: NewRectangle(...)
-File -> container: NewHBox(...)
-File -> container: NewStack(...)
 File --> Caller: return
 deactivate File
 @enduml

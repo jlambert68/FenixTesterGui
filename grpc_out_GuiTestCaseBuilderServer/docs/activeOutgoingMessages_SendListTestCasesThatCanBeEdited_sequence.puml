@@ -3,15 +3,15 @@ title Sequence Diagram - activeOutgoingMessages_SendListTestCasesThatCanBeEdited
 actor Caller
 participant "activeOutgoingMessages_SendListTestCasesThatCanBeEdited.go" as File
 participant "context" as context
+participant "grpcOut" as grpcOut
 participant "err" as err
 participant "fenixGuiTestCaseBuilderServerGrpcApi" as fenixGuiTestCaseBuilderServerGrpcApi
-participant "fenixGuiTestCaseCaseBuilderServerGrpcClient" as fenixGuiTestCaseCaseBuilderServerGrpcClient
-participant "grpcOut" as grpcOut
 participant "timestamppb" as timestamppb
+participant "fenixGuiTestCaseCaseBuilderServerGrpcClient" as fenixGuiTestCaseCaseBuilderServerGrpcClient
 Caller -> File: ListTestCasesThatCanBeEditedResponseMessage(...)
 activate File
 File -> context: Background(...)
-File -> context: WithTimeout(...)
+File -> grpcOut: setConnectionToFenixGuiTestCaseBuilderServer_new(...)
 File -> err: Error(...)
 File --> Caller: return
 deactivate File

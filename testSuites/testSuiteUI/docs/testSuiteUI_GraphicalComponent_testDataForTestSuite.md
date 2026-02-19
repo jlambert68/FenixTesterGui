@@ -39,8 +39,8 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, for/range, switch, returns error`
 - Doc: Generate the TestData-table Area for the TestSuite
-- Internal calls: `generateTestDataAsRichTextFunction`, `getTestGroupsFromTestDataEngineFunction`, `testDataPointsToStringSliceFunction`, `testDataRowSliceToStringSliceFunction`
-- Selector calls: `container.New`, `container.NewBorder`, `container.NewHBox`, `container.NewVBox`, `fmt.Sprintf`, `generateRichTextTestDataRadioGroup.SetSelected`, `layout.NewFormLayout`, `log.Fatalln`
+- Internal calls: `getTestGroupsFromTestDataEngineFunction`, `testDataPointsToStringSliceFunction`, `testDataRowSliceToStringSliceFunction`, `generateTestDataAsRichTextFunction`
+- Selector calls: `container.New`, `layout.NewFormLayout`, `container.NewVBox`, `testDataContainer.Add`, `widget.NewSelect`, `testDataPointsForAGroupSelect.SetOptions`, `testDataPointsForAGroupSelect.Refresh`, `testDataPointsForAGroupSelect.ClearSelected`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

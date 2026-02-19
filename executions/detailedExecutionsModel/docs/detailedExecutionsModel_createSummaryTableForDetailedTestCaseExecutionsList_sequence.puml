@@ -2,26 +2,26 @@
 title Sequence Diagram - detailedExecutionsModel_createSummaryTableForDetailedTestCaseExecutionsList.go
 actor Caller
 participant "detailedExecutionsModel_createSummaryTableForDetailedTestCaseExecutionsList.go" as File
-participant "b" as b
-participant "canvas" as canvas
-participant "container" as container
 participant "errors" as errors
 participant "fmt" as fmt
+participant "canvas" as canvas
+participant "container" as container
 participant "layout" as layout
-participant "log" as log
-participant "mySpaceButton" as mySpaceButton
+participant "testcaseExecutionsSummaryTableContainer" as testcaseExecutionsSummaryTableContainer
+participant "testCaseRow" as testCaseRow
+participant "testInstructionsForTestCase" as testInstructionsForTestCase
 Caller -> File: CreateSummaryTableForDetailedTestCaseExecutionsList(...)
 activate File
-File -> canvas: NewRectangle(...)
-File -> container: New(...)
+File -> layout: NewVBoxLayout(...)
+File -> testcaseExecutionsSummaryTableContainer: Add(...)
 File -> layout: NewHBoxLayout(...)
 File --> Caller: return
 deactivate File
 Caller -> File: MouseIn(...)
 activate File
-File -> b: Refresh(...)
-File -> b: SetText(...)
 File -> fmt: Println(...)
+File -> b: SetText(...)
+File -> b: Refresh(...)
 File --> Caller: return
 deactivate File
 Caller -> File: MouseMoved(...)
@@ -30,9 +30,9 @@ File --> Caller: return
 deactivate File
 Caller -> File: MouseOut(...)
 activate File
-File -> b: Refresh(...)
-File -> b: SetText(...)
 File -> fmt: Println(...)
+File -> b: SetText(...)
+File -> b: Refresh(...)
 File --> Caller: return
 deactivate File
 @enduml

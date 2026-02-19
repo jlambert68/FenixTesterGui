@@ -7,9 +7,9 @@ participant "listTestCaseUIObject" as listTestCaseUIObject
 participant "widget" as widget
 Caller -> File: GenerateTestCaseMetaDataFilterContainer(...)
 activate File
-File -> container: NewAppTabs(...)
 File -> container: NewTabItem(...)
 File -> listTestCaseUIObject: generateSimpleTestCaseMetaDataFilterContainer(...)
+File -> widget: NewLabel(...)
 File --> Caller: return
 deactivate File
 @enduml

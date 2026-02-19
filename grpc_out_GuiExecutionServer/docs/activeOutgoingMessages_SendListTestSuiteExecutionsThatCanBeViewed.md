@@ -37,7 +37,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, defer`
 - Doc: SendListTestSuiteExecutionsThatCanBeViewed - List all TestSuiteExecutions that can be views, used for producing a list that the user has access to
 - Internal calls: `GetHighestFenixGuiExecutionServerProtoFileVersion`, `cancel`
-- Selector calls: `context.Background`, `context.WithTimeout`, `err.Error`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `fenixGuiExecutionServerGrpcClient.ListTestSuiteExecutions`, `grpcOut.setConnectionToFenixGuiExecutionMessageServer_new`, `timestamppb.New`
+- Selector calls: `context.Background`, `grpcOut.setConnectionToFenixGuiExecutionMessageServer_new`, `err.Error`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `timestamppb.New`, `context.WithTimeout`, `fenixGuiExecutionServerGrpcClient.ListTestSuiteExecutions`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

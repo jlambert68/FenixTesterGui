@@ -3,50 +3,50 @@ title Sequence Diagram - commandEngine_executeCommandsOnTestCaseModel_test.go
 actor Caller
 participant "commandEngine_executeCommandsOnTestCaseModel_test.go" as File
 participant "UnitTestTestData" as UnitTestTestData
-participant "assert" as assert
 participant "commandAndRuleEngine" as commandAndRuleEngine
+participant "assert" as assert
 participant "fmt" as fmt
 participant "strconv" as strconv
 participant "uuidGenerator" as uuidGenerator
-Caller -> File: TestCopyElementCommandOnTestCaseModel(...)
-activate File
-File -> UnitTestTestData: InitLoggerForTest(...)
-File -> assert: Equal(...)
-File -> commandAndRuleEngine: executeCommandOnTestCaseModel_CopyElementInTestCaseModel(...)
-File --> Caller: return
-deactivate File
 Caller -> File: TestNewTestCaseModelCommand(...)
 activate File
 File -> UnitTestTestData: InitLoggerForTest(...)
-File -> assert: Equal(...)
 File -> commandAndRuleEngine: executeCommandOnTestCaseModel_NewTestCaseModel(...)
+File -> assert: Equal(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TestRemoveElementCommandOnTestCaseModel(...)
 activate File
 File -> UnitTestTestData: InitLoggerForTest(...)
-File -> assert: Equal(...)
+File -> uuidGenerator: New(...)
 File -> commandAndRuleEngine: executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TestSwapElementCommandOnTestCaseModel(...)
 activate File
 File -> UnitTestTestData: InitLoggerForTest(...)
-File -> assert: Equal(...)
+File -> uuidGenerator: New(...)
 File -> commandAndRuleEngine: executeCommandOnTestCaseModel_SwapOutElemenAndInNewElementInTestCaseModel(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestCopyElementCommandOnTestCaseModel(...)
+activate File
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> uuidGenerator: New(...)
+File -> commandAndRuleEngine: executeCommandOnTestCaseModel_CopyElementInTestCaseModel(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TestSwapElementFromCopyBufferCommandOnTestCaseModel(...)
 activate File
 File -> UnitTestTestData: InitLoggerForTest(...)
-File -> assert: Equal(...)
+File -> uuidGenerator: New(...)
 File -> commandAndRuleEngine: executeCommandOnTestCaseModel_CopyElementInTestCaseModel(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TestSwapElementFromCutBufferCommandOnTestCaseModel(...)
 activate File
 File -> UnitTestTestData: InitLoggerForTest(...)
-File -> assert: Equal(...)
+File -> uuidGenerator: New(...)
 File -> commandAndRuleEngine: executeCommandOnTestCaseModel_CutElementInTestCaseModel(...)
 File --> Caller: return
 deactivate File

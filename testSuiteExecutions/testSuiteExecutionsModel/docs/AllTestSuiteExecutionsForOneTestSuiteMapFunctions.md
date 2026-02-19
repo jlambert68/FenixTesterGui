@@ -30,13 +30,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - `allTestSuiteExecutionsMapMutex`
 
 ## Functions and Methods
-### AddTestSuiteExecutionsForOneTestSuiteUuid
-- Signature: `func AddTestSuiteExecutionsForOneTestSuiteUuid(testSuiteExecutionsModelRef *TestSuiteExecutionsModelStruct, testSuiteUuidMapKey TestSuiteUuidType, testSuiteExecutionUuidMapKey TestSuiteExecutionUuidType, testSuiteExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage, latestUniqueTestSuiteExecutionDatabaseRowId int32, moreRowsExists bool)`
-- Exported: `true`
-- Control-flow features: `if, defer`
-- Doc: AddTestSuiteExecutionsForOneTestSuiteUuid Add a TestSuiteExecution to the map for TestSuiteExecutions per TestSuiteUuid
-- Selector calls: `allTestSuiteExecutionsMapMutex.Lock`, `allTestSuiteExecutionsMapMutex.Unlock`
-
 ### GetAllTestSuiteExecutionsForOneTestSuiteUuid (method on `TestSuiteExecutionsModelStruct`)
 - Signature: `func (TestSuiteExecutionsModelStruct) GetAllTestSuiteExecutionsForOneTestSuiteUuid(testSuiteUuidMapKey TestSuiteUuidType) (tempTestSuiteExecutionsList *[]*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage, existInMap bool)`
 - Exported: `true`
@@ -50,6 +43,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, defer`
 - Doc: GetSpecificTestSuiteExecutionForOneTestSuiteUuid Get one specific TestSuiteExecutions for one TestSuiteUuid
 - Selector calls: `allTestSuiteExecutionsMapMutex.RLock`, `allTestSuiteExecutionsMapMutex.RUnlock`
+
+### AddTestSuiteExecutionsForOneTestSuiteUuid
+- Signature: `func AddTestSuiteExecutionsForOneTestSuiteUuid(testSuiteExecutionsModelRef *TestSuiteExecutionsModelStruct, testSuiteUuidMapKey TestSuiteUuidType, testSuiteExecutionUuidMapKey TestSuiteExecutionUuidType, testSuiteExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage, latestUniqueTestSuiteExecutionDatabaseRowId int32, moreRowsExists bool)`
+- Exported: `true`
+- Control-flow features: `if, defer`
+- Doc: AddTestSuiteExecutionsForOneTestSuiteUuid Add a TestSuiteExecution to the map for TestSuiteExecutions per TestSuiteUuid
+- Selector calls: `allTestSuiteExecutionsMapMutex.Lock`, `allTestSuiteExecutionsMapMutex.Unlock`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

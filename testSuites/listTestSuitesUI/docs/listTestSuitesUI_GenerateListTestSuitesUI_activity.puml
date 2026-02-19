@@ -2,13 +2,13 @@
 title Activity Diagram - listTestSuitesUI_GenerateListTestSuitesUI.go
 start
 :Load testSuites/listTestSuitesUI/listTestSuitesUI_GenerateListTestSuitesUI.go;
-:1. GenerateListTestSuitesUI [method on *ListTestSuiteUIStruct];
+:1. InitiateListTestSuiteUIObject;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:2. InitiateListTestSuiteUIObject;
+:2. GenerateListTestSuitesUI [method on *ListTestSuiteUIStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

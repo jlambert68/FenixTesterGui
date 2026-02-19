@@ -2,17 +2,17 @@
 title Sequence Diagram - helper_model_test_TestData.go
 actor Caller
 participant "helper_model_test_TestData.go" as File
-participant "fenixTestCaseBuilderServerGrpcApi" as fenixTestCaseBuilderServerGrpcApi
-participant "log" as log
 participant "logrus" as logrus
 participant "os" as os
+participant "log" as log
+participant "fenixTestCaseBuilderServerGrpcApi" as fenixTestCaseBuilderServerGrpcApi
 participant "protoFileExpected" as protoFileExpected
 participant "protoFileUsed" as protoFileUsed
 Caller -> File: InitLoggerForTest(...)
 activate File
-File -> log: Println(...)
-File -> logrus: SetFormatter(...)
+File -> logrus: StandardLogger(...)
 File -> logrus: SetLevel(...)
+File -> logrus: SetFormatter(...)
 File --> Caller: return
 deactivate File
 Caller -> File: IsTestDataUsingCorrectTestDataProtoFileVersion(...)

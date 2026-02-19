@@ -32,20 +32,20 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
-### IsTestCaseExecutionStatusAnEndStatus
-- Signature: `func IsTestCaseExecutionStatusAnEndStatus(testCaseExecutionStatus fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum) isTestCaseEndStatus bool`
-- Exported: `true`
-- Control-flow features: `switch`
-- Doc: Check of the TestCaseExecutionStatus is classified as an EndStatus
-
 ### processStatusUpdateOfDetailedExecutionsStatus (method on `*DetailedExecutionsModelObjectStruct`)
 - Signature: `func (*DetailedExecutionsModelObjectStruct) processStatusUpdateOfDetailedExecutionsStatus(testCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage *fenixExecutionServerGuiGrpcApi.
 	TestCaseExecutionsStatusAndTestInstructionExecutionsStatusMessage)`
 - Exported: `false`
 - Control-flow features: `if, for/range, defer`
 - Doc: Updates specific status information based on subscriptions updates from GuiExecutionServer
-- Internal calls: `IsTestCaseExecutionStatusAnEndStatus`, `int`, `int32`
-- Selector calls: `detailedExecutionsModelObject.updateTestCaseExecutionsSummaryTable`, `detailedExecutionsModelObject.updateTestInstructionExecutionsSummaryTable`, `errors.New`, `fmt.Println`, `fmt.Sprintf`, `strconv.Itoa`, `tempExecutionStatusUpdateTimeStampMapKey.After`, `tempExecutionStatusUpdateTimeStampMapKey.String`
+- Internal calls: `int`, `int32`, `IsTestCaseExecutionStatusAnEndStatus`
+- Selector calls: `strconv.Itoa`, `time.Sleep`, `errors.New`, `fmt.Sprintf`, `fmt.Println`, `tempTestCaseExecutionStatusMessage.GetTestCaseExecutionDetails`, `tempExecutionStatusUpdateTimeStampMapKey.String`, `tempExecutionStatusUpdateTimeStampMapKey.After`
+
+### IsTestCaseExecutionStatusAnEndStatus
+- Signature: `func IsTestCaseExecutionStatusAnEndStatus(testCaseExecutionStatus fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum) isTestCaseEndStatus bool`
+- Exported: `true`
+- Control-flow features: `switch`
+- Doc: Check of the TestCaseExecutionStatus is classified as an EndStatus
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

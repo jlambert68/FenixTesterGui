@@ -34,7 +34,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `returns error`
 - Doc: Generate the Graphical Representation Area for the TestCase
-- Selector calls: `canvas.NewRectangle`, `container.NewScroll`, `container.NewVBox`, `fyne.NewSize`, `myRectangle.SetMinSize`, `testCaseGraphicalModelAreaAccordion.Append`, `testCaseGraphicalModelAreaAccordion.OpenAll`, `testCaseGraphicalModelAreaAccordion.RemoveIndex`
+- Selector calls: `widget.NewAccordionItem`, `widget.NewLabel`, `widget.NewAccordion`, `testCaseGraphicalModelAreaAccordion.RemoveIndex`, `canvas.NewRectangle`, `myRectangle.SetMinSize`, `fyne.NewSize`, `testCasesUiCanvasObject.makeTestCaseGraphicalUIObject`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

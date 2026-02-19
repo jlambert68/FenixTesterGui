@@ -36,21 +36,21 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, go`
 - Doc: LoadTestSuiteExecutionsThatCanBeViewedByUser Load list with TestSuiteExecutions that the user can view
 - Internal calls: `storeAllTestSuiteExecutionsForOneTestSuiteThatCanBeViewedByUser`, `storeOneTestSuiteExecutionPerTestSuiteThatCanBeViewedByUser`
-- Selector calls: `listTestSuiteExecutionsResponse.GetAckNackResponse`, `listTestSuiteExecutionsResponse.GetLatestUniqueTestSuiteExecutionDatabaseRowId`, `listTestSuiteExecutionsResponse.GetMoreRowsExists`, `listTestSuiteExecutionsResponse.GetTestSuiteExecutionsList`
-
-### storeAllTestSuiteExecutionsForOneTestSuiteThatCanBeViewedByUser
-- Signature: `func storeAllTestSuiteExecutionsForOneTestSuiteThatCanBeViewedByUser(testSuiteExecutionsList []*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage, testSuiteExecutionsModelRef *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct, latestUniqueTestSuiteExecutionDatabaseRowId int32, moreRowsExists bool)`
-- Exported: `false`
-- Control-flow features: `for/range`
-- Doc: Store All TestSuiteExecutions for one TestSuite, That Can Be Viewed By User
-- Selector calls: `testSuiteExecution.GetTestSuiteExecutionUuid`, `testSuiteExecution.GetTestSuiteUuid`, `testSuiteExecutionsModel.AddTestSuiteExecutionsForOneTestSuiteUuid`, `testSuiteExecutionsModel.TestSuiteExecutionUuidType`, `testSuiteExecutionsModel.TestSuiteUuidType`
+- Selector calls: `listTestSuiteExecutionsResponse.GetAckNackResponse`, `listTestSuiteExecutionsResponse.GetTestSuiteExecutionsList`, `listTestSuiteExecutionsResponse.GetLatestUniqueTestSuiteExecutionDatabaseRowId`, `listTestSuiteExecutionsResponse.GetMoreRowsExists`
 
 ### storeOneTestSuiteExecutionPerTestSuiteThatCanBeViewedByUser
 - Signature: `func storeOneTestSuiteExecutionPerTestSuiteThatCanBeViewedByUser(testSuiteExecutionsList []*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage, testSuiteExecutionsModelRef *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct, latestUniqueTestSuiteExecutionDatabaseRowId int32, moreRowsExists bool)`
 - Exported: `false`
 - Control-flow features: `for/range`
 - Doc: Store TestSuiteExecutions That Can Be Viewed By User
-- Selector calls: `testSuiteExecutions.GetTestSuiteExecutionUuid`, `testSuiteExecutionsModel.TestSuiteExecutionUuidType`, `testSuiteExecutionsModelRef.AddToTestSuiteExecutionsMap`
+- Selector calls: `testSuiteExecutionsModelRef.AddToTestSuiteExecutionsMap`, `testSuiteExecutionsModel.TestSuiteExecutionUuidType`, `testSuiteExecutions.GetTestSuiteExecutionUuid`
+
+### storeAllTestSuiteExecutionsForOneTestSuiteThatCanBeViewedByUser
+- Signature: `func storeAllTestSuiteExecutionsForOneTestSuiteThatCanBeViewedByUser(testSuiteExecutionsList []*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage, testSuiteExecutionsModelRef *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct, latestUniqueTestSuiteExecutionDatabaseRowId int32, moreRowsExists bool)`
+- Exported: `false`
+- Control-flow features: `for/range`
+- Doc: Store All TestSuiteExecutions for one TestSuite, That Can Be Viewed By User
+- Selector calls: `testSuiteExecution.GetTestSuiteUuid`, `testSuiteExecution.GetTestSuiteExecutionUuid`, `testSuiteExecutionsModel.AddTestSuiteExecutionsForOneTestSuiteUuid`, `testSuiteExecutionsModel.TestSuiteUuidType`, `testSuiteExecutionsModel.TestSuiteExecutionUuidType`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

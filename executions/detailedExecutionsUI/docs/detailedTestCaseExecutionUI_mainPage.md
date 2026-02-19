@@ -36,7 +36,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*DetailedTestCaseExecutionsUIModelStruct) CreateDetailedTestCaseExecutionsTabPage() detailedTestCaseExecutionsTabPage *fyne.Container`
 - Exported: `true`
 - Control-flow features: `none detected`
-- Selector calls: `container.New`, `detailedTestCaseExecutionsUIObject.generateExecutionColorPalette`, `detailedTestCaseExecutionsUIObject.generateTestCasesSummaryTable`, `layout.NewSpacer`, `layout.NewVBoxLayout`
+- Selector calls: `detailedTestCaseExecutionsUIObject.generateTestCasesSummaryTable`, `container.New`, `layout.NewVBoxLayout`, `layout.NewSpacer`, `detailedTestCaseExecutionsUIObject.generateExecutionColorPalette`
+
+### generateTestCasesSummaryTable (method on `*DetailedTestCaseExecutionsUIModelStruct`)
+- Signature: `func (*DetailedTestCaseExecutionsUIModelStruct) generateTestCasesSummaryTable()`
+- Exported: `false`
+- Control-flow features: `none detected`
+- Selector calls: `detailedExecutionsModel.CreateSummaryTableForDetailedTestCaseExecutionsList`
 
 ### GenerateExecutionColorPalette
 - Signature: `func GenerateExecutionColorPalette() *fyne.Container`
@@ -50,13 +56,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `none detected`
 - Doc: Generates the description for which color symbolize what execution status
-- Selector calls: `canvas.NewRectangle`, `container.New`, `layout.NewHBoxLayout`, `layout.NewMaxLayout`, `layout.NewVBoxLayout`
-
-### generateTestCasesSummaryTable (method on `*DetailedTestCaseExecutionsUIModelStruct`)
-- Signature: `func (*DetailedTestCaseExecutionsUIModelStruct) generateTestCasesSummaryTable()`
-- Exported: `false`
-- Control-flow features: `none detected`
-- Selector calls: `detailedExecutionsModel.CreateSummaryTableForDetailedTestCaseExecutionsList`
+- Selector calls: `canvas.NewRectangle`, `container.New`, `layout.NewMaxLayout`, `layout.NewHBoxLayout`, `layout.NewVBoxLayout`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

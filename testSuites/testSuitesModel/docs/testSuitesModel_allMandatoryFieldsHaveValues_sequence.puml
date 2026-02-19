@@ -2,24 +2,24 @@
 title Sequence Diagram - testSuitesModel_allMandatoryFieldsHaveValues.go
 actor Caller
 participant "testSuitesModel_allMandatoryFieldsHaveValues.go" as File
+participant "testSuiteModel" as testSuiteModel
 participant "fmt" as fmt
 participant "log" as log
-participant "testSuiteModel" as testSuiteModel
 Caller -> File: checkIfAllMandatoryFieldsHaveValues(...)
 activate File
 File -> testSuiteModel: verifyMandatoryFieldsForMetaData(...)
 File --> Caller: return
 deactivate File
+Caller -> File: verifyMandatoryFieldsForMetaData(...)
+activate File
+File -> testSuiteModel: generateMandatoryMetaDataFieldsMap(...)
+File -> fmt: Sprintf(...)
+File -> log: Fatalln(...)
+File --> Caller: return
+deactivate File
 Caller -> File: generateMandatoryMetaDataFieldsMap(...)
 activate File
 File -> fmt: Sprintf(...)
-File --> Caller: return
-deactivate File
-Caller -> File: verifyMandatoryFieldsForMetaData(...)
-activate File
-File -> fmt: Sprintf(...)
-File -> log: Fatalln(...)
-File -> testSuiteModel: generateMandatoryMetaDataFieldsMap(...)
 File --> Caller: return
 deactivate File
 @enduml

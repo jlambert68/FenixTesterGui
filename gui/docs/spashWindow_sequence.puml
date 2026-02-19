@@ -2,11 +2,11 @@
 title Sequence Diagram - spashWindow.go
 actor Caller
 participant "spashWindow.go" as File
-participant "canvas" as canvas
-participant "container" as container
-participant "drv" as drv
 participant "fmt" as fmt
 participant "fyne" as fyne
+participant "drv" as drv
+participant "canvas" as canvas
+participant "container" as container
 participant "layout" as layout
 participant "time" as time
 Caller -> File: Focused(...)

@@ -3,29 +3,29 @@ title Activity Diagram - dragNdropStatemachine.go
 start
 :Load testUIDragNDropStatemachine/dragNdropStatemachine.go;
 :1. InitiateStateStateMachine [method on *StateMachineDragAndDropStruct];
-:2. TestInstructionContainerBondBelongingRectangleToMap;
-:3. executeDropAction;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:4. expandDropAreas;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:Iterate loop/range logic;
-:5. newNoneDroppableLabel;
-:6. shrinkDropAreas;
+:2. newNoneDroppableLabel;
+:3. TestInstructionContainerBondBelongingRectangleToMap;
+:4. switchStateForSource;
+:5. switchStateForTarget;
+:6. expandDropAreas;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:7. switchStateForSource;
-:8. switchStateForTarget;
+:7. shrinkDropAreas;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:8. executeDropAction;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
 stop
 @enduml

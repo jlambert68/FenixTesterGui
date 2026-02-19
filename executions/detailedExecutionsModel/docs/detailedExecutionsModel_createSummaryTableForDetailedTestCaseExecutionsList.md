@@ -47,19 +47,31 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - `testCaseRowBackgroundColorOddRow`
 
 ## Functions and Methods
+### createExecutionSummary
+- Signature: `func createExecutionSummary(testInstructionName string, testInstructionExecutionStatus int32) (tempItemExecutionSummary *fyne.Container, err error)`
+- Exported: `false`
+- Control-flow features: `if, returns error`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fmt.Println`, `canvas.NewRectangle`, `container.New`, `layout.NewMaxLayout`
+
 ### CreateSummaryTableForDetailedTestCaseExecutionsList
 - Signature: `func CreateSummaryTableForDetailedTestCaseExecutionsList() testcaseExecutionsSummaryReturnTable *fyne.Container`
 - Exported: `true`
 - Control-flow features: `if, for/range`
 - Internal calls: `createExecutionSummary`, `int32`
-- Selector calls: `canvas.NewRectangle`, `container.New`, `layout.NewHBoxLayout`, `layout.NewMaxLayout`, `layout.NewVBoxLayout`, `log.Println`, `rowWithButtonsContainer.Add`, `testCaseRow.Add`
+- Selector calls: `layout.NewVBoxLayout`, `testcaseExecutionsSummaryTableContainer.Add`, `layout.NewHBoxLayout`, `testCaseRow.Add`, `testInstructionsForTestCase.Add`, `canvas.NewRectangle`, `log.Println`, `rowWithButtonsContainer.Add`
+
+### newSpaceButton
+- Signature: `func newSpaceButton() *spaceButton`
+- Exported: `false`
+- Control-flow features: `none detected`
+- Selector calls: `mySpaceButton.ExtendBaseWidget`, `mySpaceButton.SetText`
 
 ### MouseIn (method on `*spaceButton`)
 - Signature: `func (*spaceButton) MouseIn(x *desktop.MouseEvent)`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: MouseIn is called when a desktop pointer enters the widget
-- Selector calls: `b.Refresh`, `b.SetText`, `fmt.Println`
+- Selector calls: `fmt.Println`, `b.SetText`, `b.Refresh`
 
 ### MouseMoved (method on `*spaceButton`)
 - Signature: `func (*spaceButton) MouseMoved(a *desktop.MouseEvent)`
@@ -72,19 +84,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: MouseOut is called when a desktop pointer exits the widget
-- Selector calls: `b.Refresh`, `b.SetText`, `fmt.Println`
-
-### createExecutionSummary
-- Signature: `func createExecutionSummary(testInstructionName string, testInstructionExecutionStatus int32) (tempItemExecutionSummary *fyne.Container, err error)`
-- Exported: `false`
-- Control-flow features: `if, returns error`
-- Selector calls: `canvas.NewRectangle`, `container.New`, `errors.New`, `fmt.Println`, `fmt.Sprintf`, `layout.NewMaxLayout`
-
-### newSpaceButton
-- Signature: `func newSpaceButton() *spaceButton`
-- Exported: `false`
-- Control-flow features: `none detected`
-- Selector calls: `mySpaceButton.ExtendBaseWidget`, `mySpaceButton.SetText`
+- Selector calls: `fmt.Println`, `b.SetText`, `b.Refresh`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

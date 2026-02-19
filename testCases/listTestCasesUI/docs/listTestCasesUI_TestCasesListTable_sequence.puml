@@ -2,18 +2,18 @@
 title Sequence Diagram - listTestCasesUI_TestCasesListTable.go
 actor Caller
 participant "listTestCasesUI_TestCasesListTable.go" as File
-participant "boolbits" as boolbits
+participant "listTestCaseUIObject" as listTestCaseUIObject
+participant "widget" as widget
+participant "png" as png
 participant "bytes" as bytes
+participant "container" as container
 participant "canvas" as canvas
 participant "clickable" as clickable
-participant "clickableContainer" as clickableContainer
-participant "container" as container
-participant "err" as err
-participant "fmt" as fmt
+participant "fyne" as fyne
 Caller -> File: RemoveTestCaseFromList(...)
 activate File
-File -> listTestCaseUIObject: calculateAndSetCorrectColumnWidths(...)
 File -> listTestCaseUIObject: loadTestCaseListTableTable(...)
+File -> listTestCaseUIObject: calculateAndSetCorrectColumnWidths(...)
 File -> listTestCaseUIObject: updateTestCasesListTable(...)
 File --> Caller: return
 deactivate File

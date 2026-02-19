@@ -40,13 +40,22 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
-### MinSize (method on `*CustomTemplateTable`)
-- Signature: `func (*CustomTemplateTable) MinSize() fyne.Size`
+### newClickableLabel
+- Signature: `func newClickableLabel(text string, onDoubleTap func(), tempIsClickable bool) *clickableLabel`
+- Exported: `false`
+- Control-flow features: `none detected`
+- Selector calls: `time.Now`, `l.ExtendBaseWidget`
+
+### Tapped (method on `*clickableLabel`)
+- Signature: `func (*clickableLabel) Tapped(e *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `if`
-- Doc: MinSize customizes the minimum size of the CustomTemplateTable.
-- Internal calls: `float32`
-- Selector calls: `fyne.MeasureText`, `fyne.NewSize`, `t.Length`, `t.Size`, `theme.TextSize`
+- Selector calls: `time.Since`, `l.onDoubleTap`, `time.Now`
+
+### TappedSecondary (method on `*clickableLabel`)
+- Signature: `func (*clickableLabel) TappedSecondary(*fyne.PointEvent)`
+- Exported: `true`
+- Control-flow features: `none detected`
 
 ### MouseIn (method on `*clickableLabel`)
 - Signature: `func (*clickableLabel) MouseIn(*desktop.MouseEvent)`
@@ -63,30 +72,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 
-### Tapped (method on `*clickableLabel`)
-- Signature: `func (*clickableLabel) Tapped(e *fyne.PointEvent)`
-- Exported: `true`
-- Control-flow features: `if`
-- Selector calls: `l.onDoubleTap`, `time.Now`, `time.Since`
-
-### TappedSecondary (method on `*clickableLabel`)
-- Signature: `func (*clickableLabel) TappedSecondary(*fyne.PointEvent)`
-- Exported: `true`
-- Control-flow features: `none detected`
-
 ### generateTemplateFilesTable
 - Signature: `func generateTemplateFilesTable(testCaseUuid string, filesAreClickable bool, testCasesUiCanvasObject *TestCasesUiModelStruct) *CustomTemplateTable`
 - Exported: `false`
 - Control-flow features: `if, switch`
 - Doc: Create the UI-list that holds the selected files
 - Internal calls: `newClickableLabel`
-- Selector calls: `clickable.SetText`, `nonClickable.SetText`, `templateFilesTable.ExtendBaseWidget`, `templateViewer.InitiateTemplateViewer`
-
-### newClickableLabel
-- Signature: `func newClickableLabel(text string, onDoubleTap func(), tempIsClickable bool) *clickableLabel`
-- Exported: `false`
-- Control-flow features: `none detected`
-- Selector calls: `l.ExtendBaseWidget`, `time.Now`
+- Selector calls: `clickable.SetText`, `templateViewer.InitiateTemplateViewer`, `nonClickable.SetText`, `templateFilesTable.ExtendBaseWidget`
 
 ### updateColumnAndRowSizes (method on `*CustomTemplateTable`)
 - Signature: `func (*CustomTemplateTable) updateColumnAndRowSizes(testCaseUuid string, testCasesUiCanvasObject *TestCasesUiModelStruct, checkIfTemplatesAreChangedButton *widget.Button, viewTemplateButton *widget.Button)`
@@ -94,7 +86,15 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range`
 - Doc: Update size of columns and Rows for the Table
 - Internal calls: `float32`
-- Selector calls: `checkIfTemplatesAreChangedButton.Disable`, `checkIfTemplatesAreChangedButton.Enable`, `fyne.MeasureText`, `t.Refresh`, `t.SetColumnWidth`, `t.SetRowHeight`, `theme.Padding`, `theme.TextSize`
+- Selector calls: `fyne.MeasureText`, `theme.TextSize`, `t.SetRowHeight`, `t.SetColumnWidth`, `theme.Padding`, `t.Refresh`, `checkIfTemplatesAreChangedButton.Disable`, `viewTemplateButton.Disable`
+
+### MinSize (method on `*CustomTemplateTable`)
+- Signature: `func (*CustomTemplateTable) MinSize() fyne.Size`
+- Exported: `true`
+- Control-flow features: `if`
+- Doc: MinSize customizes the minimum size of the CustomTemplateTable.
+- Internal calls: `float32`
+- Selector calls: `fyne.MeasureText`, `theme.TextSize`, `t.Length`, `fyne.NewSize`, `t.Size`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

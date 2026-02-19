@@ -2,8 +2,8 @@
 title Activity Diagram - listTestCaseExectionsUI_HeaderLabel.go
 start
 :Load testCaseExecutions/listTestCaseExecutionsUI/listTestCaseExectionsUI_HeaderLabel.go;
-:1. CreateRenderer [method on *sortableHeaderLabelStruct];
+:1. newSortableHeaderLabel;
 :2. Refresh [method on *sortableHeaderLabelStruct];
-:3. newSortableHeaderLabel;
+:3. CreateRenderer [method on *sortableHeaderLabelStruct];
 stop
 @enduml

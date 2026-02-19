@@ -49,14 +49,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: RemoveTestCaseFromList Remove a TestCase from the List
-- Selector calls: `listTestCaseUIObject.calculateAndSetCorrectColumnWidths`, `listTestCaseUIObject.loadTestCaseListTableTable`, `listTestCaseUIObject.updateTestCasesListTable`
-
-### calculateAndSetCorrectColumnWidths (method on `*ListTestCaseUIStruct`)
-- Signature: `func (*ListTestCaseUIStruct) calculateAndSetCorrectColumnWidths()`
-- Exported: `false`
-- Control-flow features: `if, for/range`
-- Internal calls: `float32`
-- Selector calls: `fyne.MeasureText`, `theme.Padding`, `theme.TextSize`
+- Selector calls: `listTestCaseUIObject.loadTestCaseListTableTable`, `listTestCaseUIObject.calculateAndSetCorrectColumnWidths`, `listTestCaseUIObject.updateTestCasesListTable`
 
 ### generateTestCasesListTable (method on `*ListTestCaseUIStruct`)
 - Signature: `func (*ListTestCaseUIStruct) generateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruct)`
@@ -64,14 +57,29 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if`
 - Doc: Create the UI-list that holds the list of TestCasesMapPtr that the user can edit
 - Internal calls: `newSortableHeaderLabel`
-- Selector calls: `bytes.NewReader`, `listTestCaseUIObject.calculateAndSetCorrectColumnWidths`, `listTestCaseUIObject.updateTestCasesListTable`, `png.Decode`, `widget.NewLabel`, `widget.NewTable`
+- Selector calls: `widget.NewTable`, `widget.NewLabel`, `png.Decode`, `bytes.NewReader`, `listTestCaseUIObject.updateTestCasesListTable`, `listTestCaseUIObject.calculateAndSetCorrectColumnWidths`
+
+### updateTestCasesListTable (method on `*ListTestCaseUIStruct`)
+- Signature: `func (*ListTestCaseUIStruct) updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruct)`
+- Exported: `false`
+- Control-flow features: `if, switch`
+- Doc: Update the Table
+- Internal calls: `newClickableTableLabel`, `int16`, `uint8`, `int32`, `int`
+- Selector calls: `container.NewStack`, `canvas.NewRectangle`, `clickable.SetText`, `listTestCaseUIObject.openTestCase`, `fyne.CurrentApp`, `fmt.Sprintf`, `tempTestCasePtr.GetDomainUuid`, `tempTestCasePtr.GetDomainName`
+
+### calculateAndSetCorrectColumnWidths (method on `*ListTestCaseUIStruct`)
+- Signature: `func (*ListTestCaseUIStruct) calculateAndSetCorrectColumnWidths()`
+- Exported: `false`
+- Control-flow features: `if, for/range`
+- Internal calls: `float32`
+- Selector calls: `fyne.MeasureText`, `theme.TextSize`, `theme.Padding`
 
 ### loadTestCaseListTableTable (method on `*ListTestCaseUIStruct`)
 - Signature: `func (*ListTestCaseUIStruct) loadTestCaseListTableTable(testCaseMetaDataFilterEntry *boolbits.Entry)`
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Internal calls: `int`, `int32`
-- Selector calls: `boolbits.NewAllZerosEntry`, `err.Error`, `fmt.Sprintf`, `listTestCaseUIObject.sort2DStringSlice`, `log.Fatalln`, `resultEntry.And`, `resultEntry.Equals`, `resultEntry.Or`
+- Selector calls: `boolbits.NewAllZerosEntry`, `fmt.Sprintf`, `err.Error`, `log.Fatalln`, `resultEntry.Or`, `tempTestCase.GetTestCaseUuid`, `resultEntry.And`, `resultEntry.Equals`
 
 ### sort2DStringSlice (method on `*ListTestCaseUIStruct`)
 - Signature: `func (*ListTestCaseUIStruct) sort2DStringSlice(data [][]string, columnToSortOn int, sortingDirection SortingDirectionType)`
@@ -79,14 +87,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, switch`
 - Doc: Sort2DStringSlice sorts a 2D string slice by a specified column index. It assumes that the column index is valid for all rows in the slice.
 - Selector calls: `sort.Slice`, `strconv.Atoi`
-
-### updateTestCasesListTable (method on `*ListTestCaseUIStruct`)
-- Signature: `func (*ListTestCaseUIStruct) updateTestCasesListTable(testCasesModel *testCaseModel.TestCasesModelsStruct)`
-- Exported: `false`
-- Control-flow features: `if, switch`
-- Doc: Update the Table
-- Internal calls: `int`, `int16`, `int32`, `newClickableTableLabel`, `uint8`
-- Selector calls: `canvas.NewRectangle`, `clickable.Hide`, `clickable.SetText`, `clickable.Show`, `clickableContainer.Refresh`, `container.NewStack`, `fmt.Sprintf`, `fyne.CurrentApp`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

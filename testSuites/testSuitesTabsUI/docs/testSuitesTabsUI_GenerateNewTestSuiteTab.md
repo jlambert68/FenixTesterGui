@@ -38,7 +38,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func GenerateNewTestSuiteTab(testCasesModel *testCaseModel.TestCasesModelsStruct)`
 - Exported: `true`
 - Control-flow features: `if, go`
-- Selector calls: `container.NewBorder`, `container.NewTabItem`, `container.NewVBox`, `err.Error`, `fmt.Sprintf`, `newTestSuiteModel.ExecuteOneTestSuiteWithAllItsTestDataSets`, `newTestSuiteModel.ExecuteOneTestSuiteWithOneTestDataSet`, `newTestSuiteModel.GetTestSuiteUuid`
+- Selector calls: `testSuitesModel.GenerateNewTestSuiteModelObject`, `container.NewTabItem`, `fmt.Sprintf`, `newTestSuiteUiObject.GenerateBuildNewTestSuiteUI`, `container.NewVBox`, `widget.NewLabel`, `err.Error`, `container.NewBorder`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

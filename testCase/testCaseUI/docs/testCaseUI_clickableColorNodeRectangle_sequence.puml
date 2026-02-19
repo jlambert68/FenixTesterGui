@@ -2,21 +2,17 @@
 title Sequence Diagram - testCaseUI_clickableColorNodeRectangle.go
 actor Caller
 participant "testCaseUI_clickableColorNodeRectangle.go" as File
-participant "bytes" as bytes
-participant "c" as c
-participant "canvas" as canvas
-participant "fyne" as fyne
-participant "log" as log
 participant "myClickableRectangle" as myClickableRectangle
+participant "canvas" as canvas
 participant "png" as png
-Caller -> File: ForceClick(...)
-activate File
-File --> Caller: return
-deactivate File
+participant "bytes" as bytes
+participant "log" as log
+participant "fyne" as fyne
+participant "c" as c
 Caller -> File: NewClickableRectangle(...)
 activate File
-File -> bytes: NewReader(...)
-File -> canvas: NewImageFromImage(...)
+File -> myClickableRectangle: ExtendBaseWidget(...)
+File -> myClickableRectangle: SetText(...)
 File -> canvas: NewRectangle(...)
 File --> Caller: return
 deactivate File
@@ -28,6 +24,10 @@ deactivate File
 Caller -> File: TappedSecondary(...)
 activate File
 File -> c: updateSelectedUINode(...)
+File --> Caller: return
+deactivate File
+Caller -> File: ForceClick(...)
+activate File
 File --> Caller: return
 deactivate File
 @enduml

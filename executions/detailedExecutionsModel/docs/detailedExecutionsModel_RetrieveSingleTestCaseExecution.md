@@ -36,8 +36,8 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, for/range, defer, returns error`
 - Doc: RetrieveSingleTestCaseExecution Retrieves a TestCaseExecution and all of its data belonging to the execution
-- Internal calls: `int32`, `uint32`
-- Selector calls: `errors.New`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `strconv.Atoi`, `time.Sleep`
+- Internal calls: `uint32`, `int32`
+- Selector calls: `strconv.Atoi`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `errors.New`, `time.Sleep`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

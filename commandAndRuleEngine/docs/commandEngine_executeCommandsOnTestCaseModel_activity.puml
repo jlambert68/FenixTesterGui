@@ -2,25 +2,25 @@
 title Activity Diagram - commandEngine_executeCommandsOnTestCaseModel.go
 start
 :Load commandAndRuleEngine/commandEngine_executeCommandsOnTestCaseModel.go;
-:1. executeCommandOnTestCaseModel_CopyElementInTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
+:1. executeCommandOnTestCaseModel_NewTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:2. executeCommandOnTestCaseModel_CutElementInTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
+:2. executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:3. executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
+:3. executeCommandOnTestCaseModel_SwapOutElemenAndInNewElementInTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:4. executeCommandOnTestCaseModel_NewTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
+:4. executeCommandOnTestCaseModel_CopyElementInTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -32,13 +32,13 @@ if (branch or error path?) then (yes)
 else (no)
 :Continue primary flow;
 endif
-:6. executeCommandOnTestCaseModel_SwapInElementFromCutBufferInTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
+:6. executeCommandOnTestCaseModel_CutElementInTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:7. executeCommandOnTestCaseModel_SwapOutElemenAndInNewElementInTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
+:7. executeCommandOnTestCaseModel_SwapInElementFromCutBufferInTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

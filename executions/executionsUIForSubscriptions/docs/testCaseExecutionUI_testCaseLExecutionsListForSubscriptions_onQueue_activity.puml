@@ -2,16 +2,9 @@
 title Activity Diagram - testCaseExecutionUI_testCaseLExecutionsListForSubscriptions_onQueue.go
 start
 :Load executions/executionsUIForSubscriptions/testCaseExecutionUI_testCaseLExecutionsListForSubscriptions_onQueue.go;
-:1. AddTestCaseExecutionToOnQueueTable;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
+:1. CreateTableForTestCaseExecutionsOnQueue;
 :Iterate loop/range logic;
-:2. CreateTableForTestCaseExecutionsOnQueue;
-:Iterate loop/range logic;
-:3. RemoveTestCaseExecutionFromOnQueueTable;
+:2. RemoveTestCaseExecutionFromOnQueueTable;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -19,6 +12,13 @@ else (no)
 endif
 :Iterate loop/range logic;
 :Start goroutine/asynchronous work;
+:3. AddTestCaseExecutionToOnQueueTable;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
 :4. StartOnQueueTableAddRemoveChannelReader;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;

@@ -2,19 +2,19 @@
 title Sequence Diagram - newOrEditTestDataPointGroupUI_TestDataFiltersComponent.go
 actor Caller
 participant "newOrEditTestDataPointGroupUI_TestDataFiltersComponent.go" as File
-participant "allAvailablePointsList" as allAvailablePointsList
 participant "container" as container
-participant "domainsSelect" as domainsSelect
-participant "fmt" as fmt
-participant "fyne" as fyne
+participant "widget" as widget
 participant "sort" as sort
-participant "strings" as strings
+participant "testDataCheckGroupContainer" as testDataCheckGroupContainer
+participant "fyne" as fyne
 participant "tempTestDataValuesSelectionContainer" as tempTestDataValuesSelectionContainer
+participant "testDataSelectionsContainer" as testDataSelectionsContainer
+participant "testAreasLabel" as testAreasLabel
 Caller -> File: generateTestDataSelectionsUIComponent(...)
 activate File
-File -> allAvailablePointsList: Refresh(...)
-File -> container: NewBorder(...)
 File -> container: NewHBox(...)
+File -> widget: NewLabel(...)
+File -> container: NewVBox(...)
 File --> Caller: return
 deactivate File
 Caller -> File: sortDataPointsList(...)

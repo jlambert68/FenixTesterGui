@@ -34,8 +34,8 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, for/range, returns error`
 - Doc: LoadFullTestCaseFromDatabase - Load the TestCase from the Database into model
-- Internal calls: `MetaDataSelectType`, `int`
-- Selector calls: `detailedTestCaseResponse.GetDetailedTestCase`, `errors.New`, `fmt.Println`, `fmt.Sprintf`, `tempMetaDataGroupFromGrpc.GetMetaDataInGroupMap`, `testCaseModel.generateTestCaseForGrpcAndHash`, `testDataEngine.TestDataAreaNameType`, `testDataEngine.TestDataAreaUuidType`
+- Internal calls: `int`, `MetaDataSelectType`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fmt.Println`, `detailedTestCaseResponse.GetDetailedTestCase`, `testDataEngine.TestDataPointRowUuidType`, `testDataPointRowValueSummaryGrpc.GetTestDataPointRowUuid`, `testDataEngine.TestDataPointRowValuesSummaryType`, `testDataPointRowValueSummaryGrpc.GetTestDataPointRowValuesSummary`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

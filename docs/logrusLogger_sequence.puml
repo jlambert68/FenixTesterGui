@@ -2,14 +2,14 @@
 title Sequence Diagram - logrusLogger.go
 actor Caller
 participant "logrusLogger.go" as File
-participant "log" as log
 participant "logrus" as logrus
+participant "log" as log
 participant "os" as os
 Caller -> File: InitLogger(...)
 activate File
+File -> logrus: StandardLogger(...)
 File -> log: Println(...)
-File -> logrus: SetFormatter(...)
-File -> logrus: SetLevel(...)
+File -> os: Exit(...)
 File --> Caller: return
 deactivate File
 @enduml

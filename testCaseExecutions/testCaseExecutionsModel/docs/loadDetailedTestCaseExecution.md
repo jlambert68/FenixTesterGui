@@ -35,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, defer`
 - Doc: LoadDetailedTestCaseExecutionFromDatabase Load all Detailed TestCaseExecution-data for specific execution
 - Internal calls: `DetailedTestCaseExecutionMapKeyType`, `int`
-- Selector calls: `TestCaseExecutionsModel.AddToDetailedTestCaseExecutionsMap`, `TestCaseExecutionsModel.ClearFlagRefreshOngoingOfDetailedTestCaseExecution`, `TestCaseExecutionsModel.ExtractAndStoreLogPostsAndValuesFromDetailedTestCaseExecution`, `TestCaseExecutionsModel.SetFlagRefreshOngoingOfDetailedTestCaseExecution`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `getSingleTestCaseExecutionResponse.GetAckNackResponse`, `getSingleTestCaseExecutionResponse.GetTestCaseExecutionResponse`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`
+- Selector calls: `strconv.Itoa`, `TestCaseExecutionsModel.SetFlagRefreshOngoingOfDetailedTestCaseExecution`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `TestCaseExecutionsModel.ClearFlagRefreshOngoingOfDetailedTestCaseExecution`, `getSingleTestCaseExecutionResponse.GetAckNackResponse`, `TestCaseExecutionsModel.AddToDetailedTestCaseExecutionsMap`, `getSingleTestCaseExecutionResponse.GetTestCaseExecutionResponse`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

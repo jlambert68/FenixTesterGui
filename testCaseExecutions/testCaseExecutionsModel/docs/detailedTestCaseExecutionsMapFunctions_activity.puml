@@ -2,42 +2,42 @@
 title Activity Diagram - detailedTestCaseExecutionsMapFunctions.go
 start
 :Load testCaseExecutions/testCaseExecutionsModel/detailedTestCaseExecutionsMapFunctions.go;
-:1. AddToDetailedTestCaseExecutionsMap [method on TestCaseExecutionsModelStruct];
+:1. ReadFromDetailedTestCaseExecutionsMap [method on TestCaseExecutionsModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
-:2. ClearFlagRefreshOngoingOfDetailedTestCaseExecution [method on TestCaseExecutionsModelStruct];
+:2. GetNumberOfDetailedTestCaseExecutionsRetrievedFromDatabase [method on TestCaseExecutionsModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
-:3. DeleteFromDetailedTestCaseExecutionsMap [method on TestCaseExecutionsModelStruct];
+:3. AddToDetailedTestCaseExecutionsMap [method on TestCaseExecutionsModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
-:4. GetNumberOfDetailedTestCaseExecutionsRetrievedFromDatabase [method on TestCaseExecutionsModelStruct];
+:4. DeleteFromDetailedTestCaseExecutionsMap [method on TestCaseExecutionsModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
-:5. ReadFromDetailedTestCaseExecutionsMap [method on TestCaseExecutionsModelStruct];
+:5. SetFlagRefreshOngoingOfDetailedTestCaseExecution [method on TestCaseExecutionsModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
-:6. SetFlagRefreshOngoingOfDetailedTestCaseExecution [method on TestCaseExecutionsModelStruct];
+:6. ClearFlagRefreshOngoingOfDetailedTestCaseExecution [method on TestCaseExecutionsModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

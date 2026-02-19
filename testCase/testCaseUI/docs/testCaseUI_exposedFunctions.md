@@ -28,19 +28,19 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
+### UpdateGraphicalRepresentationForTestCase (method on `*TestCasesUiModelStruct`)
+- Signature: `func (*TestCasesUiModelStruct) UpdateGraphicalRepresentationForTestCase(testCaseUuid string) err error`
+- Exported: `true`
+- Control-flow features: `if, returns error`
+- Doc: GenerateShortUuidFromFullUuid Generate a short version of the UUID to be used in GUI
+- Selector calls: `errors.New`, `fmt.Sprintf`, `testCasesUiCanvasObject.generateGraphicalRepresentationAreaForTestCase`, `fyne.Do`
+
 ### InitiateGraphicsUpdateChannelReader (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) InitiateGraphicsUpdateChannelReader()`
 - Exported: `true`
 - Control-flow features: `go`
 - Doc: InitiateGraphicsUpdateChannelReader Initiate the channel reader which is used for sending commands to Graphics Update Engine
 - Selector calls: `testCasesUiCanvasObject.startGUICommandChannelReader`
-
-### UpdateGraphicalRepresentationForTestCase (method on `*TestCasesUiModelStruct`)
-- Signature: `func (*TestCasesUiModelStruct) UpdateGraphicalRepresentationForTestCase(testCaseUuid string) err error`
-- Exported: `true`
-- Control-flow features: `if, returns error`
-- Doc: GenerateShortUuidFromFullUuid Generate a short version of the UUID to be used in GUI
-- Selector calls: `errors.New`, `fmt.Sprintf`, `fyne.Do`, `testCasesUiCanvasObject.generateGraphicalRepresentationAreaForTestCase`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

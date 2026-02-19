@@ -33,8 +33,8 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, for/range, defer, returns error`
 - Doc: ExtractAndStoreLogPostsAndValuesFromDetailedTestCaseExecution Extracts all extra data that will be presented to the user in GUI, ie the explorer-tabs
-- Internal calls: `AttributeNameMapKeyType`, `RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType`, `RunTimeUpdatedAttributeValueType`, `TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType`, `TestInstructionExecutionDetailsMapKeyType`, `TestInstructionExecutionLogPostMapKeyType`, `TestInstructionExecutionUuidType`, `int`
-- Selector calls: `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`, `strconv.Itoa`, `testCaseExecutionsModel.ReadFromDetailedTestCaseExecutionsMap`, `testInstructionExecution.GetTestInstructionExecutionBasicInformation`, `testInstructionExecution.GetTestInstructionExecutionsInformation`
+- Internal calls: `TestInstructionExecutionLogPostMapKeyType`, `int`, `RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType`, `TestInstructionExecutionUuidType`, `string`, `TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType`, `AttributeNameMapKeyType`, `RunTimeUpdatedAttributeValueType`
+- Selector calls: `testCaseExecutionsModel.ReadFromDetailedTestCaseExecutionsMap`, `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`, `testInstructionExecution.GetTestInstructionExecutionBasicInformation`, `strconv.Itoa`, `testInstructionExecution.GetTestInstructionExecutionsInformation`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

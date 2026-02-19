@@ -36,13 +36,42 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
+### NewCustomAttributeSelectComboBoxWidget
+- Signature: `func NewCustomAttributeSelectComboBoxWidget(newSelect *widget.Select, attributeValueIsValidWarningBox *canvas.Rectangle) *CustomAttributeSelectComboBox`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Selector calls: `widget.NewSelect`, `fyne.NewSize`, `tempEntry.Size`, `w.ExtendBaseWidget`
+
+### CreateRenderer (method on `*CustomAttributeSelectComboBox`)
+- Signature: `func (*CustomAttributeSelectComboBox) CreateRenderer() fyne.WidgetRenderer`
+- Exported: `true`
+- Control-flow features: `none detected`
+
+### MinSize (method on `*customAttributeSelectComboBoxRenderer`)
+- Signature: `func (*customAttributeSelectComboBoxRenderer) MinSize() fyne.Size`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Selector calls: `fyne.NewSize`, `fyne.Max`
+
+### Layout (method on `*customAttributeSelectComboBoxRenderer`)
+- Signature: `func (*customAttributeSelectComboBoxRenderer) Layout(size fyne.Size)`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Selector calls: `fyne.NewSize`, `fyne.NewPos`
+
+### Refresh (method on `*customAttributeSelectComboBoxRenderer`)
+- Signature: `func (*customAttributeSelectComboBoxRenderer) Refresh()`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Selector calls: `canvas.Refresh`
+
 ### BackgroundColor (method on `*customAttributeSelectComboBoxRenderer`)
 - Signature: `func (*customAttributeSelectComboBoxRenderer) BackgroundColor() color.Color`
 - Exported: `true`
 - Control-flow features: `none detected`
 
-### CreateRenderer (method on `*CustomAttributeSelectComboBox`)
-- Signature: `func (*CustomAttributeSelectComboBox) CreateRenderer() fyne.WidgetRenderer`
+### Objects (method on `*customAttributeSelectComboBoxRenderer`)
+- Signature: `func (*customAttributeSelectComboBoxRenderer) Objects() []fyne.CanvasObject`
 - Exported: `true`
 - Control-flow features: `none detected`
 
@@ -50,35 +79,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*customAttributeSelectComboBoxRenderer) Destroy()`
 - Exported: `true`
 - Control-flow features: `none detected`
-
-### Layout (method on `*customAttributeSelectComboBoxRenderer`)
-- Signature: `func (*customAttributeSelectComboBoxRenderer) Layout(size fyne.Size)`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Selector calls: `fyne.NewPos`, `fyne.NewSize`
-
-### MinSize (method on `*customAttributeSelectComboBoxRenderer`)
-- Signature: `func (*customAttributeSelectComboBoxRenderer) MinSize() fyne.Size`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Selector calls: `fyne.Max`, `fyne.NewSize`
-
-### NewCustomAttributeSelectComboBoxWidget
-- Signature: `func NewCustomAttributeSelectComboBoxWidget(newSelect *widget.Select, attributeValueIsValidWarningBox *canvas.Rectangle) *CustomAttributeSelectComboBox`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Selector calls: `fyne.NewSize`, `tempEntry.Size`, `w.ExtendBaseWidget`, `widget.NewSelect`
-
-### Objects (method on `*customAttributeSelectComboBoxRenderer`)
-- Signature: `func (*customAttributeSelectComboBoxRenderer) Objects() []fyne.CanvasObject`
-- Exported: `true`
-- Control-flow features: `none detected`
-
-### Refresh (method on `*customAttributeSelectComboBoxRenderer`)
-- Signature: `func (*customAttributeSelectComboBoxRenderer) Refresh()`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Selector calls: `canvas.Refresh`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

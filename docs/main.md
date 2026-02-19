@@ -37,13 +37,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if`
 - Internal calls: `fenixGuiBuilderServerMain`
-- Selector calls: `fmt.Println`, `strings.ReplaceAll`, `testInstruction_SendTemplateToThisDomainversion_1_0.Initate_TestInstruction_FenixSentToUsersDomain_FenixOwnedSendTemplateToThisDomain`, `testInstruction_SendTestDataToThisDomain_version_1_0.Initate_TestInstruction_FenixSentToUsersDomain_SendTestDataToThisDomain`, `user.Current`
+- Selector calls: `user.Current`, `fmt.Println`, `strings.ReplaceAll`, `testInstruction_SendTestDataToThisDomain_version_1_0.Initate_TestInstruction_FenixSentToUsersDomain_SendTestDataToThisDomain`, `testInstruction_SendTemplateToThisDomainversion_1_0.Initate_TestInstruction_FenixSentToUsersDomain_FenixOwnedSendTemplateToThisDomain`
 
 ### onExit
 - Signature: `func onExit()`
 - Exported: `false`
 - Control-flow features: `none detected`
-- Doc: SysTray Application - StartUp func onReady() {
+- Doc: SysTray Application - StartUp systray.SetIcon(embededfenixIcon)
 - Selector calls: `os.Exit`
 
 ## Behavioral Summary

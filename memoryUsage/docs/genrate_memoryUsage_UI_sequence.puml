@@ -2,19 +2,19 @@
 title Sequence Diagram - genrate_memoryUsage_UI.go
 actor Caller
 participant "genrate_memoryUsage_UI.go" as File
-participant "canvas" as canvas
-participant "chart" as chart
-participant "container" as container
 participant "fyne" as fyne
+participant "canvas" as canvas
 participant "memoryUsageImage" as memoryUsageImage
 participant "memoryUsageWindow" as memoryUsageWindow
-participant "now" as now
+participant "wg" as wg
 participant "runtime" as runtime
+participant "time" as time
+participant "sknlinechart" as sknlinechart
 Caller -> File: GenerateMemoryUsageIcon(...)
 activate File
-File -> canvas: NewImageFromResource(...)
-File -> fyne: NewSize(...)
 File -> fyne: NewStaticResource(...)
+File -> canvas: NewImageFromResource(...)
+File -> memoryUsageImage: SetMinSize(...)
 File --> Caller: return
 deactivate File
 @enduml

@@ -2,33 +2,33 @@
 title Sequence Diagram - clickableAttributeInPreview.go
 actor Caller
 participant "clickableAttributeInPreview.go" as File
-participant "attributeMessageBorderContainer" as attributeMessageBorderContainer
-participant "attributeMessageStringBuilder" as attributeMessageStringBuilder
-participant "c" as c
+participant "time" as time
 participant "clickableAttributeInPreview" as clickableAttributeInPreview
-participant "clipboard" as clipboard
+participant "widget" as widget
+participant "lbl" as lbl
+participant "maxlabelStringBuilder" as maxlabelStringBuilder
+participant "tempMaxWidget" as tempMaxWidget
 participant "container" as container
-participant "fenixMasterWindow" as fenixMasterWindow
-participant "fmt" as fmt
+participant "labelBorderContainer" as labelBorderContainer
 Caller -> File: CreateRenderer(...)
 activate File
-File -> container: NewBorder(...)
-File -> container: NewScroll(...)
-File -> labelBorderContainer: Refresh(...)
+File -> widget: NewLabel(...)
+File -> lbl: MinSize(...)
+File -> maxlabelStringBuilder: WriteString(...)
 File --> Caller: return
 deactivate File
 Caller -> File: Tapped(...)
 activate File
-File -> attributeMessageBorderContainer: Refresh(...)
-File -> attributeMessageStringBuilder: String(...)
-File -> attributeMessageStringBuilder: WriteString(...)
+File -> container: NewVBox(...)
+File -> widget: NewButton(...)
+File -> fenixMasterWindow: Clipboard(...)
 File --> Caller: return
 deactivate File
 Caller -> File: TappedSecondary(...)
 activate File
-File -> clipboard: SetContent(...)
 File -> fenixMasterWindow: Clipboard(...)
-File -> fmt: Sprintf(...)
+File -> clipboard: SetContent(...)
+File -> fyne: CurrentApp(...)
 File --> Caller: return
 deactivate File
 @enduml

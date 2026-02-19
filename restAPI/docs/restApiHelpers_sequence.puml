@@ -2,19 +2,19 @@
 title Sequence Diagram - restApiHelpers.go
 actor Caller
 participant "restApiHelpers.go" as File
-participant "dec" as dec
-participant "err" as err
-participant "errors" as errors
-participant "fmt" as fmt
 participant "header" as header
 participant "http" as http
 participant "json" as json
-participant "log" as log
-Caller -> File: SetDialAddressString(...)
+participant "dec" as dec
+participant "errors" as errors
+participant "fmt" as fmt
+participant "strings" as strings
+participant "err" as err
+Caller -> File: SetLogger(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: SetLogger(...)
+Caller -> File: SetDialAddressString(...)
 activate File
 File --> Caller: return
 deactivate File

@@ -2,15 +2,15 @@
 title Sequence Diagram - dateTime_helpers.go
 actor Caller
 participant "dateTime_helpers.go" as File
-participant "currentTime" as currentTime
+participant "time" as time
 participant "currentTimeStamp" as currentTimeStamp
+participant "currentTime" as currentTime
 participant "grpcTimeStamp" as grpcTimeStamp
 participant "grpcTimeStampAsTimeStamp" as grpcTimeStampAsTimeStamp
-participant "time" as time
-Caller -> File: ConvertGrpcTimeStampToStringForDB(...)
+Caller -> File: GenerateDatetimeTimeStampForDB(...)
 activate File
-File -> grpcTimeStamp: AsTime(...)
-File -> grpcTimeStampAsTimeStamp: Format(...)
+File -> time: Now(...)
+File -> currentTimeStamp: Format(...)
 File --> Caller: return
 deactivate File
 Caller -> File: GenerateDatetimeFromTimeInputForDB(...)
@@ -18,10 +18,10 @@ activate File
 File -> currentTime: Format(...)
 File --> Caller: return
 deactivate File
-Caller -> File: GenerateDatetimeTimeStampForDB(...)
+Caller -> File: ConvertGrpcTimeStampToStringForDB(...)
 activate File
-File -> currentTimeStamp: Format(...)
-File -> time: Now(...)
+File -> grpcTimeStamp: AsTime(...)
+File -> grpcTimeStampAsTimeStamp: Format(...)
 File --> Caller: return
 deactivate File
 @enduml

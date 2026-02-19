@@ -2,14 +2,28 @@
 title Sequence Diagram - listTestSuitesUI_TableLabel.go
 actor Caller
 participant "listTestSuitesUI_TableLabel.go" as File
+participant "time" as time
 participant "canvas" as canvas
-participant "clipboard" as clipboard
-participant "fenixMasterWindow" as fenixMasterWindow
-participant "fmt" as fmt
-participant "fyne" as fyne
 participant "l" as l
 participant "theme" as theme
-participant "time" as time
+participant "fenixMasterWindow" as fenixMasterWindow
+participant "clipboard" as clipboard
+participant "fyne" as fyne
+participant "fmt" as fmt
+Caller -> File: Tapped(...)
+activate File
+File -> time: Since(...)
+File -> l: onDoubleTap(...)
+File -> time: Now(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TappedSecondary(...)
+activate File
+File -> fenixMasterWindow: Clipboard(...)
+File -> clipboard: SetContent(...)
+File -> fyne: CurrentApp(...)
+File --> Caller: return
+deactivate File
 Caller -> File: MouseIn(...)
 activate File
 File -> l: Refresh(...)
@@ -22,20 +36,6 @@ deactivate File
 Caller -> File: MouseOut(...)
 activate File
 File -> l: Refresh(...)
-File --> Caller: return
-deactivate File
-Caller -> File: Tapped(...)
-activate File
-File -> l: onDoubleTap(...)
-File -> time: Now(...)
-File -> time: Since(...)
-File --> Caller: return
-deactivate File
-Caller -> File: TappedSecondary(...)
-activate File
-File -> clipboard: SetContent(...)
-File -> fenixMasterWindow: Clipboard(...)
-File -> fmt: Sprintf(...)
 File --> Caller: return
 deactivate File
 @enduml

@@ -2,12 +2,12 @@
 title Sequence Diagram - guiExecutionServer_helpers.go
 actor Caller
 participant "guiExecutionServer_helpers.go" as File
+participant "messageStreamEngineObject" as messageStreamEngineObject
+participant "grpc" as grpc
+participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
+participant "time" as time
 participant "context" as context
 participant "credentials" as credentials
-participant "d" as d
-participant "err" as err
-participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
-participant "grpc" as grpc
 participant "grpcurl" as grpcurl
 participant "log" as log
 Caller -> File: InitiateAndStartMessageStreamChannelReader(...)
@@ -17,9 +17,9 @@ File --> Caller: return
 deactivate File
 Caller -> File: MetadataFromHeaders(...)
 activate File
-File -> strings: HasSuffix(...)
 File -> strings: SplitN(...)
 File -> strings: ToLower(...)
+File -> strings: TrimSpace(...)
 File --> Caller: return
 deactivate File
 @enduml

@@ -2,28 +2,28 @@
 title Activity Diagram - uiServer.go
 start
 :Load gui/uiServer.go;
-:1. MouseIn [method on *CustomButton];
-:2. MouseMoved [method on *customRectangle];
-:3. MouseOut [method on *CustomButton];
-:4. StartUIServer [method on *GlobalUIServerStruct];
-:5. loadAvailableTestCaseBuildingBlocksTreeUI [method on *UIServerStruct];
-:6. loadCompleteAvailableTestCaseBuildingBlocksUI [method on *UIServerStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:7. loadCompleteCurrentTestCaseUI [method on *UIServerStruct];
-:8. loadCurrentTestCaseAttributesAreaUI [method on *UIServerStruct];
-:9. loadCurrentTestCaseModelAreaUI [method on *UIServerStruct];
-:10. loadUI [method on *UIServerStruct];
-:11. newCustomRect [method on *customRectangle];
-:12. startTestCaseUIServer [method on *UIServerStruct];
+:1. StartUIServer [method on *GlobalUIServerStruct];
+:2. startTestCaseUIServer [method on *UIServerStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Start goroutine/asynchronous work;
+:3. newCustomRect [method on *customRectangle];
+:4. MouseMoved [method on *customRectangle];
+:5. MouseIn [method on *CustomButton];
+:6. MouseOut [method on *CustomButton];
+:7. loadUI [method on *UIServerStruct];
+:8. loadCompleteAvailableTestCaseBuildingBlocksUI [method on *UIServerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:9. loadAvailableTestCaseBuildingBlocksTreeUI [method on *UIServerStruct];
+:10. loadCompleteCurrentTestCaseUI [method on *UIServerStruct];
+:11. loadCurrentTestCaseModelAreaUI [method on *UIServerStruct];
+:12. loadCurrentTestCaseAttributesAreaUI [method on *UIServerStruct];
 stop
 @enduml

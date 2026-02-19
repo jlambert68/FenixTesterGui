@@ -2,35 +2,35 @@
 title Activity Diagram - testCaseUI_graphicalRepresentation_generalTableForTemplateGithubFiles.go
 start
 :Load testCase/testCaseUI/testCaseUI_graphicalRepresentation_generalTableForTemplateGithubFiles.go;
-:1. MinSize [method on *CustomTemplateTable];
+:1. newClickableLabel;
+:2. Tapped [method on *clickableLabel];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:2. MouseIn [method on *clickableLabel];
-:3. MouseMoved [method on *clickableLabel];
-:4. MouseOut [method on *clickableLabel];
-:5. Tapped [method on *clickableLabel];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:6. TappedSecondary [method on *clickableLabel];
+:3. TappedSecondary [method on *clickableLabel];
+:4. MouseIn [method on *clickableLabel];
+:5. MouseMoved [method on *clickableLabel];
+:6. MouseOut [method on *clickableLabel];
 :7. generateTemplateFilesTable;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:8. newClickableLabel;
-:9. updateColumnAndRowSizes [method on *CustomTemplateTable];
+:8. updateColumnAndRowSizes [method on *CustomTemplateTable];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
+:9. MinSize [method on *CustomTemplateTable];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
 stop
 @enduml

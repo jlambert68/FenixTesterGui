@@ -38,21 +38,18 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - `_`
 
 ## Functions and Methods
+### NewTestCaseExecutionsSummaryTable
+- Signature: `func NewTestCaseExecutionsSummaryTable(tableOpts *DetailedTestCaseExecutionsSummaryTableOpts) *TestCaseExecutionsSummaryTableStruct`
+- Exported: `true`
+- Control-flow features: `if, for/range`
+- Internal calls: `NewTestcaseExecutionSummaryTableCell`, `string`, `float32`
+- Selector calls: `widget.NewTable`, `b.GetItem`, `log.Fatalf`, `l.SetText`, `t.ExtendBaseWidget`, `widget.NewLabel`
+
 ### CreateRenderer (method on `*TestCaseExecutionsSummaryTableStruct`)
 - Signature: `func (*TestCaseExecutionsSummaryTableStruct) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Selector calls: `container.NewMax`
-
-### Destroy (method on `testCaseExecutionSummaryTableRenderer`)
-- Signature: `func (testCaseExecutionSummaryTableRenderer) Destroy()`
-- Exported: `true`
-- Control-flow features: `none detected`
-
-### Layout (method on `testCaseExecutionSummaryTableRenderer`)
-- Signature: `func (testCaseExecutionSummaryTableRenderer) Layout(s fyne.Size)`
-- Exported: `true`
-- Control-flow features: `none detected`
 
 ### MinSize (method on `testCaseExecutionSummaryTableRenderer`)
 - Signature: `func (testCaseExecutionSummaryTableRenderer) MinSize() fyne.Size`
@@ -61,20 +58,23 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Internal calls: `float32`, `float64`
 - Selector calls: `fyne.NewSize`, `math.Max`, `math.Min`
 
-### NewTestCaseExecutionsSummaryTable
-- Signature: `func NewTestCaseExecutionsSummaryTable(tableOpts *DetailedTestCaseExecutionsSummaryTableOpts) *TestCaseExecutionsSummaryTableStruct`
+### Layout (method on `testCaseExecutionSummaryTableRenderer`)
+- Signature: `func (testCaseExecutionSummaryTableRenderer) Layout(s fyne.Size)`
 - Exported: `true`
-- Control-flow features: `if, for/range`
-- Internal calls: `NewTestcaseExecutionSummaryTableCell`, `float32`, `string`
-- Selector calls: `b.GetItem`, `l.SetText`, `log.Fatalf`, `t.ExtendBaseWidget`, `widget.NewLabel`, `widget.NewTable`
+- Control-flow features: `none detected`
 
-### Objects (method on `testCaseExecutionSummaryTableRenderer`)
-- Signature: `func (testCaseExecutionSummaryTableRenderer) Objects() []fyne.CanvasObject`
+### Destroy (method on `testCaseExecutionSummaryTableRenderer`)
+- Signature: `func (testCaseExecutionSummaryTableRenderer) Destroy()`
 - Exported: `true`
 - Control-flow features: `none detected`
 
 ### Refresh (method on `testCaseExecutionSummaryTableRenderer`)
 - Signature: `func (testCaseExecutionSummaryTableRenderer) Refresh()`
+- Exported: `true`
+- Control-flow features: `none detected`
+
+### Objects (method on `testCaseExecutionSummaryTableRenderer`)
+- Signature: `func (testCaseExecutionSummaryTableRenderer) Objects() []fyne.CanvasObject`
 - Exported: `true`
 - Control-flow features: `none detected`
 

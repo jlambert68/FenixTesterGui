@@ -33,7 +33,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, for/range, defer`
 - Doc: ListLogPostsAndValuesForTestInstructionExecutions List all LogPosts and Values for supplied TestInstructionExecutions. Log-posts are sorted on Logging DateTime
-- Internal calls: `RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType`, `TestCaseExecutionUuidType`, `TestInstructionExecutionLogPostMapKeyType`, `sortLogPostsByTimestamp`
+- Internal calls: `TestCaseExecutionUuidType`, `RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType`, `TestInstructionExecutionLogPostMapKeyType`, `sortLogPostsByTimestamp`
 - Selector calls: `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`, `testCaseExecutionsModel.GetTestInstructionExecutionUuidFromTestInstructionUuid`
 
 ### sortLogPostsByTimestamp
@@ -41,7 +41,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: sortLogPostsByTimestamp sorts LogPostAndValuesMessages slice by LogPostTimeStamp Set ascending to true for ascending order, false for descending order
-- Selector calls: `sort.SliceStable`, `timeI.After`, `timeI.Before`
+- Selector calls: `sort.SliceStable`, `timeI.Before`, `timeI.After`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

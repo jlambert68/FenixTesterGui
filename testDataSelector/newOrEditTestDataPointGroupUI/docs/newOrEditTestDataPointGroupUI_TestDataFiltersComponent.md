@@ -36,9 +36,9 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func generateTestDataSelectionsUIComponent(testDataModel *testDataEngine.TestDataModelStruct, testDataModelMap map[testDataEngine.TestDataDomainUuidType]*testDataEngine.TestDataDomainModelStruct, newOrEditTestDataPointGroupWindow *fyne.Window)`
 - Exported: `false`
 - Control-flow features: `if, for/range, go, defer`
-- Doc: *** Create the selection boxes for selecting TestDataValues values
-- Internal calls: `clearTestDataFilterCheckBoxesButtonFunction`, `searchTestDataButtonFunction`, `sortDataPointsList`, `string`, `testDataPointIntersectionOfTwoSlices`
-- Selector calls: `allAvailablePointsList.Refresh`, `container.NewBorder`, `container.NewHBox`, `container.NewScroll`, `container.NewVBox`, `domainsSelect.Refresh`, `domainsSelect.SetSelected`, `fmt.Sprintf`
+- Doc: ** Create the selection boxes for selecting TestDataValues values
+- Internal calls: `string`, `searchTestDataButtonFunction`, `clearTestDataFilterCheckBoxesButtonFunction`, `testDataPointIntersectionOfTwoSlices`, `sortDataPointsList`
+- Selector calls: `container.NewHBox`, `widget.NewLabel`, `container.NewVBox`, `widget.NewSelect`, `sort.Slice`, `sort.Strings`, `widget.NewCheckGroup`, `container.NewScroll`
 
 ### sortDataPointsList
 - Signature: `func sortDataPointsList(dataPointListToBeSorted []testDataEngine.DataPointTypeForGroupsStruct) []testDataEngine.DataPointTypeForGroupsStruct`

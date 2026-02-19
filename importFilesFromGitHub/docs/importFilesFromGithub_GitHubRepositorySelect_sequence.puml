@@ -2,14 +2,14 @@
 title Sequence Diagram - importFilesFromGithub_GitHubRepositorySelect.go
 actor Caller
 participant "importFilesFromGithub_GitHubRepositorySelect.go" as File
-participant "importFilesFromGitHubObject" as importFilesFromGitHubObject
-participant "strings" as strings
 participant "widget" as widget
+participant "strings" as strings
+participant "importFilesFromGitHubObject" as importFilesFromGitHubObject
 Caller -> File: generateGitHubRepositorySelect(...)
 activate File
-File -> importFilesFromGitHubObject: filterFileListFromGitHub(...)
-File -> importFilesFromGitHubObject: getFileListFromGitHub(...)
+File -> widget: NewSelect(...)
 File -> strings: Split(...)
+File -> importFilesFromGitHubObject: getFileListFromGitHub(...)
 File --> Caller: return
 deactivate File
 @enduml

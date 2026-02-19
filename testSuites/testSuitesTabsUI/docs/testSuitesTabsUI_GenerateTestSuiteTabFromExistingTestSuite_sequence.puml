@@ -2,19 +2,19 @@
 title Sequence Diagram - testSuitesTabsUI_GenerateTestSuiteTabFromExistingTestSuite.go
 actor Caller
 participant "testSuitesTabsUI_GenerateTestSuiteTabFromExistingTestSuite.go" as File
-participant "container" as container
-participant "err" as err
-participant "fmt" as fmt
 participant "fyne" as fyne
-participant "newTestSuiteModel" as newTestSuiteModel
-participant "newTestSuiteUiObject" as newTestSuiteUiObject
-participant "sharedCode" as sharedCode
 participant "testSuitesModel" as testSuitesModel
+participant "sharedCode" as sharedCode
+participant "newTestSuiteModel" as newTestSuiteModel
+participant "container" as container
+participant "fmt" as fmt
+participant "newTestSuiteUiObject" as newTestSuiteUiObject
+participant "widget" as widget
 Caller -> File: GenerateTestSuiteTabFromExistingTestSuite(...)
 activate File
-File -> container: NewBorder(...)
-File -> container: NewTabItem(...)
-File -> container: NewVBox(...)
+File -> fyne: CurrentApp(...)
+File -> testSuitesModel: GenerateNewTestSuiteModelObject(...)
+File -> sharedCode: GenerateShortUuidFromFullUuid(...)
 File --> Caller: return
 deactivate File
 @enduml

@@ -2,19 +2,19 @@
 title Sequence Diagram - messageStreamEngine_incomingPubSubExecutionStatusMessages.go
 actor Caller
 participant "messageStreamEngine_incomingPubSubExecutionStatusMessages.go" as File
-participant "atomic" as atomic
-participant "clientSubscription" as clientSubscription
+participant "strings" as strings
 participant "context" as context
+participant "pubsub" as pubsub
 participant "credentials" as credentials
-participant "executionStatusMessagesPubSubMessage" as executionStatusMessagesPubSubMessage
-participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
-participant "fmt" as fmt
 participant "grpc" as grpc
+participant "option" as option
+participant "pubSubClient" as pubSubClient
+participant "clientSubscription" as clientSubscription
 Caller -> File: PullPubSubTestInstructionExecutionMessages(...)
 activate File
-File -> atomic: AddInt32(...)
-File -> clientSubscription: Receive(...)
+File -> strings: ReplaceAll(...)
 File -> context: Background(...)
+File -> pubsub: NewClient(...)
 File --> Caller: return
 deactivate File
 @enduml

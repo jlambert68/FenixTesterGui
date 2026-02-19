@@ -2,22 +2,25 @@
 title Sequence Diagram - newOrEditTestDataPointGroupUI_CustomTable.go
 actor Caller
 participant "newOrEditTestDataPointGroupUI_CustomTable.go" as File
-participant "allAvailablePointsList" as allAvailablePointsList
+participant "widget" as widget
+participant "theme" as theme
 participant "canvas" as canvas
+participant "w" as w
 participant "container" as container
-participant "customWidget" as customWidget
-participant "dialog" as dialog
+participant "tempLabel" as tempLabel
 participant "fyne" as fyne
-participant "modal" as modal
-participant "selectedPointsList" as selectedPointsList
-Caller -> File: CreateRenderer(...)
+participant "table" as table
+Caller -> File: NewCustomWidget(...)
 activate File
-File -> container: NewHBox(...)
-File -> w: updateVisibility(...)
+File -> widget: NewLabel(...)
+File -> widget: NewIcon(...)
+File -> theme: CheckButtonCheckedIcon(...)
 File --> Caller: return
 deactivate File
-Caller -> File: Destroy(...)
+Caller -> File: CreateRenderer(...)
 activate File
+File -> w: updateVisibility(...)
+File -> container: NewHBox(...)
 File --> Caller: return
 deactivate File
 Caller -> File: Layout(...)
@@ -26,43 +29,36 @@ File --> Caller: return
 deactivate File
 Caller -> File: MinSize(...)
 activate File
-File -> fyne: NewSize(...)
-File -> tempLabel: MinSize(...)
+File -> widget: NewLabel(...)
 File -> tempLabel: Refresh(...)
+File -> fyne: NewSize(...)
 File --> Caller: return
 deactivate File
-Caller -> File: MouseIn(...)
+Caller -> File: Refresh(...)
 activate File
-File -> w: Refresh(...)
-File -> w: onHover(...)
-File --> Caller: return
-deactivate File
-Caller -> File: MouseMoved(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: MouseOut(...)
-activate File
-File -> w: Refresh(...)
-File -> w: onHover(...)
-File --> Caller: return
-deactivate File
-Caller -> File: NewCustomTableWidget(...)
-activate File
-File -> table: ExtendBaseWidget(...)
-File -> table: handleCellTapped(...)
-File -> table: hoverRow(...)
-File --> Caller: return
-deactivate File
-Caller -> File: NewCustomWidget(...)
-activate File
-File -> canvas: NewRectangle(...)
-File -> theme: BackgroundColor(...)
-File -> theme: CheckButtonCheckedIcon(...)
+File -> canvas: Refresh(...)
 File --> Caller: return
 deactivate File
 Caller -> File: Objects(...)
 activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Destroy(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: SetText(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: SetCellID(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MouseIn(...)
+activate File
+File -> w: onHover(...)
+File -> w: Refresh(...)
 File --> Caller: return
 deactivate File
 @enduml

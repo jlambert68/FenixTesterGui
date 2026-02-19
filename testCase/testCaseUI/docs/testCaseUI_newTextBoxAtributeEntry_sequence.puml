@@ -2,10 +2,16 @@
 title Sequence Diagram - testCaseUI_newTextBoxAtributeEntry.go
 actor Caller
 participant "testCaseUI_newTextBoxAtributeEntry.go" as File
-participant "fmt" as fmt
 participant "myAttributeEntry" as myAttributeEntry
 participant "widget" as widget
+participant "fmt" as fmt
 participant "x" as x
+Caller -> File: NewAttributeEntry(...)
+activate File
+File -> myAttributeEntry: ExtendBaseWidget(...)
+File -> widget: NewEntry(...)
+File --> Caller: return
+deactivate File
 Caller -> File: FocusGained(...)
 activate File
 File -> fmt: Println(...)
@@ -16,12 +22,6 @@ Caller -> File: FocusLost(...)
 activate File
 File -> fmt: Println(...)
 File -> x: FocusLost(...)
-File --> Caller: return
-deactivate File
-Caller -> File: NewAttributeEntry(...)
-activate File
-File -> myAttributeEntry: ExtendBaseWidget(...)
-File -> widget: NewEntry(...)
 File --> Caller: return
 deactivate File
 @enduml

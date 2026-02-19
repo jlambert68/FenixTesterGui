@@ -2,19 +2,19 @@
 title Activity Diagram - ruleEngine_delete.go
 start
 :Load commandAndRuleEngine/ruleEngine_delete.go;
-:1. executeDeleteElement [method on *CommandAndRuleEngineObjectStruct];
+:1. verifyIfElementCanBeDeleted [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:2. executeDeleteElementBasedOnRule [method on *CommandAndRuleEngineObjectStruct];
+:2. executeDeleteElement [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:3. verifyIfElementCanBeDeleted [method on *CommandAndRuleEngineObjectStruct];
+:3. executeDeleteElementBasedOnRule [method on *CommandAndRuleEngineObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

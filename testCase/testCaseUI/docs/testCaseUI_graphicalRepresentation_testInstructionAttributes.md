@@ -40,20 +40,20 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
-### extractResponseVariablesFromTestInstruction (method on `*TestCasesUiModelStruct`)
-- Signature: `func (*TestCasesUiModelStruct) extractResponseVariablesFromTestInstruction(allowedResponseVariablesTypeUuidPtr *[]string, currentElement *testCaseModel.MatureTestCaseModelElementStruct, testInstructionWithCorrectResponseVariablesTypePtr *[]*testCaseModel.MatureTestInstructionWithCorrectResponseVariablesTypeStruct) err error`
+### generateTestCaseAttributesAreaForTestCase (method on `*TestCasesUiModelStruct`)
+- Signature: `func (*TestCasesUiModelStruct) generateTestCaseAttributesAreaForTestCase(testCaseUuid string, testInstructionElementMatureUuid string) (testCaseAttributesArea fyne.CanvasObject, testInstructionAttributesAccordion *widget.Accordion, err error)`
 - Exported: `false`
 - Control-flow features: `if, for/range, returns error`
-- Doc: Extract ResponseVariables from TestInstruction, used within the two traverse functions
-- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`, `tempImmatureTestInstructionMessage.GetResponseVariablesMapStructure`, `tempResponseVariable.GetResponseVariableTypeUuid`
+- Doc: Generate the TestCaseAttributes Area for the TestCase
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fmt.Println`, `testCasesUiCanvasObject.generateAttributeStringListData`, `container.New`, `layout.NewVBoxLayout`, `layout.NewFormLayout`, `attributesContainer.Add`
 
 ### generateAttributeRow (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) generateAttributeRow(currentTestCaseUuid string, attributeItem *testCaseModel.AttributeStruct, attributesList *testCaseModel.AttributeStructSliceReferenceType, attributesFormContainer *fyne.Container, currentTestCase *testCaseModel.TestCaseModelStruct, testInstructionElementMatureUuid string, immatureTestInstructionUuid string)`
 - Exported: `false`
 - Control-flow features: `if, for/range, switch`
 - Doc: Generate and add an 'attribute row' to be used in attributes
-- Internal calls: `NewCustomAttributeSelectComboBoxWidget`, `int32`, `newCustomAttributeEntryWidget`, `string`
-- Selector calls: `attributesFormContainer.Add`, `attributesFormContainer.Refresh`, `canvas.NewRectangle`, `err.Error`, `errors.New`, `fmt.Println`, `fmt.Sprintf`, `immatureTestInstruction.GetResponseVariablesMapStructure`
+- Internal calls: `newCustomAttributeEntryWidget`, `string`, `NewCustomAttributeSelectComboBoxWidget`, `int32`
+- Selector calls: `attributesFormContainer.Add`, `widget.NewLabel`, `widget.NewEntry`, `newAttributeEntry.Enable`, `newAttributeEntry.Disable`, `newAttributeEntry.SetText`, `attributesFormContainer.Refresh`, `canvas.NewRectangle`
 
 ### generateAttributeStringListData (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) generateAttributeStringListData(testCaseUuid string, testInstructionElementMatureUuid string) (attributesListRef testCaseModel.AttributeStructSliceReferenceType, err error)`
@@ -61,28 +61,28 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, switch, returns error`
 - Doc: Generate structure for 'binding.StringList' regarding Attribute values
 - Internal calls: `int32`
-- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`, `regexp.MustCompile`, `sort.SliceStable`
-
-### generateTestCaseAttributesAreaForTestCase (method on `*TestCasesUiModelStruct`)
-- Signature: `func (*TestCasesUiModelStruct) generateTestCaseAttributesAreaForTestCase(testCaseUuid string, testInstructionElementMatureUuid string) (testCaseAttributesArea fyne.CanvasObject, testInstructionAttributesAccordion *widget.Accordion, err error)`
-- Exported: `false`
-- Control-flow features: `if, for/range, returns error`
-- Doc: Generate the TestCaseAttributes Area for the TestCase
-- Selector calls: `attributesContainer.Add`, `attributesFormContainer.Add`, `container.New`, `container.NewScroll`, `container.NewVBox`, `errors.New`, `fmt.Println`, `fmt.Sprintf`
-
-### recursiveTraverseDownwardsTestInstructionContainerElementsForResponseVariablesThatMatch (method on `*TestCasesUiModelStruct`)
-- Signature: `func (*TestCasesUiModelStruct) recursiveTraverseDownwardsTestInstructionContainerElementsForResponseVariablesThatMatch(currentTestCase *testCaseModel.TestCaseModelStruct, elementUuidToCheck string, allowedResponseVariablesTypeUuidPtr *[]string, testInstructionWithCorrectResponseVariablesTypePtr *[]*testCaseModel.MatureTestInstructionWithCorrectResponseVariablesTypeStruct) err error`
-- Exported: `false`
-- Control-flow features: `if, switch, returns error`
-- Doc: When the traverse logic comes to a TestInstructionContainer it will start to traverse down in this path, going first down and then right. This is use in UI for user to chose from. Then this information is used in runtime to get the value th...
-- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`, `log.Fatalln`, `testCasesUiCanvasObject.extractResponseVariablesFromTestInstruction`, `testCasesUiCanvasObject.recursiveTraverseDownwardsTestInstructionContainerElementsForResponseVariablesThatMatch`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fmt.Println`, `regexp.MustCompile`, `sort.SliceStable`
 
 ### recursiveTraverseUpwardsTestInstructionContainerElementsForResponseVariablesThatMatch (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) recursiveTraverseUpwardsTestInstructionContainerElementsForResponseVariablesThatMatch(currentTestCase *testCaseModel.TestCaseModelStruct, elementUuidToCheck string, allowedResponseVariablesTypeUuidPtr *[]string, testInstructionWithCorrectResponseVariablesTypePtr *[]*testCaseModel.MatureTestInstructionWithCorrectResponseVariablesTypeStruct, thisIsTheStartElement bool, previousProcessedElementUuid string, previousProcessedElementsParentUuid string) err error`
 - Exported: `false`
 - Control-flow features: `if, switch, returns error`
 - Doc: Traverse the element model to left and/or upward to the top element. This to be able to find all matching response variables. When the traverse logic comes to a TestInstructionContainer it will start to traverse down in this path, going fir...
-- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`, `log.Fatalln`, `testCasesUiCanvasObject.extractResponseVariablesFromTestInstruction`, `testCasesUiCanvasObject.recursiveTraverseDownwardsTestInstructionContainerElementsForResponseVariablesThatMatch`, `testCasesUiCanvasObject.recursiveTraverseUpwardsTestInstructionContainerElementsForResponseVariablesThatMatch`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fmt.Println`, `testCasesUiCanvasObject.extractResponseVariablesFromTestInstruction`, `testCasesUiCanvasObject.recursiveTraverseUpwardsTestInstructionContainerElementsForResponseVariablesThatMatch`, `log.Fatalln`, `testCasesUiCanvasObject.recursiveTraverseDownwardsTestInstructionContainerElementsForResponseVariablesThatMatch`
+
+### recursiveTraverseDownwardsTestInstructionContainerElementsForResponseVariablesThatMatch (method on `*TestCasesUiModelStruct`)
+- Signature: `func (*TestCasesUiModelStruct) recursiveTraverseDownwardsTestInstructionContainerElementsForResponseVariablesThatMatch(currentTestCase *testCaseModel.TestCaseModelStruct, elementUuidToCheck string, allowedResponseVariablesTypeUuidPtr *[]string, testInstructionWithCorrectResponseVariablesTypePtr *[]*testCaseModel.MatureTestInstructionWithCorrectResponseVariablesTypeStruct) err error`
+- Exported: `false`
+- Control-flow features: `if, switch, returns error`
+- Doc: When the traverse logic comes to a TestInstructionContainer it will start to traverse down in this path, going first down and then right. This is use in UI for user to chose from. Then this information is used in runtime to get the value th...
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fmt.Println`, `testCasesUiCanvasObject.extractResponseVariablesFromTestInstruction`, `testCasesUiCanvasObject.recursiveTraverseDownwardsTestInstructionContainerElementsForResponseVariablesThatMatch`, `log.Fatalln`
+
+### extractResponseVariablesFromTestInstruction (method on `*TestCasesUiModelStruct`)
+- Signature: `func (*TestCasesUiModelStruct) extractResponseVariablesFromTestInstruction(allowedResponseVariablesTypeUuidPtr *[]string, currentElement *testCaseModel.MatureTestCaseModelElementStruct, testInstructionWithCorrectResponseVariablesTypePtr *[]*testCaseModel.MatureTestInstructionWithCorrectResponseVariablesTypeStruct) err error`
+- Exported: `false`
+- Control-flow features: `if, for/range, returns error`
+- Doc: Extract ResponseVariables from TestInstruction, used within the two traverse functions
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fmt.Println`, `tempImmatureTestInstructionMessage.GetResponseVariablesMapStructure`, `tempResponseVariable.GetResponseVariableTypeUuid`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

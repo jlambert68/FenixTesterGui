@@ -38,7 +38,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `go`
 - Doc: StartTableAddAndRemoveChannelReaders Start Channel readers for testCases OnQueue, UnderExecutions or Finished Executions
-- Internal calls: `StartFinishedExecutionsTableAddRemoveChannelReader`, `StartOnQueueTableAddRemoveChannelReader`, `StartUnderExecutionTableAddRemoveChannelReader`
+- Internal calls: `StartOnQueueTableAddRemoveChannelReader`, `StartUnderExecutionTableAddRemoveChannelReader`, `StartFinishedExecutionsTableAddRemoveChannelReader`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

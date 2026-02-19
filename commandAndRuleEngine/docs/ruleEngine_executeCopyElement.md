@@ -33,14 +33,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*CommandAndRuleEngineObjectStruct) executeCopyFullELementStructure(testCaseUuid string, uuidToCopy string) err error`
 - Exported: `false`
 - Control-flow features: `if, for/range, returns error`
-- Selector calls: `commandAndRuleEngine.recursiveCopyingOfFullElementStructure`, `errors.New`, `fmt.Sprintf`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `commandAndRuleEngine.recursiveCopyingOfFullElementStructure`
 
 ### recursiveCopyingOfFullElementStructure (method on `*CommandAndRuleEngineObjectStruct`)
 - Signature: `func (*CommandAndRuleEngineObjectStruct) recursiveCopyingOfFullElementStructure(currentTestCase *testCaseModel.TestCaseModelStruct, elementsUuid string, copiedElementStructure *testCaseModel.ImmatureElementStruct) err error`
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Doc: Copy the full structure of all children, in TestCase-model, for specific Element
-- Selector calls: `commandAndRuleEngine.recursiveCopyingOfFullElementStructure`, `errors.New`, `fmt.Sprintf`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `commandAndRuleEngine.recursiveCopyingOfFullElementStructure`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -2,33 +2,33 @@
 title Sequence Diagram - testSuiteUI_GraphicalComponent_testSuiteDeletetionDate.go
 actor Caller
 participant "testSuiteUI_GraphicalComponent_testSuiteDeletetionDate.go" as File
-participant "binding" as binding
-participant "canvas" as canvas
-participant "container" as container
-participant "deleteTestSuiteButton" as deleteTestSuiteButton
-participant "enableDeletionCheckbox" as enableDeletionCheckbox
-participant "errors" as errors
+participant "tickerCountDownlabelDataBinding" as tickerCountDownlabelDataBinding
 participant "fmt" as fmt
 participant "fyne" as fyne
+participant "tickerCountDownlabel" as tickerCountDownlabel
+participant "time" as time
+participant "ticker" as ticker
+participant "enableDeletionCheckbox" as enableDeletionCheckbox
+participant "newTestSuiteDeletionDateEntry" as newTestSuiteDeletionDateEntry
 Caller -> File: countDownTicker(...)
 activate File
-File -> enableDeletionCheckbox: SetChecked(...)
+File -> tickerCountDownlabelDataBinding: Set(...)
 File -> fmt: Sprintf(...)
-File -> fyne: CurrentApp(...)
+File -> fyne: Do(...)
 File --> Caller: return
 deactivate File
 Caller -> File: flashScreen(...)
 activate File
-File -> canvas: NewRectangle(...)
-File -> fmt: Println(...)
-File -> fyne: CurrentApp(...)
+File -> mainWindow: Hide(...)
+File -> mainApp: NewWindow(...)
+File -> redWindow: SetFullScreen(...)
 File --> Caller: return
 deactivate File
 Caller -> File: generateTestSuiteDeletionDateArea(...)
 activate File
-File -> binding: NewString(...)
-File -> canvas: NewRectangle(...)
-File -> container: New(...)
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> fmt: Println(...)
 File --> Caller: return
 deactivate File
 @enduml

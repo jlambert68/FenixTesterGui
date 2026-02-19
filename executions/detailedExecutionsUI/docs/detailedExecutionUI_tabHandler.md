@@ -35,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: GenerateBaseUITabForExecutions Create the Base-UI-canvas-object for the Detailed TestCaseExecutions object.
-- Selector calls: `container.New`, `detailedTestCaseExecutionsUIObject.CreateDetailedTestCaseExecutionsTabPage`, `fmt.Println`, `layout.NewBorderLayout`, `testCaseExecutionsTabPage.Refresh`, `theme.ContentCopyIcon`, `theme.ContentRedoIcon`, `theme.HomeIcon`
+- Selector calls: `widget.NewToolbar`, `widget.NewToolbarAction`, `theme.ContentRedoIcon`, `fmt.Println`, `detailedTestCaseExecutionsUIObject.CreateDetailedTestCaseExecutionsTabPage`, `testCaseExecutionsTabPage.Refresh`, `theme.ContentCopyIcon`, `theme.HomeIcon`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

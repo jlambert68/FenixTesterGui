@@ -2,48 +2,48 @@
 title Activity Diagram - uiTestCaseCommands.go
 start
 :Load gui/uiTestCaseCommands.go;
-:1. copy [method on *UIServerStruct];
-:2. createTestCaseCommandParametersUI [method on *UIServerStruct];
+:1. createTestCaseCommandParametersUI [method on *UIServerStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:3. createTestCaseCommandsUI [method on *UIServerStruct];
+:2. createTestCaseCommandsUI [method on *UIServerStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
-:4. cut [method on *UIServerStruct];
-:5. getUuidFromTreeName [method on *UIServerStruct];
+:3. newTestCase [method on *UIServerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. remove [method on *UIServerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:5. swapFromNew [method on *UIServerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:6. copy [method on *UIServerStruct];
+:7. swapFromCopyBuffer [method on *UIServerStruct];
+:8. cut [method on *UIServerStruct];
+:9. swapFromCutBuffer [method on *UIServerStruct];
+:10. undoLastCommandOnStack [method on *UIServerStruct];
+:11. undoUndoLastCommandOnStack [method on *UIServerStruct];
+:12. getUuidFromTreeName [method on *UIServerStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:6. newTestCase [method on *UIServerStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:7. remove [method on *UIServerStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:8. swapFromCopyBuffer [method on *UIServerStruct];
-:9. swapFromCutBuffer [method on *UIServerStruct];
-:10. swapFromNew [method on *UIServerStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:11. undoLastCommandOnStack [method on *UIServerStruct];
-:12. undoUndoLastCommandOnStack [method on *UIServerStruct];
 stop
 @enduml

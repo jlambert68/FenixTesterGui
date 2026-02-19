@@ -40,7 +40,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, returns error`
 - Doc: Generate the OwnerDomain Area for the TestCase
 - Internal calls: `NewCustomAttributeSelectComboBoxWidget`
-- Selector calls: `canvas.NewRectangle`, `container.New`, `container.NewVBox`, `errors.New`, `fmt.Println`, `fmt.Sprintf`, `layout.NewFormLayout`, `layout.NewVBoxLayout`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fmt.Println`, `container.New`, `layout.NewVBoxLayout`, `layout.NewFormLayout`, `widget.NewLabel`, `testCaseOwnerDomainNameFormContainer.Add`
 
 ### setSelectedOwnerDomainForTestCaseArea (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) setSelectedOwnerDomainForTestCaseArea(tempCurrentOwnerDomainToBeChosenInDropDown string, newOwnerDomainSelect *widget.Select, valueIsValidWarningBox *canvas.Rectangle)`

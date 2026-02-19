@@ -35,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, defer`
 - Doc: LoadDetailedTestSuiteExecutionFromDatabase Load all Detailed TestSuiteExecution-data for specific execution
 - Internal calls: `DetailedTestSuiteExecutionMapKeyType`, `int`
-- Selector calls: `TestSuiteExecutionsModel.AddToDetailedTestSuiteExecutionsMap`, `TestSuiteExecutionsModel.ClearFlagRefreshOngoingOfDetailedTestSuiteExecution`, `TestSuiteExecutionsModel.SetFlagRefreshOngoingOfDetailedTestSuiteExecution`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `getSingleTestSuiteExecutionResponse.GetAckNackResponse`, `getSingleTestSuiteExecutionResponse.GetTestSuiteExecutionResponse`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `strconv.Itoa`
+- Selector calls: `strconv.Itoa`, `TestSuiteExecutionsModel.SetFlagRefreshOngoingOfDetailedTestSuiteExecution`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `TestSuiteExecutionsModel.ClearFlagRefreshOngoingOfDetailedTestSuiteExecution`, `getSingleTestSuiteExecutionResponse.GetAckNackResponse`, `TestSuiteExecutionsModel.AddToDetailedTestSuiteExecutionsMap`, `getSingleTestSuiteExecutionResponse.GetTestSuiteExecutionResponse`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

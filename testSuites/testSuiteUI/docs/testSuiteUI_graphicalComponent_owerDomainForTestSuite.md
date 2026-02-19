@@ -33,28 +33,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
-### calcCheckGroupWidth
-- Signature: `func calcCheckGroupWidth(values []string) float32`
-- Exported: `false`
-- Control-flow features: `none detected`
-- Doc: calcCheckGroupWidth returns the width needed to show the widest checkbox label
-- Selector calls: `tmp.MinSize`, `tmp.Refresh`, `widget.NewCheckGroup`
-
-### calcSelectWidth
-- Signature: `func calcSelectWidth(values []string) float32`
-- Exported: `false`
-- Control-flow features: `if, for/range`
-- Doc: calcSelectWidth returns the width needed to show the longest option
-- Internal calls: `float32`
-- Selector calls: `tmp.MinSize`, `tmp.Refresh`, `widget.NewSelect`
-
 ### generateOwnerDomainForTestSuiteArea (method on `*TestSuiteUiStruct`)
 - Signature: `func (*TestSuiteUiStruct) generateOwnerDomainForTestSuiteArea(testCasesModel *testCaseModel.TestCasesModelsStruct) (testCaseOwnerDomainContainer *fyne.Container, testCaseOwnerDomainCustomSelectComboBox *customSelectComboBox, err error)`
 - Exported: `false`
 - Control-flow features: `if, for/range, returns error`
 - Doc: Generate the OwnerDomain Area for the TestSuite
 - Internal calls: `newCustomSelectComboBoxWidget`
-- Selector calls: `canvas.NewRectangle`, `container.New`, `container.NewStack`, `container.NewVBox`, `err.Error`, `fmt.Sprintf`, `fyne.Do`, `layout.NewFormLayout`
+- Selector calls: `container.New`, `layout.NewVBoxLayout`, `layout.NewFormLayout`, `canvas.NewRectangle`, `widget.NewSelect`, `testSuiteUiModel.lockUIUntilOwnerDomainAndTestEnvironmenIsSelected`, `testSuiteUiModel.generateTestEnvironmentForTestSuite`, `fmt.Sprintf`
 
 ### setSelectedOwnerDomainForTestSuiteArea (method on `*TestSuiteUiStruct`)
 - Signature: `func (*TestSuiteUiStruct) setSelectedOwnerDomainForTestSuiteArea(tempCurrentOwnerDomainToBeChosenInDropDown string, newOwnerDomainSelect *widget.Select, valueIsValidWarningBox *canvas.Rectangle)`
@@ -62,6 +47,21 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if`
 - Doc: Sets the Selected value for the DropDown specifying the Owner-Domain of the TestSuite
 - Selector calls: `newOwnerDomainSelect.SetSelected`
+
+### calcSelectWidth
+- Signature: `func calcSelectWidth(values []string) float32`
+- Exported: `false`
+- Control-flow features: `if, for/range`
+- Doc: calcSelectWidth returns the width needed to show the longest option
+- Internal calls: `float32`
+- Selector calls: `widget.NewSelect`, `tmp.Refresh`, `tmp.MinSize`
+
+### calcCheckGroupWidth
+- Signature: `func calcCheckGroupWidth(values []string) float32`
+- Exported: `false`
+- Control-flow features: `none detected`
+- Doc: calcCheckGroupWidth returns the width needed to show the widest checkbox label
+- Selector calls: `widget.NewCheckGroup`, `tmp.Refresh`, `tmp.MinSize`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

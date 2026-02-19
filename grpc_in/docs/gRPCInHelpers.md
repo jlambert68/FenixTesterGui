@@ -36,17 +36,17 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Internal calls: `getHighestFenixUserGuiServerProtoFileVersion`
 - Selector calls: `fenixUserGuiGrpcApi.CurrentFenixUserGuiProtoFileVersionEnum`, `protoFileExpected.String`, `protoFileUsed.String`
 
+### getHighestFenixUserGuiServerProtoFileVersion
+- Signature: `func getHighestFenixUserGuiServerProtoFileVersion() int32`
+- Exported: `false`
+- Control-flow features: `if, for/range`
+- Doc: ******************************************************************************************************************* Get the highest FenixProtoFileVersionEnumeration
+
 ### SetLogger (method on `*GRPCInStruct`)
 - Signature: `func (*GRPCInStruct) SetLogger(logger *logrus.Logger)`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: SetLogger Set to use the same logger reference as is used by central part of system
-
-### getHighestFenixUserGuiServerProtoFileVersion
-- Signature: `func getHighestFenixUserGuiServerProtoFileVersion() int32`
-- Exported: `false`
-- Control-flow features: `if, for/range`
-- Doc: ******************************************************************************************************************** Get the highest FenixProtoFileVersionEnumeration
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

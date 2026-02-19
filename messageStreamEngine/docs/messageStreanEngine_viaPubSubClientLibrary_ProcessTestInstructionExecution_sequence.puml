@@ -2,19 +2,19 @@
 title Sequence Diagram - messageStreanEngine_viaPubSubClientLibrary_ProcessTestInstructionExecution.go
 actor Caller
 participant "messageStreanEngine_viaPubSubClientLibrary_ProcessTestInstructionExecution.go" as File
-participant "clientSubscription" as clientSubscription
+participant "strings" as strings
 participant "context" as context
+participant "pubsub" as pubsub
 participant "credentials" as credentials
-participant "fmt" as fmt
 participant "grpc" as grpc
 participant "option" as option
-participant "protojson" as protojson
 participant "pubSubClient" as pubSubClient
+participant "clientSubscription" as clientSubscription
 Caller -> File: PullPubSubTestInstructionExecutionMessagesGcpClientLib(...)
 activate File
-File -> clientSubscription: Receive(...)
+File -> strings: ReplaceAll(...)
 File -> context: Background(...)
-File -> credentials: NewTLS(...)
+File -> pubsub: NewClient(...)
 File --> Caller: return
 deactivate File
 @enduml

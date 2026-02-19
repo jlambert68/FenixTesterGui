@@ -2,10 +2,10 @@
 title Sequence Diagram - common_helpers.go
 actor Caller
 participant "common_helpers.go" as File
-participant "hash" as hash
 participant "headerFilterValue" as headerFilterValue
-participant "hex" as hex
 participant "sha256" as sha256
+participant "hash" as hash
+participant "hex" as hex
 Caller -> File: CreateTestDataHeaderItemMessageHash(...)
 activate File
 File -> headerFilterValue: String(...)
@@ -13,7 +13,7 @@ File --> Caller: return
 deactivate File
 Caller -> File: HashSingleValue(...)
 activate File
-File -> hash: Sum(...)
+File -> sha256: New(...)
 File -> hash: Write(...)
 File -> hex: EncodeToString(...)
 File --> Caller: return

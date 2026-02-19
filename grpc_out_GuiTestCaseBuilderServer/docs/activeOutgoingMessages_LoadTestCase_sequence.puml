@@ -3,14 +3,14 @@ title Sequence Diagram - activeOutgoingMessages_LoadTestCase.go
 actor Caller
 participant "activeOutgoingMessages_LoadTestCase.go" as File
 participant "context" as context
+participant "grpcOut" as grpcOut
 participant "err" as err
 participant "fenixGuiTestCaseBuilderServerGrpcApi" as fenixGuiTestCaseBuilderServerGrpcApi
 participant "fenixGuiTestCaseCaseBuilderServerGrpcClient" as fenixGuiTestCaseCaseBuilderServerGrpcClient
-participant "grpcOut" as grpcOut
 Caller -> File: LoadDetailedTestCase(...)
 activate File
 File -> context: Background(...)
-File -> context: WithTimeout(...)
+File -> grpcOut: setConnectionToFenixGuiTestCaseBuilderServer_new(...)
 File -> err: Error(...)
 File --> Caller: return
 deactivate File

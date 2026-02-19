@@ -2,14 +2,14 @@
 title Sequence Diagram - importFilesFromGithub_CancelButton.go
 actor Caller
 participant "importFilesFromGithub_CancelButton.go" as File
+participant "widget" as widget
 participant "fenixMainWindow" as fenixMainWindow
 participant "parentWindow" as parentWindow
-participant "widget" as widget
 Caller -> File: generateCancelButton(...)
 activate File
+File -> widget: NewButton(...)
 File -> fenixMainWindow: Show(...)
 File -> parentWindow: Close(...)
-File -> widget: NewButton(...)
 File --> Caller: return
 deactivate File
 @enduml

@@ -36,7 +36,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, defer`
 - Doc: PullPubSubTestInstructionExecutionMessagesGcpRestApi Use GCP RestApi to subscribe to a PubSub-Topic
 - Internal calls: `generatePubSubTopicSubscriptionNameForExecutionStatusUpdates`, `retrievePubSubMessagesViaRestApi`
-- Selector calls: `context.Background`, `strings.ReplaceAll`, `time.Sleep`
+- Selector calls: `strings.ReplaceAll`, `context.Background`, `time.Sleep`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

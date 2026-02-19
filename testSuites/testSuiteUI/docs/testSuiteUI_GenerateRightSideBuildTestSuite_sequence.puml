@@ -6,8 +6,8 @@ participant "container" as container
 Caller -> File: generateRightSideBuildTestSuiteContainer(...)
 activate File
 File -> container: NewAppTabs(...)
-File -> container: NewBorder(...)
 File -> container: NewScroll(...)
+File -> container: NewBorder(...)
 File --> Caller: return
 deactivate File
 @enduml

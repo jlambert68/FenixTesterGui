@@ -8,12 +8,17 @@ activate File
 File -> uuidGenerator: New(...)
 File --> Caller: return
 deactivate File
-Caller -> File: createNewBondB10Element(...)
+Caller -> File: createNewBondB1fElement(...)
 activate File
 File -> uuidGenerator: New(...)
 File --> Caller: return
 deactivate File
-Caller -> File: createNewBondB10oxElement(...)
+Caller -> File: createNewBondB1lElement(...)
+activate File
+File -> uuidGenerator: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: createNewBondB10Element(...)
 activate File
 File -> uuidGenerator: New(...)
 File --> Caller: return
@@ -28,12 +33,12 @@ activate File
 File -> uuidGenerator: New(...)
 File --> Caller: return
 deactivate File
-Caller -> File: createNewBondB11fElement(...)
+Caller -> File: createNewBondB10oxElement(...)
 activate File
 File -> uuidGenerator: New(...)
 File --> Caller: return
 deactivate File
-Caller -> File: createNewBondB11fxElement(...)
+Caller -> File: createNewBondB11fElement(...)
 activate File
 File -> uuidGenerator: New(...)
 File --> Caller: return
@@ -43,12 +48,7 @@ activate File
 File -> uuidGenerator: New(...)
 File --> Caller: return
 deactivate File
-Caller -> File: createNewBondB11lxElement(...)
-activate File
-File -> uuidGenerator: New(...)
-File --> Caller: return
-deactivate File
-Caller -> File: createNewBondB12Element(...)
+Caller -> File: createNewBondB11fxElement(...)
 activate File
 File -> uuidGenerator: New(...)
 File --> Caller: return

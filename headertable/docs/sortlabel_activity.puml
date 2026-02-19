@@ -2,30 +2,30 @@
 title Activity Diagram - sortlabel.go
 start
 :Load headertable/sortlabel.go;
-:1. CreateRenderer [method on *sortingLabel];
-:2. Destroy [method on *sortingLabelRenderer];
-:3. Layout [method on *sortingLabelRenderer];
-:4. MinSize [method on *sortingLabelRenderer];
-:5. NewSortingLabel;
-:6. Objects [method on *sortingLabelRenderer];
-:7. OnTapped [method on *sortingLabel];
+:1. NewSortingLabel;
+:2. SetState [method on *sortingLabel];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
+:3. nextState [method on *sortingLabel];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. OnTapped [method on *sortingLabel];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:5. CreateRenderer [method on *sortingLabel];
+:6. MinSize [method on *sortingLabelRenderer];
+:7. Layout [method on *sortingLabelRenderer];
 :8. Refresh [method on *sortingLabelRenderer];
-:9. SetState [method on *sortingLabel];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:10. nextState [method on *sortingLabel];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
+:9. Objects [method on *sortingLabelRenderer];
+:10. Destroy [method on *sortingLabelRenderer];
 stop
 @enduml

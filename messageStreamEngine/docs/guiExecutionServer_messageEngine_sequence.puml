@@ -3,16 +3,16 @@ title Sequence Diagram - guiExecutionServer_messageEngine.go
 actor Caller
 participant "guiExecutionServer_messageEngine.go" as File
 participant "context" as context
-participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
-participant "fenixGuiExecutionServerSubscribeToMessagesClient" as fenixGuiExecutionServerSubscribeToMessagesClient
-participant "grpc_out_GuiExecutionServer" as grpc_out_GuiExecutionServer
 participant "messageStreamEngineObject" as messageStreamEngineObject
+participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
+participant "grpc_out_GuiExecutionServer" as grpc_out_GuiExecutionServer
+participant "fenixGuiExecutionServerSubscribeToMessagesClient" as fenixGuiExecutionServerSubscribeToMessagesClient
 participant "streamClient" as streamClient
 Caller -> File: initiateGuiExecutionServerRequestForMessages(...)
 activate File
 File -> context: Background(...)
+File -> messageStreamEngineObject: setConnectionToFenixGuiExecutionMessageServer(...)
 File -> context: WithCancel(...)
-File -> fenixExecutionServerGuiGrpcApi: CurrentFenixExecutionGuiProtoFileVersionEnum(...)
 File --> Caller: return
 deactivate File
 @enduml

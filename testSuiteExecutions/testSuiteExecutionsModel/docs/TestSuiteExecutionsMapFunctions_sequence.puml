@@ -4,32 +4,18 @@ actor Caller
 participant "TestSuiteExecutionsMapFunctions.go" as File
 participant "testSuiteExecutionsMapMutex" as testSuiteExecutionsMapMutex
 participant "testSuiteExecutionsModel" as testSuiteExecutionsModel
-Caller -> File: AddToTestSuiteExecutionsMap(...)
-activate File
-File -> testSuiteExecutionsMapMutex: Lock(...)
-File -> testSuiteExecutionsMapMutex: Unlock(...)
-File --> Caller: return
-deactivate File
-Caller -> File: DeleteFromTestSuiteExecutionsMap(...)
-activate File
-File -> testSuiteExecutionsMapMutex: Lock(...)
-File -> testSuiteExecutionsMapMutex: Unlock(...)
-File --> Caller: return
-deactivate File
-Caller -> File: GetNumberOfTestSuiteExecutionsRetrievedFromDatabase(...)
-activate File
-File -> testSuiteExecutionsMapMutex: RLock(...)
-File -> testSuiteExecutionsMapMutex: RUnlock(...)
-File -> testSuiteExecutionsModel: ReadAllFromTestSuiteExecutionsMapForTableList(...)
-File --> Caller: return
-deactivate File
 Caller -> File: InitiateTestSuiteExecutionsMap(...)
 activate File
 File -> testSuiteExecutionsMapMutex: Lock(...)
 File -> testSuiteExecutionsMapMutex: Unlock(...)
 File --> Caller: return
 deactivate File
-Caller -> File: ReadAllFromTestSuiteExecutionsMap(...)
+Caller -> File: ReadFromTestSuiteExecutionsMapForTableList(...)
+activate File
+File -> testSuiteExecutionsModel: ReadFromTestSuiteExecutionsMap(...)
+File --> Caller: return
+deactivate File
+Caller -> File: ReadFromTestSuiteExecutionsMap(...)
 activate File
 File -> testSuiteExecutionsMapMutex: RLock(...)
 File -> testSuiteExecutionsMapMutex: RUnlock(...)
@@ -40,15 +26,29 @@ activate File
 File -> testSuiteExecutionsModel: ReadAllFromTestSuiteExecutionsMap(...)
 File --> Caller: return
 deactivate File
-Caller -> File: ReadFromTestSuiteExecutionsMap(...)
+Caller -> File: ReadAllFromTestSuiteExecutionsMap(...)
 activate File
 File -> testSuiteExecutionsMapMutex: RLock(...)
 File -> testSuiteExecutionsMapMutex: RUnlock(...)
 File --> Caller: return
 deactivate File
-Caller -> File: ReadFromTestSuiteExecutionsMapForTableList(...)
+Caller -> File: GetNumberOfTestSuiteExecutionsRetrievedFromDatabase(...)
 activate File
-File -> testSuiteExecutionsModel: ReadFromTestSuiteExecutionsMap(...)
+File -> testSuiteExecutionsMapMutex: RLock(...)
+File -> testSuiteExecutionsMapMutex: RUnlock(...)
+File -> testSuiteExecutionsModel: ReadAllFromTestSuiteExecutionsMapForTableList(...)
+File --> Caller: return
+deactivate File
+Caller -> File: AddToTestSuiteExecutionsMap(...)
+activate File
+File -> testSuiteExecutionsMapMutex: Lock(...)
+File -> testSuiteExecutionsMapMutex: Unlock(...)
+File --> Caller: return
+deactivate File
+Caller -> File: DeleteFromTestSuiteExecutionsMap(...)
+activate File
+File -> testSuiteExecutionsMapMutex: Lock(...)
+File -> testSuiteExecutionsMapMutex: Unlock(...)
 File --> Caller: return
 deactivate File
 @enduml

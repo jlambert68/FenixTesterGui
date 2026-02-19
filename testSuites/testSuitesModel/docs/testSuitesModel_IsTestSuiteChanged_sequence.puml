@@ -2,10 +2,10 @@
 title Sequence Diagram - testSuitesModel_IsTestSuiteChanged.go
 actor Caller
 participant "testSuitesModel_IsTestSuiteChanged.go" as File
+participant "testSuiteModel" as testSuiteModel
 participant "fmt" as fmt
 participant "log" as log
 participant "sharedCode" as sharedCode
-participant "testSuiteModel" as testSuiteModel
 Caller -> File: IsTestSuiteChanged(...)
 activate File
 File -> testSuiteModel: generateTesSuiteMetaDataHash(...)

@@ -2,19 +2,19 @@
 title Sequence Diagram - testSuitesModel_LoadTestSuite.go
 actor Caller
 participant "testSuitesModel_LoadTestSuite.go" as File
-participant "copier" as copier
-participant "detailedTestSuiteResponse" as detailedTestSuiteResponse
-participant "err" as err
 participant "errors" as errors
 participant "fmt" as fmt
+participant "detailedTestSuiteResponse" as detailedTestSuiteResponse
+participant "testSuiteModel" as testSuiteModel
+participant "err" as err
+participant "copier" as copier
 participant "log" as log
-participant "tempMetaDataGroupFromGrpc" as tempMetaDataGroupFromGrpc
-participant "tempTestCasesInTestSuiteFromGrpc" as tempTestCasesInTestSuiteFromGrpc
+participant "testSuiteBasicInformation" as testSuiteBasicInformation
 Caller -> File: LoadFullTestSuiteFromDatabase(...)
 activate File
-File -> copier: CopyWithOption(...)
-File -> detailedTestSuiteResponse: GetDetailedTestSuite(...)
-File -> err: Error(...)
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> fmt: Println(...)
 File --> Caller: return
 deactivate File
 @enduml

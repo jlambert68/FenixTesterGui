@@ -3,13 +3,13 @@ title Sequence Diagram - testCaseExecutionUI_testCaseLExecutionsList_onQueue.go
 actor Caller
 participant "testCaseExecutionUI_testCaseLExecutionsList_onQueue.go" as File
 participant "binding" as binding
-participant "container" as container
 participant "headertable" as headertable
+participant "container" as container
 Caller -> File: CreateTableForTestCaseExecutionsOnQueue(...)
 activate File
 File -> binding: BindStruct(...)
-File -> container: NewMax(...)
 File -> headertable: NewSortingHeaderTable(...)
+File -> container: NewMax(...)
 File --> Caller: return
 deactivate File
 @enduml

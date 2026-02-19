@@ -36,7 +36,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, defer`
 - Doc: Update the SummaryTable for TestCaseExecutions
 - Internal calls: `int`, `uint32`
-- Selector calls: `sharedCode.GenerateShortUuidFromFullUuid`, `sort.Slice`, `strconv.Itoa`
+- Selector calls: `sharedCode.GenerateShortUuidFromFullUuid`, `strconv.Itoa`, `sort.Slice`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

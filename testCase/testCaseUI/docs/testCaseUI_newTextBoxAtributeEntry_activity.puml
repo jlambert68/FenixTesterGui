@@ -2,8 +2,8 @@
 title Activity Diagram - testCaseUI_newTextBoxAtributeEntry.go
 start
 :Load testCase/testCaseUI/testCaseUI_newTextBoxAtributeEntry.go;
-:1. FocusGained [method on *AttributeEntry];
-:2. FocusLost [method on *AttributeEntry];
-:3. NewAttributeEntry [method on *TestCasesUiModelStruct];
+:1. NewAttributeEntry [method on *TestCasesUiModelStruct];
+:2. FocusGained [method on *AttributeEntry];
+:3. FocusLost [method on *AttributeEntry];
 stop
 @enduml

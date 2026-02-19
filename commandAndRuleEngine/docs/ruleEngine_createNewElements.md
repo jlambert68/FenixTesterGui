@@ -33,18 +33,25 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Doc: Create a new B0-bond to be used in the TestCase-model
 - Selector calls: `uuidGenerator.New`
 
+### createNewBondB1fElement (method on `*CommandAndRuleEngineObjectStruct`)
+- Signature: `func (*CommandAndRuleEngineObjectStruct) createNewBondB1fElement(parentElementUuid string) newBondB1fElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage`
+- Exported: `false`
+- Control-flow features: `if`
+- Doc: Create a new B1f-bond to be used in the TestCase-model
+- Selector calls: `uuidGenerator.New`
+
+### createNewBondB1lElement (method on `*CommandAndRuleEngineObjectStruct`)
+- Signature: `func (*CommandAndRuleEngineObjectStruct) createNewBondB1lElement(parentElementUuid string) newBondB1lElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage`
+- Exported: `false`
+- Control-flow features: `if`
+- Doc: Create a new B1l-bond to be used in the TestCase-model
+- Selector calls: `uuidGenerator.New`
+
 ### createNewBondB10Element (method on `*CommandAndRuleEngineObjectStruct`)
 - Signature: `func (*CommandAndRuleEngineObjectStruct) createNewBondB10Element(parentElementUuid string) newBondB10Element fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage`
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: Create a new B10-bond to be used in the TestCase-model
-- Selector calls: `uuidGenerator.New`
-
-### createNewBondB10oxElement (method on `*CommandAndRuleEngineObjectStruct`)
-- Signature: `func (*CommandAndRuleEngineObjectStruct) createNewBondB10oxElement(parentElementUuid string) newBondB10oxElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage`
-- Exported: `false`
-- Control-flow features: `if`
-- Doc: Create a new B10*x-bond to be used in the TestCase-model
 - Selector calls: `uuidGenerator.New`
 
 ### createNewBondB10oxoElement (method on `*CommandAndRuleEngineObjectStruct`)
@@ -61,6 +68,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Doc: Create a new B10x*-bond to be used in the TestCase-model
 - Selector calls: `uuidGenerator.New`
 
+### createNewBondB10oxElement (method on `*CommandAndRuleEngineObjectStruct`)
+- Signature: `func (*CommandAndRuleEngineObjectStruct) createNewBondB10oxElement(parentElementUuid string) newBondB10oxElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage`
+- Exported: `false`
+- Control-flow features: `if`
+- Doc: Create a new B10*x-bond to be used in the TestCase-model
+- Selector calls: `uuidGenerator.New`
+
 ### createNewBondB11fElement (method on `*CommandAndRuleEngineObjectStruct`)
 - Signature: `func (*CommandAndRuleEngineObjectStruct) createNewBondB11fElement(parentElementUuid string) newBondB11fElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage`
 - Exported: `false`
@@ -68,18 +82,18 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Doc: Create a new B11f-Bond to be used in the TestCase-model
 - Selector calls: `uuidGenerator.New`
 
-### createNewBondB11fxElement (method on `*CommandAndRuleEngineObjectStruct`)
-- Signature: `func (*CommandAndRuleEngineObjectStruct) createNewBondB11fxElement(parentElementUuid string) newBondB11fxElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage`
-- Exported: `false`
-- Control-flow features: `if`
-- Doc: Create a new B11fx-Bond to be used in the TestCase-model
-- Selector calls: `uuidGenerator.New`
-
 ### createNewBondB11lElement (method on `*CommandAndRuleEngineObjectStruct`)
 - Signature: `func (*CommandAndRuleEngineObjectStruct) createNewBondB11lElement(parentElementUuid string) newBondB11lElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage`
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: Create a new B11l-Bond to be used in the TestCase-model
+- Selector calls: `uuidGenerator.New`
+
+### createNewBondB11fxElement (method on `*CommandAndRuleEngineObjectStruct`)
+- Signature: `func (*CommandAndRuleEngineObjectStruct) createNewBondB11fxElement(parentElementUuid string) newBondB11fxElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage`
+- Exported: `false`
+- Control-flow features: `if`
+- Doc: Create a new B11fx-Bond to be used in the TestCase-model
 - Selector calls: `uuidGenerator.New`
 
 ### createNewBondB11lxElement (method on `*CommandAndRuleEngineObjectStruct`)
@@ -101,20 +115,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: Create a new B12x-Bond to be used in the TestCase-model
-- Selector calls: `uuidGenerator.New`
-
-### createNewBondB1fElement (method on `*CommandAndRuleEngineObjectStruct`)
-- Signature: `func (*CommandAndRuleEngineObjectStruct) createNewBondB1fElement(parentElementUuid string) newBondB1fElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage`
-- Exported: `false`
-- Control-flow features: `if`
-- Doc: Create a new B1f-bond to be used in the TestCase-model
-- Selector calls: `uuidGenerator.New`
-
-### createNewBondB1lElement (method on `*CommandAndRuleEngineObjectStruct`)
-- Signature: `func (*CommandAndRuleEngineObjectStruct) createNewBondB1lElement(parentElementUuid string) newBondB1lElement fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage`
-- Exported: `false`
-- Control-flow features: `if`
-- Doc: Create a new B1l-bond to be used in the TestCase-model
 - Selector calls: `uuidGenerator.New`
 
 ## Behavioral Summary

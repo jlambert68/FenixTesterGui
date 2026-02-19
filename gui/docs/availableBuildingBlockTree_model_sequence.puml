@@ -2,52 +2,69 @@
 title Sequence Diagram - availableBuildingBlockTree_model.go
 actor Caller
 participant "availableBuildingBlockTree_model.go" as File
-participant "allRepositoryApiUrlsResponseMessage" as allRepositoryApiUrlsResponseMessage
-participant "allTestDataForTestDataAreasResponseMessage" as allTestDataForTestDataAreasResponseMessage
 participant "availableBuildingBlocksModel" as availableBuildingBlocksModel
-participant "errors" as errors
-participant "fenixGuiTestCaseBuilderServerGrpcApi" as fenixGuiTestCaseBuilderServerGrpcApi
-participant "fmt" as fmt
-participant "listTestCaseAndTestSuiteMetaDataResponseMessage" as listTestCaseAndTestSuiteMetaDataResponseMessage
 participant "sort" as sort
-Caller -> File: generateUITreeName(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: generateUITreeNameForTestInstructionContainersHeader(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: generateUITreeNameForTestInstructionsHeader(...)
-activate File
-File --> Caller: return
-deactivate File
+participant "errors" as errors
+participant "fmt" as fmt
+participant "fenixGuiTestCaseBuilderServerGrpcApi" as fenixGuiTestCaseBuilderServerGrpcApi
+participant "testInstructionsAndTestContainersMessage" as testInstructionsAndTestContainersMessage
+participant "allRepositoryApiUrlsResponseMessage" as allRepositoryApiUrlsResponseMessage
+participant "listTestCaseAndTestSuiteMetaDataResponseMessage" as listTestCaseAndTestSuiteMetaDataResponseMessage
 Caller -> File: getAvailableBuildingBlocksModel(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: getAvailableDomainTreeNamesFromModel(...)
+Caller -> File: makeTreeUIModel(...)
 activate File
+File -> availableBuildingBlocksModel: getPinnedBuildingBlocksTreeNamesFromModel(...)
+File -> availableBuildingBlocksModel: getAvailableDomainTreeNamesFromModel(...)
 File -> availableBuildingBlocksModel: getAvailableDomainsFromModel(...)
 File --> Caller: return
 deactivate File
-Caller -> File: getAvailableDomainsFromModel(...)
+Caller -> File: loadAvailableBuildingBlocksFromServer(...)
+activate File
+File -> availableBuildingBlocksModel: loadModelWithAvailableBuildingBlocks(...)
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: loadTemplateRepositoryApiUrls(...)
+activate File
+File -> allRepositoryApiUrlsResponseMessage: GetAckNackResponse(...)
+File -> availableBuildingBlocksModel: storeTemplateRepositoryApiUrls(...)
+File -> allRepositoryApiUrlsResponseMessage: GetRepositoryApiUrls(...)
+File --> Caller: return
+deactivate File
+Caller -> File: loadTestCaseAndTestSuiteMetaData(...)
+activate File
+File -> listTestCaseAndTestSuiteMetaDataResponseMessage: GetAckNackResponse(...)
+File -> availableBuildingBlocksModel: storeTestCaseMetaDataPerDomain(...)
+File -> listTestCaseAndTestSuiteMetaDataResponseMessage: GetTestCaseAndTestSuiteMetaDataForDomains(...)
+File --> Caller: return
+deactivate File
+Caller -> File: loadTestData(...)
+activate File
+File -> allTestDataForTestDataAreasResponseMessage: GetAckNackResponse(...)
+File -> availableBuildingBlocksModel: storeTestData(...)
+File -> allTestDataForTestDataAreasResponseMessage: GetTestDataFromSimpleTestDataAreaFiles(...)
+File --> Caller: return
+deactivate File
+Caller -> File: loadPinnedBuildingBlocksFromServer(...)
+activate File
+File -> availableBuildingBlocksModel: loadModelWithPinnedBuildingBlocks(...)
+File --> Caller: return
+deactivate File
+Caller -> File: savePinnedBuildingBlocksFromServer(...)
+activate File
+File -> fenixGuiTestCaseBuilderServerGrpcApi: CurrentFenixTestCaseBuilderProtoFileVersionEnum(...)
+File -> errors: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: generateUITreeName(...)
 activate File
 File --> Caller: return
 deactivate File
-Caller -> File: getAvailableTestInstructionContainerTypesFromModel(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: getAvailableTestInstructionContainersFromModel(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: getAvailableTestInstructionTypesFromModel(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: getAvailableTestInstructionsFromModel(...)
+Caller -> File: generateUITreeNameForTestInstructionsHeader(...)
 activate File
 File --> Caller: return
 deactivate File

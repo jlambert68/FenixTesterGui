@@ -37,14 +37,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: InitGrpcServer - Set up and start Backend gRPC-server
-- Selector calls: `fenixUserGuiGrpcApi.RegisterFenixUserGuiGrpcServicesServer`, `grpc.NewServer`, `net.Listen`, `reflection.Register`, `registerFenixUserGuiServer.Serve`, `strconv.Itoa`
+- Selector calls: `net.Listen`, `strconv.Itoa`, `grpc.NewServer`, `fenixUserGuiGrpcApi.RegisterFenixUserGuiGrpcServicesServer`, `reflection.Register`, `registerFenixUserGuiServer.Serve`
 
 ### StopGrpcServer (method on `*GRPCInStruct`)
 - Signature: `func (*GRPCInStruct) StopGrpcServer()`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: StopGrpcServer - Stop Backend gRPC-server
-- Selector calls: `lis.Close`, `registerFenixUserGuiServer.GracefulStop`
+- Selector calls: `registerFenixUserGuiServer.GracefulStop`, `lis.Close`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

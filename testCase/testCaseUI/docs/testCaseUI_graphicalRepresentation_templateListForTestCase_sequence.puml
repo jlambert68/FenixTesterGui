@@ -2,19 +2,19 @@
 title Sequence Diagram - testCaseUI_graphicalRepresentation_templateListForTestCase.go
 actor Caller
 participant "testCaseUI_graphicalRepresentation_templateListForTestCase.go" as File
-participant "container" as container
-participant "fyne" as fyne
-participant "localImportFilesFromGitHubObject" as localImportFilesFromGitHubObject
 participant "luaEngine" as luaEngine
-participant "tableAndButtonContainer" as tableAndButtonContainer
+participant "widget" as widget
 participant "tempFenixMasterWindow" as tempFenixMasterWindow
+participant "localImportFilesFromGitHubObject" as localImportFilesFromGitHubObject
+participant "templatesFilesInTestCaseTable" as templatesFilesInTestCaseTable
 participant "templateListArea" as templateListArea
+participant "fyne" as fyne
 participant "templateViewer" as templateViewer
 Caller -> File: generateTemplateListForTestCaseArea(...)
 activate File
-File -> container: NewBorder(...)
-File -> container: NewHBox(...)
-File -> container: NewVBox(...)
+File -> luaEngine: InitiateLuaScriptEngine(...)
+File -> widget: NewButton(...)
+File -> tempFenixMasterWindow: Hide(...)
 File --> Caller: return
 deactivate File
 @enduml

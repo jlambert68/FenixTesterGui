@@ -34,7 +34,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, switch, returns error`
 - Doc: Verify the simple rules if a component can be copied or not
-- Selector calls: `componentType.String`, `errors.New`, `fmt.Sprintf`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `componentType.String`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

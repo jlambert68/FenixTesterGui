@@ -42,7 +42,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, go, defer`
 - Doc: PullPubSubTestInstructionExecutionMessagesGcpClientLib Use GCP Client Library to subscribe to a PubSub-Topic
 - Internal calls: `generatePubSubTopicSubscriptionNameForExecutionStatusUpdates`, `string`, `triggerProcessPubSubExecutionStatusMessage`
-- Selector calls: `clientSubscription.Receive`, `context.Background`, `credentials.NewTLS`, `fmt.Printf`, `grpc.WithTransportCredentials`, `option.WithGRPCDialOption`, `protojson.Unmarshal`, `pubSubClient.Close`
+- Selector calls: `strings.ReplaceAll`, `context.Background`, `pubsub.NewClient`, `credentials.NewTLS`, `grpc.WithTransportCredentials`, `option.WithGRPCDialOption`, `pubSubClient.Close`, `pubSubClient.Subscription`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -33,30 +33,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - `tree`
 
 ## Functions and Methods
-### DragEnd (method on `*tappableLabel`)
-- Signature: `func (*tappableLabel) DragEnd()`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Selector calls: `log.Println`
-
-### Dragged (method on `*tappableLabel`)
-- Signature: `func (*tappableLabel) Dragged(ev *fyne.DragEvent)`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Selector calls: `fmt.Println`, `log.Println`, `t.Position`, `widget.NewLabel`
-
-### Tapped (method on `*tappableLabel`)
-- Signature: `func (*tappableLabel) Tapped(_ *fyne.PointEvent)`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Selector calls: `fmt.Println`, `log.Println`, `t.Position`
-
-### TappedSecondary (method on `*tappableLabel`)
-- Signature: `func (*tappableLabel) TappedSecondary(_ *fyne.PointEvent)`
-- Exported: `true`
-- Control-flow features: `none detected`
-- Selector calls: `log.Println`
-
 ### makeTreeUI (method on `*UIServerStruct`)
 - Signature: `func (*UIServerStruct) makeTreeUI()`
 - Exported: `false`
@@ -68,6 +44,30 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `none detected`
 - Selector calls: `label.ExtendBaseWidget`
+
+### Tapped (method on `*tappableLabel`)
+- Signature: `func (*tappableLabel) Tapped(_ *fyne.PointEvent)`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Selector calls: `log.Println`, `fmt.Println`, `t.Position`
+
+### TappedSecondary (method on `*tappableLabel`)
+- Signature: `func (*tappableLabel) TappedSecondary(_ *fyne.PointEvent)`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Selector calls: `log.Println`
+
+### Dragged (method on `*tappableLabel`)
+- Signature: `func (*tappableLabel) Dragged(ev *fyne.DragEvent)`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Selector calls: `log.Println`, `t.Position`, `widget.NewLabel`, `fmt.Println`
+
+### DragEnd (method on `*tappableLabel`)
+- Signature: `func (*tappableLabel) DragEnd()`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Selector calls: `log.Println`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

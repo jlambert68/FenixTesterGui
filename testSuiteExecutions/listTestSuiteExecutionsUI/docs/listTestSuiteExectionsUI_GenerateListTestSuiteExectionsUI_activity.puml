@@ -2,14 +2,14 @@
 title Activity Diagram - listTestSuiteExectionsUI_GenerateListTestSuiteExectionsUI.go
 start
 :Load testSuiteExecutions/listTestSuiteExecutionsUI/listTestSuiteExectionsUI_GenerateListTestSuiteExectionsUI.go;
-:1. GenerateListTestSuiteExecutionsUI;
+:1. LoadOneTestSuiteExecutionPerTestSuiteFromDataBaseFunction;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Start goroutine/asynchronous work;
-:2. LoadOneTestSuiteExecutionPerTestSuiteFromDataBaseFunction;
+:2. GenerateListTestSuiteExecutionsUI;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

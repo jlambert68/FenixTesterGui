@@ -41,6 +41,12 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
+### NewDroppableRectangle (method on `*StateMachineDragAndDropStruct`)
+- Signature: `func (*StateMachineDragAndDropStruct) NewDroppableRectangle(nodeLevel float32, testCaseNodeRectangleSize int, uuid string, testCaseUuid string, tempParentTestInstructionContainerUuid string) *DroppableRectangle`
+- Exported: `true`
+- Control-flow features: `if`
+- Selector calls: `canvas.NewRectangle`, `rect.SetMinSize`, `fyne.NewSize`, `droppableRectangle.ExtendBaseWidget`
+
 ### CreateRenderer (method on `*DroppableRectangle`)
 - Signature: `func (*DroppableRectangle) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
@@ -62,31 +68,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Selector calls: `fyne.NewSize`
 
-### MouseIn (method on `*DroppableRectangle`)
-- Signature: `func (*DroppableRectangle) MouseIn(e *desktop.MouseEvent)`
-- Exported: `true`
-- Control-flow features: `switch`
-- Internal calls: `switchStateForSource`, `switchStateForTarget`
-- Selector calls: `log.Fatalln`
-
-### MouseMoved (method on `*DroppableRectangle`)
-- Signature: `func (*DroppableRectangle) MouseMoved(*desktop.MouseEvent)`
-- Exported: `true`
-- Control-flow features: `none detected`
-
-### MouseOut (method on `*DroppableRectangle`)
-- Signature: `func (*DroppableRectangle) MouseOut()`
-- Exported: `true`
-- Control-flow features: `switch`
-- Internal calls: `switchStateForSource`, `switchStateForTarget`
-- Selector calls: `log.Fatalln`
-
-### NewDroppableRectangle (method on `*StateMachineDragAndDropStruct`)
-- Signature: `func (*StateMachineDragAndDropStruct) NewDroppableRectangle(nodeLevel float32, testCaseNodeRectangleSize int, uuid string, testCaseUuid string, tempParentTestInstructionContainerUuid string) *DroppableRectangle`
-- Exported: `true`
-- Control-flow features: `if`
-- Selector calls: `canvas.NewRectangle`, `droppableRectangle.ExtendBaseWidget`, `fyne.NewSize`, `rect.SetMinSize`
-
 ### Objects (method on `*droppableRectRenderer`)
 - Signature: `func (*droppableRectRenderer) Objects() []fyne.CanvasObject`
 - Exported: `true`
@@ -99,6 +80,25 @@ No concise file-level comment detected. Purpose inferred from declarations below
 
 ### Tapped (method on `*DroppableRectangle`)
 - Signature: `func (*DroppableRectangle) Tapped(*fyne.PointEvent)`
+- Exported: `true`
+- Control-flow features: `none detected`
+
+### MouseIn (method on `*DroppableRectangle`)
+- Signature: `func (*DroppableRectangle) MouseIn(e *desktop.MouseEvent)`
+- Exported: `true`
+- Control-flow features: `switch`
+- Internal calls: `switchStateForSource`, `switchStateForTarget`
+- Selector calls: `log.Fatalln`
+
+### MouseOut (method on `*DroppableRectangle`)
+- Signature: `func (*DroppableRectangle) MouseOut()`
+- Exported: `true`
+- Control-flow features: `switch`
+- Internal calls: `switchStateForSource`, `switchStateForTarget`
+- Selector calls: `log.Fatalln`
+
+### MouseMoved (method on `*DroppableRectangle`)
+- Signature: `func (*DroppableRectangle) MouseMoved(*desktop.MouseEvent)`
 - Exported: `true`
 - Control-flow features: `none detected`
 

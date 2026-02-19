@@ -41,7 +41,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: Hash a single value
-- Selector calls: `hash.Sum`, `hash.Write`, `hex.EncodeToString`, `sha256.New`
+- Selector calls: `sha256.New`, `hash.Write`, `hex.EncodeToString`, `hash.Sum`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

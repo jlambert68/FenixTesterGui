@@ -8,7 +8,13 @@ if (branch or error path?) then (yes)
 else (no)
 :Continue primary flow;
 endif
-:2. GenerateGCPAccessTokenForAuthorizedUser [method on *GcpObjectStruct];
+:2. GenerateGCPAccessTokenForServiceAccount [method on *GcpObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. GenerateGCPAccessTokenForAuthorizedUser [method on *GcpObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -16,60 +22,54 @@ else (no)
 endif
 :Schedule deferred cleanup;
 :Start goroutine/asynchronous work;
-:3. GenerateGCPAccessTokenForAuthorizedUserPubSub [method on *GcpObjectStruct];
+:4. GenerateGCPAccessTokenForAuthorizedUserPubSub [method on *GcpObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Start goroutine/asynchronous work;
-:4. GenerateGCPAccessTokenForServiceAccount [method on *GcpObjectStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
 :5. GetGcpAccessTokenForAuthorizedAccountsPubSub [method on *GcpObjectStruct];
-:6. SetLogger [method on *GcpObjectStruct];
-:7. initiatAccessTokenForAuthorizedAccountsPubSubObject [method on *GcpObjectStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:8. initiateUserObject [method on *GcpObjectStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:9. refreshToken;
+:6. refreshToken;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
-:10. startLocalWebServer [method on *GcpObjectStruct];
+:7. startLocalWebServer [method on *GcpObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Start goroutine/asynchronous work;
-:11. startLocalWebServerExpanded [method on *GcpObjectStruct];
+:8. startLocalWebServerExpanded [method on *GcpObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
-:12. stopLocalWebServer [method on *GcpObjectStruct];
+:9. stopLocalWebServer [method on *GcpObjectStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
+:10. SetLogger [method on *GcpObjectStruct];
+:11. initiateUserObject [method on *GcpObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:12. initiatAccessTokenForAuthorizedAccountsPubSubObject [method on *GcpObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
 stop
 @enduml

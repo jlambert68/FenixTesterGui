@@ -2,25 +2,24 @@
 title Sequence Diagram - detailedExecutionUI_summaryTable.go
 actor Caller
 participant "detailedExecutionUI_summaryTable.go" as File
+participant "widget" as widget
 participant "b" as b
+participant "log" as log
+participant "l" as l
+participant "t" as t
 participant "container" as container
 participant "fyne" as fyne
-participant "l" as l
-participant "log" as log
 participant "math" as math
-participant "t" as t
-participant "widget" as widget
+Caller -> File: NewTestCaseExecutionsSummaryTable(...)
+activate File
+File -> widget: NewTable(...)
+File -> b: GetItem(...)
+File -> log: Fatalf(...)
+File --> Caller: return
+deactivate File
 Caller -> File: CreateRenderer(...)
 activate File
 File -> container: NewMax(...)
-File --> Caller: return
-deactivate File
-Caller -> File: Destroy(...)
-activate File
-File --> Caller: return
-deactivate File
-Caller -> File: Layout(...)
-activate File
 File --> Caller: return
 deactivate File
 Caller -> File: MinSize(...)
@@ -30,18 +29,19 @@ File -> math: Max(...)
 File -> math: Min(...)
 File --> Caller: return
 deactivate File
-Caller -> File: NewTestCaseExecutionsSummaryTable(...)
+Caller -> File: Layout(...)
 activate File
-File -> b: GetItem(...)
-File -> l: SetText(...)
-File -> log: Fatalf(...)
 File --> Caller: return
 deactivate File
-Caller -> File: Objects(...)
+Caller -> File: Destroy(...)
 activate File
 File --> Caller: return
 deactivate File
 Caller -> File: Refresh(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Objects(...)
 activate File
 File --> Caller: return
 deactivate File

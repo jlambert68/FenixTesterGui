@@ -2,34 +2,34 @@
 title Activity Diagram - gRPCOutHelpers.go
 start
 :Load grpc_out_GuiExecutionServer/gRPCOutHelpers.go;
-:1. GetHighestFenixGuiExecutionServerProtoFileVersion;
+:1. setConnectionToFenixGuiExecutionMessageServer_new [method on *GRPCOutGuiExecutionServerStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
-:2. SetConnectionToFenixGuiExecutionServer [method on *GRPCOutGuiExecutionServerStruct];
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:3. SetDialAddressString [method on *GRPCOutGuiExecutionServerStruct];
-:4. SetLogger [method on *GRPCOutGuiExecutionServerStruct];
-:5. dialFromGrpcurl;
+:2. dialFromGrpcurl;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Schedule deferred cleanup;
-:6. setConnectionToFenixGuiExecutionMessageServer_new [method on *GRPCOutGuiExecutionServerStruct];
+:3. SetConnectionToFenixGuiExecutionServer [method on *GRPCOutGuiExecutionServerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. GetHighestFenixGuiExecutionServerProtoFileVersion;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
 :Continue primary flow;
 endif
 :Iterate loop/range logic;
+:5. SetLogger [method on *GRPCOutGuiExecutionServerStruct];
+:6. SetDialAddressString [method on *GRPCOutGuiExecutionServerStruct];
 stop
 @enduml

@@ -25,6 +25,12 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
+### initiatePubSubFunctionality
+- Signature: `func initiatePubSubFunctionality(tempGcpProject string)`
+- Exported: `false`
+- Control-flow features: `if, go`
+- Internal calls: `PullPubSubTestInstructionExecutionMessagesGcpClientLib`, `PullPubSubTestInstructionExecutionMessagesGcpRestApi`
+
 ### generatePubSubTopicNameForExecutionStatusUpdates
 - Signature: `func generatePubSubTopicNameForExecutionStatusUpdates(testerGuiUserId string) statusExecutionTopic string`
 - Exported: `false`
@@ -37,12 +43,6 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Doc: Creates a Topic-Subscription-Name
 - Internal calls: `generatePubSubTopicNameForExecutionStatusUpdates`
-
-### initiatePubSubFunctionality
-- Signature: `func initiatePubSubFunctionality(tempGcpProject string)`
-- Exported: `false`
-- Control-flow features: `if, go`
-- Internal calls: `PullPubSubTestInstructionExecutionMessagesGcpClientLib`, `PullPubSubTestInstructionExecutionMessagesGcpRestApi`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

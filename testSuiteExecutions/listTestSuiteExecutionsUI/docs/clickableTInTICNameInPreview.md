@@ -45,6 +45,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
+### newClickableTestInstructionNameLabelInPreview
+- Signature: `func newClickableTestInstructionNameLabelInPreview(tInTICName string, tCExecutionKey testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType, tInTICExecutionKey testCaseExecutionsModel.
+	TCEoTICoTIEAttributesContainerMapKeyType, leftClicked func(), rightClicked func(), labelType labelTypeType, testCaseInstructionPreViewObject *TestSuiteInstructionPreViewStruct) *clickableTInTICNameLabelInPreviewStruct`
+- Exported: `false`
+- Control-flow features: `none detected`
+- Doc: Used for creating a new TestInstructionName label
+- Selector calls: `time.Now`, `clickableTInTICNameLabelInPreview.ExtendBaseWidget`
+
 ### CreateRenderer (method on `*clickableTInTICNameLabelInPreviewStruct`)
 - Signature: `func (*clickableTInTICNameLabelInPreviewStruct) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
@@ -58,22 +66,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, switch`
 - Doc: Tapped Tapped interface implementation
 - Internal calls: `int32`
-- Selector calls: `attributesContainerPtr.Hide`, `attributesContainerPtr.Refresh`, `attributesContainerPtr.Show`, `canvas.NewRectangle`, `clipboard.SetContent`, `container.New`, `container.NewBorder`, `container.NewCenter`
+- Selector calls: `testSuiteExecutionAttributesForPreviewMapMutex.Lock`, `testSuiteExecutionAttributesForPreviewMapMutex.Unlock`, `attributesContainerPtr.Hide`, `attributesContainerPtr.Show`, `attributesContainerPtr.Refresh`, `testCaseExecutionsModel.TestInstructionExecutionLogPostMapKeyType`, `testCaseExecutionsModel.TestInstructionExecutionDetailsMapKeyType`, `container.New`
 
 ### TappedSecondary (method on `*clickableTInTICNameLabelInPreviewStruct`)
 - Signature: `func (*clickableTInTICNameLabelInPreviewStruct) TappedSecondary(*fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: TappedSecondary Optional: Handle secondary tap (right-click)
-- Selector calls: `clipboard.SetContent`, `fenixMasterWindow.Clipboard`, `fmt.Sprintf`, `fyne.CurrentApp`
-
-### newClickableTestInstructionNameLabelInPreview
-- Signature: `func newClickableTestInstructionNameLabelInPreview(tInTICName string, tCExecutionKey testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType, tInTICExecutionKey testCaseExecutionsModel.
-	TCEoTICoTIEAttributesContainerMapKeyType, leftClicked func(), rightClicked func(), labelType labelTypeType, testCaseInstructionPreViewObject *TestSuiteInstructionPreViewStruct) *clickableTInTICNameLabelInPreviewStruct`
-- Exported: `false`
-- Control-flow features: `none detected`
-- Doc: Used for creating a new TestInstructionName label
-- Selector calls: `clickableTInTICNameLabelInPreview.ExtendBaseWidget`, `time.Now`
+- Selector calls: `fenixMasterWindow.Clipboard`, `clipboard.SetContent`, `fyne.CurrentApp`, `fmt.Sprintf`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

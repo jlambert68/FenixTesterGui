@@ -2,7 +2,7 @@
 title Activity Diagram - testCaseModel_verifyTestCaseHash.go
 start
 :Load testCase/testCaseModel/testCaseModel_verifyTestCaseHash.go;
-:1. TestCaseHashIsChangedSinceLoadedOrSaved [method on *TestCasesModelsStruct];
+:1. VerifyTestCaseHashTowardsDatabase [method on *TestCasesModelsStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -14,7 +14,7 @@ if (branch or error path?) then (yes)
 else (no)
 :Continue primary flow;
 endif
-:3. VerifyTestCaseHashTowardsDatabase [method on *TestCasesModelsStruct];
+:3. TestCaseHashIsChangedSinceLoadedOrSaved [method on *TestCasesModelsStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

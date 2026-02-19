@@ -35,8 +35,20 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - None
 
 ## Functions and Methods
-### MouseIn (method on `*customLabel`)
-- Signature: `func (*customLabel) MouseIn(*desktop.MouseEvent)`
+### newClickableLabel (method on `*ImportFilesFromGitHubStruct`)
+- Signature: `func (*ImportFilesFromGitHubStruct) newClickableLabel(text string, onDoubleTap func(), tempIsClickable bool) *clickableLabel`
+- Exported: `false`
+- Control-flow features: `none detected`
+- Selector calls: `time.Now`, `l.ExtendBaseWidget`
+
+### Tapped (method on `*clickableLabel`)
+- Signature: `func (*clickableLabel) Tapped(e *fyne.PointEvent)`
+- Exported: `true`
+- Control-flow features: `if`
+- Selector calls: `time.Since`, `l.onDoubleTap`, `time.Now`
+
+### TappedSecondary (method on `*clickableLabel`)
+- Signature: `func (*clickableLabel) TappedSecondary(*fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `none detected`
 
@@ -46,18 +58,8 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if`
 - Selector calls: `l.Refresh`
 
-### MouseMoved (method on `*customLabel`)
-- Signature: `func (*customLabel) MouseMoved(*desktop.MouseEvent)`
-- Exported: `true`
-- Control-flow features: `none detected`
-
 ### MouseMoved (method on `*clickableLabel`)
 - Signature: `func (*clickableLabel) MouseMoved(*desktop.MouseEvent)`
-- Exported: `true`
-- Control-flow features: `none detected`
-
-### MouseOut (method on `*customLabel`)
-- Signature: `func (*customLabel) MouseOut()`
 - Exported: `true`
 - Control-flow features: `none detected`
 
@@ -67,53 +69,51 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if`
 - Selector calls: `l.Refresh`
 
-### Tapped (method on `*customLabel`)
-- Signature: `func (*customLabel) Tapped(e *fyne.PointEvent)`
-- Exported: `true`
-- Control-flow features: `if`
-- Selector calls: `l.onDoubleTap`, `now.Sub`, `time.Now`
-
-### Tapped (method on `*clickableLabel`)
-- Signature: `func (*clickableLabel) Tapped(e *fyne.PointEvent)`
-- Exported: `true`
-- Control-flow features: `if`
-- Selector calls: `l.onDoubleTap`, `time.Now`, `time.Since`
-
-### TappedSecondary (method on `*customLabel`)
-- Signature: `func (*customLabel) TappedSecondary(*fyne.PointEvent)`
-- Exported: `true`
+### generateSelectedFilesListTable (method on `*ImportFilesFromGitHubStruct`)
+- Signature: `func (*ImportFilesFromGitHubStruct) generateSelectedFilesListTable(parentWindow fyne.Window)`
+- Exported: `false`
 - Control-flow features: `none detected`
-
-### TappedSecondary (method on `*clickableLabel`)
-- Signature: `func (*clickableLabel) TappedSecondary(*fyne.PointEvent)`
-- Exported: `true`
-- Control-flow features: `none detected`
+- Doc: Create the UI-list that holds the selected files
+- Selector calls: `widget.NewTable`, `widget.NewLabel`
 
 ### UpdateSelectedFilesTable (method on `*ImportFilesFromGitHubStruct`)
 - Signature: `func (*ImportFilesFromGitHubStruct) UpdateSelectedFilesTable()`
 - Exported: `true`
 - Control-flow features: `if, for/range, switch`
 - Internal calls: `float32`
-- Selector calls: `clickable.SetText`, `fyne.MeasureText`, `importFilesFromGitHubObject.UpdateSelectedFilesTable`, `importFilesFromGitHubObject.newClickableLabel`, `nonClickable.SetText`, `theme.Padding`, `theme.TextSize`
-
-### generateSelectedFilesListTable (method on `*ImportFilesFromGitHubStruct`)
-- Signature: `func (*ImportFilesFromGitHubStruct) generateSelectedFilesListTable(parentWindow fyne.Window)`
-- Exported: `false`
-- Control-flow features: `none detected`
-- Doc: Create the UI-list that holds the selected files
-- Selector calls: `widget.NewLabel`, `widget.NewTable`
-
-### newClickableLabel (method on `*ImportFilesFromGitHubStruct`)
-- Signature: `func (*ImportFilesFromGitHubStruct) newClickableLabel(text string, onDoubleTap func(), tempIsClickable bool) *clickableLabel`
-- Exported: `false`
-- Control-flow features: `none detected`
-- Selector calls: `l.ExtendBaseWidget`, `time.Now`
+- Selector calls: `importFilesFromGitHubObject.newClickableLabel`, `clickable.SetText`, `importFilesFromGitHubObject.UpdateSelectedFilesTable`, `nonClickable.SetText`, `fyne.MeasureText`, `theme.TextSize`, `theme.Padding`
 
 ### newCustomLabel (method on `*ImportFilesFromGitHubStruct`)
 - Signature: `func (*ImportFilesFromGitHubStruct) newCustomLabel(text string, onDoubleTap func()) *customLabel`
 - Exported: `false`
 - Control-flow features: `none detected`
-- Selector calls: `l.ExtendBaseWidget`, `time.Now`
+- Selector calls: `time.Now`, `l.ExtendBaseWidget`
+
+### Tapped (method on `*customLabel`)
+- Signature: `func (*customLabel) Tapped(e *fyne.PointEvent)`
+- Exported: `true`
+- Control-flow features: `if`
+- Selector calls: `time.Now`, `now.Sub`, `l.onDoubleTap`
+
+### TappedSecondary (method on `*customLabel`)
+- Signature: `func (*customLabel) TappedSecondary(*fyne.PointEvent)`
+- Exported: `true`
+- Control-flow features: `none detected`
+
+### MouseIn (method on `*customLabel`)
+- Signature: `func (*customLabel) MouseIn(*desktop.MouseEvent)`
+- Exported: `true`
+- Control-flow features: `none detected`
+
+### MouseMoved (method on `*customLabel`)
+- Signature: `func (*customLabel) MouseMoved(*desktop.MouseEvent)`
+- Exported: `true`
+- Control-flow features: `none detected`
+
+### MouseOut (method on `*customLabel`)
+- Signature: `func (*customLabel) MouseOut()`
+- Exported: `true`
+- Control-flow features: `none detected`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

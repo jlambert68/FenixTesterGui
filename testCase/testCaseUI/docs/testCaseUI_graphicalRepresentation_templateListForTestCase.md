@@ -40,7 +40,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, go, returns error`
 - Doc: Generate the Template-table Area for the TestCase
 - Internal calls: `generateTemplateFilesTable`
-- Selector calls: `container.NewBorder`, `container.NewHBox`, `container.NewVBox`, `fyne.CurrentApp`, `localImportFilesFromGitHubObject.InitiateImportFilesFromGitHubWindow`, `luaEngine.InitiateLuaScriptEngine`, `tableAndButtonContainer.Refresh`, `tempFenixMasterWindow.Hide`
+- Selector calls: `luaEngine.InitiateLuaScriptEngine`, `widget.NewButton`, `tempFenixMasterWindow.Hide`, `localImportFilesFromGitHubObject.InitiateImportFilesFromGitHubWindow`, `templatesFilesInTestCaseTable.updateColumnAndRowSizes`, `templateListArea.Refresh`, `fyne.CurrentApp`, `templateViewer.InitiateTemplateViewer`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -35,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: GeneratePigUI Genrate the UI-component to be used at the bottom of the Fenix-UI, to show ongoing probes(pigs)
-- Selector calls: `canvas.NewImageFromResource`, `container.NewBorder`, `container.NewVBox`, `fenixPig48x48Image.SetMinSize`, `fmt.Println`, `fyne.NewSize`, `fyne.NewStaticResource`, `memoryUsage.NewClickableImage`
+- Selector calls: `fyne.NewStaticResource`, `canvas.NewImageFromResource`, `fenixPig48x48Image.SetMinSize`, `fyne.NewSize`, `memoryUsage.NewClickableImage`, `fmt.Println`, `container.NewBorder`, `container.NewVBox`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -38,7 +38,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, go`
 - Internal calls: `GenerateNewTestSuiteTab`, `GenerateTestSuiteTabFromExistingTestSuite`
-- Selector calls: `container.NewBorder`, `container.NewVBox`, `dialog.ShowCustomConfirm`, `testSuiteUuidEntry.SetPlaceHolder`, `theme.DocumentIcon`, `theme.FolderOpenIcon`, `theme.HomeIcon`, `widget.NewEntry`
+- Selector calls: `widget.NewToolbar`, `widget.NewToolbarAction`, `theme.DocumentIcon`, `theme.FolderOpenIcon`, `widget.NewLabel`, `widget.NewEntry`, `testSuiteUuidEntry.SetPlaceHolder`, `container.NewVBox`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

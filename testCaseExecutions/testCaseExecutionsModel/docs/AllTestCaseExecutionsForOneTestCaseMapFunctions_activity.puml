@@ -2,14 +2,7 @@
 title Activity Diagram - AllTestCaseExecutionsForOneTestCaseMapFunctions.go
 start
 :Load testCaseExecutions/testCaseExecutionsModel/AllTestCaseExecutionsForOneTestCaseMapFunctions.go;
-:1. AddTestCaseExecutionsForOneTestCaseUuid;
-if (branch or error path?) then (yes)
-:Handle alternative/error path;
-else (no)
-:Continue primary flow;
-endif
-:Schedule deferred cleanup;
-:2. GetAllTestCaseExecutionsForOneTestCaseUuid [method on TestCaseExecutionsModelStruct];
+:1. GetAllTestCaseExecutionsForOneTestCaseUuid [method on TestCaseExecutionsModelStruct];
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)
@@ -17,7 +10,14 @@ else (no)
 endif
 :Iterate loop/range logic;
 :Schedule deferred cleanup;
-:3. GetSpecificTestCaseExecutionForOneTestCaseUuid [method on TestCaseExecutionsModelStruct];
+:2. GetSpecificTestCaseExecutionForOneTestCaseUuid [method on TestCaseExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:3. AddTestCaseExecutionsForOneTestCaseUuid;
 if (branch or error path?) then (yes)
 :Handle alternative/error path;
 else (no)

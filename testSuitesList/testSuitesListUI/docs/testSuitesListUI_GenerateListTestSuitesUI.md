@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuitesList/testSuitesListUI/testSuitesListUI_GenerateListTestSuitesUI.go`
 - Package: `testSuitesListUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `4`
 
@@ -34,7 +33,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: GenerateListTestSuitesUI Create the UI used for list existing TestSuites
-- External calls: `container.NewVBox`, `widget.NewLabel`
+- Selector calls: `container.NewVBox`, `widget.NewLabel`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `gui/availableBuildingBlockTree_load_gRPC_results_into_model.go`
 - Package: `gui`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `14`
 - Imports: `11`
 
@@ -47,28 +46,28 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: Load Available Building Blocks, TestInstructions and TestInstructionContainers, from GUI-server into testCaseModel
-- External calls: `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructions`, `availableBuildingBlocksModel.storeDomainsThatCanOwnTestCases`, `availableBuildingBlocksModel.storeFullGrpcStructureForAvailableBuildingBlocks`
+- Selector calls: `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers`, `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocksRegardingTestInstructions`, `availableBuildingBlocksModel.storeDomainsThatCanOwnTestCases`, `availableBuildingBlocksModel.storeFullGrpcStructureForAvailableBuildingBlocks`
 
 ### loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage)`
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: Load all available TestInstructionContainers Building Blocks
-- External calls: `availableBuildingBlocksModel.generateUITreeName`, `fmt.Println`
+- Selector calls: `availableBuildingBlocksModel.generateUITreeName`, `fmt.Println`
 
 ### loadModelWithAvailableBuildingBlocksRegardingTestInstructions (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) loadModelWithAvailableBuildingBlocksRegardingTestInstructions(testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailableTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage)`
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: Load all available TestInstructions Building Blocks
-- External calls: `availableBuildingBlocksModel.generateUITreeName`
+- Selector calls: `availableBuildingBlocksModel.generateUITreeName`
 
 ### loadModelWithPinnedBuildingBlocks (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) loadModelWithPinnedBuildingBlocks(pinnedTestInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage)`
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: Load Pinned Building Blocks, TestInstructions and TestInstructionContainers, from GUI-server into testCaseModel
-- External calls: `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructions`
+- Selector calls: `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers`, `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocksRegardingTestInstructions`
 
 ### loadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) loadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(pinnedTestInstructionsAndTestInstructionsContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.AvailablePinnedTestInstructionsAndPreCreatedTestInstructionContainersResponseMessage)`
@@ -88,7 +87,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `for/range`
 - Doc: Store list with Domains that can own a TestCase
-- External calls: `tempDomainThatCanOwnTheTestCase.GetDomainName`, `tempDomainThatCanOwnTheTestCase.GetDomainUuid`, `testCaseModeReference.GenerateShortUuidFromFullUuid`
+- Selector calls: `tempDomainThatCanOwnTheTestCase.GetDomainName`, `tempDomainThatCanOwnTheTestCase.GetDomainUuid`, `testCaseModeReference.GenerateShortUuidFromFullUuid`
 
 ### storeFullGrpcStructureForAvailableBuildingBlocks (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) storeFullGrpcStructureForAvailableBuildingBlocks(testInstructionsAndTestContainersMessage *fenixGuiTestCaseBuilderServerGrpcApi.
@@ -102,28 +101,28 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `for/range`
 - Doc: Store list with TemplateRepositoryApiUrls
-- External calls: `templateRepositoryApiUrlToBeStored.GetRepositoryApiUrlName`
+- Selector calls: `templateRepositoryApiUrlToBeStored.GetRepositoryApiUrlName`
 
 ### storeTestCaseMetaDataPerDomain (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) storeTestCaseMetaDataPerDomain(testCaseMetaDataForDomainsToBeStored []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseAndTestSuiteMetaDataForOneDomainMessage, testCaseModeReference *testCaseModel.TestCasesModelsStruct)`
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: Store list with TestCaseMEtaData per Domain
-- External calls: `bitmapper.GenerateBitMaps`, `json.Unmarshal`, `log.Fatalf`, `testCaseMetaDataForDomain.GetDomainUuid`
+- Selector calls: `bitmapper.GenerateBitMaps`, `json.Unmarshal`, `log.Fatalf`, `testCaseMetaDataForDomain.GetDomainUuid`
 
 ### storeTestData (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) storeTestData(testDataFromSimpleTestDataAreaFiles []*fenixGuiTestCaseBuilderServerGrpcApi.TestDataFromOneSimpleTestDataAreaFileMessage, testCaseModeReference *testCaseModel.TestCasesModelsStruct)`
 - Exported: `false`
 - Control-flow features: `for/range`
 - Doc: Store TestData that user can use within TestCasesMapPtr
-- External calls: `rawHeader.GetHeaderName`, `rawHeader.GetHeaderUiName`, `rawHeader.GetShouldHeaderActAsFilter`, `simpleTestDataRow.GetTestDataValue`, `testDataEngine.AddTestDataToTestDataModel`, `testDataFromOneSimpleTestDataAreaFile.GetTestDataAreaName`, `testDataFromOneSimpleTestDataAreaFile.GetTestDataAreaUuid`, `testDataFromOneSimpleTestDataAreaFile.GetTestDataDomainName`
+- Selector calls: `rawHeader.GetHeaderName`, `rawHeader.GetHeaderUiName`, `rawHeader.GetShouldHeaderActAsFilter`, `simpleTestDataRow.GetTestDataValue`, `testDataEngine.AddTestDataToTestDataModel`, `testDataFromOneSimpleTestDataAreaFile.GetTestDataAreaName`, `testDataFromOneSimpleTestDataAreaFile.GetTestDataAreaUuid`, `testDataFromOneSimpleTestDataAreaFile.GetTestDataDomainName`
 
 ### storeTestSuiteMetaDataPerDomain (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) storeTestSuiteMetaDataPerDomain(testSuiteMetaDataForDomainsToBeStored []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseAndTestSuiteMetaDataForOneDomainMessage)`
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: Store list with TestSuiteMEtaData per Domain
-- External calls: `bitmapper.GenerateBitMaps`, `json.Unmarshal`, `log.Fatalf`, `testSuiteMetaDataForDomain.GetDomainUuid`
+- Selector calls: `bitmapper.GenerateBitMaps`, `json.Unmarshal`, `log.Fatalf`, `testSuiteMetaDataForDomain.GetDomainUuid`
 
 ### storeUsersAvailableExecutionDomains (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) storeUsersAvailableExecutionDomains(executionDomainsThatCanReceiveDirectTargetedTestInstructions []*fenixGuiTestCaseBuilderServerGrpcApi.
@@ -131,7 +130,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `for/range`
 - Doc: Store Users available ExecutionDomains to be used with Fenix-created TestInstructions that should be sent to other Domain then Fenix
-- External calls: `executionDomainsThatCanReceiveDirectTargetedTestInstruction.GetNameUsedInGui`
+- Selector calls: `executionDomainsThatCanReceiveDirectTargetedTestInstruction.GetNameUsedInGui`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

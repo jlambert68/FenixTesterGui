@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `headertable/flashingTableCell.go`
 - Package: `headertable`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `12`
 - Imports: `9`
 
@@ -55,7 +54,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*FlashingTableCellStruct) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `container.NewMax`
+- Selector calls: `container.NewMax`
 
 ### Destroy (method on `*flashingTableCellRenderer`)
 - Signature: `func (*flashingTableCellRenderer) Destroy()`
@@ -67,19 +66,19 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if`
 - Internal calls: `string`
-- External calls: `detailedExecutionsModel.RemoveTestCaseExecutionFromSummaryTable`, `detailedExecutionsModel.RetrieveSingleTestCaseExecution`, `fmt.Println`
+- Selector calls: `detailedExecutionsModel.RemoveTestCaseExecutionFromSummaryTable`, `detailedExecutionsModel.RetrieveSingleTestCaseExecution`, `fmt.Println`
 
 ### FlashAddedRow
 - Signature: `func FlashAddedRow(flashingTableCell *FlashingTableCellStruct)`
 - Exported: `true`
 - Control-flow features: `go`
-- External calls: `canvas.NewColorRGBAAnimation`, `canvas.Refresh`, `rectangleColorAnimation.Start`
+- Selector calls: `canvas.NewColorRGBAAnimation`, `canvas.Refresh`, `rectangleColorAnimation.Start`
 
 ### FlashRowToBeRemoved
 - Signature: `func FlashRowToBeRemoved(flashingTableCell *FlashingTableCellStruct)`
 - Exported: `true`
 - Control-flow features: `go`
-- External calls: `canvas.NewColorRGBAAnimation`, `canvas.Refresh`, `rectangleColorAnimation.Start`
+- Selector calls: `canvas.NewColorRGBAAnimation`, `canvas.Refresh`, `rectangleColorAnimation.Start`
 
 ### Layout (method on `*flashingTableCellRenderer`)
 - Signature: `func (*flashingTableCellRenderer) Layout(size fyne.Size)`
@@ -95,7 +94,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func NewFlashingTableCell(text string) *FlashingTableCellStruct`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `canvas.NewImageFromResource`, `canvas.NewRectangle`, `newFlashingTableCell.ExtendBaseWidget`, `widget.NewLabel`
+- Selector calls: `canvas.NewImageFromResource`, `canvas.NewRectangle`, `newFlashingTableCell.ExtendBaseWidget`, `widget.NewLabel`
 
 ### Objects (method on `*flashingTableCellRenderer`)
 - Signature: `func (*flashingTableCellRenderer) Objects() []fyne.CanvasObject`
@@ -111,13 +110,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*FlashingTableCellStruct) Tapped(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `fmt.Println`
+- Selector calls: `fmt.Println`
 
 ### TappedSecondary (method on `*FlashingTableCellStruct`)
 - Signature: `func (*FlashingTableCellStruct) TappedSecondary(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `fmt.Println`
+- Selector calls: `fmt.Println`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

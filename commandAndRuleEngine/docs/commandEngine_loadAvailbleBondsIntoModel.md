@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `commandAndRuleEngine/commandEngine_loadAvailbleBondsIntoModel.go`
 - Package: `commandAndRuleEngine`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `1`
 
@@ -31,7 +30,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: LoadAvailableBondsFromServer Load all Available Bonds from Gui-server
-- External calls: `commandAndRuleEngine.loadModelWithAvailableBonds`
+- Selector calls: `commandAndRuleEngine.loadModelWithAvailableBonds`
 
 ### loadModelWithAvailableBonds (method on `*CommandAndRuleEngineObjectStruct`)
 - Signature: `func (*CommandAndRuleEngineObjectStruct) loadModelWithAvailableBonds(availableImmatureBondsMessage *fenixGuiTestCaseBuilderServerGrpcApi.ImmatureBondsMessage)`

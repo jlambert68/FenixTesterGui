@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `headertable/headertable.go`
 - Package: `headertable`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `7`
 - Imports: `6`
 
@@ -42,7 +41,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*HeaderTable) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `container.NewBorder`
+- Selector calls: `container.NewBorder`
 
 ### Destroy (method on `headerTableRenderer`)
 - Signature: `func (headerTableRenderer) Destroy()`
@@ -59,14 +58,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Internal calls: `float32`, `float64`
-- External calls: `fyne.NewSize`, `math.Max`
+- Selector calls: `fyne.NewSize`, `math.Max`
 
 ### NewHeaderTable
 - Signature: `func NewHeaderTable(tableOpts *TableOpts) *HeaderTable`
 - Exported: `true`
 - Control-flow features: `if, for/range`
 - Internal calls: `float32`
-- External calls: `b.GetItem`, `l.Refresh`, `l.SetText`, `log.Fatalf`, `t.ExtendBaseWidget`, `widget.NewLabel`, `widget.NewTable`
+- Selector calls: `b.GetItem`, `l.Refresh`, `l.SetText`, `log.Fatalf`, `t.ExtendBaseWidget`, `widget.NewLabel`, `widget.NewTable`
 
 ### Objects (method on `headerTableRenderer`)
 - Signature: `func (headerTableRenderer) Objects() []fyne.CanvasObject`

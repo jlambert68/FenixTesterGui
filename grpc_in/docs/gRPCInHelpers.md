@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `grpc_in/gRPCInHelpers.go`
 - Package: `grpc_in`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `3`
 - Imports: `3`
 
@@ -35,7 +34,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if`
 - Doc: IsClientUsingCorrectTestDataProtoFileVersion ******************************************************************************************************************** Check if Calling Client is using correct proto-file version
 - Internal calls: `getHighestFenixUserGuiServerProtoFileVersion`
-- External calls: `fenixUserGuiGrpcApi.CurrentFenixUserGuiProtoFileVersionEnum`, `protoFileExpected.String`, `protoFileUsed.String`
+- Selector calls: `fenixUserGuiGrpcApi.CurrentFenixUserGuiProtoFileVersionEnum`, `protoFileExpected.String`, `protoFileUsed.String`
 
 ### SetLogger (method on `*GRPCInStruct`)
 - Signature: `func (*GRPCInStruct) SetLogger(logger *logrus.Logger)`

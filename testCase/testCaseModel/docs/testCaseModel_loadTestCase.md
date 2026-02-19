@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseModel/testCaseModel_loadTestCase.go`
 - Package: `testCaseModel`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `5`
 
@@ -36,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, returns error`
 - Doc: LoadFullTestCaseFromDatabase - Load the TestCase from the Database into model
 - Internal calls: `MetaDataSelectType`, `int`
-- External calls: `detailedTestCaseResponse.GetDetailedTestCase`, `errors.New`, `fmt.Println`, `fmt.Sprintf`, `tempMetaDataGroupFromGrpc.GetMetaDataInGroupMap`, `testCaseModel.generateTestCaseForGrpcAndHash`, `testDataEngine.TestDataAreaNameType`, `testDataEngine.TestDataAreaUuidType`
+- Selector calls: `detailedTestCaseResponse.GetDetailedTestCase`, `errors.New`, `fmt.Println`, `fmt.Sprintf`, `tempMetaDataGroupFromGrpc.GetMetaDataInGroupMap`, `testCaseModel.generateTestCaseForGrpcAndHash`, `testDataEngine.TestDataAreaNameType`, `testDataEngine.TestDataAreaUuidType`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

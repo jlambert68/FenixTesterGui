@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `headertable/types.go`
 - Package: `headertable`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `4`
 

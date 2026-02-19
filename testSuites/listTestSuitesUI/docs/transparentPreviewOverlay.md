@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/listTestSuitesUI/transparentPreviewOverlay.go`
 - Package: `listTestSuitesUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `5`
 - Imports: `5`
 
@@ -38,14 +37,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*HoverableRect) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `widget.NewSimpleRenderer`
+- Selector calls: `widget.NewSimpleRenderer`
 
 ### MouseIn (method on `*HoverableRect`)
 - Signature: `func (*HoverableRect) MouseIn(ev *desktop.MouseEvent)`
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: implement desktop.Hoverable:
-- External calls: `h.OnMouseIn`
+- Selector calls: `h.OnMouseIn`
 
 ### MouseMoved (method on `*HoverableRect`)
 - Signature: `func (*HoverableRect) MouseMoved(ev *desktop.MouseEvent)`
@@ -56,13 +55,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*HoverableRect) MouseOut()`
 - Exported: `true`
 - Control-flow features: `if`
-- External calls: `h.OnMouseOut`
+- Selector calls: `h.OnMouseOut`
 
 ### NewHoverableRect
 - Signature: `func NewHoverableRect(color color.Color, otherHoverableRect *HoverableRect) *HoverableRect`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `canvas.NewRectangle`, `h.ExtendBaseWidget`
+- Selector calls: `canvas.NewRectangle`, `h.ExtendBaseWidget`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

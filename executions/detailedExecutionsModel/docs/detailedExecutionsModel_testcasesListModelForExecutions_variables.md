@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `executions/detailedExecutionsModel/detailedExecutionsModel_testcasesListModelForExecutions_variables.go`
 - Package: `detailedExecutionsModel`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `0`
 - Imports: `4`
 

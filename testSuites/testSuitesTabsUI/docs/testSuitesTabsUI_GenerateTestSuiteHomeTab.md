@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/testSuitesTabsUI/testSuitesTabsUI_GenerateTestSuiteHomeTab.go`
 - Package: `testSuitesTabsUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `9`
 
@@ -39,7 +38,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, go`
 - Internal calls: `GenerateNewTestSuiteTab`, `GenerateTestSuiteTabFromExistingTestSuite`
-- External calls: `container.NewBorder`, `container.NewVBox`, `dialog.ShowCustomConfirm`, `testSuiteUuidEntry.SetPlaceHolder`, `theme.DocumentIcon`, `theme.FolderOpenIcon`, `theme.HomeIcon`, `widget.NewEntry`
+- Selector calls: `container.NewBorder`, `container.NewVBox`, `dialog.ShowCustomConfirm`, `testSuiteUuidEntry.SetPlaceHolder`, `theme.DocumentIcon`, `theme.FolderOpenIcon`, `theme.HomeIcon`, `widget.NewEntry`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

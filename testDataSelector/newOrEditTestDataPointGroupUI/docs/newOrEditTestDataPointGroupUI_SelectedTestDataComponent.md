@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testDataSelector/newOrEditTestDataPointGroupUI/newOrEditTestDataPointGroupUI_SelectedTestDataComponent.go`
 - Package: `newOrEditTestDataPointGroupUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `5`
 
@@ -36,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range`
 - Doc: Create and configure the list-component of selected TestDataPoints
 - Internal calls: `setStateForSaveButtonAndGroupNameTextEntry`, `string`
-- External calls: `container.NewBorder`, `container.NewHBox`, `container.NewVBox`, `fmt.Sprintf`, `nameEntry.SetPlaceHolder`, `nameEntry.SetText`, `newOrEditTestDataPointGroupWindow.Close`, `testDataEngine.TestDataPointGroupNameType`
+- Selector calls: `container.NewBorder`, `container.NewHBox`, `container.NewVBox`, `fmt.Sprintf`, `nameEntry.SetPlaceHolder`, `nameEntry.SetText`, `newOrEditTestDataPointGroupWindow.Close`, `testDataEngine.TestDataPointGroupNameType`
 
 ### setStateForSaveButtonAndGroupNameTextEntry
 - Signature: `func setStateForSaveButtonAndGroupNameTextEntry(entryValue string, nameStatusLabel *widget.Label, saveButton *widget.Button, isNew bool, incomingGroupName testDataEngine.TestDataPointGroupNameType, testDataForGroupObject *testDataEngine.TestDataForGroupObjectStruct)`
@@ -44,7 +43,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range`
 - Doc: Set the State for Save Button and the GroupName Entry
 - Internal calls: `string`
-- External calls: `nameStatusLabel.SetText`, `saveButton.Disable`, `saveButton.Enable`
+- Selector calls: `nameStatusLabel.SetText`, `saveButton.Disable`, `saveButton.Enable`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

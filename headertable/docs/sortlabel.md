@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `headertable/sortlabel.go`
 - Package: `headertable`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `10`
 - Imports: `5`
 
@@ -47,7 +46,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*sortingLabel) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `container.NewHBox`
+- Selector calls: `container.NewHBox`
 
 ### Destroy (method on `*sortingLabelRenderer`)
 - Signature: `func (*sortingLabelRenderer) Destroy()`
@@ -68,7 +67,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func NewSortingLabel(text string) *sortingLabel`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `sl.ExtendBaseWidget`, `sl.SetState`, `widget.NewButton`, `widget.NewLabel`
+- Selector calls: `sl.ExtendBaseWidget`, `sl.SetState`, `widget.NewButton`, `widget.NewLabel`
 
 ### Objects (method on `*sortingLabelRenderer`)
 - Signature: `func (*sortingLabelRenderer) Objects() []fyne.CanvasObject`
@@ -79,7 +78,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*sortingLabel) OnTapped()`
 - Exported: `true`
 - Control-flow features: `if`
-- External calls: `s.OnAfterSort`, `s.SetState`, `s.Sorter`, `s.nextState`
+- Selector calls: `s.OnAfterSort`, `s.SetState`, `s.Sorter`, `s.nextState`
 
 ### Refresh (method on `*sortingLabelRenderer`)
 - Signature: `func (*sortingLabelRenderer) Refresh()`
@@ -90,13 +89,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*sortingLabel) SetState(state SortState)`
 - Exported: `true`
 - Control-flow features: `switch`
-- External calls: `log.Fatalf`
+- Selector calls: `log.Fatalf`
 
 ### nextState (method on `*sortingLabel`)
 - Signature: `func (*sortingLabel) nextState() SortState`
 - Exported: `false`
 - Control-flow features: `switch`
-- External calls: `log.Printf`
+- Selector calls: `log.Printf`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/testSuiteUI/testSuiteUI_graphicalComponent_general_ComboBox_Renderer.go`
 - Package: `testSuiteUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `8`
 - Imports: `4`
 
@@ -55,13 +54,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*customSelectComboBoxRenderer) Layout(size fyne.Size)`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `fyne.NewPos`, `fyne.NewSize`
+- Selector calls: `fyne.NewPos`, `fyne.NewSize`
 
 ### MinSize (method on `*customSelectComboBoxRenderer`)
 - Signature: `func (*customSelectComboBoxRenderer) MinSize() fyne.Size`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `fyne.Max`, `fyne.NewSize`
+- Selector calls: `fyne.Max`, `fyne.NewSize`
 
 ### Objects (method on `*customSelectComboBoxRenderer`)
 - Signature: `func (*customSelectComboBoxRenderer) Objects() []fyne.CanvasObject`
@@ -72,13 +71,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*customSelectComboBoxRenderer) Refresh()`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `canvas.Refresh`, `fyne.Do`
+- Selector calls: `canvas.Refresh`, `fyne.Do`
 
 ### newCustomSelectComboBoxWidget
 - Signature: `func newCustomSelectComboBoxWidget(newSelect *widget.Select, attributeValueIsValidWarningBox *canvas.Rectangle) *customSelectComboBox`
 - Exported: `false`
 - Control-flow features: `none detected`
-- External calls: `fyne.NewSize`, `tempEntry.Size`, `w.ExtendBaseWidget`, `widget.NewSelect`
+- Selector calls: `fyne.NewSize`, `tempEntry.Size`, `w.ExtendBaseWidget`, `widget.NewSelect`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

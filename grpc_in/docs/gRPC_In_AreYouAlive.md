@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `grpc_in/gRPC_In_AreYouAlive.go`
 - Package: `grpc_in`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `4`
 
@@ -35,7 +34,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `defer, returns error`
 - Doc: AreYouAlive - ********************************************************************* Anyone can check if 'FenixUserGui'-server is alive with this service
 - Internal calls: `getHighestFenixUserGuiServerProtoFileVersion`
-- External calls: `fenixUserGuiGrpcApi.CurrentFenixUserGuiProtoFileVersionEnum`
+- Selector calls: `fenixUserGuiGrpcApi.CurrentFenixUserGuiProtoFileVersionEnum`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `headertable/headertable_test.go`
 - Package: `headertable`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `8`
 - Imports: `6`
 
@@ -43,7 +42,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `for/range`
 - Internal calls: `NewHeaderTable`
-- External calls: `assert.Equal`, `binding.BindStruct`, `test.NewApp`
+- Selector calls: `assert.Equal`, `binding.BindStruct`, `test.NewApp`
 
 ### TestHeaderTable_CreateRenderer
 - Signature: `func TestHeaderTable_CreateRenderer(t *testing.T)`

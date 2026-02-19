@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/testSuitesCommandEngine/testSuitesCommandEngine_Initiate.go`
 - Package: `testSuitesCommandEngine`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `3`
 - Imports: `2`
 
@@ -46,7 +45,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `none detected`
 - Doc: Refresh Tabs-object for all TestSuites
-- External calls: `TestSuiteTabsRef.Refresh`
+- Selector calls: `TestSuiteTabsRef.Refresh`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

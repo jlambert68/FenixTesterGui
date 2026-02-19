@@ -15,6 +15,7 @@ It will:
 set -euo pipefail
 
 TMP_GO="$(mktemp /tmp/go-docgen-XXXXXX.go)"
+trap 'rm -f "$TMP_GO"' EXIT
 
 cat > "$TMP_GO" <<'EOGO'
 package main
@@ -32,7 +33,6 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-	"time"
 )
 
 type FuncInfo struct {
@@ -72,10 +72,17 @@ func main() {
 		os.Exit(1)
 	}
 
+	failed := 0
 	for _, p := range files {
 		if err := processFile(p); err != nil {
 			fmt.Fprintf(os.Stderr, "process %s: %v\n", p, err)
+			failed++
 		}
+	}
+
+	if failed > 0 {
+		fmt.Fprintf(os.Stderr, "documentation generation failed for %d file(s)\n", failed)
+		os.Exit(1)
 	}
 }
 
@@ -346,9 +353,6 @@ func cleanDoc(s string) string {
 	if s == "" {
 		return ""
 	}
-	if strings.Contains(s, "{") || strings.Contains(s, "}") {
-		return ""
-	}
 	lines := strings.Split(s, "\n")
 	out := make([]string, 0, len(lines))
 	for _, line := range lines {
@@ -526,7 +530,6 @@ func buildMarkdown(fi FileInfo) string {
 	b.WriteString("## File Overview\n")
 	b.WriteString("- Path: `" + fi.Path + "`\n")
 	b.WriteString("- Package: `" + fi.Package + "`\n")
-	b.WriteString("- Generated: `" + time.Now().Format(time.RFC3339) + "`\n")
 	b.WriteString(fmt.Sprintf("- Functions/Methods: `%d`\n", len(fi.Funcs)))
 	b.WriteString(fmt.Sprintf("- Imports: `%d`\n\n", len(fi.Imports)))
 
@@ -645,7 +648,7 @@ func buildMarkdown(fi FileInfo) string {
 				if len(calls) > 8 {
 					calls = calls[:8]
 				}
-				b.WriteString("- External calls: `" + strings.Join(calls, "`, `") + "`\n")
+				b.WriteString("- Selector calls: `" + strings.Join(calls, "`, `") + "`\n")
 			}
 			b.WriteString("\n")
 		}
@@ -663,7 +666,6 @@ else
   find . -type f -name '*.go' -print | sed 's#^\./##' | go run "$TMP_GO"
 fi
 
-rm -f "$TMP_GO"
 ```
 
 ## Important

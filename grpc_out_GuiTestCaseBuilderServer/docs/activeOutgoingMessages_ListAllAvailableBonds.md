@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `grpc_out_GuiTestCaseBuilderServer/activeOutgoingMessages_ListAllAvailableBonds.go`
 - Package: `grpc_out_GuiTestCaseBuilderServer`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `6`
 
@@ -37,7 +36,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, defer`
 - Doc: ListAllAvailableBonds - Get all Bonds that can be used within a TestCase
 - Internal calls: `cancel`
-- External calls: `context.Background`, `context.WithTimeout`, `err.Error`, `fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum`, `fenixGuiTestCaseCaseBuilderServerGrpcClient.ListAllAvailableBonds`, `grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion`, `grpcOut.setConnectionToFenixGuiTestCaseBuilderServer_new`
+- Selector calls: `context.Background`, `context.WithTimeout`, `err.Error`, `fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum`, `fenixGuiTestCaseCaseBuilderServerGrpcClient.ListAllAvailableBonds`, `grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion`, `grpcOut.setConnectionToFenixGuiTestCaseBuilderServer_new`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

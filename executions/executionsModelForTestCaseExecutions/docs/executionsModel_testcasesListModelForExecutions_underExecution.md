@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `executions/executionsModelForTestCaseExecutions/executionsModel_testcasesListModelForExecutions_underExecution.go`
 - Package: `executionsModelForExecutions`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `7`
 
@@ -38,7 +37,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, returns error`
 - Doc: LoadAndCreateModelForTestCaseUnderExecutions - Load TestCaseExecutions that are Under Execution and transform them into model used
 - Internal calls: `TestCaseExecutionMapKeyType`, `int`, `int32`
-- External calls: `errors.New`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `fmt.Println`, `fmt.Sprintf`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `strconv.FormatBool`, `strconv.Itoa`, `time.Now`
+- Selector calls: `errors.New`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `fmt.Println`, `fmt.Sprintf`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `strconv.FormatBool`, `strconv.Itoa`, `time.Now`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

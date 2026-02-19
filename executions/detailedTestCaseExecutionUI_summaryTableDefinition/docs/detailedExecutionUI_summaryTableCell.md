@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `executions/detailedTestCaseExecutionUI_summaryTableDefinition/detailedExecutionUI_summaryTableCell.go`
 - Package: `detailedTestCaseExecutionUI_summaryTableDefinition`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `12`
 - Imports: `9`
 
@@ -56,7 +55,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*TestCaseExecutionSummaryTableCellStruct) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
 - Control-flow features: `if, for/range`
-- External calls: `container.NewMax`, `container.NewVBox`, `myNewVBox.Add`
+- Selector calls: `container.NewMax`, `container.NewVBox`, `myNewVBox.Add`
 
 ### Destroy (method on `*testcaseExecutionSummaryTableCellRenderer`)
 - Signature: `func (*testcaseExecutionSummaryTableCellRenderer) Destroy()`
@@ -67,19 +66,19 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*TestCaseExecutionSummaryTableCellStruct) DoubleTapped(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `fmt.Println`
+- Selector calls: `fmt.Println`
 
 ### FlashAddedRow
 - Signature: `func FlashAddedRow(testcaseExecutionSummaryTableCell *TestCaseExecutionSummaryTableCellStruct)`
 - Exported: `true`
 - Control-flow features: `go`
-- External calls: `canvas.NewColorRGBAAnimation`, `canvas.Refresh`, `rectangleColorAnimation.Start`
+- Selector calls: `canvas.NewColorRGBAAnimation`, `canvas.Refresh`, `rectangleColorAnimation.Start`
 
 ### FlashRowToBeRemoved
 - Signature: `func FlashRowToBeRemoved(testcaseExecutionSummaryTableCell *TestCaseExecutionSummaryTableCellStruct)`
 - Exported: `true`
 - Control-flow features: `go`
-- External calls: `canvas.NewColorRGBAAnimation`, `canvas.Refresh`, `rectangleColorAnimation.Start`
+- Selector calls: `canvas.NewColorRGBAAnimation`, `canvas.Refresh`, `rectangleColorAnimation.Start`
 
 ### Layout (method on `*testcaseExecutionSummaryTableCellRenderer`)
 - Signature: `func (*testcaseExecutionSummaryTableCellRenderer) Layout(size fyne.Size)`
@@ -95,7 +94,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func NewTestcaseExecutionSummaryTableCell(text string) *TestCaseExecutionSummaryTableCellStruct`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `canvas.NewImageFromResource`, `canvas.NewRectangle`, `newtestcaseExecutionSummaryTableCell.ExtendBaseWidget`, `widget.NewLabel`
+- Selector calls: `canvas.NewImageFromResource`, `canvas.NewRectangle`, `newtestcaseExecutionSummaryTableCell.ExtendBaseWidget`, `widget.NewLabel`
 
 ### Objects (method on `*testcaseExecutionSummaryTableCellRenderer`)
 - Signature: `func (*testcaseExecutionSummaryTableCellRenderer) Objects() []fyne.CanvasObject`
@@ -111,13 +110,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*TestCaseExecutionSummaryTableCellStruct) Tapped(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `fmt.Println`
+- Selector calls: `fmt.Println`
 
 ### TappedSecondary (method on `*TestCaseExecutionSummaryTableCellStruct`)
 - Signature: `func (*TestCaseExecutionSummaryTableCellStruct) TappedSecondary(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `fmt.Println`
+- Selector calls: `fmt.Println`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

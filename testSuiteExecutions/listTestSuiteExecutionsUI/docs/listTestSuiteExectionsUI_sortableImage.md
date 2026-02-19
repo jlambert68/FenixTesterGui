@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuiteExecutions/listTestSuiteExecutionsUI/listTestSuiteExectionsUI_sortableImage.go`
 - Package: `listTestSuiteExecutionsUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `12`
 - Imports: `6`
 
@@ -49,7 +48,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*clickableSortImage) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `container.NewMax`, `r.updateImageVisibility`
+- Selector calls: `container.NewMax`, `r.updateImageVisibility`
 
 ### Destroy (method on `*clickableSortImageRenderer`)
 - Signature: `func (*clickableSortImageRenderer) Destroy()`
@@ -80,14 +79,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*clickableSortImageRenderer) Refresh()`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `fyne.Do`
+- Selector calls: `fyne.Do`
 
 ### Tapped (method on `*clickableSortImage`)
 - Signature: `func (*clickableSortImage) Tapped(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: Tapped method handles click events.
-- External calls: `log.Println`, `r.Refresh`, `r.onTapped`, `r.updateImageVisibility`
+- Selector calls: `log.Println`, `r.Refresh`, `r.onTapped`, `r.updateImageVisibility`
 
 ### TappedSecondary (method on `*clickableSortImage`)
 - Signature: `func (*clickableSortImage) TappedSecondary(_ *fyne.PointEvent)`
@@ -100,7 +99,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `none detected`
 - Doc: NewClickableSortImage creates a new ClickableSortImage with a given image path.
-- External calls: `canvas.NewImageFromImage`, `canvas.NewRectangle`, `container.NewStack`, `fyne.NewSize`, `initialImageAscending.Refresh`, `initialImageAscending.Resize`, `initialImageAscending.SetMinSize`, `initialImageDescending.Refresh`
+- Selector calls: `canvas.NewImageFromImage`, `canvas.NewRectangle`, `container.NewStack`, `fyne.NewSize`, `initialImageAscending.Refresh`, `initialImageAscending.Resize`, `initialImageAscending.SetMinSize`, `initialImageDescending.Refresh`
 
 ### updateImageVisibility (method on `*clickableSortImage`)
 - Signature: `func (*clickableSortImage) updateImageVisibility()`

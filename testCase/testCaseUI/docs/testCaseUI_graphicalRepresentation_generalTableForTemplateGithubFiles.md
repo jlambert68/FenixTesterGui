@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseUI/testCaseUI_graphicalRepresentation_generalTableForTemplateGithubFiles.go`
 - Package: `testCaseUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `9`
 - Imports: `10`
 
@@ -47,7 +46,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if`
 - Doc: MinSize customizes the minimum size of the CustomTemplateTable.
 - Internal calls: `float32`
-- External calls: `fyne.MeasureText`, `fyne.NewSize`, `t.Length`, `t.Size`, `theme.TextSize`
+- Selector calls: `fyne.MeasureText`, `fyne.NewSize`, `t.Length`, `t.Size`, `theme.TextSize`
 
 ### MouseIn (method on `*clickableLabel`)
 - Signature: `func (*clickableLabel) MouseIn(*desktop.MouseEvent)`
@@ -68,7 +67,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*clickableLabel) Tapped(e *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `if`
-- External calls: `l.onDoubleTap`, `time.Now`, `time.Since`
+- Selector calls: `l.onDoubleTap`, `time.Now`, `time.Since`
 
 ### TappedSecondary (method on `*clickableLabel`)
 - Signature: `func (*clickableLabel) TappedSecondary(*fyne.PointEvent)`
@@ -81,13 +80,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, switch`
 - Doc: Create the UI-list that holds the selected files
 - Internal calls: `newClickableLabel`
-- External calls: `clickable.SetText`, `nonClickable.SetText`, `templateFilesTable.ExtendBaseWidget`, `templateViewer.InitiateTemplateViewer`
+- Selector calls: `clickable.SetText`, `nonClickable.SetText`, `templateFilesTable.ExtendBaseWidget`, `templateViewer.InitiateTemplateViewer`
 
 ### newClickableLabel
 - Signature: `func newClickableLabel(text string, onDoubleTap func(), tempIsClickable bool) *clickableLabel`
 - Exported: `false`
 - Control-flow features: `none detected`
-- External calls: `l.ExtendBaseWidget`, `time.Now`
+- Selector calls: `l.ExtendBaseWidget`, `time.Now`
 
 ### updateColumnAndRowSizes (method on `*CustomTemplateTable`)
 - Signature: `func (*CustomTemplateTable) updateColumnAndRowSizes(testCaseUuid string, testCasesUiCanvasObject *TestCasesUiModelStruct, checkIfTemplatesAreChangedButton *widget.Button, viewTemplateButton *widget.Button)`
@@ -95,7 +94,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range`
 - Doc: Update size of columns and Rows for the Table
 - Internal calls: `float32`
-- External calls: `checkIfTemplatesAreChangedButton.Disable`, `checkIfTemplatesAreChangedButton.Enable`, `fyne.MeasureText`, `t.Refresh`, `t.SetColumnWidth`, `t.SetRowHeight`, `theme.Padding`, `theme.TextSize`
+- Selector calls: `checkIfTemplatesAreChangedButton.Disable`, `checkIfTemplatesAreChangedButton.Enable`, `fyne.MeasureText`, `t.Refresh`, `t.SetColumnWidth`, `t.SetRowHeight`, `theme.Padding`, `theme.TextSize`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

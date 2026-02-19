@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testUIDragNDropStatemachine/dragNdropStatemachine_draggableLabel.go`
 - Package: `testUIDragNDropStatemachine`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `6`
 - Imports: `5`
 
@@ -41,7 +40,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, switch`
 - Doc: DragEnd When the user release the mouse button this event is triggered
 - Internal calls: `executeDropAction`, `shrinkDropAreas`, `switchStateForSource`, `switchStateForTarget`
-- External calls: `containerRef.Hide`, `containerRef.Refresh`, `log.Fatalln`
+- Selector calls: `containerRef.Hide`, `containerRef.Refresh`, `log.Fatalln`
 
 ### Dragged (method on `*DraggableLabel`)
 - Signature: `func (*DraggableLabel) Dragged(ev *fyne.DragEvent)`
@@ -49,7 +48,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, switch`
 - Doc: Dragged When the user press down the mouse button this event is triggered
 - Internal calls: `expandDropAreas`, `switchStateForSource`, `switchStateForTarget`
-- External calls: `containerRef.Move`, `containerRef.Refresh`, `containerRef.Show`, `fyne.NewSize`, `log.Fatalln`, `rectangle2Ref.SetMinSize`, `rectangleRef.SetMinSize`, `rectangleRef.Size`
+- Selector calls: `containerRef.Move`, `containerRef.Refresh`, `containerRef.Show`, `fyne.NewSize`, `log.Fatalln`, `rectangle2Ref.SetMinSize`, `rectangleRef.SetMinSize`, `rectangleRef.Size`
 
 ### MouseIn (method on `*DraggableLabel`)
 - Signature: `func (*DraggableLabel) MouseIn(*desktop.MouseEvent)`
@@ -57,7 +56,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, switch`
 - Doc: MouseIn is called when a desktop pointer enters the widget
 - Internal calls: `switchStateForSource`
-- External calls: `log.Fatalln`
+- Selector calls: `log.Fatalln`
 
 ### MouseMoved (method on `*DraggableLabel`)
 - Signature: `func (*DraggableLabel) MouseMoved(a *desktop.MouseEvent)`
@@ -71,13 +70,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `switch`
 - Doc: MouseOut is called when a desktop pointer exits the widget
 - Internal calls: `switchStateForSource`
-- External calls: `log.Fatalln`
+- Selector calls: `log.Fatalln`
 
 ### NewDraggableLabel (method on `*StateMachineDragAndDropStruct`)
 - Signature: `func (*StateMachineDragAndDropStruct) NewDraggableLabel(uuid string) *DraggableLabel`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `draggableLabel.ExtendBaseWidget`
+- Selector calls: `draggableLabel.ExtendBaseWidget`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

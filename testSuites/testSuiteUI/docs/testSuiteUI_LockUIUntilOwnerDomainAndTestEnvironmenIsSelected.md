@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/testSuiteUI/testSuiteUI_LockUIUntilOwnerDomainAndTestEnvironmenIsSelected.go`
 - Package: `testSuiteUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `2`
 
@@ -32,7 +31,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: Lock or Unlock UI depending on if user has selected OwnerDomain and TestEnvironment
-- External calls: `fyne.Do`
+- Selector calls: `fyne.Do`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

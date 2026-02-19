@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseUI/testCaseUI_rightClickableAccordion.go`
 - Package: `testCaseUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `4`
 - Imports: `3`
 
@@ -33,19 +32,19 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*clickableAccordion) TappedSecondary(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `if`
-- External calls: `log.Println`
+- Selector calls: `log.Println`
 
 ### TappedSecondary (method on `*clickableAccordionItem`)
 - Signature: `func (*clickableAccordionItem) TappedSecondary(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `if`
-- External calls: `log.Println`
+- Selector calls: `log.Println`
 
 ### newClickableAccordion (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) newClickableAccordion(accordionItem *widget.AccordionItem, isClickable bool, testCaseUuid, testInstructionUuid string) *clickableAccordion`
 - Exported: `false`
 - Control-flow features: `none detected`
-- External calls: `accordion.Append`, `accordion.ExtendBaseWidget`
+- Selector calls: `accordion.Append`, `accordion.ExtendBaseWidget`
 
 ### newClickableAccordionItem (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) newClickableAccordionItem(title string, detail fyne.CanvasObject) *clickableAccordionItem`

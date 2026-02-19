@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCaseExecutions/testCaseExecutionsModel/detaledTestCaseExecutionFunctions.go`
 - Package: `testCaseExecutionsModel`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `4`
 
@@ -35,7 +34,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, defer, returns error`
 - Doc: ExtractAndStoreRelationBetweenTestInstructionUuidAndTestCaseExecutionUuid Extract relation between TestInstructionUuid and TestCaseExecutionUuid
 - Internal calls: `RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType`, `TestInstructionExecutionUuidType`, `int`, `string`
-- External calls: `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`, `strconv.Itoa`, `testCaseExecutionsModel.ReadFromDetailedTestCaseExecutionsMap`, `testInstructionExecution.GetTestInstructionExecutionBasicInformation`
+- Selector calls: `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`, `strconv.Itoa`, `testCaseExecutionsModel.ReadFromDetailedTestCaseExecutionsMap`, `testInstructionExecution.GetTestInstructionExecutionBasicInformation`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

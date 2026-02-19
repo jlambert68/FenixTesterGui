@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `soundEngine/soundEngine_Player.go`
 - Package: `soundEngine`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `10`
 - Imports: `8`
 
@@ -48,7 +47,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func CloseDownSoundEngine()`
 - Exported: `true`
 - Control-flow features: `if`
-- External calls: `err.Error`, `invalidNotificationPlayer.Close`, `systemNotificationPlayer.Close`
+- Selector calls: `err.Error`, `invalidNotificationPlayer.Close`, `systemNotificationPlayer.Close`
 
 ### InitSoundEngine
 - Signature: `func InitSoundEngine()`
@@ -56,13 +55,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if`
 - Doc: Init the Sound Enigine if that hasn't been done
 - Internal calls: `initiateInvalidNotification`, `initiatePlayerChannelEngine`, `initiateSystemNotification`, `initiateUserNeedToRespond`
-- External calls: `err.Error`, `oto.NewContext`
+- Selector calls: `err.Error`, `oto.NewContext`
 
 ### initiateInvalidNotification
 - Signature: `func initiateInvalidNotification()`
 - Exported: `false`
 - Control-flow features: `if`
-- External calls: `bytes.NewReader`, `err.Error`, `mp3.NewDecoder`, `otoCtx.NewPlayer`
+- Selector calls: `bytes.NewReader`, `err.Error`, `mp3.NewDecoder`, `otoCtx.NewPlayer`
 
 ### initiatePlayerChannelEngine
 - Signature: `func initiatePlayerChannelEngine()`
@@ -75,34 +74,34 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func initiateSystemNotification()`
 - Exported: `false`
 - Control-flow features: `if`
-- External calls: `bytes.NewReader`, `err.Error`, `mp3.NewDecoder`, `otoCtx.NewPlayer`
+- Selector calls: `bytes.NewReader`, `err.Error`, `mp3.NewDecoder`, `otoCtx.NewPlayer`
 
 ### initiateUserNeedToRespond
 - Signature: `func initiateUserNeedToRespond()`
 - Exported: `false`
 - Control-flow features: `if`
-- External calls: `bytes.NewReader`, `err.Error`, `mp3.NewDecoder`, `otoCtx.NewPlayer`
+- Selector calls: `bytes.NewReader`, `err.Error`, `mp3.NewDecoder`, `otoCtx.NewPlayer`
 
 ### playInvalidNotification
 - Signature: `func playInvalidNotification()`
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: Play the Invalid Notification Sound
-- External calls: `err.Error`, `invalidNotificationPlayer.Play`, `invalidNotificationPlayer.Seek`, `systemNotificationPlayer.IsPlaying`, `time.Sleep`
+- Selector calls: `err.Error`, `invalidNotificationPlayer.Play`, `invalidNotificationPlayer.Seek`, `systemNotificationPlayer.IsPlaying`, `time.Sleep`
 
 ### playSystemNotification
 - Signature: `func playSystemNotification()`
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: Play the System Notification Sound
-- External calls: `err.Error`, `systemNotificationPlayer.IsPlaying`, `systemNotificationPlayer.Play`, `systemNotificationPlayer.Seek`, `time.Sleep`
+- Selector calls: `err.Error`, `systemNotificationPlayer.IsPlaying`, `systemNotificationPlayer.Play`, `systemNotificationPlayer.Seek`, `time.Sleep`
 
 ### playUserNeedToRespond
 - Signature: `func playUserNeedToRespond()`
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: Play the User Need to Respond Sound
-- External calls: `err.Error`, `invalidNotificationPlayer.Seek`, `systemNotificationPlayer.IsPlaying`, `time.Sleep`, `userNeedToRespondPlayer.Play`
+- Selector calls: `err.Error`, `invalidNotificationPlayer.Seek`, `systemNotificationPlayer.IsPlaying`, `time.Sleep`, `userNeedToRespondPlayer.Play`
 
 ### playerChannelReader
 - Signature: `func playerChannelReader()`

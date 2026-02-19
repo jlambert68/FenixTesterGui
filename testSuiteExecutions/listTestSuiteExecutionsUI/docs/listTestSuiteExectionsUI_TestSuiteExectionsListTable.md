@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuiteExecutions/listTestSuiteExecutionsUI/listTestSuiteExectionsUI_TestSuiteExectionsListTable.go`
 - Package: `listTestSuiteExecutionsUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `10`
 - Imports: `18`
 
@@ -51,7 +50,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: RemoveTestSuiteExecutionFromList Remove a TestSuiteExecution from the List
-- External calls: `testSuiteExecutionsModel.TestSuiteExecutionUuidType`, `testSuiteExecutionsModelRef.DeleteFromTestSuiteExecutionsMap`
+- Selector calls: `testSuiteExecutionsModel.TestSuiteExecutionUuidType`, `testSuiteExecutionsModelRef.DeleteFromTestSuiteExecutionsMap`
 
 ### SortGuiTableOnCurrentColumnAndSorting
 - Signature: `func SortGuiTableOnCurrentColumnAndSorting()`
@@ -72,7 +71,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Internal calls: `float32`
-- External calls: `fyne.Do`, `fyne.MeasureText`, `testSuiteExecutionsListTable.Refresh`, `testSuiteExecutionsListTable.SetColumnWidth`, `theme.Padding`, `theme.TextSize`
+- Selector calls: `fyne.Do`, `fyne.MeasureText`, `testSuiteExecutionsListTable.Refresh`, `testSuiteExecutionsListTable.SetColumnWidth`, `theme.Padding`, `theme.TextSize`
 
 ### generateTestSuiteExecutionsListTable
 - Signature: `func generateTestSuiteExecutionsListTable(testSuiteExecutionsModel *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct)`
@@ -80,21 +79,21 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if`
 - Doc: Create the UI-list that holds the list of TestSuitesMapPtr that the user can edit
 - Internal calls: `calculateAndSetCorrectColumnWidths`, `newSortableHeaderLabel`, `updateTestSuiteExecutionsListTable`
-- External calls: `bytes.NewReader`, `png.Decode`, `widget.NewLabel`, `widget.NewTable`
+- Selector calls: `bytes.NewReader`, `png.Decode`, `widget.NewLabel`, `widget.NewTable`
 
 ### loadTestSuiteExecutionListTableTable
 - Signature: `func loadTestSuiteExecutionListTableTable(testSuiteExecutionsModelObject *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct, retrieveAllExecutionsForSpecificTestSuiteUuid bool, specificTestSuiteUuid string)`
 - Exported: `false`
 - Control-flow features: `if, for/range, switch, defer`
 - Internal calls: `int`, `int32`, `sort2DStringSlice`
-- External calls: `fmt.Sprintf`, `loadTestSuiteExecutionListTableTableMutex.Lock`, `loadTestSuiteExecutionListTableTableMutex.Unlock`, `log.Fatalln`, `sharedCode.ConvertGrpcTimeStampToStringForDB`, `strconv.Itoa`, `tempTestSuiteExecution.GetDomainName`, `tempTestSuiteExecution.GetDomainUUID`
+- Selector calls: `fmt.Sprintf`, `loadTestSuiteExecutionListTableTableMutex.Lock`, `loadTestSuiteExecutionListTableTableMutex.Unlock`, `log.Fatalln`, `sharedCode.ConvertGrpcTimeStampToStringForDB`, `strconv.Itoa`, `tempTestSuiteExecution.GetDomainName`, `tempTestSuiteExecution.GetDomainUUID`
 
 ### sort2DStringSlice
 - Signature: `func sort2DStringSlice(data [][]string, columnToSortOn int, sortingDirection SortingDirectionType)`
 - Exported: `false`
 - Control-flow features: `if, switch`
 - Doc: Sort2DStringSlice sorts a 2D string slice by a specified column index. It assumes that the column index is valid for all rows in the slice.
-- External calls: `sort.Slice`, `strconv.Atoi`
+- Selector calls: `sort.Slice`, `strconv.Atoi`
 
 ### sortGuiTableAscendingOnTestSuiteExecutionTimeStamp
 - Signature: `func sortGuiTableAscendingOnTestSuiteExecutionTimeStamp()`
@@ -109,7 +108,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, switch`
 - Doc: Sort the matrix for GUI table, update the Gui and Set correct Sort-icon for sorted Header
 - Internal calls: `calculateAndSetCorrectColumnWidths`, `int`, `loadTestSuiteExecutionListTableTable`, `sort2DStringSlice`, `updateTestSuiteExecutionsListTable`
-- External calls: `fyne.Do`, `testSuiteExecutionsListTable.Refresh`
+- Selector calls: `fyne.Do`, `testSuiteExecutionsListTable.Refresh`
 
 ### updateTestSuiteExecutionsListTable
 - Signature: `func updateTestSuiteExecutionsListTable(testSuiteExecutionsModel *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct)`
@@ -117,7 +116,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, switch, defer`
 - Doc: Update the Table
 - Internal calls: `int`, `int16`, `int32`, `newClickableTableLabel`, `uint8`
-- External calls: `alt.Hide`, `alt.Show`, `canvas.NewRectangle`, `cont.Refresh`, `container.NewStack`, `fyne.Do`, `h.Refresh`, `lbl.Hide`
+- Selector calls: `alt.Hide`, `alt.Show`, `canvas.NewRectangle`, `cont.Refresh`, `container.NewStack`, `fyne.Do`, `h.Refresh`, `lbl.Hide`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

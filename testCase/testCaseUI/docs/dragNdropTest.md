@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseUI/dragNdropTest.go`
 - Package: `testCaseUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `17`
 - Imports: `10`
 
@@ -73,7 +72,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `for/range, switch`
 - Doc: DragEnd When the user release the mouse button this event is triggered
 - Internal calls: `executeDropAction`, `shrinkDropAreas`, `switchStateForSource`, `switchStateForTarget`
-- External calls: `containerRef.Hide`, `containerRef.Refresh`, `log.Fatalln`
+- Selector calls: `containerRef.Hide`, `containerRef.Refresh`, `log.Fatalln`
 
 ### Dragged (method on `*draggableLabel`)
 - Signature: `func (*draggableLabel) Dragged(ev *fyne.DragEvent)`
@@ -81,7 +80,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `switch`
 - Doc: Dragged When the user press down the mouse button this event is triggered
 - Internal calls: `expandDropAreas`, `switchStateForSource`, `switchStateForTarget`
-- External calls: `containerRef.Move`, `containerRef.Show`, `fyne.NewSize`, `log.Fatalln`, `rectangle2Ref.SetMinSize`, `rectangleRef.SetMinSize`, `rectangleRef.Size`, `textRef.Size`
+- Selector calls: `containerRef.Move`, `containerRef.Show`, `fyne.NewSize`, `log.Fatalln`, `rectangle2Ref.SetMinSize`, `rectangleRef.SetMinSize`, `rectangleRef.Size`, `textRef.Size`
 
 ### MouseIn (method on `*draggableLabel`)
 - Signature: `func (*draggableLabel) MouseIn(*desktop.MouseEvent)`
@@ -89,7 +88,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `switch`
 - Doc: MouseIn is called when a desktop pointer enters the widget
 - Internal calls: `switchStateForSource`
-- External calls: `log.Fatalln`
+- Selector calls: `log.Fatalln`
 
 ### MouseIn (method on `*droppableLabel`)
 - Signature: `func (*droppableLabel) MouseIn(*desktop.MouseEvent)`
@@ -97,7 +96,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `switch`
 - Doc: MouseIn is called when a desktop pointer enters the widget
 - Internal calls: `switchStateForSource`, `switchStateForTarget`
-- External calls: `log.Fatalln`
+- Selector calls: `log.Fatalln`
 
 ### MouseMoved (method on `*droppableLabel`)
 - Signature: `func (*droppableLabel) MouseMoved(a *desktop.MouseEvent)`
@@ -117,7 +116,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `switch`
 - Doc: MouseOut is called when a desktop pointer exits the widget
 - Internal calls: `switchStateForSource`
-- External calls: `log.Fatalln`
+- Selector calls: `log.Fatalln`
 
 ### MouseOut (method on `*droppableLabel`)
 - Signature: `func (*droppableLabel) MouseOut()`
@@ -125,50 +124,50 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `switch`
 - Doc: MouseOut is called when a desktop pointer exits the widget
 - Internal calls: `switchStateForSource`, `switchStateForTarget`
-- External calls: `log.Fatalln`
+- Selector calls: `log.Fatalln`
 
 ### executeDropAction
 - Signature: `func executeDropAction()`
 - Exported: `false`
 - Control-flow features: `none detected`
-- External calls: `fmt.Println`, `fmt.Sprintf`
+- Selector calls: `fmt.Println`, `fmt.Sprintf`
 
 ### expandDropAreas
 - Signature: `func expandDropAreas()`
 - Exported: `false`
 - Control-flow features: `for/range, go`
-- External calls: `canvas.NewColorRGBAAnimation`, `canvas.NewSizeAnimation`, `canvas.Refresh`, `fyne.NewSize`, `rectangleColorAnimation.Start`, `rectangleSizeAnimation.Start`, `targetLabel.Show`, `time.Sleep`
+- Selector calls: `canvas.NewColorRGBAAnimation`, `canvas.NewSizeAnimation`, `canvas.Refresh`, `fyne.NewSize`, `rectangleColorAnimation.Start`, `rectangleSizeAnimation.Start`, `targetLabel.Show`, `time.Sleep`
 
 ### makeDragNDropTestGUI
 - Signature: `func makeDragNDropTestGUI(textIn *canvas.Text, recIn *canvas.Rectangle, rec2In *canvas.Rectangle, containerIn *fyne.Container) myCanvasObject fyne.CanvasObject`
 - Exported: `false`
 - Control-flow features: `none detected`
 - Internal calls: `newDraggableLabel`, `newDroppableLabel`, `newNoneDroppableLabel`
-- External calls: `canvas.NewRectangle`, `container.New`, `container.NewHBox`, `container.NewMax`, `container.NewVBox`, `dragToDrop2Label.Size`, `fyne.NewSize`, `layout.NewSpacer`
+- Selector calls: `canvas.NewRectangle`, `container.New`, `container.NewHBox`, `container.NewMax`, `container.NewVBox`, `dragToDrop2Label.Size`, `fyne.NewSize`, `layout.NewSpacer`
 
 ### newDraggableLabel
 - Signature: `func newDraggableLabel(uuid string) *draggableLabel`
 - Exported: `false`
 - Control-flow features: `none detected`
-- External calls: `draggableLabel.ExtendBaseWidget`
+- Selector calls: `draggableLabel.ExtendBaseWidget`
 
 ### newDroppableLabel
 - Signature: `func newDroppableLabel(uuid string) *droppableLabel`
 - Exported: `false`
 - Control-flow features: `none detected`
-- External calls: `canvas.NewRectangle`, `droppableLabel.ExtendBaseWidget`, `droppableLabel.Refresh`, `droppableLabel.Size`
+- Selector calls: `canvas.NewRectangle`, `droppableLabel.ExtendBaseWidget`, `droppableLabel.Refresh`, `droppableLabel.Size`
 
 ### newNoneDroppableLabel
 - Signature: `func newNoneDroppableLabel(uuid string) *noneDroppableLabel`
 - Exported: `false`
 - Control-flow features: `none detected`
-- External calls: `nonDroppableLabel.ExtendBaseWidget`
+- Selector calls: `nonDroppableLabel.ExtendBaseWidget`
 
 ### shrinkDropAreas
 - Signature: `func shrinkDropAreas()`
 - Exported: `false`
 - Control-flow features: `for/range, go`
-- External calls: `canvas.NewColorRGBAAnimation`, `canvas.NewSizeAnimation`, `canvas.Refresh`, `fyne.NewSize`, `rectangleColorAnimation.Start`, `rectangleSizeAnimation.Start`, `targetLabel.Hide`, `time.Sleep`
+- Selector calls: `canvas.NewColorRGBAAnimation`, `canvas.NewSizeAnimation`, `canvas.Refresh`, `fyne.NewSize`, `rectangleColorAnimation.Start`, `rectangleSizeAnimation.Start`, `targetLabel.Hide`, `time.Sleep`
 
 ### switchStateForSource
 - Signature: `func switchStateForSource(newState int)`

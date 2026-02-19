@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `executions/detailedExecutionsModel/detailedExecutionsModel_RepaintSummaryTableForExecutions.go`
 - Package: `detailedExecutionsModel`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `5`
 - Imports: `2`
 
@@ -45,14 +44,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `go`
 - Doc: newRefreshTestCasesSummaryTableThrottler creates a new refreshTestCasesSummaryTableThrottler
-- External calls: `t.run`, `time.NewTicker`
+- Selector calls: `t.run`, `time.NewTicker`
 
 ### refreshTestCasesSummaryTable
 - Signature: `func refreshTestCasesSummaryTable()`
 - Exported: `false`
 - Control-flow features: `none detected`
 - Doc: Refresh the TestCasesSummaryTable
-- External calls: `TestCasesSummaryTable.Refresh`
+- Selector calls: `TestCasesSummaryTable.Refresh`
 
 ### run (method on `*refreshTestCasesSummaryTableThrottler`)
 - Signature: `func (*refreshTestCasesSummaryTableThrottler) run()`

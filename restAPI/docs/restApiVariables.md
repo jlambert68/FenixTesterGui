@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `restAPI/restApiVariables.go`
 - Package: `restAPI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `0`
 - Imports: `2`
 

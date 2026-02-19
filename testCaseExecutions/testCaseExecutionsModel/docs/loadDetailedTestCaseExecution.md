@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCaseExecutions/testCaseExecutionsModel/loadDetailedTestCaseExecution.go`
 - Package: `testCaseExecutionsModel`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `5`
 
@@ -36,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, defer`
 - Doc: LoadDetailedTestCaseExecutionFromDatabase Load all Detailed TestCaseExecution-data for specific execution
 - Internal calls: `DetailedTestCaseExecutionMapKeyType`, `int`
-- External calls: `TestCaseExecutionsModel.AddToDetailedTestCaseExecutionsMap`, `TestCaseExecutionsModel.ClearFlagRefreshOngoingOfDetailedTestCaseExecution`, `TestCaseExecutionsModel.ExtractAndStoreLogPostsAndValuesFromDetailedTestCaseExecution`, `TestCaseExecutionsModel.SetFlagRefreshOngoingOfDetailedTestCaseExecution`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `getSingleTestCaseExecutionResponse.GetAckNackResponse`, `getSingleTestCaseExecutionResponse.GetTestCaseExecutionResponse`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`
+- Selector calls: `TestCaseExecutionsModel.AddToDetailedTestCaseExecutionsMap`, `TestCaseExecutionsModel.ClearFlagRefreshOngoingOfDetailedTestCaseExecution`, `TestCaseExecutionsModel.ExtractAndStoreLogPostsAndValuesFromDetailedTestCaseExecution`, `TestCaseExecutionsModel.SetFlagRefreshOngoingOfDetailedTestCaseExecution`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `getSingleTestCaseExecutionResponse.GetAckNackResponse`, `getSingleTestCaseExecutionResponse.GetTestCaseExecutionResponse`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

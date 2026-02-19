@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `gui/UnitTestTestData/helper_model_test_TestData.go`
 - Package: `UnitTestTestData`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `3`
 - Imports: `5`
 
@@ -56,7 +55,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: Init the logger for UnitTests
-- External calls: `log.Println`, `logrus.SetFormatter`, `logrus.SetLevel`, `logrus.StandardLogger`, `os.OpenFile`
+- Selector calls: `log.Println`, `logrus.SetFormatter`, `logrus.SetLevel`, `logrus.StandardLogger`, `os.OpenFile`
 
 ### IsTestDataUsingCorrectTestDataProtoFileVersion
 - Signature: `func IsTestDataUsingCorrectTestDataProtoFileVersion(usedProtoFileVersion fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum) returnMessage *fenixTestCaseBuilderServerGrpcApi.AckNackResponse`
@@ -64,7 +63,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if`
 - Doc: ******************************************************************************************************************** Check if testdata is using correct proto-file version
 - Internal calls: `getHighestFenixTestDataProtoFileVersion`
-- External calls: `fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum`, `protoFileExpected.String`, `protoFileUsed.String`
+- Selector calls: `fenixTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum`, `protoFileExpected.String`, `protoFileUsed.String`
 
 ### getHighestFenixTestDataProtoFileVersion
 - Signature: `func getHighestFenixTestDataProtoFileVersion() int32`

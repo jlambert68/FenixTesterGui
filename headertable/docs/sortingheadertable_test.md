@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `headertable/sortingheadertable_test.go`
 - Package: `headertable`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `6`
 
@@ -37,14 +36,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, for/range`
 - Internal calls: `NewSortingHeaderTable`
-- External calls: `assert.Equal`, `m.Refresh`, `test.Tap`
+- Selector calls: `assert.Equal`, `m.Refresh`, `test.Tap`
 
 ### Test_stringSort
 - Signature: `func Test_stringSort(t *testing.T)`
 - Exported: `true`
 - Control-flow features: `for/range`
 - Internal calls: `sortFn`, `stringSort`
-- External calls: `assert.Equal`, `assert.NoError`, `binding.BindStruct`, `fmt.Sprintf`
+- Selector calls: `assert.Equal`, `assert.NoError`, `binding.BindStruct`, `fmt.Sprintf`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

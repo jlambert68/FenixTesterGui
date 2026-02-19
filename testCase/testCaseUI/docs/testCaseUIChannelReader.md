@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseUI/testCaseUIChannelReader.go`
 - Package: `testCaseUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `7`
 - Imports: `10`
 
@@ -40,7 +39,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: Close tab that have the TestCase without saving the TestCse
-- External calls: `fmt.Println`, `fmt.Sprintf`, `fyne.CurrentApp`
+- Selector calls: `fmt.Println`, `fmt.Sprintf`, `fyne.CurrentApp`
 
 ### removeTestCaseTabBasedOnTestCaseUuid (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) removeTestCaseTabBasedOnTestCaseUuid(incomingChannelCommandGraphicsUpdatedData sharedCode.ChannelCommandGraphicsUpdatedStruct)`
@@ -48,14 +47,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, go`
 - Doc: Remove tab that have the TestCase
 - Internal calls: `flashScreen`
-- External calls: `enableDeletionCheckbox.Disable`, `err.Error`, `errors.New`, `fmt.Println`, `fmt.Sprintf`, `fyne.CurrentApp`, `newTestCaseDeletionDateEntry.SetText`, `time.Now`
+- Selector calls: `enableDeletionCheckbox.Disable`, `err.Error`, `errors.New`, `fmt.Println`, `fmt.Sprintf`, `fyne.CurrentApp`, `newTestCaseDeletionDateEntry.SetText`, `time.Now`
 
 ### selectTestCaseTabBasedOnTestCaseUuid (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) selectTestCaseTabBasedOnTestCaseUuid(incomingChannelCommandGraphicsUpdatedData sharedCode.ChannelCommandGraphicsUpdatedStruct)`
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: Select tab that have TestCase
-- External calls: `fmt.Println`, `fyne.Do`
+- Selector calls: `fmt.Println`, `fyne.Do`
 
 ### selectTestInstructionInTestCaseGraphics (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) selectTestInstructionInTestCaseGraphics(incomingChannelCommandGraphicsUpdatedData sharedCode.ChannelCommandGraphicsUpdatedStruct)`
@@ -68,20 +67,20 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `for/range, switch`
 - Doc: Channel reader which is used for reading out command to update GUI
-- External calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`, `testCasesUiCanvasObject.closeTestCaseTabBasedOnTestCaseUuiWithOutSaving`, `testCasesUiCanvasObject.removeTestCaseTabBasedOnTestCaseUuid`, `testCasesUiCanvasObject.selectTestCaseTabBasedOnTestCaseUuid`, `testCasesUiCanvasObject.selectTestInstructionInTestCaseGraphics`, `testCasesUiCanvasObject.updateTestCaseGraphics`
+- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`, `testCasesUiCanvasObject.closeTestCaseTabBasedOnTestCaseUuiWithOutSaving`, `testCasesUiCanvasObject.removeTestCaseTabBasedOnTestCaseUuid`, `testCasesUiCanvasObject.selectTestCaseTabBasedOnTestCaseUuid`, `testCasesUiCanvasObject.selectTestInstructionInTestCaseGraphics`, `testCasesUiCanvasObject.updateTestCaseGraphics`
 
 ### updateTestCaseGraphics (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) updateTestCaseGraphics(incomingChannelCommandGraphicsUpdatedData sharedCode.ChannelCommandGraphicsUpdatedStruct)`
 - Exported: `false`
 - Control-flow features: `if`
-- External calls: `fmt.Println`, `testCasesUiCanvasObject.GenerateNewTestCaseTabObject`, `testCasesUiCanvasObject.UpdateGraphicalRepresentationForTestCase`, `testCasesUiCanvasObject.UpdateTextualStructuresForTestCase`, `testCasesUiCanvasObject.selectTestCaseTabBasedOnTestCaseUuid`
+- Selector calls: `fmt.Println`, `testCasesUiCanvasObject.GenerateNewTestCaseTabObject`, `testCasesUiCanvasObject.UpdateGraphicalRepresentationForTestCase`, `testCasesUiCanvasObject.UpdateTextualStructuresForTestCase`, `testCasesUiCanvasObject.selectTestCaseTabBasedOnTestCaseUuid`
 
 ### updatedUpdateTestCaseTabName (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) updatedUpdateTestCaseTabName(incomingChannelCommandGraphicsUpdatedData sharedCode.ChannelCommandGraphicsUpdatedStruct)`
 - Exported: `false`
 - Control-flow features: `none detected`
 - Doc: Update that tab name for the TestCase
-- External calls: `fyne.Do`
+- Selector calls: `fyne.Do`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

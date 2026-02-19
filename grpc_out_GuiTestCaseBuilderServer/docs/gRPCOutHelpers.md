@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `grpc_out_GuiTestCaseBuilderServer/gRPCOutHelpers.go`
 - Package: `grpc_out_GuiTestCaseBuilderServer`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `6`
 - Imports: `10`
 
@@ -60,14 +59,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, defer`
 - Internal calls: `cancel`, `isUnixSocket`
-- External calls: `context.WithTimeout`, `credentials.NewTLS`, `err.Error`, `grpc.WithUserAgent`, `grpcurl.BlockingDial`, `log.Panicln`
+- Selector calls: `context.WithTimeout`, `credentials.NewTLS`, `err.Error`, `grpc.WithUserAgent`, `grpcurl.BlockingDial`, `log.Panicln`
 
 ### setConnectionToFenixGuiTestCaseBuilderServer (method on `*GRPCOutGuiTestCaseBuilderServerStruct`)
 - Signature: `func (*GRPCOutGuiTestCaseBuilderServerStruct) setConnectionToFenixGuiTestCaseBuilderServer() returnMessage *fenixTestCaseBuilderServerGrpcApi.AckNackResponse`
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: Set upp connection and Dial to FenixGuiTestCaseBuilderServer
-- External calls: `credentials.NewTLS`, `fenixTestCaseBuilderServerGrpcApi.NewFenixTestCaseBuilderServerGrpcServicesClient`, `grpc.Dial`, `grpc.WithInsecure`, `grpc.WithTransportCredentials`
+- Selector calls: `credentials.NewTLS`, `fenixTestCaseBuilderServerGrpcApi.NewFenixTestCaseBuilderServerGrpcServicesClient`, `grpc.Dial`, `grpc.WithInsecure`, `grpc.WithTransportCredentials`
 
 ### setConnectionToFenixGuiTestCaseBuilderServer_new (method on `*GRPCOutGuiTestCaseBuilderServerStruct`)
 - Signature: `func (*GRPCOutGuiTestCaseBuilderServerStruct) setConnectionToFenixGuiTestCaseBuilderServer_new(ctx context.Context) (_ context.Context, err error)`
@@ -75,7 +74,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, returns error`
 - Doc: SetConnectionToFenixExecutionWorkerServer - Set upp connection and Dial to FenixExecutionServer
 - Internal calls: `dialFromGrpcurl`
-- External calls: `fenixTestCaseBuilderServerGrpcApi.NewFenixTestCaseBuilderServerGrpcServicesClient`, `grpc.Dial`, `grpc.WithInsecure`, `time.Duration`, `time.Sleep`
+- Selector calls: `fenixTestCaseBuilderServerGrpcApi.NewFenixTestCaseBuilderServerGrpcServicesClient`, `grpc.Dial`, `grpc.WithInsecure`, `time.Duration`, `time.Sleep`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

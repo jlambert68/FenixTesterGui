@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/listTestSuitesUI/listTestSuitesUI_HeaderLabel.go`
 - Package: `listTestSuitesUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `3`
 - Imports: `6`
 
@@ -36,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*sortableHeaderLabelStruct) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `container.NewHBox`, `container.NewStack`, `widget.NewSimpleRenderer`
+- Selector calls: `container.NewHBox`, `container.NewStack`, `widget.NewSimpleRenderer`
 
 ### Refresh (method on `*sortableHeaderLabelStruct`)
 - Signature: `func (*sortableHeaderLabelStruct) Refresh()`
@@ -49,7 +48,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, switch`
 - Doc: Used for creating a new Header label
 - Internal calls: `newClickableSortImage`
-- External calls: `fmt.Println`, `listTestSuiteUI.sort2DStringSlice`, `tempSortableHeaderLabel.ExtendBaseWidget`, `tempSortableHeaderLabel.Refresh`, `widget.NewLabel`
+- Selector calls: `fmt.Println`, `listTestSuiteUI.sort2DStringSlice`, `tempSortableHeaderLabel.ExtendBaseWidget`, `tempSortableHeaderLabel.Refresh`, `widget.NewLabel`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

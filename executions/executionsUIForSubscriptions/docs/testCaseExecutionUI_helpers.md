@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `executions/executionsUIForSubscriptions/testCaseExecutionUI_helpers.go`
 - Package: `executionsUIForSubscriptions`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `3`
 - Imports: `9`
 
@@ -39,7 +38,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, for/range`
 - Internal calls: `float32`
-- External calls: `b1.GetItem`, `fyne.NewSize`, `widget.NewLabel`
+- Selector calls: `b1.GetItem`, `fyne.NewSize`, `widget.NewLabel`
 
 ### remove
 - Signature: `func remove(slice []binding.DataMap, s int) []binding.DataMap`
@@ -51,7 +50,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func verifyThatTestCaseExecutionIsNotInUse(subscriptionsForTestCaseExecutionMap executionsModelForSubscriptions.SubscriptionsForTestCaseExecutionMapOverallType) err error`
 - Exported: `false`
 - Control-flow features: `if, for/range, switch, returns error`
-- External calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`
+- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

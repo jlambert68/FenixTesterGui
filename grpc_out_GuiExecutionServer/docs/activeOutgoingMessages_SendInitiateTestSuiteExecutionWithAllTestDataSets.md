@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `grpc_out_GuiExecutionServer/activeOutgoingMessages_SendInitiateTestSuiteExecutionWithAllTestDataSets.go`
 - Package: `grpc_out_GuiExecutionServer`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `7`
 
@@ -38,7 +37,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, defer`
 - Doc: SendInitiateTestSuiteExecutionWithAllTestDataSets - Initiate a TestSuiteExecution with all its TestDataSets
 - Internal calls: `GetHighestFenixGuiExecutionServerProtoFileVersion`, `cancel`
-- External calls: `context.Background`, `context.WithTimeout`, `err.Error`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `fenixGuiExecutionServerGrpcClient.InitiateTestSuiteExecutionWithAllTestDataSets`, `fmt.Sprintf`, `grpcOut.setConnectionToFenixGuiExecutionMessageServer_new`
+- Selector calls: `context.Background`, `context.WithTimeout`, `err.Error`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `fenixGuiExecutionServerGrpcClient.InitiateTestSuiteExecutionWithAllTestDataSets`, `fmt.Sprintf`, `grpcOut.setConnectionToFenixGuiExecutionMessageServer_new`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

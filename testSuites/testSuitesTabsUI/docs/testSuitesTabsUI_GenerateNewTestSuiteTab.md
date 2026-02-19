@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/testSuitesTabsUI/testSuitesTabsUI_GenerateNewTestSuiteTab.go`
 - Package: `testSuitesTabsUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `10`
 
@@ -39,7 +38,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func GenerateNewTestSuiteTab(testCasesModel *testCaseModel.TestCasesModelsStruct)`
 - Exported: `true`
 - Control-flow features: `if, go`
-- External calls: `container.NewBorder`, `container.NewTabItem`, `container.NewVBox`, `err.Error`, `fmt.Sprintf`, `newTestSuiteModel.ExecuteOneTestSuiteWithAllItsTestDataSets`, `newTestSuiteModel.ExecuteOneTestSuiteWithOneTestDataSet`, `newTestSuiteModel.GetTestSuiteUuid`
+- Selector calls: `container.NewBorder`, `container.NewTabItem`, `container.NewVBox`, `err.Error`, `fmt.Sprintf`, `newTestSuiteModel.ExecuteOneTestSuiteWithAllItsTestDataSets`, `newTestSuiteModel.ExecuteOneTestSuiteWithOneTestDataSet`, `newTestSuiteModel.GetTestSuiteUuid`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

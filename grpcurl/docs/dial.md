@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `grpcurl/dial.go`
 - Package: `grpcurl`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `5`
 - Imports: `10`
 
@@ -46,20 +45,20 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, select, go, returns error`
 - Doc: BlockingDial is a helper method to dial the given address, using optional TLS credentials, and blocking until the returned connection is ready. If the given credentials are nil, the
 - Internal calls: `writeResult`
-- External calls: `ctx.Done`, `ctx.Err`, `grpc.DialContext`, `grpc.FailOnNonTempDialError`, `grpc.WithBlock`, `grpc.WithContextDialer`, `grpc.WithTransportCredentials`, `insecure.NewCredentials`
+- Selector calls: `ctx.Done`, `ctx.Err`, `grpc.DialContext`, `grpc.FailOnNonTempDialError`, `grpc.WithBlock`, `grpc.WithContextDialer`, `grpc.WithTransportCredentials`, `insecure.NewCredentials`
 
 ### ClientHandshake (method on `*errSignalingCreds`)
 - Signature: `func (*errSignalingCreds) ClientHandshake(ctx context.Context, addr string, rawConn net.Conn) (net.Conn, credentials.AuthInfo, error)`
 - Exported: `true`
 - Control-flow features: `if, returns error`
-- External calls: `c.writeResult`
+- Selector calls: `c.writeResult`
 
 ### ClientTLSConfig
 - Signature: `func ClientTLSConfig(insecureSkipVerify bool, cacertFile, clientCertFile, clientKeyFile string) (*tls.Config, error)`
 - Exported: `true`
 - Control-flow features: `if, returns error`
 - Doc: ClientTLSConfig builds transport-layer config for a gRPC client using the given properties. If cacertFile is blank, only standard trusted certs are used to
-- External calls: `certPool.AppendCertsFromPEM`, `errors.New`, `fmt.Errorf`, `ioutil.ReadFile`, `tls.LoadX509KeyPair`, `x509.NewCertPool`
+- Selector calls: `certPool.AppendCertsFromPEM`, `errors.New`, `fmt.Errorf`, `ioutil.ReadFile`, `tls.LoadX509KeyPair`, `x509.NewCertPool`
 
 ### ClientTransportCredentials
 - Signature: `func ClientTransportCredentials(insecureSkipVerify bool, cacertFile, clientCertFile, clientKeyFile string) (credentials.TransportCredentials, error)`
@@ -67,14 +66,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, returns error`
 - Doc: ClientTransportCredentials is a helper function that constructs a TLS config with the given properties (see ClientTLSConfig) and then constructs and returns gRPC
 - Internal calls: `ClientTLSConfig`
-- External calls: `credentials.NewTLS`
+- Selector calls: `credentials.NewTLS`
 
 ### ServerTransportCredentials
 - Signature: `func ServerTransportCredentials(cacertFile, serverCertFile, serverKeyFile string, requireClientCerts bool) (credentials.TransportCredentials, error)`
 - Exported: `true`
 - Control-flow features: `if, returns error`
 - Doc: ServerTransportCredentials builds transport credentials for a gRPC server using the given properties. If cacertFile is blank, the server will not request client certs
-- External calls: `certPool.AppendCertsFromPEM`, `credentials.NewTLS`, `errors.New`, `fmt.Errorf`, `ioutil.ReadFile`, `tls.LoadX509KeyPair`, `x509.NewCertPool`
+- Selector calls: `certPool.AppendCertsFromPEM`, `credentials.NewTLS`, `errors.New`, `fmt.Errorf`, `ioutil.ReadFile`, `tls.LoadX509KeyPair`, `x509.NewCertPool`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

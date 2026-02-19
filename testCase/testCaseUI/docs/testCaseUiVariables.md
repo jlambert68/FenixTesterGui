@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseUI/testCaseUiVariables.go`
 - Package: `testCaseUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `0`
 - Imports: `9`
 

@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCases/listTestCasesModel/listTestCasesModel_updateTestCasesList.go`
 - Package: `listTestCasesModel`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `8`
 
@@ -39,14 +38,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if`
 - Doc: LoadTestCaseThatCanBeEditedByUser Load list with TestCasesMapPtr that the user can edit
 - Internal calls: `storeTestCaseThatCanBeEditedByUser`
-- External calls: `listTestCasesThatCanBeEditedResponseMessage.GetAckNackResponse`, `listTestCasesThatCanBeEditedResponseMessage.GetTestCasesThatCanBeEditedByUser`
+- Selector calls: `listTestCasesThatCanBeEditedResponseMessage.GetAckNackResponse`, `listTestCasesThatCanBeEditedResponseMessage.GetTestCasesThatCanBeEditedByUser`
 
 ### storeTestCaseThatCanBeEditedByUser
 - Signature: `func storeTestCaseThatCanBeEditedByUser(testCasesThatCanBeEditedByUserAsSlice []*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseThatCanBeEditedByUserMessage, testCasesModeReference *testCaseModel.TestCasesModelsStruct)`
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: Store TestCasesMapPtr That Can Be Edited By User
-- External calls: `boolbits.NewAllZerosEntry`, `boolbits.NewEntry`, `err.Error`, `fmt.Sprintf`, `latestTestCaseExecutionUpdatedMinTimeStamp.Before`, `latestTestCaseUpdatedMinTimeStamp.Before`, `log.Fatalln`, `resultsEntry.Or`
+- Selector calls: `boolbits.NewAllZerosEntry`, `boolbits.NewEntry`, `err.Error`, `fmt.Sprintf`, `latestTestCaseExecutionUpdatedMinTimeStamp.Before`, `latestTestCaseUpdatedMinTimeStamp.Before`, `log.Fatalln`, `resultsEntry.Or`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

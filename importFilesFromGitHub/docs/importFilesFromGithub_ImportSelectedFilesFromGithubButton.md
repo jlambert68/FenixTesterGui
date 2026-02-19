@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `importFilesFromGitHub/importFilesFromGithub_ImportSelectedFilesFromGithubButton.go`
 - Package: `importFilesFromGitHub`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `3`
 - Imports: `7`
 
@@ -44,7 +43,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Doc: Extra the file content from the json
-- External calls: `json.Unmarshal`
+- Selector calls: `json.Unmarshal`
 
 ### generateImportSelectedFilesFromGithubButton (method on `*ImportFilesFromGitHubStruct`)
 - Signature: `func (*ImportFilesFromGitHubStruct) generateImportSelectedFilesFromGithubButton(parentWindow fyne.Window)`
@@ -52,7 +51,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range`
 - Doc: Generate the button that imports the selected files from Github
 - Internal calls: `string`
-- External calls: `dialog.ShowError`, `fenixMainWindow.Show`, `fenixSyncShared.HashSingleValue`, `importFilesFromGitHubObject.decodeBase64Content`, `importFilesFromGitHubObject.extractContentFromJson`, `importFilesFromGitHubObject.loadFileContent`, `log.Fatalf`, `parentWindow.Close`
+- Selector calls: `dialog.ShowError`, `fenixMainWindow.Show`, `fenixSyncShared.HashSingleValue`, `importFilesFromGitHubObject.decodeBase64Content`, `importFilesFromGitHubObject.extractContentFromJson`, `importFilesFromGitHubObject.loadFileContent`, `log.Fatalf`, `parentWindow.Close`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

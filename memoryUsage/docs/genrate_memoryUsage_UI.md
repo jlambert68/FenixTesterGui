@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `memoryUsage/genrate_memoryUsage_UI.go`
 - Package: `memoryUsage`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `10`
 
@@ -42,7 +41,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Doc: GenerateMemoryUsageIcon Genrate the UI-component to be used at the bottom of the Fenix-UI, to show ongoing probes(pigs)
 - Internal calls: `NewClickableImage`
-- External calls: `canvas.NewImageFromResource`, `fyne.NewSize`, `fyne.NewStaticResource`, `memoryUsageImage.SetMinSize`
+- Selector calls: `canvas.NewImageFromResource`, `fyne.NewSize`, `fyne.NewStaticResource`, `memoryUsageImage.SetMinSize`
 
 ### openStatisticsWindowFunction
 - Signature: `func openStatisticsWindowFunction(clickableContainer *ClickableImageStruct)`
@@ -50,7 +49,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, select, go, defer`
 - Doc: Open up the statistics window
 - Internal calls: `float32`
-- External calls: `chart.ApplyDataPoint`, `chart.Refresh`, `chart.SetMinSize`, `container.NewStack`, `fyne.Do`, `fyne.NewSize`, `memoryUsageWindow.Close`, `memoryUsageWindow.RequestFocus`
+- Selector calls: `chart.ApplyDataPoint`, `chart.Refresh`, `chart.SetMinSize`, `container.NewStack`, `fyne.Do`, `fyne.NewSize`, `memoryUsageWindow.Close`, `memoryUsageWindow.RequestFocus`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

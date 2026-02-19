@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `memoryUsage/clickableImage.go`
 - Package: `memoryUsage`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `7`
 - Imports: `6`
 
@@ -41,14 +40,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*ClickableImageStruct) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `container.NewStack`, `widget.NewSimpleRenderer`
+- Selector calls: `container.NewStack`, `widget.NewSimpleRenderer`
 
 ### MouseIn (method on `*ClickableImageStruct`)
 - Signature: `func (*ClickableImageStruct) MouseIn(ev *desktop.MouseEvent)`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: MouseIn is called when a desktop pointer enters the widget
-- External calls: `c.Refresh`
+- Selector calls: `c.Refresh`
 
 ### MouseMoved (method on `*ClickableImageStruct`)
 - Signature: `func (*ClickableImageStruct) MouseMoved(ev *desktop.MouseEvent)`
@@ -60,19 +59,19 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: MouseOut is called when a desktop pointer exits the widget
-- External calls: `c.Refresh`
+- Selector calls: `c.Refresh`
 
 ### NewClickableImage
 - Signature: `func NewClickableImage(image *canvas.Image, tapped func(clickableContainer *ClickableImageStruct)) *ClickableImageStruct`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `canvas.NewRectangle`, `cc.ExtendBaseWidget`, `image.Size`, `rectangleOverLay.Resize`
+- Selector calls: `canvas.NewRectangle`, `cc.ExtendBaseWidget`, `image.Size`, `rectangleOverLay.Resize`
 
 ### Tapped (method on `*ClickableImageStruct`)
 - Signature: `func (*ClickableImageStruct) Tapped(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `if`
-- External calls: `c.OnTapped`
+- Selector calls: `c.OnTapped`
 
 ### TappedSecondary (method on `*ClickableImageStruct`)
 - Signature: `func (*ClickableImageStruct) TappedSecondary(_ *fyne.PointEvent)`

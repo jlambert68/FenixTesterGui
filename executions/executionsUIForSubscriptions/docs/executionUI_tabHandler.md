@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `executions/executionsUIForSubscriptions/executionUI_tabHandler.go`
 - Package: `executionsUIForSubscriptions`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `6`
 
@@ -36,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: GenerateBaseUITabForExecutions Create the Base-UI-canvas-object for the TestCasesMapPtr object. This base doesn't contain any specific TestCase-parts, and they will be added in other function
-- External calls: `container.New`, `executionsUIObject.CreateExecutionsListTabPageForSubsacriptions`, `fmt.Println`, `layout.NewBorderLayout`, `theme.ContentCopyIcon`, `theme.ContentRedoIcon`, `theme.HomeIcon`, `widget.NewLabel`
+- Selector calls: `container.New`, `executionsUIObject.CreateExecutionsListTabPageForSubsacriptions`, `fmt.Println`, `layout.NewBorderLayout`, `theme.ContentCopyIcon`, `theme.ContentRedoIcon`, `theme.HomeIcon`, `widget.NewLabel`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

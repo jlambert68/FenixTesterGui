@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `importFilesFromGitHub/importFilesFromGithub_SelectedFilesListTable.go`
 - Package: `importFilesFromGitHub`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `14`
 - Imports: `5`
 
@@ -45,7 +44,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*clickableLabel) MouseIn(*desktop.MouseEvent)`
 - Exported: `true`
 - Control-flow features: `if`
-- External calls: `l.Refresh`
+- Selector calls: `l.Refresh`
 
 ### MouseMoved (method on `*customLabel`)
 - Signature: `func (*customLabel) MouseMoved(*desktop.MouseEvent)`
@@ -66,19 +65,19 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*clickableLabel) MouseOut()`
 - Exported: `true`
 - Control-flow features: `if`
-- External calls: `l.Refresh`
+- Selector calls: `l.Refresh`
 
 ### Tapped (method on `*customLabel`)
 - Signature: `func (*customLabel) Tapped(e *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `if`
-- External calls: `l.onDoubleTap`, `now.Sub`, `time.Now`
+- Selector calls: `l.onDoubleTap`, `now.Sub`, `time.Now`
 
 ### Tapped (method on `*clickableLabel`)
 - Signature: `func (*clickableLabel) Tapped(e *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `if`
-- External calls: `l.onDoubleTap`, `time.Now`, `time.Since`
+- Selector calls: `l.onDoubleTap`, `time.Now`, `time.Since`
 
 ### TappedSecondary (method on `*customLabel`)
 - Signature: `func (*customLabel) TappedSecondary(*fyne.PointEvent)`
@@ -95,26 +94,26 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, for/range, switch`
 - Internal calls: `float32`
-- External calls: `clickable.SetText`, `fyne.MeasureText`, `importFilesFromGitHubObject.UpdateSelectedFilesTable`, `importFilesFromGitHubObject.newClickableLabel`, `nonClickable.SetText`, `theme.Padding`, `theme.TextSize`
+- Selector calls: `clickable.SetText`, `fyne.MeasureText`, `importFilesFromGitHubObject.UpdateSelectedFilesTable`, `importFilesFromGitHubObject.newClickableLabel`, `nonClickable.SetText`, `theme.Padding`, `theme.TextSize`
 
 ### generateSelectedFilesListTable (method on `*ImportFilesFromGitHubStruct`)
 - Signature: `func (*ImportFilesFromGitHubStruct) generateSelectedFilesListTable(parentWindow fyne.Window)`
 - Exported: `false`
 - Control-flow features: `none detected`
 - Doc: Create the UI-list that holds the selected files
-- External calls: `widget.NewLabel`, `widget.NewTable`
+- Selector calls: `widget.NewLabel`, `widget.NewTable`
 
 ### newClickableLabel (method on `*ImportFilesFromGitHubStruct`)
 - Signature: `func (*ImportFilesFromGitHubStruct) newClickableLabel(text string, onDoubleTap func(), tempIsClickable bool) *clickableLabel`
 - Exported: `false`
 - Control-flow features: `none detected`
-- External calls: `l.ExtendBaseWidget`, `time.Now`
+- Selector calls: `l.ExtendBaseWidget`, `time.Now`
 
 ### newCustomLabel (method on `*ImportFilesFromGitHubStruct`)
 - Signature: `func (*ImportFilesFromGitHubStruct) newCustomLabel(text string, onDoubleTap func()) *customLabel`
 - Exported: `false`
 - Control-flow features: `none detected`
-- External calls: `l.ExtendBaseWidget`, `time.Now`
+- Selector calls: `l.ExtendBaseWidget`, `time.Now`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

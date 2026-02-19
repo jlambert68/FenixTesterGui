@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `grpc_out_GuiTestCaseBuilderServer/activeOutgoingMessages_SendListTestCasesThatCanBeEdited.go`
 - Package: `grpc_out_GuiTestCaseBuilderServer`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `7`
 
@@ -38,7 +37,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, defer`
 - Doc: ListTestCasesThatCanBeEditedResponseMessage - List all TestCasesMapPtr that can be edited, used for producing a list that the used can chose TestCase to edit from
 - Internal calls: `cancel`
-- External calls: `context.Background`, `context.WithTimeout`, `err.Error`, `fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum`, `fenixGuiTestCaseCaseBuilderServerGrpcClient.ListTestCasesThatCanBeEdited`, `grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion`, `grpcOut.setConnectionToFenixGuiTestCaseBuilderServer_new`, `timestamppb.New`
+- Selector calls: `context.Background`, `context.WithTimeout`, `err.Error`, `fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum`, `fenixGuiTestCaseCaseBuilderServerGrpcClient.ListTestCasesThatCanBeEdited`, `grpcOut.GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion`, `grpcOut.setConnectionToFenixGuiTestCaseBuilderServer_new`, `timestamppb.New`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

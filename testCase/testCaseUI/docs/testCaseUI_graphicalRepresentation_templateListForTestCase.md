@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseUI/testCaseUI_graphicalRepresentation_templateListForTestCase.go`
 - Package: `testCaseUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `10`
 
@@ -41,7 +40,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, go, returns error`
 - Doc: Generate the Template-table Area for the TestCase
 - Internal calls: `generateTemplateFilesTable`
-- External calls: `container.NewBorder`, `container.NewHBox`, `container.NewVBox`, `fyne.CurrentApp`, `localImportFilesFromGitHubObject.InitiateImportFilesFromGitHubWindow`, `luaEngine.InitiateLuaScriptEngine`, `tableAndButtonContainer.Refresh`, `tempFenixMasterWindow.Hide`
+- Selector calls: `container.NewBorder`, `container.NewHBox`, `container.NewVBox`, `fyne.CurrentApp`, `localImportFilesFromGitHubObject.InitiateImportFilesFromGitHubWindow`, `luaEngine.InitiateLuaScriptEngine`, `tableAndButtonContainer.Refresh`, `tempFenixMasterWindow.Hide`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

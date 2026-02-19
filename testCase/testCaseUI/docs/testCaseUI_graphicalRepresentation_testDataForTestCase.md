@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseUI/testCaseUI_graphicalRepresentation_testDataForTestCase.go`
 - Package: `testCaseUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `9`
 
@@ -40,7 +39,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, returns error`
 - Doc: Generate the TestData-table Area for the TestCase
 - Internal calls: `getTestGroupsFromTestDataEngineFunction`, `testDataPointsToStringSliceFunction`, `testDataRowSliceToStringSliceFunction`
-- External calls: `container.New`, `container.NewBorder`, `container.NewHBox`, `container.NewVBox`, `layout.NewFormLayout`, `selectorAndButtonContainer.Refresh`, `testDataPointGroupsSelectInMainTestCaseArea.Refresh`, `testDataPointGroupsSelectInMainTestCaseArea.SetOptions`
+- Selector calls: `container.New`, `container.NewBorder`, `container.NewHBox`, `container.NewVBox`, `layout.NewFormLayout`, `selectorAndButtonContainer.Refresh`, `testDataPointGroupsSelectInMainTestCaseArea.Refresh`, `testDataPointGroupsSelectInMainTestCaseArea.SetOptions`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

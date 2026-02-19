@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/testSuitesModel/testSuitesModel_ConvertTestSuiteMetaData.go`
 - Package: `testSuitesModel`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `0`
 

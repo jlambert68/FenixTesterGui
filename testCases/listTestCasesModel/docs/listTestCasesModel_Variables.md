@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCases/listTestCasesModel/listTestCasesModel_Variables.go`
 - Package: `listTestCasesModel`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `0`
 - Imports: `3`
 

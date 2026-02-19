@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseModel/testCaseModel_deleteTestCaseFromDatabase.go`
 - Package: `testCaseModel`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `3`
 
@@ -33,7 +32,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, returns error`
 - Doc: DeleteTestCaseAtThisDate - Mark the TestCase as deletedn by this date, in the Database
-- External calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`, `testCaseModel.SaveChangedTestCaseAttributeInTestCase`
+- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`, `testCaseModel.SaveChangedTestCaseAttributeInTestCase`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

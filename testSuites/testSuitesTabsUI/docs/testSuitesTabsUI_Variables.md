@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/testSuitesTabsUI/testSuitesTabsUI_Variables.go`
 - Package: `testSuitesTabsUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `0`
 - Imports: `2`
 

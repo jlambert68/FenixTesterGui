@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `gui/availableBuildingBlockTree_ui.go`
 - Package: `gui`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `6`
 - Imports: `5`
 
@@ -38,25 +37,25 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*tappableLabel) DragEnd()`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `log.Println`
+- Selector calls: `log.Println`
 
 ### Dragged (method on `*tappableLabel`)
 - Signature: `func (*tappableLabel) Dragged(ev *fyne.DragEvent)`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `fmt.Println`, `log.Println`, `t.Position`, `widget.NewLabel`
+- Selector calls: `fmt.Println`, `log.Println`, `t.Position`, `widget.NewLabel`
 
 ### Tapped (method on `*tappableLabel`)
 - Signature: `func (*tappableLabel) Tapped(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `fmt.Println`, `log.Println`, `t.Position`
+- Selector calls: `fmt.Println`, `log.Println`, `t.Position`
 
 ### TappedSecondary (method on `*tappableLabel`)
 - Signature: `func (*tappableLabel) TappedSecondary(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `log.Println`
+- Selector calls: `log.Println`
 
 ### makeTreeUI (method on `*UIServerStruct`)
 - Signature: `func (*UIServerStruct) makeTreeUI()`
@@ -68,7 +67,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func newTappableLabel() *tappableLabel`
 - Exported: `false`
 - Control-flow features: `none detected`
-- External calls: `label.ExtendBaseWidget`
+- Selector calls: `label.ExtendBaseWidget`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

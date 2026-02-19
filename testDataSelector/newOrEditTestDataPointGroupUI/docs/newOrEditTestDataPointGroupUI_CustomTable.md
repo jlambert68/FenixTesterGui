@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testDataSelector/newOrEditTestDataPointGroupUI/newOrEditTestDataPointGroupUI_CustomTable.go`
 - Package: `newOrEditTestDataPointGroupUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `25`
 - Imports: `11`
 
@@ -64,7 +63,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: CreateRenderer implements fyne.WidgetRenderer for customWidget
-- External calls: `container.NewHBox`, `w.updateVisibility`
+- Selector calls: `container.NewHBox`, `w.updateVisibility`
 
 ### Destroy (method on `*customWidgetRenderer`)
 - Signature: `func (*customWidgetRenderer) Destroy()`
@@ -80,13 +79,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*customWidgetRenderer) MinSize() fyne.Size`
 - Exported: `true`
 - Control-flow features: `if`
-- External calls: `fyne.NewSize`, `tempLabel.MinSize`, `tempLabel.Refresh`, `widget.NewLabel`
+- Selector calls: `fyne.NewSize`, `tempLabel.MinSize`, `tempLabel.Refresh`, `widget.NewLabel`
 
 ### MouseIn (method on `*customWidget`)
 - Signature: `func (*customWidget) MouseIn(*desktop.MouseEvent)`
 - Exported: `true`
 - Control-flow features: `if`
-- External calls: `w.Refresh`, `w.onHover`
+- Selector calls: `w.Refresh`, `w.onHover`
 
 ### MouseMoved (method on `*customWidget`)
 - Signature: `func (*customWidget) MouseMoved(*desktop.MouseEvent)`
@@ -97,21 +96,21 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*customWidget) MouseOut()`
 - Exported: `true`
 - Control-flow features: `if`
-- External calls: `w.Refresh`, `w.onHover`
+- Selector calls: `w.Refresh`, `w.onHover`
 
 ### NewCustomTableWidget
 - Signature: `func NewCustomTableWidget(data [][]string, selectedTestDataPointUuidMap map[testDataEngine.TestDataPointRowUuidType]testDataEngine.TestDataPointRowUuidStruct) *CustomTableWidget`
 - Exported: `true`
 - Control-flow features: `if, for/range`
 - Internal calls: `NewCustomWidget`, `setColumnWidths`
-- External calls: `table.ExtendBaseWidget`, `table.handleCellTapped`, `table.hoverRow`, `table.unhoverRow`, `tableMutex.Lock`, `tableMutex.Unlock`, `testDataEngine.TestDataPointRowUuidType`
+- Selector calls: `table.ExtendBaseWidget`, `table.handleCellTapped`, `table.hoverRow`, `table.unhoverRow`, `tableMutex.Lock`, `tableMutex.Unlock`, `testDataEngine.TestDataPointRowUuidType`
 
 ### NewCustomWidget
 - Signature: `func NewCustomWidget(isSelected bool, text string, tableRef *CustomTableWidget) *customWidget`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: NewCustomWidget creates a new customWidget
-- External calls: `canvas.NewRectangle`, `theme.BackgroundColor`, `theme.CheckButtonCheckedIcon`, `w.ExtendBaseWidget`, `widget.NewIcon`, `widget.NewLabel`
+- Selector calls: `canvas.NewRectangle`, `theme.BackgroundColor`, `theme.CheckButtonCheckedIcon`, `w.ExtendBaseWidget`, `widget.NewIcon`, `widget.NewLabel`
 
 ### Objects (method on `*customWidgetRenderer`)
 - Signature: `func (*customWidgetRenderer) Objects() []fyne.CanvasObject`
@@ -122,7 +121,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*customWidgetRenderer) Refresh()`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `canvas.Refresh`
+- Selector calls: `canvas.Refresh`
 
 ### SetCellID (method on `*customWidget`)
 - Signature: `func (*customWidget) SetCellID(cellID widget.TableCellID)`
@@ -141,14 +140,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: Tapped handles tap events
-- External calls: `w.onTapped`
+- Selector calls: `w.onTapped`
 
 ### addDataPointToAvailableDataPointsAndRemoveFromSelectedDataPoints
 - Signature: `func addDataPointToAvailableDataPointsAndRemoveFromSelectedDataPoints(testDataPointName testDataEngine.TestDataValueNameType, testDataPointRowUuidObject testDataEngine.TestDataPointRowUuidStruct)`
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Internal calls: `setStateForSaveButtonAndGroupNameTextEntryExternalCall`
-- External calls: `allAvailablePointsList.Refresh`, `selectedPointsList.Refresh`
+- Selector calls: `allAvailablePointsList.Refresh`, `selectedPointsList.Refresh`
 
 ### addDataPointToSelectedDataPointsAndRemoveFromAvailableDataPoints
 - Signature: `func addDataPointToSelectedDataPointsAndRemoveFromAvailableDataPoints(testDataPointName testDataEngine.TestDataValueNameType, testDataPointRowUuidObject testDataEngine.TestDataPointRowUuidStruct)`
@@ -156,33 +155,33 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range`
 - Doc: Add the TestDataPoint to the Selected-list and removes it from the Avaialables-lsit
 - Internal calls: `setStateForSaveButtonAndGroupNameTextEntryExternalCall`, `sortDataPointsList`
-- External calls: `allAvailablePointsList.Refresh`, `selectedPointsList.Refresh`
+- Selector calls: `allAvailablePointsList.Refresh`, `selectedPointsList.Refresh`
 
 ### generateTestDataPointRowUuidObject
 - Signature: `func generateTestDataPointRowUuidObject(testDataPointRowUuid testDataEngine.TestDataPointRowUuidType, dataRow []string) TestDataPointRowUuidObject testDataEngine.TestDataPointRowUuidStruct`
 - Exported: `false`
 - Control-flow features: `if, for/range`
-- External calls: `testDataEngine.TestDataPointRowValuesSummaryType`
+- Selector calls: `testDataEngine.TestDataPointRowValuesSummaryType`
 
 ### handleCellTapped (method on `*CustomTableWidget`)
 - Signature: `func (*CustomTableWidget) handleCellTapped(cellID widget.TableCellID, table *CustomTableWidget)`
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Internal calls: `sortTable`, `updateRowsSelectedMap`
-- External calls: `t.Refresh`, `table.Refresh`
+- Selector calls: `t.Refresh`, `table.Refresh`
 
 ### hoverRow (method on `*CustomTableWidget`)
 - Signature: `func (*CustomTableWidget) hoverRow(row int)`
 - Exported: `false`
 - Control-flow features: `if, for/range`
-- External calls: `customWidget.Refresh`, `t.Length`
+- Selector calls: `customWidget.Refresh`, `t.Length`
 
 ### setColumnWidths
 - Signature: `func setColumnWidths(table *widget.Table, data [][]string)`
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: setColumnWidths adapt all columns in the popup window to fit its headers and data
-- External calls: `fyne.MeasureText`, `table.SetColumnWidth`, `theme.Padding`, `theme.TextSize`
+- Selector calls: `fyne.MeasureText`, `table.SetColumnWidth`, `theme.Padding`, `theme.TextSize`
 
 ### showTable
 - Signature: `func showTable(w fyne.Window, data [][]string, selectedTestDataPointUuidMap map[testDataEngine.TestDataPointRowUuidType]testDataEngine.TestDataPointRowUuidStruct)`
@@ -190,20 +189,20 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range`
 - Doc: showTable creates and shows a table for the selected node with data
 - Internal calls: `NewCustomTableWidget`, `addDataPointToAvailableDataPointsAndRemoveFromSelectedDataPoints`, `addDataPointToSelectedDataPointsAndRemoveFromAvailableDataPoints`, `generateTestDataPointRowUuidObject`
-- External calls: `container.NewScroll`, `dialog.NewCustomConfirm`, `fyne.NewSize`, `modal.Resize`, `modal.Show`, `table.Resize`, `testDataEngine.TestDataPointRowUuidType`, `testDataEngine.TestDataValueNameType`
+- Selector calls: `container.NewScroll`, `dialog.NewCustomConfirm`, `fyne.NewSize`, `modal.Resize`, `modal.Show`, `table.Resize`, `testDataEngine.TestDataPointRowUuidType`, `testDataEngine.TestDataValueNameType`
 
 ### sortTable
 - Signature: `func sortTable(data [][]string, column int, direction sortDirection)`
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: sortTable sorts a 2D string slice based on the specified column and direction, keeping the first row intact.
-- External calls: `sort.Slice`
+- Selector calls: `sort.Slice`
 
 ### unhoverRow (method on `*CustomTableWidget`)
 - Signature: `func (*CustomTableWidget) unhoverRow(row int)`
 - Exported: `false`
 - Control-flow features: `if, for/range`
-- External calls: `customWidget.Refresh`, `t.Length`
+- Selector calls: `customWidget.Refresh`, `t.Length`
 
 ### updateRowsSelectedMap
 - Signature: `func updateRowsSelectedMap(table *CustomTableWidget)`
@@ -216,7 +215,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: updateVisibility updates the visibility of the label and icon based on the isIcon flag
-- External calls: `theme.BackgroundColor`, `theme.PrimaryColor`
+- Selector calls: `theme.BackgroundColor`, `theme.PrimaryColor`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

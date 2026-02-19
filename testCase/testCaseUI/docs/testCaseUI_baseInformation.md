@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseUI/testCaseUI_baseInformation.go`
 - Package: `testCaseUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `7`
 
@@ -37,7 +36,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Doc: Generate the BaseInformation Area for the TestCase
-- External calls: `container.New`, `errors.New`, `fmt.Sprintf`, `layout.NewVBoxLayout`, `tempBaseInformationAreaContainer.Add`, `testCasesUiCanvasObject.generateOwnerDomainForTestCaseArea`, `testCasesUiCanvasObject.generateSelectedTestDataForTestCaseArea`, `testCasesUiCanvasObject.generateTemplateListForTestCaseArea`
+- Selector calls: `container.New`, `errors.New`, `fmt.Sprintf`, `layout.NewVBoxLayout`, `tempBaseInformationAreaContainer.Add`, `testCasesUiCanvasObject.generateOwnerDomainForTestCaseArea`, `testCasesUiCanvasObject.generateSelectedTestDataForTestCaseArea`, `testCasesUiCanvasObject.generateTemplateListForTestCaseArea`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

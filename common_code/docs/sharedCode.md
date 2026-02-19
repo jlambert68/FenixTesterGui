@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `common_code/sharedCode.go`
 - Package: `sharedCode`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `6`
 - Imports: `5`
 
@@ -41,7 +40,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, returns error`
 - Doc: ConvertRGBAHexStringIntoRGBAColor- Converts a colors in a hex-string into 'color.RGBA'-format. "#FF03AFFF"
 - Internal calls: `uint8`
-- External calls: `err.Error`, `errors.New`, `fmt.Println`, `fmt.Sprintf`, `strconv.ParseInt`
+- Selector calls: `err.Error`, `errors.New`, `fmt.Println`, `fmt.Sprintf`, `strconv.ParseInt`
 
 ### GenerateShortUuidFromFullUuid
 - Signature: `func GenerateShortUuidFromFullUuid(fullUuid string) shortUuid string`
@@ -64,7 +63,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Internal calls: `sortBytes`, `string`
-- External calls: `sort.Sort`
+- Selector calls: `sort.Sort`
 
 ### Swap (method on `sortBytes`)
 - Signature: `func (sortBytes) Swap(i, j int)`

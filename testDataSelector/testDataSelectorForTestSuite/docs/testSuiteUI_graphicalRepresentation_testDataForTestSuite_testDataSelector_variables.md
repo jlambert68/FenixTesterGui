@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testDataSelector/testDataSelectorForTestSuite/testSuiteUI_graphicalRepresentation_testDataForTestSuite_testDataSelector_variables.go`
 - Package: `testDataSelectorForTestSuite`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `0`
 - Imports: `1`
 

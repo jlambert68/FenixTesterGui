@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testUIDragNDropStatemachine/dragNdropStatemachine_droppableRectangle.go`
 - Package: `testUIDragNDropStatemachine`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `11`
 - Imports: `6`
 
@@ -61,14 +60,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*droppableRectRenderer) MinSize() fyne.Size`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `fyne.NewSize`
+- Selector calls: `fyne.NewSize`
 
 ### MouseIn (method on `*DroppableRectangle`)
 - Signature: `func (*DroppableRectangle) MouseIn(e *desktop.MouseEvent)`
 - Exported: `true`
 - Control-flow features: `switch`
 - Internal calls: `switchStateForSource`, `switchStateForTarget`
-- External calls: `log.Fatalln`
+- Selector calls: `log.Fatalln`
 
 ### MouseMoved (method on `*DroppableRectangle`)
 - Signature: `func (*DroppableRectangle) MouseMoved(*desktop.MouseEvent)`
@@ -80,13 +79,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `switch`
 - Internal calls: `switchStateForSource`, `switchStateForTarget`
-- External calls: `log.Fatalln`
+- Selector calls: `log.Fatalln`
 
 ### NewDroppableRectangle (method on `*StateMachineDragAndDropStruct`)
 - Signature: `func (*StateMachineDragAndDropStruct) NewDroppableRectangle(nodeLevel float32, testCaseNodeRectangleSize int, uuid string, testCaseUuid string, tempParentTestInstructionContainerUuid string) *DroppableRectangle`
 - Exported: `true`
 - Control-flow features: `if`
-- External calls: `canvas.NewRectangle`, `droppableRectangle.ExtendBaseWidget`, `fyne.NewSize`, `rect.SetMinSize`
+- Selector calls: `canvas.NewRectangle`, `droppableRectangle.ExtendBaseWidget`, `fyne.NewSize`, `rect.SetMinSize`
 
 ### Objects (method on `*droppableRectRenderer`)
 - Signature: `func (*droppableRectRenderer) Objects() []fyne.CanvasObject`

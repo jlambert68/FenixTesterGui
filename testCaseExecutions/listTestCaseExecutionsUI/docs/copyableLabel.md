@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCaseExecutions/listTestCaseExecutionsUI/copyableLabel.go`
 - Package: `listTestCaseExecutionsUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `4`
 - Imports: `5`
 
@@ -37,7 +36,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: CreateRenderer Renderer (required by fyne.Widget)
-- External calls: `widget.NewLabel`, `widget.NewSimpleRenderer`
+- Selector calls: `widget.NewLabel`, `widget.NewSimpleRenderer`
 
 ### Tapped (method on `*copyableLabelStruct`)
 - Signature: `func (*copyableLabelStruct) Tapped(*fyne.PointEvent)`
@@ -50,14 +49,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: TappedSecondary Optional: Handle secondary tap (right-click)
-- External calls: `clipboard.SetContent`, `fenixMasterWindow.Clipboard`, `fmt.Sprintf`, `fyne.CurrentApp`
+- Selector calls: `clipboard.SetContent`, `fenixMasterWindow.Clipboard`, `fmt.Sprintf`, `fyne.CurrentApp`
 
 ### newCopyableLabel
 - Signature: `func newCopyableLabel(label string, isCopyable bool) *copyableLabelStruct`
 - Exported: `false`
 - Control-flow features: `none detected`
 - Doc: Used for creating a new copyable label
-- External calls: `copyableLabel.ExtendBaseWidget`
+- Selector calls: `copyableLabel.ExtendBaseWidget`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseUI/testCaseUI_graphicalRepresentation_owerDomainForTestCase.go`
 - Package: `testCaseUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `10`
 
@@ -41,14 +40,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, returns error`
 - Doc: Generate the OwnerDomain Area for the TestCase
 - Internal calls: `NewCustomAttributeSelectComboBoxWidget`
-- External calls: `canvas.NewRectangle`, `container.New`, `container.NewVBox`, `errors.New`, `fmt.Println`, `fmt.Sprintf`, `layout.NewFormLayout`, `layout.NewVBoxLayout`
+- Selector calls: `canvas.NewRectangle`, `container.New`, `container.NewVBox`, `errors.New`, `fmt.Println`, `fmt.Sprintf`, `layout.NewFormLayout`, `layout.NewVBoxLayout`
 
 ### setSelectedOwnerDomainForTestCaseArea (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) setSelectedOwnerDomainForTestCaseArea(tempCurrentOwnerDomainToBeChosenInDropDown string, newOwnerDomainSelect *widget.Select, valueIsValidWarningBox *canvas.Rectangle)`
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: Sets the Selected value for the DropDown specifying the Owner-Domain of the TestCase
-- External calls: `newOwnerDomainSelect.SetSelected`
+- Selector calls: `newOwnerDomainSelect.SetSelected`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

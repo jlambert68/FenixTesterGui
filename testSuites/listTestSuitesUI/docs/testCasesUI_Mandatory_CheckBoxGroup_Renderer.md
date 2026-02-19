@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/listTestSuitesUI/testCasesUI_Mandatory_CheckBoxGroup_Renderer.go`
 - Package: `listTestSuitesUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `8`
 - Imports: `4`
 
@@ -55,13 +54,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*customMandatoryCheckBoxGroupRenderer) Layout(size fyne.Size)`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `fyne.NewPos`, `fyne.NewSize`
+- Selector calls: `fyne.NewPos`, `fyne.NewSize`
 
 ### MinSize (method on `*customMandatoryCheckBoxGroupRenderer`)
 - Signature: `func (*customMandatoryCheckBoxGroupRenderer) MinSize() fyne.Size`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `fyne.Max`, `fyne.NewSize`
+- Selector calls: `fyne.Max`, `fyne.NewSize`
 
 ### Objects (method on `*customMandatoryCheckBoxGroupRenderer`)
 - Signature: `func (*customMandatoryCheckBoxGroupRenderer) Objects() []fyne.CanvasObject`
@@ -72,13 +71,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*customMandatoryCheckBoxGroupRenderer) Refresh()`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `canvas.Refresh`
+- Selector calls: `canvas.Refresh`
 
 ### newCustomMandatoryCheckBoxGroupWidget
 - Signature: `func newCustomMandatoryCheckBoxGroupWidget(newCheckGroup *widget.CheckGroup, attributeValueIsValidWarningBox *canvas.Rectangle) *customMandatoryCheckBoxGroup`
 - Exported: `false`
 - Control-flow features: `none detected`
-- External calls: `fyne.NewSize`, `tempEntry.Size`, `w.ExtendBaseWidget`, `widget.NewSelect`
+- Selector calls: `fyne.NewSize`, `tempEntry.Size`, `w.ExtendBaseWidget`, `widget.NewSelect`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

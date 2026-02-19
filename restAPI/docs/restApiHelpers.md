@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `restAPI/restApiHelpers.go`
 - Package: `restAPI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `3`
 - Imports: `9`
 
@@ -52,7 +51,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, switch, returns error`
 - Doc: ******************************************************************************** extractAndValidateJsonBody
-- External calls: `dec.Decode`, `dec.DisallowUnknownFields`, `err.Error`, `errors.As`, `errors.Is`, `fmt.Sprintf`, `header.ParseValueAndParams`, `http.Error`
+- Selector calls: `dec.Decode`, `dec.DisallowUnknownFields`, `err.Error`, `errors.As`, `errors.Is`, `fmt.Sprintf`, `header.ParseValueAndParams`, `http.Error`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

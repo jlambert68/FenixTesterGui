@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseUI/testCaseUI_graphicalRepresentation_tree.go`
 - Package: `testCaseUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `3`
 - Imports: `14`
 
@@ -45,14 +44,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, returns error`
 - Doc: Converts a colors in a hex-string into 'color.RGBA'-format. "#FF03AFFF"
 - Internal calls: `uint8`
-- External calls: `errors.New`, `fmt.Sprintf`, `strconv.ParseInt`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `strconv.ParseInt`
 
 ### makeTestCaseGraphicalUIObject (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) makeTestCaseGraphicalUIObject(testCaseUuid string) testCaseCanvasObject fyne.CanvasObject`
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: Generates the graphical structure for the TestCase
-- External calls: `container.NewVBox`, `err.Error`, `testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject`, `widget.NewLabel`
+- Selector calls: `container.NewVBox`, `err.Error`, `testCasesUiCanvasObject.recursiveMakeTestCaseGraphicalUIObject`, `widget.NewLabel`
 
 ### recursiveMakeTestCaseGraphicalUIObject (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) recursiveMakeTestCaseGraphicalUIObject(uuid string, testCaseModelForUITree *map[string][]testCaseModel.TestCaseModelAdaptedForUiTreeDataStruct, firstAccordion *clickableAccordion, nodeTreeLevel float32, testCaseUuid string, testcaseTreeContainer *fyne.Container, testCasesModel *testCaseModel.TestCaseModelStruct) testCaseCanvasObject fyne.CanvasObject`
@@ -60,7 +59,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, switch`
 - Doc: Generates the graphical structure for the TestCase
 - Internal calls: `float32`, `uint32`
-- External calls: `canvas.NewRectangle`, `container.NewHBox`, `container.NewStack`, `container.NewVBox`, `err.Error`, `errors.New`, `fmt.Sprintf`, `fyne.NewSize`
+- Selector calls: `canvas.NewRectangle`, `container.NewHBox`, `container.NewStack`, `container.NewVBox`, `err.Error`, `errors.New`, `fmt.Sprintf`, `fyne.NewSize`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

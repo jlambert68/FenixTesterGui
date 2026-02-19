@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `executions/detailedTestCaseExecutionUI_summaryTableDefinition/detailedExecutionUI_summaryTable.go`
 - Package: `detailedTestCaseExecutionUI_summaryTableDefinition`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `7`
 - Imports: `6`
 
@@ -43,7 +42,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*TestCaseExecutionsSummaryTableStruct) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `container.NewMax`
+- Selector calls: `container.NewMax`
 
 ### Destroy (method on `testCaseExecutionSummaryTableRenderer`)
 - Signature: `func (testCaseExecutionSummaryTableRenderer) Destroy()`
@@ -60,14 +59,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Internal calls: `float32`, `float64`
-- External calls: `fyne.NewSize`, `math.Max`, `math.Min`
+- Selector calls: `fyne.NewSize`, `math.Max`, `math.Min`
 
 ### NewTestCaseExecutionsSummaryTable
 - Signature: `func NewTestCaseExecutionsSummaryTable(tableOpts *DetailedTestCaseExecutionsSummaryTableOpts) *TestCaseExecutionsSummaryTableStruct`
 - Exported: `true`
 - Control-flow features: `if, for/range`
 - Internal calls: `NewTestcaseExecutionSummaryTableCell`, `float32`, `string`
-- External calls: `b.GetItem`, `l.SetText`, `log.Fatalf`, `t.ExtendBaseWidget`, `widget.NewLabel`, `widget.NewTable`
+- Selector calls: `b.GetItem`, `l.SetText`, `log.Fatalf`, `t.ExtendBaseWidget`, `widget.NewLabel`, `widget.NewTable`
 
 ### Objects (method on `testCaseExecutionSummaryTableRenderer`)
 - Signature: `func (testCaseExecutionSummaryTableRenderer) Objects() []fyne.CanvasObject`

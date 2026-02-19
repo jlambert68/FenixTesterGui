@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseModel/testCaseModel.go`
 - Package: `testCaseModel`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `6`
 - Imports: `3`
 
@@ -45,14 +44,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, switch, returns error`
 - Doc: Generate the slice with the elements in the TestCase. Order is the same as in the Textual Representation of the TestCase
-- External calls: `errors.New`, `fmt.Sprintf`, `testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor`, `testCaseModel.reverseSliceOfNodeObjects`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `testCaseModel.recursiveGraphicalTestCaseTreeModelExtractor`, `testCaseModel.reverseSliceOfNodeObjects`
 
 ### recursiveTextualTestCaseModelExtractor (method on `*TestCasesModelsStruct`)
 - Signature: `func (*TestCasesModelsStruct) recursiveTextualTestCaseModelExtractor(testCaseUuid string, elementsUuid string, testCaseModelElementsIn []fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage) (testCaseModelElementsIOut []fenixGuiTestCaseBuilderServerGrpcApi.MatureTestCaseModelElementMessage, err error)`
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Doc: Generate the slice with the elements in the TestCase. Order is the same as in the Textual Representation of the TestCase
-- External calls: `errors.New`, `testCaseModel.recursiveTextualTestCaseModelExtractor`
+- Selector calls: `errors.New`, `testCaseModel.recursiveTextualTestCaseModelExtractor`
 
 ### recursiveZombieElementSearchInTestCaseModel (method on `*TestCasesModelsStruct`)
 - Signature: `func (*TestCasesModelsStruct) recursiveZombieElementSearchInTestCaseModel(testCaseUuid string, elementsUuid string, allUuidKeys []string) (processedAllUuidKeys []string, err error)`
@@ -60,7 +59,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, returns error`
 - Doc: Verify all children, in TestCaseElement-model and remove the found element from 'allUuidKeys'
 - Internal calls: `findElementInSliceAndRemove`
-- External calls: `errors.New`, `testCaseModel.recursiveZombieElementSearchInTestCaseModel`
+- Selector calls: `errors.New`, `testCaseModel.recursiveZombieElementSearchInTestCaseModel`
 
 ### reverseSliceOfNodeObjects (method on `*TestCasesModelsStruct`)
 - Signature: `func (*TestCasesModelsStruct) reverseSliceOfNodeObjects(inSlice []TestCaseModelAdaptedForUiTreeDataStruct) outSlice []TestCaseModelAdaptedForUiTreeDataStruct`

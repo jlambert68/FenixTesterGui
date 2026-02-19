@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testDataSelector/newOrEditTestDataPointGroupUI/newOrEditTestDataPointGroupUI_MainWindow.go`
 - Package: `newOrEditTestDataPointGroupUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `4`
 
@@ -35,7 +34,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if`
 - Internal calls: `generateAllAvailablePointsListUIComponent`, `generateSelectedPointsListUIComponent`, `generateTestDataSelectionsUIComponent`
-- External calls: `app.NewWindow`, `container.NewBorder`, `container.NewHSplit`, `container.NewVSplit`, `fyne.NewSize`, `newOrEditTestDataPointGroupWindow.CenterOnScreen`, `newOrEditTestDataPointGroupWindow.Resize`, `newOrEditTestDataPointGroupWindow.SetContent`
+- Selector calls: `app.NewWindow`, `container.NewBorder`, `container.NewHSplit`, `container.NewVSplit`, `fyne.NewSize`, `newOrEditTestDataPointGroupWindow.CenterOnScreen`, `newOrEditTestDataPointGroupWindow.Resize`, `newOrEditTestDataPointGroupWindow.SetContent`
 
 ### testDataPointIntersectionOfTwoSlices
 - Signature: `func testDataPointIntersectionOfTwoSlices(firstSlice, secondSlice []testDataEngine.TestDataPointRowUuidType) []testDataEngine.TestDataPointRowUuidType`

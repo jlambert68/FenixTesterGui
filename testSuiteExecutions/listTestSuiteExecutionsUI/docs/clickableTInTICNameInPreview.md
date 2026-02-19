@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuiteExecutions/listTestSuiteExecutionsUI/clickableTInTICNameInPreview.go`
 - Package: `listTestSuiteExecutionsUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `4`
 - Imports: `16`
 
@@ -51,7 +50,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: CreateRenderer Renderer (required by fyne.Widget)
-- External calls: `widget.NewLabel`, `widget.NewSimpleRenderer`
+- Selector calls: `widget.NewLabel`, `widget.NewSimpleRenderer`
 
 ### Tapped (method on `*clickableTInTICNameLabelInPreviewStruct`)
 - Signature: `func (*clickableTInTICNameLabelInPreviewStruct) Tapped(*fyne.PointEvent)`
@@ -59,14 +58,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, switch`
 - Doc: Tapped Tapped interface implementation
 - Internal calls: `int32`
-- External calls: `attributesContainerPtr.Hide`, `attributesContainerPtr.Refresh`, `attributesContainerPtr.Show`, `canvas.NewRectangle`, `clipboard.SetContent`, `container.New`, `container.NewBorder`, `container.NewCenter`
+- Selector calls: `attributesContainerPtr.Hide`, `attributesContainerPtr.Refresh`, `attributesContainerPtr.Show`, `canvas.NewRectangle`, `clipboard.SetContent`, `container.New`, `container.NewBorder`, `container.NewCenter`
 
 ### TappedSecondary (method on `*clickableTInTICNameLabelInPreviewStruct`)
 - Signature: `func (*clickableTInTICNameLabelInPreviewStruct) TappedSecondary(*fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: TappedSecondary Optional: Handle secondary tap (right-click)
-- External calls: `clipboard.SetContent`, `fenixMasterWindow.Clipboard`, `fmt.Sprintf`, `fyne.CurrentApp`
+- Selector calls: `clipboard.SetContent`, `fenixMasterWindow.Clipboard`, `fmt.Sprintf`, `fyne.CurrentApp`
 
 ### newClickableTestInstructionNameLabelInPreview
 - Signature: `func newClickableTestInstructionNameLabelInPreview(tInTICName string, tCExecutionKey testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType, tInTICExecutionKey testCaseExecutionsModel.
@@ -74,7 +73,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `none detected`
 - Doc: Used for creating a new TestInstructionName label
-- External calls: `clickableTInTICNameLabelInPreview.ExtendBaseWidget`, `time.Now`
+- Selector calls: `clickableTInTICNameLabelInPreview.ExtendBaseWidget`, `time.Now`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

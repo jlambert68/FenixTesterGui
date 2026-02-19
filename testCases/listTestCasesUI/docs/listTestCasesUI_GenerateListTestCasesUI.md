@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCases/listTestCasesUI/listTestCasesUI_GenerateListTestCasesUI.go`
 - Package: `listTestCasesUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `16`
 
@@ -57,7 +56,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if`
 - Doc: Create the UI used for list all TestCasesMapPtr that the User can edit
 - Internal calls: `NewHoverableRect`, `filterTestCasesButtonFunction`
-- External calls: `binding.NewString`, `container.New`, `container.NewAppTabs`, `container.NewBorder`, `container.NewCenter`, `container.NewHBox`, `container.NewHSplit`, `container.NewScroll`
+- Selector calls: `binding.NewString`, `container.New`, `container.NewAppTabs`, `container.NewBorder`, `container.NewCenter`, `container.NewHBox`, `container.NewHSplit`, `container.NewScroll`
 
 ### InitiateListTestCaseUIObject
 - Signature: `func InitiateListTestCaseUIObject(tempHowShouldItBeUsed UsedForTestCasesListType, selectedTestCasesPtr *map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage) listTestCaseUIObject *ListTestCaseUIStruct`

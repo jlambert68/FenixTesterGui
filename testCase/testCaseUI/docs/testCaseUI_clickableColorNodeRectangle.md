@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseUI/testCaseUI_clickableColorNodeRectangle.go`
 - Package: `testCaseUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `5`
 - Imports: `10`
 
@@ -55,21 +54,21 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, switch`
 - Internal calls: `float32`
-- External calls: `bytes.NewReader`, `canvas.NewImageFromImage`, `canvas.NewRectangle`, `fyne.NewSize`, `log.Fatalf`, `myClickableRectangle.ExtendBaseWidget`, `myClickableRectangle.SetText`, `myClickableRectangle.updateSelectedUINode`
+- Selector calls: `bytes.NewReader`, `canvas.NewImageFromImage`, `canvas.NewRectangle`, `fyne.NewSize`, `log.Fatalf`, `myClickableRectangle.ExtendBaseWidget`, `myClickableRectangle.SetText`, `myClickableRectangle.updateSelectedUINode`
 
 ### Tapped (method on `*ClickableRectangle`)
 - Signature: `func (*ClickableRectangle) Tapped(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: Tapped - Single Click on colorRectangle
-- External calls: `c.updateSelectedUINode`
+- Selector calls: `c.updateSelectedUINode`
 
 ### TappedSecondary (method on `*ClickableRectangle`)
 - Signature: `func (*ClickableRectangle) TappedSecondary(_ *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: TappedSecondary - Right Click on colorRectangle
-- External calls: `c.updateSelectedUINode`
+- Selector calls: `c.updateSelectedUINode`
 
 ### updateSelectedUINode (method on `*ClickableRectangle`)
 - Signature: `func (*ClickableRectangle) updateSelectedUINode()`

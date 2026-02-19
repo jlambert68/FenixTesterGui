@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `gui/theme.go`
 - Package: `gui`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `3`
 - Imports: `3`
 
@@ -34,19 +33,20 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*myTheme) Color(n fyne.ThemeColorName, v fyne.ThemeVariant) color.Color`
 - Exported: `true`
 - Control-flow features: `if, switch`
-- External calls: `theme.DefaultTheme`
+- Selector calls: `theme.DefaultTheme`
 
 ### Icon (method on `*myTheme`)
 - Signature: `func (*myTheme) Icon(n fyne.ThemeIconName) fyne.Resource`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `theme.DefaultTheme`
+- Doc: func (m *myTheme) Font(s fyne.TextStyle) fyne.Resource { return resourceGochiHandTtf
+- Selector calls: `theme.DefaultTheme`
 
 ### Size (method on `*myTheme`)
 - Signature: `func (*myTheme) Size(n fyne.ThemeSizeName) float32`
 - Exported: `true`
 - Control-flow features: `if`
-- External calls: `theme.DefaultTheme`
+- Selector calls: `theme.DefaultTheme`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

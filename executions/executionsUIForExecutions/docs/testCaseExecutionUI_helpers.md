@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `executions/executionsUIForExecutions/testCaseExecutionUI_helpers.go`
 - Package: `executionsUIForExecutions`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `6`
 
@@ -36,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, for/range`
 - Internal calls: `float32`
-- External calls: `b1.GetItem`, `fyne.NewSize`, `widget.NewLabel`
+- Selector calls: `b1.GetItem`, `fyne.NewSize`, `widget.NewLabel`
 
 ### remove
 - Signature: `func remove(slice []binding.DataMap, s int) []binding.DataMap`

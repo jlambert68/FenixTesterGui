@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuiteExecutions/testSuiteExecutionsModel/AllTestSuiteExecutionsForOneTestSuiteMapFunctions.go`
 - Package: `testSuiteExecutionsModel`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `3`
 - Imports: `4`
 
@@ -36,21 +35,21 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, defer`
 - Doc: AddTestSuiteExecutionsForOneTestSuiteUuid Add a TestSuiteExecution to the map for TestSuiteExecutions per TestSuiteUuid
-- External calls: `allTestSuiteExecutionsMapMutex.Lock`, `allTestSuiteExecutionsMapMutex.Unlock`
+- Selector calls: `allTestSuiteExecutionsMapMutex.Lock`, `allTestSuiteExecutionsMapMutex.Unlock`
 
 ### GetAllTestSuiteExecutionsForOneTestSuiteUuid (method on `TestSuiteExecutionsModelStruct`)
 - Signature: `func (TestSuiteExecutionsModelStruct) GetAllTestSuiteExecutionsForOneTestSuiteUuid(testSuiteUuidMapKey TestSuiteUuidType) (tempTestSuiteExecutionsList *[]*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage, existInMap bool)`
 - Exported: `true`
 - Control-flow features: `if, for/range, defer`
 - Doc: GetAllTestSuiteExecutionsForOneTestSuiteUuid Get all TestSuiteExecutions for one TestSuiteUuid
-- External calls: `allTestSuiteExecutionsMapMutex.RLock`, `allTestSuiteExecutionsMapMutex.RUnlock`
+- Selector calls: `allTestSuiteExecutionsMapMutex.RLock`, `allTestSuiteExecutionsMapMutex.RUnlock`
 
 ### GetSpecificTestSuiteExecutionForOneTestSuiteUuid (method on `TestSuiteExecutionsModelStruct`)
 - Signature: `func (TestSuiteExecutionsModelStruct) GetSpecificTestSuiteExecutionForOneTestSuiteUuid(testSuiteUuidMapKey TestSuiteUuidType, testSuiteExecutionUuidMapKey TestSuiteExecutionUuidType) (tempTestSuiteExecution *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage, existInMap bool)`
 - Exported: `true`
 - Control-flow features: `if, defer`
 - Doc: GetSpecificTestSuiteExecutionForOneTestSuiteUuid Get one specific TestSuiteExecutions for one TestSuiteUuid
-- External calls: `allTestSuiteExecutionsMapMutex.RLock`, `allTestSuiteExecutionsMapMutex.RUnlock`
+- Selector calls: `allTestSuiteExecutionsMapMutex.RLock`, `allTestSuiteExecutionsMapMutex.RUnlock`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

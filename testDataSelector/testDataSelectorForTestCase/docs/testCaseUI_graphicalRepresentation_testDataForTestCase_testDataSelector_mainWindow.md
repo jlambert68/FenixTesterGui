@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testDataSelector/testDataSelectorForTestCase/testCaseUI_graphicalRepresentation_testDataForTestCase_testDataSelector_mainWindow.go`
 - Package: `testDataSelectorForTestCase`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `8`
 
@@ -38,7 +37,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, for/range, go`
 - Internal calls: `string`, `testDataPointGroupsToStringSliceFunction`, `testDataPointsToStringSliceFunction`, `updateTestDataPointsForAGroupList`
-- External calls: `app.NewWindow`, `container.NewBorder`, `container.NewHBox`, `container.NewHSplit`, `dialog.ShowConfirm`, `dialog.ShowInformation`, `fmt.Sprintf`, `fyne.NewSize`
+- Selector calls: `app.NewWindow`, `container.NewBorder`, `container.NewHBox`, `container.NewHSplit`, `dialog.ShowConfirm`, `dialog.ShowInformation`, `fmt.Sprintf`, `fyne.NewSize`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

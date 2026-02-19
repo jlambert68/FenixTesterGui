@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `grpc_in/gRPCInSetup.go`
 - Package: `grpc_in`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `7`
 
@@ -38,14 +37,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: InitGrpcServer - Set up and start Backend gRPC-server
-- External calls: `fenixUserGuiGrpcApi.RegisterFenixUserGuiGrpcServicesServer`, `grpc.NewServer`, `net.Listen`, `reflection.Register`, `registerFenixUserGuiServer.Serve`, `strconv.Itoa`
+- Selector calls: `fenixUserGuiGrpcApi.RegisterFenixUserGuiGrpcServicesServer`, `grpc.NewServer`, `net.Listen`, `reflection.Register`, `registerFenixUserGuiServer.Serve`, `strconv.Itoa`
 
 ### StopGrpcServer (method on `*GRPCInStruct`)
 - Signature: `func (*GRPCInStruct) StopGrpcServer()`
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: StopGrpcServer - Stop Backend gRPC-server
-- External calls: `lis.Close`, `registerFenixUserGuiServer.GracefulStop`
+- Selector calls: `lis.Close`, `registerFenixUserGuiServer.GracefulStop`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `grpc_in/gRPC_In_GuiTestCaseBuilderServerAreYouAlive.go`
 - Package: `grpc_in`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `7`
 
@@ -38,7 +37,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `defer, returns error`
 - Doc: GuiTestCaseBuilderServerAreYouAlive - ********************************************************************* Anyone can check if 'GuiTestCaseBuilderServer' is alive with this service
 - Internal calls: `getHighestFenixUserGuiServerProtoFileVersion`
-- External calls: `fenixUserGuiGrpcApi.CurrentFenixUserGuiProtoFileVersionEnum`, `fmt.Sprintf`
+- Selector calls: `fenixUserGuiGrpcApi.CurrentFenixUserGuiProtoFileVersionEnum`, `fmt.Sprintf`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

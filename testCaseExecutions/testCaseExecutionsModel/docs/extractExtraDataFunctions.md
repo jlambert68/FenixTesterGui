@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCaseExecutions/testCaseExecutionsModel/extractExtraDataFunctions.go`
 - Package: `testCaseExecutionsModel`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `4`
 
@@ -35,7 +34,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, defer, returns error`
 - Doc: ExtractAndStoreLogPostsAndValuesFromDetailedTestCaseExecution Extracts all extra data that will be presented to the user in GUI, ie the explorer-tabs
 - Internal calls: `AttributeNameMapKeyType`, `RelationBetweenTestInstructionUuidAndTestInstructionExectuionMapKeyType`, `RunTimeUpdatedAttributeValueType`, `TestInstructionExecutionAttributeRunTimeUpdatedMapKeyType`, `TestInstructionExecutionDetailsMapKeyType`, `TestInstructionExecutionLogPostMapKeyType`, `TestInstructionExecutionUuidType`, `int`
-- External calls: `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`, `strconv.Itoa`, `testCaseExecutionsModel.ReadFromDetailedTestCaseExecutionsMap`, `testInstructionExecution.GetTestInstructionExecutionBasicInformation`, `testInstructionExecution.GetTestInstructionExecutionsInformation`
+- Selector calls: `detailedTestCaseExecutionsMapMutex.Lock`, `detailedTestCaseExecutionsMapMutex.Unlock`, `strconv.Itoa`, `testCaseExecutionsModel.ReadFromDetailedTestCaseExecutionsMap`, `testInstructionExecution.GetTestInstructionExecutionBasicInformation`, `testInstructionExecution.GetTestInstructionExecutionsInformation`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

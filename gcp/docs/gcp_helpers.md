@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `gcp/gcp_helpers.go`
 - Package: `gcp`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `12`
 - Imports: `21`
 
@@ -55,27 +54,27 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*GcpObjectStruct) GenerateGCPAccessToken(ctx context.Context, targetServer TargetServerType) (appendedCtx context.Context, returnAckNack bool, returnMessage string)`
 - Exported: `true`
 - Control-flow features: `if, switch`
-- External calls: `gcp.GenerateGCPAccessTokenForAuthorizedUserPubSub`, `gcp.GenerateGCPAccessTokenForServiceAccount`
+- Selector calls: `gcp.GenerateGCPAccessTokenForAuthorizedUserPubSub`, `gcp.GenerateGCPAccessTokenForServiceAccount`
 
 ### GenerateGCPAccessTokenForAuthorizedUser (method on `*GcpObjectStruct`)
 - Signature: `func (*GcpObjectStruct) GenerateGCPAccessTokenForAuthorizedUser(ctx context.Context) (appendedCtx context.Context, returnAckNack bool, returnMessage string)`
 - Exported: `true`
 - Control-flow features: `if, go, defer`
-- External calls: `context.Background`, `fmt.Fprintln`, `gcp.initiateUserObject`, `gcp.startLocalWebServer`, `gcp.stopLocalWebServer`, `google.New`, `goth.UseProviders`, `gothic.BeginAuthHandler`
+- Selector calls: `context.Background`, `fmt.Fprintln`, `gcp.initiateUserObject`, `gcp.startLocalWebServer`, `gcp.stopLocalWebServer`, `google.New`, `goth.UseProviders`, `gothic.BeginAuthHandler`
 
 ### GenerateGCPAccessTokenForAuthorizedUserPubSub (method on `*GcpObjectStruct`)
 - Signature: `func (*GcpObjectStruct) GenerateGCPAccessTokenForAuthorizedUserPubSub(ctx context.Context) (appendedCtx context.Context, returnAckNack bool, returnMessage string)`
 - Exported: `true`
 - Control-flow features: `if, go`
 - Internal calls: `refreshToken`
-- External calls: `context.Background`, `err.Error`, `fmt.Fprintln`, `fmt.Println`, `gcp.initiatAccessTokenForAuthorizedAccountsPubSubObject`, `gcp.startLocalWebServerExpanded`, `gcp.stopLocalWebServer`, `google.New`
+- Selector calls: `context.Background`, `err.Error`, `fmt.Fprintln`, `fmt.Println`, `gcp.initiatAccessTokenForAuthorizedAccountsPubSubObject`, `gcp.startLocalWebServerExpanded`, `gcp.stopLocalWebServer`, `google.New`
 
 ### GenerateGCPAccessTokenForServiceAccount (method on `*GcpObjectStruct`)
 - Signature: `func (*GcpObjectStruct) GenerateGCPAccessTokenForServiceAccount(ctx context.Context, targetServer TargetServerType) (appendedCtx context.Context, returnAckNack bool, returnMessage string)`
 - Exported: `true`
 - Control-flow features: `if, switch`
 - Doc: GenerateGCPAccessTokenForServiceAccount Generate Google access token for a service account. Used when running in GCP
-- External calls: `grpcMetadata.AppendToOutgoingContext`, `idtoken.NewTokenSource`, `idtoken.WithCredentialsJSON`, `time.Now`, `timeToCompareTo.After`, `tokenSource.Token`
+- Selector calls: `grpcMetadata.AppendToOutgoingContext`, `idtoken.NewTokenSource`, `idtoken.WithCredentialsJSON`, `time.Now`, `timeToCompareTo.After`, `tokenSource.Token`
 
 ### GetGcpAccessTokenForAuthorizedAccountsPubSub (method on `*GcpObjectStruct`)
 - Signature: `func (*GcpObjectStruct) GetGcpAccessTokenForAuthorizedAccountsPubSub() string`
@@ -105,21 +104,21 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func refreshToken(client *http.Client, refreshToken string) (*RefreshTokenResponse, error)`
 - Exported: `false`
 - Control-flow features: `if, defer, returns error`
-- External calls: `bytes.NewBuffer`, `fmt.Println`, `http.Post`, `json.Marshal`, `json.NewDecoder`, `time.Duration`, `time.Now`
+- Selector calls: `bytes.NewBuffer`, `fmt.Println`, `http.Post`, `json.Marshal`, `json.NewDecoder`, `time.Duration`, `time.Now`
 
 ### startLocalWebServer (method on `*GcpObjectStruct`)
 - Signature: `func (*GcpObjectStruct) startLocalWebServer(webServer *http.Server)`
 - Exported: `false`
 - Control-flow features: `if, go`
 - Doc: Start and run Local Web Server
-- External calls: `time.Sleep`, `webServer.ListenAndServe`, `webbrowser.Open`
+- Selector calls: `time.Sleep`, `webServer.ListenAndServe`, `webbrowser.Open`
 
 ### startLocalWebServerExpanded (method on `*GcpObjectStruct`)
 - Signature: `func (*GcpObjectStruct) startLocalWebServerExpanded(webServer *http.Server, url string)`
 - Exported: `false`
 - Control-flow features: `if, switch, defer`
 - Doc: Start and run Local Web Server
-- External calls: `cmd.Start`, `err.Error`, `exec.Command`, `fmt.Printf`, `fmt.Println`, `webServer.ListenAndServe`
+- Selector calls: `cmd.Start`, `err.Error`, `exec.Command`, `fmt.Printf`, `fmt.Println`, `webServer.ListenAndServe`
 
 ### stopLocalWebServer (method on `*GcpObjectStruct`)
 - Signature: `func (*GcpObjectStruct) stopLocalWebServer(ctx context.Context, webServer *http.Server)`
@@ -127,7 +126,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, defer`
 - Doc: Close down Local Web Server
 - Internal calls: `cancel`
-- External calls: `context.WithTimeout`, `webServer.Shutdown`
+- Selector calls: `context.WithTimeout`, `webServer.Shutdown`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

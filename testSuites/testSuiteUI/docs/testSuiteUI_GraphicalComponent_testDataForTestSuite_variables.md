@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/testSuiteUI/testSuiteUI_GraphicalComponent_testDataForTestSuite_variables.go`
 - Package: `testSuiteUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `0`
 - Imports: `1`
 

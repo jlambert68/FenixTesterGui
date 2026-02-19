@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/testSuitesTabsUI/testSuitesTabsUI_GenerateTabsObject.go`
 - Package: `testSuitesTabsUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `12`
 
@@ -42,7 +41,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if`
 - Internal calls: `GenerateTestSuiteHomeTab`
-- External calls: `container.NewDocTabs`, `dialog.ShowCustomConfirm`, `fmt.Sprintf`, `fyne.CurrentApp`, `testSuitesModel.IsTestSuiteChanged`, `widget.NewLabel`
+- Selector calls: `container.NewDocTabs`, `dialog.ShowCustomConfirm`, `fmt.Sprintf`, `fyne.CurrentApp`, `testSuitesModel.IsTestSuiteChanged`, `widget.NewLabel`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

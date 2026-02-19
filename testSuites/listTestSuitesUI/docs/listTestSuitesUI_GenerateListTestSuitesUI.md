@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/listTestSuitesUI/listTestSuitesUI_GenerateListTestSuitesUI.go`
 - Package: `listTestSuitesUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `17`
 
@@ -58,7 +57,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if`
 - Doc: Create the UI used for list all TestSuitesMapPtr that the User can edit
 - Internal calls: `NewHoverableRect`, `filterTestSuitesButtonFunction`
-- External calls: `binding.NewString`, `container.New`, `container.NewAppTabs`, `container.NewBorder`, `container.NewCenter`, `container.NewHBox`, `container.NewHSplit`, `container.NewScroll`
+- Selector calls: `binding.NewString`, `container.New`, `container.NewAppTabs`, `container.NewBorder`, `container.NewCenter`, `container.NewHBox`, `container.NewHSplit`, `container.NewScroll`
 
 ### InitiateListTestSuiteUIObject
 - Signature: `func InitiateListTestSuiteUIObject(tempHowShouldItBeUsed UsedForTestSuitesListType, selectedTestSuitesPtr *map[string]*fenixGuiTestCaseBuilderServerGrpcApi.TestCaseInTestSuiteMessage) listTestCaseUIObject *ListTestSuiteUIStruct`

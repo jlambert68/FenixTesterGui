@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/listTestSuitesModel/listTestSuitesModel_updateTestSuitesList.go`
 - Package: `listTestSuitesModel`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `9`
 
@@ -40,14 +39,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if`
 - Doc: LoadTestSuiteThatCanBeEditedByUser Load list with TestSuitesMapPtr that the user can edit
 - Internal calls: `storeTestSuiteThatCanBeEditedByUser`
-- External calls: `listTestSuitesThatCanBeEditedResponseMessage.GetAckNackResponse`, `listTestSuitesThatCanBeEditedResponseMessage.GetBasicTestSuiteInformation`
+- Selector calls: `listTestSuitesThatCanBeEditedResponseMessage.GetAckNackResponse`, `listTestSuitesThatCanBeEditedResponseMessage.GetBasicTestSuiteInformation`
 
 ### storeTestSuiteThatCanBeEditedByUser
 - Signature: `func storeTestSuiteThatCanBeEditedByUser(TestSuitesThatCanBeEditedByUserAsSlice []*fenixGuiTestCaseBuilderServerGrpcApi.BasicTestSuiteInformationMessage, testCasesModeReference *testCaseModel.TestCasesModelsStruct)`
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: Store TestSuitesMapPtr That Can Be Edited By User
-- External calls: `boolbits.NewAllZerosEntry`, `boolbits.NewEntry`, `err.Error`, `fmt.Sprintf`, `log.Fatalln`, `resultsEntry.Or`, `tempTestSuitePreview.GetSelectedTestSuiteMetaDataValuesMap`, `testSuiteThatCanBeEditedByUser.GetTestSuitePreview`
+- Selector calls: `boolbits.NewAllZerosEntry`, `boolbits.NewEntry`, `err.Error`, `fmt.Sprintf`, `log.Fatalln`, `resultsEntry.Or`, `tempTestSuitePreview.GetSelectedTestSuiteMetaDataValuesMap`, `testSuiteThatCanBeEditedByUser.GetTestSuitePreview`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

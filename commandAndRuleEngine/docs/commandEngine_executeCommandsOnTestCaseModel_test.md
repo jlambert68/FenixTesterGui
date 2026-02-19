@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `commandAndRuleEngine/commandEngine_executeCommandsOnTestCaseModel_test.go`
 - Package: `commandAndRuleEngine`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `6`
 - Imports: `8`
 
@@ -44,7 +43,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Doc: Test to Copy an element from the TestCaseModel
 - Internal calls: `int32`
-- External calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeCommandOnTestCaseModel_CopyElementInTestCaseModel`, `fmt.Sprint`, `uuidGenerator.New`
+- Selector calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeCommandOnTestCaseModel_CopyElementInTestCaseModel`, `fmt.Sprint`, `uuidGenerator.New`
 
 ### TestNewTestCaseModelCommand
 - Signature: `func TestNewTestCaseModelCommand(t *testing.T)`
@@ -52,7 +51,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Doc: Test to create a New TestCaseModel
 - Internal calls: `int`
-- External calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeCommandOnTestCaseModel_NewTestCaseModel`, `fmt.Sprint`, `strconv.Itoa`
+- Selector calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeCommandOnTestCaseModel_NewTestCaseModel`, `fmt.Sprint`, `strconv.Itoa`
 
 ### TestRemoveElementCommandOnTestCaseModel
 - Signature: `func TestRemoveElementCommandOnTestCaseModel(t *testing.T)`
@@ -60,7 +59,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Doc: Test to Delete an element from the TestCaseModel
 - Internal calls: `int32`
-- External calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel`, `fmt.Sprint`, `uuidGenerator.New`
+- Selector calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel`, `fmt.Sprint`, `uuidGenerator.New`
 
 ### TestSwapElementCommandOnTestCaseModel
 - Signature: `func TestSwapElementCommandOnTestCaseModel(t *testing.T)`
@@ -68,7 +67,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Doc: Test to Swap out an element and in another element in the TestCaseModel
 - Internal calls: `int32`
-- External calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeCommandOnTestCaseModel_SwapOutElemenAndInNewElementInTestCaseModel`, `fmt.Sprint`, `uuidGenerator.New`
+- Selector calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeCommandOnTestCaseModel_SwapOutElemenAndInNewElementInTestCaseModel`, `fmt.Sprint`, `uuidGenerator.New`
 
 ### TestSwapElementFromCopyBufferCommandOnTestCaseModel
 - Signature: `func TestSwapElementFromCopyBufferCommandOnTestCaseModel(t *testing.T)`
@@ -76,7 +75,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Doc: Test to Swap in element from Copy Buffer on the TestCaseModel
 - Internal calls: `int32`
-- External calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeCommandOnTestCaseModel_CopyElementInTestCaseModel`, `commandAndRuleEngine.executeCommandOnTestCaseModel_SwapInElementFromCopyBufferInTestCaseModel`, `fmt.Sprint`, `uuidGenerator.New`
+- Selector calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeCommandOnTestCaseModel_CopyElementInTestCaseModel`, `commandAndRuleEngine.executeCommandOnTestCaseModel_SwapInElementFromCopyBufferInTestCaseModel`, `fmt.Sprint`, `uuidGenerator.New`
 
 ### TestSwapElementFromCutBufferCommandOnTestCaseModel
 - Signature: `func TestSwapElementFromCutBufferCommandOnTestCaseModel(t *testing.T)`
@@ -84,7 +83,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Doc: Test to Swap in element from Copy Buffer on the TestCaseModel
 - Internal calls: `int32`
-- External calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeCommandOnTestCaseModel_CutElementInTestCaseModel`, `commandAndRuleEngine.executeCommandOnTestCaseModel_SwapInElementFromCutBufferInTestCaseModel`, `fmt.Sprint`, `uuidGenerator.New`
+- Selector calls: `UnitTestTestData.InitLoggerForTest`, `assert.Equal`, `commandAndRuleEngine.executeCommandOnTestCaseModel_CutElementInTestCaseModel`, `commandAndRuleEngine.executeCommandOnTestCaseModel_SwapInElementFromCutBufferInTestCaseModel`, `fmt.Sprint`, `uuidGenerator.New`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

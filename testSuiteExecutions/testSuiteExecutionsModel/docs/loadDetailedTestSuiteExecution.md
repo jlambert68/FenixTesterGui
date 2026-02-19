@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuiteExecutions/testSuiteExecutionsModel/loadDetailedTestSuiteExecution.go`
 - Package: `testSuiteExecutionsModel`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `5`
 
@@ -36,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, defer`
 - Doc: LoadDetailedTestSuiteExecutionFromDatabase Load all Detailed TestSuiteExecution-data for specific execution
 - Internal calls: `DetailedTestSuiteExecutionMapKeyType`, `int`
-- External calls: `TestSuiteExecutionsModel.AddToDetailedTestSuiteExecutionsMap`, `TestSuiteExecutionsModel.ClearFlagRefreshOngoingOfDetailedTestSuiteExecution`, `TestSuiteExecutionsModel.SetFlagRefreshOngoingOfDetailedTestSuiteExecution`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `getSingleTestSuiteExecutionResponse.GetAckNackResponse`, `getSingleTestSuiteExecutionResponse.GetTestSuiteExecutionResponse`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `strconv.Itoa`
+- Selector calls: `TestSuiteExecutionsModel.AddToDetailedTestSuiteExecutionsMap`, `TestSuiteExecutionsModel.ClearFlagRefreshOngoingOfDetailedTestSuiteExecution`, `TestSuiteExecutionsModel.SetFlagRefreshOngoingOfDetailedTestSuiteExecution`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `getSingleTestSuiteExecutionResponse.GetAckNackResponse`, `getSingleTestSuiteExecutionResponse.GetTestSuiteExecutionResponse`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `strconv.Itoa`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/testSuiteUI/testSuiteUI_GraphicalComponent_testSuiteDescription.go`
 - Package: `testSuiteUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `8`
 
@@ -39,7 +38,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, returns error`
 - Doc: Generate the TestCaseDescription Area for the TestCase
 - Internal calls: `int`
-- External calls: `container.New`, `container.NewVBox`, `layout.NewFormLayout`, `layout.NewVBoxLayout`, `newTestCaseDescriptionEntry.SetMinRowsVisible`, `newTestCaseDescriptionEntry.SetText`, `strings.Trim`, `testCaseDescriptionContainer.Add`
+- Selector calls: `container.New`, `container.NewVBox`, `layout.NewFormLayout`, `layout.NewVBoxLayout`, `newTestCaseDescriptionEntry.SetMinRowsVisible`, `newTestCaseDescriptionEntry.SetText`, `strings.Trim`, `testCaseDescriptionContainer.Add`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

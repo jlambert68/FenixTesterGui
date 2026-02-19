@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/listTestSuitesUI/listTestSuitesUI_GenerateTestSuitePreview.go`
 - Package: `listTestSuitesUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `11`
 
@@ -42,7 +41,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Doc: GenerateTestSuitePreviewContainer Generates the PreViewContainer for the TestSuite
 - Internal calls: `float32`
-- External calls: `container.New`, `container.NewBorder`, `container.NewCenter`, `container.NewScroll`, `container.NewVBox`, `fmt.Sprintf`, `fyne.NewSize`, `layout.NewFormLayout`
+- Selector calls: `container.New`, `container.NewBorder`, `container.NewCenter`, `container.NewScroll`, `container.NewVBox`, `fmt.Sprintf`, `fyne.NewSize`, `layout.NewFormLayout`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

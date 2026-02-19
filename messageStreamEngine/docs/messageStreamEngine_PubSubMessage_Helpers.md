@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `messageStreamEngine/messageStreamEngine_PubSubMessage_Helpers.go`
 - Package: `messageStreamEngine`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `3`
 - Imports: `1`
 

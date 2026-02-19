@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseModel/testCaseModel_generateTestCaseMetaDataStructureForSelectedDomain.go`
 - Package: `testCaseModel`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `3`
 - Imports: `4`
 
@@ -42,7 +41,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, returns error`
 - Doc: GenerateTestCaseMetaDataStructureForSelectedDomain - Verify if the Hash for the TestCase is the same as the one in the database
 - Internal calls: `buildMetaDataGroups`
-- External calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`
+- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`
 
 ### buildMetaDataGroups
 - Signature: `func buildMetaDataGroups(testCaseMetaDataForDomain *TestCaseMetaDataForDomainStruct) *map[string]*MetaDataGroupStruct`

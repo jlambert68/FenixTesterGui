@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `executions/executionsUIForSubscriptions/testCaseExecutionUI_testCaseLExecutionsListForSubscriptions_mainPage.go`
 - Package: `executionsUIForSubscriptions`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `1`
 
@@ -32,7 +31,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Internal calls: `CreateTableForTestCaseExecutionsOnQueue`, `CreateTableForTestCaseExecutionsUnderExecution`, `CreateTableForTestCaseExecutionsWithFinishedExecution`, `newThreePartAdaptiveSplit`
-- External calls: `executionsListTabPage.Refresh`
+- Selector calls: `executionsListTabPage.Refresh`
 
 ### StartTableAddAndRemoveChannelReaders
 - Signature: `func StartTableAddAndRemoveChannelReaders()`

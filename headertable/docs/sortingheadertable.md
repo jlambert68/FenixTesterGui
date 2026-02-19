@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `headertable/sortingheadertable.go`
 - Package: `headertable`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `8`
 - Imports: `11`
 
@@ -47,7 +46,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*SortingHeaderTable) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `container.NewBorder`, `container.NewVBox`
+- Selector calls: `container.NewBorder`, `container.NewVBox`
 
 ### Destroy (method on `sortingHeaderTableRenderer`)
 - Signature: `func (sortingHeaderTableRenderer) Destroy()`
@@ -64,14 +63,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Internal calls: `float32`, `float64`
-- External calls: `fyne.NewSize`, `math.Max`
+- Selector calls: `fyne.NewSize`, `math.Max`
 
 ### NewSortingHeaderTable
 - Signature: `func NewSortingHeaderTable(tableOpts *TableOpts) *SortingHeaderTable`
 - Exported: `true`
 - Control-flow features: `if, for/range`
 - Internal calls: `NewFlashingTableCell`, `NewSortingLabel`, `SaveToFlashingTableCellsReferenceMap`, `TestCaseExecutionMapKeyType`, `float32`, `stringSort`
-- External calls: `b.GetItem`, `b1.GetItem`, `dataTable.Refresh`, `fmt.Println`, `fyne.NewSize`, `l.Hide`, `l.Refresh`, `l.SetText`
+- Selector calls: `b.GetItem`, `b1.GetItem`, `dataTable.Refresh`, `fmt.Println`, `fyne.NewSize`, `l.Hide`, `l.Refresh`, `l.SetText`
 
 ### Objects (method on `sortingHeaderTableRenderer`)
 - Signature: `func (sortingHeaderTableRenderer) Objects() []fyne.CanvasObject`
@@ -87,7 +86,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func stringSort(tableOpts *TableOpts, col int) SortFn`
 - Exported: `false`
 - Control-flow features: `if`
-- External calls: `b1.GetItem`, `b2.GetItem`, `log.Printf`, `sort.Slice`
+- Selector calls: `b1.GetItem`, `b2.GetItem`, `log.Printf`, `sort.Slice`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

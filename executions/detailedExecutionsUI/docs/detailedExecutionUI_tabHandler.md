@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `executions/detailedExecutionsUI/detailedExecutionUI_tabHandler.go`
 - Package: `detailedTestCaseExecutionsUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `6`
 
@@ -36,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if`
 - Doc: GenerateBaseUITabForExecutions Create the Base-UI-canvas-object for the Detailed TestCaseExecutions object.
-- External calls: `container.New`, `detailedTestCaseExecutionsUIObject.CreateDetailedTestCaseExecutionsTabPage`, `fmt.Println`, `layout.NewBorderLayout`, `testCaseExecutionsTabPage.Refresh`, `theme.ContentCopyIcon`, `theme.ContentRedoIcon`, `theme.HomeIcon`
+- Selector calls: `container.New`, `detailedTestCaseExecutionsUIObject.CreateDetailedTestCaseExecutionsTabPage`, `fmt.Println`, `layout.NewBorderLayout`, `testCaseExecutionsTabPage.Refresh`, `theme.ContentCopyIcon`, `theme.ContentRedoIcon`, `theme.HomeIcon`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

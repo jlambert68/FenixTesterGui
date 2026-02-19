@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCaseSubscriptionHandler/testCaseSubscriptionHandler_InitiateHandler.go`
 - Package: `testCaseSubscriptionHandler`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `0`
 

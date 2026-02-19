@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/testSuitesModel/testSuitesModel_LoadTestSuite.go`
 - Package: `testSuitesModel`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `10`
 - Imports: `6`
 
@@ -36,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, returns error`
 - Doc: LoadFullTestSuiteFromDatabase - Load the TestSuite from the Database into model
-- External calls: `copier.CopyWithOption`, `detailedTestSuiteResponse.GetDetailedTestSuite`, `err.Error`, `errors.New`, `fmt.Println`, `fmt.Sprintf`, `log.Fatalln`, `testSuiteModel.extractTestSuiteImplementedFunctionsMap`
+- Selector calls: `copier.CopyWithOption`, `detailedTestSuiteResponse.GetDetailedTestSuite`, `err.Error`, `errors.New`, `fmt.Println`, `fmt.Sprintf`, `log.Fatalln`, `testSuiteModel.extractTestSuiteImplementedFunctionsMap`
 
 ### extractTestSuiteImplementedFunctionsMap (method on `*TestSuiteModelStruct`)
 - Signature: `func (*TestSuiteModelStruct) extractTestSuiteImplementedFunctionsMap(testSuiteImplementedFunctionsGrpc map[int32]bool) (testSuiteImplementedFunctionsMap map[testSuiteImplementedFunctionsType]bool, err error)`
@@ -50,14 +49,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, for/range, returns error`
 - Doc: Generates 'TestCasesInTestSuite' from gRPC-message
-- External calls: `tempTestCasesInTestSuiteFromGrpc.GetTestCaseUuid`, `testCasesInTestSuiteFromGrpc.GetTestCasesInTestSuite`
+- Selector calls: `tempTestCasesInTestSuiteFromGrpc.GetTestCaseUuid`, `testCasesInTestSuiteFromGrpc.GetTestCasesInTestSuite`
 
 ### generateTestSuiteBasicInformationMessageWhenLoading (method on `*TestSuiteModelStruct`)
 - Signature: `func (*TestSuiteModelStruct) generateTestSuiteBasicInformationMessageWhenLoading(supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct, testSuiteBasicInformation *fenixGuiTestCaseBuilderServerGrpcApi.TestSuiteBasicInformationMessage, updatedByAndWhenMessage *fenixGuiTestCaseBuilderServerGrpcApi.UpdatedByAndWhenMessage, messageHash string) err error`
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Doc: Generates 'TestSuiteBasicInformation' from gRPC-message
-- External calls: `testSuiteBasicInformation.GetDomainName`, `testSuiteBasicInformation.GetDomainUuid`, `testSuiteBasicInformation.GetTestSuiteDescription`, `testSuiteBasicInformation.GetTestSuiteExecutionEnvironment`, `testSuiteBasicInformation.GetTestSuiteName`, `testSuiteBasicInformation.GetTestSuiteUuid`, `testSuiteBasicInformation.GetTestSuiteVersion`, `updatedByAndWhenMessage.GetCreatedByComputerLogin`
+- Selector calls: `testSuiteBasicInformation.GetDomainName`, `testSuiteBasicInformation.GetDomainUuid`, `testSuiteBasicInformation.GetTestSuiteDescription`, `testSuiteBasicInformation.GetTestSuiteExecutionEnvironment`, `testSuiteBasicInformation.GetTestSuiteName`, `testSuiteBasicInformation.GetTestSuiteUuid`, `testSuiteBasicInformation.GetTestSuiteVersion`, `updatedByAndWhenMessage.GetCreatedByComputerLogin`
 
 ### generateTestSuiteDeleteDateMessageWhenLoading (method on `*TestSuiteModelStruct`)
 - Signature: `func (*TestSuiteModelStruct) generateTestSuiteDeleteDateMessageWhenLoading(supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct, testSuiteDeleteDateFromGrpc string) err error`
@@ -71,7 +70,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, returns error`
 - Doc: Generates 'TestSuiteImplementedFunctionsMap' from gRPC-message
 - Internal calls: `testSuiteImplementedFunctionsType`
-- External calls: `errors.New`, `fmt.Sprintf`
+- Selector calls: `errors.New`, `fmt.Sprintf`
 
 ### generateTestSuiteMetaDataMessageWhenLoading (method on `*TestSuiteModelStruct`)
 - Signature: `func (*TestSuiteModelStruct) generateTestSuiteMetaDataMessageWhenLoading(supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct, testSuiteMetaData *fenixGuiTestCaseBuilderServerGrpcApi.UserSpecifiedTestSuiteMetaDataMessage) err error`
@@ -79,7 +78,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, returns error`
 - Doc: Generates 'TestSuiteMetaData' from gRPC-message
 - Internal calls: `MetaDataSelectType`
-- External calls: `tempMetaDataGroupFromGrpc.GetMetaDataInGroupMap`, `testSuiteMetaData.GetCurrentSelectedDomainName`, `testSuiteMetaData.GetCurrentSelectedDomainUuid`, `testSuiteMetaData.GetMetaDataGroupsMap`
+- Selector calls: `tempMetaDataGroupFromGrpc.GetMetaDataInGroupMap`, `testSuiteMetaData.GetCurrentSelectedDomainName`, `testSuiteMetaData.GetCurrentSelectedDomainUuid`, `testSuiteMetaData.GetMetaDataGroupsMap`
 
 ### generateTestSuitePreviewMessageWhenLoading (method on `*TestSuiteModelStruct`)
 - Signature: `func (*TestSuiteModelStruct) generateTestSuitePreviewMessageWhenLoading(supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct, testSuitePreview *fenixGuiTestCaseBuilderServerGrpcApi.TestSuitePreviewMessage) err error`
@@ -92,7 +91,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, for/range, returns error`
 - Doc: Generates 'UsersChosenTestDataForTestSuiteMessage' from gRPC-message
-- External calls: `testDataEngine.TestDataAreaNameType`, `testDataEngine.TestDataAreaUuidType`, `testDataEngine.TestDataDomainNameType`, `testDataEngine.TestDataDomainUuidType`, `testDataEngine.TestDataPointGroupNameType`, `testDataEngine.TestDataPointRowUuidType`, `testDataEngine.TestDataPointRowValuesSummaryType`, `testDataEngine.TestDataValueNameType`
+- Selector calls: `testDataEngine.TestDataAreaNameType`, `testDataEngine.TestDataAreaUuidType`, `testDataEngine.TestDataDomainNameType`, `testDataEngine.TestDataDomainUuidType`, `testDataEngine.TestDataPointGroupNameType`, `testDataEngine.TestDataPointRowUuidType`, `testDataEngine.TestDataPointRowValuesSummaryType`, `testDataEngine.TestDataValueNameType`
 
 ### generateTestSuiteTypeMessageWhenLoading (method on `*TestSuiteModelStruct`)
 - Signature: `func (*TestSuiteModelStruct) generateTestSuiteTypeMessageWhenLoading(supportedTestSuiteDataToBeStored *testSuiteImplementedFunctionsToBeStoredStruct, testSuiteTypeMessageFromGrpc *fenixGuiTestCaseBuilderServerGrpcApi.TestSuiteTypeMessage) err error`
@@ -100,7 +99,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, returns error`
 - Doc: Generates 'TestCasesInTestSuite' from gRPC-message
 - Internal calls: `TestSuiteTypeNameType`, `TestSuiteTypeType`
-- External calls: `testSuiteTypeMessageFromGrpc.GetTestSuiteType`, `testSuiteTypeMessageFromGrpc.GetTestSuiteTypeName`
+- Selector calls: `testSuiteTypeMessageFromGrpc.GetTestSuiteType`, `testSuiteTypeMessageFromGrpc.GetTestSuiteTypeName`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

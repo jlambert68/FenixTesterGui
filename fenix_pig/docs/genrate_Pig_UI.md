@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `fenix_pig/genrate_Pig_UI.go`
 - Package: `fenix_pig`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `6`
 
@@ -36,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: GeneratePigUI Genrate the UI-component to be used at the bottom of the Fenix-UI, to show ongoing probes(pigs)
-- External calls: `canvas.NewImageFromResource`, `container.NewBorder`, `container.NewVBox`, `fenixPig48x48Image.SetMinSize`, `fmt.Println`, `fyne.NewSize`, `fyne.NewStaticResource`, `memoryUsage.NewClickableImage`
+- Selector calls: `canvas.NewImageFromResource`, `container.NewBorder`, `container.NewVBox`, `fenixPig48x48Image.SetMinSize`, `fmt.Println`, `fyne.NewSize`, `fyne.NewStaticResource`, `memoryUsage.NewClickableImage`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

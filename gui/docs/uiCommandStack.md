@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `gui/uiCommandStack.go`
 - Package: `gui`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `5`
 
@@ -36,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*UIServerStruct) makeCommandStackUI()`
 - Exported: `false`
 - Control-flow features: `if, for/range`
-- External calls: `bindedCommandListData.Get`, `bindedCommandListData.GetValue`, `bindedCommandListData.Set`, `bindedCommandListData.SetValue`, `binding.NewStringList`, `commandStackListUI.Unselect`, `container.New`, `container.NewVBox`
+- Selector calls: `bindedCommandListData.Get`, `bindedCommandListData.GetValue`, `bindedCommandListData.Set`, `bindedCommandListData.SetValue`, `binding.NewStringList`, `commandStackListUI.Unselect`, `container.New`, `container.NewVBox`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

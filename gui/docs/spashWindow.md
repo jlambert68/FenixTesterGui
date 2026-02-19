@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `gui/spashWindow.go`
 - Package: `gui`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `3`
 - Imports: `9`
 
@@ -39,19 +38,19 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*customSplashWindow) Focused()`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `fmt.Println`
+- Selector calls: `fmt.Println`
 
 ### Unfocused (method on `*customSplashWindow`)
 - Signature: `func (*customSplashWindow) Unfocused()`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `fmt.Println`
+- Selector calls: `fmt.Println`
 
 ### createSplashWindow
 - Signature: `func createSplashWindow(splashWindow *fyne.Window, splashWindowProlongedVisibleChannelPtr *chan time.Duration)`
 - Exported: `false`
 - Control-flow features: `if, go`
-- External calls: `canvas.NewImageFromResource`, `container.New`, `drv.CreateSplashWindow`, `fyne.CurrentApp`, `fyne.Do`, `layout.NewVBoxLayout`, `time.Sleep`
+- Selector calls: `canvas.NewImageFromResource`, `container.New`, `drv.CreateSplashWindow`, `fyne.CurrentApp`, `fyne.Do`, `layout.NewVBoxLayout`, `time.Sleep`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

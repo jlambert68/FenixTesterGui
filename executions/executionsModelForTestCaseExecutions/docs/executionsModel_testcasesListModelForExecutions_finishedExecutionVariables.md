@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `executions/executionsModelForTestCaseExecutions/executionsModel_testcasesListModelForExecutions_finishedExecutionVariables.go`
 - Package: `executionsModelForExecutions`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `0`
 - Imports: `4`
 

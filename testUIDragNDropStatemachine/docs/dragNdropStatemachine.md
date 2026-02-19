@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testUIDragNDropStatemachine/dragNdropStatemachine.go`
 - Package: `testUIDragNDropStatemachine`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `8`
 - Imports: `8`
 
@@ -67,7 +66,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `none detected`
 - Doc: InitiateStateStateMachine InitiateState State machine
-- External calls: `tempLabel.MinSize`, `tempLabel.Refresh`, `widget.NewLabel`
+- Selector calls: `tempLabel.MinSize`, `tempLabel.Refresh`, `widget.NewLabel`
 
 ### TestInstructionContainerBondBelongingRectangleToMap
 - Signature: `func TestInstructionContainerBondBelongingRectangleToMap(testInstructionContainerUuid string, rectangle *canvas.Rectangle)`
@@ -79,19 +78,19 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func executeDropAction()`
 - Exported: `false`
 - Control-flow features: `switch`
-- External calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`, `sharedCode.BuildingBlock`
+- Selector calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`, `sharedCode.BuildingBlock`
 
 ### expandDropAreas
 - Signature: `func expandDropAreas()`
 - Exported: `false`
 - Control-flow features: `if, for/range`
-- External calls: `fyne.NewSize`, `targetLabel.Resize`
+- Selector calls: `fyne.NewSize`, `targetLabel.Resize`
 
 ### newNoneDroppableLabel
 - Signature: `func newNoneDroppableLabel(uuid string) *noneDroppableLabel`
 - Exported: `false`
 - Control-flow features: `none detected`
-- External calls: `nonDroppableLabel.ExtendBaseWidget`
+- Selector calls: `nonDroppableLabel.ExtendBaseWidget`
 
 ### shrinkDropAreas
 - Signature: `func shrinkDropAreas()`

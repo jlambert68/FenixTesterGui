@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `headertable/data/bundled.go`
 - Package: `data`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `0`
 - Imports: `1`
 

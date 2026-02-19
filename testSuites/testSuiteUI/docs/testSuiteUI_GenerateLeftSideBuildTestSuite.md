@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/testSuiteUI/testSuiteUI_GenerateLeftSideBuildTestSuite.go`
 - Package: `testSuiteUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `7`
 
@@ -37,7 +36,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Doc: Generate leftSideBuildTestSuite - Main information for TestSuite
-- External calls: `container.NewBorder`, `container.NewHBox`, `container.NewStack`, `container.NewVBox`, `err.Error`, `fmt.Sprintf`, `layout.NewSpacer`, `leftTopSideBuildTestSuiteContainer.Add`
+- Selector calls: `container.NewBorder`, `container.NewHBox`, `container.NewStack`, `container.NewVBox`, `err.Error`, `fmt.Sprintf`, `layout.NewSpacer`, `leftTopSideBuildTestSuiteContainer.Add`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

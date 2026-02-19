@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `messageStreamEngine/messageStreamEngine_TriggerPubSubExectuionStatusMessageProcessing.go`
 - Package: `messageStreamEngine`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `6`
 
@@ -36,7 +35,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, for/range, returns error`
 - Internal calls: `string`
-- External calls: `executionStatusMessagesPubSubMessage.GetExecutionsStatus`, `fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum`, `fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusEnum`, `protojson.Unmarshal`, `strings.ReplaceAll`, `tempGetTestCaseExecutionsStatusPubSubMessage.GetBroadcastTimeStamp`, `tempGetTestCaseExecutionsStatusPubSubMessage.GetPreviousBroadcastTimeStamp`, `tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionDetails`
+- Selector calls: `executionStatusMessagesPubSubMessage.GetExecutionsStatus`, `fenixExecutionServerGuiGrpcApi.TestCaseExecutionStatusEnum`, `fenixExecutionServerGuiGrpcApi.TestInstructionExecutionStatusEnum`, `protojson.Unmarshal`, `strings.ReplaceAll`, `tempGetTestCaseExecutionsStatusPubSubMessage.GetBroadcastTimeStamp`, `tempGetTestCaseExecutionsStatusPubSubMessage.GetPreviousBroadcastTimeStamp`, `tempGetTestCaseExecutionsStatusPubSubMessage.GetTestCaseExecutionDetails`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

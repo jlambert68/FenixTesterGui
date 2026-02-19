@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `messageStreamEngine/guiExecutionServer_messageEngine.go`
 - Package: `messageStreamEngine`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `7`
 
@@ -38,7 +37,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, go, defer`
 - Doc: TesterGui opens the gPRC-channel to have messages streamed back to TesterGui from GuiExecutionServer
 - Internal calls: `cancel`
-- External calls: `context.Background`, `context.WithCancel`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `fenixGuiExecutionServerSubscribeToMessagesClient.SubscribeToMessageStream`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `messageStreamEngineObject.setConnectionToFenixGuiExecutionMessageServer`, `streamClient.Recv`
+- Selector calls: `context.Background`, `context.WithCancel`, `fenixExecutionServerGuiGrpcApi.CurrentFenixExecutionGuiProtoFileVersionEnum`, `fenixGuiExecutionServerSubscribeToMessagesClient.SubscribeToMessageStream`, `grpc_out_GuiExecutionServer.GetHighestFenixGuiExecutionServerProtoFileVersion`, `messageStreamEngineObject.setConnectionToFenixGuiExecutionMessageServer`, `streamClient.Recv`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

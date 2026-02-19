@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/testSuitesModel/testSuitesModel_ExposedFunctions.go`
 - Package: `testSuitesModel`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `15`
 - Imports: `7`
 
@@ -57,7 +56,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if`
 - Doc: GenerateNewTestSuiteModelObject Generated s new TestSuiteModel-object
 - Internal calls: `createEmptyAndInitiatedTestSuiteModel`
-- External calls: `uuidGenerator.New`
+- Selector calls: `uuidGenerator.New`
 
 ### GetCreatedByComputerLogin (method on `*TestSuiteModelStruct`)
 - Signature: `func (*TestSuiteModelStruct) GetCreatedByComputerLogin() string`
@@ -107,7 +106,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Doc: GetTestSuiteVersion Gets the TestSuites Version
 - Internal calls: `int`
-- External calls: `strconv.Itoa`
+- Selector calls: `strconv.Itoa`
 
 ### HasLockButtonBeenClickedAndBothOwnerDomainAndTestEnvironmentHaveValues (method on `*TestSuiteModelStruct`)
 - Signature: `func (*TestSuiteModelStruct) HasLockButtonBeenClickedAndBothOwnerDomainAndTestEnvironmentHaveValues() hasValue bool`

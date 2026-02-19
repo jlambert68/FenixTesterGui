@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseUI/testCaseUI_textualRepresentation.go`
 - Package: `testCaseUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `7`
 
@@ -37,14 +36,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, returns error`
 - Doc: UpdateTextualStructuresForTestCase Updates hte Textual Structures (Simple, Complex and Extended) for a specific TestCase
-- External calls: `errors.New`, `fmt.Sprintf`, `fyne.Do`
+- Selector calls: `errors.New`, `fmt.Sprintf`, `fyne.Do`
 
 ### generateNewTextualRepresentationAreaForTestCase (method on `*TestCasesUiModelStruct`)
 - Signature: `func (*TestCasesUiModelStruct) generateNewTextualRepresentationAreaForTestCase(testCaseUuid string) (newTestCaseTextualStructure testCaseTextualStructureStruct, canvasTextualRepresentationAccordionObject fyne.CanvasObject, err error)`
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Doc: Generate the Textual Representation Area for the TestCase
-- External calls: `binding.NewString`, `container.New`, `container.NewHScroll`, `container.NewVBox`, `errors.New`, `fmt.Sprintf`, `layout.NewFormLayout`, `widget.NewAccordion`
+- Selector calls: `binding.NewString`, `container.New`, `container.NewHScroll`, `container.NewVBox`, `errors.New`, `fmt.Sprintf`, `layout.NewFormLayout`, `widget.NewAccordion`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/testSuiteUI/testSuiteUI_graphicalComponent_testEnvironmenForTestSuite.go`
 - Package: `testSuiteUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `3`
 - Imports: `10`
 
@@ -41,14 +40,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, for/range, switch`
 - Doc: Generates the TestEnvironment container in the TestSuite
 - Internal calls: `calcSelectWidth`, `newCustomSelectComboBoxWidget`
-- External calls: `canvas.NewRectangle`, `container.New`, `container.NewStack`, `container.NewVBox`, `err.Error`, `errors.New`, `fmt.Println`, `fmt.Sprintf`
+- Selector calls: `canvas.NewRectangle`, `container.New`, `container.NewStack`, `container.NewVBox`, `err.Error`, `errors.New`, `fmt.Println`, `fmt.Sprintf`
 
 ### generateTestEnvironmentForTestSuite (method on `*TestSuiteUiStruct`)
 - Signature: `func (*TestSuiteUiStruct) generateTestEnvironmentForTestSuite() (testEnvironmentContainer *fyne.Container, customTestEnvironmentSelectComboBox *customSelectComboBox, err error)`
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Doc: Generate the OwnerDomain Area for the TestSuite
-- External calls: `container.New`, `container.NewVBox`, `err.Error`, `errors.New`, `fmt.Sprintf`, `layout.NewVBoxLayout`, `testEnvironmentFormContainer.Add`, `testSuiteUiModel.buildTestEnvironmentGUIContainer`
+- Selector calls: `container.New`, `container.NewVBox`, `err.Error`, `errors.New`, `fmt.Sprintf`, `layout.NewVBoxLayout`, `testEnvironmentFormContainer.Add`, `testSuiteUiModel.buildTestEnvironmentGUIContainer`
 
 ### setSelectedTestEnvironmentForTestSuite (method on `*TestSuiteUiStruct`)
 - Signature: `func (*TestSuiteUiStruct) setSelectedTestEnvironmentForTestSuite(selectedTestEnvironment string, testEnvironmentCustomSelectComboBox *customSelectComboBox)`

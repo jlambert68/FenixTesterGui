@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseUI/testCaseUI_graphicalRepresentation_base.go`
 - Package: `testCaseUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `5`
 
@@ -35,7 +34,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `returns error`
 - Doc: Generate the Graphical Representation Area for the TestCase
-- External calls: `canvas.NewRectangle`, `container.NewScroll`, `container.NewVBox`, `fyne.NewSize`, `myRectangle.SetMinSize`, `testCaseGraphicalModelAreaAccordion.Append`, `testCaseGraphicalModelAreaAccordion.OpenAll`, `testCaseGraphicalModelAreaAccordion.RemoveIndex`
+- Selector calls: `canvas.NewRectangle`, `container.NewScroll`, `container.NewVBox`, `fyne.NewSize`, `myRectangle.SetMinSize`, `testCaseGraphicalModelAreaAccordion.Append`, `testCaseGraphicalModelAreaAccordion.OpenAll`, `testCaseGraphicalModelAreaAccordion.RemoveIndex`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

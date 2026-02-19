@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuiteExecutions/listTestSuiteExecutionsUI/listTestSuiteExectionsUI_HeaderLabel.go`
 - Package: `listTestSuiteExecutionsUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `3`
 - Imports: `4`
 
@@ -34,13 +33,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*sortableHeaderLabelStruct) CreateRenderer() fyne.WidgetRenderer`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `container.NewHBox`, `container.NewStack`, `widget.NewSimpleRenderer`
+- Selector calls: `container.NewHBox`, `container.NewStack`, `widget.NewSimpleRenderer`
 
 ### Refresh (method on `*sortableHeaderLabelStruct`)
 - Signature: `func (*sortableHeaderLabelStruct) Refresh()`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `fyne.Do`
+- Selector calls: `fyne.Do`
 
 ### newSortableHeaderLabel
 - Signature: `func newSortableHeaderLabel(headerText string, tempIsSortable bool, tempColumnNumber int) *sortableHeaderLabelStruct`
@@ -48,7 +47,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Doc: Used for creating a new Header label
 - Internal calls: `SortOrReverseSortGuiTable`, `newClickableSortImage`, `uint8`
-- External calls: `fmt.Println`, `tempSortableHeaderLabel.ExtendBaseWidget`, `widget.NewLabel`
+- Selector calls: `fmt.Println`, `tempSortableHeaderLabel.ExtendBaseWidget`, `widget.NewLabel`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

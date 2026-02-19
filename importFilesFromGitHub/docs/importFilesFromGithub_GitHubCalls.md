@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `importFilesFromGitHub/importFilesFromGithub_GitHubCalls.go`
 - Package: `importFilesFromGitHub`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `5`
 
@@ -35,14 +34,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, defer`
 - Doc: List files and folders for a certain GitHub url
-- External calls: `client.Do`, `err.Error`, `http.NewRequest`, `ioutil.ReadAll`, `json.Unmarshal`, `log.Fatalf`
+- Selector calls: `client.Do`, `err.Error`, `http.NewRequest`, `ioutil.ReadAll`, `json.Unmarshal`, `log.Fatalf`
 
 ### loadFileContent (method on `*ImportFilesFromGitHubStruct`)
 - Signature: `func (*ImportFilesFromGitHubStruct) loadFileContent(file GitHubFile) ([]byte, error)`
 - Exported: `false`
 - Control-flow features: `if, defer, returns error`
 - Doc: Load the files content from GitHub
-- External calls: `fmt.Errorf`, `http.Get`, `ioutil.ReadAll`
+- Selector calls: `fmt.Errorf`, `http.Get`, `ioutil.ReadAll`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

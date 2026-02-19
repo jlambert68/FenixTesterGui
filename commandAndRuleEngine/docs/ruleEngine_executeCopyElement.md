@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `commandAndRuleEngine/ruleEngine_executeCopyElement.go`
 - Package: `commandAndRuleEngine`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `5`
 
@@ -34,14 +33,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*CommandAndRuleEngineObjectStruct) executeCopyFullELementStructure(testCaseUuid string, uuidToCopy string) err error`
 - Exported: `false`
 - Control-flow features: `if, for/range, returns error`
-- External calls: `commandAndRuleEngine.recursiveCopyingOfFullElementStructure`, `errors.New`, `fmt.Sprintf`
+- Selector calls: `commandAndRuleEngine.recursiveCopyingOfFullElementStructure`, `errors.New`, `fmt.Sprintf`
 
 ### recursiveCopyingOfFullElementStructure (method on `*CommandAndRuleEngineObjectStruct`)
 - Signature: `func (*CommandAndRuleEngineObjectStruct) recursiveCopyingOfFullElementStructure(currentTestCase *testCaseModel.TestCaseModelStruct, elementsUuid string, copiedElementStructure *testCaseModel.ImmatureElementStruct) err error`
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Doc: Copy the full structure of all children, in TestCase-model, for specific Element
-- External calls: `commandAndRuleEngine.recursiveCopyingOfFullElementStructure`, `errors.New`, `fmt.Sprintf`
+- Selector calls: `commandAndRuleEngine.recursiveCopyingOfFullElementStructure`, `errors.New`, `fmt.Sprintf`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

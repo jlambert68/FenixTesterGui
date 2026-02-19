@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuiteExecutions/listTestSuiteExecutionsUI/listTestSuiteExectionsUI_GenerateListTestSuiteExectionsUI.go`
 - Package: `listTestSuiteExecutionsUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `3`
 - Imports: `15`
 
@@ -56,7 +55,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, go`
 - Doc: Create the UI used for list all TestCasesMapPtr that the User can edit
 - Internal calls: `LoadOneTestSuiteExecutionPerTestSuiteFromDataBaseFunction`, `NewHoverableRect`, `calculateAndSetCorrectColumnWidths`, `generatePreViewObject`, `generateTestSuiteExecutionsListTable`, `loadTestSuiteExecutionListTableTable`, `sortGuiTableAscendingOnTestSuiteExecutionTimeStamp`, `updateTestSuiteExecutionsListTable`
-- External calls: `binding.NewString`, `container.New`, `container.NewBorder`, `container.NewHBox`, `container.NewHSplit`, `container.NewScroll`, `container.NewVBox`, `detailedTestSuiteExecutionsUI.GenerateExecutionColorPalette`
+- Selector calls: `binding.NewString`, `container.New`, `container.NewBorder`, `container.NewHBox`, `container.NewHSplit`, `container.NewScroll`, `container.NewVBox`, `detailedTestSuiteExecutionsUI.GenerateExecutionColorPalette`
 
 ### LoadOneTestSuiteExecutionPerTestSuiteFromDataBaseFunction
 - Signature: `func LoadOneTestSuiteExecutionPerTestSuiteFromDataBaseFunction(testSuiteExecutionsModel *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct, updateGui bool, testSuiteInstructionPreViewObject *TestSuiteInstructionPreViewStruct)`
@@ -64,7 +63,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, go`
 - Doc: Define the function to be executed to load TestSuiteExecutions from that Database that the user can view Only loads one TestSuiteExecution per TestCase
 - Internal calls: `SortGuiTableOnCurrentColumnAndSorting`
-- External calls: `listTestSuiteExecutionsModel.LoadTestSuiteExecutionsThatCanBeViewedByUser`, `loadAllTestSuiteExecutionsForOneTestSuiteButtonReference.Disable`, `testSuiteInstructionPreViewObject.ClearTestSuiteExecutionPreviewContainer`
+- Selector calls: `listTestSuiteExecutionsModel.LoadTestSuiteExecutionsThatCanBeViewedByUser`, `loadAllTestSuiteExecutionsForOneTestSuiteButtonReference.Disable`, `testSuiteInstructionPreViewObject.ClearTestSuiteExecutionPreviewContainer`
 
 ### generatePreViewObject
 - Signature: `func generatePreViewObject(testCaseInstructionPreViewObject *TestSuiteInstructionPreViewStruct) tempTestCasePreviewTestInstructionExecutionLogSplitContainer *container.Split`
@@ -72,7 +71,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `none detected`
 - Doc: Generates the Container structure for the PreView-container
 - Internal calls: `NewHoverableRect`
-- External calls: `container.New`, `container.NewAppTabs`, `container.NewBorder`, `container.NewCenter`, `container.NewHSplit`, `container.NewScroll`, `container.NewTabItem`, `explorerTabOverlay.Hide`
+- Selector calls: `container.New`, `container.NewAppTabs`, `container.NewBorder`, `container.NewCenter`, `container.NewHSplit`, `container.NewScroll`, `container.NewTabItem`, `explorerTabOverlay.Hide`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

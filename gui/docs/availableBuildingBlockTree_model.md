@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `gui/availableBuildingBlockTree_model.go`
 - Package: `gui`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `23`
 - Imports: `7`
 
@@ -61,7 +60,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `for/range`
 - Doc: Extract all 'Domains', with Names suited for Tree-testCaseModel, for the testCaseModel tha underpins the UI Tree for Available Building Blocks
-- External calls: `availableBuildingBlocksModel.getAvailableDomainsFromModel`
+- Selector calls: `availableBuildingBlocksModel.getAvailableDomainsFromModel`
 
 ### getAvailableDomainsFromModel (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) getAvailableDomainsFromModel() availableDomains []AvailableBuildingBlocksForUITreeNodesStruct`
@@ -110,77 +109,77 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: Load all Available Building Blocks from Gui-server
-- External calls: `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks`, `availableBuildingBlocksModel.storeUsersAvailableExecutionDomains`, `errors.New`, `fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage_AttributeActionCommandEnum`, `fmt.Println`, `fmt.Sprintf`, `testInstructionsAndTestContainersMessage.GetExecutionDomainsThatCanReceiveDirectTargetedTestInstructions`
+- Selector calls: `availableBuildingBlocksModel.loadModelWithAvailableBuildingBlocks`, `availableBuildingBlocksModel.storeUsersAvailableExecutionDomains`, `errors.New`, `fenixGuiTestCaseBuilderServerGrpcApi.ImmatureTestInstructionInformationMessage_AvailableDropZoneMessage_DropZonePreSetTestInstructionAttributeMessage_AttributeActionCommandEnum`, `fmt.Println`, `fmt.Sprintf`, `testInstructionsAndTestContainersMessage.GetExecutionDomainsThatCanReceiveDirectTargetedTestInstructions`
 
 ### loadPinnedBuildingBlocksFromServer (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) loadPinnedBuildingBlocksFromServer()`
 - Exported: `false`
 - Control-flow features: `none detected`
 - Doc: Load all Pinned Building Blocks from Gui-server
-- External calls: `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks`
+- Selector calls: `availableBuildingBlocksModel.loadModelWithPinnedBuildingBlocks`
 
 ### loadTemplateRepositoryApiUrls (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) loadTemplateRepositoryApiUrls(testCaseModeReference *testCaseModel.TestCasesModelsStruct)`
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: Load list with TemplateRepositoryApiUrls form GUI-server
-- External calls: `allRepositoryApiUrlsResponseMessage.GetAckNackResponse`, `allRepositoryApiUrlsResponseMessage.GetRepositoryApiUrls`, `availableBuildingBlocksModel.storeTemplateRepositoryApiUrls`
+- Selector calls: `allRepositoryApiUrlsResponseMessage.GetAckNackResponse`, `allRepositoryApiUrlsResponseMessage.GetRepositoryApiUrls`, `availableBuildingBlocksModel.storeTemplateRepositoryApiUrls`
 
 ### loadTestCaseAndTestSuiteMetaData (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) loadTestCaseAndTestSuiteMetaData(testCaseModeReference *testCaseModel.TestCasesModelsStruct)`
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: Load a list of TestCaseMetaData and TestSuiteMetaData per Domain form GUI-server
-- External calls: `availableBuildingBlocksModel.storeTestCaseMetaDataPerDomain`, `availableBuildingBlocksModel.storeTestSuiteMetaDataPerDomain`, `listTestCaseAndTestSuiteMetaDataResponseMessage.GetAckNackResponse`, `listTestCaseAndTestSuiteMetaDataResponseMessage.GetTestCaseAndTestSuiteMetaDataForDomains`
+- Selector calls: `availableBuildingBlocksModel.storeTestCaseMetaDataPerDomain`, `availableBuildingBlocksModel.storeTestSuiteMetaDataPerDomain`, `listTestCaseAndTestSuiteMetaDataResponseMessage.GetAckNackResponse`, `listTestCaseAndTestSuiteMetaDataResponseMessage.GetTestCaseAndTestSuiteMetaDataForDomains`
 
 ### loadTestData (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) loadTestData(testCaseModeReference *testCaseModel.TestCasesModelsStruct)`
 - Exported: `false`
 - Control-flow features: `if`
 - Doc: Load list with loadTestData form GUI-server
-- External calls: `allTestDataForTestDataAreasResponseMessage.GetAckNackResponse`, `allTestDataForTestDataAreasResponseMessage.GetTestDataFromSimpleTestDataAreaFiles`, `availableBuildingBlocksModel.storeTestData`
+- Selector calls: `allTestDataForTestDataAreasResponseMessage.GetAckNackResponse`, `allTestDataForTestDataAreasResponseMessage.GetTestDataFromSimpleTestDataAreaFiles`, `availableBuildingBlocksModel.storeTestData`
 
 ### makeTreeUIModel (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) makeTreeUIModel()`
 - Exported: `false`
 - Control-flow features: `if, for/range`
 - Doc: Generate the testCaseModel used to drive the Available Building Blocks-Tree
-- External calls: `availableBuildingBlocksModel.generateUITreeNameForTestInstructionContainersHeader`, `availableBuildingBlocksModel.generateUITreeNameForTestInstructionsHeader`, `availableBuildingBlocksModel.getAvailableDomainTreeNamesFromModel`, `availableBuildingBlocksModel.getAvailableDomainsFromModel`, `availableBuildingBlocksModel.getAvailableTestInstructionContainerTypesFromModel`, `availableBuildingBlocksModel.getAvailableTestInstructionContainersFromModel`, `availableBuildingBlocksModel.getAvailableTestInstructionTypesFromModel`, `availableBuildingBlocksModel.getAvailableTestInstructionsFromModel`
+- Selector calls: `availableBuildingBlocksModel.generateUITreeNameForTestInstructionContainersHeader`, `availableBuildingBlocksModel.generateUITreeNameForTestInstructionsHeader`, `availableBuildingBlocksModel.getAvailableDomainTreeNamesFromModel`, `availableBuildingBlocksModel.getAvailableDomainsFromModel`, `availableBuildingBlocksModel.getAvailableTestInstructionContainerTypesFromModel`, `availableBuildingBlocksModel.getAvailableTestInstructionContainersFromModel`, `availableBuildingBlocksModel.getAvailableTestInstructionTypesFromModel`, `availableBuildingBlocksModel.getAvailableTestInstructionsFromModel`
 
 ### pinTestInstructionOrTestInstructionContainer (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) pinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string) err error`
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Doc: Pin one Available Building Block (TestInstruction or TestInstructionContainer, if it isn't already pinned
-- External calls: `availableBuildingBlocksModel.verifyBeforePinTestInstructionOrTestInstructionContainer`
+- Selector calls: `availableBuildingBlocksModel.verifyBeforePinTestInstructionOrTestInstructionContainer`
 
 ### savePinnedBuildingBlocksFromServer (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) savePinnedBuildingBlocksFromServer() err error`
 - Exported: `false`
 - Control-flow features: `if, for/range, switch, returns error`
 - Doc: Save all Pinned Building Blocks to Gui-server
-- External calls: `errors.New`, `fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum`
+- Selector calls: `errors.New`, `fenixGuiTestCaseBuilderServerGrpcApi.CurrentFenixTestCaseBuilderProtoFileVersionEnum`
 
 ### unPinTestInstructionOrTestInstructionContainer (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) unPinTestInstructionOrTestInstructionContainer(pinnedNameInUITree string) err error`
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Doc: Unpin one pinned Available Building Block (TestInstruction or TestInstructionContainer
-- External calls: `availableBuildingBlocksModel.verifyBeforeUnPinTestInstructionOrTestInstructionContainer`
+- Selector calls: `availableBuildingBlocksModel.verifyBeforeUnPinTestInstructionOrTestInstructionContainer`
 
 ### verifyBeforePinTestInstructionOrTestInstructionContainer (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) verifyBeforePinTestInstructionOrTestInstructionContainer(nameInAvailableBuildingBlocksTree string, onlyForVerifying bool) err error`
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Doc: Verify that it is possible to Pin one Available Building Block (TestInstruction or TestInstructionContainer, if it isn't already pinned
-- External calls: `errors.New`
+- Selector calls: `errors.New`
 
 ### verifyBeforeUnPinTestInstructionOrTestInstructionContainer (method on `*AvailableBuildingBlocksModelStruct`)
 - Signature: `func (*AvailableBuildingBlocksModelStruct) verifyBeforeUnPinTestInstructionOrTestInstructionContainer(pinnedNameInUITree string, onlyForVerifying bool) err error`
 - Exported: `false`
 - Control-flow features: `if, returns error`
 - Doc: Verify that it is possible to Unpin one pinned Available Building Block (TestInstruction or TestInstructionContainer
-- External calls: `errors.New`
+- Selector calls: `errors.New`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

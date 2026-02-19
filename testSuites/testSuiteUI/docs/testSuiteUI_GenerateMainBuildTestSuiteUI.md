@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testSuites/testSuiteUI/testSuiteUI_GenerateMainBuildTestSuiteUI.go`
 - Package: `testSuiteUI`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `1`
 - Imports: `8`
 
@@ -39,7 +38,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `if, returns error`
 - Doc: GenerateBuildNewTestSuiteUI Create the UI used for creating new TestSuites
 - Internal calls: `NewHoverableRect`, `generateRightSideBuildTestSuiteContainer`
-- External calls: `container.New`, `container.NewBorder`, `container.NewHSplit`, `container.NewVBox`, `err.Error`, `layout.NewStackLayout`, `leftCreateTestSuiteOverlay.Hide`, `newTestSuiteModel.GetTestSuiteUuid`
+- Selector calls: `container.New`, `container.NewBorder`, `container.NewHSplit`, `container.NewVBox`, `err.Error`, `layout.NewStackLayout`, `leftCreateTestSuiteOverlay.Hide`, `newTestSuiteModel.GetTestSuiteUuid`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

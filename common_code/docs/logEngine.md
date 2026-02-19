@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `common_code/logEngine.go`
 - Package: `sharedCode`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `7`
 - Imports: `2`
 
@@ -76,7 +75,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Control-flow features: `for/range, switch`
 - Doc: Run the logger engine
 - Internal calls: `LogFatalLevel`
-- External calls: `log.Debug`, `log.Error`, `log.Fatal`, `log.Info`, `log.Warn`, `zerolog.New`
+- Selector calls: `log.Debug`, `log.Error`, `log.Fatal`, `log.Info`, `log.Warn`, `zerolog.New`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

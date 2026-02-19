@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `testCase/testCaseUI/templateViewer/template_Initiate.go`
 - Package: `templateViewer`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `2`
 - Imports: `8`
 
@@ -38,14 +37,14 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Exported: `true`
 - Control-flow features: `if, for/range`
 - Internal calls: `getTestGroupsFromTestDataEngineFunction`, `getTextFromRichText`, `testDataPointsToStringSliceFunction`, `testDataRowSliceToStringSliceFunction`
-- External calls: `clipboard.SetContent`, `container.NewBorder`, `container.NewHSplit`, `container.NewVBox`, `fenixMainWindow.Show`, `fileSelectorDropdown.SetSelected`, `fyne.CurrentApp`, `fyne.NewSize`
+- Selector calls: `clipboard.SetContent`, `container.NewBorder`, `container.NewHSplit`, `container.NewVBox`, `fenixMainWindow.Show`, `fileSelectorDropdown.SetSelected`, `fyne.CurrentApp`, `fyne.NewSize`
 
 ### getTextFromRichText
 - Signature: `func getTextFromRichText(richText *widget.RichText) string`
 - Exported: `false`
 - Control-flow features: `for/range, switch`
 - Doc: Function to extract text from RichText
-- External calls: `sb.String`, `sb.WriteString`
+- Selector calls: `sb.String`, `sb.WriteString`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `grpc_in/gRPCInValiables.go`
 - Package: `grpc_in`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `0`
 - Imports: `4`
 

@@ -3,7 +3,6 @@
 ## File Overview
 - Path: `importFilesFromGitHub/importFilesFromGithub_FilteredFilesList.go`
 - Package: `importFilesFromGitHub`
-- Generated: `2026-02-19T14:23:17+01:00`
 - Functions/Methods: `8`
 - Imports: `8`
 
@@ -41,7 +40,7 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*customFilteredLabel) MouseIn(*desktop.MouseEvent)`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `l.Refresh`
+- Selector calls: `l.Refresh`
 
 ### MouseMoved (method on `*customFilteredLabel`)
 - Signature: `func (*customFilteredLabel) MouseMoved(*desktop.MouseEvent)`
@@ -52,13 +51,13 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*customFilteredLabel) MouseOut()`
 - Exported: `true`
 - Control-flow features: `none detected`
-- External calls: `l.Refresh`
+- Selector calls: `l.Refresh`
 
 ### Tapped (method on `*customFilteredLabel`)
 - Signature: `func (*customFilteredLabel) Tapped(e *fyne.PointEvent)`
 - Exported: `true`
 - Control-flow features: `if`
-- External calls: `l.onDoubleTap`, `now.Sub`, `time.Now`
+- Selector calls: `l.onDoubleTap`, `now.Sub`, `time.Now`
 
 ### TappedSecondary (method on `*customFilteredLabel`)
 - Signature: `func (*customFilteredLabel) TappedSecondary(*fyne.PointEvent)`
@@ -69,19 +68,19 @@ No concise file-level comment detected. Purpose inferred from declarations below
 - Signature: `func (*ImportFilesFromGitHubStruct) filterFileListFromGitHub()`
 - Exported: `false`
 - Control-flow features: `if, for/range`
-- External calls: `combinedRegex.MatchString`, `log.Fatalln`, `regexp.Compile`, `strings.ReplaceAll`
+- Selector calls: `combinedRegex.MatchString`, `log.Fatalln`, `regexp.Compile`, `strings.ReplaceAll`
 
 ### generateFilteredList (method on `*ImportFilesFromGitHubStruct`)
 - Signature: `func (*ImportFilesFromGitHubStruct) generateFilteredList(parentWindow fyne.Window)`
 - Exported: `false`
 - Control-flow features: `if, for/range`
-- External calls: `dialog.ShowInformation`, `importFilesFromGitHubObject.UpdateSelectedFilesTable`, `importFilesFromGitHubObject.filterFileListFromGitHub`, `importFilesFromGitHubObject.getFileListFromGitHub`, `importFilesFromGitHubObject.newCustomFilteredLabel`, `label.Refresh`, `strings.Split`, `widget.NewList`
+- Selector calls: `dialog.ShowInformation`, `importFilesFromGitHubObject.UpdateSelectedFilesTable`, `importFilesFromGitHubObject.filterFileListFromGitHub`, `importFilesFromGitHubObject.getFileListFromGitHub`, `importFilesFromGitHubObject.newCustomFilteredLabel`, `label.Refresh`, `strings.Split`, `widget.NewList`
 
 ### newCustomFilteredLabel (method on `*ImportFilesFromGitHubStruct`)
 - Signature: `func (*ImportFilesFromGitHubStruct) newCustomFilteredLabel(text string, onDoubleTap func()) *customFilteredLabel`
 - Exported: `false`
 - Control-flow features: `none detected`
-- External calls: `l.ExtendBaseWidget`
+- Selector calls: `l.ExtendBaseWidget`
 
 ## Behavioral Summary
 This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -1,0 +1,17 @@
+@startuml
+title Sequence Diagram - updateTestSuiteExecutionsList.go
+actor Caller
+participant "updateTestSuiteExecutionsList.go" as File
+participant "listTestSuiteExecutionsResponse" as listTestSuiteExecutionsResponse
+participant "testSuiteExecution" as testSuiteExecution
+participant "testSuiteExecutions" as testSuiteExecutions
+participant "testSuiteExecutionsModel" as testSuiteExecutionsModel
+participant "testSuiteExecutionsModelRef" as testSuiteExecutionsModelRef
+Caller -> File: LoadTestSuiteExecutionsThatCanBeViewedByUser(...)
+activate File
+File -> listTestSuiteExecutionsResponse: GetAckNackResponse(...)
+File -> listTestSuiteExecutionsResponse: GetLatestUniqueTestSuiteExecutionDatabaseRowId(...)
+File -> listTestSuiteExecutionsResponse: GetMoreRowsExists(...)
+File --> Caller: return
+deactivate File
+@enduml

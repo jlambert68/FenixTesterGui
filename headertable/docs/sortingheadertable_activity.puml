@@ -1,0 +1,25 @@
+@startuml
+title Activity Diagram - sortingheadertable.go
+start
+:Load headertable/sortingheadertable.go;
+:1. CreateRenderer [method on *SortingHeaderTable];
+:2. Destroy [method on sortingHeaderTableRenderer];
+:3. Layout [method on sortingHeaderTableRenderer];
+:4. MinSize [method on sortingHeaderTableRenderer];
+:5. NewSortingHeaderTable;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:6. Objects [method on sortingHeaderTableRenderer];
+:7. Refresh [method on sortingHeaderTableRenderer];
+:8. stringSort;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

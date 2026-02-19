@@ -1,0 +1,34 @@
+@startuml
+title Activity Diagram - testCaseUI_graphicalRepresentation_metaData.go
+start
+:Load testCase/testCaseUI/testCaseUI_graphicalRepresentation_metaData.go;
+:1. ConvertMetaDataToNewMap;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. GenerateMetaDataAreaForTestCase [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. buildGUIFromMetaDataGroupsMap;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:4. calcCheckGroupWidth;
+:5. calcSelectWidth;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

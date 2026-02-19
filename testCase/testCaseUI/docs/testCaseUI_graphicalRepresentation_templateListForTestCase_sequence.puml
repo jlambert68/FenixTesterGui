@@ -1,0 +1,20 @@
+@startuml
+title Sequence Diagram - testCaseUI_graphicalRepresentation_templateListForTestCase.go
+actor Caller
+participant "testCaseUI_graphicalRepresentation_templateListForTestCase.go" as File
+participant "container" as container
+participant "fyne" as fyne
+participant "localImportFilesFromGitHubObject" as localImportFilesFromGitHubObject
+participant "luaEngine" as luaEngine
+participant "tableAndButtonContainer" as tableAndButtonContainer
+participant "tempFenixMasterWindow" as tempFenixMasterWindow
+participant "templateListArea" as templateListArea
+participant "templateViewer" as templateViewer
+Caller -> File: generateTemplateListForTestCaseArea(...)
+activate File
+File -> container: NewBorder(...)
+File -> container: NewHBox(...)
+File -> container: NewVBox(...)
+File --> Caller: return
+deactivate File
+@enduml

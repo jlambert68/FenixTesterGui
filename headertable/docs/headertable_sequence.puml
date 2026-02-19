@@ -1,0 +1,47 @@
+@startuml
+title Sequence Diagram - headertable.go
+actor Caller
+participant "headertable.go" as File
+participant "b" as b
+participant "container" as container
+participant "fyne" as fyne
+participant "l" as l
+participant "log" as log
+participant "math" as math
+participant "t" as t
+participant "widget" as widget
+Caller -> File: CreateRenderer(...)
+activate File
+File -> container: NewBorder(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Destroy(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Layout(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MinSize(...)
+activate File
+File -> fyne: NewSize(...)
+File -> math: Max(...)
+File --> Caller: return
+deactivate File
+Caller -> File: NewHeaderTable(...)
+activate File
+File -> b: GetItem(...)
+File -> l: Refresh(...)
+File -> l: SetText(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Objects(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Refresh(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+title Activity Diagram - testCaseUI_graphicalRepresentation_testInstructionAttributes_CheckBoxGroup_Renderer.go
+start
+:Load testCase/testCaseUI/testCaseUI_graphicalRepresentation_testInstructionAttributes_CheckBoxGroup_Renderer.go;
+:1. BackgroundColor [method on *customAttributeCheckBoxGroupRenderer];
+:2. CreateRenderer [method on *customAttributeCheckBoxGroup];
+:3. Destroy [method on *customAttributeCheckBoxGroupRenderer];
+:4. Layout [method on *customAttributeCheckBoxGroupRenderer];
+:5. MinSize [method on *customAttributeCheckBoxGroupRenderer];
+:6. Objects [method on *customAttributeCheckBoxGroupRenderer];
+:7. Refresh [method on *customAttributeCheckBoxGroupRenderer];
+:8. newCustomAttributeCheckBoxGroupWidget;
+stop
+@enduml

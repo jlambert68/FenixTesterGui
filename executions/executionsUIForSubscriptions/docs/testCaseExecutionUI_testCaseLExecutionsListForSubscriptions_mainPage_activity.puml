@@ -1,0 +1,9 @@
+@startuml
+title Activity Diagram - testCaseExecutionUI_testCaseLExecutionsListForSubscriptions_mainPage.go
+start
+:Load executions/executionsUIForSubscriptions/testCaseExecutionUI_testCaseLExecutionsListForSubscriptions_mainPage.go;
+:1. CreateExecutionsListTabPageForSubsacriptions [method on *ExecutionsUIModelStruct];
+:2. StartTableAddAndRemoveChannelReaders;
+:Start goroutine/asynchronous work;
+stop
+@enduml

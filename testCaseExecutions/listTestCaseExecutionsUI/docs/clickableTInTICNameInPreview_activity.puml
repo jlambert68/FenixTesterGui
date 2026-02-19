@@ -1,0 +1,21 @@
+@startuml
+title Activity Diagram - clickableTInTICNameInPreview.go
+start
+:Load testCaseExecutions/listTestCaseExecutionsUI/clickableTInTICNameInPreview.go;
+:1. CreateRenderer [method on *clickableTInTICNameLabelInPreviewStruct];
+:2. Tapped [method on *clickableTInTICNameLabelInPreviewStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:3. TappedSecondary [method on *clickableTInTICNameLabelInPreviewStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. newClickableTestInstructionNameLabelInPreview;
+stop
+@enduml

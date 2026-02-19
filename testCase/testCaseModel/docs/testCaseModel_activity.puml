@@ -1,0 +1,34 @@
+@startuml
+title Activity Diagram - testCaseModel.go
+start
+:Load testCase/testCaseModel/testCaseModel.go;
+:1. findElementInSliceAndRemove;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. generateUINameForTestCaseElement [method on *TestCasesModelsStruct];
+:3. recursiveGraphicalTestCaseTreeModelExtractor [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. recursiveTextualTestCaseModelExtractor [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:5. recursiveZombieElementSearchInTestCaseModel [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:6. reverseSliceOfNodeObjects [method on *TestCasesModelsStruct];
+:Iterate loop/range logic;
+stop
+@enduml

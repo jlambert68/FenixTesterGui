@@ -1,0 +1,48 @@
+@startuml
+title Activity Diagram - TestSuiteExecutionsMapFunctions.go
+start
+:Load testSuiteExecutions/testSuiteExecutionsModel/TestSuiteExecutionsMapFunctions.go;
+:1. AddToTestSuiteExecutionsMap [method on TestSuiteExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:2. DeleteFromTestSuiteExecutionsMap [method on TestSuiteExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:3. GetNumberOfTestSuiteExecutionsRetrievedFromDatabase [method on TestSuiteExecutionsModelStruct];
+:Schedule deferred cleanup;
+:4. InitiateTestSuiteExecutionsMap [method on TestSuiteExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:5. ReadAllFromTestSuiteExecutionsMap [method on TestSuiteExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:Schedule deferred cleanup;
+:6. ReadAllFromTestSuiteExecutionsMapForTableList [method on TestSuiteExecutionsModelStruct];
+:Schedule deferred cleanup;
+:7. ReadFromTestSuiteExecutionsMap [method on TestSuiteExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:8. ReadFromTestSuiteExecutionsMapForTableList [method on TestSuiteExecutionsModelStruct];
+:Schedule deferred cleanup;
+stop
+@enduml

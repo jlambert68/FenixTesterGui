@@ -1,0 +1,12 @@
+@startuml
+title Sequence Diagram - detailedExecutionsModel_channelReader.go
+actor Caller
+participant "detailedExecutionsModel_channelReader.go" as File
+participant "detailedExecutionsModelObject" as detailedExecutionsModelObject
+participant "testCasesSummaryTableRefreshThrottler" as testCasesSummaryTableRefreshThrottler
+Caller -> File: InitiateCommandChannelReaderForDetailedStatusUpdates(...)
+activate File
+File -> detailedExecutionsModelObject: startCommandChannelReaderForDetailedStatusUpdates(...)
+File --> Caller: return
+deactivate File
+@enduml

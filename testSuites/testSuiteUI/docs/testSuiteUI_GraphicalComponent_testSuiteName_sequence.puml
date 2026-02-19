@@ -1,0 +1,19 @@
+@startuml
+title Sequence Diagram - testSuiteUI_GraphicalComponent_testSuiteName.go
+actor Caller
+participant "testSuiteUI_GraphicalComponent_testSuiteName.go" as File
+participant "container" as container
+participant "layout" as layout
+participant "newTestSuiteNameEntry" as newTestSuiteNameEntry
+participant "sharedCode" as sharedCode
+participant "strings" as strings
+participant "testSuiteNameFormContainer" as testSuiteNameFormContainer
+participant "widget" as widget
+Caller -> File: generateTestSuiteNameArea(...)
+activate File
+File -> container: New(...)
+File -> container: NewVBox(...)
+File -> layout: NewFormLayout(...)
+File --> Caller: return
+deactivate File
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+title Sequence Diagram - testerGuiServer.go
+actor Caller
+participant "testerGuiServer.go" as File
+participant "context" as context
+participant "errors" as errors
+participant "fenixTesterGuiObject" as fenixTesterGuiObject
+participant "filepath" as filepath
+participant "fmt" as fmt
+participant "log" as log
+participant "messageStreamEngine" as messageStreamEngine
+participant "os" as os
+Caller -> File: cleanup(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: fenixGuiBuilderServerMain(...)
+activate File
+File -> context: Background(...)
+File -> context: WithTimeout(...)
+File -> errors: New(...)
+File --> Caller: return
+deactivate File
+@enduml

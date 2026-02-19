@@ -1,0 +1,34 @@
+@startuml
+title Sequence Diagram - clickableAttributeInPreview.go
+actor Caller
+participant "clickableAttributeInPreview.go" as File
+participant "attributeMessageBorderContainer" as attributeMessageBorderContainer
+participant "attributeMessageStringBuilder" as attributeMessageStringBuilder
+participant "c" as c
+participant "clickableAttributeInPreview" as clickableAttributeInPreview
+participant "clipboard" as clipboard
+participant "container" as container
+participant "fenixMasterWindow" as fenixMasterWindow
+participant "fmt" as fmt
+Caller -> File: CreateRenderer(...)
+activate File
+File -> container: NewBorder(...)
+File -> container: NewScroll(...)
+File -> labelBorderContainer: Refresh(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Tapped(...)
+activate File
+File -> attributeMessageBorderContainer: Refresh(...)
+File -> attributeMessageStringBuilder: String(...)
+File -> attributeMessageStringBuilder: WriteString(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TappedSecondary(...)
+activate File
+File -> clipboard: SetContent(...)
+File -> fenixMasterWindow: Clipboard(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+@enduml

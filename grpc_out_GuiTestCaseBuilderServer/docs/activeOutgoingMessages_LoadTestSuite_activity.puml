@@ -1,0 +1,13 @@
+@startuml
+title Activity Diagram - activeOutgoingMessages_LoadTestSuite.go
+start
+:Load grpc_out_GuiTestCaseBuilderServer/activeOutgoingMessages_LoadTestSuite.go;
+:1. LoadDetailedTestSuite [method on *GRPCOutGuiTestCaseBuilderServerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+stop
+@enduml

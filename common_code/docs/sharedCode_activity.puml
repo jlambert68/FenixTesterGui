@@ -1,0 +1,17 @@
+@startuml
+title Activity Diagram - sharedCode.go
+start
+:Load common_code/sharedCode.go;
+:1. ConvertRGBAHexStringIntoRGBAColor;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. GenerateShortUuidFromFullUuid;
+:3. Len [method on sortBytes];
+:4. Less [method on sortBytes];
+:5. SortString;
+:6. Swap [method on sortBytes];
+stop
+@enduml

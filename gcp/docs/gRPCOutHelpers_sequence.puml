@@ -1,0 +1,20 @@
+@startuml
+title Sequence Diagram - gRPCOutHelpers.go
+actor Caller
+participant "gRPCOutHelpers.go" as File
+participant "bufio" as bufio
+participant "connectReq" as connectReq
+participant "credentials" as credentials
+participant "dialer" as dialer
+participant "fmt" as fmt
+participant "grpc" as grpc
+participant "http" as http
+participant "log" as log
+Caller -> File: GRPCDialer(...)
+activate File
+File -> credentials: NewTLS(...)
+File -> grpc: Dial(...)
+File -> grpc: WithContextDialer(...)
+File --> Caller: return
+deactivate File
+@enduml

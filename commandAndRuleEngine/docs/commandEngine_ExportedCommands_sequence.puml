@@ -1,0 +1,31 @@
+@startuml
+title Sequence Diagram - commandEngine_ExportedCommands.go
+actor Caller
+participant "commandEngine_ExportedCommands.go" as File
+participant "commandAndRuleEngine" as commandAndRuleEngine
+Caller -> File: DeleteElementFromTestCaseModel(...)
+activate File
+File -> commandAndRuleEngine: executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(...)
+File --> Caller: return
+deactivate File
+Caller -> File: InitiateCommandChannelReader(...)
+activate File
+File -> commandAndRuleEngine: startCommandChannelReader(...)
+File --> Caller: return
+deactivate File
+Caller -> File: NewTestCaseModel(...)
+activate File
+File -> commandAndRuleEngine: executeCommandOnTestCaseModel_NewTestCaseModel(...)
+File --> Caller: return
+deactivate File
+Caller -> File: SwapElementsInTestCaseModel(...)
+activate File
+File -> commandAndRuleEngine: executeCommandOnTestCaseModel_SwapOutElemenAndInNewElementInTestCaseModel(...)
+File --> Caller: return
+deactivate File
+Caller -> File: VerifyIfElementCanBeSwapped(...)
+activate File
+File -> commandAndRuleEngine: verifyIfElementCanBeSwapped(...)
+File --> Caller: return
+deactivate File
+@enduml

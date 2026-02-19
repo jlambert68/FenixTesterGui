@@ -1,0 +1,48 @@
+@startuml
+title Sequence Diagram - sortingheadertable.go
+actor Caller
+participant "sortingheadertable.go" as File
+participant "b" as b
+participant "b1" as b1
+participant "b2" as b2
+participant "container" as container
+participant "dataTable" as dataTable
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "l" as l
+Caller -> File: CreateRenderer(...)
+activate File
+File -> container: NewBorder(...)
+File -> container: NewVBox(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Destroy(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Layout(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MinSize(...)
+activate File
+File -> fyne: NewSize(...)
+File -> math: Max(...)
+File --> Caller: return
+deactivate File
+Caller -> File: NewSortingHeaderTable(...)
+activate File
+File -> b: GetItem(...)
+File -> b1: GetItem(...)
+File -> dataTable: Refresh(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Objects(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Refresh(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

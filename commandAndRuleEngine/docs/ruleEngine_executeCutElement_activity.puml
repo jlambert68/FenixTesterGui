@@ -1,0 +1,19 @@
+@startuml
+title Activity Diagram - ruleEngine_executeCutElement.go
+start
+:Load commandAndRuleEngine/ruleEngine_executeCutElement.go;
+:1. executeCutFullELementStructure [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. recursiveCuttingOfFullElementStructure [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+title Activity Diagram - updateTestCaseExecutionsList.go
+start
+:Load testCaseExecutions/listTestCaseExecutionsModel/updateTestCaseExecutionsList.go;
+:1. LoadTestCaseExecutionsThatCanBeViewedByUser;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Start goroutine/asynchronous work;
+:2. storeAllTestCaseExecutionsForOneTestCaseThatCanBeViewedByUser;
+:Iterate loop/range logic;
+:3. storeOneTestCaseExecutionPerTestCaseThatCanBeViewedByUser;
+:Iterate loop/range logic;
+stop
+@enduml

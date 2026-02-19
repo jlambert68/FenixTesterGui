@@ -1,0 +1,17 @@
+@startuml
+title Sequence Diagram - messageStreamEngine_PubSubMessage_Helpers.go
+actor Caller
+participant "messageStreamEngine_PubSubMessage_Helpers.go" as File
+Caller -> File: generatePubSubTopicNameForExecutionStatusUpdates(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: generatePubSubTopicSubscriptionNameForExecutionStatusUpdates(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: initiatePubSubFunctionality(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

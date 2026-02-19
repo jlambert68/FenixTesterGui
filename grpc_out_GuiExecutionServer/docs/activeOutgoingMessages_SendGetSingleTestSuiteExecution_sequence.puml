@@ -1,0 +1,18 @@
+@startuml
+title Sequence Diagram - activeOutgoingMessages_SendGetSingleTestSuiteExecution.go
+actor Caller
+participant "activeOutgoingMessages_SendGetSingleTestSuiteExecution.go" as File
+participant "context" as context
+participant "err" as err
+participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
+participant "fenixGuiExecutionServerGrpcClient" as fenixGuiExecutionServerGrpcClient
+participant "fmt" as fmt
+participant "grpcOut" as grpcOut
+Caller -> File: SendGetSingleTestSuiteExecution(...)
+activate File
+File -> context: Background(...)
+File -> context: WithTimeout(...)
+File -> err: Error(...)
+File --> Caller: return
+deactivate File
+@enduml

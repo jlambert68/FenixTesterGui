@@ -1,0 +1,33 @@
+@startuml
+title Activity Diagram - dragNdropStatemachine_draggableLabel.go
+start
+:Load testUIDragNDropStatemachine/dragNdropStatemachine_draggableLabel.go;
+:1. DragEnd [method on *DraggableLabel];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. Dragged [method on *DraggableLabel];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. MouseIn [method on *DraggableLabel];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. MouseMoved [method on *DraggableLabel];
+:5. MouseOut [method on *DraggableLabel];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:6. NewDraggableLabel [method on *StateMachineDragAndDropStruct];
+stop
+@enduml

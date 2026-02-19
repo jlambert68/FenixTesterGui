@@ -1,0 +1,25 @@
+@startuml
+title Activity Diagram - testCaseUI_graphicalRepresentation_tree.go
+start
+:Load testCase/testCaseUI/testCaseUI_graphicalRepresentation_tree.go;
+:1. convertRGBAHexStringIntoRGBAColor [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. makeTestCaseGraphicalUIObject [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. recursiveMakeTestCaseGraphicalUIObject [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

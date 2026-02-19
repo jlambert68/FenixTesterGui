@@ -1,0 +1,12 @@
+@startuml
+title Activity Diagram - ruleEngine_verifyCut.go
+start
+:Load commandAndRuleEngine/ruleEngine_verifyCut.go;
+:1. verifyIfComponentCanBeCutSimpleRules [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

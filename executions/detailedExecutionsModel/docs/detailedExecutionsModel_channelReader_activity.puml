@@ -1,0 +1,39 @@
+@startuml
+title Activity Diagram - detailedExecutionsModel_channelReader.go
+start
+:Load executions/detailedExecutionsModel/detailedExecutionsModel_channelReader.go;
+:1. InitiateCommandChannelReaderForDetailedStatusUpdates;
+:Start goroutine/asynchronous work;
+:2. startCommandChannelReaderForDetailedStatusUpdates [method on *DetailedExecutionsModelObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:3. triggerProcessFullDetailedExecutionsStatusUpdate [method on *DetailedExecutionsModelObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. triggerProcessRemoveDetailedTestCaseExecution [method on *DetailedExecutionsModelObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:5. triggerProcessRetrieveFullDetailedTestCaseExecution [method on *DetailedExecutionsModelObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:6. triggerProcessStatusUpdateOfDetailedExecutionsStatus [method on *DetailedExecutionsModelObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

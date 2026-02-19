@@ -1,0 +1,12 @@
+@startuml
+title Activity Diagram - testSuiteUI_GenerateLeftSideBuildTestSuite.go
+start
+:Load testSuites/testSuiteUI/testSuiteUI_GenerateLeftSideBuildTestSuite.go;
+:1. generateLeftSideBuildTestSuiteContainer [method on TestSuiteUiStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

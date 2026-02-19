@@ -1,0 +1,28 @@
+@startuml
+title Activity Diagram - AllTestCaseExecutionsForOneTestCaseMapFunctions.go
+start
+:Load testCaseExecutions/testCaseExecutionsModel/AllTestCaseExecutionsForOneTestCaseMapFunctions.go;
+:1. AddTestCaseExecutionsForOneTestCaseUuid;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:2. GetAllTestCaseExecutionsForOneTestCaseUuid [method on TestCaseExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:Schedule deferred cleanup;
+:3. GetSpecificTestCaseExecutionForOneTestCaseUuid [method on TestCaseExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+stop
+@enduml

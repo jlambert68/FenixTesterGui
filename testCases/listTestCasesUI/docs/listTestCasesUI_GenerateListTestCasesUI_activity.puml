@@ -1,0 +1,18 @@
+@startuml
+title Activity Diagram - listTestCasesUI_GenerateListTestCasesUI.go
+start
+:Load testCases/listTestCasesUI/listTestCasesUI_GenerateListTestCasesUI.go;
+:1. GenerateListTestCasesUI [method on *ListTestCaseUIStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. InitiateListTestCaseUIObject;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

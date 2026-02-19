@@ -1,0 +1,39 @@
+@startuml
+title Sequence Diagram - testCaseModel.go
+actor Caller
+participant "testCaseModel.go" as File
+participant "errors" as errors
+participant "fmt" as fmt
+participant "testCaseModel" as testCaseModel
+Caller -> File: findElementInSliceAndRemove(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: generateUINameForTestCaseElement(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: recursiveGraphicalTestCaseTreeModelExtractor(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> testCaseModel: recursiveGraphicalTestCaseTreeModelExtractor(...)
+File --> Caller: return
+deactivate File
+Caller -> File: recursiveTextualTestCaseModelExtractor(...)
+activate File
+File -> errors: New(...)
+File -> testCaseModel: recursiveTextualTestCaseModelExtractor(...)
+File --> Caller: return
+deactivate File
+Caller -> File: recursiveZombieElementSearchInTestCaseModel(...)
+activate File
+File -> errors: New(...)
+File -> testCaseModel: recursiveZombieElementSearchInTestCaseModel(...)
+File --> Caller: return
+deactivate File
+Caller -> File: reverseSliceOfNodeObjects(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

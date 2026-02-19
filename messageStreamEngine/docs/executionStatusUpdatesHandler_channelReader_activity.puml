@@ -1,0 +1,28 @@
+@startuml
+title Activity Diagram - executionStatusUpdatesHandler_channelReader.go
+start
+:Load messageStreamEngine/executionStatusUpdatesHandler_channelReader.go;
+:1. initiateOpenMessageStreamToGuiExecutionServer [method on *MessageStreamEngineStruct];
+:2. initiateOpenMessageStreamToGuiExecutionServerInXSeconds [method on *MessageStreamEngineStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Start goroutine/asynchronous work;
+:3. processTestExecutionStatusChange [method on *MessageStreamEngineStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:4. startCommandChannelReader [method on *MessageStreamEngineStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

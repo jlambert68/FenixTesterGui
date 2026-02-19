@@ -1,0 +1,15 @@
+@startuml
+title Sequence Diagram - listTestCasesUI_GenerateTestCaseMetaDataFilter_Main.go
+actor Caller
+participant "listTestCasesUI_GenerateTestCaseMetaDataFilter_Main.go" as File
+participant "container" as container
+participant "listTestCaseUIObject" as listTestCaseUIObject
+participant "widget" as widget
+Caller -> File: GenerateTestCaseMetaDataFilterContainer(...)
+activate File
+File -> container: NewAppTabs(...)
+File -> container: NewTabItem(...)
+File -> listTestCaseUIObject: generateSimpleTestCaseMetaDataFilterContainer(...)
+File --> Caller: return
+deactivate File
+@enduml

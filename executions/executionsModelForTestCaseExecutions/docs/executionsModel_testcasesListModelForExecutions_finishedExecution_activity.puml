@@ -1,0 +1,13 @@
+@startuml
+title Activity Diagram - executionsModel_testcasesListModelForExecutions_finishedExecution.go
+start
+:Load executions/executionsModelForTestCaseExecutions/executionsModel_testcasesListModelForExecutions_finishedExecution.go;
+:1. LoadAndCreateModelForTestCaseWithFinishedExecutions [method on *ExecutionsModelObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

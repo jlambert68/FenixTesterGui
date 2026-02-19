@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - testSuiteUI_GenerateRightSideBuildTestSuite.go
+start
+:Load testSuites/testSuiteUI/testSuiteUI_GenerateRightSideBuildTestSuite.go;
+:1. generateRightSideBuildTestSuiteContainer;
+stop
+@enduml

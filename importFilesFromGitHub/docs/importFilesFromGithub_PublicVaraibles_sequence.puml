@@ -1,0 +1,7 @@
+@startuml
+title Sequence Diagram - importFilesFromGithub_PublicVaraibles.go
+actor Caller
+participant "importFilesFromGithub_PublicVaraibles.go" as File
+Caller -> File: (no callable functions detected)
+File --> Caller: return
+@enduml

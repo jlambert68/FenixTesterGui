@@ -1,0 +1,18 @@
+@startuml
+title Sequence Diagram - testSuiteUI_lockOwnerDomainAndTestEnvironmen.go
+actor Caller
+participant "testSuiteUI_lockOwnerDomainAndTestEnvironmen.go" as File
+participant "container" as container
+participant "dialog" as dialog
+participant "layout" as layout
+participant "lockButton" as lockButton
+participant "testSuiteUiModel" as testSuiteUiModel
+participant "widget" as widget
+Caller -> File: generateLockOwnerDomainAndTestEnvironmentAreaContainer(...)
+activate File
+File -> container: NewHBox(...)
+File -> container: NewVBox(...)
+File -> dialog: ShowCustomConfirm(...)
+File --> Caller: return
+deactivate File
+@enduml

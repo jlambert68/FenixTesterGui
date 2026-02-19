@@ -1,0 +1,20 @@
+@startuml
+title Sequence Diagram - testCaseUI_graphicalRepresentation_testCaseName.go
+actor Caller
+participant "testCaseUI_graphicalRepresentation_testCaseName.go" as File
+participant "container" as container
+participant "errors" as errors
+participant "fmt" as fmt
+participant "layout" as layout
+participant "newTestCaseNameEntry" as newTestCaseNameEntry
+participant "strings" as strings
+participant "testCaseNameFormContainer" as testCaseNameFormContainer
+participant "widget" as widget
+Caller -> File: generateTestCaseNameArea(...)
+activate File
+File -> container: New(...)
+File -> container: NewVBox(...)
+File -> errors: New(...)
+File --> Caller: return
+deactivate File
+@enduml

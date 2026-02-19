@@ -1,0 +1,14 @@
+@startuml
+title Activity Diagram - testCasesUI_Mandatory_CheckBoxGroup_Renderer.go
+start
+:Load testCases/listTestCasesUI/testCasesUI_Mandatory_CheckBoxGroup_Renderer.go;
+:1. BackgroundColor [method on *customMandatoryCheckBoxGroupRenderer];
+:2. CreateRenderer [method on *customMandatoryCheckBoxGroup];
+:3. Destroy [method on *customMandatoryCheckBoxGroupRenderer];
+:4. Layout [method on *customMandatoryCheckBoxGroupRenderer];
+:5. MinSize [method on *customMandatoryCheckBoxGroupRenderer];
+:6. Objects [method on *customMandatoryCheckBoxGroupRenderer];
+:7. Refresh [method on *customMandatoryCheckBoxGroupRenderer];
+:8. newCustomMandatoryCheckBoxGroupWidget;
+stop
+@enduml

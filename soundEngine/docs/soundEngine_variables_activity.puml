@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - soundEngine_variables.go
+start
+:Load soundEngine/soundEngine_variables.go;
+:No functions declared in this file;
+stop
+@enduml

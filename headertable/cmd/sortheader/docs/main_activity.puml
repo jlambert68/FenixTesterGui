@@ -1,0 +1,8 @@
+@startuml
+title Activity Diagram - main.go
+start
+:Load headertable/cmd/sortheader/main.go;
+:1. main;
+:Iterate loop/range logic;
+stop
+@enduml

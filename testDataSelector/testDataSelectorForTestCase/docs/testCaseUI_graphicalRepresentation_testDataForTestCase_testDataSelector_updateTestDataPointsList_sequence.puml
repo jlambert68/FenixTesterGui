@@ -1,0 +1,11 @@
+@startuml
+title Sequence Diagram - testCaseUI_graphicalRepresentation_testDataForTestCase_testDataSelector_updateTestDataPointsList.go
+actor Caller
+participant "testCaseUI_graphicalRepresentation_testDataForTestCase_testDataSelector_updateTestDataPointsList.go" as File
+participant "testDataPointsForAGroupList" as testDataPointsForAGroupList
+Caller -> File: updateTestDataPointsForAGroupList(...)
+activate File
+File -> testDataPointsForAGroupList: Refresh(...)
+File --> Caller: return
+deactivate File
+@enduml

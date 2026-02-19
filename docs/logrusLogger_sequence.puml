@@ -1,0 +1,15 @@
+@startuml
+title Sequence Diagram - logrusLogger.go
+actor Caller
+participant "logrusLogger.go" as File
+participant "log" as log
+participant "logrus" as logrus
+participant "os" as os
+Caller -> File: InitLogger(...)
+activate File
+File -> log: Println(...)
+File -> logrus: SetFormatter(...)
+File -> logrus: SetLevel(...)
+File --> Caller: return
+deactivate File
+@enduml

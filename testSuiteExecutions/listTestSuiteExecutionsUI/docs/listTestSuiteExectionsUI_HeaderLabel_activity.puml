@@ -1,0 +1,9 @@
+@startuml
+title Activity Diagram - listTestSuiteExectionsUI_HeaderLabel.go
+start
+:Load testSuiteExecutions/listTestSuiteExecutionsUI/listTestSuiteExectionsUI_HeaderLabel.go;
+:1. CreateRenderer [method on *sortableHeaderLabelStruct];
+:2. Refresh [method on *sortableHeaderLabelStruct];
+:3. newSortableHeaderLabel;
+stop
+@enduml

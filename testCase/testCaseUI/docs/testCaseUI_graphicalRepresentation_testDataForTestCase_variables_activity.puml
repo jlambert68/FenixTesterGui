@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - testCaseUI_graphicalRepresentation_testDataForTestCase_variables.go
+start
+:Load testCase/testCaseUI/testCaseUI_graphicalRepresentation_testDataForTestCase_variables.go;
+:No functions declared in this file;
+stop
+@enduml

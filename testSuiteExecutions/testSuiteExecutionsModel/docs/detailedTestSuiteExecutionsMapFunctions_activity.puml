@@ -1,0 +1,48 @@
+@startuml
+title Activity Diagram - detailedTestSuiteExecutionsMapFunctions.go
+start
+:Load testSuiteExecutions/testSuiteExecutionsModel/detailedTestSuiteExecutionsMapFunctions.go;
+:1. AddToDetailedTestSuiteExecutionsMap [method on TestSuiteExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:2. ClearFlagRefreshOngoingOfDetailedTestSuiteExecution [method on TestSuiteExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:3. DeleteFromDetailedTestSuiteExecutionsMap [method on TestSuiteExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:4. GetNumberOfDetailedTestSuiteExecutionsRetrievedFromDatabase [method on TestSuiteExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:5. ReadFromDetailedTestSuiteExecutionsMap [method on TestSuiteExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:6. SetFlagRefreshOngoingOfDetailedTestSuiteExecution [method on TestSuiteExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+stop
+@enduml

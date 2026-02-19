@@ -1,0 +1,15 @@
+@startuml
+title Sequence Diagram - detailedExecutionsModel_processFullDetailedTestCaseExecutionsStatusUpdate.go
+actor Caller
+participant "detailedExecutionsModel_processFullDetailedTestCaseExecutionsStatusUpdate.go" as File
+participant "detailedExecutionsModelObject" as detailedExecutionsModelObject
+participant "strconv" as strconv
+participant "time" as time
+Caller -> File: processFullDetailedTestCaseExecutionsStatusUpdate(...)
+activate File
+File -> detailedExecutionsModelObject: updateTestCaseExecutionsSummaryTable(...)
+File -> detailedExecutionsModelObject: updateTestInstructionExecutionsSummaryTable(...)
+File -> strconv: Itoa(...)
+File --> Caller: return
+deactivate File
+@enduml

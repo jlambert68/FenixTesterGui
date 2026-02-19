@@ -1,0 +1,33 @@
+@startuml
+title Sequence Diagram - transparentPreviewOverlay.go
+actor Caller
+participant "transparentPreviewOverlay.go" as File
+participant "canvas" as canvas
+participant "h" as h
+participant "widget" as widget
+Caller -> File: CreateRenderer(...)
+activate File
+File -> widget: NewSimpleRenderer(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseIn(...)
+activate File
+File -> h: OnMouseIn(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseMoved(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MouseOut(...)
+activate File
+File -> h: OnMouseOut(...)
+File --> Caller: return
+deactivate File
+Caller -> File: NewHoverableRect(...)
+activate File
+File -> canvas: NewRectangle(...)
+File -> h: ExtendBaseWidget(...)
+File --> Caller: return
+deactivate File
+@enduml

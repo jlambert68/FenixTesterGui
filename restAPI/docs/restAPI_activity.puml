@@ -1,0 +1,47 @@
+@startuml
+title Activity Diagram - restAPI.go
+start
+:Load restAPI/restAPI.go;
+:1. HealthCheck [method on *RestApiStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:2. RestAPIServer [method on *RestApiStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. RestSendAreYouAliveToFenixGuiBuilderServer [method on *RestApiStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:4. RestSendGetInstructionsAndTestInstructionContainersToFenixGuiBuilderServer [method on *RestApiStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:5. RestSendGetPinnedInstructionsAndTestInstructionContainersToFenixGuiBuilderServer [method on *RestApiStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:6. RestSendSavePinnedInstructionsAndTestInstructionContainersToFenixGuiBuilderServer [method on *RestApiStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+stop
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+title Activity Diagram - activeOutgoingMessages_SendListTestCaseAndTestSuiteMetaData.go
+start
+:Load grpc_out_GuiTestCaseBuilderServer/activeOutgoingMessages_SendListTestCaseAndTestSuiteMetaData.go;
+:1. SendListTestCaseAndTestSuiteMetaData [method on *GRPCOutGuiTestCaseBuilderServerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+stop
+@enduml

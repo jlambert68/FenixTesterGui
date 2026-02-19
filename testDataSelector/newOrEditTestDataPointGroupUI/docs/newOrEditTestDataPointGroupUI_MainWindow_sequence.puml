@@ -1,0 +1,18 @@
+@startuml
+title Sequence Diagram - newOrEditTestDataPointGroupUI_MainWindow.go
+actor Caller
+participant "newOrEditTestDataPointGroupUI_MainWindow.go" as File
+participant "app" as app
+participant "container" as container
+participant "fyne" as fyne
+participant "newOrEditTestDataPointGroupWindow" as newOrEditTestDataPointGroupWindow
+participant "parent" as parent
+participant "widget" as widget
+Caller -> File: ShowNewOrEditGroupWindow(...)
+activate File
+File -> app: NewWindow(...)
+File -> container: NewBorder(...)
+File -> container: NewHSplit(...)
+File --> Caller: return
+deactivate File
+@enduml

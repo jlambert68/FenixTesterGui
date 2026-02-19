@@ -1,0 +1,14 @@
+@startuml
+title Activity Diagram - ruleEngine_swap_test.go
+start
+:Load commandAndRuleEngine/ruleEngine_swap_test.go;
+:1. TestTCRuleSwap101;
+:2. TestTCRuleSwap102;
+:3. TestTCRuleSwap103;
+:4. TestTCRuleSwap104;
+:5. TestTCRuleSwap105;
+:6. TestTCRuleSwap106;
+:7. TestTCRuleSwap107;
+:8. TestTCRuleSwap108;
+stop
+@enduml

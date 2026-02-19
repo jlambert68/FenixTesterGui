@@ -1,0 +1,58 @@
+# restApiHelpers.go
+
+## File Overview
+- Path: `restAPI/restApiHelpers.go`
+- Package: `restAPI`
+- Generated: `2026-02-19T14:23:17+01:00`
+- Functions/Methods: `3`
+- Imports: `9`
+
+## File Purpose
+No concise file-level comment detected. Purpose inferred from declarations below.
+
+## Potential Entry Points
+- `SetDialAddressString`
+- `SetLogger`
+
+## Imports
+- `encoding/json`
+- `errors`
+- `fmt`
+- `github.com/golang/gddo/httputil/header`
+- `github.com/sirupsen/logrus`
+- `io`
+- `log`
+- `net/http`
+- `strings`
+
+## Declared Types
+- None
+
+## Declared Constants
+- None
+
+## Declared Variables
+- None
+
+## Functions and Methods
+### SetDialAddressString (method on `*RestApiStruct`)
+- Signature: `func (*RestApiStruct) SetDialAddressString(dialAddress string)`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Doc: ******************************************************************************** SetDialAddressString
+
+### SetLogger (method on `*RestApiStruct`)
+- Signature: `func (*RestApiStruct) SetLogger(logger *logrus.Logger)`
+- Exported: `true`
+- Control-flow features: `none detected`
+- Doc: ******************************************************************************** SetLogger
+
+### extractAndValidateJsonBody
+- Signature: `func extractAndValidateJsonBody(responseWriterPointer *http.ResponseWriter, httpRequest *http.Request, myInputTypeVariable interface{}) err error`
+- Exported: `false`
+- Control-flow features: `if, switch, returns error`
+- Doc: ******************************************************************************** extractAndValidateJsonBody
+- External calls: `dec.Decode`, `dec.DisallowUnknownFields`, `err.Error`, `errors.As`, `errors.Is`, `fmt.Sprintf`, `header.ParseValueAndParams`, `http.Error`
+
+## Behavioral Summary
+This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

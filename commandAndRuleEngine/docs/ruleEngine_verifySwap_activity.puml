@@ -1,0 +1,51 @@
+@startuml
+title Activity Diagram - ruleEngine_verifySwap.go
+start
+:Load commandAndRuleEngine/ruleEngine_verifySwap.go;
+:1. FindElementInSliceAndRemove;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. recursiveVerifyAllUuidOfChildElements [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. recursiveZombieElementSearchInComponentModel [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. verifyIfComponentCanBeSwappedSimpleRules [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:5. verifyIfComponentCanBeSwappedWithComplexRules [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:6. verifyThatAllUuidsAreCorrectInComponent [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:7. verifyThatThereAreNoZombieElementsInComponent [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

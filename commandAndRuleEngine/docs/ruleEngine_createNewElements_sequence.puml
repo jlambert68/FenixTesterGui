@@ -1,0 +1,56 @@
+@startuml
+title Sequence Diagram - ruleEngine_createNewElements.go
+actor Caller
+participant "ruleEngine_createNewElements.go" as File
+participant "uuidGenerator" as uuidGenerator
+Caller -> File: createNewBondB0Element(...)
+activate File
+File -> uuidGenerator: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: createNewBondB10Element(...)
+activate File
+File -> uuidGenerator: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: createNewBondB10oxElement(...)
+activate File
+File -> uuidGenerator: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: createNewBondB10oxoElement(...)
+activate File
+File -> uuidGenerator: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: createNewBondB10xoElement(...)
+activate File
+File -> uuidGenerator: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: createNewBondB11fElement(...)
+activate File
+File -> uuidGenerator: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: createNewBondB11fxElement(...)
+activate File
+File -> uuidGenerator: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: createNewBondB11lElement(...)
+activate File
+File -> uuidGenerator: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: createNewBondB11lxElement(...)
+activate File
+File -> uuidGenerator: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: createNewBondB12Element(...)
+activate File
+File -> uuidGenerator: New(...)
+File --> Caller: return
+deactivate File
+@enduml

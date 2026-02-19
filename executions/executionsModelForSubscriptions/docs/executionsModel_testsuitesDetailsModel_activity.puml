@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - executionsModel_testsuitesDetailsModel.go
+start
+:Load executions/executionsModelForSubscriptions/executionsModel_testsuitesDetailsModel.go;
+:No functions declared in this file;
+stop
+@enduml

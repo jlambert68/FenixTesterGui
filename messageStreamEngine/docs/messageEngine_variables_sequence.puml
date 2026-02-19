@@ -1,0 +1,7 @@
+@startuml
+title Sequence Diagram - messageEngine_variables.go
+actor Caller
+participant "messageEngine_variables.go" as File
+Caller -> File: (no callable functions detected)
+File --> Caller: return
+@enduml

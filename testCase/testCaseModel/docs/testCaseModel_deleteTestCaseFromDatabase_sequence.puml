@@ -1,0 +1,15 @@
+@startuml
+title Sequence Diagram - testCaseModel_deleteTestCaseFromDatabase.go
+actor Caller
+participant "testCaseModel_deleteTestCaseFromDatabase.go" as File
+participant "errors" as errors
+participant "fmt" as fmt
+participant "testCaseModel" as testCaseModel
+Caller -> File: DeleteTestCaseAtThisDate(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Println(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+@enduml

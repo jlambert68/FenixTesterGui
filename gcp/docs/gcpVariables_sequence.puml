@@ -1,0 +1,7 @@
+@startuml
+title Sequence Diagram - gcpVariables.go
+actor Caller
+participant "gcpVariables.go" as File
+Caller -> File: (no callable functions detected)
+File --> Caller: return
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+title Sequence Diagram - messageStreamEngine_CreatePubSubClient.go
+actor Caller
+participant "messageStreamEngine_CreatePubSubClient.go" as File
+participant "credentials" as credentials
+participant "errors" as errors
+participant "grpc" as grpc
+participant "option" as option
+participant "pubsub" as pubsub
+Caller -> File: creatNewPubSubClient(...)
+activate File
+File -> credentials: NewTLS(...)
+File -> errors: New(...)
+File -> grpc: WithTransportCredentials(...)
+File --> Caller: return
+deactivate File
+@enduml

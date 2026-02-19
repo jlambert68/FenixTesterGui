@@ -1,0 +1,13 @@
+@startuml
+title Activity Diagram - testSuitesTabsUI_GenerateNewTestSuiteTab.go
+start
+:Load testSuites/testSuitesTabsUI/testSuitesTabsUI_GenerateNewTestSuiteTab.go;
+:1. GenerateNewTestSuiteTab;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Start goroutine/asynchronous work;
+stop
+@enduml

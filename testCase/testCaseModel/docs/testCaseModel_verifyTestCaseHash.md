@@ -1,0 +1,55 @@
+# testCaseModel_verifyTestCaseHash.go
+
+## File Overview
+- Path: `testCase/testCaseModel/testCaseModel_verifyTestCaseHash.go`
+- Package: `testCaseModel`
+- Generated: `2026-02-19T14:23:17+01:00`
+- Functions/Methods: `3`
+- Imports: `3`
+
+## File Purpose
+No concise file-level comment detected. Purpose inferred from declarations below.
+
+## Potential Entry Points
+- `TestCaseHashIsChangedSinceLoadedOrSaved`
+- `VerifyLatestLoadedOrSavedTestCaseHashTowardsDatabase`
+- `VerifyTestCaseHashTowardsDatabase`
+
+## Imports
+- `errors`
+- `fmt`
+- `github.com/jlambert68/FenixGrpcApi/FenixTestCaseBuilderServer/fenixTestCaseBuilderServerGrpcApi/go_grpc_api`
+
+## Declared Types
+- None
+
+## Declared Constants
+- None
+
+## Declared Variables
+- None
+
+## Functions and Methods
+### TestCaseHashIsChangedSinceLoadedOrSaved (method on `*TestCasesModelsStruct`)
+- Signature: `func (*TestCasesModelsStruct) TestCaseHashIsChangedSinceLoadedOrSaved(testCaseUuid string) (hashIsChanged bool, err error)`
+- Exported: `true`
+- Control-flow features: `if, returns error`
+- Doc: TestCaseHashIsChangedSinceLoadedOrSaved - Verify if the Hash for the TestCase is the same as the one when TestCasesMapPtr was last Loaded or Saved
+- External calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`, `testCaseModel.generateTestCaseForGrpcAndHash`
+
+### VerifyLatestLoadedOrSavedTestCaseHashTowardsDatabase (method on `*TestCasesModelsStruct`)
+- Signature: `func (*TestCasesModelsStruct) VerifyLatestLoadedOrSavedTestCaseHashTowardsDatabase(testCaseUuid string) (hashIsTheSame bool, err error)`
+- Exported: `true`
+- Control-flow features: `if, returns error`
+- Doc: VerifyLatestLoadedOrSavedTestCaseHashTowardsDatabase - Verify if the latest Loaded or Saved Hash for the TestCase is the same as the one in the database
+- External calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`
+
+### VerifyTestCaseHashTowardsDatabase (method on `*TestCasesModelsStruct`)
+- Signature: `func (*TestCasesModelsStruct) VerifyTestCaseHashTowardsDatabase(testCaseUuid string) (hashIsTheSame bool, err error)`
+- Exported: `true`
+- Control-flow features: `if, returns error`
+- Doc: VerifyTestCaseHashTowardsDatabase - Verify if the Hash for the TestCase is the same as the one in the database
+- External calls: `errors.New`, `fmt.Println`, `fmt.Sprintf`, `testCaseModel.generateTestCaseForGrpcAndHash`
+
+## Behavioral Summary
+This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

@@ -1,0 +1,26 @@
+@startuml
+title Sequence Diagram - newOrEditTestDataPointGroupUI_TestDataFiltersComponent.go
+actor Caller
+participant "newOrEditTestDataPointGroupUI_TestDataFiltersComponent.go" as File
+participant "allAvailablePointsList" as allAvailablePointsList
+participant "container" as container
+participant "domainsSelect" as domainsSelect
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "sort" as sort
+participant "strings" as strings
+participant "tempTestDataValuesSelectionContainer" as tempTestDataValuesSelectionContainer
+Caller -> File: generateTestDataSelectionsUIComponent(...)
+activate File
+File -> allAvailablePointsList: Refresh(...)
+File -> container: NewBorder(...)
+File -> container: NewHBox(...)
+File --> Caller: return
+deactivate File
+Caller -> File: sortDataPointsList(...)
+activate File
+File -> sort: Slice(...)
+File -> strings: Split(...)
+File --> Caller: return
+deactivate File
+@enduml

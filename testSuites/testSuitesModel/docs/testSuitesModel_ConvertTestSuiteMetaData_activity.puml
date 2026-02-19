@@ -1,0 +1,13 @@
+@startuml
+title Activity Diagram - testSuitesModel_ConvertTestSuiteMetaData.go
+start
+:Load testSuites/testSuitesModel/testSuitesModel_ConvertTestSuiteMetaData.go;
+:1. ConvertTestSuiteMetaData;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

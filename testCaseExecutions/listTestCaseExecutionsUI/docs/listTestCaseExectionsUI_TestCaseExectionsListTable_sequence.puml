@@ -1,0 +1,27 @@
+@startuml
+title Sequence Diagram - listTestCaseExectionsUI_TestCaseExectionsListTable.go
+actor Caller
+participant "listTestCaseExectionsUI_TestCaseExectionsListTable.go" as File
+participant "alt" as alt
+participant "bytes" as bytes
+participant "canvas" as canvas
+participant "cont" as cont
+participant "container" as container
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "h" as h
+Caller -> File: RemoveTestCaseExecutionFromList(...)
+activate File
+File -> testCaseExecutionsModel: TestCaseExecutionUuidType(...)
+File -> testCaseExecutionsModelRef: DeleteFromTestCaseExecutionsMap(...)
+File --> Caller: return
+deactivate File
+Caller -> File: SortGuiTableOnCurrentColumnAndSorting(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: SortOrReverseSortGuiTable(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

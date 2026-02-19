@@ -1,0 +1,19 @@
+@startuml
+title Sequence Diagram - gRPCInHelpers.go
+actor Caller
+participant "gRPCInHelpers.go" as File
+participant "fenixUserGuiGrpcApi" as fenixUserGuiGrpcApi
+participant "protoFileExpected" as protoFileExpected
+participant "protoFileUsed" as protoFileUsed
+Caller -> File: IsClientUsingCorrectTestDataProtoFileVersion(...)
+activate File
+File -> fenixUserGuiGrpcApi: CurrentFenixUserGuiProtoFileVersionEnum(...)
+File -> protoFileExpected: String(...)
+File -> protoFileUsed: String(...)
+File --> Caller: return
+deactivate File
+Caller -> File: SetLogger(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

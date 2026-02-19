@@ -1,0 +1,21 @@
+@startuml
+title Activity Diagram - testSuitesModel_IsTestSuiteChanged.go
+start
+:Load testSuites/testSuitesModel/testSuitesModel_IsTestSuiteChanged.go;
+:1. IsTestSuiteChanged [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. generateTesSuiteMetaDataHash [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:3. generateTesSuiteTestDataHash [method on *TestSuiteModelStruct];
+:Iterate loop/range logic;
+stop
+@enduml

@@ -1,0 +1,38 @@
+@startuml
+title Sequence Diagram - importFilesFromGithub_FilteredFilesList.go
+actor Caller
+participant "importFilesFromGithub_FilteredFilesList.go" as File
+participant "combinedRegex" as combinedRegex
+participant "dialog" as dialog
+participant "importFilesFromGitHubObject" as importFilesFromGitHubObject
+participant "l" as l
+participant "label" as label
+participant "log" as log
+participant "now" as now
+participant "regexp" as regexp
+Caller -> File: MouseIn(...)
+activate File
+File -> l: Refresh(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseMoved(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MouseOut(...)
+activate File
+File -> l: Refresh(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Tapped(...)
+activate File
+File -> l: onDoubleTap(...)
+File -> now: Sub(...)
+File -> time: Now(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TappedSecondary(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

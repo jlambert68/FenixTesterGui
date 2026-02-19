@@ -1,0 +1,20 @@
+@startuml
+title Activity Diagram - template_Initiate.go
+start
+:Load testCase/testCaseUI/templateViewer/template_Initiate.go;
+:1. InitiateTemplateViewer;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. getTextFromRichText;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

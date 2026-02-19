@@ -1,0 +1,19 @@
+@startuml
+title Activity Diagram - newOrEditTestDataPointGroupUI_MainWindow.go
+start
+:Load testDataSelector/newOrEditTestDataPointGroupUI/newOrEditTestDataPointGroupUI_MainWindow.go;
+:1. ShowNewOrEditGroupWindow;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. testDataPointIntersectionOfTwoSlices;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

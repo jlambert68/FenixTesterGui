@@ -1,0 +1,11 @@
+@startuml
+title Sequence Diagram - testCaseExecutionUI_testCaseLExecutionsList_mainPage.go
+actor Caller
+participant "testCaseExecutionUI_testCaseLExecutionsList_mainPage.go" as File
+participant "executionsListTabPage" as executionsListTabPage
+Caller -> File: CreateExecutionsListTabPageForSubsacriptions(...)
+activate File
+File -> executionsListTabPage: Refresh(...)
+File --> Caller: return
+deactivate File
+@enduml

@@ -1,0 +1,71 @@
+@startuml
+title Activity Diagram - testSuitesModel_LoadTestSuite.go
+start
+:Load testSuites/testSuitesModel/testSuitesModel_LoadTestSuite.go;
+:1. LoadFullTestSuiteFromDatabase [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. extractTestSuiteImplementedFunctionsMap [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:3. generateTestCasesInTestSuiteMessageWhenLoading [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:4. generateTestSuiteBasicInformationMessageWhenLoading [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:5. generateTestSuiteDeleteDateMessageWhenLoading [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:6. generateTestSuiteImplementedFunctionsMapWhenLoading [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:7. generateTestSuiteMetaDataMessageWhenLoading [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:8. generateTestSuitePreviewMessageWhenLoading [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:9. generateTestSuiteTestDataMessageWhenLoading [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:10. generateTestSuiteTypeMessageWhenLoading [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

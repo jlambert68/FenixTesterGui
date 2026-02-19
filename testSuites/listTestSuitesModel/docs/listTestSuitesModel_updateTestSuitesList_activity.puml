@@ -1,0 +1,19 @@
+@startuml
+title Activity Diagram - listTestSuitesModel_updateTestSuitesList.go
+start
+:Load testSuites/listTestSuitesModel/listTestSuitesModel_updateTestSuitesList.go;
+:1. LoadtestSuiteThatCanBeEditedByUser;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. storeTestSuiteThatCanBeEditedByUser;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

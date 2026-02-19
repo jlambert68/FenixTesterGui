@@ -1,0 +1,8 @@
+@startuml
+title Activity Diagram - generateTestSuiteExecutionPreview.go
+start
+:Load testSuiteExecutions/listTestSuiteExecutionsUI/generateTestSuiteExecutionPreview.go;
+:1. ClearTestSuiteExecutionPreviewContainer [method on *TestSuiteInstructionPreViewStruct];
+:2. GenerateTestSuiteExecutionPreviewContainer [method on *TestSuiteInstructionPreViewStruct];
+stop
+@enduml

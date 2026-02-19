@@ -1,0 +1,7 @@
+@startuml
+title Sequence Diagram - template_Viewer_variables.go
+actor Caller
+participant "template_Viewer_variables.go" as File
+Caller -> File: (no callable functions detected)
+File --> Caller: return
+@enduml

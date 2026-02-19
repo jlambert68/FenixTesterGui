@@ -1,0 +1,72 @@
+@startuml
+title Sequence Diagram - commandEngineChannelReader.go
+actor Caller
+participant "commandEngineChannelReader.go" as File
+participant "backgroundColorRectangle" as backgroundColorRectangle
+participant "canvas" as canvas
+participant "commandAndRuleEngine" as commandAndRuleEngine
+participant "container" as container
+participant "detailedExecutionsModel" as detailedExecutionsModel
+participant "dialog" as dialog
+participant "dropZoneButton" as dropZoneButton
+participant "dropZoneButtonContainer3" as dropZoneButtonContainer3
+Caller -> File: channelCommandChangeActiveTestCase(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Println(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: channelCommandCloseOpenTestCaseWithOutSaving(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: channelCommandCreateNewTestCase(...)
+activate File
+File -> commandAndRuleEngine: NewTestCaseModel(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+Caller -> File: channelCommandExecuteTestCase(...)
+activate File
+File -> detailedExecutionsModel: RetrieveSingleTestCaseExecution(...)
+File -> dialog: NewConfirm(...)
+File -> errors: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: channelCommandOpenTestCase(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Println(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: channelCommandRemove(...)
+activate File
+File -> commandAndRuleEngine: DeleteElementFromTestCaseModel(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+Caller -> File: channelCommandRemoveTestCaseWithOutSaving(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: channelCommandSaveTestCase(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Println(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: channelCommandSwap(...)
+activate File
+File -> backgroundColorRectangle: SetMinSize(...)
+File -> canvas: NewRectangle(...)
+File -> commandAndRuleEngine: SwapElementsInTestCaseModel(...)
+File --> Caller: return
+deactivate File
+Caller -> File: convertGrpcElementModelIntoTestCaseElementModel(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

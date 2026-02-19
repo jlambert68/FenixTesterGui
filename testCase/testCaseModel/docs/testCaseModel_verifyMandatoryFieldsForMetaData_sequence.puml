@@ -1,0 +1,21 @@
+@startuml
+title Sequence Diagram - testCaseModel_verifyMandatoryFieldsForMetaData.go
+actor Caller
+participant "testCaseModel_verifyMandatoryFieldsForMetaData.go" as File
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "log" as log
+participant "testCaseModel" as testCaseModel
+Caller -> File: generateMandatoryMetaDataFieldsMap(...)
+activate File
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: verifyMandatoryFieldsForMetaData(...)
+activate File
+File -> fmt: Errorf(...)
+File -> fmt: Sprintf(...)
+File -> fyne: CurrentApp(...)
+File --> Caller: return
+deactivate File
+@enduml

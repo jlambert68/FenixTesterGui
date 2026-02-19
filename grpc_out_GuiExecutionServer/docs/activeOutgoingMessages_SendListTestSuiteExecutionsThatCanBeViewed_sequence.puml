@@ -1,0 +1,18 @@
+@startuml
+title Sequence Diagram - activeOutgoingMessages_SendListTestSuiteExecutionsThatCanBeViewed.go
+actor Caller
+participant "activeOutgoingMessages_SendListTestSuiteExecutionsThatCanBeViewed.go" as File
+participant "context" as context
+participant "err" as err
+participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
+participant "fenixGuiExecutionServerGrpcClient" as fenixGuiExecutionServerGrpcClient
+participant "grpcOut" as grpcOut
+participant "timestamppb" as timestamppb
+Caller -> File: SendListTestSuiteExecutionsThatCanBeViewed(...)
+activate File
+File -> context: Background(...)
+File -> context: WithTimeout(...)
+File -> err: Error(...)
+File --> Caller: return
+deactivate File
+@enduml

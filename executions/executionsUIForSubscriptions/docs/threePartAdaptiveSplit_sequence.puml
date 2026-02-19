@@ -1,0 +1,14 @@
+@startuml
+title Sequence Diagram - threePartAdaptiveSplit.go
+actor Caller
+participant "threePartAdaptiveSplit.go" as File
+participant "container" as container
+Caller -> File: Layout(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MinSize(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

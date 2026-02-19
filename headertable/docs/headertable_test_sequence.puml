@@ -1,0 +1,43 @@
+@startuml
+title Sequence Diagram - headertable_test.go
+actor Caller
+participant "headertable_test.go" as File
+participant "assert" as assert
+participant "binding" as binding
+participant "test" as test
+Caller -> File: TestHeaderTable(...)
+activate File
+File -> assert: Equal(...)
+File -> binding: BindStruct(...)
+File -> test: NewApp(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestHeaderTable_CreateRenderer(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: TestNewHeaderTable(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Test_headerTableRenderer_Destroy(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Test_headerTableRenderer_Layout(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Test_headerTableRenderer_MinSize(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Test_headerTableRenderer_Objects(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Test_headerTableRenderer_Refresh(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

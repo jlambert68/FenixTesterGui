@@ -1,0 +1,41 @@
+@startuml
+title Sequence Diagram - listTestSuitesUI_TableLabel.go
+actor Caller
+participant "listTestSuitesUI_TableLabel.go" as File
+participant "canvas" as canvas
+participant "clipboard" as clipboard
+participant "fenixMasterWindow" as fenixMasterWindow
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "l" as l
+participant "theme" as theme
+participant "time" as time
+Caller -> File: MouseIn(...)
+activate File
+File -> l: Refresh(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseMoved(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MouseOut(...)
+activate File
+File -> l: Refresh(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Tapped(...)
+activate File
+File -> l: onDoubleTap(...)
+File -> time: Now(...)
+File -> time: Since(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TappedSecondary(...)
+activate File
+File -> clipboard: SetContent(...)
+File -> fenixMasterWindow: Clipboard(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+title Activity Diagram - detailedExecutionsModel_updateTestCaseExecutionsSummaryTable.go
+start
+:Load executions/detailedExecutionsModel/detailedExecutionsModel_updateTestCaseExecutionsSummaryTable.go;
+:1. updateTestCaseExecutionsSummaryTable [method on *DetailedExecutionsModelObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:Schedule deferred cleanup;
+stop
+@enduml

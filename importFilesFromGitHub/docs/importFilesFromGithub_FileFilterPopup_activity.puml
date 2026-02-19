@@ -1,0 +1,13 @@
+@startuml
+title Activity Diagram - importFilesFromGithub_FileFilterPopup.go
+start
+:Load importFilesFromGitHub/importFilesFromGithub_FileFilterPopup.go;
+:1. generateFileFilterPopup [method on *ImportFilesFromGitHubStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

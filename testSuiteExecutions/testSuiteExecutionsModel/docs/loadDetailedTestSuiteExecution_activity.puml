@@ -1,0 +1,13 @@
+@startuml
+title Activity Diagram - loadDetailedTestSuiteExecution.go
+start
+:Load testSuiteExecutions/testSuiteExecutionsModel/loadDetailedTestSuiteExecution.go;
+:1. LoadDetailedTestSuiteExecutionFromDatabase;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+stop
+@enduml

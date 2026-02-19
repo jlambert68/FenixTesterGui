@@ -1,0 +1,12 @@
+@startuml
+title Activity Diagram - messageStreamEngine_CreatePubSubClient.go
+start
+:Load messageStreamEngine/messageStreamEngine_CreatePubSubClient.go;
+:1. creatNewPubSubClient;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

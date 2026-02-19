@@ -1,0 +1,54 @@
+@startuml
+title Sequence Diagram - sortlabel.go
+actor Caller
+participant "sortlabel.go" as File
+participant "container" as container
+participant "log" as log
+participant "s" as s
+participant "sl" as sl
+participant "widget" as widget
+Caller -> File: CreateRenderer(...)
+activate File
+File -> container: NewHBox(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Destroy(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Layout(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MinSize(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: NewSortingLabel(...)
+activate File
+File -> sl: ExtendBaseWidget(...)
+File -> sl: SetState(...)
+File -> widget: NewButton(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Objects(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: OnTapped(...)
+activate File
+File -> s: OnAfterSort(...)
+File -> s: SetState(...)
+File -> s: Sorter(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Refresh(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: SetState(...)
+activate File
+File -> log: Fatalf(...)
+File --> Caller: return
+deactivate File
+@enduml

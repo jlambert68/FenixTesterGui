@@ -1,0 +1,9 @@
+@startuml
+title Activity Diagram - testSuiteUI_GraphicalComponent_testDataForTestSuite_PublicFunctions.go
+start
+:Load testSuites/testSuiteUI/testSuiteUI_GraphicalComponent_testDataForTestSuite_PublicFunctions.go;
+:1. GetSelectedTestDataGroup;
+:2. GetSelectedTestDataPoint;
+:3. GetSelectedTestDataPointRow;
+stop
+@enduml

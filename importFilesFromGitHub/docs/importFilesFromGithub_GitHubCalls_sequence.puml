@@ -1,0 +1,26 @@
+@startuml
+title Sequence Diagram - importFilesFromGithub_GitHubCalls.go
+actor Caller
+participant "importFilesFromGithub_GitHubCalls.go" as File
+participant "client" as client
+participant "err" as err
+participant "fmt" as fmt
+participant "http" as http
+participant "ioutil" as ioutil
+participant "json" as json
+participant "log" as log
+Caller -> File: getFileListFromGitHub(...)
+activate File
+File -> client: Do(...)
+File -> err: Error(...)
+File -> http: NewRequest(...)
+File --> Caller: return
+deactivate File
+Caller -> File: loadFileContent(...)
+activate File
+File -> fmt: Errorf(...)
+File -> http: Get(...)
+File -> ioutil: ReadAll(...)
+File --> Caller: return
+deactivate File
+@enduml

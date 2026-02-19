@@ -1,0 +1,18 @@
+@startuml
+title Activity Diagram - gRPCOutHelpers.go
+start
+:Load gcp/gRPCOutHelpers.go;
+:1. GRPCDialer;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. proxyDialer;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

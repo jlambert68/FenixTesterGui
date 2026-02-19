@@ -1,0 +1,54 @@
+@startuml
+title Sequence Diagram - availableBuildingBlockTree_model.go
+actor Caller
+participant "availableBuildingBlockTree_model.go" as File
+participant "allRepositoryApiUrlsResponseMessage" as allRepositoryApiUrlsResponseMessage
+participant "allTestDataForTestDataAreasResponseMessage" as allTestDataForTestDataAreasResponseMessage
+participant "availableBuildingBlocksModel" as availableBuildingBlocksModel
+participant "errors" as errors
+participant "fenixGuiTestCaseBuilderServerGrpcApi" as fenixGuiTestCaseBuilderServerGrpcApi
+participant "fmt" as fmt
+participant "listTestCaseAndTestSuiteMetaDataResponseMessage" as listTestCaseAndTestSuiteMetaDataResponseMessage
+participant "sort" as sort
+Caller -> File: generateUITreeName(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: generateUITreeNameForTestInstructionContainersHeader(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: generateUITreeNameForTestInstructionsHeader(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: getAvailableBuildingBlocksModel(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: getAvailableDomainTreeNamesFromModel(...)
+activate File
+File -> availableBuildingBlocksModel: getAvailableDomainsFromModel(...)
+File --> Caller: return
+deactivate File
+Caller -> File: getAvailableDomainsFromModel(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: getAvailableTestInstructionContainerTypesFromModel(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: getAvailableTestInstructionContainersFromModel(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: getAvailableTestInstructionTypesFromModel(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: getAvailableTestInstructionsFromModel(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

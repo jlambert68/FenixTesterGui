@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - gcpVariables.go
+start
+:Load gcp/gcpVariables.go;
+:No functions declared in this file;
+stop
+@enduml

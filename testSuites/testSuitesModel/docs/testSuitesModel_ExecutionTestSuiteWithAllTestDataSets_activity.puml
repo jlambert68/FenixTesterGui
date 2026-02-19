@@ -1,0 +1,12 @@
+@startuml
+title Activity Diagram - testSuitesModel_ExecutionTestSuiteWithAllTestDataSets.go
+start
+:Load testSuites/testSuitesModel/testSuitesModel_ExecutionTestSuiteWithAllTestDataSets.go;
+:1. ExecuteOneTestSuiteWithAllItsTestDataSets [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

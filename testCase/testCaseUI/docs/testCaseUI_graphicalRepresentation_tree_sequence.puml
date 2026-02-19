@@ -1,0 +1,34 @@
+@startuml
+title Sequence Diagram - testCaseUI_graphicalRepresentation_tree.go
+actor Caller
+participant "testCaseUI_graphicalRepresentation_tree.go" as File
+participant "canvas" as canvas
+participant "container" as container
+participant "err" as err
+participant "errors" as errors
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "layout" as layout
+participant "newBondBelongingRectangle" as newBondBelongingRectangle
+Caller -> File: convertRGBAHexStringIntoRGBAColor(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> strconv: ParseInt(...)
+File --> Caller: return
+deactivate File
+Caller -> File: makeTestCaseGraphicalUIObject(...)
+activate File
+File -> container: NewVBox(...)
+File -> err: Error(...)
+File -> testCasesUiCanvasObject: recursiveMakeTestCaseGraphicalUIObject(...)
+File --> Caller: return
+deactivate File
+Caller -> File: recursiveMakeTestCaseGraphicalUIObject(...)
+activate File
+File -> canvas: NewRectangle(...)
+File -> container: NewHBox(...)
+File -> container: NewStack(...)
+File --> Caller: return
+deactivate File
+@enduml

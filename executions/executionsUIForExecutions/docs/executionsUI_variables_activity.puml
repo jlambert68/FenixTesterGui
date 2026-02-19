@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - executionsUI_variables.go
+start
+:Load executions/executionsUIForExecutions/executionsUI_variables.go;
+:No functions declared in this file;
+stop
+@enduml

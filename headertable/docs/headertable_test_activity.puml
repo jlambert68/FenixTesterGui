@@ -1,0 +1,15 @@
+@startuml
+title Activity Diagram - headertable_test.go
+start
+:Load headertable/headertable_test.go;
+:1. TestHeaderTable;
+:Iterate loop/range logic;
+:2. TestHeaderTable_CreateRenderer;
+:3. TestNewHeaderTable;
+:4. Test_headerTableRenderer_Destroy;
+:5. Test_headerTableRenderer_Layout;
+:6. Test_headerTableRenderer_MinSize;
+:7. Test_headerTableRenderer_Objects;
+:8. Test_headerTableRenderer_Refresh;
+stop
+@enduml

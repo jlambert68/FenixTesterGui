@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - executionUI_tabHandler.go
+start
+:Load executions/executionsUIForExecutions/executionUI_tabHandler.go;
+:1. GenerateBaseUITabForExecutions [method on *ExecutionsUIModelStruct];
+stop
+@enduml

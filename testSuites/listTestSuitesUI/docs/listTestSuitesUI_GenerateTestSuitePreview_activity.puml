@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - listTestSuitesUI_GenerateTestSuitePreview.go
+start
+:Load testSuites/listTestSuitesUI/listTestSuitesUI_GenerateTestSuitePreview.go;
+:1. GenerateTestSuitePreviewContainer [method on *ListTestSuiteUIStruct];
+stop
+@enduml

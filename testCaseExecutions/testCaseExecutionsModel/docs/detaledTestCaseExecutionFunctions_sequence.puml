@@ -1,0 +1,16 @@
+@startuml
+title Sequence Diagram - detaledTestCaseExecutionFunctions.go
+actor Caller
+participant "detaledTestCaseExecutionFunctions.go" as File
+participant "detailedTestCaseExecutionsMapMutex" as detailedTestCaseExecutionsMapMutex
+participant "strconv" as strconv
+participant "testCaseExecutionsModel" as testCaseExecutionsModel
+participant "testInstructionExecution" as testInstructionExecution
+Caller -> File: ExtractAndStoreRelationBetweenTestInstructionUuidAndTestCaseExecutionUuid(...)
+activate File
+File -> detailedTestCaseExecutionsMapMutex: Lock(...)
+File -> detailedTestCaseExecutionsMapMutex: Unlock(...)
+File -> strconv: Itoa(...)
+File --> Caller: return
+deactivate File
+@enduml

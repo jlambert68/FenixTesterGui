@@ -1,0 +1,18 @@
+@startuml
+title Activity Diagram - ruleEngine_delete_test.go
+start
+:Load commandAndRuleEngine/ruleEngine_delete_test.go;
+:1. TestTCRuleDeletion101;
+:2. TestTCRuleDeletion102;
+:3. TestTCRuleDeletion103;
+:4. TestTCRuleDeletion104;
+:5. TestTCRuleDeletion105;
+:6. TestTCRuleDeletion106;
+:7. TestTCRuleDeletion107;
+:8. TestTCRuleDeletion108;
+:9. TestTCRuleDeletion109;
+:10. TestTCRuleDeletion110;
+:11. TestTCRuleDeletion111;
+:12. TestTCRuleDeletion112;
+stop
+@enduml

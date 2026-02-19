@@ -1,0 +1,20 @@
+@startuml
+title Activity Diagram - logEngine.go
+start
+:Load common_code/logEngine.go;
+:1. InitiateLoggerEngine;
+:Start goroutine/asynchronous work;
+:2. LogDebugLevel;
+:3. LogErrorLevel;
+:4. LogFatalLevel;
+:5. LogInfoLevel;
+:6. LogWarningLevel;
+:7. startLoggerEngine;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

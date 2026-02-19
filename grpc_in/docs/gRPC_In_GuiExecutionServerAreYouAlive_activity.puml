@@ -1,0 +1,13 @@
+@startuml
+title Activity Diagram - gRPC_In_GuiExecutionServerAreYouAlive.go
+start
+:Load grpc_in/gRPC_In_GuiExecutionServerAreYouAlive.go;
+:1. GuiExecutionServerAreYouAlive [method on *fenixUserGuiGrpcServicesServer];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+stop
+@enduml

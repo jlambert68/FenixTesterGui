@@ -1,0 +1,8 @@
+@startuml
+title Activity Diagram - testSuiteUI_graphicalRepresentation_testDataForTestSuite_testDataSelector_updateTestDataPointsList.go
+start
+:Load testDataSelector/testDataSelectorForTestSuite/testSuiteUI_graphicalRepresentation_testDataForTestSuite_testDataSelector_updateTestDataPointsList.go;
+:1. updateTestDataPointsForAGroupList;
+:Iterate loop/range logic;
+stop
+@enduml

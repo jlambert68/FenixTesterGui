@@ -1,0 +1,13 @@
+@startuml
+title Activity Diagram - main.go
+start
+:Load main.go;
+:1. main;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. onExit;
+stop
+@enduml

@@ -1,0 +1,11 @@
+@startuml
+title Sequence Diagram - testSuiteUI_LockUIUntilOwnerDomainAndTestEnvironmenIsSelected.go
+actor Caller
+participant "testSuiteUI_LockUIUntilOwnerDomainAndTestEnvironmenIsSelected.go" as File
+participant "fyne" as fyne
+Caller -> File: lockUIUntilOwnerDomainAndTestEnvironmenIsSelected(...)
+activate File
+File -> fyne: Do(...)
+File --> Caller: return
+deactivate File
+@enduml

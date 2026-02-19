@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - restApiVariables.go
+start
+:Load restAPI/restApiVariables.go;
+:No functions declared in this file;
+stop
+@enduml

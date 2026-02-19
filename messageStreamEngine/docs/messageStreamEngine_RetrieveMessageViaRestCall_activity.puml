@@ -1,0 +1,22 @@
+@startuml
+title Activity Diagram - messageStreamEngine_RetrieveMessageViaRestCall.go
+start
+:Load messageStreamEngine/messageStreamEngine_RetrieveMessageViaRestCall.go;
+:1. retrievePubSubMessagesViaRestApi;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:Schedule deferred cleanup;
+:Start goroutine/asynchronous work;
+:2. sendAcknowledgeMessageViaRestApi;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+stop
+@enduml

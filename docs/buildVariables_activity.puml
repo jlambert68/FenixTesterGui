@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - buildVariables.go
+start
+:Load buildVariables.go;
+:No functions declared in this file;
+stop
+@enduml

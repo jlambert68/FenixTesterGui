@@ -1,0 +1,27 @@
+@startuml
+title Activity Diagram - testCaseModel_generateTestCaseMetaDataStructureForSelectedDomain.go
+start
+:Load testCase/testCaseModel/testCaseModel_generateTestCaseMetaDataStructureForSelectedDomain.go;
+:1. ConvertTestCaseMetaData;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. GenerateTestCaseMetaDataStructureForSelectedDomain [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:3. buildMetaDataGroups;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

@@ -1,0 +1,9 @@
+@startuml
+title Activity Diagram - commandEngine_loadAvailbleBondsIntoModel.go
+start
+:Load commandAndRuleEngine/commandEngine_loadAvailbleBondsIntoModel.go;
+:1. LoadAvailableBondsFromServer [method on *CommandAndRuleEngineObjectStruct];
+:2. loadModelWithAvailableBonds [method on *CommandAndRuleEngineObjectStruct];
+:Iterate loop/range logic;
+stop
+@enduml

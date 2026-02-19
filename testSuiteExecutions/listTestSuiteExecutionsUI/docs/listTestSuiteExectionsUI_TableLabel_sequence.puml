@@ -1,0 +1,45 @@
+@startuml
+title Sequence Diagram - listTestSuiteExectionsUI_TableLabel.go
+actor Caller
+participant "listTestSuiteExectionsUI_TableLabel.go" as File
+participant "TestSuiteInstructionPreViewObject" as TestSuiteInstructionPreViewObject
+participant "canvas" as canvas
+participant "clipboard" as clipboard
+participant "currentRowThatMouseIsHoveringAboveMutex" as currentRowThatMouseIsHoveringAboveMutex
+participant "fenixMasterWindow" as fenixMasterWindow
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "l" as l
+Caller -> File: MouseIn(...)
+activate File
+File -> currentRowThatMouseIsHoveringAboveMutex: Lock(...)
+File -> currentRowThatMouseIsHoveringAboveMutex: Unlock(...)
+File -> l: Refresh(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseMoved(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MouseOut(...)
+activate File
+File -> currentRowThatMouseIsHoveringAboveMutex: Lock(...)
+File -> currentRowThatMouseIsHoveringAboveMutex: Unlock(...)
+File -> l: Refresh(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Tapped(...)
+activate File
+File -> TestSuiteInstructionPreViewObject: GenerateTestSuiteExecutionPreviewContainer(...)
+File -> fmt: Println(...)
+File -> l: onDoubleTap(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TappedSecondary(...)
+activate File
+File -> clipboard: SetContent(...)
+File -> fenixMasterWindow: Clipboard(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+@enduml

@@ -1,0 +1,7 @@
+@startuml
+title Sequence Diagram - testCaseUI_graphicalRepresentation_testDataForTestCase_variables.go
+actor Caller
+participant "testCaseUI_graphicalRepresentation_testDataForTestCase_variables.go" as File
+Caller -> File: (no callable functions detected)
+File --> Caller: return
+@enduml

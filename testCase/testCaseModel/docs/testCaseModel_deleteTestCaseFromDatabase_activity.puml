@@ -1,0 +1,12 @@
+@startuml
+title Activity Diagram - testCaseModel_deleteTestCaseFromDatabase.go
+start
+:Load testCase/testCaseModel/testCaseModel_deleteTestCaseFromDatabase.go;
+:1. DeleteTestCaseAtThisDate [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

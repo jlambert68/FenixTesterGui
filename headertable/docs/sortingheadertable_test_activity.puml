@@ -1,0 +1,15 @@
+@startuml
+title Activity Diagram - sortingheadertable_test.go
+start
+:Load headertable/sortingheadertable_test.go;
+:1. TestSortingLabel_OnTapped_CallsSorterAndUnsortsOthers;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. Test_stringSort;
+:Iterate loop/range logic;
+stop
+@enduml

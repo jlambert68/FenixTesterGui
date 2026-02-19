@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - listTestCasesModel_Variables.go
+start
+:Load testCases/listTestCasesModel/listTestCasesModel_Variables.go;
+:No functions declared in this file;
+stop
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+title Sequence Diagram - testCaseUI_rightClickableAccordion.go
+actor Caller
+participant "testCaseUI_rightClickableAccordion.go" as File
+participant "accordion" as accordion
+participant "log" as log
+Caller -> File: TappedSecondary(...)
+activate File
+File -> log: Println(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TappedSecondary(...)
+activate File
+File -> log: Println(...)
+File --> Caller: return
+deactivate File
+@enduml

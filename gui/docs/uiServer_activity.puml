@@ -1,0 +1,29 @@
+@startuml
+title Activity Diagram - uiServer.go
+start
+:Load gui/uiServer.go;
+:1. MouseIn [method on *CustomButton];
+:2. MouseMoved [method on *customRectangle];
+:3. MouseOut [method on *CustomButton];
+:4. StartUIServer [method on *GlobalUIServerStruct];
+:5. loadAvailableTestCaseBuildingBlocksTreeUI [method on *UIServerStruct];
+:6. loadCompleteAvailableTestCaseBuildingBlocksUI [method on *UIServerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:7. loadCompleteCurrentTestCaseUI [method on *UIServerStruct];
+:8. loadCurrentTestCaseAttributesAreaUI [method on *UIServerStruct];
+:9. loadCurrentTestCaseModelAreaUI [method on *UIServerStruct];
+:10. loadUI [method on *UIServerStruct];
+:11. newCustomRect [method on *customRectangle];
+:12. startTestCaseUIServer [method on *UIServerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Start goroutine/asynchronous work;
+stop
+@enduml

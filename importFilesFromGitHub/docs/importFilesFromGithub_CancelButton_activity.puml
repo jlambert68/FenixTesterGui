@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - importFilesFromGithub_CancelButton.go
+start
+:Load importFilesFromGitHub/importFilesFromGithub_CancelButton.go;
+:1. generateCancelButton [method on *ImportFilesFromGitHubStruct];
+stop
+@enduml

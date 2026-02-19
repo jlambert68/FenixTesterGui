@@ -1,0 +1,38 @@
+@startuml
+title Sequence Diagram - detailedExecutionsModel_createSummaryTableForDetailedTestCaseExecutionsList.go
+actor Caller
+participant "detailedExecutionsModel_createSummaryTableForDetailedTestCaseExecutionsList.go" as File
+participant "b" as b
+participant "canvas" as canvas
+participant "container" as container
+participant "errors" as errors
+participant "fmt" as fmt
+participant "layout" as layout
+participant "log" as log
+participant "mySpaceButton" as mySpaceButton
+Caller -> File: CreateSummaryTableForDetailedTestCaseExecutionsList(...)
+activate File
+File -> canvas: NewRectangle(...)
+File -> container: New(...)
+File -> layout: NewHBoxLayout(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseIn(...)
+activate File
+File -> b: Refresh(...)
+File -> b: SetText(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseMoved(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MouseOut(...)
+activate File
+File -> b: Refresh(...)
+File -> b: SetText(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+@enduml

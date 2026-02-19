@@ -1,0 +1,9 @@
+@startuml
+title Activity Diagram - dateTime_helpers.go
+start
+:Load common_code/dateTime_helpers.go;
+:1. ConvertGrpcTimeStampToStringForDB;
+:2. GenerateDatetimeFromTimeInputForDB;
+:3. GenerateDatetimeTimeStampForDB;
+stop
+@enduml

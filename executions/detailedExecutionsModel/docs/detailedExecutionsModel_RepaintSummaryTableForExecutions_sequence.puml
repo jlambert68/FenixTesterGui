@@ -1,0 +1,16 @@
+@startuml
+title Sequence Diagram - detailedExecutionsModel_RepaintSummaryTableForExecutions.go
+actor Caller
+participant "detailedExecutionsModel_RepaintSummaryTableForExecutions.go" as File
+participant "TestCasesSummaryTable" as TestCasesSummaryTable
+participant "t" as t
+participant "time" as time
+Caller -> File: RequestRefreshTestCasesSummaryTable(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Stop(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

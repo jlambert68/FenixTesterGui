@@ -1,0 +1,38 @@
+@startuml
+title Sequence Diagram - sharedCode.go
+actor Caller
+participant "sharedCode.go" as File
+participant "err" as err
+participant "errors" as errors
+participant "fmt" as fmt
+participant "sort" as sort
+participant "strconv" as strconv
+Caller -> File: ConvertRGBAHexStringIntoRGBAColor(...)
+activate File
+File -> err: Error(...)
+File -> errors: New(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GenerateShortUuidFromFullUuid(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Len(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Less(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: SortString(...)
+activate File
+File -> sort: Sort(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Swap(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

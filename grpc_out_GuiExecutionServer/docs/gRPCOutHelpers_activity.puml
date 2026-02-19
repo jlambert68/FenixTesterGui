@@ -1,0 +1,35 @@
+@startuml
+title Activity Diagram - gRPCOutHelpers.go
+start
+:Load grpc_out_GuiExecutionServer/gRPCOutHelpers.go;
+:1. GetHighestFenixGuiExecutionServerProtoFileVersion;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. SetConnectionToFenixGuiExecutionServer [method on *GRPCOutGuiExecutionServerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. SetDialAddressString [method on *GRPCOutGuiExecutionServerStruct];
+:4. SetLogger [method on *GRPCOutGuiExecutionServerStruct];
+:5. dialFromGrpcurl;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:6. setConnectionToFenixGuiExecutionMessageServer_new [method on *GRPCOutGuiExecutionServerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

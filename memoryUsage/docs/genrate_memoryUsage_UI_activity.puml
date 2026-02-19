@@ -1,0 +1,16 @@
+@startuml
+title Activity Diagram - genrate_memoryUsage_UI.go
+start
+:Load memoryUsage/genrate_memoryUsage_UI.go;
+:1. GenerateMemoryUsageIcon;
+:2. openStatisticsWindowFunction;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:Schedule deferred cleanup;
+:Start goroutine/asynchronous work;
+stop
+@enduml

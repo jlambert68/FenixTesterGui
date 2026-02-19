@@ -1,0 +1,18 @@
+@startuml
+title Sequence Diagram - executionsModel_testcasesListModelForExecutions_underExecution.go
+actor Caller
+participant "executionsModel_testcasesListModelForExecutions_underExecution.go" as File
+participant "errors" as errors
+participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
+participant "fmt" as fmt
+participant "grpc_out_GuiExecutionServer" as grpc_out_GuiExecutionServer
+participant "strconv" as strconv
+participant "time" as time
+Caller -> File: LoadAndCreateModelForTestCaseUnderExecutions(...)
+activate File
+File -> errors: New(...)
+File -> fenixExecutionServerGuiGrpcApi: CurrentFenixExecutionGuiProtoFileVersionEnum(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+@enduml

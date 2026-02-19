@@ -1,0 +1,22 @@
+@startuml
+title Activity Diagram - newOrEditTestDataPointGroupUI_TestDataFiltersComponent.go
+start
+:Load testDataSelector/newOrEditTestDataPointGroupUI/newOrEditTestDataPointGroupUI_TestDataFiltersComponent.go;
+:1. generateTestDataSelectionsUIComponent;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:Schedule deferred cleanup;
+:Start goroutine/asynchronous work;
+:2. sortDataPointsList;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

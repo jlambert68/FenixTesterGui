@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - detailedExecutionUI_summaryTableTypes.go
+start
+:Load executions/detailedTestCaseExecutionUI_summaryTableDefinition/detailedExecutionUI_summaryTableTypes.go;
+:No functions declared in this file;
+stop
+@enduml

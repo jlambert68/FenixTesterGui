@@ -1,0 +1,45 @@
+@startuml
+title Sequence Diagram - dragNdropStatemachine_draggableLabel.go
+actor Caller
+participant "dragNdropStatemachine_draggableLabel.go" as File
+participant "containerRef" as containerRef
+participant "draggableLabel" as draggableLabel
+participant "fyne" as fyne
+participant "log" as log
+participant "rectangle2Ref" as rectangle2Ref
+participant "rectangleRef" as rectangleRef
+participant "textRef" as textRef
+Caller -> File: DragEnd(...)
+activate File
+File -> containerRef: Hide(...)
+File -> containerRef: Refresh(...)
+File -> log: Fatalln(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Dragged(...)
+activate File
+File -> containerRef: Move(...)
+File -> containerRef: Refresh(...)
+File -> containerRef: Show(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseIn(...)
+activate File
+File -> log: Fatalln(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseMoved(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MouseOut(...)
+activate File
+File -> log: Fatalln(...)
+File --> Caller: return
+deactivate File
+Caller -> File: NewDraggableLabel(...)
+activate File
+File -> draggableLabel: ExtendBaseWidget(...)
+File --> Caller: return
+deactivate File
+@enduml

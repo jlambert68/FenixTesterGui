@@ -1,0 +1,20 @@
+@startuml
+title Sequence Diagram - main.go
+actor Caller
+participant "main.go" as File
+participant "a" as a
+participant "app" as app
+participant "binding" as binding
+participant "container" as container
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "headertable" as headertable
+participant "ht" as ht
+Caller -> File: main(...)
+activate File
+File -> a: NewWindow(...)
+File -> app: New(...)
+File -> binding: BindStruct(...)
+File --> Caller: return
+deactivate File
+@enduml

@@ -1,0 +1,48 @@
+@startuml
+title Sequence Diagram - gcp_helpers.go
+actor Caller
+participant "gcp_helpers.go" as File
+participant "bytes" as bytes
+participant "cmd" as cmd
+participant "context" as context
+participant "err" as err
+participant "exec" as exec
+participant "fmt" as fmt
+participant "gcp" as gcp
+participant "google" as google
+Caller -> File: GenerateGCPAccessToken(...)
+activate File
+File -> gcp: GenerateGCPAccessTokenForAuthorizedUserPubSub(...)
+File -> gcp: GenerateGCPAccessTokenForServiceAccount(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GenerateGCPAccessTokenForAuthorizedUser(...)
+activate File
+File -> context: Background(...)
+File -> fmt: Fprintln(...)
+File -> gcp: initiateUserObject(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GenerateGCPAccessTokenForAuthorizedUserPubSub(...)
+activate File
+File -> context: Background(...)
+File -> err: Error(...)
+File -> fmt: Fprintln(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GenerateGCPAccessTokenForServiceAccount(...)
+activate File
+File -> grpcMetadata: AppendToOutgoingContext(...)
+File -> idtoken: NewTokenSource(...)
+File -> idtoken: WithCredentialsJSON(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GetGcpAccessTokenForAuthorizedAccountsPubSub(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: SetLogger(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

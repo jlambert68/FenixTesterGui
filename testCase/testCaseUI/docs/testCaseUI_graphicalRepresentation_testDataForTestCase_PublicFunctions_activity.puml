@@ -1,0 +1,9 @@
+@startuml
+title Activity Diagram - testCaseUI_graphicalRepresentation_testDataForTestCase_PublicFunctions.go
+start
+:Load testCase/testCaseUI/testCaseUI_graphicalRepresentation_testDataForTestCase_PublicFunctions.go;
+:1. GetSelectedTestDataGroup;
+:2. GetSelectedTestDataPoint;
+:3. GetSelectedTestDataPointRow;
+stop
+@enduml

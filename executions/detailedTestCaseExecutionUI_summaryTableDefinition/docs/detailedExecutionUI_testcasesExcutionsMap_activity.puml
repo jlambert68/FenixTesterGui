@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - detailedExecutionUI_testcasesExcutionsMap.go
+start
+:Load executions/detailedTestCaseExecutionUI_summaryTableDefinition/detailedExecutionUI_testcasesExcutionsMap.go;
+:No functions declared in this file;
+stop
+@enduml

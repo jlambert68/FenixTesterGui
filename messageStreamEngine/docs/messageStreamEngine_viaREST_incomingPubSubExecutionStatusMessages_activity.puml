@@ -1,0 +1,14 @@
+@startuml
+title Activity Diagram - messageStreamEngine_viaREST_incomingPubSubExecutionStatusMessages.go
+start
+:Load messageStreamEngine/messageStreamEngine_viaREST_incomingPubSubExecutionStatusMessages.go;
+:1. PullPubSubTestInstructionExecutionMessagesGcpRestApi;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:Schedule deferred cleanup;
+stop
+@enduml

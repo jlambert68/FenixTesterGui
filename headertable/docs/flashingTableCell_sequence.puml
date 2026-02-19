@@ -1,0 +1,65 @@
+@startuml
+title Sequence Diagram - flashingTableCell.go
+actor Caller
+participant "flashingTableCell.go" as File
+participant "canvas" as canvas
+participant "container" as container
+participant "detailedExecutionsModel" as detailedExecutionsModel
+participant "fmt" as fmt
+participant "newFlashingTableCell" as newFlashingTableCell
+participant "rectangleColorAnimation" as rectangleColorAnimation
+participant "widget" as widget
+Caller -> File: CreateRenderer(...)
+activate File
+File -> container: NewMax(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Destroy(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: DoubleTapped(...)
+activate File
+File -> detailedExecutionsModel: RemoveTestCaseExecutionFromSummaryTable(...)
+File -> detailedExecutionsModel: RetrieveSingleTestCaseExecution(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+Caller -> File: FlashAddedRow(...)
+activate File
+File -> canvas: NewColorRGBAAnimation(...)
+File -> canvas: Refresh(...)
+File -> rectangleColorAnimation: Start(...)
+File --> Caller: return
+deactivate File
+Caller -> File: FlashRowToBeRemoved(...)
+activate File
+File -> canvas: NewColorRGBAAnimation(...)
+File -> canvas: Refresh(...)
+File -> rectangleColorAnimation: Start(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Layout(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MinSize(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: NewFlashingTableCell(...)
+activate File
+File -> canvas: NewImageFromResource(...)
+File -> canvas: NewRectangle(...)
+File -> newFlashingTableCell: ExtendBaseWidget(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Objects(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Refresh(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

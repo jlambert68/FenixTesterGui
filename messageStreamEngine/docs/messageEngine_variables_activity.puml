@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - messageEngine_variables.go
+start
+:Load messageStreamEngine/messageEngine_variables.go;
+:No functions declared in this file;
+stop
+@enduml

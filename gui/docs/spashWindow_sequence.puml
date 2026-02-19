@@ -1,0 +1,22 @@
+@startuml
+title Sequence Diagram - spashWindow.go
+actor Caller
+participant "spashWindow.go" as File
+participant "canvas" as canvas
+participant "container" as container
+participant "drv" as drv
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "layout" as layout
+participant "time" as time
+Caller -> File: Focused(...)
+activate File
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Unfocused(...)
+activate File
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+@enduml

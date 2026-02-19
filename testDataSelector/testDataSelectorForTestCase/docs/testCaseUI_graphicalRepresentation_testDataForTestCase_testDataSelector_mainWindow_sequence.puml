@@ -1,0 +1,20 @@
+@startuml
+title Sequence Diagram - testCaseUI_graphicalRepresentation_testDataForTestCase_testDataSelector_mainWindow.go
+actor Caller
+participant "testCaseUI_graphicalRepresentation_testDataForTestCase_testDataSelector_mainWindow.go" as File
+participant "app" as app
+participant "container" as container
+participant "dialog" as dialog
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "myWindow" as myWindow
+participant "newOrEditTestDataPointGroupUI" as newOrEditTestDataPointGroupUI
+participant "parent" as parent
+Caller -> File: MainTestDataSelector(...)
+activate File
+File -> app: NewWindow(...)
+File -> container: NewBorder(...)
+File -> container: NewHBox(...)
+File --> Caller: return
+deactivate File
+@enduml

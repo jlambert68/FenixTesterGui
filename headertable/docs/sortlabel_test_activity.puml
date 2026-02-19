@@ -1,0 +1,23 @@
+@startuml
+title Activity Diagram - sortlabel_test.go
+start
+:Load headertable/sortlabel_test.go;
+:1. TestNewSortingLabel;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. TestSortingLabel_OnTapped_CyclesSortStates;
+:3. TestSortingLabel_SetState;
+:Iterate loop/range logic;
+:4. TestSortingLabel_nextState;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

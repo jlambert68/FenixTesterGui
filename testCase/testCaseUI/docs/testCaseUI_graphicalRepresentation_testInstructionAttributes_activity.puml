@@ -1,0 +1,46 @@
+@startuml
+title Activity Diagram - testCaseUI_graphicalRepresentation_testInstructionAttributes.go
+start
+:Load testCase/testCaseUI/testCaseUI_graphicalRepresentation_testInstructionAttributes.go;
+:1. extractResponseVariablesFromTestInstruction [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. generateAttributeRow [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:3. generateAttributeStringListData [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:4. generateTestCaseAttributesAreaForTestCase [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:5. recursiveTraverseDownwardsTestInstructionContainerElementsForResponseVariablesThatMatch [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:6. recursiveTraverseUpwardsTestInstructionContainerElementsForResponseVariablesThatMatch [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

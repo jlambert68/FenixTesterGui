@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - icons.go
+start
+:Load headertable/data/icons.go;
+:No functions declared in this file;
+stop
+@enduml

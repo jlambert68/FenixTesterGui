@@ -1,0 +1,75 @@
+@startuml
+title Activity Diagram - ruleEngine_executeSwapElement.go
+start
+:Load commandAndRuleEngine/ruleEngine_executeSwapElement.go;
+:1. executeTCRuleSwap101 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. executeTCRuleSwap102 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:3. executeTCRuleSwap103 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:4. executeTCRuleSwap104 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:5. executeTCRuleSwap105 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:6. executeTCRuleSwap106 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:7. executeTCRuleSwap107 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:8. executeTCRuleSwap108 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:9. transformImmatureElementModelIntoMatureElementModel [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:10. verifySwapRuleAndConvertIntoMatureComponentElementModel [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

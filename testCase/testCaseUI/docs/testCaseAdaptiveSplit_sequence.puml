@@ -1,0 +1,19 @@
+@startuml
+title Sequence Diagram - testCaseAdaptiveSplit.go
+actor Caller
+participant "testCaseAdaptiveSplit.go" as File
+participant "container" as container
+participant "dev" as dev
+participant "fyne" as fyne
+Caller -> File: Layout(...)
+activate File
+File -> dev: IsMobile(...)
+File -> dev: Orientation(...)
+File -> fyne: CurrentDevice(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MinSize(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

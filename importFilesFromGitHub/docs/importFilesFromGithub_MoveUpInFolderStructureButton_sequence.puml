@@ -1,0 +1,24 @@
+@startuml
+title Sequence Diagram - importFilesFromGithub_MoveUpInFolderStructureButton.go
+actor Caller
+participant "importFilesFromGithub_MoveUpInFolderStructureButton.go" as File
+participant "fmt" as fmt
+participant "importFilesFromGitHubObject" as importFilesFromGitHubObject
+participant "strings" as strings
+participant "theme" as theme
+participant "widget" as widget
+Caller -> File: generateMoveUpInFolderStructureButton(...)
+activate File
+File -> importFilesFromGitHubObject: filterFileListFromGitHub(...)
+File -> importFilesFromGitHubObject: getFileListFromGitHub(...)
+File -> importFilesFromGitHubObject: moveUpInPath(...)
+File --> Caller: return
+deactivate File
+Caller -> File: moveUpInPath(...)
+activate File
+File -> fmt: Errorf(...)
+File -> strings: Join(...)
+File -> strings: Split(...)
+File --> Caller: return
+deactivate File
+@enduml

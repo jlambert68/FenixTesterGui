@@ -1,0 +1,20 @@
+@startuml
+title Sequence Diagram - testSuitesModel_LoadTestSuite.go
+actor Caller
+participant "testSuitesModel_LoadTestSuite.go" as File
+participant "copier" as copier
+participant "detailedTestSuiteResponse" as detailedTestSuiteResponse
+participant "err" as err
+participant "errors" as errors
+participant "fmt" as fmt
+participant "log" as log
+participant "tempMetaDataGroupFromGrpc" as tempMetaDataGroupFromGrpc
+participant "tempTestCasesInTestSuiteFromGrpc" as tempTestCasesInTestSuiteFromGrpc
+Caller -> File: LoadFullTestSuiteFromDatabase(...)
+activate File
+File -> copier: CopyWithOption(...)
+File -> detailedTestSuiteResponse: GetDetailedTestSuite(...)
+File -> err: Error(...)
+File --> Caller: return
+deactivate File
+@enduml

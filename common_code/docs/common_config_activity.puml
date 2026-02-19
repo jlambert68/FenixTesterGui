@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - common_config.go
+start
+:Load common_code/common_config.go;
+:No functions declared in this file;
+stop
+@enduml

@@ -1,0 +1,37 @@
+@startuml
+title Activity Diagram - dial.go
+start
+:Load grpcurl/dial.go;
+:1. BlockingDial;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Start goroutine/asynchronous work;
+:2. ClientHandshake [method on *errSignalingCreds];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. ClientTLSConfig;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. ClientTransportCredentials;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:5. ServerTransportCredentials;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

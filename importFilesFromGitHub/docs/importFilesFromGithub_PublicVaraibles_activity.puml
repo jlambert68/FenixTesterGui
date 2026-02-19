@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - importFilesFromGithub_PublicVaraibles.go
+start
+:Load importFilesFromGitHub/importFilesFromGithub_PublicVaraibles.go;
+:No functions declared in this file;
+stop
+@enduml

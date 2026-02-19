@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - gRPCOutValiables.go
+start
+:Load grpc_out_GuiExecutionServer/gRPCOutValiables.go;
+:No functions declared in this file;
+stop
+@enduml

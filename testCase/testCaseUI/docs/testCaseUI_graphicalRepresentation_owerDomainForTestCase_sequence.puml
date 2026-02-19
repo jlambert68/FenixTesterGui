@@ -1,0 +1,25 @@
+@startuml
+title Sequence Diagram - testCaseUI_graphicalRepresentation_owerDomainForTestCase.go
+actor Caller
+participant "testCaseUI_graphicalRepresentation_owerDomainForTestCase.go" as File
+participant "canvas" as canvas
+participant "container" as container
+participant "errors" as errors
+participant "fmt" as fmt
+participant "layout" as layout
+participant "log" as log
+participant "metaDataAccordion" as metaDataAccordion
+participant "newOwnerDomainSelect" as newOwnerDomainSelect
+Caller -> File: generateOwnerDomainForTestCaseArea(...)
+activate File
+File -> canvas: NewRectangle(...)
+File -> container: New(...)
+File -> container: NewVBox(...)
+File --> Caller: return
+deactivate File
+Caller -> File: setSelectedOwnerDomainForTestCaseArea(...)
+activate File
+File -> newOwnerDomainSelect: SetSelected(...)
+File --> Caller: return
+deactivate File
+@enduml

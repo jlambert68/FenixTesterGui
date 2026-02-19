@@ -1,0 +1,56 @@
+@startuml
+title Sequence Diagram - dragNdropStatemachine_droppableRectangle.go
+actor Caller
+participant "dragNdropStatemachine_droppableRectangle.go" as File
+participant "canvas" as canvas
+participant "droppableRectangle" as droppableRectangle
+participant "fyne" as fyne
+participant "log" as log
+participant "rect" as rect
+Caller -> File: CreateRenderer(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Destroy(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Layout(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MinSize(...)
+activate File
+File -> fyne: NewSize(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseIn(...)
+activate File
+File -> log: Fatalln(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseMoved(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MouseOut(...)
+activate File
+File -> log: Fatalln(...)
+File --> Caller: return
+deactivate File
+Caller -> File: NewDroppableRectangle(...)
+activate File
+File -> canvas: NewRectangle(...)
+File -> droppableRectangle: ExtendBaseWidget(...)
+File -> fyne: NewSize(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Objects(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Refresh(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

@@ -1,0 +1,19 @@
+@startuml
+title Sequence Diagram - testCaseSubscriptionHandler_handler.go
+actor Caller
+participant "testCaseSubscriptionHandler_handler.go" as File
+participant "errors" as errors
+participant "fmt" as fmt
+Caller -> File: AddTestCaseExecutionStatusSubscription(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: RemoveTestCaseExecutionStatusSubscription(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+@enduml

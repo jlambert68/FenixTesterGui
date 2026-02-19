@@ -1,0 +1,19 @@
+@startuml
+title Sequence Diagram - testCaseUI_graphicalRepresentation_base.go
+actor Caller
+participant "testCaseUI_graphicalRepresentation_base.go" as File
+participant "canvas" as canvas
+participant "container" as container
+participant "fyne" as fyne
+participant "myRectangle" as myRectangle
+participant "testCaseGraphicalModelAreaAccordion" as testCaseGraphicalModelAreaAccordion
+participant "testCasesUiCanvasObject" as testCasesUiCanvasObject
+participant "widget" as widget
+Caller -> File: generateGraphicalRepresentationAreaForTestCase(...)
+activate File
+File -> canvas: NewRectangle(...)
+File -> container: NewScroll(...)
+File -> container: NewVBox(...)
+File --> Caller: return
+deactivate File
+@enduml

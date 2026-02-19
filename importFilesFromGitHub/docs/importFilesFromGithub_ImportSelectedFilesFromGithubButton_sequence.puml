@@ -1,0 +1,29 @@
+@startuml
+title Sequence Diagram - importFilesFromGithub_ImportSelectedFilesFromGithubButton.go
+actor Caller
+participant "importFilesFromGithub_ImportSelectedFilesFromGithubButton.go" as File
+participant "dialog" as dialog
+participant "fenixMainWindow" as fenixMainWindow
+participant "fenixSyncShared" as fenixSyncShared
+participant "importFilesFromGitHubObject" as importFilesFromGitHubObject
+participant "json" as json
+participant "log" as log
+participant "parentWindow" as parentWindow
+participant "widget" as widget
+Caller -> File: decodeBase64Content(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: extractContentFromJson(...)
+activate File
+File -> json: Unmarshal(...)
+File --> Caller: return
+deactivate File
+Caller -> File: generateImportSelectedFilesFromGithubButton(...)
+activate File
+File -> dialog: ShowError(...)
+File -> fenixMainWindow: Show(...)
+File -> fenixSyncShared: HashSingleValue(...)
+File --> Caller: return
+deactivate File
+@enduml

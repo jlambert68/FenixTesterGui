@@ -1,0 +1,19 @@
+@startuml
+title Sequence Diagram - listTestSuitesModel_updateTestSuitesList.go
+actor Caller
+participant "listTestSuitesModel_updateTestSuitesList.go" as File
+participant "boolbits" as boolbits
+participant "err" as err
+participant "fmt" as fmt
+participant "listTestSuitesThatCanBeEditedResponseMessage" as listTestSuitesThatCanBeEditedResponseMessage
+participant "log" as log
+participant "resultsEntry" as resultsEntry
+participant "tempTestSuitePreview" as tempTestSuitePreview
+participant "testSuiteThatCanBeEditedByUser" as testSuiteThatCanBeEditedByUser
+Caller -> File: LoadtestSuiteThatCanBeEditedByUser(...)
+activate File
+File -> listTestSuitesThatCanBeEditedResponseMessage: GetAckNackResponse(...)
+File -> listTestSuitesThatCanBeEditedResponseMessage: GetBasicTestSuiteInformation(...)
+File --> Caller: return
+deactivate File
+@enduml

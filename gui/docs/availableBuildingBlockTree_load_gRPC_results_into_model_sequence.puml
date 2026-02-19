@@ -1,0 +1,65 @@
+@startuml
+title Sequence Diagram - availableBuildingBlockTree_load_gRPC_results_into_model.go
+actor Caller
+participant "availableBuildingBlockTree_load_gRPC_results_into_model.go" as File
+participant "availableBuildingBlocksModel" as availableBuildingBlocksModel
+participant "bitmapper" as bitmapper
+participant "executionDomainsThatCanReceiveDirectTargetedTestInstruction" as executionDomainsThatCanReceiveDirectTargetedTestInstruction
+participant "fmt" as fmt
+participant "json" as json
+participant "log" as log
+participant "rawHeader" as rawHeader
+participant "simpleTestDataRow" as simpleTestDataRow
+Caller -> File: convertGrpcElementModelIntoTestCaseElementModel(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: loadModelWithAvailableBuildingBlocks(...)
+activate File
+File -> availableBuildingBlocksModel: loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(...)
+File -> availableBuildingBlocksModel: loadModelWithAvailableBuildingBlocksRegardingTestInstructions(...)
+File -> availableBuildingBlocksModel: storeDomainsThatCanOwnTestCases(...)
+File --> Caller: return
+deactivate File
+Caller -> File: loadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers(...)
+activate File
+File -> availableBuildingBlocksModel: generateUITreeName(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+Caller -> File: loadModelWithAvailableBuildingBlocksRegardingTestInstructions(...)
+activate File
+File -> availableBuildingBlocksModel: generateUITreeName(...)
+File --> Caller: return
+deactivate File
+Caller -> File: loadModelWithPinnedBuildingBlocks(...)
+activate File
+File -> availableBuildingBlocksModel: loadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(...)
+File -> availableBuildingBlocksModel: loadModelWithPinnedBuildingBlocksRegardingTestInstructions(...)
+File --> Caller: return
+deactivate File
+Caller -> File: loadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: loadModelWithPinnedBuildingBlocksRegardingTestInstructions(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: storeDomainsThatCanOwnTestCases(...)
+activate File
+File -> tempDomainThatCanOwnTheTestCase: GetDomainName(...)
+File -> tempDomainThatCanOwnTheTestCase: GetDomainUuid(...)
+File -> testCaseModeReference: GenerateShortUuidFromFullUuid(...)
+File --> Caller: return
+deactivate File
+Caller -> File: storeFullGrpcStructureForAvailableBuildingBlocks(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: storeTemplateRepositoryApiUrls(...)
+activate File
+File -> templateRepositoryApiUrlToBeStored: GetRepositoryApiUrlName(...)
+File --> Caller: return
+deactivate File
+@enduml

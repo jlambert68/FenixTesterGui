@@ -1,0 +1,25 @@
+@startuml
+title Activity Diagram - helper_model_test_TestData.go
+start
+:Load gui/UnitTestTestData/helper_model_test_TestData.go;
+:1. InitLoggerForTest;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. IsTestDataUsingCorrectTestDataProtoFileVersion;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. getHighestFenixTestDataProtoFileVersion;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

@@ -1,0 +1,55 @@
+@startuml
+title Sequence Diagram - restAPI.go
+actor Caller
+participant "restAPI.go" as File
+participant "err" as err
+participant "fenixGuiTestCaseBuilderServerGrpcApi" as fenixGuiTestCaseBuilderServerGrpcApi
+participant "fmt" as fmt
+participant "grpcOut" as grpcOut
+participant "http" as http
+participant "json" as json
+participant "log" as log
+participant "mux" as mux
+Caller -> File: HealthCheck(...)
+activate File
+File -> fmt: Fprintf(...)
+File -> log: Fatalln(...)
+File -> w: WriteHeader(...)
+File --> Caller: return
+deactivate File
+Caller -> File: RestAPIServer(...)
+activate File
+File -> http: Handle(...)
+File -> http: ListenAndServe(...)
+File -> log: Fatalln(...)
+File --> Caller: return
+deactivate File
+Caller -> File: RestSendAreYouAliveToFenixGuiBuilderServer(...)
+activate File
+File -> json: Marshal(...)
+File -> log: Fatalln(...)
+File -> w: Header(...)
+File --> Caller: return
+deactivate File
+Caller -> File: RestSendGetInstructionsAndTestInstructionContainersToFenixGuiBuilderServer(...)
+activate File
+File -> err: Error(...)
+File -> fmt: Fprintf(...)
+File -> json: Marshal(...)
+File --> Caller: return
+deactivate File
+Caller -> File: RestSendGetPinnedInstructionsAndTestInstructionContainersToFenixGuiBuilderServer(...)
+activate File
+File -> err: Error(...)
+File -> fmt: Fprintf(...)
+File -> json: Marshal(...)
+File --> Caller: return
+deactivate File
+Caller -> File: RestSendSavePinnedInstructionsAndTestInstructionContainersToFenixGuiBuilderServer(...)
+activate File
+File -> err: Error(...)
+File -> fenixGuiTestCaseBuilderServerGrpcApi: CurrentFenixTestCaseBuilderProtoFileVersionEnum(...)
+File -> fmt: Fprintf(...)
+File --> Caller: return
+deactivate File
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+title Activity Diagram - uiCommandStack.go
+start
+:Load gui/uiCommandStack.go;
+:1. makeCommandStackUI [method on *UIServerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

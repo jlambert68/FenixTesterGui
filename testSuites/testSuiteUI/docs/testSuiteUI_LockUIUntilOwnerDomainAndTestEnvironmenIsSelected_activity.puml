@@ -1,0 +1,12 @@
+@startuml
+title Activity Diagram - testSuiteUI_LockUIUntilOwnerDomainAndTestEnvironmenIsSelected.go
+start
+:Load testSuites/testSuiteUI/testSuiteUI_LockUIUntilOwnerDomainAndTestEnvironmenIsSelected.go;
+:1. lockUIUntilOwnerDomainAndTestEnvironmenIsSelected [method on *TestSuiteUiStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

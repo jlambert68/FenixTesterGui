@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - testCaseExecutionUI_testCaseLExecutionsList_mainPage.go
+start
+:Load executions/executionsUIForExecutions/testCaseExecutionUI_testCaseLExecutionsList_mainPage.go;
+:1. CreateExecutionsListTabPageForSubsacriptions [method on *ExecutionsUIModelStruct];
+stop
+@enduml

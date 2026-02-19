@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - listTestCasesUI_GenerateTestCaseMetaDataFilter_Main.go
+start
+:Load testCases/listTestCasesUI/listTestCasesUI_GenerateTestCaseMetaDataFilter_Main.go;
+:1. GenerateTestCaseMetaDataFilterContainer [method on *ListTestCaseUIStruct];
+stop
+@enduml

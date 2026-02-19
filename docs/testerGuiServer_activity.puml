@@ -1,0 +1,20 @@
+@startuml
+title Activity Diagram - testerGuiServer.go
+start
+:Load testerGuiServer.go;
+:1. cleanup;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. fenixGuiBuilderServerMain;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:Start goroutine/asynchronous work;
+stop
+@enduml

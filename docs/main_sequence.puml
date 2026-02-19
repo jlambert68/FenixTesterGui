@@ -1,0 +1,23 @@
+@startuml
+title Sequence Diagram - main.go
+actor Caller
+participant "main.go" as File
+participant "fmt" as fmt
+participant "os" as os
+participant "strings" as strings
+participant "testInstruction_SendTemplateToThisDomainversion_1_0" as testInstruction_SendTemplateToThisDomainversion_1_0
+participant "testInstruction_SendTestDataToThisDomain_version_1_0" as testInstruction_SendTestDataToThisDomain_version_1_0
+participant "user" as user
+Caller -> File: main(...)
+activate File
+File -> fmt: Println(...)
+File -> strings: ReplaceAll(...)
+File -> testInstruction_SendTemplateToThisDomainversion_1_0: Initate_TestInstruction_FenixSentToUsersDomain_FenixOwnedSendTemplateToThisDomain(...)
+File --> Caller: return
+deactivate File
+Caller -> File: onExit(...)
+activate File
+File -> os: Exit(...)
+File --> Caller: return
+deactivate File
+@enduml

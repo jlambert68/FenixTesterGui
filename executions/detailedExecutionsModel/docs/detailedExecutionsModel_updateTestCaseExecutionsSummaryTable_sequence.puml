@@ -1,0 +1,15 @@
+@startuml
+title Sequence Diagram - detailedExecutionsModel_updateTestCaseExecutionsSummaryTable.go
+actor Caller
+participant "detailedExecutionsModel_updateTestCaseExecutionsSummaryTable.go" as File
+participant "sharedCode" as sharedCode
+participant "sort" as sort
+participant "strconv" as strconv
+Caller -> File: updateTestCaseExecutionsSummaryTable(...)
+activate File
+File -> sharedCode: GenerateShortUuidFromFullUuid(...)
+File -> sort: Slice(...)
+File -> strconv: Itoa(...)
+File --> Caller: return
+deactivate File
+@enduml

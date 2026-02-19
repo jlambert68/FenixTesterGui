@@ -1,0 +1,22 @@
+@startuml
+title Sequence Diagram - listTestSuiteExectionsUI_HeaderLabel.go
+actor Caller
+participant "listTestSuiteExectionsUI_HeaderLabel.go" as File
+participant "container" as container
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "tempSortableHeaderLabel" as tempSortableHeaderLabel
+participant "widget" as widget
+Caller -> File: CreateRenderer(...)
+activate File
+File -> container: NewHBox(...)
+File -> container: NewStack(...)
+File -> widget: NewSimpleRenderer(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Refresh(...)
+activate File
+File -> fyne: Do(...)
+File --> Caller: return
+deactivate File
+@enduml

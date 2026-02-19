@@ -1,0 +1,25 @@
+@startuml
+title Activity Diagram - flashingTableCell.go
+start
+:Load headertable/flashingTableCell.go;
+:1. CreateRenderer [method on *FlashingTableCellStruct];
+:2. Destroy [method on *flashingTableCellRenderer];
+:3. DoubleTapped [method on *FlashingTableCellStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. FlashAddedRow;
+:Start goroutine/asynchronous work;
+:5. FlashRowToBeRemoved;
+:Start goroutine/asynchronous work;
+:6. Layout [method on *flashingTableCellRenderer];
+:7. MinSize [method on *flashingTableCellRenderer];
+:8. NewFlashingTableCell;
+:9. Objects [method on *flashingTableCellRenderer];
+:10. Refresh [method on *flashingTableCellRenderer];
+:11. Tapped [method on *FlashingTableCellStruct];
+:12. TappedSecondary [method on *FlashingTableCellStruct];
+stop
+@enduml

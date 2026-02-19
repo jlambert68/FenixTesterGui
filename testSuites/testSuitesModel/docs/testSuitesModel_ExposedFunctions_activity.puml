@@ -1,0 +1,23 @@
+@startuml
+title Activity Diagram - testSuitesModel_ExposedFunctions.go
+start
+:Load testSuites/testSuitesModel/testSuitesModel_ExposedFunctions.go;
+:1. DoBothOwnerDomainAndTestEnvironmentHaveValues [method on *TestSuiteModelStruct];
+:2. GenerateNewTestSuiteModelObject;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. GetCreatedByComputerLogin [method on *TestSuiteModelStruct];
+:4. GetCreatedByGcpLogin [method on *TestSuiteModelStruct];
+:5. GetCreatedDate [method on *TestSuiteModelStruct];
+:6. GetLastChangedByComputerLogin [method on *TestSuiteModelStruct];
+:7. GetLastChangedByGcpLogin [method on *TestSuiteModelStruct];
+:8. GetLastChangedDate [method on *TestSuiteModelStruct];
+:9. GetTestSuiteUuid [method on *TestSuiteModelStruct];
+:10. GetTestSuiteVersion [method on *TestSuiteModelStruct];
+:11. HasLockButtonBeenClickedAndBothOwnerDomainAndTestEnvironmentHaveValues [method on *TestSuiteModelStruct];
+:12. LockButtonHasBeenClicked [method on *TestSuiteModelStruct];
+stop
+@enduml

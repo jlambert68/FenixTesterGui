@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - testSuiteUI_GraphicalComponent_testDataForTestSuite_variables.go
+start
+:Load testSuites/testSuiteUI/testSuiteUI_GraphicalComponent_testDataForTestSuite_variables.go;
+:No functions declared in this file;
+stop
+@enduml

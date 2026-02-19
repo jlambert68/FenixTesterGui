@@ -1,0 +1,20 @@
+@startuml
+title Sequence Diagram - importFilesFromGithub_Initiate.go
+actor Caller
+participant "importFilesFromGithub_Initiate.go" as File
+participant "binding" as binding
+participant "container" as container
+participant "fenixMainWindow" as fenixMainWindow
+participant "fyne" as fyne
+participant "githubFileImporterWindow" as githubFileImporterWindow
+participant "importFilesFromGitHubObject" as importFilesFromGitHubObject
+participant "layout" as layout
+participant "mainWindow" as mainWindow
+Caller -> File: InitiateImportFilesFromGitHubWindow(...)
+activate File
+File -> binding: NewString(...)
+File -> container: NewBorder(...)
+File -> container: NewHBox(...)
+File --> Caller: return
+deactivate File
+@enduml

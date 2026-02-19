@@ -1,0 +1,12 @@
+@startuml
+title Activity Diagram - logrusLogger.go
+start
+:Load logrusLogger.go;
+:1. InitLogger [method on *fenixGuiBuilderProxyServerObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

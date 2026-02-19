@@ -1,0 +1,9 @@
+@startuml
+title Sequence Diagram - detailedExecutionsModel_processRemoveDetailedTestCaseExecution.go
+actor Caller
+participant "detailedExecutionsModel_processRemoveDetailedTestCaseExecution.go" as File
+Caller -> File: processRemoveDetailedTestCaseExecution(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

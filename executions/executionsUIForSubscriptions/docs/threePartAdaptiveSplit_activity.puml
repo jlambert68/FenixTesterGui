@@ -1,0 +1,9 @@
+@startuml
+title Activity Diagram - threePartAdaptiveSplit.go
+start
+:Load executions/executionsUIForSubscriptions/threePartAdaptiveSplit.go;
+:1. Layout [method on *adaptiveLayout];
+:2. MinSize [method on *adaptiveLayout];
+:3. newThreePartAdaptiveSplit;
+stop
+@enduml

@@ -1,0 +1,46 @@
+@startuml
+title Sequence Diagram - availableBuildingBlockTree_model_test.go
+actor Caller
+participant "availableBuildingBlockTree_model_test.go" as File
+participant "UnitTestTestData" as UnitTestTestData
+participant "assert" as assert
+participant "availableBuildingBlocksModel" as availableBuildingBlocksModel
+participant "fmt" as fmt
+participant "jsonpb" as jsonpb
+participant "myLogger" as myLogger
+Caller -> File: TestThatAlreadyPinnedBuildingBlockNotCanBePinned(...)
+activate File
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> UnitTestTestData: IsTestDataUsingCorrectTestDataProtoFileVersion(...)
+File -> assert: Equal(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestThatNonExistingBuildBlockCanBePinned(...)
+activate File
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> UnitTestTestData: IsTestDataUsingCorrectTestDataProtoFileVersion(...)
+File -> assert: Equal(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestThatNonExistingBuildingBlockCanNotBeUnPinned(...)
+activate File
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> UnitTestTestData: IsTestDataUsingCorrectTestDataProtoFileVersion(...)
+File -> assert: Equal(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestToPinBuildingBlockCanBePinned(...)
+activate File
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> UnitTestTestData: IsTestDataUsingCorrectTestDataProtoFileVersion(...)
+File -> assert: Equal(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestUnPinBuildingBlockThatIsPinned(...)
+activate File
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> UnitTestTestData: IsTestDataUsingCorrectTestDataProtoFileVersion(...)
+File -> assert: Equal(...)
+File --> Caller: return
+deactivate File
+@enduml

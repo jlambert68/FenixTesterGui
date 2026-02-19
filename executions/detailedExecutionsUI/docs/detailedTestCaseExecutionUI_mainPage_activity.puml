@@ -1,0 +1,10 @@
+@startuml
+title Activity Diagram - detailedTestCaseExecutionUI_mainPage.go
+start
+:Load executions/detailedExecutionsUI/detailedTestCaseExecutionUI_mainPage.go;
+:1. CreateDetailedTestCaseExecutionsTabPage [method on *DetailedTestCaseExecutionsUIModelStruct];
+:2. GenerateExecutionColorPalette;
+:3. generateExecutionColorPalette [method on *DetailedTestCaseExecutionsUIModelStruct];
+:4. generateTestCasesSummaryTable [method on *DetailedTestCaseExecutionsUIModelStruct];
+stop
+@enduml

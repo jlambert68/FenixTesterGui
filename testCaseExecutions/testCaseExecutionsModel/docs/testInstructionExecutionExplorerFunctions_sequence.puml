@@ -1,0 +1,16 @@
+@startuml
+title Sequence Diagram - testInstructionExecutionExplorerFunctions.go
+actor Caller
+participant "testInstructionExecutionExplorerFunctions.go" as File
+participant "detailedTestCaseExecutionsMapMutex" as detailedTestCaseExecutionsMapMutex
+participant "sort" as sort
+participant "testCaseExecutionsModel" as testCaseExecutionsModel
+participant "timeI" as timeI
+Caller -> File: ListExecutionDataForTestInstructionExecutions(...)
+activate File
+File -> detailedTestCaseExecutionsMapMutex: Lock(...)
+File -> detailedTestCaseExecutionsMapMutex: Unlock(...)
+File -> testCaseExecutionsModel: GetTestInstructionExecutionUuidFromTestInstructionUuid(...)
+File --> Caller: return
+deactivate File
+@enduml

@@ -1,0 +1,23 @@
+@startuml
+title Activity Diagram - detailedExecutionsModel_createSummaryTableForDetailedTestCaseExecutionsList.go
+start
+:Load executions/detailedExecutionsModel/detailedExecutionsModel_createSummaryTableForDetailedTestCaseExecutionsList.go;
+:1. CreateSummaryTableForDetailedTestCaseExecutionsList;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. MouseIn [method on *spaceButton];
+:3. MouseMoved [method on *spaceButton];
+:4. MouseOut [method on *spaceButton];
+:5. createExecutionSummary;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:6. newSpaceButton;
+stop
+@enduml

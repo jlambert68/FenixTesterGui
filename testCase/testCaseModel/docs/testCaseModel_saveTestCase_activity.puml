@@ -1,0 +1,83 @@
+@startuml
+title Activity Diagram - testCaseModel_saveTestCase.go
+start
+:Load testCase/testCaseModel/testCaseModel_saveTestCase.go;
+:1. SaveChangedTestCaseAttributeInTestCase [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. SaveFullTestCase [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. generateMatureTestInstructionContainersForGrpc [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:4. generateMatureTestInstructionsForGrpc [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:5. generateTestCaseExtraInformationForGrpc [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:6. generateTestCaseForGrpcAndHash [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:Schedule deferred cleanup;
+:7. generateTestCaseModelElementsForGrpc [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:8. generateTestCasePreviewMessageForGrpc [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:9. generateTestCaseTemplateFilesForGrpc [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:10. generateTestCaseTestDataForGrpc [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:11. generateUserSpecifiedTestCaseMetaDataMessageForGrpc [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

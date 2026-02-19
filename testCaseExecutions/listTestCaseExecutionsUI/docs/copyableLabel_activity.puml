@@ -1,0 +1,15 @@
+@startuml
+title Activity Diagram - copyableLabel.go
+start
+:Load testCaseExecutions/listTestCaseExecutionsUI/copyableLabel.go;
+:1. CreateRenderer [method on *copyableLabelStruct];
+:2. Tapped [method on *copyableLabelStruct];
+:3. TappedSecondary [method on *copyableLabelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. newCopyableLabel;
+stop
+@enduml

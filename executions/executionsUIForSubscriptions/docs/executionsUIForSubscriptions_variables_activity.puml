@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - executionsUIForSubscriptions_variables.go
+start
+:Load executions/executionsUIForSubscriptions/executionsUIForSubscriptions_variables.go;
+:No functions declared in this file;
+stop
+@enduml

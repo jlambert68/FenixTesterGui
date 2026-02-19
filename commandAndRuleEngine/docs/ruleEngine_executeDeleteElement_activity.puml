@@ -1,0 +1,78 @@
+@startuml
+title Activity Diagram - ruleEngine_executeDeleteElement.go
+start
+:Load commandAndRuleEngine/ruleEngine_executeDeleteElement.go;
+:1. executeTCRuleDeletion101 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. executeTCRuleDeletion102 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. executeTCRuleDeletion103 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. executeTCRuleDeletion104 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:5. executeTCRuleDeletion105 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:6. executeTCRuleDeletion106 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:7. executeTCRuleDeletion107 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:8. executeTCRuleDeletion108 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:9. executeTCRuleDeletion109 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:10. executeTCRuleDeletion110 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:11. executeTCRuleDeletion111 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:12. executeTCRuleDeletion112 [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

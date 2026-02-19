@@ -1,0 +1,14 @@
+@startuml
+title Activity Diagram - testSuiteUI_graphicalComponent_general_ComboBox_Renderer.go
+start
+:Load testSuites/testSuiteUI/testSuiteUI_graphicalComponent_general_ComboBox_Renderer.go;
+:1. BackgroundColor [method on *customSelectComboBoxRenderer];
+:2. CreateRenderer [method on *customSelectComboBox];
+:3. Destroy [method on *customSelectComboBoxRenderer];
+:4. Layout [method on *customSelectComboBoxRenderer];
+:5. MinSize [method on *customSelectComboBoxRenderer];
+:6. Objects [method on *customSelectComboBoxRenderer];
+:7. Refresh [method on *customSelectComboBoxRenderer];
+:8. newCustomSelectComboBoxWidget;
+stop
+@enduml

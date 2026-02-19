@@ -1,0 +1,13 @@
+@startuml
+title Activity Diagram - activeOutgoingMessages_SendInitiateTestCaseExecution.go
+start
+:Load grpc_out_GuiExecutionServer/activeOutgoingMessages_SendInitiateTestCaseExecution.go;
+:1. SendInitiateTestCaseExecution [method on *GRPCOutGuiExecutionServerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+stop
+@enduml

@@ -1,0 +1,9 @@
+@startuml
+title Sequence Diagram - testSuitesModel_ConvertTestSuiteMetaData.go
+actor Caller
+participant "testSuitesModel_ConvertTestSuiteMetaData.go" as File
+Caller -> File: ConvertTestSuiteMetaData(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

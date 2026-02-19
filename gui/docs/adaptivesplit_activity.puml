@@ -1,0 +1,9 @@
+@startuml
+title Activity Diagram - adaptivesplit.go
+start
+:Load gui/adaptivesplit.go;
+:1. Layout [method on *adaptiveLayout];
+:2. MinSize [method on *adaptiveLayout];
+:3. newAdaptiveSplit;
+stop
+@enduml

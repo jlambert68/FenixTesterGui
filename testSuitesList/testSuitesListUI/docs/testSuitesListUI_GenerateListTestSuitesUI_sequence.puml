@@ -1,0 +1,13 @@
+@startuml
+title Sequence Diagram - testSuitesListUI_GenerateListTestSuitesUI.go
+actor Caller
+participant "testSuitesListUI_GenerateListTestSuitesUI.go" as File
+participant "container" as container
+participant "widget" as widget
+Caller -> File: GenerateListTestSuitesUI(...)
+activate File
+File -> container: NewVBox(...)
+File -> widget: NewLabel(...)
+File --> Caller: return
+deactivate File
+@enduml

@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - executionsModel_testCasesListModelForExecutions.go
+start
+:Load executions/executionsModelForTestCaseExecutions/executionsModel_testCasesListModelForExecutions.go;
+:1. InitiateAndStartChannelsUsedByListModel;
+stop
+@enduml

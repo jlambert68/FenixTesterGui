@@ -1,0 +1,17 @@
+@startuml
+title Activity Diagram - availableBuildingBlockTree_ui.go
+start
+:Load gui/availableBuildingBlockTree_ui.go;
+:1. DragEnd [method on *tappableLabel];
+:2. Dragged [method on *tappableLabel];
+:3. Tapped [method on *tappableLabel];
+:4. TappedSecondary [method on *tappableLabel];
+:5. makeTreeUI [method on *UIServerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:6. newTappableLabel;
+stop
+@enduml

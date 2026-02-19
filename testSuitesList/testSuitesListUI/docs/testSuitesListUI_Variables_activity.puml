@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - testSuitesListUI_Variables.go
+start
+:Load testSuitesList/testSuitesListUI/testSuitesListUI_Variables.go;
+:No functions declared in this file;
+stop
+@enduml

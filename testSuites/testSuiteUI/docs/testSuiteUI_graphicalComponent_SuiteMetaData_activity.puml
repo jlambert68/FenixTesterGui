@@ -1,0 +1,26 @@
+@startuml
+title Activity Diagram - testSuiteUI_graphicalComponent_SuiteMetaData.go
+start
+:Load testSuites/testSuiteUI/testSuiteUI_graphicalComponent_SuiteMetaData.go;
+:1. GenerateMetaDataAreaForTestCase [method on TestSuiteUiStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. buildGUIFromMetaDataGroupsMap [method on TestSuiteUiStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:3. convertMetaDataToNewMap [method on TestSuiteUiStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+title Sequence Diagram - updateTestCaseExecutionsList.go
+actor Caller
+participant "updateTestCaseExecutionsList.go" as File
+participant "fmt" as fmt
+participant "listTestCaseExecutionsResponse" as listTestCaseExecutionsResponse
+participant "testCaseExecution" as testCaseExecution
+participant "testCaseExecutions" as testCaseExecutions
+participant "testCaseExecutionsModel" as testCaseExecutionsModel
+participant "testCaseExecutionsModelRef" as testCaseExecutionsModelRef
+Caller -> File: LoadTestCaseExecutionsThatCanBeViewedByUser(...)
+activate File
+File -> fmt: Println(...)
+File -> listTestCaseExecutionsResponse: GetAckNackResponse(...)
+File -> listTestCaseExecutionsResponse: GetLatestUniqueTestCaseExecutionDatabaseRowId(...)
+File --> Caller: return
+deactivate File
+@enduml

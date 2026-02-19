@@ -1,0 +1,17 @@
+@startuml
+title Sequence Diagram - testCaseUI_graphicalRepresentation_testDataForTestCase_PublicFunctions.go
+actor Caller
+participant "testCaseUI_graphicalRepresentation_testDataForTestCase_PublicFunctions.go" as File
+Caller -> File: GetSelectedTestDataGroup(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: GetSelectedTestDataPoint(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: GetSelectedTestDataPointRow(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

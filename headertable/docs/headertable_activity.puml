@@ -1,0 +1,19 @@
+@startuml
+title Activity Diagram - headertable.go
+start
+:Load headertable/headertable.go;
+:1. CreateRenderer [method on *HeaderTable];
+:2. Destroy [method on headerTableRenderer];
+:3. Layout [method on headerTableRenderer];
+:4. MinSize [method on headerTableRenderer];
+:5. NewHeaderTable;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:6. Objects [method on headerTableRenderer];
+:7. Refresh [method on headerTableRenderer];
+stop
+@enduml

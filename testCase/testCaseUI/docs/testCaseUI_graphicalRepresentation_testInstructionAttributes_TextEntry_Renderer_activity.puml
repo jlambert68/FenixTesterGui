@@ -1,0 +1,14 @@
+@startuml
+title Activity Diagram - testCaseUI_graphicalRepresentation_testInstructionAttributes_TextEntry_Renderer.go
+start
+:Load testCase/testCaseUI/testCaseUI_graphicalRepresentation_testInstructionAttributes_TextEntry_Renderer.go;
+:1. BackgroundColor [method on *customEntryWidgetRenderer];
+:2. CreateRenderer [method on *customAttributeEntryWidget];
+:3. Destroy [method on *customEntryWidgetRenderer];
+:4. Layout [method on *customEntryWidgetRenderer];
+:5. MinSize [method on *customEntryWidgetRenderer];
+:6. Objects [method on *customEntryWidgetRenderer];
+:7. Refresh [method on *customEntryWidgetRenderer];
+:8. newCustomAttributeEntryWidget;
+stop
+@enduml

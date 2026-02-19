@@ -1,0 +1,28 @@
+@startuml
+title Activity Diagram - listTestCasesUI_sortableImage.go
+start
+:Load testCases/listTestCasesUI/listTestCasesUI_sortableImage.go;
+:1. BackgroundColor [method on *clickableSortImageRenderer];
+:2. CreateRenderer [method on *clickableSortImage];
+:3. Destroy [method on *clickableSortImageRenderer];
+:4. Layout [method on *clickableSortImageRenderer];
+:5. MinSize [method on *clickableSortImageRenderer];
+:6. Objects [method on *clickableSortImageRenderer];
+:7. Refresh [method on *clickableSortImage];
+:8. Refresh [method on *clickableSortImageRenderer];
+:9. Tapped [method on *clickableSortImage];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:10. TappedSecondary [method on *clickableSortImage];
+:11. newClickableSortImage;
+:12. updateImageVisibility [method on *clickableSortImage];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

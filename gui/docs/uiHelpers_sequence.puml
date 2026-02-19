@@ -1,0 +1,29 @@
+@startuml
+title Sequence Diagram - uiHelpers.go
+actor Caller
+participant "uiHelpers.go" as File
+Caller -> File: SetDialAddressString(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: SetDialAddressString(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: SetDialAddressString(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: SetLogger(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: SetLogger(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: SetLogger(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

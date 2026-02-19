@@ -1,0 +1,442 @@
+package listTestSuiteExecutionsUI
+
+import (
+	sharedCode "FenixTesterGui/common_code"
+	"FenixTesterGui/executions/detailedExecutionsModel"
+	"FenixTesterGui/testCaseExecutions/listTestCaseExecutionsUI"
+	"FenixTesterGui/testCaseExecutions/testCaseExecutionsModel"
+	"FenixTesterGui/testSuiteExecutions/testSuiteExecutionsModel"
+	"fmt"
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/theme"
+	"fyne.io/fyne/v2/widget"
+	fenixExecutionServerGuiGrpcApi "github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api"
+	"github.com/sirupsen/logrus"
+	"image/color"
+	"strconv"
+)
+
+func (testSuiteInstructionPreViewObjectRef *TestSuiteInstructionPreViewStruct) GenerateTestSuiteExecutionPreviewContainer(
+	testSuiteExecutionUuid string,
+	testSuiteExecutionVersion uint32,
+	testSuiteExecutionsModelRef *testSuiteExecutionsModel.TestSuiteExecutionsModelStruct,
+	openedTestSuiteExecutionFrom listTestCaseExecutionsUI.OpenedTestCaseExecutionOrTestSuiteExecutionFromType,
+	currentWindowPtr *fyne.Window,
+	testCaseExecutionsModelRef *testCaseExecutionsModel.TestCaseExecutionsModelStruct) {
+
+	var testSuiteExecutionPreviewTopContainer *fyne.Container
+	var testSuitePreviewBottomContainer *fyne.Container
+	var testCaseExecutionPreviewAreaForPreviewContainer *fyne.Container
+
+	// Get Data for the Execution Preview
+	var tempTestSuiteExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage
+
+	// Get the Data for the Execution Preview
+	//tempTestSuiteExecutionResponseMessage = listTestSuitesModel.TestSuitesThatCanBeEditedByUserMap[testSuiteUuid].TestSuitePreview.TestSuitePreview
+
+	// Can preview be found in Map for "One TestCaseExecution per TestCase" or "All TestCaseExecutions per TestCase"
+	switch selectedTestSuiteExecutionObjected.ExecutionsInGuiIsOfType {
+
+	case AllExecutionsForOneTestSuite:
+		tempTestSuiteExecutionsListMessage, _ = testSuiteExecutionsModelRef.
+			GetSpecificTestSuiteExecutionForOneTestSuiteUuid(
+				testSuiteExecutionsModel.TestSuiteUuidType(selectedTestSuiteExecutionObjected.
+					allExecutionsFoOneTestSuiteListObject.testSuiteUuidForTestSuiteExecutionThatIsShownInPreview),
+				testSuiteExecutionsModel.TestSuiteExecutionUuidType(selectedTestSuiteExecutionObjected.
+					allExecutionsFoOneTestSuiteListObject.testSuiteExecutionUuidThatIsShownInPreview))
+
+	case OneExecutionPerTestSuite:
+		tempTestSuiteExecutionsListMessage, _ = testSuiteExecutionsModelRef.ReadFromTestSuiteExecutionsMapForTableList(
+			testSuiteExecutionsModel.TestSuiteExecutionUuidType(testSuiteExecutionUuid))
+
+	case NotDefined:
+
+		tempTestSuiteExecutionsListMessage = &fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage{}
+
+	}
+
+	// Create the Top container
+	testSuiteExecutionPreviewTopContainer = container.New(layout.NewFormLayout())
+
+	// Create the ExecutionStatus Rectangle for TestSuiteExecution-status
+	var tempTestSuiteExecutionStatusRectangle *canvas.Rectangle
+	tempTestSuiteExecutionStatusRectangle = canvas.NewRectangle(color.Transparent)
+
+	// Resize the ExecutionStatus rectangle
+	tempTestSuiteExecutionStatusRectangle.SetMinSize(fyne.Size{
+		Width:  testSuiteExecutionStatusRectangleWidth,
+		Height: testSuiteExecutionStatusRectangleHeight,
+	})
+	tempTestSuiteExecutionStatusRectangle.Resize(fyne.Size{
+		Width:  testSuiteExecutionStatusRectangleWidth,
+		Height: testSuiteExecutionStatusRectangleHeight,
+	})
+
+	// Set correct color on ExecutionStatus Rectangle
+	var statusId uint8
+
+	// Extract TestCaseExecution-status
+	var tempTestSuiteExecutionStatusEnum string
+	tempTestSuiteExecutionStatusEnum = tempTestSuiteExecutionsListMessage.GetTestSuiteExecutionStatus().String()[4:]
+
+	statusId = detailedExecutionsModel.
+		ExecutionStatusColorNameToNumberMap[tempTestSuiteExecutionStatusEnum].ExecutionStatusNumber
+
+	var executionStatusColorMapObjectForTestSuiteExecution detailedExecutionsModel.ExecutionStatusColorMapStruct
+	var existInMap bool
+	executionStatusColorMapObjectForTestSuiteExecution, existInMap = detailedExecutionsModel.ExecutionStatusColorMap[int32(statusId)]
+	if existInMap == false {
+		// No matching Status color exist due to that TestInstruction exists in ExecutionQueue
+		// 'INITIATED = 1'
+		executionStatusColorMapObjectForTestSuiteExecution, _ = detailedExecutionsModel.ExecutionStatusColorMap[1]
+		/*
+			tempTestSuiteExecutionStatusRectangle.StrokeWidth = 2
+			tempTestSuiteExecutionStatusRectangle.StrokeColor = color.NRGBA{
+				R: 0xFF,
+				G: 0x00,
+				B: 0x00,
+				A: 0xFF,
+			}
+		*/
+
+	} else {
+		// Status color found
+		tempTestSuiteExecutionStatusRectangle.FillColor = executionStatusColorMapObjectForTestSuiteExecution.BackgroundColor
+
+		if executionStatusColorMapObjectForTestSuiteExecution.UseStroke == true {
+			tempTestSuiteExecutionStatusRectangle.StrokeWidth = 2
+			tempTestSuiteExecutionStatusRectangle.StrokeColor = executionStatusColorMapObjectForTestSuiteExecution.StrokeColor
+		}
+	}
+
+	// Add TestSuiteName to Top container
+	tempTestSuiteNameLabel := widget.NewLabel("TestSuiteName:")
+	tempTestSuiteNameLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testSuiteExecutionPreviewTopContainer.Add(tempTestSuiteNameLabel)
+	testSuiteExecutionPreviewTopContainer.Add(widget.NewLabel(tempTestSuiteExecutionsListMessage.GetTestSuiteName()))
+
+	// Add TestCaseExecutionStatus
+	tempTestSuiteExecutionStatusLabel := widget.NewLabel("TestSuiteExecution-status:")
+	tempTestSuiteExecutionStatusLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testSuiteExecutionPreviewTopContainer.Add(tempTestSuiteExecutionStatusLabel)
+
+	var testSuiteExecutionStatusStackContainer *fyne.Container
+	var testSuiteExecutionStatusHBoxContainer *fyne.Container
+	var testSuiteExecutionStatusOuterHBoxContainer *fyne.Container
+	testSuiteExecutionStatusStackContainer = container.NewStack()
+	testSuiteExecutionStatusHBoxContainer = container.NewHBox(
+		widget.NewLabel(" "),
+		canvas.NewText(executionStatusColorMapObjectForTestSuiteExecution.ExecutionStatusName, color.Black),
+		widget.NewLabel(" "))
+	testSuiteExecutionStatusStackContainer.Add(tempTestSuiteExecutionStatusRectangle)
+	testSuiteExecutionStatusStackContainer.Add(testSuiteExecutionStatusHBoxContainer)
+	testSuiteExecutionStatusOuterHBoxContainer = container.NewHBox(
+		testSuiteExecutionStatusStackContainer,
+		layout.NewSpacer())
+
+	testSuiteExecutionPreviewTopContainer.Add(testSuiteExecutionStatusOuterHBoxContainer)
+
+	// Add TestSuiteOwner Domain Top container
+	tempOwnerDomainLabel := widget.NewLabel("OwnerDomain:")
+	tempOwnerDomainLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testSuiteExecutionPreviewTopContainer.Add(tempOwnerDomainLabel)
+	testSuiteExecutionPreviewTopContainer.Add(widget.NewLabel(tempTestSuiteExecutionsListMessage.GetDomainName()))
+
+	// Add Description Top container
+	tempTestSuiteDescription := widget.NewLabel("Description:")
+	tempTestSuiteDescription.TextStyle = fyne.TextStyle{Bold: true}
+	testSuiteExecutionPreviewTopContainer.Add(tempTestSuiteDescription)
+	testSuiteExecutionPreviewTopContainer.Add(widget.NewRichTextWithText(tempTestSuiteExecutionsListMessage.
+		TestSuitePreview.TestSuitePreview.TestSuiteDescription))
+
+	// Create Header for TestCase-list area
+	testCaseListHeaderLabel := widget.NewLabel("TestCases in TestSuite")
+	testCaseListHeaderLabel.TextStyle = fyne.TextStyle{Bold: true, Italic: true}
+	testSuiteExecutionPreviewTopContainer.Add(testCaseListHeaderLabel)
+	testSuiteExecutionPreviewTopContainer.Add(widget.NewLabel(""))
+
+	// Create the Bottom container
+	testSuitePreviewBottomContainer = container.New(layout.NewFormLayout())
+
+	// Create Header for Bottom container
+	bottomContainerHeaderLabel := widget.NewLabel("TestSuiteExecution Information")
+	bottomContainerHeaderLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testSuitePreviewBottomContainer.Add(bottomContainerHeaderLabel)
+	testSuitePreviewBottomContainer.Add(widget.NewLabel(""))
+
+	// Add TestSuiteExecutionVersion to Bottom container
+	tempTestSuiteExecutionVersionLabel := widget.NewLabel("TestSuiteExecutionVersion:")
+	tempTestSuiteExecutionVersionLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testSuitePreviewBottomContainer.Add(tempTestSuiteExecutionVersionLabel)
+	testSuitePreviewBottomContainer.Add(widget.NewLabel(strconv.Itoa(int(tempTestSuiteExecutionsListMessage.TestSuiteExecutionVersion))))
+
+	// Add ExecutionStartTimeStamp to Bottom container
+	tempExecutionStartTimeStampLabel := widget.NewLabel("TestSuite Execution Start TimeStamp:")
+	tempExecutionStartTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testSuitePreviewBottomContainer.Add(tempExecutionStartTimeStampLabel)
+	copyableExecutionStartTimeStampLabel := newCopyableLabel(
+		tempTestSuiteExecutionsListMessage.GetExecutionStartTimeStamp().AsTime().String(),
+		true)
+	testSuitePreviewBottomContainer.Add(copyableExecutionStartTimeStampLabel)
+
+	// Add ExecutionStopTimeStamp to Bottom container
+	tempExecutionStopTimeStampLabel := widget.NewLabel("TestSuite Execution Stop TimeStamp:")
+	tempExecutionStopTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testSuitePreviewBottomContainer.Add(tempExecutionStopTimeStampLabel)
+	copyableExecutionStopTimeStampLabel := newCopyableLabel(
+		tempTestSuiteExecutionsListMessage.ExecutionStopTimeStamp.AsTime().String(),
+		true)
+	testSuitePreviewBottomContainer.Add(copyableExecutionStopTimeStampLabel)
+
+	// Add ExecutionStatusUpdateTimeStamp to Bottom container
+	tempExecutionStatusUpdateTimeStampLabel := widget.NewLabel("TestSuite Execution Status Update TimeStamp:")
+	tempExecutionStatusUpdateTimeStampLabel.TextStyle = fyne.TextStyle{Bold: true}
+	testSuitePreviewBottomContainer.Add(tempExecutionStatusUpdateTimeStampLabel)
+	copyableExecutionStatusUpdateTimeStampLabel := newCopyableLabel(
+		tempTestSuiteExecutionsListMessage.ExecutionStatusUpdateTimeStamp.AsTime().String(),
+		true)
+	testSuitePreviewBottomContainer.Add(copyableExecutionStatusUpdateTimeStampLabel)
+
+	// Create the Temporary container that should be shown
+	temporaryContainer := container.NewCenter(widget.NewLabel("Select a TestCaseExecution to get the Preview"))
+	testCaseExecutionPreviewAreaForPreviewContainer = container.NewBorder(nil, nil, nil, nil, temporaryContainer)
+
+	// Generate List with TestCaseExecutions. User can click TestCase and its Preview is shown
+	var testCaseExecutionsWidgetList *widget.List
+
+	// Create a short name to use in list
+	testCaseExecutionsList := tempTestSuiteExecutionsListMessage.TestInstructionsExecutionStatusPreviewValues.TestInstructionExecutionStatusPreviewValues
+
+	// Create and configure the list-component of all TestDataPoints
+	testCaseExecutionsWidgetList = widget.NewList(
+		func() int { return len(testCaseExecutionsList) },
+		func() fyne.CanvasObject {
+
+			return widget.NewLabel("")
+		},
+		func(id widget.ListItemID, obj fyne.CanvasObject) {
+
+			obj.(*widget.Label).SetText(fmt.Sprintf(
+				"%s [%s]",
+				testCaseExecutionsList[id].TestCaseName,
+				sharedCode.GenerateShortUuidFromFullUuid(testCaseExecutionsList[id].TestCaseUuid)))
+		},
+	)
+
+	// When TestCaseExecution is selected then show Preview
+	testCaseExecutionsWidgetList.OnSelected = func(id widget.ListItemID) {
+
+		// Load DetailedTestCaseExecution to check if it exists and the execution status
+		var detailedTestCaseExecutionMapKey testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType
+		var detailedTestCaseExecution *fenixExecutionServerGuiGrpcApi.TestCaseExecutionResponseMessage
+
+		detailedTestCaseExecutionMapKey = testCaseExecutionsModel.DetailedTestCaseExecutionMapKeyType(
+			testCaseExecutionsList[id].TestCaseExecutionUuid +
+				strconv.Itoa(int(testCaseExecutionsList[id].TestCaseExecutionVersion)))
+		detailedTestCaseExecution, existInMap = testCaseExecutionsModel.TestCaseExecutionsModel.
+			ReadFromDetailedTestCaseExecutionsMap(detailedTestCaseExecutionMapKey)
+
+		if existInMap == false {
+
+			// 'detailedTestCaseExecution' doesn't exist in Map so load it from Database
+			testCaseExecutionsModel.LoadDetailedTestCaseExecutionFromDatabase(
+				testCaseExecutionsList[id].TestCaseExecutionUuid,
+				uint32(testCaseExecutionsList[id].TestCaseExecutionVersion))
+		} else {
+			// 'detailedTestCaseExecution' existed, so check execution status for it
+			var isEndStatus bool
+			isEndStatus = detailedExecutionsModel.IsTestCaseExecutionStatusAnEndStatus(
+				detailedTestCaseExecution.TestCaseExecutionDetails[len(detailedTestCaseExecution.TestCaseExecutionDetails)-1].
+					TestCaseExecutionStatus)
+
+			// Load Detailed TestCaseExecution from Database, if TestCaseExecutionStatus is NOT an end status
+			// FIXA
+			if isEndStatus == false || testCaseExecutionsList[id].TestInstructionName == "ValidateMT548" {
+				testCaseExecutionsModel.LoadDetailedTestCaseExecutionFromDatabase(
+					testCaseExecutionsList[id].TestCaseExecutionUuid,
+					uint32(testCaseExecutionsList[id].TestCaseExecutionVersion))
+			}
+
+		}
+
+		// Generate object for the TestCaseExecutionPreview
+		//testCaseExecutionPreViewObjectInTestSuiteExecution = &listTestCaseExecutionsUI.TestCaseInstructionPreViewStruct{}
+
+		// Find correct 'TestCasePreviewStructureMessageFromTestSuiteExecution'
+		var tempTestCasePreviewStructureMessageFromTestSuiteExecution *fenixExecutionServerGuiGrpcApi.TestCasePreviewStructureMessage
+		var tempTestInstructionExecutionStatusPreviewValuesFromTestSuiteExecution *fenixExecutionServerGuiGrpcApi.TestInstructionsExecutionStatusPreviewValuesMessage
+		var foundTestCase bool
+
+		// Find 'tempTestCasePreviewStructureMessageFromTestSuiteExecution' & 'testTestInstructionsExecutionStatusPreviewValues'
+		for preViewIndex, _ := range tempTestSuiteExecutionsListMessage.TestCasesPreviews.TestCasePreviews {
+
+			// Check if PreView is connected to same TestCaseUuid as the user picked from the list
+			if tempTestSuiteExecutionsListMessage.TestCasesPreviews.TestCasePreviews[preViewIndex].TestCaseUuid ==
+				testCaseExecutionsList[id].TestCaseUuid {
+
+				tempTestCasePreviewStructureMessageFromTestSuiteExecution =
+					tempTestSuiteExecutionsListMessage.TestCasesPreviews.TestCasePreviews[preViewIndex]
+
+				tempTestInstructionExecutionStatusPreviewValuesFromTestSuiteExecution = tempTestSuiteExecutionsListMessage.
+					TestInstructionsExecutionStatusPreviewValues
+
+				foundTestCase = true
+				break
+			}
+		}
+
+		if foundTestCase == false {
+
+			sharedCode.Logger.WithFields(logrus.Fields{
+				"id": "489205ae-e5bf-4758-8f8f-b06f5b51706e",
+				"testCaseExecutionsList[id].TestCaseUuid ": testCaseExecutionsList[id].TestCaseUuid,
+			}).Fatalln("'TestCaseUuid' couldn't be found 'tempTestSuiteExecutionsListMessage.TestCasesPreviews.TestCasePreviews'. Should never happen")
+		}
+		// Update TestCaseExecution Preview
+		Skapa ett nytt 'listTestCaseExecutionsUI.TestCaseInstructionPreViewObject'-object som används i TestSuitePreview
+
+		// Define function to open a TestCaseExecution in a Tab
+		var openTestCaseExecutionInTabFunction func()
+		openTestCaseExecutionInTabFunction = func() {
+
+			// Object exist, but check if the Tab already exist
+			if openedDetailedTestCaseExecutionPtr.isTestCaseExecutionOpenInTab == true {
+				// Tab exist, so get the tab so make it the visible one
+				detailedTestCaseExecutionsUITabObjectRef.Select(openedDetailedTestCaseExecutionPtr.tabItem)
+
+			} else {
+
+				// Initialize Tab-object
+				openedDetailedTestCaseExecutionPtr.
+					TestCaseInstructionPreViewObjectInTab = &TestCaseInstructionPreViewStruct{
+					testCasePreviewTestInstructionExecutionLogSplitContainer: nil,
+					testCaseExecutionPreviewContainerScroll:                  nil,
+					testCaseExecutionPreviewContainer:                        container.New(layout.NewVBoxLayout()),
+					testInstructionsExecutionDetailsContainerScroll:          nil,
+					testInstructionsExecutionLogContainer:                    nil,
+					testInstructionsExecutionAttributesContainerScroll:       nil,
+					testInstructionsExecutionAttributesContainer:             nil,
+					testInstructionsExecutionDetailsContainer:                nil,
+					preViewTabs:                       nil,
+					attributeExplorerTab:              nil,
+					logsExplorerTab:                   nil,
+					testInstructionDetailsExplorerTab: nil,
+				}
+
+				// Generate base objects for the PreView
+				openedDetailedTestCaseExecutionPtr.TestCaseInstructionPreViewObjectInTab.
+					testCasePreviewTestInstructionExecutionLogSplitContainer = generatePreViewObject(
+					openedDetailedTestCaseExecutionPtr.TestCaseInstructionPreViewObjectInTab)
+
+				// Generate a copy of the TestCaseExecutionPreview
+				openedDetailedTestCaseExecutionPtr.TestCaseInstructionPreViewObjectInTab.
+					GenerateTestCaseExecutionPreviewContainer(
+						testCaseExecutionUuid,
+						testCaseExecutionVersion,
+						testCaseExecutionsModelRef,
+						FromTabForTestCaseExecution,
+						sharedCode.FenixMasterWindowPtr,
+						nil,
+						nil)
+
+				// Save the Object back to the Map
+				openedDetailedTestCaseExecutionsMap[openedDetailedTestCaseExecutionsMapKey] = openedDetailedTestCaseExecutionPtr
+
+				// Create a new Tab used for a specific TestCaseExecution
+				var newDetailedTestCaseExecutionsTab *container.TabItem
+				newDetailedTestCaseExecutionsTab = container.NewTabItem(
+					testCaseExecutionUuid,
+					container.NewBorder(
+						nil,
+						nil,
+						nil,
+						nil,
+						openedDetailedTestCaseExecutionPtr.TestCaseInstructionPreViewObjectInTab.
+							testCasePreviewTestInstructionExecutionLogSplitContainer))
+
+				// Add Tab to TabObjects TestCaseExecutions
+				detailedTestCaseExecutionsUITabObjectRef.Append(newDetailedTestCaseExecutionsTab)
+
+				// Extract Map with exit-functions for Tabs
+				var exitFunctionsForDetailedTestCaseExecutionsUITabObject map[*container.TabItem]func()
+				exitFunctionsForDetailedTestCaseExecutionsUITabObject = *exitFunctionsForDetailedTestCaseExecutionsUITabObjectPtr
+
+				// Add Close function to TabItem
+				exitFunctionsForDetailedTestCaseExecutionsUITabObject[newDetailedTestCaseExecutionsTab] = func() {
+
+					// Remove and indicate that no Tab is onpen
+					openedDetailedTestCaseExecutionPtr.isTestCaseExecutionOpenInTab = false
+					openedDetailedTestCaseExecutionPtr.TestCaseInstructionPreViewObjectInTab = nil
+
+					// Delete the Exit-function for the Tab
+					defer func() {
+						delete(exitFunctionsForDetailedTestCaseExecutionsUITabObject, newDetailedTestCaseExecutionsTab)
+					}()
+
+				}
+
+				// Select the newly created TabItem
+				detailedTestCaseExecutionsUITabObjectRef.Select(newDetailedTestCaseExecutionsTab)
+
+				// Refresh the Tab
+				detailedTestCaseExecutionsUITabObjectRef.Refresh()
+
+				// Store the pointer to the TabItem
+				openedDetailedTestCaseExecutionPtr.tabItem = newDetailedTestCaseExecutionsTab
+
+				// Set boolean to indicate that window is open
+				openedDetailedTestCaseExecutionPtr.isTestCaseExecutionOpenInTab = true
+
+			}
+
+		}
+		openTestCaseExecutionInTabFunction()
+		/*
+		listTestCaseExecutionsUI.TestCaseInstructionPreViewObject.GenerateTestCaseExecutionPreviewContainer(
+			testCaseExecutionsList[id].TestCaseExecutionUuid,
+			uint32(testCaseExecutionsList[id].TestCaseExecutionVersion),
+			testCaseExecutionsModelRef,
+			listTestCaseExecutionsUI.FromExecutionListForTestSuites,
+			currentWindowPtr,
+			tempTestCasePreviewStructureMessageFromTestSuiteExecution,
+			tempTestInstructionExecutionStatusPreviewValuesFromTestSuiteExecution)
+
+	}
+
+		 */
+
+	// Calculate a sensible minimum height for ~5 rows
+	template := widget.NewLabel("template")
+	rowH := template.MinSize().Height
+	rows := float32(5.0)
+	minH := rowH*rows + theme.Padding()*(rows-1)
+
+	// Wrap the list so it can't shrink below ~5 rows
+	wrap := container.New(layout.NewGridWrapLayout(fyne.NewSize(320, minH)), testCaseExecutionsWidgetList)
+
+	testSuiteExecutionMainAreaForPreviewBorderContainer := container.NewBorder(wrap, nil, nil, nil, testCaseExecutionPreviewAreaForPreviewContainer)
+	testSuiteExecutionMainAreaForPreviewScrollContainer := container.NewScroll(testSuiteExecutionMainAreaForPreviewBorderContainer)
+
+	// Create Top header for Preview
+	tempTopHeaderLabel := widget.NewLabel("TestSuiteExecution Preview")
+	tempTopHeaderLabel.TextStyle = fyne.TextStyle{Bold: true}
+
+	testSuiteInstructionPreViewObjectRef.testSuiteExecutionPreviewContainer.Objects[0] = container.NewBorder(
+		container.NewVBox(container.NewCenter(tempTopHeaderLabel), testSuiteExecutionPreviewTopContainer, widget.NewSeparator()),
+		container.NewVBox(widget.NewSeparator(), testSuitePreviewBottomContainer), nil, nil,
+		testSuiteExecutionMainAreaForPreviewScrollContainer)
+
+	// Refresh the 'testSuitePreviewContainer'
+	testSuiteInstructionPreViewObjectRef.testSuiteExecutionPreviewContainer.Refresh()
+
+	return
+}
+
+// ClearTestSuiteExecutionPreviewContainer
+// Clears the preview area for the TestSuiteExecution
+func (testCaseInstructionPreViewObjectRef *TestSuiteInstructionPreViewStruct) ClearTestSuiteExecutionPreviewContainer() {
+	testCaseInstructionPreViewObjectRef.testSuiteExecutionPreviewContainer.Objects[0] = container.NewCenter(widget.NewLabel("Select a TestSuiteExecution to get the Preview"))
+}

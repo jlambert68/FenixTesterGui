@@ -1,0 +1,8 @@
+@startuml
+title Activity Diagram - testCaseExecutionUI_testCaseLExecutionsList_finishedExecution.go
+start
+:Load executions/executionsUIForExecutions/testCaseExecutionUI_testCaseLExecutionsList_finishedExecution.go;
+:1. CreateTableForTestCaseExecutionsWithFinishedExecution;
+:Iterate loop/range logic;
+stop
+@enduml

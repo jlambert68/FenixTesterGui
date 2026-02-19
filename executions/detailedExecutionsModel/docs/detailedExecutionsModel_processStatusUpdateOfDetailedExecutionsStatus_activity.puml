@@ -1,0 +1,20 @@
+@startuml
+title Activity Diagram - detailedExecutionsModel_processStatusUpdateOfDetailedExecutionsStatus.go
+start
+:Load executions/detailedExecutionsModel/detailedExecutionsModel_processStatusUpdateOfDetailedExecutionsStatus.go;
+:1. IsTestCaseExecutionStatusAnEndStatus;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. processStatusUpdateOfDetailedExecutionsStatus [method on *DetailedExecutionsModelObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:Schedule deferred cleanup;
+stop
+@enduml

@@ -1,0 +1,7 @@
+@startuml
+title Sequence Diagram - bundled.go
+actor Caller
+participant "bundled.go" as File
+Caller -> File: (no callable functions detected)
+File --> Caller: return
+@enduml

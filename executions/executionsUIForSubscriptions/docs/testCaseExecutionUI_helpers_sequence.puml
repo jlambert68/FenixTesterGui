@@ -1,0 +1,17 @@
+@startuml
+title Sequence Diagram - testCaseExecutionUI_helpers.go
+actor Caller
+participant "testCaseExecutionUI_helpers.go" as File
+participant "b1" as b1
+participant "errors" as errors
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "widget" as widget
+Caller -> File: ResizeTableColumns(...)
+activate File
+File -> b1: GetItem(...)
+File -> fyne: NewSize(...)
+File -> widget: NewLabel(...)
+File --> Caller: return
+deactivate File
+@enduml

@@ -1,0 +1,65 @@
+@startuml
+title Activity Diagram - testSuitesModel_SaveTestSuite.go
+start
+:Load testSuites/testSuitesModel/testSuitesModel_SaveTestSuite.go;
+:1. SaveTestSuite [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. generateTestCasesInTestSuiteMessageWhenSaving [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:3. generateTestSuiteBasicInformationMessageWhenSaving [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. generateTestSuiteDeleteDateMessageWhenSaving [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:5. generateTestSuiteImplementedFunctionsMapWhenSaving [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:6. generateTestSuiteMetaDataMessageWhenSaving [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:7. generateTestSuitePreviewMessageWhenSaving [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:8. generateTestSuiteTestDataMessageWhenSaving [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:9. generateTestSuiteTypeMessageWhenSaving [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

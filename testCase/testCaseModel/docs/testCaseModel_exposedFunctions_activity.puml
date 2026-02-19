@@ -1,0 +1,68 @@
+@startuml
+title Activity Diagram - testCaseModel_exposedFunctions.go
+start
+:Load testCase/testCaseModel/testCaseModel_exposedFunctions.go;
+:1. CreateTextualTestCase [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. GenerateShortUuidFromFullUuid [method on *TestCasesModelsStruct];
+:3. GetArrayOfTestCaseTreeNodeChildrenData [method on *TestCasesModelsStruct];
+:Iterate loop/range logic;
+:4. GetTestCaseNameUuid [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:5. GetTestCaseTreeNodeChildData [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:6. GetTreeViewModelForTestCase [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:7. GetUuidFromUiName [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:8. ListAllAvailableBuildingBlocksInTestCase [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:9. ListAvailableTestCases [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:10. UpdateTreeViewModelForTestCase [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:11. VerifyThatThereAreNoZombieElementsInTestCaseModel [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

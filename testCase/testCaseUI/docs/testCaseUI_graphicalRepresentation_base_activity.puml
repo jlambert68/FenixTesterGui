@@ -1,0 +1,12 @@
+@startuml
+title Activity Diagram - testCaseUI_graphicalRepresentation_base.go
+start
+:Load testCase/testCaseUI/testCaseUI_graphicalRepresentation_base.go;
+:1. generateGraphicalRepresentationAreaForTestCase [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

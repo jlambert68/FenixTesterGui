@@ -1,0 +1,45 @@
+@startuml
+title Sequence Diagram - listTestCaseExectionsUI_TableLabel.go
+actor Caller
+participant "listTestCaseExectionsUI_TableLabel.go" as File
+participant "TestCaseInstructionPreViewObject" as TestCaseInstructionPreViewObject
+participant "canvas" as canvas
+participant "clipboard" as clipboard
+participant "currentRowThatMouseIsHoveringAboveMutex" as currentRowThatMouseIsHoveringAboveMutex
+participant "fenixMasterWindow" as fenixMasterWindow
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "l" as l
+Caller -> File: MouseIn(...)
+activate File
+File -> currentRowThatMouseIsHoveringAboveMutex: Lock(...)
+File -> currentRowThatMouseIsHoveringAboveMutex: Unlock(...)
+File -> l: Refresh(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseMoved(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MouseOut(...)
+activate File
+File -> currentRowThatMouseIsHoveringAboveMutex: Lock(...)
+File -> currentRowThatMouseIsHoveringAboveMutex: Unlock(...)
+File -> l: Refresh(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Tapped(...)
+activate File
+File -> TestCaseInstructionPreViewObject: GenerateTestCaseExecutionPreviewContainer(...)
+File -> l: onDoubleTap(...)
+File -> loadAllTestCaseExecutionsForOneTestCaseButtonReference: Enable(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TappedSecondary(...)
+activate File
+File -> clipboard: SetContent(...)
+File -> fenixMasterWindow: Clipboard(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+title Activity Diagram - detaledTestCaseExecutionFunctions.go
+start
+:Load testCaseExecutions/testCaseExecutionsModel/detaledTestCaseExecutionFunctions.go;
+:1. ExtractAndStoreRelationBetweenTestInstructionUuidAndTestCaseExecutionUuid [method on TestCaseExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:Schedule deferred cleanup;
+stop
+@enduml

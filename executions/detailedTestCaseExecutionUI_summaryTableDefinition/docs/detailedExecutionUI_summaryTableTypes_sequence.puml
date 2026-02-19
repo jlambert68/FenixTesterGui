@@ -1,0 +1,7 @@
+@startuml
+title Sequence Diagram - detailedExecutionUI_summaryTableTypes.go
+actor Caller
+participant "detailedExecutionUI_summaryTableTypes.go" as File
+Caller -> File: (no callable functions detected)
+File --> Caller: return
+@enduml

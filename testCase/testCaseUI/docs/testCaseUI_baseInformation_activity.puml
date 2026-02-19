@@ -1,0 +1,12 @@
+@startuml
+title Activity Diagram - testCaseUI_baseInformation.go
+start
+:Load testCase/testCaseUI/testCaseUI_baseInformation.go;
+:1. generateBaseInformationAreaForTestCase [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

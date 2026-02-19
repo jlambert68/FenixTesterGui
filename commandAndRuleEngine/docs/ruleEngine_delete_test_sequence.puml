@@ -1,0 +1,80 @@
+@startuml
+title Sequence Diagram - ruleEngine_delete_test.go
+actor Caller
+participant "ruleEngine_delete_test.go" as File
+participant "UnitTestTestData" as UnitTestTestData
+participant "assert" as assert
+participant "commandAndRuleEngine" as commandAndRuleEngine
+participant "fmt" as fmt
+participant "uuidGenerator" as uuidGenerator
+Caller -> File: TestTCRuleDeletion101(...)
+activate File
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> assert: Equal(...)
+File -> commandAndRuleEngine: executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestTCRuleDeletion102(...)
+activate File
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> assert: Equal(...)
+File -> commandAndRuleEngine: executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestTCRuleDeletion103(...)
+activate File
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> assert: Equal(...)
+File -> commandAndRuleEngine: executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestTCRuleDeletion104(...)
+activate File
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> assert: Equal(...)
+File -> commandAndRuleEngine: executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestTCRuleDeletion105(...)
+activate File
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> assert: Equal(...)
+File -> commandAndRuleEngine: executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestTCRuleDeletion106(...)
+activate File
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> assert: Equal(...)
+File -> commandAndRuleEngine: executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestTCRuleDeletion107(...)
+activate File
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> assert: Equal(...)
+File -> commandAndRuleEngine: executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestTCRuleDeletion108(...)
+activate File
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> assert: Equal(...)
+File -> commandAndRuleEngine: executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestTCRuleDeletion109(...)
+activate File
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> assert: Equal(...)
+File -> commandAndRuleEngine: executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TestTCRuleDeletion110(...)
+activate File
+File -> UnitTestTestData: InitLoggerForTest(...)
+File -> assert: Equal(...)
+File -> commandAndRuleEngine: executeCommandOnTestCaseModel_DeleteElementFromTestCaseModel(...)
+File --> Caller: return
+deactivate File
+@enduml

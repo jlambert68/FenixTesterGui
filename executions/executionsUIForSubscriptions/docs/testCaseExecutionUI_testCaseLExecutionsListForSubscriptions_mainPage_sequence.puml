@@ -1,0 +1,15 @@
+@startuml
+title Sequence Diagram - testCaseExecutionUI_testCaseLExecutionsListForSubscriptions_mainPage.go
+actor Caller
+participant "testCaseExecutionUI_testCaseLExecutionsListForSubscriptions_mainPage.go" as File
+participant "executionsListTabPage" as executionsListTabPage
+Caller -> File: CreateExecutionsListTabPageForSubsacriptions(...)
+activate File
+File -> executionsListTabPage: Refresh(...)
+File --> Caller: return
+deactivate File
+Caller -> File: StartTableAddAndRemoveChannelReaders(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

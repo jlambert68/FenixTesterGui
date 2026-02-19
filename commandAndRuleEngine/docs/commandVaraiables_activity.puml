@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - commandVaraiables.go
+start
+:Load commandAndRuleEngine/commandVaraiables.go;
+:No functions declared in this file;
+stop
+@enduml

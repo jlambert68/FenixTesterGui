@@ -1,0 +1,61 @@
+@startuml
+title Sequence Diagram - importFilesFromGithub_SelectedFilesListTable.go
+actor Caller
+participant "importFilesFromGithub_SelectedFilesListTable.go" as File
+participant "clickable" as clickable
+participant "fyne" as fyne
+participant "importFilesFromGitHubObject" as importFilesFromGitHubObject
+participant "l" as l
+participant "nonClickable" as nonClickable
+participant "now" as now
+participant "theme" as theme
+participant "time" as time
+Caller -> File: MouseIn(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MouseIn(...)
+activate File
+File -> l: Refresh(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseMoved(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MouseMoved(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MouseOut(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MouseOut(...)
+activate File
+File -> l: Refresh(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Tapped(...)
+activate File
+File -> l: onDoubleTap(...)
+File -> now: Sub(...)
+File -> time: Now(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Tapped(...)
+activate File
+File -> l: onDoubleTap(...)
+File -> time: Now(...)
+File -> time: Since(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TappedSecondary(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: TappedSecondary(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

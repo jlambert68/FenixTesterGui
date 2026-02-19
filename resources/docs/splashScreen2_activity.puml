@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - splashScreen2.go
+start
+:Load resources/splashScreen2.go;
+:No functions declared in this file;
+stop
+@enduml

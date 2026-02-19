@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - bundled.go
+start
+:Load headertable/data/bundled.go;
+:No functions declared in this file;
+stop
+@enduml

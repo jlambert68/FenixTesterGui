@@ -1,0 +1,28 @@
+@startuml
+title Sequence Diagram - copyableAndSelectableLabel.go
+actor Caller
+participant "copyableAndSelectableLabel.go" as File
+participant "clipboard" as clipboard
+participant "copyableLabel" as copyableLabel
+participant "fenixMasterWindow" as fenixMasterWindow
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "widget" as widget
+Caller -> File: CreateRenderer(...)
+activate File
+File -> widget: NewLabel(...)
+File -> widget: NewSimpleRenderer(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Tapped(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: TappedSecondary(...)
+activate File
+File -> clipboard: SetContent(...)
+File -> fenixMasterWindow: Clipboard(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+@enduml

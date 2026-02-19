@@ -1,0 +1,9 @@
+@startuml
+title Activity Diagram - main.go
+start
+:Load headertable/cmd/plainheader/main.go;
+:1. main;
+:Iterate loop/range logic;
+:Start goroutine/asynchronous work;
+stop
+@enduml

@@ -1,0 +1,31 @@
+@startuml
+title Activity Diagram - testCaseUI_graphicalRepresentation_testCaseDeletetionDate.go
+start
+:Load testCase/testCaseUI/testCaseUI_graphicalRepresentation_testCaseDeletetionDate.go;
+:1. countDownTicker;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:Schedule deferred cleanup;
+:Start goroutine/asynchronous work;
+:2. flashScreen;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:Schedule deferred cleanup;
+:Start goroutine/asynchronous work;
+:3. generateTestCaseDeletionDateArea [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Start goroutine/asynchronous work;
+stop
+@enduml

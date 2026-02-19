@@ -1,0 +1,98 @@
+# TestSuiteExecutionsMapFunctions.go
+
+## File Overview
+- Path: `testSuiteExecutions/testSuiteExecutionsModel/TestSuiteExecutionsMapFunctions.go`
+- Package: `testSuiteExecutionsModel`
+- Generated: `2026-02-19T14:23:17+01:00`
+- Functions/Methods: `8`
+- Imports: `4`
+
+## File Purpose
+No concise file-level comment detected. Purpose inferred from declarations below.
+
+## Potential Entry Points
+- `AddToTestSuiteExecutionsMap`
+- `DeleteFromTestSuiteExecutionsMap`
+- `GetNumberOfTestSuiteExecutionsRetrievedFromDatabase`
+- `InitiateTestSuiteExecutionsMap`
+- `ReadAllFromTestSuiteExecutionsMap`
+- `ReadAllFromTestSuiteExecutionsMapForTableList`
+- `ReadFromTestSuiteExecutionsMap`
+- `ReadFromTestSuiteExecutionsMapForTableList`
+
+## Imports
+- `FenixTesterGui/common_code`
+- `github.com/jlambert68/FenixGrpcApi/FenixExecutionServer/fenixExecutionServerGuiGrpcApi/go_grpc_api`
+- `github.com/sirupsen/logrus`
+- `sync`
+
+## Declared Types
+- `readListOrDetailedMessagesTypeType`
+
+## Declared Constants
+- `ReadListMessages`
+- `readDetailedMessages`
+
+## Declared Variables
+- `testSuiteExecutionsMapMutex`
+
+## Functions and Methods
+### AddToTestSuiteExecutionsMap (method on `TestSuiteExecutionsModelStruct`)
+- Signature: `func (TestSuiteExecutionsModelStruct) AddToTestSuiteExecutionsMap(testSuiteExecutionsMapKey TestSuiteExecutionUuidType, testSuiteExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage)`
+- Exported: `true`
+- Control-flow features: `if, defer`
+- Doc: AddToTestSuiteExecutionsMap Add to the TestSuiteExecutions-Map
+- External calls: `testSuiteExecutionsMapMutex.Lock`, `testSuiteExecutionsMapMutex.Unlock`
+
+### DeleteFromTestSuiteExecutionsMap (method on `TestSuiteExecutionsModelStruct`)
+- Signature: `func (TestSuiteExecutionsModelStruct) DeleteFromTestSuiteExecutionsMap(testSuiteExecutionsMapKey TestSuiteExecutionUuidType)`
+- Exported: `true`
+- Control-flow features: `if, defer`
+- Doc: DeleteFromTestSuiteExecutionsMap Delete from the TestSuiteExecutions-Map
+- External calls: `testSuiteExecutionsMapMutex.Lock`, `testSuiteExecutionsMapMutex.Unlock`
+
+### GetNumberOfTestSuiteExecutionsRetrievedFromDatabase (method on `TestSuiteExecutionsModelStruct`)
+- Signature: `func (TestSuiteExecutionsModelStruct) GetNumberOfTestSuiteExecutionsRetrievedFromDatabase() numberOfTestSuiteExecutionsRetrievedFromDatabase int`
+- Exported: `true`
+- Control-flow features: `defer`
+- Doc: GetNumberOfTestSuiteExecutionsRetrievedFromDatabase Read all from the TestSuiteExecutions-Map
+- External calls: `testSuiteExecutionsMapMutex.RLock`, `testSuiteExecutionsMapMutex.RUnlock`, `testSuiteExecutionsModel.ReadAllFromTestSuiteExecutionsMapForTableList`
+
+### InitiateTestSuiteExecutionsMap (method on `TestSuiteExecutionsModelStruct`)
+- Signature: `func (TestSuiteExecutionsModelStruct) InitiateTestSuiteExecutionsMap()`
+- Exported: `true`
+- Control-flow features: `if, defer`
+- Doc: InitiateTestSuiteExecutionsMap Add to the TestSuiteExecutions-Map
+- External calls: `testSuiteExecutionsMapMutex.Lock`, `testSuiteExecutionsMapMutex.Unlock`
+
+### ReadAllFromTestSuiteExecutionsMap (method on `TestSuiteExecutionsModelStruct`)
+- Signature: `func (TestSuiteExecutionsModelStruct) ReadAllFromTestSuiteExecutionsMap(readListOrDetailedMessagesType readListOrDetailedMessagesTypeType) (testSuiteExecutionsListMessages *[]*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage, testSuiteExecutionResponseMessages *[]*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionResponseMessage)`
+- Exported: `true`
+- Control-flow features: `if, for/range, switch, defer`
+- Doc: ReadAllFromTestSuiteExecutionsMap Read all from the TestSuiteExecutions-Map
+- External calls: `testSuiteExecutionsMapMutex.RLock`, `testSuiteExecutionsMapMutex.RUnlock`
+
+### ReadAllFromTestSuiteExecutionsMapForTableList (method on `TestSuiteExecutionsModelStruct`)
+- Signature: `func (TestSuiteExecutionsModelStruct) ReadAllFromTestSuiteExecutionsMapForTableList() testSuiteExecutionsListMessages *[]*fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage`
+- Exported: `true`
+- Control-flow features: `defer`
+- Doc: ReadAllFromTestSuiteExecutionsMapForTableList Read all from the TestSuiteExecutions-Map for the TableList for TestSuiteExecutions
+- External calls: `testSuiteExecutionsModel.ReadAllFromTestSuiteExecutionsMap`
+
+### ReadFromTestSuiteExecutionsMap (method on `TestSuiteExecutionsModelStruct`)
+- Signature: `func (TestSuiteExecutionsModelStruct) ReadFromTestSuiteExecutionsMap(readListOrDetailedMessagesType readListOrDetailedMessagesTypeType, testSuiteExecutionsMapKey TestSuiteExecutionUuidType) (testSuiteExecutionsListMessages *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage, testSuiteExecutionResponseMessage *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionResponseMessage, existInMap bool)`
+- Exported: `true`
+- Control-flow features: `if, switch, defer`
+- Doc: ReadFromTestSuiteExecutionsMap Read from the TestSuiteExecutions-Map
+- Internal calls: `DetailedTestSuiteExecutionMapKeyType`
+- External calls: `testSuiteExecutionsMapMutex.RLock`, `testSuiteExecutionsMapMutex.RUnlock`
+
+### ReadFromTestSuiteExecutionsMapForTableList (method on `TestSuiteExecutionsModelStruct`)
+- Signature: `func (TestSuiteExecutionsModelStruct) ReadFromTestSuiteExecutionsMapForTableList(testSuiteExecutionsMapKey TestSuiteExecutionUuidType) (testSuiteExecutionsListMessage *fenixExecutionServerGuiGrpcApi.TestSuiteExecutionsListMessage, existInMap bool)`
+- Exported: `true`
+- Control-flow features: `defer`
+- Doc: ReadFromTestSuiteExecutionsMapForTableList Read from the TestSuiteExecutions-Map for the TableList for TestSuiteExecutions
+- External calls: `testSuiteExecutionsModel.ReadFromTestSuiteExecutionsMap`
+
+## Behavioral Summary
+This file summary is generated from AST analysis. For exact runtime behavior (ordering, side effects, retries, failure semantics), validate against source and tests.

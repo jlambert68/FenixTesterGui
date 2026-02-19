@@ -1,0 +1,46 @@
+@startuml
+title Sequence Diagram - detailedTestCaseExecutionsMapFunctions.go
+actor Caller
+participant "detailedTestCaseExecutionsMapFunctions.go" as File
+participant "detailedTestCaseExecutionsMapMutex" as detailedTestCaseExecutionsMapMutex
+participant "fmt" as fmt
+Caller -> File: AddToDetailedTestCaseExecutionsMap(...)
+activate File
+File -> detailedTestCaseExecutionsMapMutex: Lock(...)
+File -> detailedTestCaseExecutionsMapMutex: Unlock(...)
+File --> Caller: return
+deactivate File
+Caller -> File: ClearFlagRefreshOngoingOfDetailedTestCaseExecution(...)
+activate File
+File -> detailedTestCaseExecutionsMapMutex: Lock(...)
+File -> detailedTestCaseExecutionsMapMutex: Unlock(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+Caller -> File: DeleteFromDetailedTestCaseExecutionsMap(...)
+activate File
+File -> detailedTestCaseExecutionsMapMutex: Lock(...)
+File -> detailedTestCaseExecutionsMapMutex: Unlock(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GetNumberOfDetailedTestCaseExecutionsRetrievedFromDatabase(...)
+activate File
+File -> detailedTestCaseExecutionsMapMutex: RLock(...)
+File -> detailedTestCaseExecutionsMapMutex: RUnlock(...)
+File --> Caller: return
+deactivate File
+Caller -> File: ReadFromDetailedTestCaseExecutionsMap(...)
+activate File
+File -> detailedTestCaseExecutionsMapMutex: Lock(...)
+File -> detailedTestCaseExecutionsMapMutex: Unlock(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+Caller -> File: SetFlagRefreshOngoingOfDetailedTestCaseExecution(...)
+activate File
+File -> detailedTestCaseExecutionsMapMutex: Lock(...)
+File -> detailedTestCaseExecutionsMapMutex: Unlock(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+@enduml

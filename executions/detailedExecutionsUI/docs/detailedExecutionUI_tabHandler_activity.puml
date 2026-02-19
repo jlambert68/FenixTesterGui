@@ -1,0 +1,12 @@
+@startuml
+title Activity Diagram - detailedExecutionUI_tabHandler.go
+start
+:Load executions/detailedExecutionsUI/detailedExecutionUI_tabHandler.go;
+:1. GenerateBaseUITabForDetailedTestCaseExecutions [method on *DetailedTestCaseExecutionsUIModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

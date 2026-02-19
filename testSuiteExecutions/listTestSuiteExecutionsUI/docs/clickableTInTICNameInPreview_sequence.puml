@@ -1,0 +1,33 @@
+@startuml
+title Sequence Diagram - clickableTInTICNameInPreview.go
+actor Caller
+participant "clickableTInTICNameInPreview.go" as File
+participant "attributesContainerPtr" as attributesContainerPtr
+participant "canvas" as canvas
+participant "clickableTInTICNameLabelInPreview" as clickableTInTICNameLabelInPreview
+participant "clipboard" as clipboard
+participant "container" as container
+participant "copyLogToClipBoardContainer" as copyLogToClipBoardContainer
+participant "copyTestInstructionExecutionDataToClipBoardContainer" as copyTestInstructionExecutionDataToClipBoardContainer
+participant "fenixMasterWindow" as fenixMasterWindow
+Caller -> File: CreateRenderer(...)
+activate File
+File -> widget: NewLabel(...)
+File -> widget: NewSimpleRenderer(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Tapped(...)
+activate File
+File -> attributesContainerPtr: Hide(...)
+File -> attributesContainerPtr: Refresh(...)
+File -> attributesContainerPtr: Show(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TappedSecondary(...)
+activate File
+File -> clipboard: SetContent(...)
+File -> fenixMasterWindow: Clipboard(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+title Activity Diagram - testCaseUI_graphicalRepresentation_testInstructionAttributes_ComboBox_Renderer.go
+start
+:Load testCase/testCaseUI/testCaseUI_graphicalRepresentation_testInstructionAttributes_ComboBox_Renderer.go;
+:1. BackgroundColor [method on *customAttributeSelectComboBoxRenderer];
+:2. CreateRenderer [method on *CustomAttributeSelectComboBox];
+:3. Destroy [method on *customAttributeSelectComboBoxRenderer];
+:4. Layout [method on *customAttributeSelectComboBoxRenderer];
+:5. MinSize [method on *customAttributeSelectComboBoxRenderer];
+:6. NewCustomAttributeSelectComboBoxWidget;
+:7. Objects [method on *customAttributeSelectComboBoxRenderer];
+:8. Refresh [method on *customAttributeSelectComboBoxRenderer];
+stop
+@enduml

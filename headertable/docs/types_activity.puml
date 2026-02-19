@@ -1,0 +1,10 @@
+@startuml
+title Activity Diagram - types.go
+start
+:Load headertable/types.go;
+:1. LoadFromFlashingTableCellsReferenceMap;
+:Schedule deferred cleanup;
+:2. SaveToFlashingTableCellsReferenceMap;
+:Schedule deferred cleanup;
+stop
+@enduml

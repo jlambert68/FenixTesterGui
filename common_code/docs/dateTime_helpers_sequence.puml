@@ -1,0 +1,27 @@
+@startuml
+title Sequence Diagram - dateTime_helpers.go
+actor Caller
+participant "dateTime_helpers.go" as File
+participant "currentTime" as currentTime
+participant "currentTimeStamp" as currentTimeStamp
+participant "grpcTimeStamp" as grpcTimeStamp
+participant "grpcTimeStampAsTimeStamp" as grpcTimeStampAsTimeStamp
+participant "time" as time
+Caller -> File: ConvertGrpcTimeStampToStringForDB(...)
+activate File
+File -> grpcTimeStamp: AsTime(...)
+File -> grpcTimeStampAsTimeStamp: Format(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GenerateDatetimeFromTimeInputForDB(...)
+activate File
+File -> currentTime: Format(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GenerateDatetimeTimeStampForDB(...)
+activate File
+File -> currentTimeStamp: Format(...)
+File -> time: Now(...)
+File --> Caller: return
+deactivate File
+@enduml

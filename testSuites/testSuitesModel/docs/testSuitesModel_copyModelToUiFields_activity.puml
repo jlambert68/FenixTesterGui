@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - testSuitesModel_copyModelToUiFields.go
+start
+:Load testSuites/testSuitesModel/testSuitesModel_copyModelToUiFields.go;
+:1. copyModelToUiFields [method on *TestSuiteModelStruct];
+stop
+@enduml

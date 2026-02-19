@@ -1,0 +1,20 @@
+@startuml
+title Sequence Diagram - testSuiteUI_graphicalComponent_SuiteMetaData.go
+actor Caller
+participant "testSuiteUI_graphicalComponent_SuiteMetaData.go" as File
+participant "canvas" as canvas
+participant "chk" as chk
+participant "container" as container
+participant "fyne" as fyne
+participant "layout" as layout
+participant "log" as log
+participant "myContainer" as myContainer
+participant "myContainerScroll" as myContainerScroll
+Caller -> File: GenerateMetaDataAreaForTestCase(...)
+activate File
+File -> container: New(...)
+File -> container: NewBorder(...)
+File -> container: NewScroll(...)
+File --> Caller: return
+deactivate File
+@enduml

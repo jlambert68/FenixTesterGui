@@ -1,0 +1,25 @@
+@startuml
+title Sequence Diagram - gRPCInSetup.go
+actor Caller
+participant "gRPCInSetup.go" as File
+participant "fenixUserGuiGrpcApi" as fenixUserGuiGrpcApi
+participant "grpc" as grpc
+participant "lis" as lis
+participant "net" as net
+participant "reflection" as reflection
+participant "registerFenixUserGuiServer" as registerFenixUserGuiServer
+participant "strconv" as strconv
+Caller -> File: InitGrpcServer(...)
+activate File
+File -> fenixUserGuiGrpcApi: RegisterFenixUserGuiGrpcServicesServer(...)
+File -> grpc: NewServer(...)
+File -> net: Listen(...)
+File --> Caller: return
+deactivate File
+Caller -> File: StopGrpcServer(...)
+activate File
+File -> lis: Close(...)
+File -> registerFenixUserGuiServer: GracefulStop(...)
+File --> Caller: return
+deactivate File
+@enduml

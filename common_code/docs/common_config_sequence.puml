@@ -1,0 +1,7 @@
+@startuml
+title Sequence Diagram - common_config.go
+actor Caller
+participant "common_config.go" as File
+Caller -> File: (no callable functions detected)
+File --> Caller: return
+@enduml

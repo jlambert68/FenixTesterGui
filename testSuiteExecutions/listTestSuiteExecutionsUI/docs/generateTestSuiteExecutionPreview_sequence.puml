@@ -1,0 +1,13 @@
+@startuml
+title Sequence Diagram - generateTestSuiteExecutionPreview.go
+actor Caller
+participant "generateTestSuiteExecutionPreview.go" as File
+Caller -> File: ClearTestSuiteExecutionPreviewContainer(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: GenerateTestSuiteExecutionPreviewContainer(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

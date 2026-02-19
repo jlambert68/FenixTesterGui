@@ -1,0 +1,17 @@
+@startuml
+title Activity Diagram - updateTestSuiteExecutionsList.go
+start
+:Load testSuiteExecutions/listTestSuiteExecutionsModel/updateTestSuiteExecutionsList.go;
+:1. LoadTestSuiteExecutionsThatCanBeViewedByUser;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Start goroutine/asynchronous work;
+:2. storeAllTestSuiteExecutionsForOneTestSuiteThatCanBeViewedByUser;
+:Iterate loop/range logic;
+:3. storeOneTestSuiteExecutionPerTestSuiteThatCanBeViewedByUser;
+:Iterate loop/range logic;
+stop
+@enduml

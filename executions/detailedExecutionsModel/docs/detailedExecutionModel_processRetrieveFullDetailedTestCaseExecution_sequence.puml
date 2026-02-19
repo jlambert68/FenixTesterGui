@@ -1,0 +1,9 @@
+@startuml
+title Sequence Diagram - detailedExecutionModel_processRetrieveFullDetailedTestCaseExecution.go
+actor Caller
+participant "detailedExecutionModel_processRetrieveFullDetailedTestCaseExecution.go" as File
+Caller -> File: processRetrieveFullDetailedTestCaseExecution(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

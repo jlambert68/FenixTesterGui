@@ -1,0 +1,20 @@
+@startuml
+title Sequence Diagram - testSuitesTabsUI_GenerateNewTestSuiteTab.go
+actor Caller
+participant "testSuitesTabsUI_GenerateNewTestSuiteTab.go" as File
+participant "container" as container
+participant "err" as err
+participant "fmt" as fmt
+participant "newTestSuiteModel" as newTestSuiteModel
+participant "newTestSuiteUiObject" as newTestSuiteUiObject
+participant "sharedCode" as sharedCode
+participant "testSuitesModel" as testSuitesModel
+participant "theme" as theme
+Caller -> File: GenerateNewTestSuiteTab(...)
+activate File
+File -> container: NewBorder(...)
+File -> container: NewTabItem(...)
+File -> container: NewVBox(...)
+File --> Caller: return
+deactivate File
+@enduml

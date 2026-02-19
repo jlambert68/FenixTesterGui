@@ -1,0 +1,10 @@
+@startuml
+title Sequence Diagram - testSuitesCommandEngine_Initiate.go
+actor Caller
+participant "testSuitesCommandEngine_Initiate.go" as File
+participant "TestSuiteTabsRef" as TestSuiteTabsRef
+Caller -> File: InitiateTestSuiteCommandChannelReader(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

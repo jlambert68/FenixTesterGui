@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - environmentVariables.go
+start
+:Load common_code/environmentVariables.go;
+:No functions declared in this file;
+stop
+@enduml

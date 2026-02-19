@@ -1,0 +1,26 @@
+@startuml
+title Activity Diagram - testSuitesModel_allMandatoryFieldsHaveValues.go
+start
+:Load testSuites/testSuitesModel/testSuitesModel_allMandatoryFieldsHaveValues.go;
+:1. checkIfAllMandatoryFieldsHaveValues [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. generateMandatoryMetaDataFieldsMap [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:3. verifyMandatoryFieldsForMetaData [method on *TestSuiteModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

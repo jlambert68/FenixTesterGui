@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - testSuitesListUI_GenerateListTestSuitesUI.go
+start
+:Load testSuitesList/testSuitesListUI/testSuitesListUI_GenerateListTestSuitesUI.go;
+:1. GenerateListTestSuitesUI;
+stop
+@enduml

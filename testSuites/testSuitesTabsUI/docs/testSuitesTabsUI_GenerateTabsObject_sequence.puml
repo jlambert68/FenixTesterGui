@@ -1,0 +1,18 @@
+@startuml
+title Sequence Diagram - testSuitesTabsUI_GenerateTabsObject.go
+actor Caller
+participant "testSuitesTabsUI_GenerateTabsObject.go" as File
+participant "container" as container
+participant "dialog" as dialog
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "testSuitesModel" as testSuitesModel
+participant "widget" as widget
+Caller -> File: GenerateTestSuiteTabObject(...)
+activate File
+File -> container: NewDocTabs(...)
+File -> dialog: ShowCustomConfirm(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+@enduml

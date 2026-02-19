@@ -1,0 +1,20 @@
+@startuml
+title Activity Diagram - testInstructionExecutionExplorerFunctions.go
+start
+:Load testCaseExecutions/testCaseExecutionsModel/testInstructionExecutionExplorerFunctions.go;
+:1. ListExecutionDataForTestInstructionExecutions [method on TestCaseExecutionsModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:Schedule deferred cleanup;
+:2. sortTestInstructionExecutionPostsByTimestamp;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

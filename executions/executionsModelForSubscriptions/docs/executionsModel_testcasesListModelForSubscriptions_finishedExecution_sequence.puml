@@ -1,0 +1,22 @@
+@startuml
+title Sequence Diagram - executionsModel_testcasesListModelForSubscriptions_finishedExecution.go
+actor Caller
+participant "executionsModel_testcasesListModelForSubscriptions_finishedExecution.go" as File
+participant "errors" as errors
+participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
+participant "fmt" as fmt
+participant "grpc_out_GuiExecutionServer" as grpc_out_GuiExecutionServer
+participant "strconv" as strconv
+participant "time" as time
+Caller -> File: InitiateSubscriptionModelForTestCaseWithFinishedExecutions(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: LoadAndCreateModelForTestCaseWithFinishedExecutions(...)
+activate File
+File -> errors: New(...)
+File -> fenixExecutionServerGuiGrpcApi: CurrentFenixExecutionGuiProtoFileVersionEnum(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+@enduml

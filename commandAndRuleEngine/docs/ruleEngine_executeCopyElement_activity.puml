@@ -1,0 +1,19 @@
+@startuml
+title Activity Diagram - ruleEngine_executeCopyElement.go
+start
+:Load commandAndRuleEngine/ruleEngine_executeCopyElement.go;
+:1. executeCopyFullELementStructure [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. recursiveCopyingOfFullElementStructure [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

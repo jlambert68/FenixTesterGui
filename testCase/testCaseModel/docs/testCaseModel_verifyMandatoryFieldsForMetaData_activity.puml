@@ -1,0 +1,20 @@
+@startuml
+title Activity Diagram - testCaseModel_verifyMandatoryFieldsForMetaData.go
+start
+:Load testCase/testCaseModel/testCaseModel_verifyMandatoryFieldsForMetaData.go;
+:1. generateMandatoryMetaDataFieldsMap [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. verifyMandatoryFieldsForMetaData [method on *TestCasesModelsStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

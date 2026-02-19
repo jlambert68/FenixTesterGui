@@ -1,0 +1,14 @@
+@startuml
+title Activity Diagram - detailedExecutionModel_RemoveTestCaseExecutionFromSummaryTable.go
+start
+:Load executions/detailedExecutionsModel/detailedExecutionModel_RemoveTestCaseExecutionFromSummaryTable.go;
+:1. RemoveTestCaseExecutionFromSummaryTable;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:Schedule deferred cleanup;
+stop
+@enduml

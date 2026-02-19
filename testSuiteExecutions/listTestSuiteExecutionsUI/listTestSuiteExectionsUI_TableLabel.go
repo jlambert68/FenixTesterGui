@@ -154,8 +154,10 @@ func (l *clickableTableLabel) Tapped(e *fyne.PointEvent) {
 
 	}
 
+	fmt.Println("TestSuiteExecutionUuid: ", testSuiteExecutionUuid)
+	fmt.Println("TestSuiteExecutionVersion: ", testSuiteExecutionVersion)
+
 	// Load Detailed TestSuiteExecution from Database
-	fmt.Println(testSuiteExecutionUuid, testSuiteExecutionVersion)
 	// FIXA
 	//testSuiteExecutionsModel.LoadDetailedTestSuiteExecutionFromDatabase(testSuiteExecutionUuid, testSuiteExecutionVersion)
 

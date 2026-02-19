@@ -1,0 +1,16 @@
+@startuml
+title Sequence Diagram - newOrEditTestDataPointGroupUI_BuildPopUpTable.go
+actor Caller
+participant "newOrEditTestDataPointGroupUI_BuildPopUpTable.go" as File
+participant "fmt" as fmt
+participant "re" as re
+participant "regexp" as regexp
+participant "testDataEngine" as testDataEngine
+Caller -> File: buildPopUpTableDataFromTestDataPointName(...)
+activate File
+File -> fmt: Println(...)
+File -> re: FindStringSubmatch(...)
+File -> regexp: MustCompile(...)
+File --> Caller: return
+deactivate File
+@enduml

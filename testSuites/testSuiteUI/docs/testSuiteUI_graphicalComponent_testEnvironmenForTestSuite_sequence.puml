@@ -1,0 +1,31 @@
+@startuml
+title Sequence Diagram - testSuiteUI_graphicalComponent_testEnvironmenForTestSuite.go
+actor Caller
+participant "testSuiteUI_graphicalComponent_testEnvironmenForTestSuite.go" as File
+participant "canvas" as canvas
+participant "container" as container
+participant "err" as err
+participant "errors" as errors
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "layout" as layout
+participant "sel" as sel
+Caller -> File: buildTestEnvironmentGUIContainer(...)
+activate File
+File -> canvas: NewRectangle(...)
+File -> container: New(...)
+File -> container: NewStack(...)
+File --> Caller: return
+deactivate File
+Caller -> File: generateTestEnvironmentForTestSuite(...)
+activate File
+File -> container: New(...)
+File -> container: NewVBox(...)
+File -> err: Error(...)
+File --> Caller: return
+deactivate File
+Caller -> File: setSelectedTestEnvironmentForTestSuite(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

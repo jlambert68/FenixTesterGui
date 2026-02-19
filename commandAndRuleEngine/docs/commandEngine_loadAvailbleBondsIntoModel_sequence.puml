@@ -1,0 +1,11 @@
+@startuml
+title Sequence Diagram - commandEngine_loadAvailbleBondsIntoModel.go
+actor Caller
+participant "commandEngine_loadAvailbleBondsIntoModel.go" as File
+participant "commandAndRuleEngine" as commandAndRuleEngine
+Caller -> File: LoadAvailableBondsFromServer(...)
+activate File
+File -> commandAndRuleEngine: loadModelWithAvailableBonds(...)
+File --> Caller: return
+deactivate File
+@enduml

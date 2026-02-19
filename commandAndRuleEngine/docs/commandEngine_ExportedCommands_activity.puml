@@ -1,0 +1,32 @@
+@startuml
+title Activity Diagram - commandEngine_ExportedCommands.go
+start
+:Load commandAndRuleEngine/commandEngine_ExportedCommands.go;
+:1. DeleteElementFromTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. InitiateCommandChannelReader [method on *CommandAndRuleEngineObjectStruct];
+:Start goroutine/asynchronous work;
+:3. NewTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. SwapElementsInTestCaseModel [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:5. VerifyIfElementCanBeSwapped [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

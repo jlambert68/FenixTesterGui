@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - testCaseUI_graphicalRepresentation_testDataForTestCase_testDataSelector_variables.go
+start
+:Load testDataSelector/testDataSelectorForTestCase/testCaseUI_graphicalRepresentation_testDataForTestCase_testDataSelector_variables.go;
+:No functions declared in this file;
+stop
+@enduml

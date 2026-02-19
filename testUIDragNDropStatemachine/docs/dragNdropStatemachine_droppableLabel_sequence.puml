@@ -1,0 +1,30 @@
+@startuml
+title Sequence Diagram - dragNdropStatemachine_droppableLabel.go
+actor Caller
+participant "dragNdropStatemachine_droppableLabel.go" as File
+participant "canvas" as canvas
+participant "droppableLabel" as droppableLabel
+participant "fyne" as fyne
+participant "log" as log
+Caller -> File: MouseIn(...)
+activate File
+File -> log: Fatalln(...)
+File --> Caller: return
+deactivate File
+Caller -> File: MouseMoved(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MouseOut(...)
+activate File
+File -> log: Fatalln(...)
+File --> Caller: return
+deactivate File
+Caller -> File: NewDroppableLabel(...)
+activate File
+File -> canvas: NewRectangle(...)
+File -> droppableLabel: ExtendBaseWidget(...)
+File -> droppableLabel: MinSize(...)
+File --> Caller: return
+deactivate File
+@enduml

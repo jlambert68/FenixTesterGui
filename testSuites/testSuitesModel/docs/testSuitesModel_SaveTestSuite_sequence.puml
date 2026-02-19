@@ -1,0 +1,20 @@
+@startuml
+title Sequence Diagram - testSuitesModel_SaveTestSuite.go
+actor Caller
+participant "testSuitesModel_SaveTestSuite.go" as File
+participant "copier" as copier
+participant "err" as err
+participant "errors" as errors
+participant "fenixGuiTestCaseBuilderServerGrpcApi" as fenixGuiTestCaseBuilderServerGrpcApi
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "log" as log
+participant "protojson" as protojson
+Caller -> File: SaveTestSuite(...)
+activate File
+File -> copier: CopyWithOption(...)
+File -> err: Error(...)
+File -> errors: New(...)
+File --> Caller: return
+deactivate File
+@enduml

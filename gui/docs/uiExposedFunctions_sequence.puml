@@ -1,0 +1,13 @@
+@startuml
+title Sequence Diagram - uiExposedFunctions.go
+actor Caller
+participant "uiExposedFunctions.go" as File
+participant "errors" as errors
+participant "fmt" as fmt
+Caller -> File: GetDraggedBuildingBlockType(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+@enduml

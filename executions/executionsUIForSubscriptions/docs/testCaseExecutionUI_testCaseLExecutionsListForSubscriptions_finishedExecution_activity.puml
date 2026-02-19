@@ -1,0 +1,30 @@
+@startuml
+title Activity Diagram - testCaseExecutionUI_testCaseLExecutionsListForSubscriptions_finishedExecution.go
+start
+:Load executions/executionsUIForSubscriptions/testCaseExecutionUI_testCaseLExecutionsListForSubscriptions_finishedExecution.go;
+:1. CreateTableForTestCaseExecutionsWithFinishedExecution;
+:Iterate loop/range logic;
+:2. MoveTestCaseExecutionFromUnderExecutionToFinishedExecution;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:3. RemoveTestCaseExecutionFromFinishedTable;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:Start goroutine/asynchronous work;
+:4. StartFinishedExecutionsTableAddRemoveChannelReader;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

@@ -1,0 +1,39 @@
+@startuml
+title Activity Diagram - listTestCasesUI_TestCasesListTable.go
+start
+:Load testCases/listTestCasesUI/listTestCasesUI_TestCasesListTable.go;
+:1. RemoveTestCaseFromList [method on *ListTestCaseUIStruct];
+:2. calculateAndSetCorrectColumnWidths [method on *ListTestCaseUIStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:3. generateTestCasesListTable [method on *ListTestCaseUIStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. loadTestCaseListTableTable [method on *ListTestCaseUIStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:5. sort2DStringSlice [method on *ListTestCaseUIStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:6. updateTestCasesListTable [method on *ListTestCaseUIStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

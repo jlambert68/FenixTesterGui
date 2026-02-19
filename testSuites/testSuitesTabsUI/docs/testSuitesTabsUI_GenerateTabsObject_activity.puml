@@ -1,0 +1,12 @@
+@startuml
+title Activity Diagram - testSuitesTabsUI_GenerateTabsObject.go
+start
+:Load testSuites/testSuitesTabsUI/testSuitesTabsUI_GenerateTabsObject.go;
+:1. GenerateTestSuiteTabObject;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

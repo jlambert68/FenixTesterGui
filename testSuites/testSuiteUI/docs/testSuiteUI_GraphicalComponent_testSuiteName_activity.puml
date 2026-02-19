@@ -1,0 +1,12 @@
+@startuml
+title Activity Diagram - testSuiteUI_GraphicalComponent_testSuiteName.go
+start
+:Load testSuites/testSuiteUI/testSuiteUI_GraphicalComponent_testSuiteName.go;
+:1. generateTestSuiteNameArea [method on *TestSuiteUiStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

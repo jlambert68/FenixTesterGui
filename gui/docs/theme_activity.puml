@@ -1,0 +1,19 @@
+@startuml
+title Activity Diagram - theme.go
+start
+:Load gui/theme.go;
+:1. Color [method on *myTheme];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. Icon [method on *myTheme];
+:3. Size [method on *myTheme];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

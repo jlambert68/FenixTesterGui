@@ -1,0 +1,13 @@
+@startuml
+title Sequence Diagram - gRPC_In_GuiTestCaseBuilderServerAreYouAlive.go
+actor Caller
+participant "gRPC_In_GuiTestCaseBuilderServerAreYouAlive.go" as File
+participant "fenixUserGuiGrpcApi" as fenixUserGuiGrpcApi
+participant "fmt" as fmt
+Caller -> File: GuiTestCaseBuilderServerAreYouAlive(...)
+activate File
+File -> fenixUserGuiGrpcApi: CurrentFenixUserGuiProtoFileVersionEnum(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+@enduml

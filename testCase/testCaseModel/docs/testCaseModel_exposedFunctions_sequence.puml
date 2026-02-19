@@ -1,0 +1,67 @@
+@startuml
+title Sequence Diagram - testCaseModel_exposedFunctions.go
+actor Caller
+participant "testCaseModel_exposedFunctions.go" as File
+participant "errors" as errors
+participant "fmt" as fmt
+participant "strings" as strings
+participant "testCaseModel" as testCaseModel
+Caller -> File: CreateTextualTestCase(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> strings: Index(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GenerateShortUuidFromFullUuid(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: GetArrayOfTestCaseTreeNodeChildrenData(...)
+activate File
+File -> testCaseModel: GetTreeViewModelForTestCase(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GetTestCaseNameUuid(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GetTestCaseTreeNodeChildData(...)
+activate File
+File -> testCaseModel: GetTreeViewModelForTestCase(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GetTreeViewModelForTestCase(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: GetUuidFromUiName(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> strings: Index(...)
+File --> Caller: return
+deactivate File
+Caller -> File: ListAllAvailableBuildingBlocksInTestCase(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> testCaseModel: generateUINameForTestCaseElement(...)
+File --> Caller: return
+deactivate File
+Caller -> File: ListAvailableTestCases(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: UpdateTreeViewModelForTestCase(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File -> testCaseModel: recursiveGraphicalTestCaseTreeModelExtractor(...)
+File --> Caller: return
+deactivate File
+@enduml

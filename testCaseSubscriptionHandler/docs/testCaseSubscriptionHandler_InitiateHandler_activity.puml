@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - testCaseSubscriptionHandler_InitiateHandler.go
+start
+:Load testCaseSubscriptionHandler/testCaseSubscriptionHandler_InitiateHandler.go;
+:1. InitiateTestCaseExecutionStatusSubscriptionHandler [method on *TestCaseExecutionStatusSubscriptionHandlerStruct];
+stop
+@enduml

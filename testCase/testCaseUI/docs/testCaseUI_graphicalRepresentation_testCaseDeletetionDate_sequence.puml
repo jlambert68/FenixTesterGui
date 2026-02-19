@@ -1,0 +1,34 @@
+@startuml
+title Sequence Diagram - testCaseUI_graphicalRepresentation_testCaseDeletetionDate.go
+actor Caller
+participant "testCaseUI_graphicalRepresentation_testCaseDeletetionDate.go" as File
+participant "binding" as binding
+participant "canvas" as canvas
+participant "container" as container
+participant "deleteTestCaseButton" as deleteTestCaseButton
+participant "enableDeletionCheckbox" as enableDeletionCheckbox
+participant "errors" as errors
+participant "fmt" as fmt
+participant "fyne" as fyne
+Caller -> File: countDownTicker(...)
+activate File
+File -> enableDeletionCheckbox: SetChecked(...)
+File -> fmt: Sprintf(...)
+File -> ticker: Stop(...)
+File --> Caller: return
+deactivate File
+Caller -> File: flashScreen(...)
+activate File
+File -> canvas: NewRectangle(...)
+File -> fmt: Println(...)
+File -> fyne: CurrentApp(...)
+File --> Caller: return
+deactivate File
+Caller -> File: generateTestCaseDeletionDateArea(...)
+activate File
+File -> binding: NewString(...)
+File -> canvas: NewRectangle(...)
+File -> container: New(...)
+File --> Caller: return
+deactivate File
+@enduml

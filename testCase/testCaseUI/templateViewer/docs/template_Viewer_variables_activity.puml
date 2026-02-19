@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - template_Viewer_variables.go
+start
+:Load testCase/testCaseUI/templateViewer/template_Viewer_variables.go;
+:No functions declared in this file;
+stop
+@enduml

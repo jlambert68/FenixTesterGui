@@ -1,0 +1,15 @@
+@startuml
+title Sequence Diagram - testSuitesModel_IsTestSuiteChanged.go
+actor Caller
+participant "testSuitesModel_IsTestSuiteChanged.go" as File
+participant "fmt" as fmt
+participant "log" as log
+participant "sharedCode" as sharedCode
+participant "testSuiteModel" as testSuiteModel
+Caller -> File: IsTestSuiteChanged(...)
+activate File
+File -> testSuiteModel: generateTesSuiteMetaDataHash(...)
+File -> testSuiteModel: generateTesSuiteTestDataHash(...)
+File --> Caller: return
+deactivate File
+@enduml

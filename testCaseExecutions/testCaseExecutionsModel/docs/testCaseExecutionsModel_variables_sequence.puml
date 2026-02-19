@@ -1,0 +1,7 @@
+@startuml
+title Sequence Diagram - testCaseExecutionsModel_variables.go
+actor Caller
+participant "testCaseExecutionsModel_variables.go" as File
+Caller -> File: (no callable functions detected)
+File --> Caller: return
+@enduml

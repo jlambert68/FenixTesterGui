@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - testSuiteExecutionsModel.go
+start
+:Load testSuiteExecutions/testSuiteExecutionsModel/testSuiteExecutionsModel.go;
+:1. InitiateTestSuiteExecutionModel;
+stop
+@enduml

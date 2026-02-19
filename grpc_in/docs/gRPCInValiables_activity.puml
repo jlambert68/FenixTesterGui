@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - gRPCInValiables.go
+start
+:Load grpc_in/gRPCInValiables.go;
+:No functions declared in this file;
+stop
+@enduml

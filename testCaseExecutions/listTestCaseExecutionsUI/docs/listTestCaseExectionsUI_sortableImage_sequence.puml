@@ -1,0 +1,58 @@
+@startuml
+title Sequence Diagram - listTestCaseExectionsUI_sortableImage.go
+actor Caller
+participant "listTestCaseExectionsUI_sortableImage.go" as File
+participant "canvas" as canvas
+participant "container" as container
+participant "fyne" as fyne
+participant "initialImageAscending" as initialImageAscending
+participant "initialImageDescending" as initialImageDescending
+participant "initialImageUnspecified" as initialImageUnspecified
+participant "log" as log
+participant "r" as r
+Caller -> File: BackgroundColor(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: CreateRenderer(...)
+activate File
+File -> container: NewMax(...)
+File -> r: updateImageVisibility(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Destroy(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Layout(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: MinSize(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Objects(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Refresh(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Refresh(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: Tapped(...)
+activate File
+File -> log: Println(...)
+File -> r: Refresh(...)
+File -> r: onTapped(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TappedSecondary(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

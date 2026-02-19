@@ -1,0 +1,18 @@
+@startuml
+title Activity Diagram - testCaseSubscriptionHandler_handler.go
+start
+:Load testCaseSubscriptionHandler/testCaseSubscriptionHandler_handler.go;
+:1. AddTestCaseExecutionStatusSubscription [method on *TestCaseExecutionStatusSubscriptionHandlerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. RemoveTestCaseExecutionStatusSubscription [method on *TestCaseExecutionStatusSubscriptionHandlerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

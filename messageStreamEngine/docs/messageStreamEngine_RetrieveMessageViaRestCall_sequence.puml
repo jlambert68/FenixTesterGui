@@ -1,0 +1,27 @@
+@startuml
+title Sequence Diagram - messageStreamEngine_RetrieveMessageViaRestCall.go
+actor Caller
+participant "messageStreamEngine_RetrieveMessageViaRestCall.go" as File
+participant "bytes" as bytes
+participant "client" as client
+participant "decoder" as decoder
+participant "err" as err
+participant "errors" as errors
+participant "fmt" as fmt
+participant "http" as http
+participant "ioutil" as ioutil
+Caller -> File: retrievePubSubMessagesViaRestApi(...)
+activate File
+File -> bytes: NewBuffer(...)
+File -> client: Do(...)
+File -> decoder: Decode(...)
+File --> Caller: return
+deactivate File
+Caller -> File: sendAcknowledgeMessageViaRestApi(...)
+activate File
+File -> bytes: NewBuffer(...)
+File -> client: Do(...)
+File -> fmt: Errorf(...)
+File --> Caller: return
+deactivate File
+@enduml

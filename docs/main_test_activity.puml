@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - main_test.go
+start
+:Load main_test.go;
+:1. TestMain;
+stop
+@enduml

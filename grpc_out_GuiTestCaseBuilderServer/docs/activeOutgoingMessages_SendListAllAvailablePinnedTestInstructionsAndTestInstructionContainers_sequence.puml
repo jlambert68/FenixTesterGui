@@ -1,0 +1,17 @@
+@startuml
+title Sequence Diagram - activeOutgoingMessages_SendListAllAvailablePinnedTestInstructionsAndTestInstructionContainers.go
+actor Caller
+participant "activeOutgoingMessages_SendListAllAvailablePinnedTestInstructionsAndTestInstructionContainers.go" as File
+participant "context" as context
+participant "err" as err
+participant "fenixGuiTestCaseBuilderServerGrpcApi" as fenixGuiTestCaseBuilderServerGrpcApi
+participant "fenixGuiTestCaseCaseBuilderServerGrpcClient" as fenixGuiTestCaseCaseBuilderServerGrpcClient
+participant "grpcOut" as grpcOut
+Caller -> File: SendListAllAvailablePinnedTestInstructionsAndTestInstructionContainers(...)
+activate File
+File -> context: Background(...)
+File -> context: WithTimeout(...)
+File -> err: Error(...)
+File --> Caller: return
+deactivate File
+@enduml

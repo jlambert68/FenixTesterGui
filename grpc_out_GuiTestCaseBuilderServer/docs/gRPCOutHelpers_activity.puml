@@ -1,0 +1,35 @@
+@startuml
+title Activity Diagram - gRPCOutHelpers.go
+start
+:Load grpc_out_GuiTestCaseBuilderServer/gRPCOutHelpers.go;
+:1. GetHighestFenixGuiTestCaseBuilderServerProtoFileVersion [method on *GRPCOutGuiTestCaseBuilderServerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. SetDialAddressString [method on *GRPCOutGuiTestCaseBuilderServerStruct];
+:3. SetLogger [method on *GRPCOutGuiTestCaseBuilderServerStruct];
+:4. dialFromGrpcurl;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Schedule deferred cleanup;
+:5. setConnectionToFenixGuiTestCaseBuilderServer [method on *GRPCOutGuiTestCaseBuilderServerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:6. setConnectionToFenixGuiTestCaseBuilderServer_new [method on *GRPCOutGuiTestCaseBuilderServerStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

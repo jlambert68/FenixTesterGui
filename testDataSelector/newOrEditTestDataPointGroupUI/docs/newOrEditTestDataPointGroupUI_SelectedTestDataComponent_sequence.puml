@@ -1,0 +1,27 @@
+@startuml
+title Sequence Diagram - newOrEditTestDataPointGroupUI_SelectedTestDataComponent.go
+actor Caller
+participant "newOrEditTestDataPointGroupUI_SelectedTestDataComponent.go" as File
+participant "container" as container
+participant "fmt" as fmt
+participant "nameEntry" as nameEntry
+participant "nameStatusLabel" as nameStatusLabel
+participant "newOrEditTestDataPointGroupWindow" as newOrEditTestDataPointGroupWindow
+participant "saveButton" as saveButton
+participant "testDataEngine" as testDataEngine
+participant "widget" as widget
+Caller -> File: generateSelectedPointsListUIComponent(...)
+activate File
+File -> container: NewBorder(...)
+File -> container: NewHBox(...)
+File -> container: NewVBox(...)
+File --> Caller: return
+deactivate File
+Caller -> File: setStateForSaveButtonAndGroupNameTextEntry(...)
+activate File
+File -> nameStatusLabel: SetText(...)
+File -> saveButton: Disable(...)
+File -> saveButton: Enable(...)
+File --> Caller: return
+deactivate File
+@enduml

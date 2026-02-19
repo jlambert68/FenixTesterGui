@@ -1,0 +1,55 @@
+@startuml
+title Sequence Diagram - testCaseUI_graphicalRepresentation_testInstructionAttributes.go
+actor Caller
+participant "testCaseUI_graphicalRepresentation_testInstructionAttributes.go" as File
+participant "attributesContainer" as attributesContainer
+participant "attributesFormContainer" as attributesFormContainer
+participant "canvas" as canvas
+participant "container" as container
+participant "err" as err
+participant "errors" as errors
+participant "fmt" as fmt
+participant "immatureTestInstruction" as immatureTestInstruction
+Caller -> File: extractResponseVariablesFromTestInstruction(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Println(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: generateAttributeRow(...)
+activate File
+File -> attributesFormContainer: Add(...)
+File -> attributesFormContainer: Refresh(...)
+File -> canvas: NewRectangle(...)
+File --> Caller: return
+deactivate File
+Caller -> File: generateAttributeStringListData(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Println(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: generateTestCaseAttributesAreaForTestCase(...)
+activate File
+File -> attributesContainer: Add(...)
+File -> attributesFormContainer: Add(...)
+File -> container: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: recursiveTraverseDownwardsTestInstructionContainerElementsForResponseVariablesThatMatch(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Println(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: recursiveTraverseUpwardsTestInstructionContainerElementsForResponseVariablesThatMatch(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Println(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+@enduml

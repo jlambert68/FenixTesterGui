@@ -1,0 +1,56 @@
+@startuml
+title Sequence Diagram - testCaseUIChannelReader.go
+actor Caller
+participant "testCaseUIChannelReader.go" as File
+participant "enableDeletionCheckbox" as enableDeletionCheckbox
+participant "err" as err
+participant "errors" as errors
+participant "fmt" as fmt
+participant "fyne" as fyne
+participant "newTestCaseDeletionDateEntry" as newTestCaseDeletionDateEntry
+participant "testCasesUiCanvasObject" as testCasesUiCanvasObject
+participant "time" as time
+Caller -> File: closeTestCaseTabBasedOnTestCaseUuiWithOutSaving(...)
+activate File
+File -> fmt: Println(...)
+File -> fmt: Sprintf(...)
+File -> fyne: CurrentApp(...)
+File --> Caller: return
+deactivate File
+Caller -> File: removeTestCaseTabBasedOnTestCaseUuid(...)
+activate File
+File -> enableDeletionCheckbox: Disable(...)
+File -> err: Error(...)
+File -> errors: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: selectTestCaseTabBasedOnTestCaseUuid(...)
+activate File
+File -> fmt: Println(...)
+File -> fyne: Do(...)
+File --> Caller: return
+deactivate File
+Caller -> File: selectTestInstructionInTestCaseGraphics(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: startGUICommandChannelReader(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Println(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+Caller -> File: updateTestCaseGraphics(...)
+activate File
+File -> fmt: Println(...)
+File -> testCasesUiCanvasObject: GenerateNewTestCaseTabObject(...)
+File -> testCasesUiCanvasObject: UpdateGraphicalRepresentationForTestCase(...)
+File --> Caller: return
+deactivate File
+Caller -> File: updatedUpdateTestCaseTabName(...)
+activate File
+File -> fyne: Do(...)
+File --> Caller: return
+deactivate File
+@enduml

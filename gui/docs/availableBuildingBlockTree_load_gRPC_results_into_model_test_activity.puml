@@ -1,0 +1,42 @@
+@startuml
+title Activity Diagram - availableBuildingBlockTree_load_gRPC_results_into_model_test.go
+start
+:Load gui/availableBuildingBlockTree_load_gRPC_results_into_model_test.go;
+:1. TestLoadModelWithAvailableBuildingBlocks;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructionContainers;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. TestLoadModelWithAvailableBuildingBlocksRegardingTestInstructions;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionAndTestInstructionContainers;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:5. TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructionContainers;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:6. TestLoadModelWithPinnedBuildingBlocksRegardingTestInstructions;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

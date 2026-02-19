@@ -1,0 +1,37 @@
+@startuml
+title Sequence Diagram - executionStatusUpdatesHandler_channelReader.go
+actor Caller
+participant "executionStatusUpdatesHandler_channelReader.go" as File
+participant "errors" as errors
+participant "executionsUIForSubscriptions" as executionsUIForSubscriptions
+participant "fmt" as fmt
+participant "messageStreamEngineObject" as messageStreamEngineObject
+participant "strconv" as strconv
+participant "time" as time
+Caller -> File: initiateOpenMessageStreamToGuiExecutionServer(...)
+activate File
+File -> messageStreamEngineObject: initiateOpenMessageStreamToGuiExecutionServerInXSeconds(...)
+File --> Caller: return
+deactivate File
+Caller -> File: initiateOpenMessageStreamToGuiExecutionServerInXSeconds(...)
+activate File
+File -> messageStreamEngineObject: initiateGuiExecutionServerRequestForMessages(...)
+File -> time: Duration(...)
+File -> time: Sleep(...)
+File --> Caller: return
+deactivate File
+Caller -> File: processTestExecutionStatusChange(...)
+activate File
+File -> errors: New(...)
+File -> executionsUIForSubscriptions: MoveTestCaseExecutionFromUnderExecutionToFinishedExecution(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+Caller -> File: startCommandChannelReader(...)
+activate File
+File -> messageStreamEngineObject: initiateOpenMessageStreamToGuiExecutionServer(...)
+File -> messageStreamEngineObject: initiateOpenMessageStreamToGuiExecutionServerInXSeconds(...)
+File -> messageStreamEngineObject: processTestExecutionStatusChange(...)
+File --> Caller: return
+deactivate File
+@enduml

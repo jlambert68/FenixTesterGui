@@ -1,0 +1,18 @@
+@startuml
+title Activity Diagram - testCaseUI_textualRepresentation.go
+start
+:Load testCase/testCaseUI/testCaseUI_textualRepresentation.go;
+:1. UpdateTextualStructuresForTestCase [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. generateNewTextualRepresentationAreaForTestCase [method on *TestCasesUiModelStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

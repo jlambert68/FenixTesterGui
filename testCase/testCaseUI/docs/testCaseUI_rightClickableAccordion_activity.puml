@@ -1,0 +1,20 @@
+@startuml
+title Activity Diagram - testCaseUI_rightClickableAccordion.go
+start
+:Load testCase/testCaseUI/testCaseUI_rightClickableAccordion.go;
+:1. TappedSecondary [method on *clickableAccordion];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. TappedSecondary [method on *clickableAccordionItem];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. newClickableAccordion [method on *TestCasesUiModelStruct];
+:4. newClickableAccordionItem [method on *TestCasesUiModelStruct];
+stop
+@enduml

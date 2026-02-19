@@ -1,0 +1,7 @@
+@startuml
+title Sequence Diagram - testCaseModel_loadTestCasesHashes.go
+actor Caller
+participant "testCaseModel_loadTestCasesHashes.go" as File
+Caller -> File: (no callable functions detected)
+File --> Caller: return
+@enduml

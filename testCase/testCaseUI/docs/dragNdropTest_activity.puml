@@ -1,0 +1,51 @@
+@startuml
+title Activity Diagram - dragNdropTest.go
+start
+:Load testCase/testCaseUI/dragNdropTest.go;
+:1. DragEnd [method on *draggableLabel];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. Dragged [method on *draggableLabel];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:3. MouseIn [method on *draggableLabel];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:4. MouseIn [method on *droppableLabel];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:5. MouseMoved [method on *droppableLabel];
+:6. MouseMoved [method on *draggableLabel];
+:7. MouseOut [method on *draggableLabel];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:8. MouseOut [method on *droppableLabel];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:9. executeDropAction;
+:10. expandDropAreas;
+:Iterate loop/range logic;
+:Start goroutine/asynchronous work;
+:11. makeDragNDropTestGUI;
+:12. newDraggableLabel;
+stop
+@enduml

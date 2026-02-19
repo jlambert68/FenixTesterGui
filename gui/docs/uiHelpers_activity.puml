@@ -1,0 +1,12 @@
+@startuml
+title Activity Diagram - uiHelpers.go
+start
+:Load gui/uiHelpers.go;
+:1. SetDialAddressString [method on *AvailableBuildingBlocksModelStruct];
+:2. SetDialAddressString [method on *GlobalUIServerStruct];
+:3. SetDialAddressString [method on *UIServerStruct];
+:4. SetLogger [method on *AvailableBuildingBlocksModelStruct];
+:5. SetLogger [method on *GlobalUIServerStruct];
+:6. SetLogger [method on *UIServerStruct];
+stop
+@enduml

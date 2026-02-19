@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - genrate_Pig_UI.go
+start
+:Load fenix_pig/genrate_Pig_UI.go;
+:1. GeneratePigUI;
+stop
+@enduml

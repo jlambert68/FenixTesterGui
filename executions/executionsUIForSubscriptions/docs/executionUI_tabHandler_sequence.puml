@@ -1,0 +1,18 @@
+@startuml
+title Sequence Diagram - executionUI_tabHandler.go
+actor Caller
+participant "executionUI_tabHandler.go" as File
+participant "container" as container
+participant "executionsUIObject" as executionsUIObject
+participant "fmt" as fmt
+participant "layout" as layout
+participant "theme" as theme
+participant "widget" as widget
+Caller -> File: GenerateBaseUITabForExecutions(...)
+activate File
+File -> container: New(...)
+File -> executionsUIObject: CreateExecutionsListTabPageForSubsacriptions(...)
+File -> fmt: Println(...)
+File --> Caller: return
+deactivate File
+@enduml

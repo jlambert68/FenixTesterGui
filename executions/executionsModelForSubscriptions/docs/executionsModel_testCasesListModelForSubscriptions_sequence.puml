@@ -1,0 +1,9 @@
+@startuml
+title Sequence Diagram - executionsModel_testCasesListModelForSubscriptions.go
+actor Caller
+participant "executionsModel_testCasesListModelForSubscriptions.go" as File
+Caller -> File: InitiateAndStartChannelsUsedByListModel(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

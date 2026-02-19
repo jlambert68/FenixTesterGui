@@ -1,0 +1,41 @@
+@startuml
+title Sequence Diagram - testCaseExecutionUI_testCaseLExecutionsListForSubscriptions_onQueue.go
+actor Caller
+participant "testCaseExecutionUI_testCaseLExecutionsListForSubscriptions_onQueue.go" as File
+participant "binding" as binding
+participant "container" as container
+participant "dataMapBinding" as dataMapBinding
+participant "errors" as errors
+participant "executionsModelForSubscriptions" as executionsModelForSubscriptions
+participant "fmt" as fmt
+participant "headertable" as headertable
+participant "strconv" as strconv
+Caller -> File: AddTestCaseExecutionToOnQueueTable(...)
+activate File
+File -> binding: BindStruct(...)
+File -> executionsModelForSubscriptions: TestCaseExecutionMapKeyType(...)
+File -> headertable: FlashAddedRow(...)
+File --> Caller: return
+deactivate File
+Caller -> File: CreateTableForTestCaseExecutionsOnQueue(...)
+activate File
+File -> binding: BindStruct(...)
+File -> container: NewMax(...)
+File -> headertable: NewSortingHeaderTable(...)
+File --> Caller: return
+deactivate File
+Caller -> File: RemoveTestCaseExecutionFromOnQueueTable(...)
+activate File
+File -> dataMapBinding: GetItem(...)
+File -> errors: New(...)
+File -> executionsModelForSubscriptions: TestCaseExecutionMapKeyType(...)
+File --> Caller: return
+deactivate File
+Caller -> File: StartOnQueueTableAddRemoveChannelReader(...)
+activate File
+File -> errors: New(...)
+File -> fmt: Println(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+@enduml

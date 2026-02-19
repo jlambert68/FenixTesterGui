@@ -1,0 +1,22 @@
+@startuml
+title Sequence Diagram - ruleEngine_executeCutElement.go
+actor Caller
+participant "ruleEngine_executeCutElement.go" as File
+participant "commandAndRuleEngine" as commandAndRuleEngine
+participant "errors" as errors
+participant "fmt" as fmt
+Caller -> File: executeCutFullELementStructure(...)
+activate File
+File -> commandAndRuleEngine: executeDeleteElement(...)
+File -> commandAndRuleEngine: recursiveCuttingOfFullElementStructure(...)
+File -> errors: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: recursiveCuttingOfFullElementStructure(...)
+activate File
+File -> commandAndRuleEngine: recursiveCuttingOfFullElementStructure(...)
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+@enduml

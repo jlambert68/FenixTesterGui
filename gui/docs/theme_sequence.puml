@@ -1,0 +1,21 @@
+@startuml
+title Sequence Diagram - theme.go
+actor Caller
+participant "theme.go" as File
+participant "theme" as theme
+Caller -> File: Color(...)
+activate File
+File -> theme: DefaultTheme(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Icon(...)
+activate File
+File -> theme: DefaultTheme(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Size(...)
+activate File
+File -> theme: DefaultTheme(...)
+File --> Caller: return
+deactivate File
+@enduml

@@ -1,0 +1,9 @@
+@startuml
+title Sequence Diagram - testSuiteExecutionsModel.go
+actor Caller
+participant "testSuiteExecutionsModel.go" as File
+Caller -> File: InitiateTestSuiteExecutionModel(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

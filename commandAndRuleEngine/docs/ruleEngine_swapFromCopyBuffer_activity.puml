@@ -1,0 +1,18 @@
+@startuml
+title Activity Diagram - ruleEngine_swapFromCopyBuffer.go
+start
+:Load commandAndRuleEngine/ruleEngine_swapFromCopyBuffer.go;
+:1. executeSwapElementForCopyBuffer [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. verifyIfElementCanBeSwappedForCopyBuffer [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - testCaseSubscriptionHandler_handlerVariables.go
+start
+:Load testCaseSubscriptionHandler/testCaseSubscriptionHandler_handlerVariables.go;
+:No functions declared in this file;
+stop
+@enduml

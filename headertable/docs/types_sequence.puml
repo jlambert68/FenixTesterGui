@@ -1,0 +1,13 @@
+@startuml
+title Sequence Diagram - types.go
+actor Caller
+participant "types.go" as File
+Caller -> File: LoadFromFlashingTableCellsReferenceMap(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: SaveToFlashingTableCellsReferenceMap(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

@@ -1,0 +1,9 @@
+@startuml
+title Sequence Diagram - testSuitesModel_copyUiFieldsToModel.go
+actor Caller
+participant "testSuitesModel_copyUiFieldsToModel.go" as File
+Caller -> File: copyUiFieldsToModel(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

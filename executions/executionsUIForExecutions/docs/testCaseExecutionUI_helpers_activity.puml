@@ -1,0 +1,14 @@
+@startuml
+title Activity Diagram - testCaseExecutionUI_helpers.go
+start
+:Load executions/executionsUIForExecutions/testCaseExecutionUI_helpers.go;
+:1. ResizeTableColumns;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:2. remove;
+stop
+@enduml

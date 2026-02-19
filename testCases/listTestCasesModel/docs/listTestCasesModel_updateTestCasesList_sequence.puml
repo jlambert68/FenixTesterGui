@@ -1,0 +1,19 @@
+@startuml
+title Sequence Diagram - listTestCasesModel_updateTestCasesList.go
+actor Caller
+participant "listTestCasesModel_updateTestCasesList.go" as File
+participant "boolbits" as boolbits
+participant "err" as err
+participant "fmt" as fmt
+participant "latestTestCaseExecutionUpdatedMinTimeStamp" as latestTestCaseExecutionUpdatedMinTimeStamp
+participant "latestTestCaseUpdatedMinTimeStamp" as latestTestCaseUpdatedMinTimeStamp
+participant "listTestCasesThatCanBeEditedResponseMessage" as listTestCasesThatCanBeEditedResponseMessage
+participant "log" as log
+participant "resultsEntry" as resultsEntry
+Caller -> File: LoadTestCaseThatCanBeEditedByUser(...)
+activate File
+File -> listTestCasesThatCanBeEditedResponseMessage: GetAckNackResponse(...)
+File -> listTestCasesThatCanBeEditedResponseMessage: GetTestCasesThatCanBeEditedByUser(...)
+File --> Caller: return
+deactivate File
+@enduml

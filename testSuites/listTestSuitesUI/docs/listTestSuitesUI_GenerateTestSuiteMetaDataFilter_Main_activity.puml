@@ -1,0 +1,7 @@
+@startuml
+title Activity Diagram - listTestSuitesUI_GenerateTestSuiteMetaDataFilter_Main.go
+start
+:Load testSuites/listTestSuitesUI/listTestSuitesUI_GenerateTestSuiteMetaDataFilter_Main.go;
+:1. GenerateTestSuiteMetaDataFilterContainer [method on *ListTestSuiteUIStruct];
+stop
+@enduml

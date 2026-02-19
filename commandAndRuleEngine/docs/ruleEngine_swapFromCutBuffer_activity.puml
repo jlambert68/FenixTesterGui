@@ -1,0 +1,18 @@
+@startuml
+title Activity Diagram - ruleEngine_swapFromCutBuffer.go
+start
+:Load commandAndRuleEngine/ruleEngine_swapFromCutBuffer.go;
+:1. executeSwapElementFromCutBuffer [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. verifyIfElementCanBeSwappedForCutBuffer [method on *CommandAndRuleEngineObjectStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

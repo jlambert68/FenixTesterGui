@@ -1,0 +1,9 @@
+@startuml
+title Sequence Diagram - main_test.go
+actor Caller
+participant "main_test.go" as File
+Caller -> File: TestMain(...)
+activate File
+File --> Caller: return
+deactivate File
+@enduml

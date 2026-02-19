@@ -1,0 +1,31 @@
+@startuml
+title Activity Diagram - sortlabel.go
+start
+:Load headertable/sortlabel.go;
+:1. CreateRenderer [method on *sortingLabel];
+:2. Destroy [method on *sortingLabelRenderer];
+:3. Layout [method on *sortingLabelRenderer];
+:4. MinSize [method on *sortingLabelRenderer];
+:5. NewSortingLabel;
+:6. Objects [method on *sortingLabelRenderer];
+:7. OnTapped [method on *sortingLabel];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:8. Refresh [method on *sortingLabelRenderer];
+:9. SetState [method on *sortingLabel];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:10. nextState [method on *sortingLabel];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+stop
+@enduml

@@ -1,0 +1,20 @@
+@startuml
+title Sequence Diagram - ruleEngine_Copy.go
+actor Caller
+participant "ruleEngine_Copy.go" as File
+participant "commandAndRuleEngine" as commandAndRuleEngine
+participant "errors" as errors
+participant "fmt" as fmt
+Caller -> File: executeCopyElement(...)
+activate File
+File -> commandAndRuleEngine: executeCopyFullELementStructure(...)
+File -> commandAndRuleEngine: verifyIfElementCanBeCopied(...)
+File -> errors: New(...)
+File --> Caller: return
+deactivate File
+Caller -> File: verifyIfElementCanBeCopied(...)
+activate File
+File -> commandAndRuleEngine: verifyIfComponentCanBeCopiedSimpleRules(...)
+File --> Caller: return
+deactivate File
+@enduml

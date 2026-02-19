@@ -1,0 +1,15 @@
+@startuml
+title Activity Diagram - generateTestCaseExecutionPreview.go
+start
+:Load testCaseExecutions/listTestCaseExecutionsUI/generateTestCaseExecutionPreview.go;
+:1. ClearTestCaseExecutionPreviewContainer [method on *TestCaseInstructionPreViewStruct];
+:2. GenerateTestCaseExecutionPreviewContainer [method on *TestCaseInstructionPreViewStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:Schedule deferred cleanup;
+stop
+@enduml

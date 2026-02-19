@@ -1,0 +1,18 @@
+@startuml
+title Sequence Diagram - activeOutgoingMessages_SendListTestCasesOnExecutionQueue.go
+actor Caller
+participant "activeOutgoingMessages_SendListTestCasesOnExecutionQueue.go" as File
+participant "context" as context
+participant "err" as err
+participant "fenixExecutionServerGuiGrpcApi" as fenixExecutionServerGuiGrpcApi
+participant "fenixGuiExecutionServerGrpcClient" as fenixGuiExecutionServerGrpcClient
+participant "fmt" as fmt
+participant "grpcOut" as grpcOut
+Caller -> File: SendListTestCasesOnExecutionQueue(...)
+activate File
+File -> context: Background(...)
+File -> context: WithTimeout(...)
+File -> err: Error(...)
+File --> Caller: return
+deactivate File
+@enduml

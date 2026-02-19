@@ -1,0 +1,15 @@
+@startuml
+title Activity Diagram - guiExecutionServer_messageEngine.go
+start
+:Load messageStreamEngine/guiExecutionServer_messageEngine.go;
+:1. initiateGuiExecutionServerRequestForMessages [method on *MessageStreamEngineStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+:Schedule deferred cleanup;
+:Start goroutine/asynchronous work;
+stop
+@enduml

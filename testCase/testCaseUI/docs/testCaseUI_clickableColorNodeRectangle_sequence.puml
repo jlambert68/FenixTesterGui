@@ -1,0 +1,33 @@
+@startuml
+title Sequence Diagram - testCaseUI_clickableColorNodeRectangle.go
+actor Caller
+participant "testCaseUI_clickableColorNodeRectangle.go" as File
+participant "bytes" as bytes
+participant "c" as c
+participant "canvas" as canvas
+participant "fyne" as fyne
+participant "log" as log
+participant "myClickableRectangle" as myClickableRectangle
+participant "png" as png
+Caller -> File: ForceClick(...)
+activate File
+File --> Caller: return
+deactivate File
+Caller -> File: NewClickableRectangle(...)
+activate File
+File -> bytes: NewReader(...)
+File -> canvas: NewImageFromImage(...)
+File -> canvas: NewRectangle(...)
+File --> Caller: return
+deactivate File
+Caller -> File: Tapped(...)
+activate File
+File -> c: updateSelectedUINode(...)
+File --> Caller: return
+deactivate File
+Caller -> File: TappedSecondary(...)
+activate File
+File -> c: updateSelectedUINode(...)
+File --> Caller: return
+deactivate File
+@enduml

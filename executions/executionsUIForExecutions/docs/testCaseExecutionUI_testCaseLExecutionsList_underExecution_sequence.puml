@@ -1,0 +1,15 @@
+@startuml
+title Sequence Diagram - testCaseExecutionUI_testCaseLExecutionsList_underExecution.go
+actor Caller
+participant "testCaseExecutionUI_testCaseLExecutionsList_underExecution.go" as File
+participant "binding" as binding
+participant "container" as container
+participant "headertable" as headertable
+Caller -> File: CreateTableForTestCaseExecutionsUnderExecution(...)
+activate File
+File -> binding: BindStruct(...)
+File -> container: NewMax(...)
+File -> headertable: NewSortingHeaderTable(...)
+File --> Caller: return
+deactivate File
+@enduml

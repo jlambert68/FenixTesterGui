@@ -1,0 +1,7 @@
+@startuml
+title Sequence Diagram - executionsModel_testcasesListModelForSubscriptions_onQueueVariables.go
+actor Caller
+participant "executionsModel_testcasesListModelForSubscriptions_onQueueVariables.go" as File
+Caller -> File: (no callable functions detected)
+File --> Caller: return
+@enduml

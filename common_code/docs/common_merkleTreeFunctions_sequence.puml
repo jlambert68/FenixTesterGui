@@ -1,0 +1,46 @@
+@startuml
+title Sequence Diagram - common_merkleTreeFunctions.go
+actor Caller
+participant "common_merkleTreeFunctions.go" as File
+participant "dataFrameToWorkOn" as dataFrameToWorkOn
+participant "dataframe" as dataframe
+participant "df" as df
+participant "hash" as hash
+participant "hex" as hex
+participant "irisCsv" as irisCsv
+participant "log" as log
+participant "merkleTree" as merkleTree
+Caller -> File: CalculateMerkleHashFromMerkleTree(...)
+activate File
+File -> merkleTree: Col(...)
+File -> merkleTree: Filter(...)
+File -> merkleTreeLeafNodes: Mutate(...)
+File --> Caller: return
+deactivate File
+Caller -> File: ExtractMerkleRootHashFromMerkleTree(...)
+activate File
+File -> merkleTree: Col(...)
+File -> merkleTree: Filter(...)
+File -> merkleTreeRoot: Col(...)
+File --> Caller: return
+deactivate File
+Caller -> File: ExtractValuesFromFilterPath(...)
+activate File
+File -> strings: Index(...)
+File --> Caller: return
+deactivate File
+Caller -> File: HashValues(...)
+activate File
+File -> hash: Sum(...)
+File -> hash: Write(...)
+File -> hex: EncodeToString(...)
+File --> Caller: return
+deactivate File
+Caller -> File: LoadAndProcessFile(...)
+activate File
+File -> dataframe: HasHeader(...)
+File -> dataframe: New(...)
+File -> dataframe: ReadCSV(...)
+File --> Caller: return
+deactivate File
+@enduml

@@ -1,0 +1,19 @@
+@startuml
+title Activity Diagram - listTestCasesModel_updateTestCasesList.go
+start
+:Load testCases/listTestCasesModel/listTestCasesModel_updateTestCasesList.go;
+:1. LoadTestCaseThatCanBeEditedByUser;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. storeTestCaseThatCanBeEditedByUser;
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:Iterate loop/range logic;
+stop
+@enduml

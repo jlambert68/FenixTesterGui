@@ -1,0 +1,15 @@
+@startuml
+title Sequence Diagram - ruleEngine_verifyCopy.go
+actor Caller
+participant "ruleEngine_verifyCopy.go" as File
+participant "componentType" as componentType
+participant "errors" as errors
+participant "fmt" as fmt
+Caller -> File: verifyIfComponentCanBeCopiedSimpleRules(...)
+activate File
+File -> componentType: String(...)
+File -> errors: New(...)
+File -> fmt: Sprintf(...)
+File --> Caller: return
+deactivate File
+@enduml

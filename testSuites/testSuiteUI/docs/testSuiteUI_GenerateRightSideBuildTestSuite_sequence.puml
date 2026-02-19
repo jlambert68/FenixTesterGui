@@ -1,0 +1,13 @@
+@startuml
+title Sequence Diagram - testSuiteUI_GenerateRightSideBuildTestSuite.go
+actor Caller
+participant "testSuiteUI_GenerateRightSideBuildTestSuite.go" as File
+participant "container" as container
+Caller -> File: generateRightSideBuildTestSuiteContainer(...)
+activate File
+File -> container: NewAppTabs(...)
+File -> container: NewBorder(...)
+File -> container: NewScroll(...)
+File --> Caller: return
+deactivate File
+@enduml

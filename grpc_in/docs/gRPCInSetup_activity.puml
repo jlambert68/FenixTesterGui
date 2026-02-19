@@ -1,0 +1,13 @@
+@startuml
+title Activity Diagram - gRPCInSetup.go
+start
+:Load grpc_in/gRPCInSetup.go;
+:1. InitGrpcServer [method on *GRPCInStruct];
+if (branch or error path?) then (yes)
+:Handle alternative/error path;
+else (no)
+:Continue primary flow;
+endif
+:2. StopGrpcServer [method on *GRPCInStruct];
+stop
+@enduml
